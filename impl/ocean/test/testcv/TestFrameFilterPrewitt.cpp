@@ -12,6 +12,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterPrewitt.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,30 +24,29 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterPrewitt::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterPrewitt::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	Log::info() << "---   Prewitt filter test with frame size " << width << "x" << height << ":   ---";
+	TestResult testResult("Prewitt filter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
 
-	allSucceeded = testHorizontalVerticalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testHorizontalVerticalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("horizontalVerticalFilter8BitPerChannel_int8"))
 	{
-		Log::info() << "Prewitt filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Prewitt filter test FAILED!";
+		testResult = testHorizontalVerticalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("horizontalVerticalFilter8BitPerChannel_int16"))
+	{
+		testResult = testHorizontalVerticalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

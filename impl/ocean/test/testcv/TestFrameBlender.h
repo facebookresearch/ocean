@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -31,9 +33,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameBlender
 		 * Tests the frame blender functions.
 		 * @param testDuration Test duration in seconds, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if this test succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the blending two images with constant alpha value.

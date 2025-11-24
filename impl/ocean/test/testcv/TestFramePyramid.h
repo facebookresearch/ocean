@@ -15,6 +15,8 @@
 
 #include "ocean/cv/FramePyramid.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -44,9 +46,10 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * Tests the functionality of frame pyramids
 		 * @param testDuration Number of seconds for each test
 		 * @param worker The worker object to distribute the computational load
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the ideal layers functions.

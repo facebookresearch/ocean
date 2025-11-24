@@ -18,6 +18,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -27,42 +30,46 @@ namespace Test
 namespace TestCV
 {
 
-bool TestMotion::test(const double testDuration, Worker& /*worker*/)
+bool TestMotion::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Motion test:   ---";
+	TestResult testResult("Motion test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testMotionMirroredBorder<1u>(testDuration) && allSucceeded;
-
-	Log::info() << "\n-\n";
-
-	allSucceeded = testMotionMirroredBorder<2u>(testDuration) && allSucceeded;
-
-	Log::info() << "\n-\n";
-
-	allSucceeded = testMotionMirroredBorder<3u>(testDuration) && allSucceeded;
-
-	Log::info() << "\n-\n";
-
-	allSucceeded = testMotionMirroredBorder<4u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-
-	if (allSucceeded)
+	if (selector.shouldRun("motionmirroredborder1"))
 	{
-		Log::info() << "Motion test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Motion test FAILED!";
+		testResult = testMotionMirroredBorder<1u>(testDuration);
+
+		Log::info() << "\n-\n";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("motionmirroredborder2"))
+	{
+		testResult = testMotionMirroredBorder<2u>(testDuration);
+
+		Log::info() << "\n-\n";
+	}
+
+	if (selector.shouldRun("motionmirroredborder3"))
+	{
+		testResult = testMotionMirroredBorder<3u>(testDuration);
+
+		Log::info() << "\n-\n";
+	}
+
+	if (selector.shouldRun("motionmirroredborder4"))
+	{
+		testResult = testMotionMirroredBorder<4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

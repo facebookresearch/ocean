@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterYA16.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,80 +21,75 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterYA16::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterYA16::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   YA16 converter test:   ---";
+	TestResult testResult("YA16 converter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("YA16ToRGBA32"))
 	{
 		Log::info() << "Testing YA16 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYA16ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYA16ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YA16ToBGRA32"))
 	{
 		Log::info() << "Testing YA16 to BGRA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYA16ToBGRA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYA16ToBGRA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YA16ToY8"))
 	{
 		Log::info() << "Testing YA16 to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYA16ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYA16ToY8(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YA16ToYA16"))
 	{
 		Log::info() << "Testing YA16 to YA16 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYA16ToYA16(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYA16ToYA16(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "YA16 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "YA16 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

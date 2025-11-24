@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterRGB24.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,16 +21,16 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   RGB24 converter test:   ---";
+	TestResult testResult("RGB24 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("RGB24ToARGB32"))
 	{
 		Log::info() << "Testing RGB24 to ARGB32 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -35,14 +38,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToARGB32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToARGB32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToBGR24"))
 	{
 		Log::info() << "Testing RGB24 to BGR24 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -50,14 +54,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToBGR32"))
 	{
 		Log::info() << "Testing RGB24 to BGR32 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -65,14 +70,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToBGR32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToBGR32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToBGRA32"))
 	{
 		Log::info() << "Testing RGB24 to BGRA32 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -80,14 +86,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToBGRA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToBGRA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToRGB24"))
 	{
 		Log::info() << "Testing RGB24 to RGB24 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -95,14 +102,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToRGB32"))
 	{
 		Log::info() << "Testing RGB24 to RGB32 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -110,14 +118,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToRGB32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToRGB32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToRGBA32"))
 	{
 		Log::info() << "Testing RGB24 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -125,14 +134,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToY8FullRange"))
 	{
 		Log::info() << "Testing RGB24 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -140,14 +150,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToYUV24"))
 	{
 		Log::info() << "Testing RGB24 to YUV24 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -155,14 +166,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToYUV24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_UV12LimitedRange"))
 	{
 		Log::info() << "Testing full range RGB24 to limited range Y_UV12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -170,14 +182,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_UV12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_UV12LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_VU12LimitedRange"))
 	{
 		Log::info() << "Testing full range RGB24 to limited range Y_VU12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -185,14 +198,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_VU12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_VU12LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_UV12FullRange"))
 	{
 		Log::info() << "Testing full range RGB24 to full range Y_UV12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -200,14 +214,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_UV12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_UV12FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_VU12FullRange"))
 	{
 		Log::info() << "Testing full range RGB24 to full range Y_VU12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -215,14 +230,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_VU12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_VU12FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_U_V12LimitedRange"))
 	{
 		Log::info() << "Testing full range RGB24 to limited range Y_U_V12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -230,14 +246,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_U_V12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_U_V12LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_V_U12LimitedRange"))
 	{
 		Log::info() << "Testing full range RGB24 to limited range Y_V_U12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -245,14 +262,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_V_U12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_V_U12LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_U_V12FullRange"))
 	{
 		Log::info() << "Testing full range RGB24 to full range Y_U_V12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -260,14 +278,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_U_V12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_U_V12FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24FullRangeToY_V_U12FullRange"))
 	{
 		Log::info() << "Testing full range RGB24 to full range Y_V_U12 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -275,14 +294,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24FullRangeToY_V_U12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24FullRangeToY_V_U12FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB24ToR_G_B24"))
 	{
 		Log::info() << "Testing RGB24 to R_G_B24 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -290,22 +310,15 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToR_G_B24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB24ToR_G_B24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "RGB24 converter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "RGB24 converter test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

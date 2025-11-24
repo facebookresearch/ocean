@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterRGBA64.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,66 +21,60 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterRGBA64::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterRGBA64::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   RGBA64 converter test:   ---";
+	TestResult testResult("RGBA64 converter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("RGBA64ToRGB24"))
 	{
 		Log::info() << "Testing RGBA64 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA64ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA64ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA64ToRGBA32"))
 	{
 		Log::info() << "Testing RGBA64 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA64ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA64ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA64ToRGBA64"))
 	{
 		Log::info() << "Testing RGBA64 to RGBA64 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA64ToRGBA64(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA64ToRGBA64(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "RGBA64 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "RGBA64 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

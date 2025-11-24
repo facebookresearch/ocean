@@ -15,6 +15,9 @@
 #include "ocean/cv/FrameConverter.h"
 #include "ocean/cv/ImageQuality.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,35 +27,31 @@ namespace Test
 namespace TestCV
 {
 
-bool TestImageQuality::test(const unsigned int /*width*/, const unsigned int /*height*/, const double testDuration, Worker& worker)
+bool TestImageQuality::test(const unsigned int /*width*/, const unsigned int /*height*/, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Image Quality test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Image Quality test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testStructuralSimilarityStressTest(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiScaleStructuralSimilarityStressTest(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("structuralsimilaritystresstest"))
 	{
-		Log::info() << "Image Quality test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Image Quality test FAILED!";
+		testResult = testStructuralSimilarityStressTest(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("multiscalestructuralsimilaritystresstest"))
+	{
+		testResult = testMultiScaleStructuralSimilarityStressTest(testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

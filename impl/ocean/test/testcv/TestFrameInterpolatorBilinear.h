@@ -19,6 +19,8 @@
 #include "ocean/math/SquareMatrix3.h"
 #include "ocean/math/Vector2.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -42,9 +44,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		 * @param height The height of the source frame in pixel
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the CPU load
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the pixel interpolation function for frames with 8 bit per channel.

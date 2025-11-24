@@ -15,6 +15,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameConverterThreshold.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,36 +27,33 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterThreshold::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterThreshold::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Frame converter threshold test:   ---";
+	TestResult testResult("Frame converter threshold test");
 	Log::info() << " ";
 
-	allSucceeded = testConvertY8ToB8(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInPlaceConvertY8ToB8(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("ConvertY8ToB8"))
 	{
-		Log::info() << "Frame converter threshold test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame converter threshold test FAILED!";
+		testResult = testConvertY8ToB8(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("InPlaceConvertY8ToB8"))
+	{
+		testResult = testInPlaceConvertY8ToB8(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

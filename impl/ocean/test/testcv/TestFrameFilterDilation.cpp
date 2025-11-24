@@ -14,6 +14,9 @@
 #include "ocean/cv/FrameConverter.h"
 #include "ocean/cv/FrameFilterDilation.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -23,47 +26,55 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterDilation::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterDilation::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 4u && height >= 4u && testDuration > 0.0);
 
-	Log::info() << "---   Dilation filter test with frame size " << width << "x" << height << ":   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = test8Bit4Neighbor(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit8Neighbor(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit24Neighbor(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit(width, height, testDuration, worker) && allSucceeded;
+	TestResult testResult("Dilation filter");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("8bit4neighbor"))
 	{
-		Log::info() << "Dilation filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Dilation filter test FAILED!";
+		testResult = test8Bit4Neighbor(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("8bit8neighbor"))
+	{
+		testResult = test8Bit8Neighbor(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("8bit24neighbor"))
+	{
+		testResult = test8Bit24Neighbor(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("8bit"))
+	{
+		testResult = test8Bit(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

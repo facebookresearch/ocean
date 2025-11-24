@@ -15,6 +15,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameTransposer.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,47 +27,49 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameTransposer::test(const double testDuration, Worker& worker)
+bool TestFrameTransposer::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame transposer test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Frame transposer test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testTransposer(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRotate90(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRotate180(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRotate(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("transposer"))
 	{
-		Log::info() << "Frame transposer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame transposer test FAILED!";
+		testResult = testTransposer(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("rotate90"))
+	{
+		testResult = testRotate90(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rotate180"))
+	{
+		testResult = testRotate180(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rotate"))
+	{
+		testResult = testRotate(testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

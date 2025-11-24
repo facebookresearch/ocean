@@ -12,6 +12,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterSobelMagnitude.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,59 +24,78 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterSobelMagnitude::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterSobelMagnitude::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Sobel Magnitude filter test with frame size " << width << "x" << height << ":   ---";
+	TestResult testResult("Sobel Magnitude filter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testHorizontalVerticalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testHorizontalVerticalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDiagonalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testDiagonalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalVerticalFilterTo1Response8Bit<uint8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testHorizontalVerticalFilterTo1Response8Bit<uint16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("horizontalVerticalFilter8BitPerChannel_int8"))
 	{
-		Log::info() << "Sobel Magnitude filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sobel Magnitude filter test FAILED!";
+		testResult = testHorizontalVerticalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("horizontalVerticalFilter8BitPerChannel_int16"))
+	{
+		testResult = testHorizontalVerticalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("diagonalFilter8BitPerChannel_int8"))
+	{
+		testResult = testDiagonalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("diagonalFilter8BitPerChannel_int16"))
+	{
+		testResult = testDiagonalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filter8BitPerChannel_int8"))
+	{
+		testResult = testFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filter8BitPerChannel_int16"))
+	{
+		testResult = testFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalVerticalFilterTo1Response8Bit_uint8"))
+	{
+		testResult = testHorizontalVerticalFilterTo1Response8Bit<uint8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalVerticalFilterTo1Response8Bit_uint16"))
+	{
+		testResult = testHorizontalVerticalFilterTo1Response8Bit<uint16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

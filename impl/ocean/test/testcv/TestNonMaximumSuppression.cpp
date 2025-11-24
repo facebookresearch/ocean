@@ -15,6 +15,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -24,70 +26,66 @@ namespace Test
 namespace TestCV
 {
 
-bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Non maximum suppression test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testSuppressionInFrame(width, height, width, height, true, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSuppressionInFrame(width, height, width, height, false, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSuppressionInFrame(width, height, width * 75u / 100u, height * 75u / 100u, true, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSuppressionInFrame(width, height, width * 75u / 100u, height * 75u / 100u, false, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSuppressionInStrengthPositions(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeterminePrecisePeakLocation1<float>() && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDeterminePrecisePeakLocation1<double>() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeterminePrecisePeakLocation2<float>() && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDeterminePrecisePeakLocation2<double>() && allSucceeded;
+	TestResult testResult("Non maximum suppression test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("suppressioninframe"))
 	{
-		Log::info() << "Non maximum suppression test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Non maximum suppression test FAILED!";
+		testResult = testSuppressionInFrame(width, height, width, height, true, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSuppressionInFrame(width, height, width, height, false, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSuppressionInFrame(width, height, width * 75u / 100u, height * 75u / 100u, true, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSuppressionInFrame(width, height, width * 75u / 100u, height * 75u / 100u, false, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("suppressioninstrengthpositions"))
+	{
+		testResult = testSuppressionInStrengthPositions(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determineprecisepeaklocation1"))
+	{
+		testResult = testDeterminePrecisePeakLocation1<float>();
+		Log::info() << " ";
+		testResult = testDeterminePrecisePeakLocation1<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determineprecisepeaklocation2"))
+	{
+		testResult = testDeterminePrecisePeakLocation2<float>();
+		Log::info() << " ";
+		testResult = testDeterminePrecisePeakLocation2<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

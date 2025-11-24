@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -36,9 +38,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameMinMax
 		 * @param height The height of the test image in pixel, with range [1, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the function determining the minimum value and location.

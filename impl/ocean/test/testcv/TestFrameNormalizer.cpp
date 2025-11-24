@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameNormalizer.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Timestamp.h"
@@ -23,41 +26,40 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameNormalizer::test(const double testDuration, Worker& worker)
+bool TestFrameNormalizer::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Normalizer test:   ---";
+	TestResult testResult("Frame Normalizer test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNormalizerToUint8(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNormalizeToFloat(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testValueRangeNormalizerToUint8(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("normalizertouint8"))
 	{
-		Log::info() << "Frame Normalizer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Normalizer test FAILED!";
+		testResult = testNormalizerToUint8(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("normalizetofloat"))
+	{
+		testResult = testNormalizeToFloat(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("valuerangenormalizertouint8"))
+	{
+		testResult = testValueRangeNormalizerToUint8(testDuration, worker);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

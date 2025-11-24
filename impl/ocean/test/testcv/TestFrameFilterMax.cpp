@@ -13,6 +13,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,60 +25,70 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterMax::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterMax::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 51u && height >= 51u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Max filter test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testMax<uint8_t>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMax<uint8_t>(width, height, 3u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMax<float>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMax<float>(width, height, 3u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMaxInPlace<float>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMaxInPlace<float>(width, height, 3u, testDuration, worker) && allSucceeded;
+	TestResult testResult("Max filter test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("max_uint8_1channel"))
 	{
-		Log::info() << "Max filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Max filter test FAILED!";
+		testResult = testMax<uint8_t>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("max_uint8_3channels"))
+	{
+		testResult = testMax<uint8_t>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("max_float_1channel"))
+	{
+		testResult = testMax<float>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("max_float_3channels"))
+	{
+		testResult = testMax<float>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("maxInPlace_float_1channel"))
+	{
+		testResult = testMaxInPlace<float>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("maxInPlace_float_3channels"))
+	{
+		testResult = testMaxInPlace<float>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

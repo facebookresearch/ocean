@@ -13,6 +13,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,35 +25,33 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterSorted::test(const double testDuration, Worker& /*worker*/)
+bool TestFrameFilterSorted::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Sorted filter test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testHistogram(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSortedElements(testDuration) && allSucceeded;
+	TestResult testResult("Sorted filter test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("histogram"))
 	{
-		Log::info() << "Sorted filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sorted filter test FAILED!";
+		testResult = testHistogram(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("sortedElements"))
+	{
+		testResult = testSortedElements(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestEigenUtilities.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
 
@@ -22,53 +25,58 @@ namespace Test
 namespace TestCV
 {
 
-bool TestEigenUtilities::test(const double testDuration)
+bool TestEigenUtilities::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Test EigenUtilities:   ---";
-	Log::info() << " ";
+	TestResult testResult("Test EigenUtilities");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testFrame2Matrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testToEigenVector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testToOceanVector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testToEigenQuaternion(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testToOceanQuaternion(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("frame2matrix"))
 	{
-		Log::info() << "EigenUtilities test succeeded.";
-	}
-	else
-	{
-		Log::info() << "EigenUtilities test FAILED!";
+		testResult = testFrame2Matrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("toeigenvector"))
+	{
+		testResult = testToEigenVector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("tooceanvector"))
+	{
+		testResult = testToOceanVector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("toeigenquaternion"))
+	{
+		testResult = testToEigenQuaternion(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("tooceanquaternion"))
+	{
+		testResult = testToOceanQuaternion(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

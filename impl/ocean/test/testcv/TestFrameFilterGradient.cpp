@@ -15,6 +15,9 @@
 
 #include "ocean/math/Numeric.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,53 +27,64 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterGradient::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterGradient::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 3u && height >= 3u && testDuration > 0.0);
 
-	Log::info() << "---   Gradient filter test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testHorizontalVertical(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalVerticalSubFrame(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalVerticalMagnitudeSquared(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterHorizontal1x2LinedIntegralImage<uint8_t, int32_t>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterVertical2x1LinedIntegralImage<uint8_t, int32_t>(testDuration) && allSucceeded;
+	TestResult testResult("Gradient filter");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("horizontalvertical"))
 	{
-		Log::info() << "Gradient filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Gradient filter test FAILED!";
+		testResult = testHorizontalVertical(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("horizontalverticalsubframe"))
+	{
+		testResult = testHorizontalVerticalSubFrame(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalverticalmagnitudesquared"))
+	{
+		testResult = testHorizontalVerticalMagnitudeSquared(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filterhorizontal1x2linedintegralimage"))
+	{
+		testResult = testFilterHorizontal1x2LinedIntegralImage<uint8_t, int32_t>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filtervertical2x1linedintegralimage"))
+	{
+		testResult = testFilterVertical2x1LinedIntegralImage<uint8_t, int32_t>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

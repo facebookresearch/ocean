@@ -18,6 +18,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <array>
 
 namespace Ocean
@@ -29,53 +32,58 @@ namespace Test
 namespace TestCV
 {
 
-bool TestHistogram::test(const double testDuration, Worker& worker)
+bool TestHistogram::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Histogram test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Histogram test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testDetermineHistogram8BitPerChannel(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetermineHistogram8BitPerChannelSubFrame(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testContrastLimitedAdaptiveHistogramTileLookupTables(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testContrastLimitedAdaptiveBilinearInterpolationParameters(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testContrastLimitedHistogramEqualization(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("determinehistogram8bitperchannel"))
 	{
-		Log::info() << "Histogram test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Histogram test FAILED!";
+		testResult = testDetermineHistogram8BitPerChannel(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("determinehistogram8bitperchannelsubframe"))
+	{
+		testResult = testDetermineHistogram8BitPerChannelSubFrame(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("contrastlimitedadaptivehistogramtilelookuptables"))
+	{
+		testResult = testContrastLimitedAdaptiveHistogramTileLookupTables(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("contrastlimitedadaptivebilinearinterpolationparameters"))
+	{
+		testResult = testContrastLimitedAdaptiveBilinearInterpolationParameters(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("contrastlimitedhistogramequalization"))
+	{
+		testResult = testContrastLimitedHistogramEqualization(testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -15,6 +15,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,35 +27,37 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilter::test(const double testDuration, Worker& worker)
+bool TestFrameFilter::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Frame filter test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testMagnitude(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNormalizeValue(testDuration) && allSucceeded;
+	TestResult testResult("Frame filter");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("magnitude"))
 	{
-		Log::info() << "Frame filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame filter test FAILED!";
+		testResult = testMagnitude(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("normalizevalue"))
+	{
+		testResult = testNormalizeValue(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

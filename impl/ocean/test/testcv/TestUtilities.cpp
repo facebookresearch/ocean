@@ -12,6 +12,9 @@
 
 #include "ocean/cv/CVUtilities.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <array>
 
 namespace Ocean
@@ -23,92 +26,97 @@ namespace Test
 namespace TestCV
 {
 
-bool TestUtilities::test(const double testDuration)
+bool TestUtilities::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Utilities test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testCopyPixel<uint8_t, 1u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixel<uint8_t, 2u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixel<uint8_t, 3u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixel<uint8_t, 4u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testCopyPixel<int16_t, 1u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixel<int16_t, 2u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixel<int16_t, 3u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixel<int16_t, 4u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopyPixelWithIndex<uint8_t, 1u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithIndex<uint8_t, 2u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithIndex<uint8_t, 3u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithIndex<uint8_t, 4u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testCopyPixelWithIndex<uint16_t, 1u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithIndex<uint16_t, 2u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithIndex<uint16_t, 3u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithIndex<uint16_t, 4u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopyPixelWithPosition<uint8_t, 1u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithPosition<uint8_t, 2u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithPosition<uint8_t, 3u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithPosition<uint8_t, 4u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testCopyPixelWithPosition<uint16_t, 1u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithPosition<uint16_t, 2u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithPosition<uint16_t, 3u>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyPixelWithPosition<uint16_t, 4u>(testDuration) && allSucceeded;
+	TestResult testResult("Utilities test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("copypixel"))
 	{
-		Log::info() << "Utilities test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Utilities test FAILED!";
+		testResult = testCopyPixel<uint8_t, 1u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixel<uint8_t, 2u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixel<uint8_t, 3u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixel<uint8_t, 4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = testCopyPixel<int16_t, 1u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixel<int16_t, 2u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixel<int16_t, 3u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixel<int16_t, 4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("copypixelwithindex"))
+	{
+		testResult = testCopyPixelWithIndex<uint8_t, 1u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithIndex<uint8_t, 2u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithIndex<uint8_t, 3u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithIndex<uint8_t, 4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = testCopyPixelWithIndex<uint16_t, 1u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithIndex<uint16_t, 2u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithIndex<uint16_t, 3u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithIndex<uint16_t, 4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copypixelwithposition"))
+	{
+		testResult = testCopyPixelWithPosition<uint8_t, 1u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithPosition<uint8_t, 2u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithPosition<uint8_t, 3u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithPosition<uint8_t, 4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = testCopyPixelWithPosition<uint16_t, 1u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithPosition<uint16_t, 2u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithPosition<uint16_t, 3u>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyPixelWithPosition<uint16_t, 4u>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

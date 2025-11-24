@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameMinMax.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
@@ -30,47 +33,49 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameMinMax::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameMinMax::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame MinMax test:   ---";
+	TestResult testResult("Frame MinMax test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testDetermineMinValue(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetermineMaxValue(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetermineMinMaxValues(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCountElementsOutsideRange(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("determineminvalue"))
 	{
-		Log::info() << "Frame MinMax test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame MinMax test FAILED!";
+		testResult = testDetermineMinValue(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("determinemaxvalue"))
+	{
+		testResult = testDetermineMaxValue(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determineminmaxvalues"))
+	{
+		testResult = testDetermineMinMaxValues(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("countelementsoutsiderange"))
+	{
+		testResult = testCountElementsOutsideRange(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

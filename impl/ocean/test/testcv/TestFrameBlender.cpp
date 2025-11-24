@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameBlender.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -23,55 +26,60 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameBlender::test(const double testDuration, Worker& worker)
+bool TestFrameBlender::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	Log::info() << "---   Frame blender test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Frame blender test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testConstantAlpha(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparateAlphaChannel<true>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSeparateAlphaChannel<false>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBlend<true>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBlend<false>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBlendWithConstantValue<true>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testBlendWithConstantValue<false>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constantalpha"))
 	{
-		Log::info() << "Frame blender test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame blender test FAILED!";
+		testResult = testConstantAlpha(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("separatealphachannel"))
+	{
+		testResult = testSeparateAlphaChannel<true>(testDuration, worker);
+		Log::info() << " ";
+		testResult = testSeparateAlphaChannel<false>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("blend0xff"))
+	{
+		testResult = testBlend<true>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("blend0x00"))
+	{
+		testResult = testBlend<false>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("blendwithconstantvalue"))
+	{
+		testResult = testBlendWithConstantValue<true>(testDuration, worker);
+		Log::info() << " ";
+		testResult = testBlendWithConstantValue<false>(testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

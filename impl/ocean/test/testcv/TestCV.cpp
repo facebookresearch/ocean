@@ -92,6 +92,9 @@
 #include "ocean/test/testcv/TestUtilities.h"
 #include "ocean/test/testcv/TestZeroMeanSumSquareDifferences.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Frame.h"
@@ -122,7 +125,7 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 	ocean_assert(width >= 32u && height >= 32u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Computer Vision Library test");
 
 	Log::info() << "+++   Ocean Computer Vision Library test:   +++";
 	Log::info() << " ";
@@ -151,1120 +154,864 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("utilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("utilities"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestUtilities::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestUtilities::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("bresenham") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("bresenham"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestBresenham::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestBresenham::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("canvas") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("canvas"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestCanvas::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestCanvas::test(testDuration, subSelector);
 	}
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
-	if (testSet.empty() || testSet.find("neon") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("neon"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestNEON::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestNEON::test(testDuration, subSelector);
 	}
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 
-	if (testSet.empty() || testSet.find("sse") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("sse"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestSSE::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestSSE::test(testDuration, subSelector);
 	}
 
 #endif // OCEAN_HARDWARE_SSE_VERSION >= 41
 
-	if (testSet.empty() || testSet.find("pixelposition") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("pixelposition"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestPixelPosition::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestPixelPosition::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("pixelboundingbox") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("pixelboundingbox"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestPixelBoundingBox::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestPixelBoundingBox::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("sumabsolutedifferences") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("sumabsolutedifferences"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestSumAbsoluteDifferences::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestSumAbsoluteDifferences::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("sumsquaredifferences") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("sumsquaredifferences"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestSumSquareDifferences::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestSumSquareDifferences::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("zeromeansumsquaredifferences") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("zeromeansumsquaredifferences"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestZeroMeanSumSquareDifferences::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestZeroMeanSumSquareDifferences::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameenlarger") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameenlarger"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameEnlarger::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameEnlarger::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameblender") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameblender"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameBlender::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameBlender::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framechannels") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framechannels"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameChannels::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameChannels::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverter") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverter"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverter::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverter::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterabgr32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterabgr32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterABGR32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterABGR32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterargb32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterargb32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterARGB32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterARGB32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterbgr24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterbgr24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterBGR24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterBGR24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterb_g_r24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterb_g_r24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterB_G_R24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterB_G_R24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterbgr32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterbgr32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterBGR32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterBGR32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterbgr565") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterbgr565"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterBGR565::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterBGR565::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterbgra32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterbgra32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterBGRA32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterBGRA32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterrgb24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterrgb24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterRGB24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterRGB24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterr_g_b24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterr_g_b24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterR_G_B24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterR_G_B24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterrgb32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterrgb32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterRGB32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterRGB32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterrgb565") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterrgb565"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterRGB565::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterRGB565::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterrgba32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterrgba32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterRGBA32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterRGBA32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterrgba64") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterrgba64"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterRGBA64::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterRGBA64::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterrggb10_packed") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterrggb10_packed"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterRGGB10_Packed::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterRGGB10_Packed::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery8") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery8"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY8::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY8::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery10_packed") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery10_packed"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY10_Packed::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY10_Packed::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterya16") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterya16"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterYA16::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterYA16::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery_uv12") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery_uv12"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY_UV12::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY_UV12::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery_vu12") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery_vu12"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY_VU12::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY_VU12::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverteryuv24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverteryuv24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterYUV24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterYUV24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverteryuva32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverteryuva32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterYUVA32::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterYUVA32::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverteryuyv16") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverteryuyv16"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterYUYV16::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterYUYV16::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverteruyvy16") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverteruyvy16"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterUYVY16::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterUYVY16::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverteryvu24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverteryvu24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterYVU24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterYVU24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery_u_v12") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery_u_v12"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY_U_V12::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY_U_V12::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery_u_v24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery_u_v24"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY_U_V24::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY_U_V24::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconvertery_v_u12") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconvertery_v_u12"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterY_V_U12::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterY_V_U12::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameconverterthreshold") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameconverterthreshold"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameConverterThreshold::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameConverterThreshold::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltergaussian") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltergaussian"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterGaussian::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterGaussian::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilterseparable") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilterseparable"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterSeparable::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterSeparable::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilterprewitt") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilterprewitt"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterPrewitt::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterPrewitt::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltercanny") != testSet.end() || testSet.find("framefiltercanny*") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltercanny"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterCanny::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterCanny::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilterscharr") != testSet.end() || testSet.find("framefilterscharr*") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilterscharr"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterScharr::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterScharr::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilterscharrmagnitude") != testSet.end() || testSet.find("framefilterscharr*") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilterscharrmagnitude"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterScharrMagnitude::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterScharrMagnitude::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltersobel") != testSet.end() || testSet.find("framefiltersobel*") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltersobel"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterSobel::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterSobel::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltersobelmagnitude") != testSet.end() || testSet.find("framefiltersobel*") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltersobelmagnitude"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterSobelMagnitude::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterSobelMagnitude::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltertemplate") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltertemplate"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterTemplate::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterTemplate::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilterlaplace") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilterlaplace"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterLaplace::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterLaplace::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltermean") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltermean"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterMean::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterMean::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltersorted") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltersorted"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterSorted::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterSorted::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltermedian") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltermedian"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterMedian::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterMedian::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltermin") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltermin"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterMin::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterMin::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltermax") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltermax"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterMax::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterMax::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltererosion") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltererosion"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterErosion::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterErosion::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefiltergradient") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefiltergradient"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterGradient::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterGradient::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilterdilation") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilterdilation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilterDilation::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilterDilation::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framefilter") != testSet.end() || testSet.find("framefilter*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framefilter"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameFilter::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameFilter::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameshrinker") != testSet.end() || testSet.find("frameshrinker*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameshrinker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameShrinker::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameShrinker::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameshrinkeralpha") != testSet.end() || testSet.find("frameshrinker*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameshrinkeralpha"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameShrinkerAlpha::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameShrinkerAlpha::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frametransposer") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frametransposer"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameTransposer::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameTransposer::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameoperations") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameoperations"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameOperations::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameOperations::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framepyramid") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framepyramid"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFramePyramid::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFramePyramid::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameinterpolatornearestpixel") != testSet.end() || testSet.find("frameinterpolator*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolatornearestpixel"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameInterpolatorNearestPixel::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameInterpolatorNearestPixel::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameinterpolatorbilinear") != testSet.end() || testSet.find("frameinterpolator*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolatorbilinear"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameInterpolatorBilinear::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameInterpolatorBilinear::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameinterpolatorbilinearalpha") != testSet.end() || testSet.find("frameinterpolator*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolatorbilinearalpha"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameInterpolatorBilinearAlpha::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameInterpolatorBilinearAlpha::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameinterpolatorbicubic") != testSet.end() || testSet.find("frameinterpolator*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolatorbicubic"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameInterpolatorBicubic::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameInterpolatorBicubic::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameinterpolator") != testSet.end() || testSet.find("frameinterpolator*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolator"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameInterpolator::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameInterpolator::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("maskanalyzer") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("maskanalyzer"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestMaskAnalyzer::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestMaskAnalyzer::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("motion") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("motion"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestMotion::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestMotion::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("integralimage") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("integralimage"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestIntegralImage::test(width, height, testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestIntegralImage::test(width, height, testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framevariance") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framevariance"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameVariance::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameVariance::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonmaximumsuppression") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonmaximumsuppression"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestNonMaximumSuppression::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestNonMaximumSuppression::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framemean") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framemean"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameMean::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameMean::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framenorm") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framenorm"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameNorm::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameNorm::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framenormalizer") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framenormalizer"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameNormalizer::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameNormalizer::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameminmax") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameminmax"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameMinMax::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameMinMax::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("histogram") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("histogram"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestHistogram::test(testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestHistogram::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frameinverter") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frameinverter"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestFrameInverter::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestFrameInverter::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("imagequality") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("imagequality"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestImageQuality::test(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestImageQuality::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("eigenutilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("eigenutilities"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!TestEigenUtilities::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestEigenUtilities::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
@@ -1272,16 +1019,8 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision library test FAILED!";
-	}
-
-	return allSucceeded;
+	Log::info() << selector << " " << testResult;
+	return testResult.succeeded();
 }
 
 static void testCVAsynchronInternal(const double testDuration, const unsigned int testWidth, const unsigned int testHeight, const std::string testFunctions)

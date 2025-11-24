@@ -15,6 +15,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,36 +27,34 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameInterpolatorBilinearAlpha::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/)
+bool TestFrameInterpolatorBilinearAlpha::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Bilinear alpha-interpolation test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testInterpolatePixel8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateInfiniteBorder8BitPerChannel(width, height, testDuration) && allSucceeded;
+	TestResult testResult("Bilinear alpha-interpolation test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("interpolatePixel8BitPerChannel"))
 	{
-		Log::info() << "Bilinear alpha-interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Bilinear alpha-interpolation test FAILED!";
+		testResult = testInterpolatePixel8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("interpolateInfiniteBorder8BitPerChannel"))
+	{
+		testResult = testInterpolateInfiniteBorder8BitPerChannel(width, height, testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

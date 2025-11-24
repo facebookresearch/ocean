@@ -15,6 +15,8 @@
 
 #include "ocean/cv/FrameConverter.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -38,9 +40,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterBGR565
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the exact BGR565 to BGR24 conversion.

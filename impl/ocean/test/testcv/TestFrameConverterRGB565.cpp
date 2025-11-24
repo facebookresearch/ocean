@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterRGB565.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,54 +21,47 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterRGB565::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterRGB565::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   RGB565 converter test:   ---";
+	TestResult testResult("RGB565 converter test");
 	Log::info() << " ";
 
 	const auto flags = CV::FrameConverter::conversionFlags();
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("RGB565ToRGB24"))
 	{
 		Log::info() << "Testing RGB565 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB565ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB565ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB565ToY8FullRange"))
 	{
 		Log::info() << "Testing RGB565 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB565ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB565ToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "RGB565 converter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "RGB565 converter test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

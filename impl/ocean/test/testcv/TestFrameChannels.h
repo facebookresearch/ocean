@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -42,9 +44,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameChannels
 		 * @param height The height of the test frame in pixel, with range [1, infinity)
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if so
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests frame separation to one channel function.

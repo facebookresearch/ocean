@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Worker.h"
 
 namespace Ocean
@@ -33,9 +35,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGaussian
 		 * Tests all Gaussian filter functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the conversion function between filter size and sigma.

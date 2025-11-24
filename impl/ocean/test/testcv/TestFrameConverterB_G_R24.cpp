@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterB_G_R24.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,52 +21,46 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterB_G_R24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterB_G_R24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   B_G_R24 converter test:   ---";
+	TestResult testResult("B_G_R24 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("B_G_R24ToBGR24"))
 	{
 		Log::info() << "Testing B_G_R24 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testB_G_R24ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testB_G_R24ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("B_G_R24ToRGB24"))
 	{
 		Log::info() << "Testing B_G_R24 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testB_G_R24ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testB_G_R24ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "B_G_R24 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "B_G_R24 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

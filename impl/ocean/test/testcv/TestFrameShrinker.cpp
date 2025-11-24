@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameShrinker.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Utilities.h"
@@ -24,68 +27,73 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameShrinker::test(const double testDuration, Worker& worker)
+bool TestFrameShrinker::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Test Frame Shrinker:   ---";
+	TestResult testResult("Test Frame Shrinker");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testRowDownsamplingByTwoThreeRows8Bit121(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFrameDownsamplingByTwo8Bit11(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testFrameDownsamplingByTwo8Bit11ExtremeResolutions(worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDownsampleBinayMaskByTwo11(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testDownsampleBinayMaskByTwo11ExtremeResolutions(worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFrameDownsamplingByTwo8Bit14641(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testFrameDownsamplingByTwo8Bit14641ExtremeResolutions(worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPyramidByTwo11(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("rowdownsamplingbytwothreerows8bit121"))
 	{
-		Log::info() << "FrameShrinker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "FrameShrinker test FAILED!";
+		testResult = testRowDownsamplingByTwoThreeRows8Bit121(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("framedownsamplingbytwo8bit11"))
+	{
+		testResult = testFrameDownsamplingByTwo8Bit11(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = testFrameDownsamplingByTwo8Bit11ExtremeResolutions(worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("downsamplebinaymaskbytwo11"))
+	{
+		testResult = testDownsampleBinayMaskByTwo11(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = testDownsampleBinayMaskByTwo11ExtremeResolutions(worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("framedownsamplingbytwo8bit14641"))
+	{
+		testResult = testFrameDownsamplingByTwo8Bit14641(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = testFrameDownsamplingByTwo8Bit14641ExtremeResolutions(worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pyramidbytwo11"))
+	{
+		testResult = testPyramidByTwo11(testDuration, worker);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

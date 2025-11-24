@@ -12,6 +12,9 @@
 
 #include "ocean/cv/CVUtilities.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,59 +24,68 @@ namespace Test
 namespace TestCV
 {
 
-bool TestSumAbsoluteDifferences::test(const double testDuration)
+bool TestSumAbsoluteDifferences::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Test sum of absolute differences:   ---";
+	TestResult testResult("SumAbsoluteDifferences test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testDifferenceBetweenFramesWithOnePlane(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDifferenceBetweenFramesWithSeveralPlanes(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("differencebetweenframeswithoneplane"))
 	{
-		Log::info() << "Sum of absolute differences test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sum of absolute differences test FAILED!";
+		testResult = testDifferenceBetweenFramesWithOnePlane(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("differencebetweenframeswithseveralplanes"))
+	{
+		testResult = testDifferenceBetweenFramesWithSeveralPlanes(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patch8bitperchannel"))
+	{
+		testResult = testPatch8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("buffer8bitperchannel"))
+	{
+		testResult = testBuffer8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchbuffer8bitperchannel"))
+	{
+		testResult = testPatchBuffer8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchmirroredborder8bitperchannel"))
+	{
+		testResult = testPatchMirroredBorder8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

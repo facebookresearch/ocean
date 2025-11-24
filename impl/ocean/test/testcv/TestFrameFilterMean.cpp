@@ -12,6 +12,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterMean.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,29 +24,28 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterMean::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterMean::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 21u && height >= 21u && testDuration > 0.0);
 
-	Log::info() << "---   Mean filter test with frame size " << width << "x" << height << ":   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testFilterSizeArbitrary(width, height, testDuration, worker) && allSucceeded;
+	TestResult testResult("Mean filter");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("filtersizearbitrary"))
 	{
-		Log::info() << "Mean filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mean filter test FAILED!";
+		testResult = testFilterSizeArbitrary(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

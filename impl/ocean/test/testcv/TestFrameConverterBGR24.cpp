@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterBGR24.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,164 +21,166 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterBGR24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterBGR24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   BGR24 converter test:   ---";
+	TestResult testResult("BGR24 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("BGR24ToBGR24"))
 	{
 		Log::info() << "Testing BGR24 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24ToBGRA32"))
 	{
 		Log::info() << "Testing BGR24 to BGRA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24ToBGRA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24ToBGRA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24ToRGB24"))
 	{
 		Log::info() << "Testing BGR24 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24ToRGBA32"))
 	{
 		Log::info() << "Testing BGR24 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24ToY8FullRange"))
 	{
 		Log::info() << "Testing BGR24 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24ToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24ToYUV24"))
 	{
 		Log::info() << "Testing BGR24 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24ToYUV24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24FullRangeToY_U_V12LimitedRange"))
 	{
 		Log::info() << "Testing full range BGR24 to limited range Y_U_V12 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24FullRangeToY_U_V12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24FullRangeToY_U_V12LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24FullRangeToY_V_U12LimitedRange"))
 	{
 		Log::info() << "Testing full range BGR24 to limited range Y_V_U12 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24FullRangeToY_V_U12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24FullRangeToY_V_U12LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24FullRangeToY_U_V12FullRange"))
 	{
 		Log::info() << "Testing full range BGR24 to full range Y_U_V12 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24FullRangeToY_U_V12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24FullRangeToY_U_V12FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR24FullRangeToY_V_U12FullRange"))
 	{
 		Log::info() << "Testing full range BGR24 to full range Y_V_U12 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR24FullRangeToY_V_U12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR24FullRangeToY_V_U12FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "BGR24 converter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "BGR24 converter test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

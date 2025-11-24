@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterBGR565.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,66 +21,61 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterBGR565::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterBGR565::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   BGR565 converter test:   ---";
+	TestResult testResult("BGR565 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("BGR565ToBGR24"))
 	{
 		Log::info() << "Testing BGR565 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR565ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR565ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR565ToRGB24"))
 	{
 		Log::info() << "Testing BGR565 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR565ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR565ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("BGR565ToY8FullRange"))
 	{
 		Log::info() << "Testing BGR565 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR565ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testBGR565ToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "BGR565 converter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "BGR565 converter test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterRGB32.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,52 +21,46 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterRGB32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterRGB32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   RGB32 converter test:   ---";
+	TestResult testResult("RGB32 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("RGB32ToRGB24"))
 	{
 		Log::info() << "Testing RGB32 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB32ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB32ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGB32ToRGBA32"))
 	{
 		Log::info() << "Testing RGB32 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB32ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGB32ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "RGB32 converter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "RGB32 converter test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

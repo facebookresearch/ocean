@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/cv/SumAbsoluteDifferences.h"
 
 namespace Ocean
@@ -51,9 +53,10 @@ class OCEAN_TEST_CV_EXPORT TestSumAbsoluteDifferences
 		/**
 		 * Invokes all tests testing absolute differences functionalities.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the absolute differences function between entire frames with one plane.

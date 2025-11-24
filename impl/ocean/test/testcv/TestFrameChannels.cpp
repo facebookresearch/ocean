@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameChannels.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/cv/CVUtilities.h"
 
 namespace Ocean
@@ -18,198 +21,275 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameChannels::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameChannels::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Frame channels test");
 
-	Log::info() << "---   Frame channels test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testSeparateTo1Channel(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testZipChannels(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddFirstChannel(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddFirstChannelValue(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddLastChannel(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddLastChannelValue(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRemoveFirstChannel(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRemoveLastChannel(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopyChannel(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSetChannel(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testApplyAdvancedPixelModifier(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testApplyBivariateOperator<uint8_t, 3u>(5, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testApplyBivariateOperator<float, 3u>(5, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTransformGeneric(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPremultipliedAlphaToStraightAlpha(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStraightAlphaToPremultipliedAlpha(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseChannelOrder(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion3ChannelsTo1Channel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion3ChannelsTo3Channels6BitPrecision(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion3ChannelsTo3Channels7BitPrecision(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion3ChannelsTo3Channels10BitPrecision(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion4ChannelsTo1Channel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion4ChannelsTo2Channels(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowPixelConversion4ChannelsTo3Channels(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseRowPixelOrder(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseRowChannelOrder(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShuffleRowChannels(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShuffleRowChannelsAndSetLastChannelValue(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNarrowRow16BitPerChannels(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("separateto1channel"))
 	{
-		Log::info() << "Frame channels test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame channels test FAILED!";
+		testResult = testSeparateTo1Channel(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("zipchannels"))
+	{
+		testResult = testZipChannels(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addfirstchannel"))
+	{
+		testResult = testAddFirstChannel(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addfirstchannelvalue"))
+	{
+		testResult = testAddFirstChannelValue(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addlastchannel"))
+	{
+		testResult = testAddLastChannel(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addlastchannelvalue"))
+	{
+		testResult = testAddLastChannelValue(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("removefirstchannel"))
+	{
+		testResult = testRemoveFirstChannel(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("removelastchannel"))
+	{
+		testResult = testRemoveLastChannel(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copychannel"))
+	{
+		testResult = testCopyChannel(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("setchannel"))
+	{
+		testResult = testSetChannel(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("applyadvancedpixelmodifier"))
+	{
+		testResult = testApplyAdvancedPixelModifier(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("applybivariateoperatoruint8"))
+	{
+		testResult = testApplyBivariateOperator<uint8_t, 3u>(5, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("applybivariateoperatorfloat"))
+	{
+		testResult = testApplyBivariateOperator<float, 3u>(5, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("transformgeneric"))
+	{
+		testResult = testTransformGeneric(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("premultipliedalphatostraightalpha"))
+	{
+		testResult = testPremultipliedAlphaToStraightAlpha(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("straightalphatopremultipliedalpha"))
+	{
+		testResult = testStraightAlphaToPremultipliedAlpha(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reversechannelorder"))
+	{
+		testResult = testReverseChannelOrder(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion3channelsto1channel"))
+	{
+		testResult = testRowPixelConversion3ChannelsTo1Channel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion3channelsto3channels6bitprecision"))
+	{
+		testResult = testRowPixelConversion3ChannelsTo3Channels6BitPrecision(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion3channelsto3channels7bitprecision"))
+	{
+		testResult = testRowPixelConversion3ChannelsTo3Channels7BitPrecision(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion3channelsto3channels10bitprecision"))
+	{
+		testResult = testRowPixelConversion3ChannelsTo3Channels10BitPrecision(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion4channelsto1channel"))
+	{
+		testResult = testRowPixelConversion4ChannelsTo1Channel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion4channelsto2channels"))
+	{
+		testResult = testRowPixelConversion4ChannelsTo2Channels(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rowpixelconversion4channelsto3channels"))
+	{
+		testResult = testRowPixelConversion4ChannelsTo3Channels(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reverserowpixelorder"))
+	{
+		testResult = testReverseRowPixelOrder(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reverserowchannelorder"))
+	{
+		testResult = testReverseRowChannelOrder(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shufflerowchannels"))
+	{
+		testResult = testShuffleRowChannels(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shufflerowchannelsandsetlastchannelvalue"))
+	{
+		testResult = testShuffleRowChannelsAndSetLastChannelValue(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("narrowrow16bitperchannels"))
+	{
+		testResult = testNarrowRow16BitPerChannels(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

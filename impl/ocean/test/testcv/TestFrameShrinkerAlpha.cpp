@@ -12,6 +12,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameShrinkerAlpha.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,29 +24,25 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameShrinkerAlpha::test(const double testDuration, Worker& worker)
+bool TestFrameShrinkerAlpha::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Test Alpha Frame Shrinker:   ---";
+	TestResult testResult("Alpha Frame Shrinker test");
 	Log::info() << " ";
 
-	allSucceeded = testFrameDivideByTwo(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("framedividebytwo"))
 	{
-		Log::info() << "Alpha Frame Shrinker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Alpha Frame Shrinker test FAILED!";
+		testResult = testFrameDivideByTwo(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

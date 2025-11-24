@@ -12,6 +12,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterSeparable.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,98 +24,108 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterSeparable::test(const double testDuration, Worker& worker)
+bool TestFrameFilterSeparable::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Separable filter test:   ---";
+	TestResult testResult("Separable filter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testExtremeDimensions(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNormalDimensions(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReusableMemory<uint8_t, uint32_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testReusableMemory<float, float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReusableMemoryComfort<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testReusableMemoryComfort<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<char>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<unsigned char>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<short>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<unsigned short>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<int>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<unsigned int>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<float>(testDuration, worker) && allSucceeded;
-	allSucceeded = testSeparableFilterUniversalExtremeResolutions<double>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableFilterUniversal<unsigned char>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableFilterUniversal<short>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableFilterUniversal<int>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableFilterUniversal<float>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableFilterUniversal<double>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("extremeDimensions"))
 	{
-		Log::info() << "Separable filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Separable filter test FAILED!";
+		testResult = testExtremeDimensions(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("normalDimensions"))
+	{
+		testResult = testNormalDimensions(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reusableMemory"))
+	{
+		testResult = testReusableMemory<uint8_t, uint32_t>(testDuration);
+		Log::info() << " ";
+		testResult = testReusableMemory<float, float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reusableMemoryComfort"))
+	{
+		testResult = testReusableMemoryComfort<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testReusableMemoryComfort<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("separableFilterUniversalExtremeResolutions"))
+	{
+		testResult = testSeparableFilterUniversalExtremeResolutions<char>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<unsigned char>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<short>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<unsigned short>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<int>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<unsigned int>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<float>(testDuration, worker);
+		testResult = testSeparableFilterUniversalExtremeResolutions<double>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("separableFilterUniversal"))
+	{
+		testResult = testSeparableFilterUniversal<unsigned char>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testSeparableFilterUniversal<short>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testSeparableFilterUniversal<int>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testSeparableFilterUniversal<float>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testSeparableFilterUniversal<double>(testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -12,6 +12,9 @@
 
 #include "ocean/cv/CVUtilities.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,53 +24,59 @@ namespace Test
 namespace TestCV
 {
 
-bool TestSumSquareDifferences::test(const double testDuration)
+bool TestSumSquareDifferences::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Test sum of square differences:   ---";
+	TestResult testResult("Sum of square differences test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPatch8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("patch8bitperchannel"))
 	{
-		Log::info() << "Sum of square differences test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sum of square differences test FAILED!";
+		testResult = testPatch8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("buffer8bitperchannel"))
+	{
+		testResult = testBuffer8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchbuffer8bitperchannel"))
+	{
+		testResult = testPatchBuffer8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchatborder8bitperchannel"))
+	{
+		testResult = testPatchAtBorder8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchmirroredborder8bitperchannel"))
+	{
+		testResult = testPatchMirroredBorder8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterYVU24.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,108 +21,105 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   YVU24 converter test:   ---";
+	TestResult testResult("YVU24 converter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("YVU24ToBGR24"))
 	{
 		Log::info() << "Testing YVU24 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYVU24ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYVU24ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YVU24ToRGB24"))
 	{
 		Log::info() << "Testing YVU24 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYVU24ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYVU24ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YVU24ToY8"))
 	{
 		Log::info() << "Testing YVU24 to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYVU24ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYVU24ToY8(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YVU24ToYUV24"))
 	{
 		Log::info() << "Testing YVU24 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYVU24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYVU24ToYUV24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YVU24ToYVU24"))
 	{
 		Log::info() << "Testing YVU24 to YVU24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYVU24ToYVU24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYVU24ToYVU24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("YVU24ToY_V_U12"))
 	{
 		Log::info() << "Testing YVU24 to Y_V_U12 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYVU24ToY_V_U12(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYVU24ToY_V_U12(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "YVU24 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "YVU24 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

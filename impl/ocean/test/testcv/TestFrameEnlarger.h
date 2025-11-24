@@ -13,6 +13,8 @@
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -34,9 +36,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameEnlarger
 		 * Tests the entire frame enlarger functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the add border function using a defined border color.

@@ -15,6 +15,9 @@
 #include "ocean/cv/FrameVariance.h"
 #include "ocean/cv/IntegralImage.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -24,98 +27,130 @@ namespace Test
 namespace TestCV
 {
 
-bool TestIntegralImage::test(const unsigned int width, const unsigned int height, const double testDuration)
+bool TestIntegralImage::test(const unsigned int width, const unsigned int height, const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Integral image test");
 
-	allSucceeded = testIntegralImage(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLinedIntegralImage(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLinedIntegralImageComfort(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLinedIntegralImageSquared(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLinedIntegralImageAndSquaredJoined(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBorderedIntegralImage(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBorderedIntegralImageComfort(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBorderedIntegralImageSquared(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBorderedIntegralImageMirror(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBorderedIntegralImageSquaredMirror(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	testVarianceCalculation(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	testVarianceCalculationTwoRegions(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("integralimage"))
 	{
-		Log::info() << "Integral image test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Integral image test FAILED!";
+		testResult = testIntegralImage(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("linedintegralimage"))
+	{
+		testResult = testLinedIntegralImage(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("linedintegralimagecomfort"))
+	{
+		testResult = testLinedIntegralImageComfort(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("linedintegralimagesquared"))
+	{
+		testResult = testLinedIntegralImageSquared(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("linedintegralimagesandsquaredjoined"))
+	{
+		testResult = testLinedIntegralImageAndSquaredJoined(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("linedintegralimagesandsquaredseparate"))
+	{
+		testResult = testLinedIntegralImageAndSquaredSeparate(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("borderedintegralimage"))
+	{
+		testResult = testBorderedIntegralImage(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("borderedintegralimagecomfort"))
+	{
+		testResult = testBorderedIntegralImageComfort(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("borderedintegralimagesquared"))
+	{
+		testResult = testBorderedIntegralImageSquared(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("borderedintegralimagemirror"))
+	{
+		testResult = testBorderedIntegralImageMirror(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("borderedintegralimagesquaredmirror"))
+	{
+		testResult = testBorderedIntegralImageSquaredMirror(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("variancecalculation"))
+	{
+		testResult = testVarianceCalculation(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("variancecalculationtworegions"))
+	{
+		testResult = testVarianceCalculationTwoRegions(testDuration);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 
 }
 

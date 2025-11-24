@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameNorm.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -23,35 +26,28 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameNorm::test(const double testDuration)
+bool TestFrameNorm::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Norm test:   ---";
+	TestResult testResult("Frame Norm test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNormL2<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNormL2<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("norml2"))
 	{
-		Log::info() << "Frame Norm test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Norm test FAILED!";
+		testResult = testNormL2<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testNormL2<double>(testDuration);
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

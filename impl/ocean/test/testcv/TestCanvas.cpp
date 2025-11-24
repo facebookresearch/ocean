@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestCanvas.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
@@ -22,47 +25,49 @@ namespace Test
 namespace TestCV
 {
 
-bool TestCanvas::test(const double testDuration)
+bool TestCanvas::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Test Canvas:   ---";
-	Log::info() << " ";
+	TestResult testResult("Test Canvas");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testColors() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLinePixelAccuracy(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPointNoFraction(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPointWithFraction(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("colors"))
 	{
-		Log::info() << "Canvas test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Canvas test FAILED!";
+		testResult = testColors();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("linepixelaccuracy"))
+	{
+		testResult = testLinePixelAccuracy(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pointnofraction"))
+	{
+		testResult = testPointNoFraction(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pointwithfraction"))
+	{
+		testResult = testPointWithFraction(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

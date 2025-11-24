@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/RandomGenerator.h"
 
@@ -34,9 +36,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilter
 		 * Tests all frame filter functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the CPU load
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the magnitude function.

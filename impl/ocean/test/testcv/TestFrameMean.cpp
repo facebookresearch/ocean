@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameMean.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -24,47 +27,43 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameMean::test(const double testDuration, Worker& worker)
+bool TestFrameMean::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Mean test:   ---";
+	TestResult testResult("Frame Mean test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testMeanValue(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " - ";
-	Log::info() << " ";
-
-	allSucceeded = testAddToFrameIndividually(1920u, 1080u, 1u, testDuration, worker);
-
-	Log::info() << " ";
-
-	allSucceeded = testAddToFrameIndividually(1920u, 1080u, 2u, testDuration, worker);
-
-	Log::info() << " ";
-
-	allSucceeded = testAddToFrameIndividually(1920u, 1080u, 3u, testDuration, worker);
-
-	Log::info() << " ";
-
-	allSucceeded = testAddToFrameIndividually(1920u, 1080u, 4u, testDuration, worker);
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("meanvalue"))
 	{
-		Log::info() << "Frame Mean test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Mean test FAILED!";
+		testResult = testMeanValue(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << " - ";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("addtoframeindividually"))
+	{
+		testResult = testAddToFrameIndividually(1920u, 1080u, 1u, testDuration, worker);
+
+		Log::info() << " ";
+
+		testResult = testAddToFrameIndividually(1920u, 1080u, 2u, testDuration, worker);
+
+		Log::info() << " ";
+
+		testResult = testAddToFrameIndividually(1920u, 1080u, 3u, testDuration, worker);
+
+		Log::info() << " ";
+
+		testResult = testAddToFrameIndividually(1920u, 1080u, 4u, testDuration, worker);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

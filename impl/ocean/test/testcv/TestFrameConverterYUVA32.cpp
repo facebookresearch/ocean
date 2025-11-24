@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterYUVA32.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,38 +21,31 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterYUVA32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterYUVA32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   YUVA32 converter test:   ---";
+	TestResult testResult("YUVA32 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("YUVA32ToY8"))
 	{
 		Log::info() << "Testing YUVA32 to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testYUVA32ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testYUVA32ToY8(width, height, flag, testDuration, worker);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "YUVA32 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "YUVA32 converter tests FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

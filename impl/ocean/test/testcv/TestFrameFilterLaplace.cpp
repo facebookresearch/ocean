@@ -17,6 +17,9 @@
 
 #include "ocean/math/Variance.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -26,48 +29,42 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterLaplace::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterLaplace::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width >= 3u && height >= 3u);
 
-	Log::info() << "---   Laplace filter test with frame size " << width << "x" << height << ":   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = test1Channel<uint8_t, int8_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test1Channel<uint8_t, int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test1Channel<uint8_t, uint16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVariance1Channel(width, height, testDuration);
+	TestResult testResult("Laplace filter");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("1channel"))
 	{
-		Log::info() << "Laplace filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Laplace filter test FAILED!";
+		testResult = test1Channel<uint8_t, int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = test1Channel<uint8_t, int16_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = test1Channel<uint8_t, uint16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("variance1channel"))
+	{
+		testResult = testVariance1Channel(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

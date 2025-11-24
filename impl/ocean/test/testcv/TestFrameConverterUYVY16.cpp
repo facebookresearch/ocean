@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterUYVY16.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,25 +21,25 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterUYVY16::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterUYVY16::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   UYVY16 converter test:   ---";
+	TestResult testResult("UYVY16 converter test");
+
 	Log::info() << " ";
 
 	const auto flags = CV::FrameConverter::conversionFlags();
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("UYVY16ToBGR24"))
 	{
 		Log::info() << "Testing UYVY16 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testUYVY16ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testUYVY16ToBGR24(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -44,13 +47,14 @@ bool TestFrameConverterUYVY16::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("UYVY16ToRGB24"))
 	{
 		Log::info() << "Testing UYVY16 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testUYVY16ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testUYVY16ToRGB24(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -58,13 +62,14 @@ bool TestFrameConverterUYVY16::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("UYVY16ToY8"))
 	{
 		Log::info() << "Testing UYVY16 to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testUYVY16ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testUYVY16ToY8(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -72,13 +77,14 @@ bool TestFrameConverterUYVY16::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("UYVY16ToYUV24"))
 	{
 		Log::info() << "Testing UYVY16 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testUYVY16ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testUYVY16ToYUV24(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -86,28 +92,22 @@ bool TestFrameConverterUYVY16::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("UYVY16ToYVU24"))
 	{
 		Log::info() << "Testing UYVY16 to YVU24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testUYVY16ToYVU24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testUYVY16ToYVU24(width, height, flag, testDuration, worker);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "UYVY16 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "UYVY16 converter tests FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
 
@@ -55,9 +57,10 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		 * @param height The height of the test frame in pixel, with range [3, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the non maximum suppression within a frame.

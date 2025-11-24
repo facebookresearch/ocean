@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterY8.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -19,208 +22,213 @@ namespace TestCV
 {
 
 
-bool TestFrameConverterY8::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterY8::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   Y8 converter test:   ---";
+	TestResult testResult("Y8 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("Y8FullRangeToBGR24"))
 	{
 		Log::info() << "Testing Y8 full range to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8FullRangeToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8FullRangeToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8FullRangeToRGB24"))
 	{
 		Log::info() << "Testing Y8 full range to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8FullRangeToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8FullRangeToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8FullRangeToRGBA32"))
 	{
 		Log::info() << "Testing Y8 full range to RGBA32 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8FullRangeToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8FullRangeToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8ToY8"))
 	{
 		Log::info() << "Testing Y8 to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8ToY8(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8ToY8GammaLUT"))
 	{
 		Log::info() << "Testing Y8 to Y8 conversion with LUT gamma correction (x^" << String::toAString(FrameConverterTestUtilities::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8ToY8GammaLUT(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8ToY8GammaLUT(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8LimitedRangeToY8FullRangePrecision6Bit"))
 	{
 		Log::info() << "Testing Y8 limited range to Y8 full range conversion (6-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToY8FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8LimitedRangeToY8FullRangePrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8LimitedRangeToY8FullRangePrecision10Bit"))
 	{
 		Log::info() << "Testing Y8 limited range to Y8 full range conversion (10-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToY8FullRangePrecision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8LimitedRangeToY8FullRangePrecision10Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8FullRangeToY8LimitedRangePrecision6Bit"))
 	{
 		Log::info() << "Testing Y8 full range to Y8 limited range conversion (6-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8FullRangeToY8LimitedRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8FullRangeToY8LimitedRangePrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8FullRangeToY8LimitedRangePrecision10Bit"))
 	{
 		Log::info() << "Testing Y8 full range to Y8 limited range conversion (10-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8FullRangeToY8LimitedRangePrecision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8FullRangeToY8LimitedRangePrecision10Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8LimitedRangeToRGB24Precision6Bit"))
 	{
 		Log::info() << "Testing Y8 limited range to RGB24 (full range) conversion (6-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToRGB24Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8LimitedRangeToRGB24Precision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8LimitedRangeToRGB24Precision10Bit"))
 	{
 		Log::info() << "Testing Y8 limited range to RGB24 (full range) conversion (10-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToRGB24Precision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8LimitedRangeToRGB24Precision10Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8LimitedRangeToRGBA32Precision6Bit"))
 	{
 		Log::info() << "Testing Y8 limited range to RGBA32 (full range) conversion (6-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToRGBA32Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8LimitedRangeToRGBA32Precision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y8LimitedRangeToRGBA32Precision10Bit"))
 	{
 		Log::info() << "Testing Y8 limited range to RGBA32 (full range) conversion (10-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToRGBA32Precision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY8LimitedRangeToRGBA32Precision10Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Y8 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "Y8 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

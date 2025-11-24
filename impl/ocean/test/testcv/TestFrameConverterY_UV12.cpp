@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterY_UV12.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,178 +21,177 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterY_UV12::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterY_UV12::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   Y_UV12 converter test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Y_UV12 converter test");
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("y_uv12limitedrangetobgr24fullrange"))
 	{
 		Log::info() << "Testing Y_UV12_LIMITED_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12LimitedRangeToBGR24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12LimitedRangeToBGR24FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12limitedrangetorgb24fullrange"))
 	{
 		Log::info() << "Testing Y_UV12_LIMITED_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12LimitedRangeToRGB24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12LimitedRangeToRGB24FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12fullrangetobgr24fullrange"))
 	{
 		Log::info() << "Testing Y_UV12_FULL_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12FullRangeToBGR24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12FullRangeToBGR24FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12fullrangetorgb24fullrange"))
 	{
 		Log::info() << "Testing Y_UV12_FULL_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12FullRangeToRGB24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12FullRangeToRGB24FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12toyuv24"))
 	{
 		Log::info() << "Testing Y_UV12 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12ToYUV24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12toyvu24"))
 	{
 		Log::info() << "Testing Y_UV12 to YVU24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12ToYVU24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12ToYVU24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12limitedrangetoy8limitedrange"))
 	{
 		Log::info() << "Testing Y_UV12_LIMITED_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12limitedrangetoy8fullrange"))
 	{
 		Log::info() << "Testing Y_UV12_LIMITED_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12LimitedRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12LimitedRangeToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12fullrangetoy8fullrange"))
 	{
 		Log::info() << "Testing Y_UV12_FULL_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12FullRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12FullRangeToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12fullrangetoy8limitedrange"))
 	{
 		Log::info() << "Testing Y_UV12_FULL_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12FullRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12FullRangeToY8LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_uv12toy_u_v12"))
 	{
 		Log::info() << "Testing Y_UV12 to Y_U_V12 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_UV12ToY_U_V12(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_UV12ToY_U_V12(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-
-	if (allSucceeded)
-	{
-		Log::info() << "Y_UV12 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "Y_UV12 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

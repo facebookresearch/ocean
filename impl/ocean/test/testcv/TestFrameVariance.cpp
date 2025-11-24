@@ -17,6 +17,9 @@
 #include "ocean/math/Math.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -26,40 +29,36 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameVariance::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/)
+bool TestFrameVariance::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Variance test:   ---";
+	TestResult testResult("Frame Variance test");
+
+	if (selector.shouldRun("deviation1channel8bit"))
+	{
+		for (const unsigned int window : {5u, 11u, 21u})
+		{
+			testResult = testDeviation1Channel8Bit<int8_t>(width, height, window, testDuration);
+			Log::info() << " ";
+			testResult = testDeviation1Channel8Bit<uint8_t>(width, height, window, testDuration);
+
+			Log::info() << " ";
+			Log::info() << "-";
+			Log::info() << " ";
+		}
+	}
+
+	if (selector.shouldRun("framestatistics"))
+	{
+		testResult = testFrameStatistics(width, height, testDuration);
+	}
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Log::info() << testResult;
 
-	for (const unsigned int window : {5u, 11u, 21u})
-	{
-		allSucceeded = testDeviation1Channel8Bit<int8_t>(width, height, window, testDuration) && allSucceeded;
-		Log::info() << " ";
-		allSucceeded = testDeviation1Channel8Bit<uint8_t>(width, height, window, testDuration) && allSucceeded;
-
-		Log::info() << " ";
-		Log::info() << "-";
-		Log::info() << " ";
-	}
-
-	allSucceeded = testFrameStatistics(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
-	{
-		Log::info() << "Frame Variance test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Variance test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

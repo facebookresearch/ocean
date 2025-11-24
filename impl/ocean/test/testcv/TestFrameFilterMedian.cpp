@@ -14,6 +14,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 // using reduced resolution to reduce execution time
 #define GTEST_TEST_IMAGE_WIDTH_2 GTEST_TEST_IMAGE_WIDTH / 2u
 #define GTEST_TEST_IMAGE_HEIGHT_2 GTEST_TEST_IMAGE_HEIGHT / 2u
@@ -27,60 +30,70 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterMedian::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterMedian::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 51u && height >= 51u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Median filter test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testMedian<uint8_t>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMedian<uint8_t>(width, height, 3u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMedian<float>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMedian<float>(width, height, 3u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMedianInPlace<float>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMedianInPlace<float>(width, height, 3u, testDuration, worker) && allSucceeded;
+	TestResult testResult("Median filter test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("median_uint8_1channel"))
 	{
-		Log::info() << "Median filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Median filter test FAILED!";
+		testResult = testMedian<uint8_t>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("median_uint8_3channels"))
+	{
+		testResult = testMedian<uint8_t>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("median_float_1channel"))
+	{
+		testResult = testMedian<float>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("median_float_3channels"))
+	{
+		testResult = testMedian<float>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("medianInPlace_float_1channel"))
+	{
+		testResult = testMedianInPlace<float>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("medianInPlace_float_3channels"))
+	{
+		testResult = testMedianInPlace<float>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -13,6 +13,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameInterpolatorBicubic.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,56 +25,76 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameInterpolatorBicubic::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameInterpolatorBicubic::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Bicubic interpolation test:   ---";
-	Log::info() << " ";
-
-	bool result = true;
-
-	result = testResize8BitPerChannel<1u>(width, height, 0.75f, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testResize8BitPerChannel<1u>(width, height, 2.5f, testDuration, worker) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testResize8BitPerChannel<2u>(width, height, 0.75f, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testResize8BitPerChannel<2u>(width, height, 2.5f, testDuration, worker) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testResize8BitPerChannel<3u>(width, height, 0.75f, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testResize8BitPerChannel<3u>(width, height, 2.5f, testDuration, worker) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testResize8BitPerChannel<4u>(width, height, 0.75f, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testResize8BitPerChannel<4u>(width, height, 2.5f, testDuration, worker) && result;
+	TestResult testResult("Bicubic interpolation test");
 
 	Log::info() << " ";
 
-	if (result)
+	if (selector.shouldRun("resize8BitPerChannel_1_downscale"))
 	{
-		Log::info() << "Bicubic interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Bicubic interpolation test FAILED!";
+		testResult = testResize8BitPerChannel<1u>(width, height, 0.75f, testDuration, worker);
+		Log::info() << " ";
 	}
 
-	return result;
+	if (selector.shouldRun("resize8BitPerChannel_1_upscale"))
+	{
+		testResult = testResize8BitPerChannel<1u>(width, height, 2.5f, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resize8BitPerChannel_2_downscale"))
+	{
+		testResult = testResize8BitPerChannel<2u>(width, height, 0.75f, testDuration, worker);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resize8BitPerChannel_2_upscale"))
+	{
+		testResult = testResize8BitPerChannel<2u>(width, height, 2.5f, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resize8BitPerChannel_3_downscale"))
+	{
+		testResult = testResize8BitPerChannel<3u>(width, height, 0.75f, testDuration, worker);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resize8BitPerChannel_3_upscale"))
+	{
+		testResult = testResize8BitPerChannel<3u>(width, height, 2.5f, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resize8BitPerChannel_4_downscale"))
+	{
+		testResult = testResize8BitPerChannel<4u>(width, height, 0.75f, testDuration, worker);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resize8BitPerChannel_4_upscale"))
+	{
+		testResult = testResize8BitPerChannel<4u>(width, height, 2.5f, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 template <unsigned int tChannels>

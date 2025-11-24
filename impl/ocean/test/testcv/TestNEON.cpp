@@ -13,6 +13,8 @@
 
 #include "ocean/cv/NEON.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 #include <array>
@@ -28,61 +30,70 @@ namespace Test
 namespace TestCV
 {
 
-bool TestNEON::test(const double testDuration)
+bool TestNEON::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   NEON test:   ---";
+	TestResult testResult("NEON test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-
-	allSucceeded = testSum16Bit4Blocks3x3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveragingPixels2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiply(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopySign(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCastElements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSumHorizontal_u_32x4(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("sum16bit4blocks3x3"))
 	{
-		Log::info() << "NEON test succeeded.";
-	}
-	else
-	{
-		Log::info() << "NEON test FAILED!";
+		testResult = testSum16Bit4Blocks3x3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("averagingpixels2x2"))
+	{
+		testResult = testAveragingPixels2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiply"))
+	{
+		testResult = testMultiply(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copysign"))
+	{
+		testResult = testCopySign(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("castelements"))
+	{
+		testResult = testCastElements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("sumhorizontal_u_32x4"))
+	{
+		testResult = testSumHorizontal_u_32x4(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

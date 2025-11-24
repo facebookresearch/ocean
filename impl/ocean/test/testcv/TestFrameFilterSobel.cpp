@@ -16,6 +16,9 @@
 
 #include "ocean/test/Validation.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -25,78 +28,107 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterSobel::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterSobel::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width >= 3u && height >= 3u);
 
-	Log::info() << "---   Sobel filter test with frame size " << width << "x" << height << ":   ---";
+	TestResult testResult("Sobel filter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
 
-	allSucceeded = testHorizontalVerticalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testHorizontalVerticalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalVertical3Squared1Channel8BitRow(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDiagonalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testDiagonalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilter8BitPerChannel<int8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testFilter8BitPerChannel<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalVerticalMaximumAbsolute8BitPerChannel<uint8_t>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testHorizontalVerticalMaximumAbsolute8BitPerChannel<uint16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComfort(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterPixelCoreHorizontalVertical3Squared1Channel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("horizontalVerticalFilter8BitPerChannel_int8"))
 	{
-		Log::info() << "Sobel filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sobel filter test FAILED!";
+		testResult = testHorizontalVerticalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("horizontalVerticalFilter8BitPerChannel_int16"))
+	{
+		testResult = testHorizontalVerticalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalVertical3Squared1Channel8BitRow"))
+	{
+		testResult = testHorizontalVertical3Squared1Channel8BitRow(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("diagonalFilter8BitPerChannel_int8"))
+	{
+		testResult = testDiagonalFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("diagonalFilter8BitPerChannel_int16"))
+	{
+		testResult = testDiagonalFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filter8BitPerChannel_int8"))
+	{
+		testResult = testFilter8BitPerChannel<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filter8BitPerChannel_int16"))
+	{
+		testResult = testFilter8BitPerChannel<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalVerticalMaximumAbsolute8BitPerChannel_uint8"))
+	{
+		testResult = testHorizontalVerticalMaximumAbsolute8BitPerChannel<uint8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalVerticalMaximumAbsolute8BitPerChannel_uint16"))
+	{
+		testResult = testHorizontalVerticalMaximumAbsolute8BitPerChannel<uint16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("comfort"))
+	{
+		testResult = testComfort(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("filterPixelCoreHorizontalVertical3Squared1Channel"))
+	{
+		testResult = testFilterPixelCoreHorizontalVertical3Squared1Channel(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

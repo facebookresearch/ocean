@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_CV_EXPORT TestPixelBoundingBox
 		/**
 		 * Tests the entire pixel bounding box functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the constructors.

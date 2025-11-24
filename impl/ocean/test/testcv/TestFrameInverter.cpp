@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameInverter.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -24,34 +27,27 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameInverter::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameInverter::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width > 0u && height > 0u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Inverter test:   ---";
+	TestResult testResult("Frame Inverter test");
 	Log::info() << " ";
-
-	bool allSucceeded = true;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
-		Log::info().newLine(channels != 1u);
-		allSucceeded = testInvert8BitPerChannel(width, height, channels, testDuration, worker) && allSucceeded;
+		if (selector.shouldRun("invert8bitperchannel"))
+		{
+			Log::info().newLine(channels != 1u);
+			testResult = testInvert8BitPerChannel(width, height, channels, testDuration, worker);
+		}
 	}
 
 	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Frame Inverter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Inverter test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

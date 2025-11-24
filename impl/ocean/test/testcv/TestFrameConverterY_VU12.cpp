@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterY_VU12.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,25 +21,25 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   Y_VU12 converter test:   ---";
+	TestResult testResult("Y_VU12 converter test");
+
 	Log::info() << " ";
 
 	const CV::FrameConverter::ConversionFlags flags = CV::FrameConverter::conversionFlags();
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("Y_VU12LimitedRangeToBGR24FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_LIMITED_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12LimitedRangeToBGR24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12LimitedRangeToBGR24FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -44,13 +47,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12FullRangeToBGRA32FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_FULL_RANGE to BGRA32 (full range), Android specific, conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12FullRangeToBGRA32FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12FullRangeToBGRA32FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -58,13 +62,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12LimitedRangeToRGB24FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_LIMITED_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12LimitedRangeToRGB24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12LimitedRangeToRGB24FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -72,13 +77,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12FullRangeToRGB24FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_FULL_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12FullRangeToRGB24FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12FullRangeToRGB24FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -86,13 +92,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12ToYUV24"))
 	{
 		Log::info() << "Testing Y_VU12 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12ToYUV24(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -100,13 +107,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12ToYVU24"))
 	{
 		Log::info() << "Testing Y_VU12 to YVU24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12ToYVU24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12ToYVU24(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -114,13 +122,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12LimitedRangeToY8LimitedRange"))
 	{
 		Log::info() << "Testing Y_VU12_LIMITED_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -128,13 +137,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12LimitedRangeToY8FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_LIMITED_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12LimitedRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12LimitedRangeToY8FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -142,13 +152,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12FullRangeToY8FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_FULL_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12FullRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12FullRangeToY8FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -156,13 +167,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12FullRangeToY8LimitedRange"))
 	{
 		Log::info() << "Testing Y_VU12_FULL_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12FullRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12FullRangeToY8LimitedRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -170,13 +182,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12LimitedRangeToY_UV12LimitedRange"))
 	{
 		Log::info() << "Testing Y_VU12_LIMITED_RANGE to Y_UV12_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12LimitedRangeToY_UV12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12LimitedRangeToY_UV12LimitedRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -184,13 +197,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12FullRangeToY_UV12FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_FULL_RANGE to Y_UV12_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12FullRangeToY_UV12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12FullRangeToY_UV12FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -198,13 +212,14 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12LimitedRangeToY_U_V12LimitedRange"))
 	{
 		Log::info() << "Testing Y_VU12_LIMITED_RANGE to Y_U_V12_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12LimitedRangeToY_U_V12LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12LimitedRangeToY_U_V12LimitedRange(width, height, flag, testDuration, worker);
 		}
 	}
 
@@ -212,28 +227,22 @@ bool TestFrameConverterY_VU12::test(const unsigned int width, const unsigned int
 	Log::info() << "-";
 	Log::info() << " ";
 
+	if (selector.shouldRun("Y_VU12FullRangeToY_U_V12FullRange"))
 	{
 		Log::info() << "Testing Y_VU12_FULL_RANGE to Y_U_V12_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_VU12FullRangeToY_U_V12FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_VU12FullRangeToY_U_V12FullRange(width, height, flag, testDuration, worker);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Y_VU12 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "Y_VU12 converter tests FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

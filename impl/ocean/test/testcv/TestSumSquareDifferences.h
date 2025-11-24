@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/cv/SumSquareDifferences.h"
 
 namespace Ocean
@@ -51,9 +53,10 @@ class OCEAN_TEST_CV_EXPORT TestSumSquareDifferences
 		/**
 		 * Tests the entire sum square differences functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the sum square differences function for two image patches.

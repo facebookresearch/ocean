@@ -14,6 +14,9 @@
 #include "ocean/cv/FrameFilterCanny.h"
 #include "ocean/cv/FrameFilterScharr.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -42,36 +45,31 @@ enum EdgeDirection
 	ED_NO_EDGE
 };
 
-bool TestFrameFilterCanny::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterCanny::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width >= 3u && height >= 3u);
 
-	Log::info() << "---   Canny filter test with frame size " << width << "x" << height << ":   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
+	TestResult testResult("Canny filter");
 
 	Log::info() << " ";
 
-	allSucceeded = testFilterCannyScharr<int8_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testFilterCannyScharr<int16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("filtercannyscharr"))
 	{
-		Log::info() << "Canny filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Canny filter test FAILED!";
+		testResult = testFilterCannyScharr<int8_t>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testFilterCannyScharr<int16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

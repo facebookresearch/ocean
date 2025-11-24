@@ -13,6 +13,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,60 +25,70 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterMin::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterMin::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 51u && height >= 51u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Min filter test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testMin<uint8_t>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMin<uint8_t>(width, height, 3u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMin<float>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMin<float>(width, height, 3u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMinInPlace<float>(width, height, 1u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMinInPlace<float>(width, height, 3u, testDuration, worker) && allSucceeded;
+	TestResult testResult("Min filter test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("min_uint8_1channel"))
 	{
-		Log::info() << "Min filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Min filter test FAILED!";
+		testResult = testMin<uint8_t>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("min_uint8_3channels"))
+	{
+		testResult = testMin<uint8_t>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("min_float_1channel"))
+	{
+		testResult = testMin<float>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("min_float_3channels"))
+	{
+		testResult = testMin<float>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("minInPlace_float_1channel"))
+	{
+		testResult = testMinInPlace<float>(width, height, 1u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("minInPlace_float_3channels"))
+	{
+		testResult = testMinInPlace<float>(width, height, 3u, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

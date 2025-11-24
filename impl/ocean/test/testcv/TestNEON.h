@@ -12,6 +12,8 @@
 
 #include "ocean/base/RandomGenerator.h"
 
+#include "ocean/test/TestSelector.h"
+
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
 namespace Ocean
@@ -44,9 +46,10 @@ class OCEAN_TEST_CV_EXPORT TestNEON
 		/**
 		 * Invokes all tests of the NEON class.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the NEON-based calculation of 3x3 block sums of 16 bit values.

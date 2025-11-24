@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestBresenham.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/cv/Bresenham.h"
@@ -24,39 +27,36 @@ namespace Test
 namespace TestCV
 {
 
-bool TestBresenham::test(const double testDuration)
+bool TestBresenham::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Bresenham test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Bresenham test");
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-
-	allSucceeded = testIntegerBorderIntersection(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testFloatBorderIntersection(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNumberLinePixels(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("integerborderintersection"))
 	{
-		Log::info() << "Bresenham test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Bresenham test FAILED!";
+		testResult = testIntegerBorderIntersection(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("floatborderintersection"))
+	{
+		testResult = testFloatBorderIntersection(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("numberlinepixels"))
+	{
+		testResult = testNumberLinePixels(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -12,6 +12,8 @@
 
 #include "ocean/cv/FrameFilterTemplate.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -35,9 +37,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterTemplate
 		 * @param height The height of the test frame in pixel, with range [3, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the filter response of the template filter for frames with 8 bit per channel and 8 bit integer response.

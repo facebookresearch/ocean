@@ -13,6 +13,9 @@
 #include "ocean/cv/FrameFilterErosion.h"
 #include "ocean/cv/MaskAnalyzer.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,65 +25,82 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterErosion::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterErosion::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 4u && height >= 4u && testDuration > 0.0);
 
-	Log::info() << "---   Erosion filter test with frame size " << width << "x" << height << ":   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testShrinkMask4Neighbor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShrinkMask8Neighbor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShrinkMaskRandom8Neighbor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit4Neighbor(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit8Neighbor(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit24Neighbor(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = test8Bit(width, height, testDuration, worker) && allSucceeded;
+	TestResult testResult("Erosion filter");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("shrinkmask4neighbor"))
 	{
-		Log::info() << "Erosion filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Erosion filter test FAILED!";
+		testResult = testShrinkMask4Neighbor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("shrinkmask8neighbor"))
+	{
+		testResult = testShrinkMask8Neighbor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shrinkmaskrandom8neighbor"))
+	{
+		testResult = testShrinkMaskRandom8Neighbor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("8bit4neighbor"))
+	{
+		testResult = test8Bit4Neighbor(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("8bit8neighbor"))
+	{
+		testResult = test8Bit8Neighbor(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("8bit24neighbor"))
+	{
+		testResult = test8Bit24Neighbor(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("8bit"))
+	{
+		testResult = test8Bit(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

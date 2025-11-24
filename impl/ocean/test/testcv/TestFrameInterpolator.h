@@ -15,6 +15,8 @@
 
 #include "ocean/cv/FrameInterpolator.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -36,9 +38,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolator
 		 * Invokes all test of the FrameInterpolator class.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the resize function.

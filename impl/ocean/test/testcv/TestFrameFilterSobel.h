@@ -12,6 +12,8 @@
 
 #include "ocean/base/Worker.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -37,9 +39,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterSobel
 		 * @param height The height of the test frame in pixel, with range [3, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the horizontal and vertical 8 bit Sobel filter.

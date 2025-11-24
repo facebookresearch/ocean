@@ -16,6 +16,8 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/SSE.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -29,7 +31,7 @@ namespace Test
 namespace TestCV
 {
 
-bool TestSSE::test(const double testDuration)
+bool TestSSE::test(const double testDuration, const TestSelector& selector)
 {
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC == 1
 	static_assert(sizeof(CV::SSE::M128i) == 16, "Invalid data type");
@@ -37,237 +39,336 @@ bool TestSSE::test(const double testDuration)
 
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   SSE test:   ---";
+	TestResult testResult("SSE test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-
-	allSucceeded = testAveraging1Channel8Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging2Channel16Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging3Channel24Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging4Channel32Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging1Channel32Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging2Channel64Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging3Channel96Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging4Channel128Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBinaryAveraging1Channel8Bit2x2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAveraging1Channel8Bit3x3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeInterleave3Channel8Bit15Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeInterleave3Channel8Bit24Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeInterleave3Channel8Bit48Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeInterleave3Channel8Bit45Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterleave3Channel8Bit48Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseChannelOrder2Channel8Bit32Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseChannelOrder3Channel8Bit48Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseChannelOrder4Channel8Bit64Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSwapReversedChannelOrder3Channel8Bit48Elements() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReverseElements8Bit48Elements() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSwapReversedElements8Bit48Elements() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStore1Channel8Bit8ElementsTo3Channels24Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStore1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSumInterleave1Channel8Bit16Elements() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSumInterleave1Channel8Bit15Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSumInterleave3Channel8Bit48Elements() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSumInterleave3Channel8Bit45Elements() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolation1Channel8Bit15Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolation3Channel24Bit12Elements(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddOffsetBeforeRightShiftDivisionByTwoSigned16Bit(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddOffsetBeforeRightShiftDivisionSigned16Bit(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRoundedDivideByRightShiftSigned16Bit(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddOffsetBeforeRightShiftDivisionByTwoSigned32Bit(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddOffsetBeforeRightShiftDivisionSigned32Bit(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiplyInt8x16ToInt32x8(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiplyInt8x16ToInt32x8AndAccumulate(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("averaging1channel8bit2x2"))
 	{
-		Log::info() << "SSE test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SSE test FAILED!";
+		testResult = testAveraging1Channel8Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("averaging2channel16bit2x2"))
+	{
+		testResult = testAveraging2Channel16Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging3channel24bit2x2"))
+	{
+		testResult = testAveraging3Channel24Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging4channel32bit2x2"))
+	{
+		testResult = testAveraging4Channel32Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging1channel32bit2x2"))
+	{
+		testResult = testAveraging1Channel32Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging2channel64bit2x2"))
+	{
+		testResult = testAveraging2Channel64Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging3channel96bit2x2"))
+	{
+		testResult = testAveraging3Channel96Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging4channel128bit2x2"))
+	{
+		testResult = testAveraging4Channel128Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("binaryaveraging1channel8bit2x2"))
+	{
+		testResult = testBinaryAveraging1Channel8Bit2x2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("averaging1channel8bit3x3"))
+	{
+		testResult = testAveraging1Channel8Bit3x3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("deinterleave3channel8bit15elements"))
+	{
+		testResult = testDeInterleave3Channel8Bit15Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("deinterleave3channel8bit24elements"))
+	{
+		testResult = testDeInterleave3Channel8Bit24Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("deinterleave3channel8bit48elements"))
+	{
+		testResult = testDeInterleave3Channel8Bit48Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("deinterleave3channel8bit45elements"))
+	{
+		testResult = testDeInterleave3Channel8Bit45Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interleave3channel8bit48elements"))
+	{
+		testResult = testInterleave3Channel8Bit48Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reversechannelorder2channel8bit32elements"))
+	{
+		testResult = testReverseChannelOrder2Channel8Bit32Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reversechannelorder3channel8bit48elements"))
+	{
+		testResult = testReverseChannelOrder3Channel8Bit48Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reversechannelorder4channel8bit64elements"))
+	{
+		testResult = testReverseChannelOrder4Channel8Bit64Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("swapreversedchannelorder3channel8bit48elements"))
+	{
+		testResult = testSwapReversedChannelOrder3Channel8Bit48Elements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reverseelements8bit48elements"))
+	{
+		testResult = testReverseElements8Bit48Elements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("swapreversedelements8bit48elements"))
+	{
+		testResult = testSwapReversedElements8Bit48Elements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("store1channel8bit8elementsto3channels24elements"))
+	{
+		testResult = testStore1Channel8Bit8ElementsTo3Channels24Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("store1channel8bit8elementsto4channels32elementswithconstantlastchannel"))
+	{
+		testResult = testStore1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("suminterleave1channel8bit16elements"))
+	{
+		testResult = testSumInterleave1Channel8Bit16Elements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("suminterleave1channel8bit15elements"))
+	{
+		testResult = testSumInterleave1Channel8Bit15Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("suminterleave3channel8bit48elements"))
+	{
+		testResult = testSumInterleave3Channel8Bit48Elements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("suminterleave3channel8bit45elements"))
+	{
+		testResult = testSumInterleave3Channel8Bit45Elements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interpolation1channel8bit15elements"))
+	{
+		testResult = testInterpolation1Channel8Bit15Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interpolation3channel24bit12elements"))
+	{
+		testResult = testInterpolation3Channel24Bit12Elements(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addoffsetbeforerightshiftdivisionbytwosigned16bit"))
+	{
+		testResult = testAddOffsetBeforeRightShiftDivisionByTwoSigned16Bit(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addoffsetbeforerightshiftdivisionsigned16bit"))
+	{
+		testResult = testAddOffsetBeforeRightShiftDivisionSigned16Bit(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("roundeddividebyrightshiftsigned16bit"))
+	{
+		testResult = testRoundedDivideByRightShiftSigned16Bit(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addoffsetbeforerightshiftdivisionbytwosigned32bit"))
+	{
+		testResult = testAddOffsetBeforeRightShiftDivisionByTwoSigned32Bit(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addoffsetbeforerightshiftdivisionsigned32bit"))
+	{
+		testResult = testAddOffsetBeforeRightShiftDivisionSigned32Bit(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiplyint8x16toint32x8"))
+	{
+		testResult = testMultiplyInt8x16ToInt32x8(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiplyint8x16toint32x8andaccumulate"))
+	{
+		testResult = testMultiplyInt8x16ToInt32x8AndAccumulate(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

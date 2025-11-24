@@ -20,6 +20,8 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameConverter.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include <numeric>
 
 namespace Ocean
@@ -43,9 +45,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		 * Tests all frame converter functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector The test selector to control which tests to run
 		 * @return True, if all tests succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the comfort convert function for a Frame.

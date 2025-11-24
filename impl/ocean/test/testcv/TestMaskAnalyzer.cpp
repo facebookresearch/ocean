@@ -13,6 +13,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/MaskAnalyzer.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,47 +25,52 @@ namespace Test
 namespace TestCV
 {
 
-bool TestMaskAnalyzer::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestMaskAnalyzer::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u && testDuration > 0.0);
 
-	Log::info() << "---   Mask analyzer test:   ---";
+	TestResult testResult("Mask analyzer test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testDetectBoundingBox(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetectBoundingBoxWithRoughGuess(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetectOpaqueBoundingBox(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasValue(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("detectboundingbox"))
 	{
-		Log::info() << "Mask analyzer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask analyzer test FAILED!";
+		testResult = testDetectBoundingBox(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("detectboundingboxwithroughguess"))
+	{
+		testResult = testDetectBoundingBoxWithRoughGuess(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("detectopaqueboundingbox"))
+	{
+		testResult = testDetectOpaqueBoundingBox(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasvalue"))
+	{
+		testResult = testHasValue(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

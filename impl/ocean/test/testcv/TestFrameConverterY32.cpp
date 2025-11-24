@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterY32.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,52 +21,45 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterY32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterY32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   Y32 converter test:   ---";
+	TestResult testResult("Y32 converter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("Y32ToY8"))
 	{
 		Log::info() << "Testing Y32 to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY32ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY32ToY8(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y32ToY16"))
 	{
 		Log::info() << "Testing Y32 to Y16 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY32ToY16(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY32ToY16(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Y32 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "Y32 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

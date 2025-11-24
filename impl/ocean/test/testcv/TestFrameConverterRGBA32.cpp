@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterRGBA32.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,178 +21,180 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterRGBA32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterRGBA32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   RGBA32 converter test:   ---";
+	TestResult testResult("RGBA32 converter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("RGBA32ToBGR24"))
 	{
 		Log::info() << "Testing RGBA32 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToBGR32"))
 	{
 		Log::info() << "Testing RGBA32 to BGR32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToBGR32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToBGR32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToRGB24"))
 	{
 		Log::info() << "Testing RGBA32 to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToRGB32"))
 	{
 		Log::info() << "Testing RGBA32 to RGB32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToRGB32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToRGB32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToRGBA32"))
 	{
 		Log::info() << "Testing RGBA32 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToABGR32"))
 	{
 		Log::info() << "Testing RGBA32 to ABGR32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToABGR32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToABGR32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToARGB32"))
 	{
 		Log::info() << "Testing RGBA32 to ARGB32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToARGB32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToARGB32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToBGRA32"))
 	{
 		Log::info() << "Testing RGBA32 to BGRA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToBGRA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToBGRA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToY8FullRange"))
 	{
 		Log::info() << "Testing RGBA32 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToY8FullRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToYA16"))
 	{
 		Log::info() << "Testing RGBA32 to YA16 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToYA16(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToYA16(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGBA32ToYUV24"))
 	{
 		Log::info() << "Testing RGBA32 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGBA32ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGBA32ToYUV24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "RGBA32 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "RGBA32 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

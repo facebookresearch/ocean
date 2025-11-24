@@ -17,6 +17,9 @@
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -26,64 +29,68 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterTemplate::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameFilterTemplate::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 3u && height >= 3u && testDuration > 0.0);
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "---   Frame filter template test:   ---";
+	TestResult testResult("Frame filter template test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
+	if (selector.shouldRun("filter8BitPerChannelTo8BitInteger"))
 	{
-		Log::info().newLine(n != 1u);
-		allSucceeded = testFilter8BitPerChannelTo8BitInteger(width, height, n, testDuration, worker) && allSucceeded;
+		for (unsigned int n = 1u; n <= 4u; ++n)
+		{
+			Log::info().newLine(n != 1u);
+			testResult = testFilter8BitPerChannelTo8BitInteger(width, height, n, testDuration, worker);
+		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
+	if (selector.shouldRun("filter8BitPerChannelTo32BitFloat"))
 	{
-		Log::info().newLine(n != 1u);
-		allSucceeded = testFilter8BitPerChannelTo32BitFloat(width, height, n, testDuration, worker) && allSucceeded;
+		for (unsigned int n = 1u; n <= 4u; ++n)
+		{
+			Log::info().newLine(n != 1u);
+			testResult = testFilter8BitPerChannelTo32BitFloat(width, height, n, testDuration, worker);
+		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
+	if (selector.shouldRun("filterWithFactor8BitPerChannelTo32BitFloat"))
 	{
-		Log::info().newLine(n != 1u);
-		allSucceeded = testFilterWithFactor8BitPerChannelTo32BitFloat(width, height, n, testDuration, worker) && allSucceeded;
+		for (unsigned int n = 1u; n <= 4u; ++n)
+		{
+			Log::info().newLine(n != 1u);
+			testResult = testFilterWithFactor8BitPerChannelTo32BitFloat(width, height, n, testDuration, worker);
+		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
+	if (selector.shouldRun("pixel8BitPerChannel"))
 	{
-		Log::info().newLine(n != 1u);
-		allSucceeded = testPixel8BitPerChannel(width, height, n, testDuration) && allSucceeded;
+		for (unsigned int n = 1u; n <= 4u; ++n)
+		{
+			Log::info().newLine(n != 1u);
+			testResult = testPixel8BitPerChannel(width, height, n, testDuration);
+		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Frame filter template test succeeded.";
-	}
-	else
-	{
-		Log::info() << "frame filter template test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterY_U_V24.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,108 +21,102 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   Y_U_V24 converter test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Y_U_V24 converter test");
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("y_u_v24toyuv24"))
 	{
 		Log::info() << "Testing Y_U_V24 to YUV24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_U_V24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_U_V24ToYUV24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_u_v24limitedrangetobgr24fullrangeprecision6bit"))
 	{
 		Log::info() << "Testing limited range Y_U_V24 to BGR24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_U_V24LimitedRangeToBGR24FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_U_V24LimitedRangeToBGR24FullRangePrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_u_v24limitedrangetorgb24fullrangeprecision6bit"))
 	{
 		Log::info() << "Testing limited range Y_U_V24 to RGB24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_U_V24LimitedRangeToRGB24FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_U_V24LimitedRangeToRGB24FullRangePrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_u_v24limitedrangetobgra32fullrangeprecision6bit"))
 	{
 		Log::info() << "Testing limited range Y_U_V24 to BGRA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_U_V24LimitedRangeToBGRA32FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_U_V24LimitedRangeToBGRA32FullRangePrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_u_v24limitedrangetorgba32fullrangeprecision6bit"))
 	{
 		Log::info() << "Testing limited range Y_U_V24 to RGBA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_U_V24LimitedRangeToRGBA32FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_U_V24LimitedRangeToRGBA32FullRangePrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("y_u_v24fullrangetobgra32fullrangeandroidprecision6bit"))
 	{
 		Log::info() << "Testing full range Y_U_V24 to BGRA32 (with 6 bit precision) Android-specific conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY_U_V24FullRangeToBGRA32FullRangeAndroidPrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY_U_V24FullRangeToBGRA32FullRangeAndroidPrecision6Bit(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-
-	if (allSucceeded)
-	{
-		Log::info() << "Y_U_V24 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "Y_U_V24 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

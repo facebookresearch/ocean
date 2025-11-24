@@ -14,6 +14,8 @@
 
 #include "ocean/cv/Histogram.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -38,9 +40,10 @@ class OCEAN_TEST_CV_EXPORT TestHistogram : protected CV::ContrastLimitedAdaptive
 		 * Tests the histogram function.
 		 * @param testDuration Number of seconds for each test, range: (0, infinity)
 		 * @param worker A worker instance for parallel execution of the tested function (performance)
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True if all tests of this class passed, otherwise false
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Performance and validation test for the computation of histograms

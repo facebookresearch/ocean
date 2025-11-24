@@ -13,6 +13,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameEnlarger.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,59 +25,67 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameEnlarger::test(const double testDuration, Worker& worker)
+bool TestFrameEnlarger::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame enlarger test:   ---";
+	TestResult testResult("Frame enlarger test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAddBorder<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAddBorder<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddBorderNearestPixel<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAddBorderNearestPixel<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddBorderMirrored<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAddBorderMirrored<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFrameMultiplyByTwo(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAddTransparentBorder(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("addBorder"))
 	{
-		Log::info() << "Frame enlarger test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame enlarger test FAILED!";
+		testResult = testAddBorder<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testAddBorder<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("addBorderNearestPixel"))
+	{
+		testResult = testAddBorderNearestPixel<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testAddBorderNearestPixel<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addBorderMirrored"))
+	{
+		testResult = testAddBorderMirrored<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testAddBorderMirrored<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("frameMultiplyByTwo"))
+	{
+		testResult = testFrameMultiplyByTwo(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addTransparentBorder"))
+	{
+		testResult = testAddTransparentBorder(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

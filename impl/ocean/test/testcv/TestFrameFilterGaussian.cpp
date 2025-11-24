@@ -13,6 +13,9 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterGaussian.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,71 +25,88 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameFilterGaussian::test(const double testDuration, Worker& worker)
+bool TestFrameFilterGaussian::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Gaussian blur test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testFilterSizeSigmaConversion() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterFactors() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testExtremeDimensions(worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNormalDimensions(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReusableMemory<uint8_t, uint32_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testReusableMemory<float, float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReusableMemoryComfort<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testReusableMemoryComfort<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInplace<uint8_t, uint32_t>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testInplace<float, float>(testDuration, worker) && allSucceeded;
+	TestResult testResult("Gaussian blur");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("filtersizesigmaconversion"))
 	{
-		Log::info() << "Gaussian filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Gaussian filter test FAILED!";
+		testResult = testFilterSizeSigmaConversion();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("filterfactors"))
+	{
+		testResult = testFilterFactors();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("extremedimensions"))
+	{
+		testResult = testExtremeDimensions(worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("normaldimensions"))
+	{
+		testResult = testNormalDimensions(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reusablememory"))
+	{
+		testResult = testReusableMemory<uint8_t, uint32_t>(testDuration);
+		Log::info() << " ";
+		testResult = testReusableMemory<float, float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("reusablememorycomfort"))
+	{
+		testResult = testReusableMemoryComfort<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testReusableMemoryComfort<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("inplace"))
+	{
+		testResult = testInplace<uint8_t, uint32_t>(testDuration, worker);
+		Log::info() << " ";
+		testResult = testInplace<float, float>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

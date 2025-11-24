@@ -14,6 +14,9 @@
 
 #include "ocean/cv/CVUtilities.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -23,35 +26,33 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameInterpolator::test(const double testDuration, Worker& worker)
+bool TestFrameInterpolator::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   FrameInterpolator test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testResize(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testResizeUseCase(testDuration) && allSucceeded;
+	TestResult testResult("FrameInterpolator test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("resize"))
 	{
-		Log::info() << "FrameInterpolator test succeeded.";
-	}
-	else
-	{
-		Log::info() << "FrameInerplator test FAILED!";
+		testResult = testResize(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("resizeUseCase"))
+	{
+		testResult = testResizeUseCase(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterY10_Packed.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -19,108 +22,105 @@ namespace TestCV
 {
 
 
-bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   Y10_PACKED converter test:   ---";
+	TestResult testResult("Y10_PACKED converter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("Y10_PackedToBGR24"))
 	{
 		Log::info() << "Testing Y10_PACKED to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY10_PackedToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY10_PackedToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y10_PackedToRGB24"))
 	{
 		Log::info() << "Testing Y10_PACKED to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY10_PackedToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY10_PackedToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y10_PackedToY8Linear"))
 	{
 		Log::info() << "Testing linear Y10_PACKED to Y8 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY10_PackedToY8Linear(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY10_PackedToY8Linear(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y10_PackedToY8GammaLUT"))
 	{
 		Log::info() << "Testing Y10_PACKED to Y8 conversion with LUT gamma correction (x^" << String::toAString(FrameConverterTestUtilities::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY10_PackedToY8GammaLUT(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY10_PackedToY8GammaLUT(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y10_PackedToY8GammaApproximated"))
 	{
 		Log::info() << "Testing Y10_PACKED to Y8 conversion with approximated gamma correction (x^" << String::toAString(FrameConverterTestUtilities::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY10_PackedToY8GammaApproximated(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY10_PackedToY8GammaApproximated(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("Y10_PackedToY10"))
 	{
 		Log::info() << "Testing Y10_PACKED to Y10 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY10_PackedToY10(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testY10_PackedToY10(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Y10_PACKED converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "Y10_PACKED converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,9 @@
 
 #include "ocean/test/testcv/TestFrameOperations.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -26,47 +29,40 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameOperations::test(const double testDuration, Ocean::Worker &worker)
+bool TestFrameOperations::test(const double testDuration, Ocean::Worker &worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool result = true;
-
-	Log::info() << "---   Frame operations test:   ---";
+	TestResult testResult("Frame operations test");
 	Log::info() << " ";
 
-	result = testSubtraction<uint8_t>(1920u, 1080u, 1u, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testSubtraction<uint8_t>(1920u, 1080u, 2u, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testSubtraction<uint8_t>(1920u, 1080u, 3u, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testSubtraction<uint8_t>(1920u, 1080u, 4u, testDuration, worker) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testSubtraction<float>(1920u, 1080u, 1u, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testSubtraction<float>(1920u, 1080u, 2u, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testSubtraction<float>(1920u, 1080u, 3u, testDuration, worker) && result;
-	Log::info() << " ";
-	result = testSubtraction<float>(1920u, 1080u, 4u, testDuration, worker) && result;
-
-	Log::info() << " ";
-
-	if (result)
+	if (selector.shouldRun("subtraction"))
 	{
-		Log::info() << "Frame operations test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame operations test FAILED!";
+		testResult = testSubtraction<uint8_t>(1920u, 1080u, 1u, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSubtraction<uint8_t>(1920u, 1080u, 2u, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSubtraction<uint8_t>(1920u, 1080u, 3u, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSubtraction<uint8_t>(1920u, 1080u, 4u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testSubtraction<float>(1920u, 1080u, 1u, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSubtraction<float>(1920u, 1080u, 2u, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSubtraction<float>(1920u, 1080u, 3u, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSubtraction<float>(1920u, 1080u, 4u, testDuration, worker);
 	}
 
-	return result;
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

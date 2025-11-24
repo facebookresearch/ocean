@@ -9,6 +9,9 @@
 
 #include "ocean/cv/FrameConverterABGR32.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,58 +21,61 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterABGR32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterABGR32::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   ABGR32 converter test:   ---";
+	TestResult testResult("ABGR32 converter test");
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("ABGR32ToABGR32"))
 	{
 		Log::info() << "Testing ABGR32 to ABGR32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testABGR32ToABGR32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testABGR32ToABGR32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("ABGR32ToBGR24"))
 	{
 		Log::info() << "Testing ABGR32 to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testABGR32ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testABGR32ToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("ABGR32ToBGRA32"))
 	{
 		Log::info() << "Testing ABGR32 to BGRA32 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testABGR32ToBGRA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testABGR32ToBGRA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("ABGR32ToRGBA32"))
 	{
 		Log::info() << "Testing ABGR32 to RGBA32 conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
@@ -77,22 +83,15 @@ bool TestFrameConverterABGR32::test(const unsigned int width, const unsigned int
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testABGR32ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testABGR32ToRGBA32(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "ARGB32 converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "ARGB32 converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

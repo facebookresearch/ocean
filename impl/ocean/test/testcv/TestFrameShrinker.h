@@ -10,6 +10,8 @@
 
 #include "ocean/test/testcv/TestCV.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Worker.h"
 
 #include "ocean/cv/FrameShrinker.h"
@@ -35,9 +37,10 @@ class OCEAN_TEST_CV_EXPORT TestFrameShrinker : protected CV::FrameShrinker
 		 * Tests the frame downsize.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computational load
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the downsampling of three rows to one row.

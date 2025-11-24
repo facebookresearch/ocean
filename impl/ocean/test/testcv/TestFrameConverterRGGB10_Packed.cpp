@@ -11,6 +11,9 @@
 
 #include "ocean/cv/FrameConverterRGGB10_Packed.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -20,82 +23,77 @@ namespace Test
 namespace TestCV
 {
 
-bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
 
-	Log::info() << "---   RGGB10_PACKED converter test:   ---";
+	TestResult testResult("RGGB10_PACKED converter test");
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
 
-	bool allSucceeded = true;
-
+	if (selector.shouldRun("RGGB10_PackedToBGR24"))
 	{
 		Log::info() << "Testing RGGB10_PACKED to BGR24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGGB10_PackedToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGGB10_PackedToBGR24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGGB10_PackedToRGB24"))
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGGB10_PackedToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGGB10_PackedToRGB24(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("RGGB10_PackedToRGB48"))
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB48 conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGGB10_PackedToRGB48(width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testRGGB10_PackedToRGB48(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("ConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT"))
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with black-level subtraction, white balancing, and gamma encoding at resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(randomGenerator, width, height, flag, testDuration, worker) && allSucceeded;
+			testResult = testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(randomGenerator, width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "RGGB10_PACKED converter tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "RGGB10_PACKED converter tests FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
