@@ -917,7 +917,7 @@ inline void Validation::setSucceededFalse()
 
 inline std::ostream& operator<<(std::ostream& stream, const Validation& validation)
 {
-	if (validation.succeeded())
+	if (validation.succeededSoFar())
 	{
 		stream << "succeeded.";
 	}
@@ -932,7 +932,7 @@ inline std::ostream& operator<<(std::ostream& stream, const Validation& validati
 template <bool tActive>
 MessageObject<tActive>& operator<<(MessageObject<tActive>& messageObject, const Validation& validation)
 {
-	if (validation.succeeded())
+	if (validation.succeededSoFar())
 	{
 		messageObject << "succeeded.";
 	}
@@ -947,7 +947,7 @@ MessageObject<tActive>& operator<<(MessageObject<tActive>& messageObject, const 
 template <bool tActive>
 MessageObject<tActive>& operator<<(MessageObject<tActive>&& messageObject, const Validation& validation)
 {
-	if (validation.succeeded())
+	if (validation.succeededSoFar())
 	{
 		messageObject << "succeeded.";
 	}
