@@ -9,6 +9,9 @@
 
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/WorkerPool.h"
@@ -34,7 +37,7 @@ namespace Test
 namespace TestMedia
 {
 
-bool TestWIC::test(const double testDuration)
+bool TestWIC::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -42,29 +45,24 @@ bool TestWIC::test(const double testDuration)
 	Media::WIC::registerWICLibrary();
 #endif
 
-	Log::info() << "WIC test:";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testAnyImageEncodeDecode(testDuration) && allSucceeded;
+	TestResult testResult("WIC test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("anyimagencodedecode"))
 	{
-		Log::info() << "Entire WIC test succeeded.";
+		testResult = testAnyImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
 	}
-	else
-	{
-		Log::info() << "WIC test FAILED!";
-	}
+
+	Log::info() << selector << " " << testResult;
 
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::WIC::unregisterWICLibrary();
 #endif
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

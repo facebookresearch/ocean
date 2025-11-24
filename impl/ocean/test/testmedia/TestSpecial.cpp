@@ -7,6 +7,9 @@
 
 #include "ocean/test/testmedia/TestSpecial.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Timestamp.h"
@@ -31,103 +34,125 @@ namespace Test
 namespace TestMedia
 {
 
-bool TestSpecial::test(const double testDuration)
+bool TestSpecial::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Special test:";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testBmpImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-#ifdef OCEAN_DEBUG
-	Log::info() << "Skipping BMP stress test in debug builds";
-#else
-	allSucceeded = testBmpDecodeStressTest() && allSucceeded;
-#endif
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPfmImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-#ifdef OCEAN_DEBUG
-	Log::info() << "Skipping PFM stress test in debug builds";
-#else
-	allSucceeded = testPfmDecodeStressTest() && allSucceeded;
-#endif
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNpyImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-#ifdef OCEAN_DEBUG
-	Log::info() << "Skipping NPY stress test in debug builds";
-#else
-	allSucceeded = testNpyDecodeStressTest() && allSucceeded;
-#endif
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testOcnImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-#ifdef OCEAN_DEBUG
-	Log::info() << "Skipping OCN stress test in debug builds";
-#else
-	allSucceeded = testOcnDecodeStressTest() && allSucceeded;
-#endif
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAnyImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-#ifdef OCEAN_DEBUG
-	Log::info() << "Skipping any stress test in debug builds";
-#else
-	allSucceeded = testDecodeStressTest() && allSucceeded;
-#endif
+	TestResult testResult("Special test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("bmpimagencodedecode"))
 	{
-		Log::info() << "Entire Special test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Special test FAILED!";
+		testResult = testBmpImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("bmpdecodestresstest"))
+	{
+#ifdef OCEAN_DEBUG
+		Log::info() << "Skipping BMP stress test in debug builds";
+#else
+		testResult = testBmpDecodeStressTest();
+#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pfmimagencodedecode"))
+	{
+		testResult = testPfmImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pfmdecodestresstest"))
+	{
+#ifdef OCEAN_DEBUG
+		Log::info() << "Skipping PFM stress test in debug builds";
+#else
+		testResult = testPfmDecodeStressTest();
+#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("npyimagencodedecode"))
+	{
+		testResult = testNpyImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("npydecodestresstest"))
+	{
+#ifdef OCEAN_DEBUG
+		Log::info() << "Skipping NPY stress test in debug builds";
+#else
+		testResult = testNpyDecodeStressTest();
+#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("ocnimagencodedecode"))
+	{
+		testResult = testOcnImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("ocndecodestresstest"))
+	{
+#ifdef OCEAN_DEBUG
+		Log::info() << "Skipping OCN stress test in debug builds";
+#else
+		testResult = testOcnDecodeStressTest();
+#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("anyimagencodedecode"))
+	{
+		testResult = testAnyImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("decodestresstest"))
+	{
+#ifdef OCEAN_DEBUG
+		Log::info() << "Skipping any stress test in debug builds";
+#else
+		testResult = testDecodeStressTest();
+#endif
+
+		Log::info() << " ";
+	}
+
+	Log::info() << selector << " " << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

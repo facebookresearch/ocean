@@ -7,12 +7,14 @@
 
 #include "ocean/test/testmedia/TestAVFoundation.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/media/avfoundation/PixelBufferAccessor.h"
-
-#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -23,35 +25,33 @@ namespace Test
 namespace TestMedia
 {
 
-bool TestAVFoundation::test(const double testDuration)
+bool TestAVFoundation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "AVFoundation test:";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testPixelBufferAccessorGenericPixelFormats(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPixelBufferAccessorNonGenericPixelFormats(testDuration) && allSucceeded;
+	TestResult testResult("AVFoundation test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("pixelbufferaccessorgenericpixelformats"))
 	{
-		Log::info() << "Entire AVFoundation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "AVFoundation test FAILED!";
+		testResult = testPixelBufferAccessorGenericPixelFormats(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("pixelbufferaccessornongenericpixelformats"))
+	{
+		testResult = testPixelBufferAccessorNonGenericPixelFormats(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << selector << " " << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

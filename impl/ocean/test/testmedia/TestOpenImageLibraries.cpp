@@ -7,6 +7,9 @@
 
 #include "ocean/test/testmedia/TestOpenImageLibraries.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/WorkerPool.h"
@@ -50,7 +53,7 @@ namespace Test
 namespace TestMedia
 {
 
-bool TestOpenImageLibraries::test(const double testDuration)
+bool TestOpenImageLibraries::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -58,133 +61,178 @@ bool TestOpenImageLibraries::test(const double testDuration)
 	Media::OpenImageLibraries::registerOpenImageLibrariesLibrary();
 #endif
 
-	Log::info() << "OpenImageLibraries test:";
-	Log::info() << " ";
+	TestResult testResult("OpenImageLibraries test");
 
-	bool allSucceeded = true;
+	Log::info() << " ";
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_JPG
-	allSucceeded = testJpgImageEncodeDecode(testDuration) && allSucceeded;
+	if (selector.shouldRun("jpgimagencodedecode"))
+	{
+		testResult = testJpgImageEncodeDecode(testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
+	if (selector.shouldRun("jpgdecodestresstest"))
+	{
 	#ifdef OCEAN_DEBUG
 		Log::info() << "Skipping JPG stress test in debug builds";
 	#else
-		allSucceeded = testJpgDecodeStressTest() && allSucceeded;
+		testResult = testJpgDecodeStressTest();
 	#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 #else
 	Log::info() << "Skipping JPG as not supported on this platforms.";
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 #endif
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_PNG
-	allSucceeded = testPngImageEncodeDecode(testDuration) && allSucceeded;
+	if (selector.shouldRun("pngimagencodedecode"))
+	{
+		testResult = testPngImageEncodeDecode(testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
+	if (selector.shouldRun("pngdecodestresstest"))
+	{
 	#ifdef OCEAN_DEBUG
 		Log::info() << "Skipping PNG stress test in debug builds";
 	#else
-		allSucceeded = testPngDecodeStressTest() && allSucceeded;
+		testResult = testPngDecodeStressTest();
 	#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 #else
 	Log::info() << "Skipping PNG as not supported on this platforms.";
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 #endif
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_TIF
-	allSucceeded = testTifImageEncodeDecode(testDuration) && allSucceeded;
+	if (selector.shouldRun("tifimagencodedecode"))
+	{
+		testResult = testTifImageEncodeDecode(testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
+	if (selector.shouldRun("tifdecodestresstest"))
+	{
 	#ifdef OCEAN_DEBUG
 		Log::info() << "Skipping TIF stress test in debug builds";
 	#else
-		allSucceeded = testTifDecodeStressTest() && allSucceeded;
+		testResult = testTifDecodeStressTest();
 	#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 #else
 	Log::info() << "Skipping TIF as not supported on this platforms.";
-#endif
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
+#endif
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_GIF
+	if (selector.shouldRun("gifdecodestresstest"))
+	{
 	#ifdef OCEAN_DEBUG
 		Log::info() << "Skipping GIF stress test in debug builds";
 	#else
-		allSucceeded = testGifDecodeStressTest() && allSucceeded;
+		testResult = testGifDecodeStressTest();
 	#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 #else
 	Log::info() << "Skipping GIF as not supported on this platforms.";
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 #endif
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_WEBP
-	allSucceeded = testWebpImageEncodeDecode(testDuration) && allSucceeded;
+	if (selector.shouldRun("webpimagencodedecode"))
+	{
+		testResult = testWebpImageEncodeDecode(testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
+	if (selector.shouldRun("webpdecodestresstest"))
+	{
 	#ifdef OCEAN_DEBUG
 		Log::info() << "Skipping WEBP stress test in debug builds";
 	#else
-		allSucceeded = testWebpDecodeStressTest() && allSucceeded;
+		testResult = testWebpDecodeStressTest();
 	#endif
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 #else
 	Log::info() << "Skipping WEBP as not supported on this platforms.";
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 #endif
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+	if (selector.shouldRun("anyimagencodedecode"))
+	{
+		testResult = testAnyImageEncodeDecode(testDuration);
 
-	allSucceeded = testAnyImageEncodeDecode(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
+	if (selector.shouldRun("decodestresstest"))
+	{
 #ifdef OCEAN_DEBUG
 	Log::info() << "Skipping any stress test in debug builds";
 #else
-	allSucceeded = testDecodeStressTest() && allSucceeded;
+		testResult = testDecodeStressTest();
 #endif
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Entire OpenImageLibraries test succeeded.";
-	}
-	else
-	{
-		Log::info() << "OpenImageLibraries test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary();
 #endif
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

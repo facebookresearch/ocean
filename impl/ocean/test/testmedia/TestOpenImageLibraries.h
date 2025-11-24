@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmedia/TestMedia.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Frame.h"
 
 namespace Ocean
@@ -32,9 +34,10 @@ class OCEAN_TEST_MEDIA_EXPORT TestOpenImageLibraries
 		/**
 		 * Invokes all tests that are defined.
 		 * @param testDuration The number of seconds for each test
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_JPG
 

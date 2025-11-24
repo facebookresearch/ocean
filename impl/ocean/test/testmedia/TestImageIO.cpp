@@ -9,6 +9,10 @@
 
 #ifdef OCEAN_PLATFORM_BUILD_APPLE
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -32,8 +36,6 @@
 
 #include "ocean/platform/apple/Apple.h"
 
-#include "ocean/test/Validation.h"
-
 namespace Ocean
 {
 
@@ -43,7 +45,7 @@ namespace Test
 namespace TestMedia
 {
 
-bool TestImageIO::test(const double testDuration)
+bool TestImageIO::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -51,71 +53,87 @@ bool TestImageIO::test(const double testDuration)
 	Media::ImageIO::registerImageIOLibrary();
 #endif
 
-	Log::info() << "ImageIO test:";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testBmpImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testJpgImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHeicImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPngImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTifImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAnyImageEncodeDecode(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterchangeability(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConversionCGImage(testDuration) && allSucceeded;
+	TestResult testResult("ImageIO test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("bmpimagencodedecode"))
 	{
-		Log::info() << "Entire ImageIO test succeeded.";
+		testResult = testBmpImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
-	else
+
+	if (selector.shouldRun("jpgimagencodedecode"))
 	{
-		Log::info() << "ImageIO test FAILED!";
+		testResult = testJpgImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
+
+	if (selector.shouldRun("heicimagencodedecode"))
+	{
+		testResult = testHeicImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pngimagencodedecode"))
+	{
+		testResult = testPngImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("tifimagencodedecode"))
+	{
+		testResult = testTifImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("anyimagencodedecode"))
+	{
+		testResult = testAnyImageEncodeDecode(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interchangeability"))
+	{
+		testResult = testInterchangeability(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("conversioncgimage"))
+	{
+		testResult = testConversionCGImage(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << selector << " " << testResult;
 
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::ImageIO::unregisterImageIOLibrary();
 #endif
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

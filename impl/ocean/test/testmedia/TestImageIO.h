@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmedia/TestMedia.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Frame.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_APPLE
@@ -34,9 +36,10 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		/**
 		 * Invokes all tests that are defined.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the read and write functions for BMP images.

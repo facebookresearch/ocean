@@ -7,6 +7,9 @@
 
 #include "ocean/test/testmedia/TestMovie.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/String.h"
 
 #include "ocean/cv/Canvas.h"
@@ -226,45 +229,46 @@ bool TestMovie::MovieVerifier::verifyColor(const Frame& rgbFrame, const unsigned
 	return true;
 }
 
-bool TestMovie::test(const double testDuration)
+bool TestMovie::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert_and_suppress_unused(testDuration > 0.0, testDuration);
 
 	registerMediaLibraries();
 
-	Log::info() << "Movie test:";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testEncodeDecode() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLoop() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPause() && allSucceeded;
+	TestResult testResult("Movie test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("encodedecode"))
 	{
-		Log::info() << "Entire Movie test succeeded.";
+		testResult = testEncodeDecode();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
-	else
+
+	if (selector.shouldRun("loop"))
 	{
-		Log::info() << "Movie test FAILED!";
+		testResult = testLoop();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
+
+	if (selector.shouldRun("pause"))
+	{
+		testResult = testPause();
+
+		Log::info() << " ";
+	}
+
+	Log::info() << selector << " " << testResult;
 
 	unregisterMediaLibraries();
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

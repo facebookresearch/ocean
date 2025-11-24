@@ -19,6 +19,9 @@
 	#include "ocean/test/testmedia/TestWIC.h"
 #endif
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -48,7 +51,7 @@ bool testMedia(const double testDuration, Worker& /*worker*/, const std::string&
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Media Library test");
 
 	Log::info() << "+++   Ocean Media Library test:   +++";
 	Log::info() << " ";
@@ -77,65 +80,83 @@ bool testMedia(const double testDuration, Worker& /*worker*/, const std::string&
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("openimagelibraries") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("openimagelibraries"))
 	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestOpenImageLibraries::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestOpenImageLibraries::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("special") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("special"))
 	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestSpecial::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestSpecial::test(testDuration, subSelector);
 	}
 
 #ifdef OCEAN_PLATFORM_BUILD_APPLE
 
-	if (testSet.empty() || testSet.find("imageio") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("imageio"))
 	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestImageIO::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestImageIO::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("avfoundation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("avfoundation"))
 	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestAVFoundation::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestAVFoundation::test(testDuration, subSelector);
 	}
 
 #endif
 
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
-	if (testSet.empty() || testSet.find("wic") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("wic"))
 	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestWIC::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestWIC::test(testDuration, subSelector);
 	}
 
 #endif
 
-	if (testSet.empty() || testSet.find("movie") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("movie"))
 	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestMovie::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestMovie::test(testDuration, subSelector);
 	}
 
-	Log::info() << "\n\n\n\n";
+	Log::info() << " ";
+	Log::info() << " ";
+	Log::info() << " ";
+	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Media library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Media library test FAILED!";
-	}
-
-	return allSucceeded;
+	Log::info() << selector << " " << testResult;
+	return testResult.succeeded();
 }
 
 static void testMediaAsynchronInternal(const double testDuration, const std::string testFunctions)

@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmedia/TestMedia.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/Lock.h"
 
@@ -126,9 +128,10 @@ class OCEAN_TEST_MEDIA_EXPORT TestMovie
 		/**
 		 * Invokes all tests that are defined.
 		 * @param testDuration The number of seconds for each test
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the encoder and decoder of movies.
