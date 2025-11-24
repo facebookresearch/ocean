@@ -988,7 +988,7 @@ bool FrameType::planeLayout(const PixelFormat imagePixelFormat, const unsigned i
 				ocean_assert(widthMultiple == 2u);
 				ocean_assert(heightMultiple == 2u);
 
-				if (planeIndex > 2u)
+				if (planeIndex > 1u)
 				{
 					return false;
 				}
@@ -2094,7 +2094,7 @@ const FrameType::DataTypes& FrameType::definedDataTypes()
 
 	if (dataTypes.size() != size_t(FrameType::DT_END) - 1)
 	{
-		ocean_assert(false && "Missing pixel format!");
+		ocean_assert(false && "Wrong data type!");
 	}
 
 	return dataTypes;
@@ -2224,7 +2224,7 @@ Frame::Plane::Plane(const unsigned int width, const unsigned int height, const u
 
 Frame::Plane::Plane(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int elementTypeSize, void* dataToUse, const unsigned int paddingElements) noexcept :
 	allocatedData_(nullptr),
-	constData_(dataToUse), // the we interpret the plane as read-only as well
+	constData_(dataToUse), // we interpret the plane as read-only as well
 	data_(dataToUse),
 	width_(width),
 	height_(height),
@@ -3306,6 +3306,8 @@ Frame& Frame::operator=(const Frame& right) noexcept
 
 	if (!right.isValid())
 	{
+		release();
+
 		return *this;
 	}
 
