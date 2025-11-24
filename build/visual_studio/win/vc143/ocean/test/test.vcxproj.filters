@@ -26,6 +26,12 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\ValidationPrecision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.cpp">
@@ -37,5 +43,8 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\Validation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
