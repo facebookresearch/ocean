@@ -101,8 +101,8 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random number with Gaussian distribution using an explicit random generator.
-		 * @param randomGenerator The random generator to be used
 		 * The returned value lies inside the range [-5 * sigma, 5 * sigma].
+		 * @param randomGenerator The random generator to be used
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Gaussian distributed random value
 		 */
@@ -161,7 +161,7 @@ class RandomT : public RandomI
 		 * Returns a random 2D vector with coordinates in a given range.
 		 * @param xMin Minimum x coordinate value for each axis, with range (-infinity, infinity)
 		 * @param xMax Maximum x coordinate value for each axis, with range [xMin, infinity)
-		 * @param yMin Minimum x coordinate value for each axis, with range (-infinity, infinity)
+		 * @param yMin Minimum y coordinate value for each axis, with range (-infinity, infinity)
 		 * @param yMax Maximum x coordinate value for each axis, with range [yMin, infinity)
 		 * @return Random 2D vector with random length
 		 */
@@ -172,7 +172,7 @@ class RandomT : public RandomI
 		 * @param randomGenerator The random generator to be used
 		 * @param xMin Minimum x coordinate value for each axis, with range (-infinity, infinity)
 		 * @param xMax Maximum x coordinate value for each axis, with range [xMin, infinity)
-		 * @param yMin Minimum x coordinate value for each axis, with range (-infinity, infinity)
+		 * @param yMin Minimum y coordinate value for each axis, with range (-infinity, infinity)
 		 * @param yMax Maximum x coordinate value for each axis, with range [yMin, infinity)
 		 * @return Random 2D vector with random length
 		 */
@@ -317,14 +317,14 @@ class RandomT : public RandomI
 		static EulerT<T> euler(const T minRange, const T maxRange);
 
 		/**
-		 * Returns a random euler using an explicit random generator using an explicit random generator.
+		 * Returns a random euler using an explicit random generator.
 		 * @param randomGenerator The random generator to be used
 		 * @return Random euler
 		 */
 		static EulerT<T> euler(RandomGenerator& randomGenerator);
 
 		/**
-		 * Returns a random euler with angles in a given range using an explicit random generator using an explicit random generator.
+		 * Returns a random euler with angles in a given range using an explicit random generator.
 		 * @param randomGenerator The random generator to be used
 		 * @param range Scalar defining the +/- range for each angle axis in radian, with range [0, PI/2)
 		 * @return Random euler
@@ -332,30 +332,19 @@ class RandomT : public RandomI
 		static EulerT<T> euler(RandomGenerator& randomGenerator, const T range);
 
 		/**
-		 * Returns a random euler with angles in a given range using an explicit random generator using an explicit random generator.
+		 * Returns a random euler with angles in a given range using an explicit random generator.
 		 * This function allows to specified an angle range so that a minimal and maximal rotation is guaranteed.<br>
 		 * First, three individual random angles are determined lying inside the specified range.<br>
 		 * Second, the signs of the three angles are determined randomly (as the range is specified with positive values).<br>
 		 * @param randomGenerator The random generator to be used
 		 * @param minRange Scalar defining the minimal range for each angle axis in radian, with range [0, PI/2)
-		 * @param maxRange Scalar defining the minimal range for each angle axis in radian, with range [minRange, PI/2)
+		 * @param maxRange Scalar defining the maximal range for each angle axis in radian, with range [minRange, PI/2)
 		 * @return Random euler
 		 */
 		static EulerT<T> euler(RandomGenerator& randomGenerator, const T minRange, const T maxRange);
 
 	protected:
 
-		/**
-		 * Returns the inverse of MAX_RAND.
-		 * @return 1 / MAX_RAND
-		 */
-		static constexpr T inverseMaxRand();
-
-		/**
-		 * Returns the inverse of RandomGenerator::randMax().
-		 * @return 1 / RandomGenerator::randMax()
-		 */
-		static constexpr T inverseMaxRandomGenerator();
 };
 
 template <typename T>
@@ -391,7 +380,7 @@ T RandomT<T>::scalar(const T lower, const T upper)
 
 	ocean_assert(upper >= lower);
 
-	return T(rand()) * inverseMaxRand() * (upper - lower) + lower;
+	return lower + (upper - lower) * (T(rand()) / T(RAND_MAX));
 }
 
 template <typename T>
@@ -401,7 +390,7 @@ T RandomT<T>::scalar(RandomGenerator& randomGenerator, const T lower, const T up
 
 	ocean_assert(upper >= lower);
 
-	return T(randomGenerator.rand()) * inverseMaxRandomGenerator() * (upper - lower) + lower;
+	return lower + (upper - lower) * (T(randomGenerator.rand()) / T(RandomGenerator::randMax()));
 }
 
 template <typename T>
@@ -678,31 +667,33 @@ VectorT4<T> RandomT<T>::vector4(RandomGenerator& randomGenerator, const T min, c
 template <typename T>
 QuaternionT<T> RandomT<T>::quaternion()
 {
-	return QuaternionT<T>(vector3(), scalar(T(0.0), NumericT<T>::pi2() - NumericT<T>::eps()));
+	// uniformly distributed random rotation by sampling a point on the 4D unit hypersphere
+
+	return QuaternionT<T>(vector4());
 }
 
 template <typename T>
 QuaternionT<T> RandomT<T>::quaternion(RandomGenerator& randomGenerator)
 {
-	const VectorT3<T> axis = vector3(randomGenerator);
-	const T angle = scalar(randomGenerator, T(0.0), NumericT<T>::pi2() - NumericT<T>::eps());
+	// uniformly distributed random rotation by sampling a point on the 4D unit hypersphere
 
-	return QuaternionT<T>(axis, angle);
+	return QuaternionT<T>(vector4(randomGenerator));
 }
 
 template <typename T>
 RotationT<T> RandomT<T>::rotation()
 {
-	return RotationT<T>(vector3(), scalar(T(0.0), NumericT<T>::pi2() - NumericT<T>::eps()));
+	// uniformly distributed random rotation via quaternion
+
+	return RotationT<T>(quaternion());
 }
 
 template <typename T>
 RotationT<T> RandomT<T>::rotation(RandomGenerator& randomGenerator)
 {
-	const VectorT3<T> axis = vector3(randomGenerator);
-	const T angle = scalar(randomGenerator, T(0.0), NumericT<T>::pi2() - NumericT<T>::eps());
+	// uniformly distributed random rotation via quaternion
 
-	return RotationT<T>(axis, angle);
+	return RotationT<T>(quaternion(randomGenerator));
 }
 
 template <typename T>
@@ -768,18 +759,6 @@ EulerT<T> RandomT<T>::euler(RandomGenerator& randomGenerator, const T minRange, 
 	const T roll = scalar(randomGenerator, minRange, maxRange) * rollSign;
 
 	return EulerT<T>(yaw, pitch, roll);
-}
-
-template <typename T>
-constexpr T RandomT<T>::inverseMaxRand()
-{
-	return T(1.0) / T(RAND_MAX);
-}
-
-template <typename T>
-constexpr T RandomT<T>::inverseMaxRandomGenerator()
-{
-	return T(1.0) / T(RandomGenerator::randMax());
 }
 
 }
