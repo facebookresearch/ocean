@@ -381,10 +381,7 @@ bool TestRotation::testMatrixConstructors(const double testDuration)
 			const SquareMatrixT3<T> matrix(originalRotation);
 			const RotationT<T> reconstructedRotation(matrix);
 
-			if (!reconstructedRotation.isValid())
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, reconstructedRotation.isValid());
 
 			// verify that the rotations produce the same result
 
@@ -405,10 +402,7 @@ bool TestRotation::testMatrixConstructors(const double testDuration)
 			const HomogenousMatrixT4<T> matrix(originalRotation);
 			const RotationT<T> reconstructedRotation(matrix);
 
-			if (!reconstructedRotation.isValid())
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, reconstructedRotation.isValid());
 
 			// verify that the rotations produce the same result
 
@@ -444,10 +438,7 @@ bool TestRotation::testMatrixConstructors(const double testDuration)
 					const SquareMatrixT3<T> matrix(originalRotation);
 					const RotationT<T> reconstructedRotation(matrix);
 
-					if (!reconstructedRotation.isValid())
-					{
-						OCEAN_SET_FAILED(validation);
-					}
+					OCEAN_EXPECT_TRUE(validation, reconstructedRotation.isValid());
 
 					// verify that the rotations produce the same result
 
@@ -888,17 +879,11 @@ bool TestRotation::testLeft_R_right(const double testDuration)
 
 			const RotationT<T> identity(VectorT3<T>(0, 1, 0), T(0));
 
-			if (left_R_right != identity)
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_EQUAL(validation, left_R_right, identity);
 
 			const VectorT3<T> vector = RandomT<T>::vector3(randomGenerator);
 
-			if (!vector.isEqual(left_R_right * vector, NumericT<T>::weakEps()))
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, vector.isEqual(left_R_right * vector, NumericT<T>::weakEps()));
 		}
 
 		{
@@ -909,29 +894,17 @@ bool TestRotation::testLeft_R_right(const double testDuration)
 			{
 				const RotationT<T> left_R_right = RotationT<T>::left_R_right(axis, -axis);
 
-				if (!axis.isEqual(left_R_right * -axis, NumericT<T>::weakEps()))
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_TRUE(validation, axis.isEqual(left_R_right * -axis, NumericT<T>::weakEps()));
 
-				if (!(-axis).isEqual(left_R_right * axis, NumericT<T>::weakEps()))
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_TRUE(validation, (-axis).isEqual(left_R_right * axis, NumericT<T>::weakEps()));
 			}
 
 			{
 				const RotationT<T> left_R_right = RotationT<T>::left_R_right(-axis, axis);
 
-				if (!axis.isEqual(left_R_right * -axis, NumericT<T>::weakEps()))
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_TRUE(validation, axis.isEqual(left_R_right * -axis, NumericT<T>::weakEps()));
 
-				if (!(-axis).isEqual(left_R_right * axis, NumericT<T>::weakEps()))
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_TRUE(validation, (-axis).isEqual(left_R_right * axis, NumericT<T>::weakEps()));
 			}
 		}
 
