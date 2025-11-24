@@ -47,6 +47,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testIdealTrackingParameters(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testIsOwner(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -584,6 +590,284 @@ bool TestFramePyramid::testIdealCoarsestLayerRadius(const double testDuration)
 
 			// the result should always be at least 1
 			OCEAN_EXPECT_GREATER_EQUAL(validation, resultRadius, 1u);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFramePyramid::testIdealTrackingParameters(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing ideal tracking parameters:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	{
+		constexpr unsigned int width = 640u;
+		constexpr unsigned int height = 480u;
+
+		constexpr unsigned int patchSize = 7u;
+
+		constexpr float maximalTrackingDistance = 0.05f; // ~40 pixels for 640x480
+
+		constexpr unsigned int invalidCoarsestWidth = patchSize * 2u - 1u;
+		constexpr unsigned int invalidCoarsestHeight = patchSize * 2u - 1u;
+
+		constexpr unsigned int minimalCoarsestLayerRadius = 2u;
+		constexpr unsigned int maximalCoarsestLayerRadius = 8u;
+
+		constexpr unsigned int minimalLayers = 1u;
+		constexpr unsigned int maximalLayers = (unsigned int)(-1);
+		unsigned int idealLayers = 0u;
+		unsigned int idealCoarsestLayerRadius = 0u;
+
+		const bool result = CV::FramePyramid::idealTrackingParameters(width, height, invalidCoarsestWidth, invalidCoarsestHeight, maximalTrackingDistance, minimalLayers, maximalLayers, minimalCoarsestLayerRadius, maximalCoarsestLayerRadius, idealLayers, idealCoarsestLayerRadius);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+		OCEAN_EXPECT_EQUAL(validation, idealLayers, 4u);
+		OCEAN_EXPECT_EQUAL(validation, idealCoarsestLayerRadius, 5u);
+	}
+
+	{
+		constexpr unsigned int width = 640u;
+		constexpr unsigned int height = 480u;
+
+		constexpr unsigned int patchSize = 7u;
+
+		constexpr float maximalTrackingDistance = 0.01f; // ~20 pixels for 640x480
+
+		constexpr unsigned int invalidCoarsestWidth = patchSize * 2u - 1u;
+		constexpr unsigned int invalidCoarsestHeight = patchSize * 2u - 1u;
+
+		constexpr unsigned int minimalLayers = 1u;
+		constexpr unsigned int maximalLayers = (unsigned int)(-1);
+		constexpr unsigned int minimalCoarsestLayerRadius = 2u;
+		constexpr unsigned int maximalCoarsestLayerRadius = 4u;
+
+		unsigned int idealLayers = 0u;
+		unsigned int idealCoarsestLayerRadius = 0u;
+
+		const bool result = CV::FramePyramid::idealTrackingParameters(width, height, invalidCoarsestWidth, invalidCoarsestHeight, maximalTrackingDistance, minimalLayers, maximalLayers, minimalCoarsestLayerRadius, maximalCoarsestLayerRadius, idealLayers, idealCoarsestLayerRadius);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+
+		OCEAN_EXPECT_EQUAL(validation, idealLayers, 2u);
+		OCEAN_EXPECT_EQUAL(validation, idealCoarsestLayerRadius, 4u);
+	}
+
+	const Indices32 widths = {640u, 1280u, 1920u, 320u, 3840u};
+	const Indices32 heights = {480u, 720u, 1080u, 240u, 2160u};
+	const Indices32 patchSizes = {7u, 15u, 31u};
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			const unsigned int width = RandomI::random(randomGenerator, widths);
+			const unsigned int height = RandomI::random(randomGenerator, heights);
+			const unsigned int patchSize = RandomI::random(randomGenerator, patchSizes);
+			const float maximalTrackingDistance = RandomF::scalar(randomGenerator, 0.05f, 0.3f);
+			const unsigned int minimalLayers = RandomI::random(randomGenerator, 1u, 3u);
+			const unsigned int maximalLayers = RandomI::random(randomGenerator, minimalLayers, minimalLayers + 5u);
+			const unsigned int minimalCoarsestLayerRadius = RandomI::random(randomGenerator, 2u, 4u);
+			const unsigned int maximalCoarsestLayerRadius = RandomI::random(randomGenerator, minimalCoarsestLayerRadius + 2u, 12u);
+
+			const unsigned int invalidCoarsestWidth = patchSize * 2u - 1u;
+			const unsigned int invalidCoarsestHeight = patchSize * 2u - 1u;
+
+			unsigned int idealLayers = 0u;
+			unsigned int idealCoarsestLayerRadius = 0u;
+
+			const bool result = CV::FramePyramid::idealTrackingParameters(width, height, invalidCoarsestWidth, invalidCoarsestHeight, maximalTrackingDistance, minimalLayers, maximalLayers, minimalCoarsestLayerRadius, maximalCoarsestLayerRadius, idealLayers, idealCoarsestLayerRadius);
+
+			if (result)
+			{
+				// Verify the result meets the constraints
+				OCEAN_EXPECT_GREATER_EQUAL(validation, idealLayers, minimalLayers);
+				OCEAN_EXPECT_LESS_EQUAL(validation, idealLayers, maximalLayers);
+				OCEAN_EXPECT_GREATER_EQUAL(validation, idealCoarsestLayerRadius, minimalCoarsestLayerRadius);
+				OCEAN_EXPECT_LESS_EQUAL(validation, idealCoarsestLayerRadius, maximalCoarsestLayerRadius);
+
+				// Verify it can track the required distance
+				const float diagonal = std::sqrt(float(width * width) + float(height * height));
+				const unsigned int requiredTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+				const unsigned int coarsestSizeFactor = 1u << (idealLayers - 1u);
+				const unsigned int actualTrackingDistance = idealCoarsestLayerRadius * coarsestSizeFactor;
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, actualTrackingDistance, requiredTrackingDistance);
+			}
+			else
+			{
+				// Verify the function failed for a legitimate reason: no valid configuration exists
+				// Calculate the required tracking distance
+				const float diagonal = std::sqrt(float(width * width) + float(height * height));
+				const unsigned int requiredTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+
+				// Check all possible combinations within constraints to verify none work
+				bool foundValidConfiguration = false;
+
+				for (unsigned int testLayers = minimalLayers; testLayers <= maximalLayers; ++testLayers)
+				{
+					for (unsigned int testRadius = minimalCoarsestLayerRadius; testRadius <= maximalCoarsestLayerRadius; ++testRadius)
+					{
+						const unsigned int testCoarsestSizeFactor = 1u << (testLayers - 1u);
+						const unsigned int testActualTrackingDistance = testRadius * testCoarsestSizeFactor;
+
+						// Check if this configuration meets the tracking requirement
+						if (testActualTrackingDistance >= requiredTrackingDistance)
+						{
+							// Check if this number of layers is valid for the frame size
+							const unsigned int validLayers = CV::FramePyramid::idealLayers(width, height, invalidCoarsestWidth, invalidCoarsestHeight);
+
+							if (testLayers <= validLayers)
+							{
+								foundValidConfiguration = true;
+								break;
+							}
+						}
+					}
+
+					if (foundValidConfiguration)
+					{
+						break;
+					}
+				}
+
+				// The function should only fail if no valid configuration exists
+				OCEAN_EXPECT_FALSE(validation, foundValidConfiguration);
+			}
+		}
+
+		{
+			// Test with zero maximalLayers (auto-determine)
+			const unsigned int width = RandomI::random(randomGenerator, 320u, 1920u);
+			const unsigned int height = RandomI::random(randomGenerator, 240u, 1080u);
+			const unsigned int patchSize = 7u + RandomI::random(randomGenerator, 3u) * 8u; // 7, 15, or 23
+			const float maximalTrackingDistance = RandomF::scalar(randomGenerator, 0.1f, 0.25f);
+
+			const unsigned int invalidCoarsestWidth = patchSize * 2u - 1u;
+			const unsigned int invalidCoarsestHeight = patchSize * 2u - 1u;
+
+			unsigned int idealLayers = 0u;
+			unsigned int idealCoarsestLayerRadius = 0u;
+
+			const bool result = CV::FramePyramid::idealTrackingParameters(width, height, invalidCoarsestWidth, invalidCoarsestHeight, maximalTrackingDistance, 1u, 0u, 2u, 8u, idealLayers, idealCoarsestLayerRadius);
+
+			if (result)
+			{
+				OCEAN_EXPECT_GREATER_EQUAL(validation, idealLayers, 1u);
+				OCEAN_EXPECT_GREATER_EQUAL(validation, idealCoarsestLayerRadius, 2u);
+				OCEAN_EXPECT_LESS_EQUAL(validation, idealCoarsestLayerRadius, 8u);
+
+				// Verify it can track the required distance
+				const float diagonal = std::sqrt(float(width * width) + float(height * height));
+				const unsigned int requiredTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+				const unsigned int coarsestSizeFactor = 1u << (idealLayers - 1u);
+				const unsigned int actualTrackingDistance = idealCoarsestLayerRadius * coarsestSizeFactor;
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, actualTrackingDistance, requiredTrackingDistance);
+			}
+			else
+			{
+				// Verify failure is legitimate
+				const float diagonal = std::sqrt(float(width * width) + float(height * height));
+				const unsigned int requiredTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+				const unsigned int maxLayers = CV::FramePyramid::idealLayers(width, height, invalidCoarsestWidth, invalidCoarsestHeight);
+
+				// Check if any valid configuration exists
+				bool foundValidConfiguration = false;
+
+				for (unsigned int testLayers = 1u; testLayers <= maxLayers; ++testLayers)
+				{
+					for (unsigned int testRadius = 2u; testRadius <= 8u; ++testRadius)
+					{
+						const unsigned int testCoarsestSizeFactor = 1u << (testLayers - 1u);
+						const unsigned int testActualTrackingDistance = testRadius * testCoarsestSizeFactor;
+
+						if (testActualTrackingDistance >= requiredTrackingDistance)
+						{
+							foundValidConfiguration = true;
+							break;
+						}
+					}
+
+					if (foundValidConfiguration)
+					{
+						break;
+					}
+				}
+
+				OCEAN_EXPECT_FALSE(validation, foundValidConfiguration);
+			}
+		}
+
+		{
+			// Test edge case: very small frame
+			const unsigned int width = RandomI::random(randomGenerator, 64u, 160u);
+			const unsigned int height = RandomI::random(randomGenerator, 48u, 120u);
+			const unsigned int patchSize = 7u;
+			const float maximalTrackingDistance = 0.1f;
+
+			const unsigned int invalidCoarsestWidth = patchSize * 2u - 1u;
+			const unsigned int invalidCoarsestHeight = patchSize * 2u - 1u;
+
+			unsigned int idealLayers = 0u;
+			unsigned int idealCoarsestLayerRadius = 0u;
+
+			const bool result = CV::FramePyramid::idealTrackingParameters(width, height, invalidCoarsestWidth, invalidCoarsestHeight, maximalTrackingDistance, 1u, 0u, 2u, 8u, idealLayers, idealCoarsestLayerRadius);
+
+			if (result)
+			{
+				// If it succeeds, verify the configuration is valid
+				OCEAN_EXPECT_GREATER_EQUAL(validation, idealLayers, 1u);
+				OCEAN_EXPECT_GREATER_EQUAL(validation, idealCoarsestLayerRadius, 2u);
+				OCEAN_EXPECT_LESS_EQUAL(validation, idealCoarsestLayerRadius, 8u);
+
+				const float diagonal = std::sqrt(float(width * width) + float(height * height));
+				const unsigned int requiredTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+				const unsigned int coarsestSizeFactor = 1u << (idealLayers - 1u);
+				const unsigned int actualTrackingDistance = idealCoarsestLayerRadius * coarsestSizeFactor;
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, actualTrackingDistance, requiredTrackingDistance);
+			}
+			else
+			{
+				// Small frames may legitimately fail - verify no valid configuration exists
+				const float diagonal = std::sqrt(float(width * width) + float(height * height));
+				const unsigned int requiredTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+				const unsigned int maxLayers = CV::FramePyramid::idealLayers(width, height, invalidCoarsestWidth, invalidCoarsestHeight);
+
+				bool foundValidConfiguration = false;
+
+				for (unsigned int testLayers = 1u; testLayers <= maxLayers; ++testLayers)
+				{
+					for (unsigned int testRadius = 2u; testRadius <= 8u; ++testRadius)
+					{
+						const unsigned int testCoarsestSizeFactor = 1u << (testLayers - 1u);
+						const unsigned int testActualTrackingDistance = testRadius * testCoarsestSizeFactor;
+
+						if (testActualTrackingDistance >= requiredTrackingDistance)
+						{
+							foundValidConfiguration = true;
+							break;
+						}
+					}
+
+					if (foundValidConfiguration)
+					{
+						break;
+					}
+				}
+
+				OCEAN_EXPECT_FALSE(validation, foundValidConfiguration);
+			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

@@ -692,6 +692,136 @@ unsigned int FramePyramid::idealCoarsestLayerRadius(const unsigned int maximalRa
 	return coarsestLayerRadius;
 }
 
+bool FramePyramid::idealTrackingParameters(const unsigned int width, const unsigned int height, const unsigned int invalidCoarsestWidth, const unsigned int invalidCoarsestHeight, const float maximalTrackingDistance, const unsigned int minimalLayers, const unsigned int maximalLayers, const unsigned int minimalCoarsestLayerRadius, const unsigned int maximalCoarsestLayerRadius, unsigned int& idealLayers, unsigned int& idealCoarsestLayerRadius)
+{
+	ocean_assert(width >= 1u && height >= 1u);
+	ocean_assert(invalidCoarsestWidth < width && invalidCoarsestHeight < height);
+	ocean_assert(maximalTrackingDistance > 0.0f);
+	ocean_assert(minimalLayers >= 1u);
+	ocean_assert(minimalCoarsestLayerRadius >= 1u);
+	ocean_assert(maximalCoarsestLayerRadius >= minimalCoarsestLayerRadius);
+
+	if (width == 0u || height == 0u || maximalTrackingDistance <= 0.0f || minimalLayers == 0u || maximalCoarsestLayerRadius < minimalCoarsestLayerRadius)
+	{
+		return false;
+	}
+
+	// tracking distance based on diagonal distance
+
+	const float diagonal = std::sqrt(float(width * width) + float(height * height));
+	const unsigned int trackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
+
+	if (trackingDistance == 0u)
+	{
+		return false;
+	}
+
+	// let's determine the maximal number of layers that can actually be used
+
+	unsigned int effectiveMaximalLayers = FramePyramid::idealLayers(width, height, invalidCoarsestWidth, invalidCoarsestHeight);
+
+	if (maximalLayers != 0u && effectiveMaximalLayers > maximalLayers)
+	{
+		effectiveMaximalLayers = maximalLayers;
+	}
+
+	if (minimalLayers > effectiveMaximalLayers)
+	{
+		return false;
+	}
+
+	// We will evaluate different configurations and pick the best one
+	// The score is based on:
+	// 1. Can it track the required distance?
+	// 2. Performance (fewer layers is faster due to less pyramid construction)
+	// 3. Precision (fewer layers with larger radius can be more precise, as it reduces error accumulation through pyramid levels)
+
+	unsigned int bestLayers = 0u;
+	unsigned int bestRadius = 0u;
+	float bestScore = -1.0f;
+
+	for (unsigned int layers = minimalLayers; layers <= effectiveMaximalLayers; ++layers)
+	{
+		// Check if this number of layers is valid for the given frame size
+
+		const unsigned int validLayers = FramePyramid::idealLayers(width, height, invalidCoarsestWidth, invalidCoarsestHeight);
+
+		if (layers > validLayers)
+		{
+			// Too many layers for this frame size
+			break;
+		}
+
+		// Calculate the ideal coarsest layer radius for this number of layers
+		const unsigned int idealRadius = FramePyramid::idealCoarsestLayerRadius(trackingDistance, layers);
+
+		// We will test the ideal radius and neighboring values
+		const unsigned int minTestRadius = std::max(minimalCoarsestLayerRadius, (idealRadius >= 2u) ? (idealRadius - 2u) : 1u);
+		const unsigned int maxTestRadius = std::min(maximalCoarsestLayerRadius, idealRadius + 2u);
+
+		for (unsigned int radius = minTestRadius; radius <= maxTestRadius; ++radius)
+		{
+			// Calculate the actual tracking distance this configuration can handle
+			const unsigned int coarsestSizeFactor = 1u << (layers - 1u);
+			const unsigned int actualTrackingDistance = radius * coarsestSizeFactor;
+
+			// Check if this configuration can track the required distance
+			if (actualTrackingDistance < trackingDistance)
+			{
+				continue;
+			}
+
+			// Calculate a score for this configuration
+			// The ideal configuration should:
+			// - Meet the tracking distance requirement (not too much excess)
+			// - Use fewer layers (faster, more precise)
+			// - Use appropriate radius (not excessive)
+
+			// Compute the "excess" tracking capability
+			const float excessRatio = float(actualTrackingDistance) / float(trackingDistance);
+
+			// Prefer configurations that are close to the required tracking distance
+			// Penalize both insufficient (filtered above) and excessive tracking capability
+			const float excessPenalty = std::min(2.0f, excessRatio); // Cap at 2x
+
+			// Strongly prefer fewer layers (faster computation, less error accumulation)
+			// Normalize relative to the range of layers we're considering
+			const float layerRange = float(effectiveMaximalLayers - minimalLayers + 1u);
+			const float layerPenalty = float(layers - minimalLayers + 1u) / layerRange;
+
+			// Prefer smaller radius when it meets the requirement
+			// But this is less important than layer count
+			const float radiusRange = float(maximalCoarsestLayerRadius - minimalCoarsestLayerRadius + 1u);
+			const float radiusPenalty = float(radius - minimalCoarsestLayerRadius + 1u) / radiusRange;
+
+			// Combine penalties with weights: layer count is most important, then excess, then radius
+			// Lower penalty is better
+			const float combinedPenalty = layerPenalty * 2.0f + excessPenalty + radiusPenalty * 0.5f;
+
+			// Convert to score: higher is better
+			const float score = 1.0f / combinedPenalty;
+
+			if (score > bestScore)
+			{
+				bestScore = score;
+				bestLayers = layers;
+				bestRadius = radius;
+			}
+		}
+	}
+
+	if (bestLayers == 0u || bestRadius == 0u)
+	{
+		// No valid configuration found
+		return false;
+	}
+
+	idealLayers = bestLayers;
+	idealCoarsestLayerRadius = bestRadius;
+
+	return true;
+}
+
 FramePyramid& FramePyramid::operator=(FramePyramid&& right) noexcept
 {
 	if (this != &right)

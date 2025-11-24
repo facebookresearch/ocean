@@ -63,6 +63,13 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		static bool testIdealCoarsestLayerRadius(const double testDuration);
 
 		/**
+		 * Tests the ideal tracking parameters function.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 */
+		static bool testIdealTrackingParameters(const double testDuration);
+
+		/**
 		 * Tests the isOwner() function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded

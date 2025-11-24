@@ -527,7 +527,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer.
 		 * @param width The width of the finest layer in pixel, with range [1, infinity)
 		 * @param height The height of the finest layer in pixel, with range [1, infinity)
-		 * @param invalidCoarsestWidthOrHeight The width or the height of a coarse layer not valid any more, with range (0, infinity)
+		 * @param invalidCoarsestWidthOrHeight The width or the height of a coarse layer not valid any more, with range [1, infinity)
 		 * @param coarsestLayerWidth Optional resulting width of the coarsest valid pyramid layer, with range [invalidCoarsestWidth + 1u, width], nullptr if not of interest
 		 * @param coarsestLayerHeight Optional resulting height of the coarsest valid pyramid layer, with range [invalidCoarsestHeight + 1u, height], nullptr if not of interest
 		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity), 0 if 'width' or 'height' are smaller or equal than 'invalidCoarsestWidthOrHeight'
@@ -538,8 +538,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer.
 		 * @param width The width of the finest layer in pixel, with range [1, infinity)
 		 * @param height The height of the finest layer in pixel, with range [1, infinity)
-		 * @param invalidCoarsestWidth The width of a coarse layer not valid any more, with range (0, infinity)
-		 * @param invalidCoarsestHeight The height of a coarse layer not valid any more, with range (0, infinity)
+		 * @param invalidCoarsestWidth The width of a coarse layer not valid any more, with range [1, infinity)
+		 * @param invalidCoarsestHeight The height of a coarse layer not valid any more, with range [1, infinity)
 		 * @param coarsestLayerWidth Optional resulting width of the coarsest valid pyramid layer, with range [invalidCoarsestWidth + 1u, width], nullptr if not of interest
 		 * @param coarsestLayerHeight Optional resulting height of the coarsest valid pyramid layer, with range [invalidCoarsestHeight + 1u, height], nullptr if not of interest
 		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity), 0 if 'width/height' is smaller or equal than 'invalidCoarsestWidth/invalidCoarsestHeight'
@@ -550,8 +550,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer or an overall size radius is reached.
 		 * @param width The width of the finest layer in pixel
 		 * @param height The height of the finest layer in pixel
-		 * @param invalidCoarsestWidth Width of a coarse layer not valid any more, with range (0, infinity)
-		 * @param invalidCoarsestHeight Height of a coarse layer not valid any more, with range (0, infinity)
+		 * @param invalidCoarsestWidth Width of a coarse layer not valid any more, with range [1, infinity)
+		 * @param invalidCoarsestHeight Height of a coarse layer not valid any more, with range [1, infinity)
 		 * @param layerFactor Size factor on each layer (a factor of 2 means that the layer dimension is halved on each layer), with range [2, infinity)
 		 * @param maximalRadius Maximal radius that can be reached on the finest layer by starting with coarsestLayerRadius on the coarsest layer in pixel (the maximal expected baseline between two pixels in the finest pyramid layer), with range [1, infinity)
 		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
@@ -574,6 +574,33 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return The ideal search radius on the coarsest layer in pixel, with range [1, infinity)
 		 */
 		static unsigned int idealCoarsestLayerRadius(const unsigned int maximalRadius, const unsigned int layers, const unsigned int layerFactor = 2u);
+
+		/**
+		 * Determines the ideal tracking parameters (pyramid layers and coarsest layer search radius) for frame tracking.
+		 * This function analyzes various combinations of pyramid layers and search radii to find the optimal configuration that balances performance and tracking precision while respecting the given constraints.
+		 *
+		 * The function evaluates different parameter combinations and selects the one that:
+		 * - Can track the required maximal tracking distance
+		 * - Meets all specified constraints (min/max layers and radius)
+		 * - Optimizes the performance/precision trade-off
+		 *
+		 * The search explores "neighboring" parameter options, recognizing that sometimes reducing pyramid layers but increasing the search radius can provide better performance or precision characteristics.
+		 * Specifically, fewer layers with larger radius can be more precise by reducing error accumulation through pyramid levels.
+		 *
+		 * @param width The width of the frame in pixels, with range [1, infinity)
+		 * @param height The height of the frame in pixels, with range [1, infinity)
+		 * @param invalidCoarsestWidth The width of a coarse layer not valid any more, with range [1, infinity)
+		 * @param invalidCoarsestHeight The height of a coarse layer not valid any more, with range [1, infinity)
+		 * @param maximalTrackingDistance The maximal tracking distance as a fraction of the frame diagonal, with range (0, infinity)
+		 * @param minimalLayers The minimal number of pyramid layers to consider, with range [1, infinity)
+		 * @param maximalLayers The maximal number of pyramid layers to consider, with range [minimalLayers, infinity), or 0 to determine automatically based on frame size
+		 * @param minimalCoarsestLayerRadius The minimal search radius on the coarsest pyramid layer in pixels, with range [1, infinity)
+		 * @param maximalCoarsestLayerRadius The maximal search radius on the coarsest pyramid layer in pixels, with range [minimalCoarsestLayerRadius, infinity)
+		 * @param idealLayers The resulting ideal number of pyramid layers
+		 * @param idealCoarsestLayerRadius The resulting ideal search radius on the coarsest pyramid layer in pixels
+		 * @return True if valid parameters were found; False otherwise
+		 */
+		static bool idealTrackingParameters(const unsigned int width, const unsigned int height, const unsigned int invalidCoarsestWidth, const unsigned int invalidCoarsestHeight, const float maximalTrackingDistance, const unsigned int minimalLayers, const unsigned int maximalLayers, const unsigned int minimalCoarsestLayerRadius, const unsigned int maximalCoarsestLayerRadius, unsigned int& idealLayers, unsigned int& idealCoarsestLayerRadius);
 
 	protected:
 
