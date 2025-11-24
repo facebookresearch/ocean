@@ -119,7 +119,7 @@ class Validation
 		/**
 		 * Destructs this validation object.
 		 */
-		inline ~Validation();
+		inline virtual ~Validation();
 
 		/**
 		 * Informs this validation object that a value is expected to be True.
@@ -355,7 +355,7 @@ class Validation
 		 * Returns if this validation has succeeded.
 		 * @return True, if so; False, if the validation has failed
 		 */
-		[[nodiscard]] inline bool succeeded() const;
+		[[nodiscard]] inline virtual bool succeeded() const;
 
 		/**
 		 * Returns whether this validation has succeeded so far.

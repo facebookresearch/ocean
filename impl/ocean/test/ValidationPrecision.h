@@ -20,18 +20,20 @@ namespace Test
 {
 
 /**
- * This class implements a helper class to validate the accuracy of tests.
- * @see Validation.
+ * This class implements a helper class to validate the precision of algorithms or objects across multiple iterations.
+ * The main purpose is to allow a configurable percentage of iterations to be imprecise while still considering the overall test as successful.
+ * This class inherits from Validation and extends it with precision-based validation capabilities.
+ * As this class inherits from Validation, the entire validation can also be invalidated using base class methods (e.g., OCEAN_EXPECT_TRUE, OCEAN_SET_FAILED) for errors unrelated to precision.
+ * @see Validation, ScopedIteration.
  * @ingroup test
  */
-class ValidationPrecision
+class ValidationPrecision : public Validation
 {
 	public:
 
 		/**
-		 * Creates a new scoped iteration.
-		 * By default the iteration is accurate enough.<br>
-		 * Call setInaccurate() for an iteration which is not precise enough.
+		 * Creates a new scoped iteration representing one iteration in a precision test.
+		 * By default each iteration is considered accurate; call setInaccurate() if the iteration is not precise enough.
 		 */
 		class ScopedIteration
 		{
@@ -107,11 +109,6 @@ class ValidationPrecision
 		inline ValidationPrecision(const double threshold, RandomGenerator& randomGenerator, const unsigned int minimumIterations = 1u);
 
 		/**
-		 * Destructs this validation object.
-		 */
-		inline ~ValidationPrecision();
-
-		/**
 		 * Explicitly adds a new iteration which is either accurate or not.
 		 * @param accurate True, if the iteration was precise enough; False, if the iteration was not precise enough
 		 * @see ScopedIteration.
@@ -125,22 +122,6 @@ class ValidationPrecision
 		 * @see ScopedIteration.
 		 */
 		inline void addIterations(const size_t accurateIterations, const size_t iterations);
-
-		/**
-		 * Explicitly sets the validation to be failed.
-		 * Setting this validation to be failed will result in a failed validation even if all iteration were precise enough.
-		 * @see succeeded().
-		 */
-		inline void setFailed();
-
-		/**
-		 * Explicitly sets the validation to be failed.
-		 * Setting this validation to be failed will result in a failed validation even if all iteration were precise enough.
-		 * @param file The source file in which the function call happens, e.g., __FILE__, must be valid
-		 * @param line The line in the source file in which the function call happens, e.g., __LINE__, must be valid
-		 * @see succeeded().
-		 */
-		inline void setFailed(const char* file, const int line);
 
 		/**
 		 * Returns the number of iterations in which the precision has been determined.
@@ -164,7 +145,7 @@ class ValidationPrecision
 		 * Returns if this validation has succeeded.
 		 * @return True, if so; False, if the validation has failed
 		 */
-		[[nodiscard]] inline bool succeeded() const;
+		[[nodiscard]] inline bool succeeded() const override;
 
 		/**
 		 * Returns the accuracy of all iterations.
@@ -187,31 +168,10 @@ class ValidationPrecision
 		 */
 		[[nodiscard]] inline bool hasSetFailed() const;
 
-		/**
-		 * Returns a string containing the random generator's initial seed, if any
-		 * @return The string with initial seed test, empty if no random generator is associated with this validation object
-		 */
-		inline std::string randomGeneratorOutput() const;
-
-	protected:
-
-		/**
-		 * Disabled copy constructor.
-		 */
-		ValidationPrecision(const ValidationPrecision&) = delete;
-
-		/**
-		 * Sets the succeeded state to false.
-		 */
-		inline void setSucceededFalse();
-
 	protected:
 
 		/// The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
 		double threshold_ = 1.0;
-
-		/// True, if the validation has succeeded; False, if the validation has failed.
-		bool succeeded_ = true;
 
 		/// The number of iterations needed to determine success or failure.
 		uint64_t necessaryIterations_ = 0ull;
@@ -221,14 +181,6 @@ class ValidationPrecision
 
 		/// The number of iterations which were precise enough, with range [0, iterations_]
 		uint64_t accurateIterations_ = 0ull;
-
-		/// Optional random generator object which will be used during validation.
-		RandomGenerator* randomGenerator_ = nullptr;
-
-#ifdef OCEAN_DEBUG
-		/// True, if the success state of this validation has been checked.
-		mutable bool succeededChecked_ = false;
-#endif // OCEAN_DEBUG
 };
 
 #ifndef OCEAN_SET_INACCURATE
@@ -286,16 +238,26 @@ inline ValidationPrecision::ValidationPrecision(const double threshold, const un
 }
 
 inline ValidationPrecision::ValidationPrecision(const double threshold, RandomGenerator& randomGenerator, const unsigned int minimumIterations) :
-	ValidationPrecision(threshold, minimumIterations)
+	Validation(randomGenerator)
 {
-	randomGenerator_ = &randomGenerator;
-}
+	ocean_assert(threshold > 0.0 && threshold <= 1.0);
 
-inline ValidationPrecision::~ValidationPrecision()
-{
-#ifdef OCEAN_DEBUG
-	ocean_assert(succeededChecked_ && "The verifier has not been check for success");
-#endif
+	if (threshold > 0.0 && threshold <= 1.0)
+	{
+		threshold_ = threshold;
+
+		const double failureRate = 1.0 - threshold_;
+		ocean_assert(failureRate > 0.0);
+
+		const double idealIterations = 1.0 / failureRate;
+
+		ocean_assert(idealIterations <= 1000000000u);
+		necessaryIterations_ = std::max(minimumIterations, (unsigned int)(std::ceil(idealIterations) * 2.0));
+	}
+	else
+	{
+		setSucceededFalse();
+	}
 }
 
 inline void ValidationPrecision::addIteration(const bool accurate)
@@ -320,26 +282,6 @@ inline void ValidationPrecision::addIterations(const size_t accurateIterations, 
 
 	accurateIterations_ += accurateIterations;
 	iterations_ += iterations;
-}
-
-inline void ValidationPrecision::setFailed()
-{
-	setSucceededFalse();
-}
-
-inline void ValidationPrecision::setFailed(const char* file, const int line)
-{
-	setSucceededFalse();
-
-	ocean_assert(file != nullptr);
-	if (file != nullptr)
-	{
-#ifdef OCEAN_USE_GTEST
-		std::cerr << "\nValidationPrecision::setFailed() in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
-#else
-		Log::error() << "ValidationPrecision::setFailed() in '" << file << "', in line " << line << randomGeneratorOutput();
-#endif
-	}
 }
 
 inline uint64_t ValidationPrecision::iterations() const
@@ -420,21 +362,6 @@ inline double ValidationPrecision::threshold() const
 [[nodiscard]] inline bool ValidationPrecision::hasSetFailed() const
 {
 	return succeeded_ == false;
-}
-
-inline std::string ValidationPrecision::randomGeneratorOutput() const
-{
-	if (randomGenerator_ != nullptr)
-	{
-		return ", with random generator initial seed '" + String::toAString(randomGenerator_->initialSeed()) + "'";
-	}
-
-	return std::string();
-}
-
-inline void ValidationPrecision::setSucceededFalse()
-{
-	succeeded_ = false;
 }
 
 inline std::ostream& operator<<(std::ostream& stream, const ValidationPrecision& validation)
