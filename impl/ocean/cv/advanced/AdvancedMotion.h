@@ -81,9 +81,9 @@ class OCEAN_CV_ADVANCED_EXPORT AdvancedMotion
 
 				/**
 				 * Creates a new point correspondences object with pre-defined predicted next points.
-				 * This constructor is used when rough estimates for the next image points are already available.
+				 * In case no rough estimates for the next image points are known, use a copy of the previous points.
 				 * @param previousPoints The previous image points, must be valid
-				 * @param predictedNextPoints The predicted next image points (rough estimates), must be valid
+				 * @param predictedNextPoints The predicted next image points (rough estimates), will be updated to the actuall tracked current next points, must be valid
 				 * @param validCorrespondences The buffer to store validity flags for each correspondence, must be valid
 				 * @param correspondences The number of point correspondences, with range [1, infinity)
 				 * @param pyramidLayers The number of pyramid layers to be used for tracking, with range [1, infinity)
@@ -284,6 +284,74 @@ class OCEAN_CV_ADVANCED_EXPORT AdvancedMotion
 
 				/// Internal storage for backward tracking results used for bidirectional validation
 				Vectors2 internalBackwardNextPoints_;
+		};
+
+		/**
+		 * This class collects statistics about tracking distances between corresponding 2D feature points.
+		 * The class calculates various statistical measures including average, median, percentiles (P95, P99), and maximum tracking distances.<br>
+		 * This class can be used to determine suitable tracking parameters for a specific tracking use case.
+		 * @see AdvancedMotionT::trackPointsBidirectionalSubPixelMirroredBorder().
+		 */
+		class TrackingStatistic
+		{
+			public:
+
+				/**
+				 * Creates a new tracking statistic object.
+				 * @param width The width of the image frame in pixels, with range [1, infinity)
+				 * @param height The height of the image frame in pixels, with range [1, infinity)
+				 */
+				TrackingStatistic(const unsigned int width, const unsigned int height);
+
+				/**
+				 * Adds a set of point correspondences to the tracking statistics.
+				 * @param previousImagePoints The image points from the previous frame, must be valid
+				 * @param nextImagePoints The corresponding image points from the next frame, one for each previous image point, must be valid
+				 * @param size The number of point correspondences, with range [1, infinity)
+				 */
+				void addCorrespondences(const Vector2* previousImagePoints, const Vector2* nextImagePoints, const size_t size);
+
+				/**
+				 * Adds a set of point correspondences to the tracking statistics, filtering by validity flags.
+				 * Only correspondences marked as valid (non-zero in validCorrespondences) are added to the statistics.
+				 * @param previousImagePoints The image points from the previous frame, must be valid
+				 * @param nextImagePoints The corresponding image points from the next frame, one for each previous image point, must be valid
+				 * @param validCorrespondences The validity flags for each correspondence, non-zero indicates valid, must be valid
+				 * @param size The number of point correspondences, with range [1, infinity)
+				 */
+				void addCorrespondences(const Vector2* previousImagePoints, const Vector2* nextImagePoints, const uint8_t* validCorrespondences, const size_t size);
+
+				/**
+				 * Returns the number of measurements this statistic holds, (the number of calls to addCorrespondences()).
+				 * @return The object's measurements
+				 */
+				inline size_t measurements() const;
+
+				/**
+				 * Returns whether this tracking statistic object is valid.
+				 * @return True if so
+				 */
+				inline bool isValid() const;
+
+				/**
+				 * Returns a string of the tracking statistics.
+				 * @return The tracking statistics as string
+				 */
+				std::string toString() const;
+
+			protected:
+
+				/// The width of the image frame in pixels
+				unsigned int width_ = 0u;
+
+				/// The height of the image frame in pixels
+				unsigned int height_ = 0u;
+
+				/// The squared Euclidean distances between all added point correspondences
+				Scalars sqrDistances_;
+
+				/// The number of measurements (calls to addCorrespondences())
+				size_t measurements_ = 0;
 		};
 };
 
@@ -745,6 +813,8 @@ inline AdvancedMotion::PointCorrespondences::PointCorrespondences(const Vector2*
 	ocean_assert(nextPoints_ != nullptr);
 	ocean_assert(validCorrespondences_ != nullptr);
 
+	ocean_assert(previousPoints_ != nextPoints_); // must not point to the same memory
+
 	ocean_assert(pyramidLayers_ != 0u);
 
 	ocean_assert(maximalError >= 0);
@@ -859,6 +929,16 @@ inline size_t AdvancedMotion::PointCorrespondences::size() const
 inline bool AdvancedMotion::PointCorrespondences::isValid() const
 {
 	return previousPoints_ != nullptr;
+}
+
+inline size_t AdvancedMotion::TrackingStatistic::measurements() const
+{
+	return measurements_;
+}
+
+inline bool AdvancedMotion::TrackingStatistic::isValid() const
+{
+	return width_ >= 1u && height_ >= 1u;
 }
 
 template <typename TMetricInteger, typename TMetricFloat>

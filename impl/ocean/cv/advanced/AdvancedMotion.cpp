@@ -7,6 +7,9 @@
 
 #include "ocean/cv/advanced/AdvancedMotion.h"
 
+#include "ocean/base/Median.h"
+#include "ocean/base/String.h"
+
 namespace Ocean
 {
 
@@ -212,6 +215,109 @@ unsigned int AdvancedMotion::PointCorrespondences::coarsestPyramidLayer(const CV
 	}
 
 	return coarsestLayerIndex;
+}
+
+AdvancedMotion::TrackingStatistic::TrackingStatistic(const unsigned int width, const unsigned int height) :
+	width_(width),
+	height_(height)
+{
+	ocean_assert(width_ > 0u);
+	ocean_assert(height_ > 0u);
+}
+
+void AdvancedMotion::TrackingStatistic::addCorrespondences(const Vector2* previousImagePoints, const Vector2* nextImagePoints, const size_t size)
+{
+	ocean_assert(isValid());
+
+	ocean_assert(previousImagePoints != nullptr);
+	ocean_assert(nextImagePoints != nullptr);
+
+	sqrDistances_.reserve(sqrDistances_.size() + size);
+
+	for (size_t i = 0; i < size; ++i)
+	{
+		const Scalar sqrDistance = previousImagePoints[i].sqrDistance(nextImagePoints[i]);
+		sqrDistances_.push_back(sqrDistance);
+	}
+
+	++measurements_;
+}
+
+void AdvancedMotion::TrackingStatistic::addCorrespondences(const Vector2* previousImagePoints, const Vector2* nextImagePoints, const uint8_t* validCorrespondences, const size_t size)
+{
+	ocean_assert(isValid());
+
+	ocean_assert(previousImagePoints != nullptr);
+	ocean_assert(nextImagePoints != nullptr);
+	ocean_assert(validCorrespondences != nullptr);
+
+	sqrDistances_.reserve(sqrDistances_.size() + size);
+
+	for (size_t i = 0; i < size; ++i)
+	{
+		if (validCorrespondences[i] != 0u)
+		{
+			const Scalar sqrDistance = previousImagePoints[i].sqrDistance(nextImagePoints[i]);
+			sqrDistances_.push_back(sqrDistance);
+		}
+	}
+
+	++measurements_;
+}
+
+std::string AdvancedMotion::TrackingStatistic::toString() const
+{
+	ocean_assert(isValid());
+
+	if (sqrDistances_.empty())
+	{
+		return std::string();
+	}
+
+	const Scalar diagonal = Numeric::sqrt(Scalar(width_ * width_ + height_ * height_));
+
+	Scalars sqrDistancesCopy = sqrDistances_;
+
+	Scalar sqrSum = Scalar(0);
+	Scalar sqrMax = Numeric::minValue();
+
+	for (const Scalar sqrDistance : sqrDistances_)
+	{
+		sqrSum += sqrDistance;
+
+		if (sqrDistance > sqrMax)
+		{
+			sqrMax = sqrDistance;
+		}
+	}
+
+	const Scalar average = Numeric::sqrt(sqrSum / Scalar(sqrDistances_.size()));
+
+	const Scalar median = Numeric::sqrt(Median::percentile(sqrDistancesCopy.data(), sqrDistancesCopy.size(), 0.5));
+	const Scalar p95 = Numeric::sqrt(Median::percentile(sqrDistancesCopy.data(), sqrDistancesCopy.size(), 0.95));
+	const Scalar p99 = Numeric::sqrt(Median::percentile(sqrDistancesCopy.data(), sqrDistancesCopy.size(), 0.99));
+	const Scalar p995 = Numeric::sqrt(Median::percentile(sqrDistancesCopy.data(), sqrDistancesCopy.size(), 0.995));
+	const Scalar p999 = Numeric::sqrt(Median::percentile(sqrDistancesCopy.data(), sqrDistancesCopy.size(), 0.999));
+	const Scalar maximum = Numeric::sqrt(sqrMax);
+
+	const Scalar averagePercent = (average / diagonal) * Scalar(100);
+	const Scalar medianPercent = (median / diagonal) * Scalar(100);
+	const Scalar p95Percent = (p95 / diagonal) * Scalar(100);
+	const Scalar p99Percent = (p99 / diagonal) * Scalar(100);
+	const Scalar p995Percent = (p995 / diagonal) * Scalar(100);
+	const Scalar p999Percent = (p999 / diagonal) * Scalar(100);
+	const Scalar maximumPercent = (maximum / diagonal) * Scalar(100);
+
+	std::string result = String::toAString(measurements_) + " measurements, " + String::toAString(sqrDistances_.size()) + " correspondences:";
+	result += "\nAverage: " + String::toAString(average, 2u) + "px (" + String::toAString(averagePercent, 1u) + "%), ";
+	result += "\nMedian: " + String::toAString(median, 2u) + "px (" + String::toAString(medianPercent, 1u) + "%), ";
+	result += "\nP95: " + String::toAString(p95, 2u) + "px (" + String::toAString(p95Percent, 1u) + "%), ";
+	result += "\nP99: " + String::toAString(p99, 2u) + "px (" + String::toAString(p99Percent, 1u) + "%), ";
+	result += "\nP995: " + String::toAString(p995, 2u) + "px (" + String::toAString(p995Percent, 1u) + "%), ";
+	result += "\nP999: " + String::toAString(p999, 2u) + "px (" + String::toAString(p999Percent, 1u) + "%), ";
+	result += "\nMax: " + String::toAString(maximum, 2u) + "px (" + String::toAString(maximumPercent, 1u) + "%)";
+
+	return result;
 }
 
 }
