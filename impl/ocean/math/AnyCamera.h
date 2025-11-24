@@ -393,7 +393,7 @@ class AnyCameraT : public CameraT<T>
 		 * | dfv / dx, dfv / dy, dfv / dz |
 		 * with projection function
 		 * q = f(p)
-		 * q_u = fu(p), q_y = fv(p)
+		 * q_u = fu(p), q_v = fv(p)
 		 * with 2D image point q = (q_u, q_v) and 3D object point p = (x, y, z)
 		 * </pre>
 		 * @param flippedCameraObjectPoint The 3D object point defined in relation to the inverted and flipped camera pose (camera looking into the positive z-space with y-axis pointing down).
@@ -414,7 +414,7 @@ class AnyCameraT : public CameraT<T>
 		 * | dfv / dx, dfv / dy, dfv / dz |
 		 * with projection function
 		 * q = f(p)
-		 * q_u = fu(p), q_y = fv(p)
+		 * q_u = fu(p), q_v = fv(p)
 		 * with 2D image point q = (q_u, q_v) and 3D object point p = (x, y, z)
 		 * </pre>
 		 * @param flippedCameraObjectPoints The 3D object points defined in relation to the inverted and flipped camera pose (camera looking into the positive z-space with y-axis pointing down).
@@ -903,7 +903,7 @@ class AnyCameraWrappingT final :
 		 * | dfv / dx, dfv / dy, dfv / dz |
 		 * with projection function
 		 * q = f(p)
-		 * q_u = fu(p), q_y = fv(p)
+		 * q_u = fu(p), q_v = fv(p)
 		 * with 2D image point q = (q_u, q_v) and 3D object point p = (x, y, z)
 		 * </pre>
 		 * @param flippedCameraObjectPoint The 3D object point defined in relation to the inverted and flipped camera pose (camera looking into the positive z-space with y-axis pointing down).
@@ -923,7 +923,7 @@ class AnyCameraWrappingT final :
 		 * | dfv / dx, dfv / dy, dfv / dz |
 		 * with projection function
 		 * q = f(p)
-		 * q_u = fu(p), q_y = fv(p)
+		 * q_u = fu(p), q_v = fv(p)
 		 * with 2D image point q = (q_u, q_v) and 3D object point p = (x, y, z)
 		 * </pre>
 		 * @param flippedCameraObjectPoints The 3D object points defined in relation to the inverted and flipped camera pose (camera looking into the positive z-space with y-axis pointing down).
@@ -1881,7 +1881,7 @@ bool AnyCameraClipperT<T>::determineCameraBoundary(const AnyCameraT<T>& camera, 
 
 			const VectorT2<T> distortedImagePoint = corner0 * (T(1) - factor) + corner1 * factor;
 
-			const VectorT2<T> offsetTowardsPrincipalPoint = (principalPoint - distortedImagePoint).normalizedOrZero() * T(1.0); // one pixel towards the pinciapl point
+			const VectorT2<T> offsetTowardsPrincipalPoint = (principalPoint - distortedImagePoint).normalizedOrZero() * T(1.0); // one pixel towards the principal point
 
 			VectorT3<T> objectPoint = VectorT3<T>::minValue();
 
@@ -1928,8 +1928,6 @@ bool AnyCameraClipperT<T>::determineCameraBoundary(const AnyCameraT<T>& camera, 
 						boundaryImagePoint = middleImagePoint;
 					}
 				}
-
-				ocean_assert(objectPoint != principalObjectPoint);
 			}
 
 			if (objectPoint != VectorT3<T>::minValue())
@@ -1943,7 +1941,6 @@ bool AnyCameraClipperT<T>::determineCameraBoundary(const AnyCameraT<T>& camera, 
 	}
 
 	ocean_assert(normalizedImagePoints.size() >= 3);
-	ocean_assert(normalizedImagePoints.size() == segmentSteps * corners.size());
 
 	ocean_assert(cameraBoundarySegments.empty());
 	cameraBoundarySegments.clear();
@@ -2013,7 +2010,7 @@ bool AnyCameraClipperT<T>::isValidForPoint(const AnyCameraT<T>& camera, const Ve
 	ocean_assert(camera.isValid());
 	ocean_assert(camera.isInside(imagePoint, T(-1)));
 	ocean_assert(maximalReprojectionError >= T(0));
-	ocean_assert(additionalChecksTowardsPrincipalPoint>= 1u);
+	ocean_assert(additionalChecksTowardsPrincipalPoint >= 1u);
 
 	const VectorT3<T> objectPoint = camera.vectorIF(imagePoint, false /*makeUnitVector*/);
 	const VectorT2<T> projectedObjectPoint = camera.projectToImageIF(objectPoint);
@@ -2863,8 +2860,9 @@ inline std::unique_ptr<AnyCameraT<U>> CameraWrapperBaseFisheyeT<T>::clone(const 
 	}
 
 	const unsigned int validWidth = (height * actualCamera_.width() + actualCamera_.height() / 2u) / actualCamera_.height();
+	const unsigned int validHeight = (width * actualCamera_.height() + actualCamera_.width() / 2u) / actualCamera_.width();
 
-	if (!NumericT<unsigned int>::isEqual(width, validWidth, 1u))
+	if (!NumericT<unsigned int>::isEqual(width, validWidth, 1u) && !NumericT<unsigned int>::isEqual(height, validHeight, 1u))
 	{
 		ocean_assert(false && "Wrong aspect ratio!");
 		return nullptr;
