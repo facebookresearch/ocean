@@ -10,6 +10,9 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <cmath>
 
 namespace Ocean
@@ -103,71 +106,86 @@ void TestSignal::AsyncFunctionThread::asyncFunction()
 	}
 }
 
-bool TestSignal::test(const double testDuration)
+bool TestSignal::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Signal tests:   ---";
+	TestResult testResult("Signal test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testSignalBasics() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSingleSignalStandard() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSingleSignalTimeout() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSingleSignalLoop() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAsyncFunction(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultipleSignals() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSubsetSignalsStandard() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSubsetSignalsTimeout() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("signalbasics"))
 	{
-		Log::info() << "Signal test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Signal test FAILED!";
+		testResult = testSignalBasics();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("singlesignalstandard"))
+	{
+		testResult = testSingleSignalStandard();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("singlesignaltimeout"))
+	{
+		testResult = testSingleSignalTimeout();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("singlesignalloop"))
+	{
+		testResult = testSingleSignalLoop();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("asyncfunction"))
+	{
+		testResult = testAsyncFunction(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiplesignals"))
+	{
+		testResult = testMultipleSignals();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("subsetsignalsstandard"))
+	{
+		testResult = testSubsetSignalsStandard();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("subsetsignalstimeout"))
+	{
+		testResult = testSubsetSignalsTimeout();
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

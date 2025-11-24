@@ -12,6 +12,9 @@
 #include "ocean/base/Subset.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,41 +24,43 @@ namespace Test
 namespace TestBase
 {
 
-bool TestSubset::test(const double testDuration)
+bool TestSubset::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Subset test:   ---";
+	TestResult testResult("Subset test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testSubset(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvertedSubset(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = hasIntersectingElement(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("subset"))
 	{
-		Log::info() << "Subset test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Subset test FAILED!";
+		testResult = testSubset(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("invertedsubset"))
+	{
+		testResult = testInvertedSubset(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasintersectingelement"))
+	{
+		testResult = hasIntersectingElement(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

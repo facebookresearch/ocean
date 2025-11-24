@@ -11,6 +11,9 @@
 #include "ocean/base/Processor.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <cmath>
 
 namespace Ocean
@@ -22,11 +25,11 @@ namespace Test
 namespace TestBase
 {
 
-bool TestWorker::test(const double testDuration)
+bool TestWorker::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Worker tests:   ---";
+	TestResult testResult("Worker test");
 	Log::info() << " ";
 
 	Worker worker;
@@ -38,60 +41,72 @@ bool TestWorker::test(const double testDuration)
 		return true;
 	}
 
-	bool allSucceeded = true;
-
 	Log::info() << " ";
 
-	allSucceeded = testConstructor() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDelay(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStaticWorker(worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStaticWorkerSumOfSquares(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStaticWorkerSumOfSquareRoots(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAbortableFunction(worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSeparableAndAbortableFunction(worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "Worker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Worker test FAILED!";
+		testResult = testConstructor();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("delay"))
+	{
+		testResult = testDelay(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("staticworker"))
+	{
+		testResult = testStaticWorker(worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("staticworkersumof squares"))
+	{
+		testResult = testStaticWorkerSumOfSquares(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("staticworkersumof squareroots"))
+	{
+		testResult = testStaticWorkerSumOfSquareRoots(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("abortablefunction"))
+	{
+		testResult = testAbortableFunction(worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("separableandabortablefunction"))
+	{
+		testResult = testSeparableAndAbortableFunction(worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -10,6 +10,9 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/RandomI.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -197,33 +200,32 @@ TestMoveBehavior::NonExceptObject& TestMoveBehavior::NonExceptObject::operator=(
 	return *this;
 }
 
-bool TestMoveBehavior::test(const double testDuration)
+bool TestMoveBehavior::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Move behavior of std implementation test:   ---";
+	TestResult testResult("Move behavior test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-
-	allSucceeded = testDefaultObject(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNonExceptObject(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("defaultobject"))
 	{
-		Log::info() << "Move behavior test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Move behavior test FAILED!";
+		testResult = testDefaultObject(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("nonexceptobject"))
+	{
+		testResult = testNonExceptObject(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 	
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,9 @@
 
 #include "ocean/test/testbase/TestDataType.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -22,47 +25,68 @@ namespace Test
 namespace TestBase
 {
 
-bool TestDataType::test(const double testDuration)
+bool TestDataType::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Data type test:   ---";
+	TestResult testResult("Data type test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testChar() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testIntegerShift() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testArbitraryDataType(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testUnsignedTyper() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testAbsoluteDifferenceValueTyper() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testFloat16(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("char"))
 	{
-		Log::info() << "Data type test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Data type test FAILED!";
+		testResult = testChar();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("integershift"))
+	{
+		testResult = testIntegerShift();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("arbitrarydatatype"))
+	{
+		testResult = testArbitraryDataType(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("unsignedtyper"))
+	{
+		testResult = testUnsignedTyper();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("absolutedifferencevaluetyper"))
+	{
+		testResult = testAbsoluteDifferenceValueTyper();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("float16"))
+	{
+		testResult = testFloat16(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

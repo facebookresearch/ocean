@@ -12,6 +12,9 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <vector>
 #include <map>
 
@@ -24,32 +27,33 @@ namespace Test
 namespace TestBase
 {
 
-bool TestHashMap::test(const double testDuration)
+bool TestHashMap::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Hash map test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testSingleIntegers(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testMultipleIntegers(testDuration) && allSucceeded;
+	TestResult testResult("Hash map test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("singleintegers"))
 	{
-		Log::info() << "Hash map test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Hash map test FAILED!";
+		testResult = testSingleIntegers(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("multipleintegers"))
+	{
+		testResult = testMultipleIntegers(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

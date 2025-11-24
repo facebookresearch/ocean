@@ -12,6 +12,9 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/WorkerPool.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -21,11 +24,11 @@ namespace Test
 namespace TestBase
 {
 
-bool TestWorkerPool::test(const double testDuration)
+bool TestWorkerPool::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   WorkerPool tests:   ---";
+	TestResult testResult("WorkerPool test");
 	Log::info() << " ";
 
 	const unsigned int cores = Processor::get().cores();
@@ -37,25 +40,20 @@ bool TestWorkerPool::test(const double testDuration)
 	}
 
 	Log::info() << "Capacity of the worker pool: " << WorkerPool::get().capacity();
-
-	bool allSucceeded = true;
-
 	Log::info() << " ";
 
-	allSucceeded = testScopedWorker(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("scopedworker"))
 	{
-		Log::info() << "WorkerPool test succeeded.";
-	}
-	else
-	{
-		Log::info() << "WorkerPool test FAILED!";
+		testResult = testScopedWorker(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

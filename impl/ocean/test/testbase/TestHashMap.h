@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_HASH_MAP_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 namespace Ocean
 {
@@ -30,9 +31,10 @@ class OCEAN_TEST_BASE_EXPORT TestHashMap
 		/**
 		 * Tests the hash map functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Test selector for filtering sub-tests; default runs all tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the hash map for single values.

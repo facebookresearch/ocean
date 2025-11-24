@@ -9,6 +9,9 @@
 
 #include "ocean/base/CommandArguments.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,27 +21,26 @@ namespace Test
 namespace TestBase
 {
 
-bool TestCommandArguments::test(const double /*testDuration*/)
+bool TestCommandArguments::test(const double /*testDuration*/, const TestSelector& selector)
 {
-	Log::info() << "---   Command arguments test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testParse() && allSucceeded;
+	TestResult testResult("Command arguments test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("parse"))
 	{
-		Log::info() << "Command arguments test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Command arguments test FAILED!";
+		testResult = testParse();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

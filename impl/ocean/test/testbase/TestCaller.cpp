@@ -7,6 +7,9 @@
 
 #include "ocean/test/testbase/TestCaller.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -320,39 +323,39 @@ int TestCaller::Object::nonConstantFunctionIndividualParameters1(int parameter0,
 	return -1;
 }
 
-bool TestCaller::test()
+bool TestCaller::test(const TestSelector& selector)
 {
-	Log::info() << "---   Caller tests:   ---";
+	TestResult testResult("Caller test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testCallerMembers() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCallerStatics() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCallerParameters() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("callermembers"))
 	{
-		Log::info() << "Caller test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Caller test FAILED!";
+		testResult = testCallerMembers();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("callerstatics"))
+	{
+		testResult = testCallerStatics();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("callerparameters"))
+	{
+		testResult = testCallerParameters();
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

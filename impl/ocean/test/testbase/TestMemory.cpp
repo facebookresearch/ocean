@@ -8,6 +8,8 @@
 #include "ocean/test/testbase/TestMemory.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 #include "ocean/base/Memory.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -22,39 +24,42 @@ namespace Test
 namespace TestBase
 {
 
-bool TestMemory::test(const double testDuration, Worker& worker)
+bool TestMemory::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	Log::info() << "---   Memory tests:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testObject(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAllocation(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsInside(testDuration) && allSucceeded;
+	TestResult testResult("Memory tests");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("object"))
 	{
-		Log::info() << "Memory test succeed.";
-	}
-	else
-	{
-		Log::info() << "Memory test FAILED!";
+		testResult = testObject(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("allocation"))
+	{
+		testResult = testAllocation(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isinside"))
+	{
+		testResult = testIsInside(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

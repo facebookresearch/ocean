@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_INHERITANCE_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include <cmath>
 
@@ -506,9 +507,10 @@ class OCEAN_TEST_BASE_EXPORT TestInheritance
 		/**
 		 * Tests all inheritance functions.
 		 * @param testDuration Number of test seconds, with range (0, infinity)
+		 * @param selector Selector for which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the performance of the normal class.

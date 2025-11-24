@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_LOCK_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Lock.h"
 
@@ -61,9 +62,10 @@ class OCEAN_TEST_BASE_EXPORT TestLock
 
 		/**
 		 * Tests all lock functions.
+		 * @param selector Optional test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the lock and unlock functions.

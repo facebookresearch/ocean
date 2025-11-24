@@ -11,6 +11,9 @@
 #include "ocean/base/StaticBuffer.h"
 #include "ocean/base/String.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -20,45 +23,50 @@ namespace Test
 namespace TestBase
 {
 
-bool TestStaticBuffer::test(const double /*testDuration*/)
+bool TestStaticBuffer::test(const double /*testDuration*/, const TestSelector& selector)
 {
-	Log::info() << "---   StaticBuffer test:   ---";
+	TestResult testResult("StaticBuffer test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testConstructor() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAccess() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testClear() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComparison() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "StaticBuffer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "StaticBuffer test FAILED!";
+		testResult = testConstructor();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("access"))
+	{
+		testResult = testAccess();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("clear"))
+	{
+		testResult = testClear();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("comparison"))
+	{
+		testResult = testComparison();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

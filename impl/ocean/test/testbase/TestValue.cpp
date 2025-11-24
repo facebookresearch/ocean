@@ -11,6 +11,9 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -20,51 +23,59 @@ namespace Test
 namespace TestBase
 {
 
-bool TestValue::test(const double testDuration)
+bool TestValue::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Value tests:   ---";
+	TestResult testResult("Value test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComparison(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopy(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMove(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReadWrite(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "Value test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Value test FAILED!";
+		testResult = testConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("comparison"))
+	{
+		testResult = testComparison(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copy"))
+	{
+		testResult = testCopy(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("move"))
+	{
+		testResult = testMove(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("readwrite"))
+	{
+		testResult = testReadWrite(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

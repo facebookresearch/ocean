@@ -11,6 +11,9 @@
 #include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -20,47 +23,52 @@ namespace Test
 namespace TestBase
 {
 
-bool TestRingMap::test(const double testDuration)
+bool TestRingMap::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "---   RingMap test:   ---";
+	TestResult testResult("RingMap test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testInsert(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testChangeCapacity(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCheckout(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRefresh(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("insert"))
 	{
-		Log::info() << "RingMap test succeeded.";
-	}
-	else
-	{
-		Log::info() << "RingMap test FAILED!";
+		testResult = testInsert(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("changecapacity"))
+	{
+		testResult = testChangeCapacity(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("checkout"))
+	{
+		testResult = testCheckout(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("refresh"))
+	{
+		testResult = testRefresh(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

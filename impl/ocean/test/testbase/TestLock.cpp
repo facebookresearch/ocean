@@ -7,6 +7,9 @@
 
 #include "ocean/test/testbase/TestLock.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <thread>
 
 namespace Ocean
@@ -24,43 +27,59 @@ Lock& TestLock::staticLockObject()
 	return lockObject;
 }
 
-bool TestLock::test()
+bool TestLock::test(const TestSelector& selector)
 {
-	Log::info() << "---   Lock test:   ---";
+	TestResult testResult("Lock test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testLockUnlock() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testScopedLock() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStaticScopedLock() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testTemplatedLock() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDualScopedLock() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("lockunlock"))
 	{
-		Log::info() << "Lock test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Lock test FAILED!";
+		testResult = testLockUnlock();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("scopedlock"))
+	{
+		testResult = testScopedLock();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("staticscopedlock"))
+	{
+		testResult = testStaticScopedLock();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("templatedlock"))
+	{
+		testResult = testTemplatedLock();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("dualscopedlock"))
+	{
+		testResult = testDualScopedLock();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

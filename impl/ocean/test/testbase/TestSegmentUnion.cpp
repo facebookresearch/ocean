@@ -13,6 +13,9 @@
 #include "ocean/base/ShiftVector.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <stddef.h>
 
 namespace Ocean
@@ -24,55 +27,60 @@ namespace Test
 namespace TestBase
 {
 
-bool TestSegmentUnion::test(const double testDuration)
+bool TestSegmentUnion::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "---   SegmentUnion test:   ---";
+	TestResult testResult("SegmentUnion test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testUnionSize<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testUnionSize<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntersection<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIntersection<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMaximalGap<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMaximalGap<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBoolCastOperator<float>() && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testBoolCastOperator<double>() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("unionsize"))
 	{
-		Log::info() << "SegmentUnion test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SegmentUnion test FAILED!";
+		testResult = testUnionSize<float>(testDuration);
+		Log::info() << " ";
+		testResult = testUnionSize<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("intersection"))
+	{
+		testResult = testIntersection<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIntersection<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("maximalgap"))
+	{
+		testResult = testMaximalGap<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMaximalGap<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("boolcastoperator"))
+	{
+		testResult = testBoolCastOperator<float>();
+		Log::info() << " ";
+		testResult = testBoolCastOperator<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

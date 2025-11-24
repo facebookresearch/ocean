@@ -7,6 +7,9 @@
 
 #include "ocean/test/testbase/TestCallback.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -247,33 +250,31 @@ int TestCallback::Object::functionInt20(int /*p0*/, int /*p1*/, int /*p2*/, int 
 	return 20;
 }
 
-bool TestCallback::test()
+bool TestCallback::test(const TestSelector& selector)
 {
-	Log::info() << "---   Callback tests:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testCallbackMembers() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCallbackStatics() && allSucceeded;
+	TestResult testResult("Callback tests");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("callbackmembers"))
 	{
-		Log::info() << "Callback test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Callback test FAILED!";
+		testResult = testCallbackMembers();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("callbackstatics"))
+	{
+		testResult = testCallbackStatics();
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

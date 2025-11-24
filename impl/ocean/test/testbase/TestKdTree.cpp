@@ -14,6 +14,9 @@
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -23,44 +26,53 @@ namespace Test
 namespace TestBase
 {
 
-bool TestKdTree::test(const double testDuration)
+bool TestKdTree::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Kd tree tests:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testNearestNeighborInteger<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testNearestNeighborInteger<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testRadiusSearchInteger<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testRadiusSearchInteger<float>(testDuration) && allSucceeded;
+	TestResult testResult("Kd tree tests");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("nearestneighborinteger<double>"))
 	{
-		Log::info() << "Kd tree test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Kd tree test FAILED!";
+		testResult = testNearestNeighborInteger<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("nearestneighborinteger<float>"))
+	{
+		testResult = testNearestNeighborInteger<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("radiussearchinteger<double>"))
+	{
+		testResult = testRadiusSearchInteger<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("radiussearchinteger<float>"))
+	{
+		testResult = testRadiusSearchInteger<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

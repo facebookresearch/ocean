@@ -13,6 +13,9 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <set>
 #include <unordered_set>
 #include <vector>
@@ -26,29 +29,33 @@ namespace Test
 namespace TestBase
 {
 
-bool TestHashSet::test(const double testDuration)
+bool TestHashSet::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Hash set test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testSingleIntegers(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultipleIntegers(testDuration) && allSucceeded;
+	TestResult testResult("Hash set test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-		Log::info() << "Hash set test succeeded.";
-	else
-		Log::info() << "Hash set test FAILED!";
+	if (selector.shouldRun("singleintegers"))
+	{
+		testResult = testSingleIntegers(testDuration);
 
-	return allSucceeded;
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multipleintegers"))
+	{
+		testResult = testMultipleIntegers(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

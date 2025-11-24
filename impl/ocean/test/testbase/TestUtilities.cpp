@@ -8,6 +8,8 @@
 #include "ocean/test/testbase/TestUtilities.h"
 
 #include "ocean/base/Utilities.h"
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
@@ -20,47 +22,69 @@ namespace Test
 namespace TestBase
 {
 
-bool TestUtilities::test(const double testDuration)
+bool TestUtilities::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Utilities test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testMinmax(testDuration) && allSucceeded;
+	TestResult testResult("Utilities test");
 
 	Log::info() << " ";
 
-	allSucceeded = testModulo(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testRingDistance(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testMirrorValue(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDivisionBy2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testIsPowerOfTwo(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("minmax"))
 	{
-		Log::info() << "Utilities test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Utilities test FAILED!";
+		testResult = testMinmax(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("modulo"))
+	{
+		testResult = testModulo(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("ringdistance"))
+	{
+		testResult = testRingDistance(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("mirrorvalue"))
+	{
+		testResult = testMirrorValue(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("divisionby2"))
+	{
+		testResult = testDivisionBy2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("ispoweroftwo"))
+	{
+		testResult = testIsPowerOfTwo(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_HIGH_PERFORMANCE_TIMER_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 namespace Ocean
 {
@@ -29,9 +30,10 @@ class OCEAN_TEST_BASE_EXPORT TestHighPerformanceTimer
 
 		/**
 		 * Invokes all high performance timer tests.
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector = TestSelector());
 	
 		/**
 		 * Tests the precision of the high performance timer.
@@ -50,9 +52,10 @@ class OCEAN_TEST_BASE_EXPORT TestHighPerformanceStatistic
 
 		/**
 		 * Tests all high performance statistic tests.
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the reset function.

@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_CALLBACK_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Callback.h"
 
@@ -372,9 +373,10 @@ class OCEAN_TEST_BASE_EXPORT TestCallback
 
 		/**
 		 * Tests the entire callback functionality.
+		 * @param selector Selector for which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the callback object with member functions.

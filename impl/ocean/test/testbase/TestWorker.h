@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_WORKER_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Worker.h"
 
@@ -32,9 +33,10 @@ class OCEAN_TEST_BASE_EXPORT TestWorker : protected Worker
 		/**
 		 * Tests the entire worker functionalities.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param selector Optional test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the constructor.

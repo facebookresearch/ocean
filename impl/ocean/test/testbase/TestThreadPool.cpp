@@ -13,6 +13,9 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/ThreadPool.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -50,31 +53,25 @@ void TestThreadPool::Executions::clear()
 	ids_.clear();
 }
 
-bool TestThreadPool::test(const double testDuration)
+bool TestThreadPool::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   ThreadPool tests:   ---";
+	TestResult testResult("ThreadPool test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-
-	allSucceeded = testInvokeFunctions(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("invokefunctions"))
 	{
-		Log::info() << "ThreadPool test succeeded.";
-	}
-	else
-	{
-		Log::info() << "ThreadPool test FAILED!";
+		testResult = testInvokeFunctions(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

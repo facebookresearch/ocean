@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_THREAD_POOL_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Lock.h"
 #include "ocean/base/Singleton.h"
@@ -74,9 +75,10 @@ class OCEAN_TEST_BASE_EXPORT TestThreadPool
 		/**
 		 * Tests all TestThreadPool functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector to filter specific tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests to invoke several functions.

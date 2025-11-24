@@ -10,6 +10,9 @@
 #include "ocean/base/ScopedFunction.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <functional>
 
 namespace Ocean
@@ -21,29 +24,23 @@ namespace Test
 namespace TestBase
 {
 
-bool TestScopedFunction::test(const double testDuration)
+bool TestScopedFunction::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert_and_suppress_unused(testDuration > 0.0, testDuration);
 
-	Log::info() << "---   ScopedFunction test:   ---";
+	TestResult testResult("ScopedFunction test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testRelease() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("release"))
 	{
-		Log::info() << "ScopedObject test succeeded.";
-	}
-	else
-	{
-		Log::info() << "ScopedObject test FAILED!";
+		testResult = testRelease();
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

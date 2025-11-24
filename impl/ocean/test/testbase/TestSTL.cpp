@@ -7,6 +7,8 @@
 
 #include "ocean/test/testbase/TestSTL.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include <cstdlib>
 
 namespace Ocean
@@ -18,7 +20,7 @@ namespace Test
 namespace TestBase
 {
 
-bool TestSTL::testSTL()
+bool TestSTL::testSTL(const TestSelector& /*selector*/)
 {
 	Log::info() << "---   Testing C++ STL functions:   ---";
 	Log::info() << " ";

@@ -9,6 +9,10 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_UTILITIES_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
+
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 
 namespace Ocean
 {
@@ -30,9 +34,10 @@ class OCEAN_TEST_BASE_EXPORT TestUtilities
 		/**
 		 * Tests the entire utilities functionality.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The selector to filter individual test cases
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the min max function.

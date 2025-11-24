@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_CALLER_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Caller.h"
 
@@ -583,9 +584,10 @@ class OCEAN_TEST_BASE_EXPORT TestCaller
 
 		/**
 		 * Tests the entire caller functionality.
+		 * @param selector Optional test selector
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the caller object with member functions.

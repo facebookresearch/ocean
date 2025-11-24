@@ -10,6 +10,9 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <vector>
 
 namespace Ocean
@@ -277,35 +280,40 @@ double TestInheritance::VirtualSubClass::virtualFunction1(const double value) co
 	return sqrt(value) * classValue_;
 }
 
-bool TestInheritance::test(const double testDuration)
+bool TestInheritance::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Inheritance test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testNormal(testDuration) && allSucceeded;
+	TestResult testResult("Inheritance test");
 
 	Log::info() << " ";
 
-	allSucceeded = testVirtual(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDiamond(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("normal"))
 	{
-		Log::info() << "Inheritance test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Inheritance test FAILED!";
+		testResult = testNormal(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("virtual"))
+	{
+		testResult = testVirtual(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("diamond"))
+	{
+		testResult = testDiamond(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 	
 #ifdef OCEAN_USE_GTEST

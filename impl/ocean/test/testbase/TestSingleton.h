@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_SINGLETON_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Singleton.h"
 
@@ -66,9 +67,10 @@ class OCEAN_TEST_BASE_EXPORT TestSingleton
 
 		/**
 		 * Tests all singleton functions.
+		 * @param selector The test selector to select the tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the get function (creating the instance).

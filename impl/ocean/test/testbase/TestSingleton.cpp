@@ -7,6 +7,9 @@
 
 #include "ocean/test/testbase/TestSingleton.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -32,27 +35,23 @@ unsigned int TestSingleton::SingletonUser::value() const
 	return userValue;
 }
 
-bool TestSingleton::test()
+bool TestSingleton::test(const TestSelector& selector)
 {
-	Log::info() << "---   Tests the singleton:   ---";
+	TestResult testResult("Singleton test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testInstance() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("instance"))
 	{
-		Log::info() << "Singleton test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Singleton test FAILED!";
+		testResult = testInstance();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

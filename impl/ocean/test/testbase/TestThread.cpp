@@ -9,6 +9,8 @@
 
 #include "ocean/base/RandomI.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 #include <thread>
@@ -22,37 +24,32 @@ namespace Test
 namespace TestBase
 {
 
-bool TestThread::test(const double testDuration)
+bool TestThread::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Thread tests:   ---";
+	TestResult testResult("Thread test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	Log::info() << " ";
-
-	allSucceeded = testWaitForValueWithoutLock(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testWaitForValueWithLock(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("waitforvaluewithoutlock"))
 	{
-		Log::info() << "Thread test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Thread test FAILED!";
+		testResult = testWaitForValueWithoutLock(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("waitforvaluewithlock"))
+	{
+		testResult = testWaitForValueWithLock(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

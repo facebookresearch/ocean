@@ -13,6 +13,9 @@
 #include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -22,29 +25,28 @@ namespace Test
 namespace TestBase
 {
 
-bool TestDateTime::test(const double testDuration)
+bool TestDateTime::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   DateTime test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testConversion(testDuration) && allSucceeded;
+	TestResult testResult("DateTime test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("conversion"))
 	{
-		Log::info() << "DateTime test succeeded.";
-	}
-	else
-	{
-		Log::info() << "DateTime test FAILED!";
+		testResult = testConversion(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

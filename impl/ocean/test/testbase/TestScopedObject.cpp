@@ -11,6 +11,9 @@
 #include "ocean/base/ScopedObject.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <functional>
 
 namespace Ocean
@@ -75,35 +78,32 @@ bool TestScopedObject::Manager::removeObject(const uint64_t id)
 	return true;
 }
 
-bool TestScopedObject::test(const double testDuration)
+bool TestScopedObject::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "---   ScopedObject test:   ---";
+	TestResult testResult("ScopedObject test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testRuntime(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCompileTime(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("runtime"))
 	{
-		Log::info() << "ScopedObject test succeeded.";
-	}
-	else
-	{
-		Log::info() << "ScopedObject test FAILED!";
+		testResult = testRuntime(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("compiletime"))
+	{
+		testResult = testCompileTime(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

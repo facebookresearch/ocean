@@ -10,6 +10,9 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <cmath>
 
 namespace Ocean
@@ -21,53 +24,61 @@ namespace Test
 namespace TestBase
 {
 
-bool TestTimestamp::test(const double testDuration)
+bool TestTimestamp::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Timestamp test:   ---";
+	TestResult testResult("Timestamp test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testResolution(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMilliseconds(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMicroseconds(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNanoseconds(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasTimePassed(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("resolution"))
 	{
-		Log::info() << "Timestamp test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Timestamp test FAILED!";
+		testResult = testResolution(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("milliseconds"))
+	{
+		testResult = testMilliseconds(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("microseconds"))
+	{
+		testResult = testMicroseconds(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("nanoseconds"))
+	{
+		testResult = testNanoseconds(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hastimepassed"))
+	{
+		testResult = testHasTimePassed(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

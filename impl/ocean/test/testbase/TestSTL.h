@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_STL_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 namespace Ocean
 {
@@ -29,9 +30,10 @@ class OCEAN_TEST_BASE_EXPORT TestSTL
 
 		/**
 		 * Tests all c++ functions.
+		 * @param selector Optional test selector to control which tests to run
 		 * @return True, if succeeded
 		 */
-		static bool testSTL();
+		static bool testSTL(const TestSelector& selector = TestSelector());
 
 	private:
 

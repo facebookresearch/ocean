@@ -11,6 +11,9 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Thread.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include <cmath>
 
 namespace Ocean
@@ -22,50 +25,42 @@ namespace Test
 namespace TestBase
 {
 
-bool TestHighPerformanceTimer::test()
+bool TestHighPerformanceTimer::test(const TestSelector& selector)
 {
-	Log::info() << "---   Test high performance timer:   ---";
+	TestResult testResult("Test high performance timer");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPrecision() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("precision"))
 	{
-		Log::info() << "High performance timer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "High performance timer test FAILED!";
+		testResult = testPrecision();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
-bool TestHighPerformanceStatistic::test()
+bool TestHighPerformanceStatistic::test(const TestSelector& selector)
 {
-	Log::info() << "---   Test high performance statistic:   ---";
+	TestResult testResult("Test high performance statistic");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testReset() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("reset"))
 	{
-		Log::info() << "High performance statistic test succeeded.";
-	}
-	else
-	{
-		Log::info() << "High performance statistic test FAILED!";
+		testResult = testReset();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

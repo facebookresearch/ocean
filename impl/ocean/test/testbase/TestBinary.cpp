@@ -9,6 +9,9 @@
 
 #include "ocean/base/Binary.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -18,27 +21,23 @@ namespace Test
 namespace TestBase
 {
 
-bool TestBinary::test(const double /*testDuration*/)
+bool TestBinary::test(const double /*testDuration*/, const TestSelector& selector)
 {
-	Log::info() << "---   Binary test:   ---";
+	TestResult testResult("Binary test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testHideString() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("hidestring"))
 	{
-		Log::info() << "Binary test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Binary test FAILED!";
+		testResult = testHideString();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

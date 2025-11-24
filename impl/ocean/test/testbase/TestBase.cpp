@@ -43,12 +43,14 @@
 #include "ocean/test/testbase/TestWorker.h"
 #include "ocean/test/testbase/TestWorkerPool.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/String.h"
 #include "ocean/base/TaskQueue.h"
-#include "ocean/base/Utilities.h"
 
 #ifdef _ANDROID
 	#include "ocean/platform/android/Battery.h"
@@ -56,8 +58,6 @@
 #endif
 
 #include "ocean/system/Process.h"
-
-#include <set>
 
 namespace Ocean
 {
@@ -74,7 +74,7 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 	static_assert(sizeof(int) == 4, "Invalid data type");
 	static_assert(sizeof(long long) == 8, "Invalid data type");
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
 	Log::info() << "+++   Ocean Base Library test:   +++";
 	Log::info() << " ";
@@ -90,340 +90,339 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 	Log::info() << "This device has " << Processor::get().cores() << " CPU cores (may include HT).";
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("datatype") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("datatype"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestDataType::test(testDuration) && allSucceeded;
+		testResult = TestDataType::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frame") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frame"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFrame::test(testDuration) && allSucceeded;
+		testResult = TestFrame::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("stl") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("stl"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSTL::testSTL() && allSucceeded;
+		testResult = TestSTL::testSTL(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("commandarguments") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("commandarguments"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestCommandArguments::test(testDuration) && allSucceeded;
+		testResult = TestCommandArguments::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("lock") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("lock"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLock::test() && allSucceeded;
+		testResult = TestLock::test(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("singleton") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("singleton"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSingleton::test() && allSucceeded;
+		testResult = TestSingleton::test(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("randomi") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("randomi"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRandomI::test(testDuration) && allSucceeded;
+		testResult = TestRandomI::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("ringmap") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("ringmap"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRingMap::test(testDuration) && allSucceeded;
+		testResult = TestRingMap::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("string") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("string"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestString::test(testDuration) && allSucceeded;
+		testResult = TestString::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("timestamp") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("timestamp"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestTimestamp::test(testDuration) && allSucceeded;
+		testResult = TestTimestamp::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("datetime") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("datetime"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestDateTime::test(testDuration) && allSucceeded;
+		testResult = TestDateTime::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("highperformancetimer") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("highperformancetimer"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHighPerformanceTimer::test() && allSucceeded;
+		testResult = TestHighPerformanceTimer::test(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("highperformancestatistic") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("highperformancestatistic"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHighPerformanceStatistic::test() && allSucceeded;
+		testResult = TestHighPerformanceStatistic::test(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("inheritance") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("inheritance"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestInheritance::test(testDuration) && allSucceeded;
+		testResult = TestInheritance::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("callback") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("callback"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestCallback::test() && allSucceeded;
+		testResult = TestCallback::test(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("caller") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("caller"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestCaller::test() && allSucceeded;
+		testResult = TestCaller::test(subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("signal") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("signal"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSignal::test(testDuration) && allSucceeded;
+		testResult = TestSignal::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("worker") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("worker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestWorker::test(testDuration) && allSucceeded;
+		testResult = TestWorker::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("median") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("median"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMedian::test(testDuration) && allSucceeded;
+		testResult = TestMedian::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("memory") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("memory"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMemory::test(testDuration, worker) && allSucceeded;
+		testResult = TestMemory::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("utilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("utilities"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestUtilities::test(testDuration) && allSucceeded;
+		testResult = TestUtilities::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("hashset") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("hashset"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHashSet::test(testDuration) && allSucceeded;
+		testResult = TestHashSet::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("hashmap") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("hashmap"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHashMap::test(testDuration) && allSucceeded;
+		testResult = TestHashMap::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("kdtree") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("kdtree"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestKdTree::test(testDuration) && allSucceeded;
+		testResult = TestKdTree::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("workerpool") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("workerpool"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestWorkerPool::test(testDuration) && allSucceeded;
+		testResult = TestWorkerPool::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("subset") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("subset"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSubset::test(testDuration) && allSucceeded;
+		testResult = TestSubset::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("segmentunion") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("segmentunion"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSegmentUnion::test(testDuration) && allSucceeded;
+		testResult = TestSegmentUnion::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("movebehavior") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("movebehavior"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMoveBehavior::test(testDuration) && allSucceeded;
+		testResult = TestMoveBehavior::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("binary") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("binary"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestBinary::test(testDuration) && allSucceeded;
+		testResult = TestBinary::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("value") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("value"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestValue::test(testDuration) && allSucceeded;
+		testResult = TestValue::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("scopedobject") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("scopedobject"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestScopedObject::test(testDuration) && allSucceeded;
+		testResult = TestScopedObject::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("scopedfunction") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("scopedfunction"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestScopedFunction::test(testDuration) && allSucceeded;
+		testResult = TestScopedFunction::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("thread") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("thread"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestThread::test(testDuration) && allSucceeded;
+		testResult = TestThread::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("threadpool") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("threadpool"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestThreadPool::test(testDuration) && allSucceeded;
+		testResult = TestThreadPool::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("staticbuffer") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("staticbuffer"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestStaticBuffer::test(testDuration) && allSucceeded;
+		testResult = TestStaticBuffer::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("staticvector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("staticvector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestStaticVector::test(testDuration) && allSucceeded;
+		testResult = TestStaticVector::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("stackheapvector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("stackheapvector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestStackHeapVector::test(testDuration) && allSucceeded;
+		testResult = TestStackHeapVector::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
@@ -431,16 +430,9 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Base Library test succeeded!";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Base Library test FAILED!";
-	}
+	Log::info() << selector << " Ocean Base Library test " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testBaseAsynchronInternal(const double testDuration, const std::string testFunctions)

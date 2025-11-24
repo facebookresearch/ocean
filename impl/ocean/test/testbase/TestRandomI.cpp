@@ -12,6 +12,8 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 #include <numeric>
@@ -26,14 +28,12 @@ namespace Test
 namespace TestBase
 {
 
-bool TestRandomI::test(const double testDuration)
+bool TestRandomI::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   RandomI test:   ---";
+	TestResult testResult("RandomI test");
 	Log::info() << " ";
-
-	bool allSucceeded = true;
 
 	RandomGenerator randomGenerator;
 
@@ -41,97 +41,145 @@ bool TestRandomI::test(const double testDuration)
 
 	if (initialSeed != randomGenerator.seed())
 	{
-		allSucceeded = false;
+		testResult = false;
 	}
 
-	allSucceeded = testDistribution32(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("distribution32"))
+	{
+		testResult = testDistribution32(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testDistribution64(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("distribution64"))
+	{
+		testResult = testDistribution64(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testDistributionSmallRange(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("distributionsmallrange"))
+	{
+		testResult = testDistributionSmallRange(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testDistributionLargeRange(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("distributionlargerange"))
+	{
+		testResult = testDistributionLargeRange(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testOneParameter(randomGenerator) && allSucceeded;
+	if (selector.shouldRun("oneparameter"))
+	{
+		testResult = testOneParameter(randomGenerator);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testTwoParameter(randomGenerator) && allSucceeded;
+	if (selector.shouldRun("twoparameter"))
+	{
+		testResult = testTwoParameter(randomGenerator);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testThreeParameter(randomGenerator) && allSucceeded;
+	if (selector.shouldRun("threeparameter"))
+	{
+		testResult = testThreeParameter(randomGenerator);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testSeveralParameter(randomGenerator) && allSucceeded;
+	if (selector.shouldRun("severalparameter"))
+	{
+		testResult = testSeveralParameter(randomGenerator);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testRandomPair(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("randompair"))
+	{
+		testResult = testRandomPair(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testRandomTriple(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("randomtriple"))
+	{
+		testResult = testRandomTriple(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testRandomBoolean(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("randomboolean"))
+	{
+		testResult = testRandomBoolean(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testRandomElementsVector(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("randomelementsvector"))
+	{
+		testResult = testRandomElementsVector(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testRandomElementsInitializerList(randomGenerator, testDuration) && allSucceeded;
+	if (selector.shouldRun("randomelementinitializerlist"))
+	{
+		testResult = testRandomElementsInitializerList(randomGenerator, testDuration);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testExtremeValueRange(randomGenerator) && allSucceeded;
+	if (selector.shouldRun("extremevaluerange"))
+	{
+		testResult = testExtremeValueRange(randomGenerator);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testSequentialCorrelation(randomGenerator) && allSucceeded;
+	if (selector.shouldRun("sequentialcorrelation"))
+	{
+		testResult = testSequentialCorrelation(randomGenerator);
 
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
+	if (selector.shouldRun("initialseed"))
 	{
 		Log::info() << "Initial seed test:";
 
@@ -143,11 +191,15 @@ bool TestRandomI::test(const double testDuration)
 		{
 			Log::info() << "Validation: FAILED!";
 
-			allSucceeded = false;
+			testResult = false;
 		}
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

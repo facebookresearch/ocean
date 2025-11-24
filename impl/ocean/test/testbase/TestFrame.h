@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_FRAME_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/RandomGenerator.h"
@@ -33,9 +34,10 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		/**
 		 * Invokes all tests.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Test ensuring that the function returning all data types is correct.

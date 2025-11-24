@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_RING_MAP_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/RingMap.h"
 
@@ -39,9 +40,10 @@ class OCEAN_TEST_BASE_EXPORT TestRingMap
 		/**
 		 * Tests the ring map class.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector to select the tests to run
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the insert function.

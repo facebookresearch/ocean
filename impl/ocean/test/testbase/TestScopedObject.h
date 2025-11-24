@@ -9,6 +9,7 @@
 #define META_OCEAN_TEST_TESTBASE_TEST_SCOPED_OBJECT_H
 
 #include "ocean/test/testbase/TestBase.h"
+#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/Lock.h"
 #include "ocean/base/Singleton.h"
@@ -136,9 +137,10 @@ class OCEAN_TEST_BASE_EXPORT TestScopedObject
 		/**
 		 * Tests the ScopedObject class.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
 
 		/**
 		 * Tests the ScopedObject with runtime release function.
