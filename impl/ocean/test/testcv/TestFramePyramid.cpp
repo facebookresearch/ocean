@@ -297,11 +297,10 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 	Log::info() << "Testing ideal layers:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	const Timestamp startTimestampWorker(true);
+	const Timestamp startTimestamp(true);
 
 	do
 	{
@@ -319,10 +318,7 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u /*invalidCoarsestWidthOrHeight*/, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
-			if (layers == 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, layers, 0u);
 
 			unsigned int expectedLayers = 1u;
 			unsigned int layerWidth = width;
@@ -344,25 +340,16 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 				++expectedLayers;
 			}
 
-			if (layers != expectedLayers)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, layers, expectedLayers);
 
 			if (useCoarsestLayerWidth != nullptr)
 			{
-				if (*useCoarsestLayerWidth != layerWidth)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerWidth, layerWidth);
 			}
 
 			if (useCoarsestLayerHeight != nullptr)
 			{
-				if (*useCoarsestLayerHeight != layerHeight)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerHeight, layerHeight);
 			}
 		}
 
@@ -382,10 +369,7 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidSize, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
-			if (layers == 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, layers, 0u);
 
 			unsigned int testWidth = width;
 			unsigned int testHeight = height;
@@ -396,30 +380,22 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 				testHeight /= 2u;
 			}
 
-			if (testWidth <= invalidSize || testHeight <= invalidSize)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_GREATER(validation, testWidth, invalidSize);
+			OCEAN_EXPECT_GREATER(validation, testHeight, invalidSize);
 
 			if (testWidth / 2u > invalidSize && testHeight / 2u > invalidSize)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (useCoarsestLayerWidth != nullptr)
 			{
-				if (*useCoarsestLayerWidth != testWidth)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerWidth, testWidth);
 			}
 
 			if (useCoarsestLayerHeight != nullptr)
 			{
-				if (*useCoarsestLayerHeight != testHeight)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerHeight, testHeight);
 			}
 		}
 
@@ -434,10 +410,7 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
-			if (layers == 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, layers, 0u);
 
 			unsigned int testWidth = width;
 			unsigned int testHeight = height;
@@ -448,30 +421,22 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 				testHeight /= 2u;
 			}
 
-			if (testWidth <= invalidWidth || testHeight <= invalidHeight)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_GREATER(validation, testWidth, invalidWidth);
+			OCEAN_EXPECT_GREATER(validation, testHeight, invalidHeight);
 
 			if (testWidth / 2u > invalidWidth && testHeight / 2u > invalidHeight)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (useCoarsestLayerWidth != nullptr)
 			{
-				if (*useCoarsestLayerWidth != testWidth)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerWidth, testWidth);
 			}
 
 			if (useCoarsestLayerHeight != nullptr)
 			{
-				if (*useCoarsestLayerHeight != testHeight)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerHeight, testHeight);
 			}
 		}
 
@@ -508,10 +473,8 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 				testRadius *= layerFactor;
 			}
 
-			if (testWidth <= invalidWidth || testHeight <= invalidHeight)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_GREATER(validation, testWidth, invalidWidth);
+			OCEAN_EXPECT_GREATER(validation, testHeight, invalidHeight);
 
 			if (testRadius < maximalRadius)
 			{
@@ -522,7 +485,7 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 				if (nextTestWidth > invalidWidth && nextTestHeight > invalidHeight)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -530,38 +493,25 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 			{
 				// we should not add more layers than necessary
 
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (useCoarsestLayerWidth != nullptr)
 			{
-				if (*useCoarsestLayerWidth != testWidth)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerWidth, testWidth);
 			}
 
 			if (useCoarsestLayerHeight != nullptr)
 			{
-				if (*useCoarsestLayerHeight != testHeight)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, *useCoarsestLayerHeight, testHeight);
 			}
 		}
 	}
-	while (startTimestampWorker + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testIdealCoarsestLayerRadius(const double testDuration)
@@ -658,8 +608,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 	};
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -676,22 +625,13 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramid(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/));
 
 			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
 
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, true /*isOwner*/));
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)); // NOLINT(bugprone-use-after-move)
 		}
 
 		{
@@ -701,22 +641,13 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramid(framePyramidSource, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, true /*copyData*/);
 
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/));
 
 			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
 
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, true /*isOwner*/));
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)); // NOLINT(bugprone-use-after-move)
 		}
 
 		{
@@ -726,36 +657,20 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramid(framePyramidSource, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, false /*copyData*/);
 
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(framePyramid, true /*isValid*/, false /*isOwner*/));
 
 			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
 
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, false /*isOwner*/));
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)); // NOLINT(bugprone-use-after-move)
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
@@ -794,8 +709,7 @@ bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
 	}
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -838,25 +752,13 @@ bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
 
 			const FrameType layerFrameType(layerWidth, layerHeight, pixelFormat, pixelOrigin);
 
-			if (!layerFrameType.isValid())
-			{
-				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, layerFrameType.isValid());
 
 			const unsigned int layerSize = layerFrameType.frameTypeSize();
 
-			if (layerSize == 0u)
-			{
-				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, layerSize, 0u);
 
-			if (size_t(layerSize) >= NumericT<size_t>::maxValue() / 2u)
-			{
-				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS(validation, size_t(layerSize), NumericT<size_t>::maxValue() / 2u);
 
 			if (layerIndex == 0u)
 			{
@@ -873,38 +775,21 @@ bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
 			layerWidth /= 2u;
 			layerHeight /= 2u;
 
-			if (testSize >= NumericT<size_t>::maxValue() / 2)
-			{
-				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS(validation, testSize, NumericT<size_t>::maxValue() / 2);
 		}
 
-		if (testSize != size)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, testSize, size);
 
 		if (useTotalLayers != nullptr)
 		{
-			if (*useTotalLayers != testLayers)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, *useTotalLayers, testLayers);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testCreationFramePyramidWithConstructor(const double testDuration, Worker& worker)
@@ -916,7 +801,8 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const double test
 	Log::info() << "Testing creation of " << layers << " pyramid layers with constructor:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Indices32 widths =  {640u, 800u, 1280u, 1920u, 3840u};
 	const Indices32 heights = {480u, 640u,  720u, 1080u, 2160u};
@@ -931,12 +817,12 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const double test
 
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testCreationFramePyramidWithConstructor(width, height, channel, layers, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testCreationFramePyramidWithConstructor(width, height, channel, layers, testDuration, worker));
 			Log::info() << " ";
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker)
@@ -950,9 +836,8 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned in
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1073,27 +958,18 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned in
 
 						performance.stop();
 
-						if (!localResult)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, localResult);
 
 						const size_t expectedMemorySize = CV::FramePyramid::calculateMemorySize(testWidth, testHeight, pixelFormat, expectedLayers, copyFirstLayer);
 
-						if (framePyramid.memory().size() != expectedMemorySize)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, framePyramid.memory().size(), expectedMemorySize);
 
 						ocean_assert(framePyramid.layers() == expectedLayers);
 
-						if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers));
 					}
 				}
-				while (startTimestamp + testDuration > Timestamp(true));
+				while (!startTimestamp.hasTimePassed(testDuration));
 			}
 
 			Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
@@ -1109,16 +985,9 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned in
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testCreationFramePyramidWithReplace(const double testDuration, Worker& worker)
@@ -1130,7 +999,8 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const double testDura
 	Log::info() << "Testing creation of " << layers << " pyramid layers with replace:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Indices32 widths =  {640u, 800u, 1280u, 1920u, 3840u};
 	const Indices32 heights = {480u, 640u,  720u, 1080u, 2160u};
@@ -1145,12 +1015,12 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const double testDura
 
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testCreationFramePyramidWithReplace(width, height, channel, layers, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testCreationFramePyramidWithReplace(width, height, channel, layers, testDuration, worker));
 			Log::info() << " ";
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker)
@@ -1164,9 +1034,8 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int wi
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1307,27 +1176,18 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int wi
 
 						performance.stop();
 
-						if (!localResult)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, localResult);
 
 						const size_t expectedMemorySize = CV::FramePyramid::calculateMemorySize(testWidth, testHeight, pixelFormat, expectedLayers, copyFirstLayer);
 
-						if (framePyramid.memory().size() != expectedMemorySize)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, framePyramid.memory().size(), expectedMemorySize);
 
 						ocean_assert(framePyramid.layers() == expectedLayers);
 
-						if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers));
 					}
 				}
-				while (startTimestamp + testDuration > Timestamp(true));
+				while (!startTimestamp.hasTimePassed(testDuration));
 			}
 
 			Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
@@ -1343,25 +1203,17 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int wi
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testCreateFramePyramidExtreme()
 {
 	Log::info() << "Testing creation with extreme parameters";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Indices32 widths =  {640u, 641u, 640u, 641u, 800u, 1280u, 1920u, 3840u, 3840u};
 	const Indices32 heights = {480u, 480u, 481u, 481u, 640u,  720u, 1080u, 2048u, 2160u};
@@ -1399,10 +1251,7 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 					{
 						const CV::FramePyramid framePyramid(frame, downsamplingMode, layerIndex, copyFirstLayer, &extremeWorker);
 
-						if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex));
 
 						if (framePyramid.coarsestLayer().width() >= 2u && framePyramid.coarsestLayer().height() >= 2u)
 						{
@@ -1414,16 +1263,9 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testConstructFromFrameMultiLayer(const double testDuration, Worker& worker)
@@ -1443,7 +1285,8 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const double testDuratio
 		IndexPair32(3840u, 2160u)
 	};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (size_t i = 0; i < sizes.size(); i++)
 	{
@@ -1456,36 +1299,28 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const double testDuratio
 		const unsigned int width = sizes[i].first;
 		const unsigned int height = sizes[i].second;
 
-		allSucceeded = testConstructFromFrameMultiLayer(width, height, 1u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testConstructFromFrameMultiLayer(width, height, 1u, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testConstructFromFrameMultiLayer(width, height, 2u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testConstructFromFrameMultiLayer(width, height, 2u, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testConstructFromFrameMultiLayer(width, height, 4u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testConstructFromFrameMultiLayer(width, height, 4u, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testConstructFromFrameMultiLayer(width, height, (unsigned int)(-1), testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testConstructFromFrameMultiLayer(width, height, (unsigned int)(-1), testDuration, worker));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width, unsigned int height, const unsigned int layerCount, const double testDuration, Worker& worker)
 {
 	Log::info() << "... with size " << width << "x" << height << " and " << (layerCount == ALL_LAYERS ? "all" : String::toAString(layerCount)) << " layers:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1540,10 +1375,7 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 					const CV::FramePyramid framePyramid(frame, dowsamplingMode, layerCount, copyFirstLayer, useWorker);
 				performance.stop();
 
-				if (!validateConstructFromFrame(framePyramid, dowsamplingMode, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(framePyramid, dowsamplingMode, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers));
 
 				if (dowsamplingMode == CV::FramePyramid::DM_FILTER_11)
 				{
@@ -1554,18 +1386,12 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 						expectedOutsideMemoryBlockLayers.emplace(0u);
 					}
 
-					if (!validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker, FrameType::FORMAT_UNDEFINED, frame.timestamp()), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker, FrameType::FORMAT_UNDEFINED, frame.timestamp()), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers));
 
-					if (!validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers));
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
@@ -1579,16 +1405,9 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worker& worker)
@@ -1596,15 +1415,14 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 	Log::info() << "Testing construction from pyramid:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats =
 	{
 		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
 		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
 	};
-
-	RandomGenerator randomGenerator;
 
 	Timestamp startTimestamp(true);
 
@@ -1631,11 +1449,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 
 		const CV::FramePyramid framePyramid(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
 
-		if (!framePyramid.isValid())
-		{
-			ocean_assert(false && "This should never happen!");
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, framePyramid.isValid());
 
 		ocean_assert(validateFramePyramid(frame, framePyramid, downsamplingMode, framePyramid.layers()));
 
@@ -1672,32 +1486,19 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 
 		const CV::FramePyramid newPyramid(framePyramid, firstSourceLayerIndex, sourceLayers, copyData);
 
-		if (!verifyPyramidOwnership(newPyramid, true, copyData))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, verifyPyramidOwnership(newPyramid, true, copyData));
 
 		UnorderedIndexSet32 readOnlyLayers;
 
-		if (!validateConstructFromFrame(newPyramid, downsamplingMode, framePyramid[firstSourceLayerIndex], expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(newPyramid, downsamplingMode, framePyramid[firstSourceLayerIndex], expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers));
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
@@ -1706,15 +1507,14 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 
 	Log::info() << "Testing replace with frame type:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats =
 	{
 		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
 		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
 	};
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -1766,20 +1566,11 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 
 			if (framePyramid.replace(frameType, forceOwner, layers))
 			{
-				if (framePyramid.layers() != expectedLayers)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), expectedLayers);
 
-				if (!framePyramid.isOwner())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, framePyramid.isOwner());
 
-				if (framePyramid.finestLayer().frameType() != frameType)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, framePyramid.finestLayer().frameType(), frameType);
 
 				unsigned int layerWidth = frameType.width();
 				unsigned int layerHeight = frameType.height();
@@ -1787,25 +1578,16 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 
 				for (unsigned int layerIndex = 0u; layerIndex < framePyramid.layers(); ++layerIndex)
 				{
-					if (layerWidth == 0u || layerHeight == 0u)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_NOT_EQUAL(validation, layerWidth, 0u);
+					OCEAN_EXPECT_NOT_EQUAL(validation, layerHeight, 0u);
 
-					if (framePyramid[layerIndex].width() != layerWidth || framePyramid[layerIndex].height() != layerHeight)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, framePyramid[layerIndex].width(), layerWidth);
+					OCEAN_EXPECT_EQUAL(validation, framePyramid[layerIndex].height(), layerHeight);
 
-					if (framePyramid[layerIndex].pixelFormat() != frameType.pixelFormat() || framePyramid[layerIndex].pixelOrigin() != frameType.pixelOrigin())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, framePyramid[layerIndex].pixelFormat(), frameType.pixelFormat());
+					OCEAN_EXPECT_EQUAL(validation, framePyramid[layerIndex].pixelOrigin(), frameType.pixelOrigin());
 
-					if (framePyramid[layerIndex].constdata<void>() != framePyramid.memory().constdata<uint8_t>() + memoryOffset)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, framePyramid[layerIndex].constdata<void>(), static_cast<const void*>(framePyramid.memory().constdata<uint8_t>() + memoryOffset));
 
 					const size_t layerSize = size_t(layerWidth * layerHeight * frameType.channels()) * sizeof(uint8_t);
 
@@ -1815,10 +1597,7 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 					memoryOffset += layerSize;
 				}
 
-				if (memoryOffset > framePyramid.memory().size())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_LESS_EQUAL(validation, memoryOffset, framePyramid.memory().size());
 
 				if (nIteration != 0u)
 				{
@@ -1831,40 +1610,27 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 
 					if (expectUpdatedMemory)
 					{
-						if (framePyramid.memory().constdata() == previousPyramidMemory)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_NOT_EQUAL(validation, framePyramid.memory().constdata(), previousPyramidMemory);
 					}
 					else
 					{
-						if (framePyramid.memory().constdata() != previousPyramidMemory)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, framePyramid.memory().constdata(), previousPyramidMemory);
 					}
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			previousFrameType = frameType;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& worker)
@@ -1873,15 +1639,14 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 
 	Log::info() << "Testing replace with frame:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats =
 	{
 		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
 		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
 	};
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -2002,15 +1767,9 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 
 			if (localResult)
 			{
-				if (framePyramid.layers() != expectedLayers)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), expectedLayers);
 
-				if (framePyramid.finestLayer().frameType() != newFrameType)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, framePyramid.finestLayer().frameType(), newFrameType);
 
 				unsigned int testTotalLayers = 0u;
 				const size_t newMemorySize = CV::FramePyramid::calculateMemorySize(copyFrame.width(), copyFrame.height(), copyFrame.pixelFormat(), expectedLayers, copyFirstLayer, &testTotalLayers);
@@ -2019,17 +1778,11 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 
 				if (nIteration == 0u)
 				{
-					if (framePyramid.memory().size() != newMemorySize)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, framePyramid.memory().size(), newMemorySize);
 				}
 				else
 				{
-					if (framePyramid.memory().size() < newMemorySize)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_GREATER_EQUAL(validation, framePyramid.memory().size(), newMemorySize);
 				}
 
 				if (nIteration != 0u && finestLayerWasOwner)
@@ -2047,10 +1800,7 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 					}
 				}
 
-				if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers));
 
 				if (nIteration != 0u)
 				{
@@ -2058,23 +1808,17 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 
 					if (expectUpdatedMemory)
 					{
-						if (framePyramid.memory().constdata() == previousPyramidMemory)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_NOT_EQUAL(validation, framePyramid.memory().constdata(), previousPyramidMemory);
 					}
 					else
 					{
-						if (framePyramid.memory().constdata() != previousPyramidMemory)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, framePyramid.memory().constdata(), previousPyramidMemory);
 					}
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			previousFrameType = newFrameType;
@@ -2084,18 +1828,11 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 			finestLayerWasOwner = framePyramid.isValid() && framePyramid.finestLayer().isOwner();
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
@@ -2109,9 +1846,8 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::FORMAT_RGB24, FrameType::genericPixelFormat<uint8_t, 4u>()};
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -2154,32 +1890,20 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 			if (replaceResult)
 			{
-				if (framePyramid.layers() != expectedLayers)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), expectedLayers);
 
 				if (copyFirstLayer)
 				{
-					if (frame.constdata<void>() == framePyramid.finestLayer().constdata<void>())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_NOT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 				}
 				else
 				{
-					if (frame.constdata<void>() != framePyramid.finestLayer().constdata<void>())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 				}
 
 				const bool allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
 
-				if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType));
 
 				if (nIteration == 0u)
 				{
@@ -2190,16 +1914,12 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 				{
 					ocean_assert(initialPyramidMemory != nullptr || (framePyramid.layers() == 1u && !copyFirstLayer));
 
-					if (initialPyramidMemory != framePyramid.memory().constdata())
-					{
-						// the pyramid should not have allocated a new memory
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, initialPyramidMemory, framePyramid.memory().constdata());
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2220,61 +1940,38 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 		if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, frame.timestamp()))
 		{
-			if (framePyramid.layers() != newExpectedLayers)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), newExpectedLayers);
 
 			if (copyFirstLayer)
 			{
-				if (frame.constdata<void>() == framePyramid.finestLayer().constdata<void>())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 			}
 			else
 			{
-				if (frame.constdata<void>() != framePyramid.finestLayer().constdata<void>())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 			}
 
 			const bool allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
 
-			if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, newExpectedLayers, allowCompatibleFrameType))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, newExpectedLayers, allowCompatibleFrameType));
 
 			if (framePyramid.layers() != 1u || copyFirstLayer)
 			{
 				ocean_assert(initialPyramidMemory != nullptr);
 
-				if (initialPyramidMemory == framePyramid.memory().constdata())
-				{
-					// the pyramid should have allocated a new memory
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, initialPyramidMemory, framePyramid.memory().constdata());
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testConstructor11(const double testDuration, Worker& worker)
@@ -2288,9 +1985,8 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::FORMAT_RGB24, FrameType::genericPixelFormat<uint8_t, 4u>()};
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -2331,32 +2027,20 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 		{
 			const void* initialPyramidMemory = framePyramid.memory().constdata();
 
-			if (framePyramid.layers() != expectedLayers)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), expectedLayers);
 
 			if (copyFirstLayer)
 			{
-				if (frame.constdata<void>() == framePyramid.finestLayer().constdata<void>())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 			}
 			else
 			{
-				if (frame.constdata<void>() != framePyramid.finestLayer().constdata<void>())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 			}
 
 			bool allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
 
-			if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType));
 
 
 			// now, re replace the pyramid
@@ -2369,84 +2053,58 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 			if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, frame.timestamp()))
 			{
-				if (framePyramid.layers() != expectedLayers)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), expectedLayers);
 
 				if (copyFirstLayer)
 				{
-					if (frame.constdata<void>() == framePyramid.finestLayer().constdata<void>())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_NOT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 				}
 				else
 				{
-					if (frame.constdata<void>() != framePyramid.finestLayer().constdata<void>())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frame.constdata<void>(), framePyramid.finestLayer().constdata<void>());
 				}
 
 				allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
 
-				if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType));
 
 				ocean_assert(initialPyramidMemory != nullptr || (framePyramid.layers() == 1u && !copyFirstLayer));
 
-				if (initialPyramidMemory != framePyramid.memory().constdata())
-				{
-					// the pyramid should not have allocated a new memory
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, initialPyramidMemory, framePyramid.memory().constdata());
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testReduceLayers(const double testDuration)
 {
 	Log::info() << "Testing reduce layers:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::FORMAT_Y16, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_F32, FrameType::FORMAT_Y64, FrameType::FORMAT_RGBA64};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		CV::FramePyramid framePyramid;
 
 		framePyramid.reduceLayers(0);
 
-		if (framePyramid.layers() != 0 || framePyramid.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, framePyramid.layers(), 0u);
+		OCEAN_EXPECT_FALSE(validation, framePyramid.isValid());
 	}
 
 	Timestamp startTimestamp(true);
@@ -2469,10 +2127,7 @@ bool TestFramePyramid::testReduceLayers(const double testDuration)
 
 		CV::FramePyramid framePyramid(layers, FrameType(width, height, pixelFormat, pixelOrigin));
 
-		if (!framePyramid.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, framePyramid.isValid());
 
 		std::vector<const void*> layerPoints;
 
@@ -2485,41 +2140,23 @@ bool TestFramePyramid::testReduceLayers(const double testDuration)
 
 		framePyramid.reduceLayers(newLayers);
 
-		if (framePyramid.layers() == newLayers)
+		OCEAN_EXPECT_EQUAL(validation, size_t(framePyramid.layers()), newLayers);
+
+		for (size_t layerIndex = 0; layerIndex < framePyramid.layers(); ++layerIndex)
 		{
-			for (size_t layerIndex = 0; layerIndex < framePyramid.layers(); ++layerIndex)
-			{
-				if (layerPoints[layerIndex] != framePyramid[(unsigned int)(layerIndex)].constdata<void>())
-				{
-					allSucceeded = false;
-				}
-			}
-		}
-		else
-		{
-			allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, layerPoints[layerIndex], framePyramid[(unsigned int)(layerIndex)].constdata<void>());
 		}
 
 		if (newLayers == 0)
 		{
-			if (framePyramid.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, framePyramid.isValid());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingMode downsamplingMode, const unsigned int layers, const bool allowCompatibleFrameType)
