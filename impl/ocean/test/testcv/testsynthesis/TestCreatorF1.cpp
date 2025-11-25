@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestCreatorF1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -29,30 +31,24 @@ namespace TestCV
 namespace TestSynthesis
 {
 
-bool TestCreatorF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestCreatorF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "CreatorF1 test:";
+	TestResult testResult("CreatorF1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testInpaintingContent(width, height, testDuration, worker) && allSucceeded;
+	if (selector.shouldRun("inpaintingcontent"))
+	{
+		testResult = testInpaintingContent(width, height, testDuration, worker);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "CreatorF1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "CreatorF1 test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

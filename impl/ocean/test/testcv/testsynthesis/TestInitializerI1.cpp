@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestInitializerI1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -220,84 +222,105 @@ VectorI2 TestInitializerI1::InpaintingPixel::determineImageOrientation(const Fra
 	return imageOrientation;
 }
 
-bool TestInitializerI1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestInitializerI1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "InitializerI1 test:";
+	TestResult testResult("InitializerI1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAppearanceMappingAreaConstrained(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAppearanceMapping(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCoarserMappingAdaption(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCoarserMappingAdaptionAreaConstrained(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCoarserMappingAdaptionSpatialCostMask(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRandomMapping(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRandomMappingAreaConstrained(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShrinkingErosion(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShrinkingErosionRandomized(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShrinkingPatchMatching(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("appearancemappingareaconstrained"))
 	{
-		Log::info() << "InitializerI1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "InitializerI1 test FAILED!";
+		testResult = testAppearanceMappingAreaConstrained(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("appearancemapping"))
+	{
+		testResult = testAppearanceMapping(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("coarsermappingadaption"))
+	{
+		testResult = testCoarserMappingAdaption(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("coarsermappingadaptionareaconstrained"))
+	{
+		testResult = testCoarserMappingAdaptionAreaConstrained(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("coarsermappingadaptionspatialcostmask"))
+	{
+		testResult = testCoarserMappingAdaptionSpatialCostMask(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("randommapping"))
+	{
+		testResult = testRandomMapping(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("randommappingareaconstrained"))
+	{
+		testResult = testRandomMappingAreaConstrained(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shrinkingerosion"))
+	{
+		testResult = testShrinkingErosion(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shrinkingerosionrandomized"))
+	{
+		testResult = testShrinkingErosionRandomized(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shrinkingpatchmatching"))
+	{
+		testResult = testShrinkingPatchMatching(testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

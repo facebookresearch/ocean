@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestMappingF1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Utilities.h"
@@ -36,60 +38,69 @@ namespace TestCV
 namespace TestSynthesis
 {
 
-bool TestMappingF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestMappingF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "MappingF1 test:";
+	TestResult testResult("MappingF1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testApplyMapping(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSumSquaredDifference5x5Mask(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAppearanceCost5x5(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAppearanceReferenceCost5x5(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSpatialCost4Neighborhood(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTwoPixelPatchOneSubPixelPatch8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("applymapping"))
 	{
-		Log::info() << "MappingF1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "MappingF1 test FAILED!";
+		testResult = testApplyMapping(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("sumsquareddifference5x5mask"))
+	{
+		testResult = testSumSquaredDifference5x5Mask(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("appearancecost5x5"))
+	{
+		testResult = testAppearanceCost5x5(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("appearancereferencecost5x5"))
+	{
+		testResult = testAppearanceReferenceCost5x5(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("spatialcost4neighborhood"))
+	{
+		testResult = testSpatialCost4Neighborhood(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("twopixelpatchonesubpixelpatch8bitperchannel"))
+	{
+		testResult = testTwoPixelPatchOneSubPixelPatch8BitPerChannel(testDuration);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

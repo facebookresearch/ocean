@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestCreatorI1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -31,42 +33,42 @@ namespace TestCV
 namespace TestSynthesis
 {
 
-bool TestCreatorI1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestCreatorI1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "CreatorI1 test:";
+	TestResult testResult("CreatorI1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testInpaintingContent(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInformationSpatialCost(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInformationCost4Neighborhood(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("inpaintingcontent"))
 	{
-		Log::info() << "CreatorI1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "CreatorI1 test FAILED!";
+		testResult = testInpaintingContent(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("informationspatialcost"))
+	{
+		testResult = testInformationSpatialCost(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("informationcost4neighborhood"))
+	{
+		testResult = testInformationCost4Neighborhood(width, height, testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

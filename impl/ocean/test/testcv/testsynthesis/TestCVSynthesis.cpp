@@ -15,6 +15,8 @@
 #include "ocean/test/testcv/testsynthesis/TestOptimizerF1.h"
 #include "ocean/test/testcv/testsynthesis/TestOptimizerI1.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/Utilities.h"
@@ -41,9 +43,8 @@ namespace TestSynthesis
 
 bool testCVSynthesis(const double testDuration, Worker& worker, const unsigned int testWidth, const unsigned int testHeight, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Synthesis Computer Vision Library test");
 
-	Log::info() << "+++   Ocean Synthesis Computer Vision Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -70,93 +71,85 @@ bool testCVSynthesis(const double testDuration, Worker& worker, const unsigned i
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("mappingi1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("mappingi1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestMappingI1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestMappingI1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("mappingf1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("mappingf1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestMappingF1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestMappingF1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("creatori1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("creatori1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestCreatorI1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestCreatorI1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("creatorf1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("creatorf1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestCreatorF1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestCreatorF1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("initializeri1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("initializeri1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestInitializerI1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestInitializerI1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("initializerf1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("initializerf1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestInitializerF1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestInitializerF1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("optimizeri1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("optimizeri1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestOptimizerI1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestOptimizerI1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("optimizerf1") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("optimizerf1"))
 	{
 		Log::info() << " ";
 		Log::info() << "-";
 		Log::info() << " ";
 
-		allSucceeded = TestOptimizerF1::test(testWidth, testHeight, testDuration, worker) && allSucceeded;
+		testResult = TestOptimizerF1::test(testWidth, testHeight, testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Synthesis library test succeeded!";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Synthesis library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 }

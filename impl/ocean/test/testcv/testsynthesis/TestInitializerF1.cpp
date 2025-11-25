@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestInitializerF1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -33,36 +35,33 @@ namespace TestCV
 namespace TestSynthesis
 {
 
-bool TestInitializerF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestInitializerF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "InitializerF1 test:";
+	TestResult testResult("InitializerF1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAppearanceMapping(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCoarserMappingAdaption(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("appearancemapping"))
 	{
-		Log::info() << "InitializerF1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "InitializerF1 test FAILED!";
+		testResult = testAppearanceMapping(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("coarsermappingadaption"))
+	{
+		testResult = testCoarserMappingAdaption(width, height, testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

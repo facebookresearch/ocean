@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestOptimizerF1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -30,36 +32,33 @@ namespace TestCV
 namespace TestSynthesis
 {
 
-bool TestOptimizerF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestOptimizerF1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "OptimizerF1 test:";
+	TestResult testResult("OptimizerF1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testHighPerformance4Neighborhood(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReferenceFrame4Neighborhood(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("highperformance4neighborhood"))
 	{
-		Log::info() << "OptimizerF1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "OptimizerF1 test FAILED!";
+		testResult = testHighPerformance4Neighborhood(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("referenceframe4neighborhood"))
+	{
+		testResult = testReferenceFrame4Neighborhood(width, height, testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -14,6 +14,8 @@
 
 #include "ocean/cv/synthesis/MappingI1.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -40,9 +42,10 @@ class OCEAN_TEST_CV_SYNTHESIS_EXPORT TestMappingI1 : protected CV::Synthesis::Ma
 		 * @param height The height of the source frame in pixel, with range [1, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the CPU load
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the applyMapping function.

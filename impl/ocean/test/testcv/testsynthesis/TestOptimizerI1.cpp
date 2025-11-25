@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testsynthesis/TestOptimizerI1.h"
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -35,54 +37,60 @@ namespace TestCV
 namespace TestSynthesis
 {
 
-bool TestOptimizerI1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestOptimizerI1::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "OptimizerI1 test:";
+	TestResult testResult("OptimizerI1 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAreaConstrained4Neighborhood(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHighPerformance4Neighborhood(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHighPerformance4NeighborhoodSkipping(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHighPerformance4NeighborhoodSkippingByCostMask(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStructuralConstrained4Neighborhood(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("areaconstrained4neighborhood"))
 	{
-		Log::info() << "OptimizerI1 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "OptimizerI1 test FAILED!";
+		testResult = testAreaConstrained4Neighborhood(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("highperformance4neighborhood"))
+	{
+		testResult = testHighPerformance4Neighborhood(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("highperformance4neighborhoodskipping"))
+	{
+		testResult = testHighPerformance4NeighborhoodSkipping(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("highperformance4neighborhoodskippingbycostmask"))
+	{
+		testResult = testHighPerformance4NeighborhoodSkippingByCostMask(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("structuralconstrained4neighborhood"))
+	{
+		testResult = testStructuralConstrained4Neighborhood(width, height, testDuration, worker);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
