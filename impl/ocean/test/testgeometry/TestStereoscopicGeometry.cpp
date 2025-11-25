@@ -17,6 +17,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -28,29 +29,24 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestStereoscopicGeometry::test(const double testDuration)
+bool TestStereoscopicGeometry::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   StereoscopicGeometry test:   ---";
-	Log::info() << " ";
+	TestResult testResult("StereoscopicGeometry test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testCameraPose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("camerapose"))
 	{
-		Log::info() << "StereoscopicGeometry test succeeded.";
-	}
-	else
-	{
-		Log::info() << "StereoscopicGeometry test FAILED!";
+		testResult = testCameraPose(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

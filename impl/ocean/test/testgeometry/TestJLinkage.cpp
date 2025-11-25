@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestGeometry.h"
 #include "ocean/test/testgeometry/TestJLinkage.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
@@ -29,92 +31,94 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestJLinkage::testJLinkage(const double testDuration)
+bool TestJLinkage::testJLinkage(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   J-Linkage test:   ---";
-
-	bool allSucceeded = true;
+	TestResult testResult("J-Linkage test");
 
 	Log::info() << " ";
 
-	allSucceeded = testFaultlessSingleHomography<LM_JLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessNoisedSingleHomography<LM_JLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessMultipleHomography<LM_JLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessLines<LM_JLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("faultlesssinglehomography"))
 	{
-		Log::info() << "J-Linkage test succeeded.";
-	}
-	else
-	{
-		Log::info() << "J-Linkage test FAILED!";
+		testResult = testFaultlessSingleHomography<LM_JLINKAGE>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("faultlessnoisedsinglelhomography"))
+	{
+		testResult = testFaultlessNoisedSingleHomography<LM_JLINKAGE>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlessmultiplehomography"))
+	{
+		testResult = testFaultlessMultipleHomography<LM_JLINKAGE>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlesslines"))
+	{
+		testResult = testFaultlessLines<LM_JLINKAGE>(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
-bool TestJLinkage::testTLinkage(const double testDuration)
+bool TestJLinkage::testTLinkage(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   T-Linkage test:   ---";
-
-	bool allSucceeded = true;
+	TestResult testResult("T-Linkage test");
 
 	Log::info() << " ";
 
-	allSucceeded = testFaultlessSingleHomography<LM_TLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessNoisedSingleHomography<LM_TLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessMultipleHomography<LM_TLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessLines<LM_TLINKAGE>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("faultlesssinglehomography"))
 	{
-		Log::info() << "T-Linkage test succeeded.";
-	}
-	else
-	{
-		Log::info() << "T-Linkage test FAILED!";
+		testResult = testFaultlessSingleHomography<LM_TLINKAGE>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("faultlessnoisedsinglelhomography"))
+	{
+		testResult = testFaultlessNoisedSingleHomography<LM_TLINKAGE>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlessmultiplehomography"))
+	{
+		testResult = testFaultlessMultipleHomography<LM_TLINKAGE>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlesslines"))
+	{
+		testResult = testFaultlessLines<LM_TLINKAGE>(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 template <TestJLinkage::LinkageMethod tLinkageType>

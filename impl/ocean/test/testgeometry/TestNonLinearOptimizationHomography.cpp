@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationHomography.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -26,35 +28,31 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationHomography::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationHomography::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Non linear homography optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Non linear homography optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNonLinearOptimizationHomography(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationhomography"))
+	{
+		testResult = testNonLinearOptimizationHomography(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNonLinearOptimizationSimilarity(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationsimilarity"))
+	{
+		testResult = testNonLinearOptimizationSimilarity(testDuration);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Non linear homography optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Non linear homography optimization test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

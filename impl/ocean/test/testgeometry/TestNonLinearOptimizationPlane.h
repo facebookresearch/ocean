@@ -12,6 +12,8 @@
 
 #include "ocean/geometry/Estimator.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -33,9 +35,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPlane
 		 * Tests the non linear optimization plane function.
 		 * @param testDuration Number of seconds for each test
 		 * @param worker Optional worker object
+		 * @param selector Selector for sub-tests
 		 * @return True, if the entire function test has succeeded
 		 */
-		static bool test(const double testDuration, Worker* worker);
+		static bool test(const double testDuration, Worker* worker, const TestSelector& selector);
 
 	private:
 

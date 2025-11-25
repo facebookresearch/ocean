@@ -12,6 +12,8 @@
 
 #include "ocean/math/PinholeCamera.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -32,9 +34,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestMultipleViewGeometry
 		/**
 		 * Tests all multiple view geometry functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Selector for sub-tests
 		 * @return True, if succeeded
 		 */
-		static bool testMultipleViewGeometry(const double testDuration);
+		static bool testMultipleViewGeometry(const double testDuration, const TestSelector& selector);
 
 	private:
 

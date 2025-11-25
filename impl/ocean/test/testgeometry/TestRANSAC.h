@@ -12,6 +12,8 @@
 
 #include "ocean/math/AnyCamera.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -48,9 +50,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		 * Invokes all RANSAC tests.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker Optional worker object
+		 * @param selector The test selector
 		 * @return True, if the entire function test has succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the iterations function.

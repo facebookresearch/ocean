@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationOrientation.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -27,27 +29,20 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationOrientation::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationOrientation::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
-	Log::info() << "---   Orientation non linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Orientation non linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testOptimizeOrientation(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("optimizeorientation"))
 	{
-		Log::info() << "Orientation non linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Orientation non linear optimization test FAILED!";
+		testResult = testOptimizeOrientation(testDuration);
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationObjectPoint.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/String.h"
 #include "ocean/base/Subset.h"
@@ -29,87 +31,110 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationObjectPoint::test(const double testDuration, Worker* worker)
+bool TestNonLinearOptimizationObjectPoint::test(const double testDuration, Worker* worker, const TestSelector& selector)
 {
-	Log::info() << "---   Object point non linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Object point non linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNonLinearOptimizationObjectPointsPinholeCamera(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationObjectPointFisheyeCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationObjectPointAnyCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationObjectPointStereoAnyCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationObjectPointAnyCameras(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationObjectPointStereoFisheyeCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationOnePoseObjectPoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationTwoPosesObjectPoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationPosesObjectPoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonLinearOptimizationOrientationalPosesObjectPoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testOptimizeObjectPointRotationalPoses(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("nonlinearoptimizationobjectpointspinholecamera"))
 	{
-		Log::info() << "Object point non linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Object Point non linear optimization test FAILED!";
+		testResult = testNonLinearOptimizationObjectPointsPinholeCamera(testDuration, worker);
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationobjectpointfisheyecamera"))
+	{
+		testResult = testNonLinearOptimizationObjectPointFisheyeCamera(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationobjectpointanycamera"))
+	{
+		testResult = testNonLinearOptimizationObjectPointAnyCamera(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationobjectpointstereoanycamera"))
+	{
+		testResult = testNonLinearOptimizationObjectPointStereoAnyCamera(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationobjectpointanycameras"))
+	{
+		testResult = testNonLinearOptimizationObjectPointAnyCameras(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationobjectpointstereofisheyecamera"))
+	{
+		testResult = testNonLinearOptimizationObjectPointStereoFisheyeCamera(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationoneposeobjectpoints"))
+	{
+		testResult = testNonLinearOptimizationOnePoseObjectPoints(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationtwoposesobjectpoints"))
+	{
+		testResult = testNonLinearOptimizationTwoPosesObjectPoints(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationposesobjectpoints"))
+	{
+		testResult = testNonLinearOptimizationPosesObjectPoints(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("nonlinearoptimizationorientationalposesobjectpoints"))
+	{
+		testResult = testNonLinearOptimizationOrientationalPosesObjectPoints(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	if (selector.shouldRun("optimizeobjectpointrotationalposes"))
+	{
+		testResult = testOptimizeObjectPointRotationalPoses(testDuration);
+	}
+
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationLine.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -25,27 +27,20 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationLine::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationLine::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
-	Log::info() << "---   Line non linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Line non linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNonLinearOptimizationLine(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("nonlinearoptimizationline"))
 	{
-		Log::info() << "Line non linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Line non linear optimization test FAILED!";
+		testResult = testNonLinearOptimizationLine(testDuration);
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 bool TestNonLinearOptimizationLine::testNonLinearOptimizationLine(const double testDuration)

@@ -23,6 +23,7 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Vector3.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -34,55 +35,59 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestP3P::test(const double testDuration)
+bool TestP3P::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   P3P test:   ---";
-	Log::info() << " ";
+	TestResult testResult("P3P test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testP3PWithPoints<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testP3PWithPoints<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testP3PWithRays<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testP3PWithRays<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testP3PWithPointsStressTest<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testP3PWithPointsStressTest<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testP3PWithRaysStressTest<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testP3PWithRaysStressTest<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("p3pwithpoints"))
 	{
-		Log::info() << "P3P test succeeded.";
-	}
-	else
-	{
-		Log::info() << "P3P test FAILED!";
+		testResult = testP3PWithPoints<float>(testDuration);
+		Log::info() << " ";
+		testResult = testP3PWithPoints<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("p3pwithrays"))
+	{
+		testResult = testP3PWithRays<float>(testDuration);
+		Log::info() << " ";
+		testResult = testP3PWithRays<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("p3pwithpointsstresstest"))
+	{
+		testResult = testP3PWithPointsStressTest<float>(testDuration);
+		Log::info() << " ";
+		testResult = testP3PWithPointsStressTest<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("p3pwithraysstresstest"))
+	{
+		testResult = testP3PWithRaysStressTest<float>(testDuration);
+		Log::info() << " ";
+		testResult = testP3PWithRaysStressTest<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

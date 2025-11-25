@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestEstimator.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/geometry/Estimator.h"
@@ -27,53 +29,58 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestEstimator::test(const double testDuration)
+bool TestEstimator::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Estimator test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testNeedSigma() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsStandardEstimator() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRobustError(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRobustWeight(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTranslateEstimatorType() && allSucceeded;
+	TestResult testResult("Estimator test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("needsigma"))
 	{
-		Log::info() << "Estimator test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Estimator test FAILED!";
+		testResult = testNeedSigma();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("isstandardestimator"))
+	{
+		testResult = testIsStandardEstimator();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("robusterror"))
+	{
+		testResult = testRobustError(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("robustweight"))
+	{
+		testResult = testRobustWeight(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("translateestimatortype"))
+	{
+		testResult = testTranslateEstimatorType();
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -16,6 +16,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Triangle2.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -25,53 +27,60 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestUtilities::test(const double testDuration)
+bool TestUtilities::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "---   Utilities test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Utilities test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testCreateObjectPoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComputePolygonArea(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsInsideConvexPolygon(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRandomCameraPosePinhole(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRandomCameraPoseFisheye(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("createobjectpoints"))
 	{
-		Log::info() << "Utilities test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Utilities test FAILED!";
+		testResult = testCreateObjectPoints(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("computepolygonarea"))
+	{
+		testResult = testComputePolygonArea(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isinsideconvexpolygon"))
+	{
+		testResult = testIsInsideConvexPolygon(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("randomcameraposepinhole"))
+	{
+		testResult = testRandomCameraPosePinhole(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("randomcameraposefisheye"))
+	{
+		testResult = testRandomCameraPoseFisheye(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

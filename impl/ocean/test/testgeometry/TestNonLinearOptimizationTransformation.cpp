@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationTransformation.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -26,33 +28,29 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationTransformation::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationTransformation::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
-	Log::info() << "---   Transformation non-linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Transformation non-linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNonLinearOptimizationObjectTransformation(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationobjecttransformation"))
+	{
+		testResult = testNonLinearOptimizationObjectTransformation(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNonLinearOptimizationObjectTransformationStereo(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationobjecttransformationstereo"))
+	{
+		testResult = testNonLinearOptimizationObjectTransformationStereo(testDuration);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Transformation non-linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Transformation non-linear optimization test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

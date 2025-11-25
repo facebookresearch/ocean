@@ -7,6 +7,8 @@
 
 #include "ocean/test/testgeometry/TestDelaunay.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -24,30 +26,22 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestDelaunay::test(const double testDuration)
+bool TestDelaunay::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Delaunay test:   ---";
-
-	bool allSucceeded = true;
+	TestResult testResult("Delaunay test");
 
 	Log::info() << " ";
 
-	testTriangulation(testDuration);
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("triangulation"))
 	{
-		Log::info() << "Delaunay test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Delaunay test FAILED!";
+		testResult = testTriangulation(testDuration);
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

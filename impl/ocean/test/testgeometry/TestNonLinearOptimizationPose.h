@@ -16,6 +16,8 @@
 #include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/PinholeCamera.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -37,9 +39,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPose
 		 * Tests the non linear optimization function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker Optional worker object
+		 * @param selector Selector for sub-tests
 		 * @return True, if the entire function test has succeeded
 		 */
-		static bool test(const double testDuration, Worker* worker);
+		static bool test(const double testDuration, Worker* worker, const TestSelector& selector);
 
 		/**
 		 * Deprecated.

@@ -12,6 +12,8 @@
 
 #include "ocean/base/Worker.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -32,9 +34,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestOctree
 		/**
 		 * Tests all octree functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the constructor.

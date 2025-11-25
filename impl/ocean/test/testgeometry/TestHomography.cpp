@@ -7,6 +7,8 @@
 
 #include "ocean/test/testgeometry/TestHomography.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -34,126 +36,166 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestHomography::test(const double testDuration, Worker& /*worker*/)
+bool TestHomography::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Homography test:   ---";
-
-	bool allSucceeded = true;
+	TestResult testResult("Homography test");
 
 	Log::info() << " ";
 
-	allSucceeded = testRotationalHomographyOnePose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRotationalHomographyTwoPoses(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPlanarHomographyOnePose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPlanarHomographyTwoPoses(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFactorizationPlanarHomographyOnePose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFactorizationPlanarHomographyTwoPoses(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessPlanarHomography2D(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessNoisedPlanarHomography2D(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessHomography(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFaultlessNoisedHomography(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntrinsic(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomotheticMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSimilarityMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAffineMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomographyMatrix(testDuration, true) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomographyMatrix(testDuration, false) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	testHomographyMatrixFromPointsAndLinesSVD(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("rotationalhomographyonepose"))
 	{
-		Log::info() << "Homography test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Homography test FAILED!";
+		testResult = testRotationalHomographyOnePose(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("rotationalhomographytwoposes"))
+	{
+		testResult = testRotationalHomographyTwoPoses(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("planarhomographyonepose"))
+	{
+		testResult = testPlanarHomographyOnePose(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("planarhomographytwoposes"))
+	{
+		testResult = testPlanarHomographyTwoPoses(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("factorizationplanarhomographyonepose"))
+	{
+		testResult = testFactorizationPlanarHomographyOnePose(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("factorizationplanarhomographytwoposes"))
+	{
+		testResult = testFactorizationPlanarHomographyTwoPoses(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlessplanarhomography2d"))
+	{
+		testResult = testFaultlessPlanarHomography2D(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlessnoisedplanarhomography2d"))
+	{
+		testResult = testFaultlessNoisedPlanarHomography2D(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlesshomography"))
+	{
+		testResult = testFaultlessHomography(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("faultlessnoisedhomography"))
+	{
+		testResult = testFaultlessNoisedHomography(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("intrinsic"))
+	{
+		testResult = testIntrinsic(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homotheticmatrix"))
+	{
+		testResult = testHomotheticMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("similaritymatrix"))
+	{
+		testResult = testSimilarityMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("affinematrix"))
+	{
+		testResult = testAffineMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homographymatrixnormalized"))
+	{
+		testResult = testHomographyMatrix(testDuration, true);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homographymatrix"))
+	{
+		testResult = testHomographyMatrix(testDuration, false);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homographymatrixfrompointsandlinessvd"))
+	{
+		testResult = testHomographyMatrixFromPointsAndLinesSVD(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

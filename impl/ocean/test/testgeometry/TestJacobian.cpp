@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestJacobian.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -28,220 +30,301 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestJacobian::test(const double testDuration)
+bool TestJacobian::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   Jacobian test:   ---";
-
-	bool allSucceeded = true;
+	TestResult testResult("Jacobian test");
 
 	Log::info() << " ";
 
-	allSucceeded = testOrientationalJacobian2x3<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOrientationalJacobian2x3<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testOrientationJacobian2nx3<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOrientationJacobian2nx3<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraPoseJacobian2nx6(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFisheyeCameraPoseJacobian2x6(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAnyCameraPoseJacobian2nx6<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAnyCameraPoseJacobian2nx6<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPoseJacobianDampedDistortion2nx6(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPoseZoomJacobian2nx7(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraObjectTransformation2nx6(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFisheyeCameraObjectTransformation2nx6(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraPointJacobian2nx3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFisheyeCameraPointJacobian2x3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAnyCameraPointJacobian2x3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPosesPointsJacobian2nx12(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSphericalObjectPoint3x3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSphericalObjectPointOrientation2x3IF<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSphericalObjectPointOrientation2x3IF<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraDistortionJacobian2x4(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraJacobian2x6(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraJacobian2x7(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPinholeCameraJacobian2x8<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPinholeCameraJacobian2x8<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFisheyeCameraJacobian2x12<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testFisheyeCameraJacobian2x12<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testOrientationPinholeCameraJacobian2x11(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPosePinholeCameraJacobian2x12(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPosePinholeCameraJacobian2x14<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPosePinholeCameraJacobian2x14<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPoseFisheyeCameraJacobian2x18<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPoseFisheyeCameraJacobian2x18<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomography2x8(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomography2x9(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIdentityHomography2x8(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIdentityHomography2x9(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSimilarity2x4(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCalculateFisheyeDistortNormalized2x2<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCalculateFisheyeDistortNormalized2x2<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("orientationaljacobian2x3"))
 	{
-		Log::info() << "Jacobian test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Jacobian test FAILED!";
+		testResult = testOrientationalJacobian2x3<float>(testDuration);
+		Log::info() << " ";
+		testResult = testOrientationalJacobian2x3<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("orientationjacobian2nx3"))
+	{
+		testResult = testOrientationJacobian2nx3<float>(testDuration);
+		Log::info() << " ";
+		testResult = testOrientationJacobian2nx3<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecameraposejacobian2nx6"))
+	{
+		testResult = testPinholeCameraPoseJacobian2nx6(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fisheyecameraposejacobian2x6"))
+	{
+		testResult = testFisheyeCameraPoseJacobian2x6(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("anycameraposejacobian2nx6"))
+	{
+		testResult = testAnyCameraPoseJacobian2nx6<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAnyCameraPoseJacobian2nx6<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("posejacobiandampeddistortion2nx6"))
+	{
+		testResult = testPoseJacobianDampedDistortion2nx6(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("posezoomjacobian2nx7"))
+	{
+		testResult = testPoseZoomJacobian2nx7(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecameraobjecttransformation2nx6"))
+	{
+		testResult = testPinholeCameraObjectTransformation2nx6(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fisheyecameraobjecttransformation2nx6"))
+	{
+		testResult = testFisheyeCameraObjectTransformation2nx6(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecamerapointjacobian2nx3"))
+	{
+		testResult = testPinholeCameraPointJacobian2nx3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fisheyecamerapointjacobian2x3"))
+	{
+		testResult = testFisheyeCameraPointJacobian2x3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("anycamerapointjacobian2x3"))
+	{
+		testResult = testAnyCameraPointJacobian2x3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("posespointsjacobian2nx12"))
+	{
+		testResult = testPosesPointsJacobian2nx12(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("sphericalobjectpoint3x3"))
+	{
+		testResult = testSphericalObjectPoint3x3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("sphericalobjectpointorientation2x3if"))
+	{
+		testResult = testSphericalObjectPointOrientation2x3IF<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSphericalObjectPointOrientation2x3IF<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecameradistortionjacobian2x4"))
+	{
+		testResult = testPinholeCameraDistortionJacobian2x4(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecamerajacobian2x6"))
+	{
+		testResult = testPinholeCameraJacobian2x6(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecamerajacobian2x7"))
+	{
+		testResult = testPinholeCameraJacobian2x7(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pinholecamerajacobian2x8"))
+	{
+		testResult = testPinholeCameraJacobian2x8<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPinholeCameraJacobian2x8<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fisheyecamerajacobian2x12"))
+	{
+		testResult = testFisheyeCameraJacobian2x12<float>(testDuration);
+		Log::info() << " ";
+		testResult = testFisheyeCameraJacobian2x12<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("orientationpinholecamerajacobian2x11"))
+	{
+		testResult = testOrientationPinholeCameraJacobian2x11(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("posepinholecamerajacobian2x12"))
+	{
+		testResult = testPosePinholeCameraJacobian2x12(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("posepinholecamerajacobian2x14"))
+	{
+		testResult = testPosePinholeCameraJacobian2x14<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPosePinholeCameraJacobian2x14<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("posefisheyecamerajacobian2x18"))
+	{
+		testResult = testPoseFisheyeCameraJacobian2x18<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPoseFisheyeCameraJacobian2x18<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homography2x8"))
+	{
+		testResult = testHomography2x8(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homography2x9"))
+	{
+		testResult = testHomography2x9(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("identityhomography2x8"))
+	{
+		testResult = testIdentityHomography2x8(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("identityhomography2x9"))
+	{
+		testResult = testIdentityHomography2x9(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("similarity2x4"))
+	{
+		testResult = testSimilarity2x4(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("calculatefisheyedistortnormalized2x2"))
+	{
+		testResult = testCalculateFisheyeDistortNormalized2x2<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCalculateFisheyeDistortNormalized2x2<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

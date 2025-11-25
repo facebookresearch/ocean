@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestEpipolarGeometry.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -27,47 +29,49 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestEpipolarGeometry::test(const double testDuration)
+bool TestEpipolarGeometry::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Epipolar geometry test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testFundamentalMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFundamentalMatrixWithNoise(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testEssentialMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTriangulateImagePoints(testDuration) && allSucceeded;
+	TestResult testResult("Epipolar geometry test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("fundamentalmatrix"))
 	{
-		Log::info() << "Epipolar geometry test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Epipolar geometry test FAILED!";
+		testResult = testFundamentalMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("fundamentalmatrixwithnoise"))
+	{
+		testResult = testFundamentalMatrixWithNoise(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("essentialmatrix"))
+	{
+		testResult = testEssentialMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("triangulateimagepoints"))
+	{
+		testResult = testTriangulateImagePoints(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

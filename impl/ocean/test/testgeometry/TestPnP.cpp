@@ -19,6 +19,7 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Vector3.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -30,35 +31,30 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestPnP::test(const double testDuration)
+bool TestPnP::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   PnP test:   ---";
-	Log::info() <<  " ";
+	TestResult testResult("PnP test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("pose"))
 	{
-		Log::info() << "PnP test succeeded.";
-	}
-	else
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "The test failed, however the applied 32 bit floating point value precision is too low for this function so that we rate the result as expected.";
-			return true;
-		}
+		testResult = testPose(testDuration);
 
-		Log::info() << "PnP test FAILED!";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (!testResult.succeeded() && std::is_same<Scalar, float>::value)
+	{
+		Log::info() << "The test failed, however the applied 32 bit floating point value precision is too low for this function so that we rate the result as expected.";
+		return true;
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

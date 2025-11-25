@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationCamera.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Subset.h"
 #include "ocean/base/Timestamp.h"
@@ -31,33 +33,29 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationCamera::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationCamera::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
-	Log::info() << "---   Camera non linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Camera non linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNonLinearOptimizationCamera(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationcamera"))
+	{
+		testResult = testNonLinearOptimizationCamera(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNonLinearOptimizationCameraPoses(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationcameraposes"))
+	{
+		testResult = testNonLinearOptimizationCameraPoses(testDuration);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Camera non linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Camera non linear optimization test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const double testDuration)

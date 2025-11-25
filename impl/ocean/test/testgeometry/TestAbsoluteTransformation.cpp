@@ -7,6 +7,8 @@
 
 #include "ocean/test/testgeometry/TestAbsoluteTransformation.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -28,39 +30,40 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestAbsoluteTransformation::test(const double testDuration)
+bool TestAbsoluteTransformation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Tests the Absolute Transformation:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testAbsoluteTransformationBasedOnPoints(testDuration) && allSucceeded;
+	TestResult testResult("Absolute Transformation test");
 
 	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
 
-	allSucceeded = testAbsoluteTransformationBasedOnTransformations(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAbsoluteTransformationBasedOnTransformationsWithOutliers(testDuration) && allSucceeded;
-
-	if (allSucceeded)
+	if (selector.shouldRun("absolutetransformationbasedonpoints"))
 	{
-		Log::info() << "Absolute Transformation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Absolute Transformation test FAILED!";
+		testResult = testAbsoluteTransformationBasedOnPoints(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("absolutetransformationbasedontransformations"))
+	{
+		testResult = testAbsoluteTransformationBasedOnTransformations(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("absolutetransformationbasedontransformationswithoutliers"))
+	{
+		testResult = testAbsoluteTransformationBasedOnTransformationsWithOutliers(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

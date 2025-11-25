@@ -19,6 +19,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Vector3.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -28,29 +30,24 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestP4P::test(const double testDuration)
+bool TestP4P::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   P4P test:   ---";
-	Log::info() << " ";
+	TestResult testResult("P4P test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("pose"))
 	{
-		Log::info() << "P4P test succeeded.";
-	}
-	else
-	{
-		Log::info() << "P4P test FAILED!";
+		testResult = testPose(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

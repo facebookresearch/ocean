@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationPose.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -28,39 +30,38 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationPose::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationPose::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
-	Log::info() << "---   Pose non linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Pose non linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testNonLinearOptimizationPosePinholeCamera(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationposepinholecamera"))
+	{
+		testResult = testNonLinearOptimizationPosePinholeCamera(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNonLinearOptimizationPoseAnyCamera(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationposeanycamera"))
+	{
+		testResult = testNonLinearOptimizationPoseAnyCamera(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNonLinearOptimizationPoseZoom(testDuration) && allSucceeded;
+	if (selector.shouldRun("nonlinearoptimizationposezoom"))
+	{
+		testResult = testNonLinearOptimizationPoseZoom(testDuration);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Pose non linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Pose non linear optimization test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

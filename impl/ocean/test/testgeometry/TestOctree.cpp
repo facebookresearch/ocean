@@ -14,6 +14,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/Validation.h"
 
 namespace Ocean
@@ -25,47 +26,51 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestOctree::test(const double testDuration)
+bool TestOctree::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "---   Octree test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Octree test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testClosestPoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntersectingLeavesForRays(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testEdgeCases(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "Octree test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Octree test FAILED!";
+		testResult = testConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("closestpoints"))
+	{
+		testResult = testClosestPoints(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("intersectingleavesforrays"))
+	{
+		testResult = testIntersectingLeavesForRays(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("edgecases"))
+	{
+		testResult = testEdgeCases(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

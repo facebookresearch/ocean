@@ -10,6 +10,8 @@
 
 #include "ocean/test/testgeometry/TestGeometry.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include <set>
 
 namespace Ocean
@@ -32,9 +34,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestEpipolarGeometry
 		/**
 		 * Tests all epipolar geometry functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Selector for individual tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the calculation of the fundamental matrix.

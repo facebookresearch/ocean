@@ -14,6 +14,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -34,9 +36,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		/**
 		 * Invokes all tests for the perspective pose problem for three points.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the perspective pose problem for three image points and any camera.

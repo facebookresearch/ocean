@@ -33,6 +33,8 @@
 #include "ocean/test/testgeometry/TestStereoscopicGeometry.h"
 #include "ocean/test/testgeometry/TestUtilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -60,9 +62,8 @@ namespace TestGeometry
 
 bool testGeometry(const double testDuration, Worker& worker, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Geometry Library test");
 
-	Log::info() << "+++   Ocean Geometry Library test:   +++";
 	Log::info() << " ";
 	Log::info() << "Test with: " << String::toAString(sizeof(Scalar)) << "byte floats";
 	Log::info() << " ";
@@ -91,241 +92,240 @@ bool testGeometry(const double testDuration, Worker& worker, const std::string& 
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("spatialdistribution") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("spatialdistribution"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSpatialDistribution::test(testDuration) && allSucceeded;
+		testResult = TestSpatialDistribution::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("absolutetransformation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("absolutetransformation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAbsoluteTransformation::test(testDuration) && allSucceeded;
+		testResult = TestAbsoluteTransformation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("p3p") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("p3p"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestP3P::test(testDuration) && allSucceeded;
+		testResult = TestP3P::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("p4p") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("p4p"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestP4P::test(testDuration) && allSucceeded;
+		testResult = TestP4P::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("pnp") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("pnp"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPnP::test(testDuration) && allSucceeded;
+		testResult = TestPnP::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("homography") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("homography"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHomography::test(testDuration, worker) && allSucceeded;
+		testResult = TestHomography::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("jacobian") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("jacobian"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestJacobian::test(testDuration) && allSucceeded;
+		testResult = TestJacobian::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("jlinkage") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("jlinkage"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestJLinkage::testJLinkage(testDuration) && allSucceeded;
+		testResult = TestJLinkage::testJLinkage(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("tlinkage") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("tlinkage"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestJLinkage::testTLinkage(testDuration) && allSucceeded;
+		testResult = TestJLinkage::testTLinkage(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("error") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("error"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestError::test(testDuration) && allSucceeded;
+		testResult = TestError::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("estimator") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("estimator"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestEstimator::test(testDuration) && allSucceeded;
+		testResult = TestEstimator::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("ransac") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("ransac"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRANSAC::test(testDuration, worker) && allSucceeded;
+		testResult = TestRANSAC::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationcamera") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationcamera"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationCamera::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationCamera::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationhomography") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationhomography"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationHomography::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationHomography::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationline") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationline"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationLine::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationLine::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationorientation") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationorientation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationOrientation::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationOrientation::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationobjectpoint") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationobjectpoint"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationObjectPoint::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationObjectPoint::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationplane") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationplane"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationPlane::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationPlane::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationpose") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationpose"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationPose::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationPose::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("nonlinearoptimizationtransformation") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("nonlinearoptimizationtransformation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNonLinearOptimizationTransformation::test(testDuration, &worker) && allSucceeded;
+		testResult = TestNonLinearOptimizationTransformation::test(testDuration, &worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("epipolargeometry") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("epipolargeometry"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestEpipolarGeometry::test(testDuration) && allSucceeded;
+		testResult = TestEpipolarGeometry::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("multipleviewgeometry") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("multipleviewgeometry"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMultipleViewGeometry::testMultipleViewGeometry(testDuration) && allSucceeded;
+		testResult = TestMultipleViewGeometry::testMultipleViewGeometry(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("delaunay") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("delaunay"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestDelaunay::test(testDuration) && allSucceeded;
+		testResult = TestDelaunay::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("utilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("utilities"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestUtilities::test(testDuration) && allSucceeded;
+		testResult = TestUtilities::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("octree") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("octree"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestOctree::test(testDuration) && allSucceeded;
+		testResult = TestOctree::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("stereoscopicgeometry") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("stereoscopicgeometry"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestStereoscopicGeometry::test(testDuration) && allSucceeded;
+		testResult = TestStereoscopicGeometry::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
@@ -333,16 +333,9 @@ bool testGeometry(const double testDuration, Worker& worker, const std::string& 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " geometry library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " geometry library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testGeometryAsynchronInternal(const double testDuration, const std::string testFunctions)

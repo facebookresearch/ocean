@@ -16,6 +16,8 @@
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/PinholeCamera.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -37,9 +39,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 		 * Tests the non linear optimization orientation function.
 		 * @param testDuration Number of seconds for each test
 		 * @param worker Optional worker object
+		 * @param selector Selector for sub-tests
 		 * @return True, if the entire function test has succeeded
 		 */
-		static bool test(const double testDuration, Worker* worker);
+		static bool test(const double testDuration, Worker* worker, const TestSelector& selector);
 
 		/**
 		 * Tests the non linear optimization function for several 3D object points and a pinhole camera.

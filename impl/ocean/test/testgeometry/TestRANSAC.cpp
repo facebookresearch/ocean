@@ -17,6 +17,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
@@ -29,63 +30,76 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestRANSAC::test(const double testDuration, Worker& worker)
+bool TestRANSAC::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	Log::info() << "---   RANSAC test:   ---";
-	Log::info() << " ";
+	TestResult testResult("RANSAC test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testIterations(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testP3P(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testP3PZoom(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testObjectTransformationStereoAnyCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomographyMatrix(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomographyMatrixForNonBijectiveCorrespondences(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFundamentalMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("iterations"))
 	{
-		Log::info() << "RANSAC test succeeded.";
-	}
-	else
-	{
-		Log::info() << "RANSAC test FAILED!";
+		testResult = testIterations(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("p3p"))
+	{
+		testResult = testP3P(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("p3pzoom"))
+	{
+		testResult = testP3PZoom(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("objecttransformationstereoanycamera"))
+	{
+		testResult = testObjectTransformationStereoAnyCamera(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homographymatrix"))
+	{
+		testResult = testHomographyMatrix(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homographymatrixfornonbijectivecorrespondences"))
+	{
+		testResult = testHomographyMatrixForNonBijectiveCorrespondences(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fundamentalmatrix"))
+	{
+		testResult = testFundamentalMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

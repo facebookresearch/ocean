@@ -14,6 +14,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
@@ -26,67 +27,78 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestSpatialDistribution::test(const double testDuration)
+bool TestSpatialDistribution::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Spatial distribution test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Spatial distribution test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testIdealBins(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIdealBinsNeighborhood9(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMinimalSqrDistances(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistribute(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistributeAndFilter(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistributeAndFilterIndices(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopyConstructorWithNeighborhood8(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("idealbins"))
 	{
-		Log::info() << "Spatial distribution test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Spatial distribution test FAILED!";
+		testResult = testIdealBins(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("idealbinsneighborhood9"))
+	{
+		testResult = testIdealBinsNeighborhood9(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("minimalsqrdistances"))
+	{
+		testResult = testMinimalSqrDistances(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distribute"))
+	{
+		testResult = testDistribute(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distributeandfilter"))
+	{
+		testResult = testDistributeAndFilter(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distributeandfilterindices"))
+	{
+		testResult = testDistributeAndFilterIndices(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copyconstructorwithneighborhood8"))
+	{
+		testResult = testCopyConstructorWithNeighborhood8(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

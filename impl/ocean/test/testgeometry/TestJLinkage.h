@@ -10,6 +10,8 @@
 
 #include "ocean/test/testgeometry/TestGeometry.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -41,16 +43,18 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJLinkage
 		/**
 		 * Tests all J-Linkage functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Selector for individual tests
 		 * @return True, if succeeded
 		 */
-		static bool testJLinkage(const double testDuration);
+		static bool testJLinkage(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests all T-Linkage functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Selector for individual tests
 		 * @return True, if succeeded
 		 */
-		static bool testTLinkage(const double testDuration);
+		static bool testTLinkage(const double testDuration, const TestSelector& selector);
 
 	protected:
 

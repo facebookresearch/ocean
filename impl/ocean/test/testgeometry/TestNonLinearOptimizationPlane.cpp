@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestNonLinearOptimizationPlane.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -26,39 +28,38 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestNonLinearOptimizationPlane::test(const double testDuration, Worker* /*worker*/)
+bool TestNonLinearOptimizationPlane::test(const double testDuration, Worker* /*worker*/, const TestSelector& selector)
 {
-	Log::info() << "---   Plane non linear optimization test:   ---";
-	Log::info() << " ";
+	TestResult testResult("Plane non linear optimization test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testOptimizePlane(testDuration) && allSucceeded;
+	if (selector.shouldRun("optimizeplane"))
+	{
+		testResult = testOptimizePlane(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testOptimizeOnePoseOnePlane(testDuration) && allSucceeded;
+	if (selector.shouldRun("optimizeoneposeoneplane"))
+	{
+		testResult = testOptimizeOnePoseOnePlane(testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testOptimizePosesOnePlane(testDuration) && allSucceeded;
+	if (selector.shouldRun("optimizeposesoneplane"))
+	{
+		testResult = testOptimizePosesOnePlane(testDuration);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Plane non linear optimization test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Plane non linear optimization test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 bool TestNonLinearOptimizationPlane::testOptimizePlane(const double testDuration)

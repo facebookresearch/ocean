@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestMultipleViewGeometry.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Accessor.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -31,64 +33,64 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuration)
+bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Multiple view geometry test:   ---";
+	TestResult testResult("Multiple view geometry test");
+
+	if (selector.shouldRun("trifocaltensormatrixfalse"))
+	{
+		testResult = testTrifocalTensorMatrix(false, testDuration);
+	}
+
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testTrifocalTensorMatrix(false, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	// trifocal tensor fails (0% success rate) on noised data as expected, but nice to see
-	testTrifocalTensorMatrix(true, testDuration);
+	if (selector.shouldRun("trifocaltensormatrixtrue"))
+	{
+		// trifocal tensor fails (0% success rate) on noised data as expected, but nice to see
+		testTrifocalTensorMatrix(true, testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testProjectiveReconstructionFrom3Views(false, testDuration) && allSucceeded;
+	if (selector.shouldRun("projectivereconstructionfrom3viewsfalse"))
+	{
+		testResult = testProjectiveReconstructionFrom3Views(false, testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	// projection reconstruction fails (success rate < 30%) on noised data as expected, but nice to see
-	testProjectiveReconstructionFrom3Views(true, testDuration) && allSucceeded;
+	if (selector.shouldRun("projectivereconstructionfrom3viewstrue"))
+	{
+		// projection reconstruction fails (success rate < 30%) on noised data as expected, but nice to see
+		testProjectiveReconstructionFrom3Views(true, testDuration);
+	}
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	for (unsigned int iView = 4; iView < 11; iView += 2)
+	if (selector.shouldRun("projectivereconstruction"))
 	{
-		allSucceeded = testProjectiveReconstruction(iView, false, testDuration) && allSucceeded;
-
-		Log::info() << " ";
-
-		testProjectiveReconstruction(iView, true, testDuration) && allSucceeded;
-
-		Log::info() << " ";
-
-		allSucceeded = testFaultyProjectiveReconstruction(iView, testDuration) && allSucceeded;
-
-		Log::info() << " ";
+		for (unsigned int iView = 4; iView < 11; iView += 2)
+		{
+			testResult = testProjectiveReconstruction(iView, false, testDuration);
+			Log::info() << " ";
+			testProjectiveReconstruction(iView, true, testDuration);
+			Log::info() << " ";
+			testResult = testFaultyProjectiveReconstruction(iView, testDuration);
+			Log::info() << " ";
+		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Multiple view geometry test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Multiple view geometry test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, const double testDuration)

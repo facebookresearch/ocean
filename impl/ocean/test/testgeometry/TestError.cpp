@@ -8,6 +8,8 @@
 #include "ocean/test/testgeometry/TestError.h"
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/geometry/Error.h"
@@ -25,46 +27,50 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestError::test(const double testDuration)
+bool TestError::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Error test:   ---";
-
-	bool allSucceeded = true;
+	TestResult testResult("Error test");
 
 	Log::info() << " ";
 
-	allSucceeded = testDeterminePoseErrorSeparatePinhole(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDeterminePoseErrorSeparateAnyCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDeterminePoseErrorCombinedPinhole(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDeterminePoseErrorCombinedAnyCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDetermineHomographyErrorSeparate(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("determineposeerrorseparatepinhole"))
 	{
-		Log::info() << "Error test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Error test FAILED!";
+		testResult = testDeterminePoseErrorSeparatePinhole(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("determineposeerrorseparateanycamera"))
+	{
+		testResult = testDeterminePoseErrorSeparateAnyCamera(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determineposeerrorcombinedpinhole"))
+	{
+		testResult = testDeterminePoseErrorCombinedPinhole(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determineposeerrorcombinedanycamera"))
+	{
+		testResult = testDeterminePoseErrorCombinedAnyCamera(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determinehomographyerrorseparate"))
+	{
+		testResult = testDetermineHomographyErrorSeparate(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

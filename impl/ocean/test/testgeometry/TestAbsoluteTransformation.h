@@ -10,6 +10,8 @@
 
 #include "ocean/test/testgeometry/TestGeometry.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestAbsoluteTransformation
 		/**
 		 * Tests the absolute transformation function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector Selector for individual tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the absolute transformation function which is based on 3D points.
