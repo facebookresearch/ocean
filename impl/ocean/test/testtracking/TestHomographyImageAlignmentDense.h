@@ -15,6 +15,8 @@
 
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -36,9 +38,10 @@ class OCEAN_TEST_TRACKING_EXPORT TestHomographyImageAlignmentDense
 		 * Invokes all tests.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the additive alignment.

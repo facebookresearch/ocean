@@ -14,6 +14,8 @@
 #include "ocean/test/testtracking/TestSimilarityTracker.h"
 #include "ocean/test/testtracking/TestVocabularyTree.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -41,9 +43,8 @@ namespace TestTracking
 
 bool testTracking(const double testDuration, Worker& worker, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Tracking Library test");
 
-	Log::info() << "+++   Ocean Tracking Library test:   +++";
 	Log::info() << " ";
 	Log::info() << "Test with: " << String::toAString(sizeof(Scalar)) << "byte floats";
 	Log::info() << " ";
@@ -72,70 +73,69 @@ bool testTracking(const double testDuration, Worker& worker, const std::string& 
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("database") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("database"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestDatabase::test(testDuration) && allSucceeded;
+		testResult = TestDatabase::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("similaritytracker") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("similaritytracker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSimilarityTracker::test(testDuration, worker) && allSucceeded;
+		testResult = TestSimilarityTracker::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("smoothedtransformation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("smoothedtransformation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSmoothedTransformation::test(testDuration, worker) && allSucceeded;
+		testResult = TestSmoothedTransformation::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("vocabularytree") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("vocabularytree"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestVocabularyTree::test(testDuration, worker) && allSucceeded;
+		testResult = TestVocabularyTree::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("patterntracker") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("patterntracker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPatternTracker::test(testDuration, worker) && allSucceeded;
+		testResult = TestPatternTracker::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("homographyimagealignmentdense") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("homographyimagealignmentdense"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHomographyImageAlignmentDense::test(testDuration, worker) && allSucceeded;
+		testResult = TestHomographyImageAlignmentDense::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("unidirectionalcorrespondences") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("unidirectionalcorrespondences"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestUnidirectionalCorrespondences::test(testDuration, worker) && allSucceeded;
+		testResult = TestUnidirectionalCorrespondences::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
@@ -143,16 +143,9 @@ bool testTracking(const double testDuration, Worker& worker, const std::string& 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Tracking Library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Tracking Library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testTrackingAsynchronInternal(const double testDuration, const std::string testFunctions)

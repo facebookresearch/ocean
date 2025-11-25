@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestSimilarityTracker.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/RandomI.h"
 
@@ -29,35 +31,34 @@ namespace Test
 namespace TestTracking
 {
 
-bool TestSimilarityTracker::test(const double testDuration, Worker& worker)
+bool TestSimilarityTracker::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   SimilarityTracker test:   ---";
+	TestResult testResult("SimilarityTracker test");
 	Log::info() << " ";
 
-	allSucceeded = testTracking(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStressTest(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("tracking"))
 	{
-		Log::info() << "SimilarityTracker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SimilarityTracker test FAILED";
+		testResult = testTracking(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("stresstest"))
+	{
+		testResult = testStressTest(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

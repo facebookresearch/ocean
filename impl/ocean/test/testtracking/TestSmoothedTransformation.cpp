@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestSmoothedTransformation.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 
 #include "ocean/tracking/SmoothedTransformation.h"
@@ -20,29 +22,25 @@ namespace Test
 namespace TestTracking
 {
 
-bool TestSmoothedTransformation::test(const double testDuration, Worker& /*worker*/)
+bool TestSmoothedTransformation::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   SmoothedTransformation test:   ---";
+	TestResult testResult("SmoothedTransformation test");
 	Log::info() << " ";
 
-	allSucceeded = testTransformation(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("transformation"))
 	{
-		Log::info() << "SmoothedTransformation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SmoothedTransformation test FAILED";
+		testResult = testTransformation(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestHomographyImageAlignmentDense.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -29,39 +31,41 @@ namespace Test
 namespace TestTracking
 {
 
-bool TestHomographyImageAlignmentDense::test(const double testDuration, Worker& worker)
+bool TestHomographyImageAlignmentDense::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	bool allSucceeded = true;
-
-	Log::info() << "---   TestHomographyImageAlignmentDense test:   ---";
+	TestResult testResult("HomographyImageAlignmentDense test");
 	Log::info() << " ";
 
-	allSucceeded = testAdditive(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInverseCompositional(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiResolution(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("additive"))
 	{
-		Log::info() << "TestHomographyImageAlignmentDense test succeeded.";
-	}
-	else
-	{
-		Log::info() << "TestHomographyImageAlignmentDense test FAILED";
+		testResult = testAdditive(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("inversecompositional"))
+	{
+		testResult = testInverseCompositional(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiresolution"))
+	{
+		testResult = testMultiResolution(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestVocabularyTree.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/RandomI.h"
@@ -155,83 +157,106 @@ std::vector<float> TestVocabularyTree::TypeHelper<TestVocabularyTree::DT_FLOAT>:
 	return epsilons;
 }
 
-bool TestVocabularyTree::test(const double testDuration, Worker& worker)
+bool TestVocabularyTree::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   TestVocabularyTree test:   ---";
+	TestResult testResult("VocabularyTree test");
 	Log::info() << " ";
 
-	allSucceeded = TestVocabularyTree::testDetermineClustersMeanForBinaryDescriptor(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testConstructor<DT_BINARY>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testConstructor<DT_FLOAT>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testMatchingViaLeaves<DT_BINARY>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testMatchingViaLeaves<DT_FLOAT>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testMatchingDescriptors<DT_BINARY>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testMatchingDescriptors<DT_FLOAT>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testMatchingDescriptorsWithForest<DT_BINARY>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestVocabularyTree::testMatchingDescriptorsWithForest<DT_FLOAT>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("determineclustersmeanforbinarydescriptor"))
 	{
-		Log::info() << "Database test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Database test FAILED";
+		testResult = testDetermineClustersMeanForBinaryDescriptor(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("determineclustersmeanforfloatdescriptor"))
+	{
+		testResult = testDetermineClustersMeanForFloatDescriptor(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("constructorbinary"))
+	{
+		testResult = testConstructor<DT_BINARY>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("constructorfloat"))
+	{
+		testResult = testConstructor<DT_FLOAT>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matchingvialeavesbinary"))
+	{
+		testResult = testMatchingViaLeaves<DT_BINARY>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matchingvialeavesfloat"))
+	{
+		testResult = testMatchingViaLeaves<DT_FLOAT>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matchingdescriptorsbinary"))
+	{
+		testResult = testMatchingDescriptors<DT_BINARY>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matchingdescriptorsfloat"))
+	{
+		testResult = testMatchingDescriptors<DT_FLOAT>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matchingdescriptorswithforestbinary"))
+	{
+		testResult = testMatchingDescriptorsWithForest<DT_BINARY>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matchingdescriptorswithforestfloat"))
+	{
+		testResult = testMatchingDescriptorsWithForest<DT_FLOAT>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

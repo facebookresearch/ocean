@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestUnidirectionalCorrespondences.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 
 #include "ocean/test/Validation.h"
@@ -22,35 +24,34 @@ namespace Test
 namespace TestTracking
 {
 
-bool TestUnidirectionalCorrespondences::test(const double testDuration, Worker& /*worker*/)
+bool TestUnidirectionalCorrespondences::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   UnidirectionalCorrespondences test:   ---";
+	TestResult testResult("UnidirectionalCorrespondences test");
 	Log::info() << " ";
 
-	allSucceeded = testCountBijectiveCorrespondences(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRemoveNonBijectiveCorrespondences(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("countbijectivecorrespondences"))
 	{
-		Log::info() << "UnidirectionalCorrespondences test succeeded.";
-	}
-	else
-	{
-		Log::info() << "UnidirectionalCorrespondences test FAILED";
+		testResult = testCountBijectiveCorrespondences(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("removenonbijectivecorrespondences"))
+	{
+		testResult = testRemoveNonBijectiveCorrespondences(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

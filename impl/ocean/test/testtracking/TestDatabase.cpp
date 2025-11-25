@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestDatabase.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/RandomI.h"
 
@@ -21,35 +23,34 @@ namespace Test
 namespace TestTracking
 {
 
-bool TestDatabase::test(const double testDuration)
+bool TestDatabase::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Database test:   ---";
+	TestResult testResult("Database test");
 	Log::info() << " ";
 
-	allSucceeded = TestDatabase::testAddObjectPointFromDatabase(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = TestDatabase::testSerialization(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("addobjectpointfromdatabase"))
 	{
-		Log::info() << "Database test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Database test FAILED";
+		testResult = testAddObjectPointFromDatabase(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("serialization"))
+	{
+		testResult = testSerialization(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

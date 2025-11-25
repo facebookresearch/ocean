@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/TestPatternTracker.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/media/Manager.h"
@@ -34,27 +36,23 @@ namespace Test
 namespace TestTracking
 {
 
-bool TestPatternTracker::test(const double /*testDuration*/, Worker& /*worker*/)
+bool TestPatternTracker::test(const double /*testDuration*/, Worker& /*worker*/, const TestSelector& selector)
 {
-	bool allSucceeded = true;
-
-	Log::info() << "---   PatternTracker test:   ---";
+	TestResult testResult("PatternTracker test");
 	Log::info() << " ";
 
-	allSucceeded = testPowerConsumption() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("powerconsumption"))
 	{
-		Log::info() << "PatternTracker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "PatternTracker test FAILED";
+		testResult = testPowerConsumption();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 bool TestPatternTracker::testPowerConsumption()
