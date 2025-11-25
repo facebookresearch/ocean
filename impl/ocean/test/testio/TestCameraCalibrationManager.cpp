@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestCameraCalibrationManager.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/io/CameraCalibrationManager.h"
 
 #include "ocean/test/Validation.h"
@@ -20,63 +22,104 @@ namespace Test
 namespace TestIO
 {
 
-bool TestCameraCalibrationManager::test()
+bool TestCameraCalibrationManager::test(const TestSelector& selector)
 {
-	Log::info() << "Camera Calibration Manager test:";
+	TestResult testResult("Camera Calibration Manager test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testBasicRegistration() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCameraLookup() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testAliasLookup() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testResolutionMatching() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPriorityHandling() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCameraModels() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testErrorHandling() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDeviceContext() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDeviceContextHierarchy() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDeviceContextIsolation() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("basicregistration"))
 	{
-		Log::info() << "Entire Camera Calibration Manager test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Camera Calibration Manager test FAILED!";
+		testResult = testBasicRegistration();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("cameralookup"))
+	{
+		testResult = testCameraLookup();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("aliaslookup"))
+	{
+		testResult = testAliasLookup();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("resolutionmatching"))
+	{
+		testResult = testResolutionMatching();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("priorityhandling"))
+	{
+		testResult = testPriorityHandling();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cameramodels"))
+	{
+		testResult = testCameraModels();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("errorhandling"))
+	{
+		testResult = testErrorHandling();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("devicecontext"))
+	{
+		testResult = testDeviceContext();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("devicecontexthierarchy"))
+	{
+		testResult = testDeviceContextHierarchy();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("devicecontextisolation"))
+	{
+		testResult = testDeviceContextIsolation();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

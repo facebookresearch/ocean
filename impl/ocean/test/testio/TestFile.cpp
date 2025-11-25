@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestFile.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
@@ -22,27 +24,23 @@ namespace Test
 namespace TestIO
 {
 
-bool TestFile::test(const double testDuration)
+bool TestFile::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "File test:";
+	TestResult testResult("File test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testFileExists(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("fileexists"))
 	{
-		Log::info() << "Entire File test succeeded.";
-	}
-	else
-	{
-		Log::info() << "File test FAILED!";
+		testResult = testFileExists(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

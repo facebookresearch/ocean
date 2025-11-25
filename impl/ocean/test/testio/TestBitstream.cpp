@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestBitstream.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/io/Bitstream.h"
 
 #include <sstream>
@@ -20,24 +22,22 @@ namespace Test
 namespace TestIO
 {
 
-bool TestBitstream::test(const double /*testDuration*/)
+bool TestBitstream::test(const double /*testDuration*/, const TestSelector& selector)
 {
-	Log::info() << "Bitstream test:";
+	TestResult testResult("Bitstream test");
 
-	bool allSucceeded = true;
-
-	allSucceeded = testInputOutputBitstream() && allSucceeded;
-
-	if (allSucceeded)
+	if (selector.shouldRun("inputoutputbitstream"))
 	{
-		Log::info() << "Bitstream test suceeded.";
-	}
-	else
-	{
-		Log::info() << "Bitstream test FAILED!";
+		testResult = testInputOutputBitstream();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

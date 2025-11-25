@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestBase64.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
@@ -21,27 +23,23 @@ namespace Test
 namespace TestIO
 {
 
-bool TestBase64::test(const double testDuration)
+bool TestBase64::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "Base64 test:";
+	TestResult testResult("Base64 test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testEncodingDecoding(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("encodingdecoding"))
 	{
-		Log::info() << "Entire base64 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Base64 test FAILED!";
+		testResult = testEncodingDecoding(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

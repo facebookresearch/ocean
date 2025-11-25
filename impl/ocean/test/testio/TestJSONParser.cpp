@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestJSONParser.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/RandomI.h"
 
@@ -202,55 +204,86 @@ TestJSONParser::JSONTestData TestJSONParser::JSONTestData::randomValue(RandomGen
 	return result;
 }
 
-bool TestJSONParser::test(const double testDuration)
+bool TestJSONParser::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "JSON Parser test:";
+	TestResult testResult("JSON Parser test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPrimitives(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testArrays(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testObjects() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNestedStructures() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testErrorHandling() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInputSources() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testRandomJSON(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStrictAndLenientParsing() && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("primitives"))
 	{
-		Log::info() << "Entire JSON Parser test succeeded.";
-	}
-	else
-	{
-		Log::info() << "JSON Parser test FAILED!";
+		testResult = testPrimitives(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("arrays"))
+	{
+		testResult = testArrays(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("objects"))
+	{
+		testResult = testObjects();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("nestedstructures"))
+	{
+		testResult = testNestedStructures();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("errorhandling"))
+	{
+		testResult = testErrorHandling();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("inputsources"))
+	{
+		testResult = testInputSources();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("randomjson"))
+	{
+		testResult = testRandomJSON(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("strictandlenientparsing"))
+	{
+		testResult = testStrictAndLenientParsing();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

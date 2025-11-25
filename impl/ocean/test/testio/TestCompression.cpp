@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestCompression.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -22,27 +24,23 @@ namespace Test
 namespace TestIO
 {
 
-bool TestCompression::test(const double testDuration)
+bool TestCompression::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "Compression test:";
+	TestResult testResult("Compression test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testGzipCompression(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("gzipcompression"))
 	{
-		Log::info() << "Entire Compression test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Compression test FAILED!";
+		testResult = testGzipCompression(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

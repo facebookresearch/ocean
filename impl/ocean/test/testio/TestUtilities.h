@@ -10,6 +10,8 @@
 
 #include "ocean/test/testio/TestIO.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_IO_EXPORT TestUtilities
 		/**
 		 * Tests all compression functions.
 		 * @param testDuration The number of seconds for each test
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the read file function.

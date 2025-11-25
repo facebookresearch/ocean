@@ -12,6 +12,8 @@
 
 #include "ocean/io/CameraCalibrationManager.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -47,9 +49,10 @@ class OCEAN_TEST_IO_EXPORT TestCameraCalibrationManager
 
 		/**
 		 * Tests all camera calibration manager functions.
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const TestSelector& selector);
 
 		/**
 		 * Tests basic camera registration from JSON string.

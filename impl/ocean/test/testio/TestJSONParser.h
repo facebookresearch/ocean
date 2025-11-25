@@ -14,6 +14,7 @@
 
 #include "ocean/io/JSONParser.h"
 
+#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 namespace Ocean
@@ -86,9 +87,10 @@ class OCEAN_TEST_IO_EXPORT TestJSONParser
 		/**
 		 * Tests all JSON parser functions.
 		 * @param testDuration The number of seconds for each test
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests parsing of primitive JSON values (null, boolean, number, string).

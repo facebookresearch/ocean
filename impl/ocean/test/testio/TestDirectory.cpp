@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestDirectory.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
@@ -21,27 +23,23 @@ namespace Test
 namespace TestIO
 {
 
-bool TestDirectory::test(const double testDuration)
+bool TestDirectory::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "Directory test:";
+	TestResult testResult("Directory test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testScopedDirectory(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("scopeddirectory"))
 	{
-		Log::info() << "Entire Directory test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Directory test FAILED!";
+		testResult = testScopedDirectory(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

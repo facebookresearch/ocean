@@ -15,6 +15,8 @@
 #include "ocean/test/testio/TestJSONParser.h"
 #include "ocean/test/testio/TestUtilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -41,9 +43,8 @@ namespace TestIO
 
 bool testIO(const double testDuration, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean IO Library test");
 
-	Log::info() << "+++   Ocean IO Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -70,85 +71,88 @@ bool testIO(const double testDuration, const std::string& testFunctions)
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("bitstream") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("bitstream"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestBitstream::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestBitstream::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("compression") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("compression"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestCompression::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestCompression::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("base64") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("base64"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestBase64::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestBase64::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("directory") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("directory"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestDirectory::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestDirectory::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("file") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("file"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestFile::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestFile::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("utilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("utilities"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestUtilities::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestUtilities::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("jsonparser") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("jsonparser"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestJSONParser::test(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestJSONParser::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("cameracalibrationmanager") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("cameracalibrationmanager"))
 	{
 		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
-		allSucceeded = TestCameraCalibrationManager::test() && allSucceeded;
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestCameraCalibrationManager::test(subSelector);
 	}
 
 	Log::info() << " ";
+	Log::info() << " ";
+	Log::info() << " ";
+	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean IO Library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean IO Library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testIOAsynchronInternal(const double testDuration, const std::string testFunctions)

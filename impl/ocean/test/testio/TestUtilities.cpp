@@ -7,6 +7,8 @@
 
 #include "ocean/test/testio/TestUtilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
@@ -23,27 +25,23 @@ namespace Test
 namespace TestIO
 {
 
-bool TestUtilities::test(const double testDuration)
+bool TestUtilities::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "Utilities test:";
+	TestResult testResult("Utilities test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testReadFile(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("readfile"))
 	{
-		Log::info() << "Entire Utilities test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Utilities test FAILED!";
+		testResult = testReadFile(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
