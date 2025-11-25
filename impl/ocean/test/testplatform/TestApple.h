@@ -12,6 +12,8 @@
 
 #include "ocean/base/Frame.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -32,9 +34,10 @@ class OCEAN_TEST_PLATFORM_EXPORT TestApple
 		/**
 		 * Invokes all tests that are defined.
 		 * @param testDuration The number of seconds for each test
+		 * @param selector The test selector to filter specific tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the toCGImage() function.

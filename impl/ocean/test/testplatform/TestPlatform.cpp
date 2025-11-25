@@ -11,6 +11,9 @@
 	#include "ocean/test/testplatform/TestApple.h"
 #endif
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -40,9 +43,8 @@ bool testPlatform(const double testDuration, Worker& /*worker*/, const std::stri
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Platform Library test");
 
-	Log::info() << "+++   Ocean Platform Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -69,31 +71,23 @@ bool testPlatform(const double testDuration, Worker& /*worker*/, const std::stri
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
 #ifdef __APPLE__
 
-	if (testSet.empty() || testSet.find("apple") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("apple"))
 	{
 		Log::info() << "\n\n\n\n";
-		allSucceeded = TestApple::test(testDuration) && allSucceeded;
+		testResult = TestApple::test(testDuration, subSelector);
 	}
 
 #endif
 
 	Log::info() << "\n\n\n\n";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Platform library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Platform library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testPlatformAsynchronInternal(const double testDuration, const std::string testFunctions)

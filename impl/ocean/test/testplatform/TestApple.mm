@@ -7,6 +7,8 @@
 
 #include "ocean/test/testplatform/TestApple.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -28,29 +30,25 @@ namespace Test
 namespace TestPlatform
 {
 
-bool TestApple::test(const double testDuration)
+bool TestApple::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Apple test:";
+	TestResult testResult("Apple test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testToCGImage(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("tocgimage"))
 	{
-		Log::info() << "Entire Apple test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Apple test FAILED!";
+		testResult = testToCGImage(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
