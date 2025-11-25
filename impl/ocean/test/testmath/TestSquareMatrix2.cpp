@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix2.h"
 
@@ -24,67 +26,80 @@ namespace Test
 namespace TestMath
 {
 
-bool TestSquareMatrix2::test(const double testDuration)
+bool TestSquareMatrix2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   SquareMatrix2 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testWriteToMessenger() && allSucceeded;
+	TestResult testResult("SquareMatrix2 test");
 
 	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
 
-	allSucceeded = testElementConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvert(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixConversion(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testEigenConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testEigenSystem() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSolve(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("writetomessenger"))
 	{
-		Log::info() << "SquareMatrix2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SquareMatrix2 test FAILED.";
+		testResult = testWriteToMessenger();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("elementconstructor"))
+	{
+		testResult = testElementConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("invert"))
+	{
+		testResult = testInvert(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixconversion"))
+	{
+		testResult = testMatrixConversion(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("eigenconstructor"))
+	{
+		testResult = testEigenConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("eigensystem"))
+	{
+		testResult = testEigenSystem();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("solve"))
+	{
+		testResult = testSolve(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 
 #include "ocean/test/Validation.h"
@@ -24,93 +26,112 @@ namespace Test
 namespace TestMath
 {
 
-bool TestQuaternion::test(const double testDuration)
+bool TestQuaternion::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Quaternion test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testWriteToMessenger<float>() && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testWriteToMessenger<double>() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNormalization<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNormalization<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInverting<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testInverting<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConversionToRotation<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConversionToRotation<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReferenceOffsetConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testReferenceOffsetConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLeft_Q_right<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testLeft_Q_right<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngle<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAngle<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSlerp<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSlerp<double>(testDuration) && allSucceeded;
+	TestResult testResult("Quaternion test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("writetomessenger"))
 	{
-		Log::info() << "Quaternion test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Quaternion test FAILED!";
+		testResult = testWriteToMessenger<float>();
+		Log::info() << " ";
+		testResult = testWriteToMessenger<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("constructor"))
+	{
+		testResult = testConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("normalization"))
+	{
+		testResult = testNormalization<float>(testDuration);
+		Log::info() << " ";
+		testResult = testNormalization<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("inverting"))
+	{
+		testResult = testInverting<float>(testDuration);
+		Log::info() << " ";
+		testResult = testInverting<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("conversiontorotation"))
+	{
+		testResult = testConversionToRotation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConversionToRotation<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("referenceoffsetconstructor"))
+	{
+		testResult = testReferenceOffsetConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testReferenceOffsetConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("left_q_right"))
+	{
+		testResult = testLeft_Q_right<float>(testDuration);
+		Log::info() << " ";
+		testResult = testLeft_Q_right<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angle"))
+	{
+		testResult = testAngle<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAngle<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("slerp"))
+	{
+		testResult = testSlerp<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSlerp<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

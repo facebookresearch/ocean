@@ -54,6 +54,9 @@
 #include "ocean/test/testmath/TestVector3.h"
 #include "ocean/test/testmath/TestVector4.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -80,9 +83,8 @@ namespace TestMath
 
 bool testMath(const double testDuration, Worker& worker, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Math Library test");
 
-	Log::info() << "+++   Ocean Math Library test:   +++";
 	Log::info() << " ";
 	Log::info() << "Test with: " << String::toAString(sizeof(Scalar)) << "byte floats";
 	Log::info() << " ";
@@ -111,430 +113,429 @@ bool testMath(const double testDuration, Worker& worker, const std::string& test
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("random") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("random"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRandom::test(testDuration) && allSucceeded;
+		testResult = TestRandom::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("camera") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("camera"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestCamera::test(testDuration) && allSucceeded;
+		testResult = TestCamera::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("pinholecamera") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("pinholecamera"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPinholeCamera::test(testDuration) && allSucceeded;
+		testResult = TestPinholeCamera::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("fisheyecamera") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("fisheyecamera"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFisheyeCamera::test(testDuration) && allSucceeded;
+		testResult = TestFisheyeCamera::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("anycamera") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("anycamera"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAnyCamera::test(testDuration) && allSucceeded;
+		testResult = TestAnyCamera::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("equation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("equation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestEquation::test(testDuration) && allSucceeded;
+		testResult = TestEquation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("homogenousmatrix4") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("homogenousmatrix4"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHomogenousMatrix4::test(testDuration) && allSucceeded;
+		testResult = TestHomogenousMatrix4::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("numeric") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("numeric"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestNumeric::test(testDuration) && allSucceeded;
+		testResult = TestNumeric::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("interpolation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("interpolation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestInterpolation::test(testDuration) && allSucceeded;
+		testResult = TestInterpolation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("line2") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("line2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLine2::test(testDuration) && allSucceeded;
+		testResult = TestLine2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("line3") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("line3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLine3::test(testDuration) && allSucceeded;
+		testResult = TestLine3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("finiteline2") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("finiteline2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFiniteLine2::test(testDuration) && allSucceeded;
+		testResult = TestFiniteLine2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("finiteline3") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("finiteline3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFiniteLine3::test(testDuration) && allSucceeded;
+		testResult = TestFiniteLine3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("triangle2") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("triangle2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestTriangle2::test(testDuration) && allSucceeded;
+		testResult = TestTriangle2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("linearalgebra") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("linearalgebra"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLinearAlgebra::test(testDuration) && allSucceeded;
+		testResult = TestLinearAlgebra::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("lookup2") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("lookup2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLookup2::test(testDuration) && allSucceeded;
+		testResult = TestLookup2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("plane3") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("plane3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPlane3::test(testDuration) && allSucceeded;
+		testResult = TestPlane3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("box2") != testSet.end() || testSet.find("box*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("box2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestBox2::test(testDuration) && allSucceeded;
+		testResult = TestBox2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("box3") != testSet.end() || testSet.find("box*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("box3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestBox3::test(testDuration) && allSucceeded;
+		testResult = TestBox3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("cone3") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("cone3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestCone3::test(testDuration) && allSucceeded;
+		testResult = TestCone3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("cylinder3") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("cylinder3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestCylinder3::test(testDuration) && allSucceeded;
+		testResult = TestCylinder3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("sphere3") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("sphere3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSphere3::test(testDuration) && allSucceeded;
+		testResult = TestSphere3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("boundingbox") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("boundingbox"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestBoundingBox::test(testDuration) && allSucceeded;
+		testResult = TestBoundingBox::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("boundingsphere") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("boundingsphere"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestBoundingSphere::test(testDuration) && allSucceeded;
+		testResult = TestBoundingSphere::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("approximation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("approximation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestApproximation::test(testDuration) && allSucceeded;
+		testResult = TestApproximation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("matrix") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("matrix"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMatrix::test(testDuration) && allSucceeded;
+		testResult = TestMatrix::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("squarematrix2") != testSet.end() || testSet.find("squarematrix*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("squarematrix2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSquareMatrix2::test(testDuration) && allSucceeded;
+		testResult = TestSquareMatrix2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("squarematrix3") != testSet.end() || testSet.find("squarematrix*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("squarematrix3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSquareMatrix3::test(testDuration, worker) && allSucceeded;
+		testResult = TestSquareMatrix3::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("squarematrix4") != testSet.end() || testSet.find("squarematrix*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("squarematrix4"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSquareMatrix4::test(testDuration, worker) && allSucceeded;
+		testResult = TestSquareMatrix4::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("staticmatrix") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("staticmatrix"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestStaticMatrix::test(testDuration) && allSucceeded;
+		testResult = TestStaticMatrix::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("vector2") != testSet.end() || testSet.find("vector*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("vector2"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestVector2::test(testDuration) && allSucceeded;
+		testResult = TestVector2::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("vector3") != testSet.end() || testSet.find("vector*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("vector3"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestVector3::test(testDuration) && allSucceeded;
+		testResult = TestVector3::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("vector4") != testSet.end() || testSet.find("vector*") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("vector4"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestVector4::test(testDuration) && allSucceeded;
+		testResult = TestVector4::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("rotation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("rotation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRotation::test(testDuration) && allSucceeded;
+		testResult = TestRotation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("quaternion") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("quaternion"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestQuaternion::test(testDuration) && allSucceeded;
+		testResult = TestQuaternion::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("euler") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("euler"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestEuler::test(testDuration) && allSucceeded;
+		testResult = TestEuler::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("exponentialmap") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("exponentialmap"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestExponentialMap::test(testDuration) && allSucceeded;
+		testResult = TestExponentialMap::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("sparsematrix") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("sparsematrix"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSparseMatrix::test(testDuration) && allSucceeded;
+		testResult = TestSparseMatrix::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("automaticdifferentiation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("automaticdifferentiation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAutomaticDifferentiation::test(testDuration) && allSucceeded;
+		testResult = TestAutomaticDifferentiation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("fouriertransformation") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("fouriertransformation"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFourierTransformation::test(testDuration) && allSucceeded;
+		testResult = TestFourierTransformation::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("samplemap") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("samplemap"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSampleMap::test(testDuration) && allSucceeded;
+		testResult = TestSampleMap::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("rgbacolor") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("rgbacolor"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRGBAColor::test(testDuration) && allSucceeded;
+		testResult = TestRGBAColor::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("hsvacolor") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("hsvacolor"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHSVAColor::test(testDuration) && allSucceeded;
+		testResult = TestHSVAColor::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("ratecalculator") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("ratecalculator"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRateCalculator::test(testDuration, worker) && allSucceeded;
+		testResult = TestRateCalculator::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("frustum") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("frustum"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFrustum::test(testDuration) && allSucceeded;
+		testResult = TestFrustum::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("mathutilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("mathutilities"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMathUtilities::test(testDuration) && allSucceeded;
+		testResult = TestMathUtilities::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("variance") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("variance"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestVariance::test(testDuration) && allSucceeded;
+		testResult = TestVariance::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
@@ -542,16 +543,9 @@ bool testMath(const double testDuration, Worker& worker, const std::string& test
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Math Library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Math Library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testMathAsynchronInternal(const double testDuration, const std::string testFunctions)

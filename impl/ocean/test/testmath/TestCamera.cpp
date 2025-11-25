@@ -15,6 +15,7 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -26,55 +27,59 @@ namespace Test
 namespace TestMath
 {
 
-bool TestCamera::test(const double testDuration)
+bool TestCamera::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Camera test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testObjectPointInFront<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testObjectPointInFront<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedHomogenousMatrix4<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testStandard2InvertedFlippedHomogenousMatrix4<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedSquareMatrix3<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testStandard2InvertedFlippedSquareMatrix3<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedQuaternion<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testStandard2InvertedFlippedQuaternion<double>(testDuration) && allSucceeded;
+	TestResult testResult("Camera test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("objectpointinfront"))
 	{
-		Log::info() <<  "Camera test succeeded.";
-	}
-	else
-	{
-		Log::info() <<  "Camera test FAILED";
+		testResult = testObjectPointInFront<float>(testDuration);
+		Log::info() << " ";
+		testResult = testObjectPointInFront<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("standard2invertedflippedhomogenousmatrix4"))
+	{
+		testResult = testStandard2InvertedFlippedHomogenousMatrix4<float>(testDuration);
+		Log::info() << " ";
+		testResult = testStandard2InvertedFlippedHomogenousMatrix4<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("standard2invertedflippedsquarematrix3"))
+	{
+		testResult = testStandard2InvertedFlippedSquareMatrix3<float>(testDuration);
+		Log::info() << " ";
+		testResult = testStandard2InvertedFlippedSquareMatrix3<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("standard2invertedflippedquaternion"))
+	{
+		testResult = testStandard2InvertedFlippedQuaternion<float>(testDuration);
+		Log::info() << " ";
+		testResult = testStandard2InvertedFlippedQuaternion<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -13,6 +13,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Rotation.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -22,37 +24,38 @@ namespace Test
 namespace TestMath
 {
 
-bool TestLine2::test(const double testDuration)
+bool TestLine2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Line2 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testIsOnLine(testDuration) && allSucceeded;
+	TestResult testResult("Line2 test");
 
 	Log::info() << " ";
 
-	allSucceeded = testIsLeftOfLine(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = decomposeNormalDistance(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("isonline"))
 	{
-		Log::info() << "Line2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Line2 test FAILED!";
+		testResult = testIsOnLine(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("isleftofline"))
+	{
+		testResult = testIsLeftOfLine(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("decomposenormaldistance"))
+	{
+		testResult = decomposeNormalDistance(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

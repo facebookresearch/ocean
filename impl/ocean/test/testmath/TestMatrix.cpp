@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Matrix.h"
 #include "ocean/math/Random.h"
 
@@ -22,89 +24,114 @@ namespace Test
 namespace TestMath
 {
 
-bool TestMatrix::test(const double testDuration)
+bool TestMatrix::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Matrix test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testElementConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSubMatrixConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSelfSquareMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSelfTransposedSquareMatrixExistingResult(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSelfTransposedSquareMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testWeightedSelfTransposedSquareMatrixExistingResult(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvert(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPseudoInverted(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRank(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonNegativeMatrixFactorization(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixMultiplication(testDuration) && allSucceeded;
+	TestResult testResult("Matrix test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("elementconstructor"))
 	{
-		Log::info() << "Matrix test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Matrix test FAILED!";
+		testResult = testElementConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("submatrixconstructor"))
+	{
+		testResult = testSubMatrixConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("selfsquarematrix"))
+	{
+		testResult = testSelfSquareMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("selftransposedsquarematrixexistingresult"))
+	{
+		testResult = testSelfTransposedSquareMatrixExistingResult(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("selftransposedsquarematrix"))
+	{
+		testResult = testSelfTransposedSquareMatrix(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("weightedselftransposedsquarematrixexistingresult"))
+	{
+		testResult = testWeightedSelfTransposedSquareMatrixExistingResult(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("invert"))
+	{
+		testResult = testInvert(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pseudoinverted"))
+	{
+		testResult = testPseudoInverted(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rank"))
+	{
+		testResult = testRank(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("nonnegativematrixfactorization"))
+	{
+		testResult = testNonNegativeMatrixFactorization(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixmultiplication"))
+	{
+		testResult = testMatrixMultiplication(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

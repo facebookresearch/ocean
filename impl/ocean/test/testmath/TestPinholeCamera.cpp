@@ -10,6 +10,8 @@
 #include "ocean/base/DataType.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
@@ -26,79 +28,92 @@ namespace Test
 namespace TestMath
 {
 
-bool TestPinholeCamera::test(const double testDuration)
+bool TestPinholeCamera::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   PinholeCamera test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testCameraConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCameraConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatternCamera<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPatternCamera<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSubFrameCamera<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSubFrameCamera<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistortion<float>(640u, 480u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDistortion<double>(640u, 480u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorDistortionFree<float>(640u, 480u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVectorDistortionFree<double>(640u, 480u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorDistorted<float>(640u, 480u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVectorDistorted<double>(640u, 480u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFovDiagonal<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testFovDiagonal<double>(testDuration) && allSucceeded;
+	TestResult testResult("PinholeCamera test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("cameraconstructor"))
 	{
-		Log::info() <<  "PinholeCamera test succeeded.";
-	}
-	else
-	{
-		Log::info() <<  "PinholeCamera test FAILED";
+		testResult = testCameraConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCameraConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("patterncamera"))
+	{
+		testResult = testPatternCamera<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPatternCamera<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("subframecamera"))
+	{
+		testResult = testSubFrameCamera<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSubFrameCamera<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distortion"))
+	{
+		testResult = testDistortion<float>(640u, 480u, testDuration);
+		Log::info() << " ";
+		testResult = testDistortion<double>(640u, 480u, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectordistortionfree"))
+	{
+		testResult = testVectorDistortionFree<float>(640u, 480u, testDuration);
+		Log::info() << " ";
+		testResult = testVectorDistortionFree<double>(640u, 480u, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectordistorted"))
+	{
+		testResult = testVectorDistorted<float>(640u, 480u, testDuration);
+		Log::info() << " ";
+		testResult = testVectorDistorted<double>(640u, 480u, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fovdiagonal"))
+	{
+		testResult = testFovDiagonal<float>(testDuration);
+		Log::info() << " ";
+		testResult = testFovDiagonal<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

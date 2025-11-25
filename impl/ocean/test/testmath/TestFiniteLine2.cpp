@@ -13,6 +13,8 @@
 #include "ocean/math/FiniteLine2.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -22,85 +24,104 @@ namespace Test
 namespace TestMath
 {
 
-bool TestFiniteLine2::test(const double testDuration)
+bool TestFiniteLine2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   FiniteLine2 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testIsOnLine(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistance(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsLeftOfLine(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsCollinear(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNormal(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsEqual<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsEqual<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNearestPoint<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNearestPoint<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntersection<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIntersection<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNearestPointOnInfiniteLine<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNearestPointOnInfiniteLine<double>(testDuration) && allSucceeded;
+	TestResult testResult("FiniteLine2 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("isonline"))
 	{
-		Log::info() << "FiniteLine2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "FiniteLine2 test FAILED!";
+		testResult = testIsOnLine(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("distance"))
+	{
+		testResult = testDistance(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isleftofline"))
+	{
+		testResult = testIsLeftOfLine(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("iscollinear"))
+	{
+		testResult = testIsCollinear(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("normal"))
+	{
+		testResult = testNormal(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isequal"))
+	{
+		testResult = testIsEqual<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIsEqual<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("nearestpoint"))
+	{
+		testResult = testNearestPoint<float>(testDuration);
+		Log::info() << " ";
+		testResult = testNearestPoint<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("intersection"))
+	{
+		testResult = testIntersection<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIntersection<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("nearestpointoninfiniteline"))
+	{
+		testResult = testNearestPointOnInfiniteLine<float>(testDuration);
+		Log::info() << " ";
+		testResult = testNearestPointOnInfiniteLine<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

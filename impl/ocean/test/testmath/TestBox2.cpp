@@ -15,6 +15,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -24,63 +26,70 @@ namespace Test
 namespace TestMath
 {
 
-bool TestBox2::test(const double testDuration)
+bool TestBox2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Box2 test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testConstructors<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConstructors<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntersects<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIntersects<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testUnsignedBox2integer<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testUnsignedBox2integer<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSignedBox2integer<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSignedBox2integer<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiplicationOperators<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMultiplicationOperators<double>(testDuration) && allSucceeded;
+	TestResult testResult("Box2 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructors"))
 	{
-		Log::info() << "Box2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Box2 test FAILED!";
+		testResult = testConstructors<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConstructors<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("intersects"))
+	{
+		testResult = testIntersects<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIntersects<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("unsignedbox2integer"))
+	{
+		testResult = testUnsignedBox2integer<float>(testDuration);
+		Log::info() << " ";
+		testResult = testUnsignedBox2integer<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("signedbox2integer"))
+	{
+		testResult = testSignedBox2integer<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSignedBox2integer<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiplicationoperators"))
+	{
+		testResult = testMultiplicationOperators<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMultiplicationOperators<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

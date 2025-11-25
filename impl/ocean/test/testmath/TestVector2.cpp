@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 #include "ocean/math/Vector2.h"
 
@@ -23,59 +25,69 @@ namespace Test
 namespace TestMath
 {
 
-bool TestVector2::test(const double testDuration)
+bool TestVector2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Vector2 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testWriteToMessenger() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsUnit(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngle(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPerpendicular(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLessOperator(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorConversion(testDuration) && allSucceeded;
+	TestResult testResult("Vector2 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("writetomessenger"))
 	{
-		Log::info() << "Vector2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Vector2 test FAILED!";
+		testResult = testWriteToMessenger();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("isunit"))
+	{
+		testResult = testIsUnit(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angle"))
+	{
+		testResult = testAngle(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("perpendicular"))
+	{
+		testResult = testPerpendicular(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("lessoperator"))
+	{
+		testResult = testLessOperator(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectorconversion"))
+	{
+		testResult = testVectorConversion(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

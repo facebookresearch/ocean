@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/math/Box3.h"
 #include "ocean/math/Line3.h"
 
@@ -33,9 +35,10 @@ class OCEAN_TEST_MATH_EXPORT TestBox3
 		/**
 		 * Tests the entire box functionalities.
 		 * @param testDuration Duration of each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Point test.

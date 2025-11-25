@@ -13,6 +13,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -22,35 +24,35 @@ namespace Test
 namespace TestMath
 {
 
-bool TestCylinder3::test(const double testDuration)
+bool TestCylinder3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Cylinder3 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = testConstructor();
+	TestResult testResult("Cylinder3 test");
 
 	Log::info() << " ";
 
-	allSucceeded = testNearestIntersection<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNearestIntersection<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "Cylinder3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Cylinder3 test FAILED!";
+		testResult = testConstructor();
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("nearestintersection"))
+	{
+		testResult = testNearestIntersection<float>(testDuration);
+
+		Log::info() << " ";
+
+		testResult = testNearestIntersection<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

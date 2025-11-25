@@ -12,6 +12,7 @@
 #include "ocean/math/Interpolation.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
@@ -24,49 +25,53 @@ namespace Test
 namespace TestMath
 {
 
-bool TestInterpolation::test(const double testDuration)
+bool TestInterpolation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Interpolation test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testLinear(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBilinear(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testBilinearSubset(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSpherical<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSpherical<double>(testDuration) && allSucceeded;
+	TestResult testResult("Interpolation test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("linear"))
 	{
-		Log::info() << "Interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Interpolation test FAILED!";
+		testResult = testLinear(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("bilinear"))
+	{
+		testResult = testBilinear(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("bilinearsubset"))
+	{
+		testResult = testBilinearSubset(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("spherical"))
+	{
+		testResult = testSpherical<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSpherical<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

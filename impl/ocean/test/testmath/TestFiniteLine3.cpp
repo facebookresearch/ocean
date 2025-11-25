@@ -12,6 +12,8 @@
 #include "ocean/math/FiniteLine3.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -21,33 +23,31 @@ namespace Test
 namespace TestMath
 {
 
-bool TestFiniteLine3::test(const double testDuration)
+bool TestFiniteLine3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   FiniteLine3 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testIsOnLine(testDuration) && allSucceeded;
+	TestResult testResult("FiniteLine3 test");
 
 	Log::info() << " ";
 
-	allSucceeded = testDistance(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("isonline"))
 	{
-		Log::info() << "FiniteLine3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "FiniteLine3 test FAILED!";
+		testResult = testIsOnLine(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("distance"))
+	{
+		testResult = testDistance(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

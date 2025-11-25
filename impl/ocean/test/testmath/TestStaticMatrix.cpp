@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Matrix.h"
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Random.h"
@@ -24,95 +26,120 @@ namespace Test
 namespace TestMath
 {
 
-bool TestStaticMatrix::test(const double testDuration)
+bool TestStaticMatrix::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Static Matrix test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testConstructorIdentity() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConstructorData() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTranspose(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixAdd(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixAddTransposed(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testScalarMultiplication(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorMultiplication<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorMultiplication<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixMultiplication(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixMultiplicationTransposedLeft(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixMultiplicationTransposedRight(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSolveCholesky(testDuration) && allSucceeded;
+	TestResult testResult("Static Matrix test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructoridentity"))
 	{
-		Log::info() << "Static Matrix test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Static Matrix test FAILED!";
+		testResult = testConstructorIdentity();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("constructordata"))
+	{
+		testResult = testConstructorData();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("transpose"))
+	{
+		testResult = testTranspose(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixadd"))
+	{
+		testResult = testMatrixAdd(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixaddtransposed"))
+	{
+		testResult = testMatrixAddTransposed(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("scalarmultiplication"))
+	{
+		testResult = testScalarMultiplication(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectormultiplication"))
+	{
+		testResult = testVectorMultiplication<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testVectorMultiplication<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixmultiplication"))
+	{
+		testResult = testMatrixMultiplication(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixmultiplicationtransposedleft"))
+	{
+		testResult = testMatrixMultiplicationTransposedLeft(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixmultiplicationtransposedright"))
+	{
+		testResult = testMatrixMultiplicationTransposedRight(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("solvecholesky"))
+	{
+		testResult = testSolveCholesky(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

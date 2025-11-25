@@ -14,6 +14,7 @@
 #include "ocean/math/Equation.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -25,55 +26,59 @@ namespace Test
 namespace TestMath
 {
 
-bool TestEquation::test(const double testDuration)
+bool TestEquation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool result = true;
-
-	Log::info() << "---   Equation test:   ---";
-	Log::info() << " ";
-
-	result = testLinearEquation<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testLinearEquation<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testQuadraticEquation<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testQuadraticEquation<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testCubicEquation<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testCubicEquation<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testQuarticEquation<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testQuarticEquation<double>(testDuration) && result;
+	TestResult testResult("Equation test");
 
 	Log::info() << " ";
 
-	if (result)
+	if (selector.shouldRun("linearequation"))
 	{
-		Log::info() << "Equation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Equation test FAILED!";
+		testResult = testLinearEquation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testLinearEquation<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return result;
+	if (selector.shouldRun("quadraticequation"))
+	{
+		testResult = testQuadraticEquation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testQuadraticEquation<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cubicequation"))
+	{
+		testResult = testCubicEquation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCubicEquation<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("quarticequation"))
+	{
+		testResult = testQuarticEquation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testQuarticEquation<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

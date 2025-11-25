@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 
 #include "ocean/test/Validation.h"
@@ -24,119 +26,147 @@ namespace Test
 namespace TestMath
 {
 
-bool TestRotation::test(const double testDuration)
+bool TestRotation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Rotation test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testConstructors<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConstructors<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixConstructors<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMatrixConstructors<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testArrayConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testArrayConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngleNormalization<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAngleNormalization<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConversionToQuaterion<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConversionToQuaterion<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConversionToHomogenousMatrix<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConversionToHomogenousMatrix<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testReferenceOffsetConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testReferenceOffsetConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLeft_R_right<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testLeft_R_right<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInversion<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testInversion<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComparisonOperators<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testComparisonOperators<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMultiplicationOperators<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMultiplicationOperators<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testElementAccess<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testElementAccess<double>(testDuration) && allSucceeded;
+	TestResult testResult("Rotation test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructors"))
 	{
-		Log::info() << "Rotation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Rotation test FAILED!";
+		testResult = testConstructors<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConstructors<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("matrixconstructors"))
+	{
+		testResult = testMatrixConstructors<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMatrixConstructors<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("arrayconstructor"))
+	{
+		testResult = testArrayConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testArrayConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("anglenormalization"))
+	{
+		testResult = testAngleNormalization<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAngleNormalization<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("conversiontoquaterion"))
+	{
+		testResult = testConversionToQuaterion<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConversionToQuaterion<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("conversiontohomogenousmatrix"))
+	{
+		testResult = testConversionToHomogenousMatrix<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConversionToHomogenousMatrix<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("referenceoffsetconstructor"))
+	{
+		testResult = testReferenceOffsetConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testReferenceOffsetConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("left_r_right"))
+	{
+		testResult = testLeft_R_right<float>(testDuration);
+		Log::info() << " ";
+		testResult = testLeft_R_right<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("inversion"))
+	{
+		testResult = testInversion<float>(testDuration);
+		Log::info() << " ";
+		testResult = testInversion<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("comparisonoperators"))
+	{
+		testResult = testComparisonOperators<float>(testDuration);
+		Log::info() << " ";
+		testResult = testComparisonOperators<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("multiplicationoperators"))
+	{
+		testResult = testMultiplicationOperators<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMultiplicationOperators<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("elementaccess"))
+	{
+		testResult = testElementAccess<float>(testDuration);
+		Log::info() << " ";
+		testResult = testElementAccess<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

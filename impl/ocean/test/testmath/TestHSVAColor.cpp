@@ -15,6 +15,7 @@
 #include "ocean/math/RGBAColor.h"
 #include "ocean/math/HSVAColor.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/Validation.h"
 
 namespace Ocean
@@ -26,53 +27,60 @@ namespace Test
 namespace TestMath
 {
 
-bool TestHSVAColor::test(const double testDuration)
+bool TestHSVAColor::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   HSVAColor test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testWriteToMessenger() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsEqual(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAccessors(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConversionRGBA(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolate(testDuration) && allSucceeded;
+	TestResult testResult("HSVAColor test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("writetomessenger"))
 	{
-		Log::info() << "HSVAColor test succeeded.";
-	}
-	else
-	{
-		Log::info() << "HSVAColor test FAILED!";
+		testResult = testWriteToMessenger();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("isequal"))
+	{
+		testResult = testIsEqual(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("accessors"))
+	{
+		testResult = testAccessors(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("conversionrgba"))
+	{
+		testResult = testConversionRGBA(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interpolate"))
+	{
+		testResult = testInterpolate(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

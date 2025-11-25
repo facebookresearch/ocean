@@ -11,6 +11,8 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Worker.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Euler.h"
 #include "ocean/math/Random.h"
 
@@ -25,55 +27,77 @@ namespace Test
 namespace TestMath
 {
 
-bool TestRandom::test(const double testDuration)
+bool TestRandom::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Random test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testStandardRandomSingleThreaded(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOceanRandomSingleThreaded(testDuration) && allSucceeded;
+	TestResult testResult("Random test");
 
 	Log::info() << " ";
 
-	allSucceeded = testStandardRandomMultiThreaded(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOceanRandomMultiThreaded(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandardRandomTriple(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOceanRandomTriple(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandardRandomVector3(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOceanRandomVector3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandardRandomEuler(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOceanRandomEuler(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("standardrandomsinglethreaded"))
 	{
-		Log::info() << "Random test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Random test FAILED!";
+		testResult = testStandardRandomSingleThreaded(testDuration);
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("oceanrandomsinglethreaded"))
+	{
+		testResult = testOceanRandomSingleThreaded(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("standardrandommultithreaded"))
+	{
+		testResult = testStandardRandomMultiThreaded(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("oceanrandommultithreaded"))
+	{
+		testResult = testOceanRandomMultiThreaded(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("standardrandomtriple"))
+	{
+		testResult = testStandardRandomTriple(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("oceanrandomtriple"))
+	{
+		testResult = testOceanRandomTriple(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("standardrandomvector3"))
+	{
+		testResult = testStandardRandomVector3(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("oceanrandomvector3"))
+	{
+		testResult = testOceanRandomVector3(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("standardrandomeuler"))
+	{
+		testResult = testStandardRandomEuler(testDuration);
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("oceanrandomeuler"))
+	{
+		testResult = testOceanRandomEuler(testDuration);
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

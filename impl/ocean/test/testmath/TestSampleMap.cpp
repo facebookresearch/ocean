@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
 #include "ocean/math/SampleMap.h"
@@ -22,47 +24,51 @@ namespace Test
 namespace TestMath
 {
 
-bool TestSampleMap::test(const double testDuration)
+bool TestSampleMap::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   SampleMap test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testSampleMostRecent(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSampleSpecific(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSampleInterpolation(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testStressTest(testDuration) && allSucceeded;
+	TestResult testResult("SampleMap test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("samplemostrecent"))
 	{
-		Log::info() << "SampleMap test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SampleMap test FAILED";
+		testResult = testSampleMostRecent(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("samplespecific"))
+	{
+		testResult = testSampleSpecific(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("sampleinterpolation"))
+	{
+		testResult = testSampleInterpolation(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("stresstest"))
+	{
+		testResult = testStressTest(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

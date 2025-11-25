@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/MathUtilities.h"
 #include "ocean/math/Matrix.h"
@@ -27,131 +29,168 @@ namespace Test
 namespace TestMath
 {
 
-bool TestSquareMatrix4::test(const double testDuration, Worker& worker)
+bool TestSquareMatrix4::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	Log::info() << "---   SquareMatrix4 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testWriteToMessenger() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testElementConstructor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorMultiplication<float>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVectorMultiplication<double>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixMultiplication<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMatrixMultiplication<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvert(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixConversion(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testProjectionMatrixFieldOfView<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testProjectionMatrixFieldOfView<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testProjectionMatrixCameraMatrix<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testProjectionMatrixCameraMatrix<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTranspose<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testTranspose<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeterminant<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDeterminant<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTrace<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testTrace<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixAddition<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMatrixAddition<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMatrixSubtraction<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMatrixSubtraction<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAccessor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testEigenSystem<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testEigenSystem<double>(testDuration) && allSucceeded;
+	TestResult testResult("SquareMatrix4 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("writetomessenger"))
 	{
-		Log::info() << "SquareMatrix4 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "SquareMatrix4 test FAILED.";
+		testResult = testWriteToMessenger();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("elementconstructor"))
+	{
+		testResult = testElementConstructor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectormultiplication"))
+	{
+		testResult = testVectorMultiplication<float>(testDuration, worker);
+		Log::info() << " ";
+		testResult = testVectorMultiplication<double>(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixmultiplication"))
+	{
+		testResult = testMatrixMultiplication<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMatrixMultiplication<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("invert"))
+	{
+		testResult = testInvert(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixconversion"))
+	{
+		testResult = testMatrixConversion(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("projectionmatrixfieldofview"))
+	{
+		testResult = testProjectionMatrixFieldOfView<float>(testDuration);
+		Log::info() << " ";
+		testResult = testProjectionMatrixFieldOfView<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("projectionmatrixcameramatrix"))
+	{
+		testResult = testProjectionMatrixCameraMatrix<float>(testDuration);
+		Log::info() << " ";
+		testResult = testProjectionMatrixCameraMatrix<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("transpose"))
+	{
+		testResult = testTranspose<float>(testDuration);
+		Log::info() << " ";
+		testResult = testTranspose<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determinant"))
+	{
+		testResult = testDeterminant<float>(testDuration);
+		Log::info() << " ";
+		testResult = testDeterminant<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("trace"))
+	{
+		testResult = testTrace<float>(testDuration);
+		Log::info() << " ";
+		testResult = testTrace<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixaddition"))
+	{
+		testResult = testMatrixAddition<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMatrixAddition<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("matrixsubtraction"))
+	{
+		testResult = testMatrixSubtraction<float>(testDuration);
+		Log::info() << " ";
+		testResult = testMatrixSubtraction<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("accessor"))
+	{
+		testResult = testAccessor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("eigensystem"))
+	{
+		testResult = testEigenSystem<float>(testDuration);
+		Log::info() << " ";
+		testResult = testEigenSystem<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

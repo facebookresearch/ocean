@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 #include "ocean/math/Sphere3.h"
 #include "ocean/math/SquareMatrix3.h"
@@ -22,55 +24,59 @@ namespace Test
 namespace TestMath
 {
 
-bool TestSphere3::test(const double testDuration)
+bool TestSphere3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Sphere3 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testHasIntersection<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testHasIntersection<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasIntersectionTransformed<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testHasIntersectionTransformed<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCoordinateVectorConversion<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCoordinateVectorConversion<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testShortestDistance<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testShortestDistance<double>(testDuration) && allSucceeded;
+	TestResult testResult("Sphere3 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("hasintersection"))
 	{
-		Log::info() << "Sphere3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sphere3 test FAILED!";
+		testResult = testHasIntersection<float>(testDuration);
+		Log::info() << " ";
+		testResult = testHasIntersection<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("hasintersectiontransformed"))
+	{
+		testResult = testHasIntersectionTransformed<float>(testDuration);
+		Log::info() << " ";
+		testResult = testHasIntersectionTransformed<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("coordinatevectorconversion"))
+	{
+		testResult = testCoordinateVectorConversion<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCoordinateVectorConversion<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("shortestdistance"))
+	{
+		testResult = testShortestDistance<float>(testDuration);
+		Log::info() << " ";
+		testResult = testShortestDistance<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

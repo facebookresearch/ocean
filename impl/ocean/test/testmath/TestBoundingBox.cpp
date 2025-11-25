@@ -12,6 +12,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/BoundingBox.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -21,33 +23,31 @@ namespace Test
 namespace TestMath
 {
 
-bool TestBoundingBox::test(const double testDuration)
+bool TestBoundingBox::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Bounding box test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testPositiveFrontIntersection(testDuration) && allSucceeded;
+	TestResult testResult("Bounding box test");
 
 	Log::info() << " ";
 
-	allSucceeded = testPositiveBackIntersection(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("positivefrontintersection"))
 	{
-		Log::info() << "Bounding box test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Bounding box test FAILED!";
+		testResult = testPositiveFrontIntersection(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("positivebackintersection"))
+	{
+		testResult = testPositiveBackIntersection(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

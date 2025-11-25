@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 
 namespace Ocean
@@ -21,199 +23,269 @@ namespace Test
 namespace TestMath
 {
 
-bool TestNumeric::test(const double testDuration)
+bool TestNumeric::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Numeric tests:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testEps() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testWeakEps() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsEqualDynamic() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRound() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngleConversion<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAngleConversion<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngleAdjustPositive(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngleAdjustNull(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngleIsEqual(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAngleIsBelowThreshold(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testGaussianDistribution1(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testGaussianDistribution2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testGaussianDistribution3(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAbs() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSecureAbs() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFloor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCeil(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLog2(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDotProduct<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDotProduct<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSign(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopySign() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvertSign() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFactorial() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsNan<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsNan<double>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsNan<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsNan<int32_t>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsInf<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsInf<double>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsInf<uint8_t>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsInf<int32_t>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPow() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIsInsideValueRange(testDuration) && allSucceeded;
+	TestResult testResult("Numeric tests");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("eps"))
 	{
-		Log::info() << "Numeric test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Numeric test FAILED!";
+		testResult = testEps();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("weakeps"))
+	{
+		testResult = testWeakEps();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isequaldynamic"))
+	{
+		testResult = testIsEqualDynamic();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("round"))
+	{
+		testResult = testRound();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angleconversion"))
+	{
+		testResult = testAngleConversion<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAngleConversion<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angleadjustpositive"))
+	{
+		testResult = testAngleAdjustPositive(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angleadjustnull"))
+	{
+		testResult = testAngleAdjustNull(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angleisequal"))
+	{
+		testResult = testAngleIsEqual(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("angleisbelowthreshold"))
+	{
+		testResult = testAngleIsBelowThreshold(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("gaussiandistribution1"))
+	{
+		testResult = testGaussianDistribution1(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("gaussiandistribution2"))
+	{
+		testResult = testGaussianDistribution2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("gaussiandistribution3"))
+	{
+		testResult = testGaussianDistribution3(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("abs"))
+	{
+		testResult = testAbs();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("secureabs"))
+	{
+		testResult = testSecureAbs();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("floor"))
+	{
+		testResult = testFloor(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("ceil"))
+	{
+		testResult = testCeil(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("log2"))
+	{
+		testResult = testLog2(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("dotproduct"))
+	{
+		testResult = testDotProduct<float>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+
+		testResult = testDotProduct<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("sign"))
+	{
+		testResult = testSign(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copysign"))
+	{
+		testResult = testCopySign();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("invertsign"))
+	{
+		testResult = testInvertSign();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("factorial"))
+	{
+		testResult = testFactorial();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isnan"))
+	{
+		testResult = testIsNan<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIsNan<double>(testDuration);
+		Log::info() << " ";
+		testResult = testIsNan<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testIsNan<int32_t>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isinf"))
+	{
+		testResult = testIsInf<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIsInf<double>(testDuration);
+		Log::info() << " ";
+		testResult = testIsInf<uint8_t>(testDuration);
+		Log::info() << " ";
+		testResult = testIsInf<int32_t>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pow"))
+	{
+		testResult = testPow();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("isinsidevaluerange"))
+	{
+		testResult = testIsInsideValueRange(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

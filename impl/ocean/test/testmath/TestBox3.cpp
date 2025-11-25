@@ -15,6 +15,8 @@
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -24,95 +26,114 @@ namespace Test
 namespace TestMath
 {
 
-bool TestBox3::test(const double testDuration)
+bool TestBox3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool result = true;
-
-	Log::info() << "---   Box3 test:   ---";
-	Log::info() << " ";
-
-	result = testPoint<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testPoint<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testIsInside<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testIsInside<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testAddition<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testAddition<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testTransformation<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testTransformation<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testLine<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testLine<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testPlane<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testPlane<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testSpace<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testSpace<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testHasIntersection<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testHasIntersection<double>(testDuration) && result;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	result = testExpand<float>(testDuration) && result;
-	Log::info() << " ";
-	result = testExpand<double>(testDuration) && result;
+	TestResult testResult("Box3 test");
 
 	Log::info() << " ";
 
-	if (result)
+	if (selector.shouldRun("point"))
 	{
-		Log::info() << "Box3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Box3 test FAILED";
+		testResult = testPoint<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPoint<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return result;
+	if (selector.shouldRun("isinside"))
+	{
+		testResult = testIsInside<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIsInside<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("addition"))
+	{
+		testResult = testAddition<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAddition<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("transformation"))
+	{
+		testResult = testTransformation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testTransformation<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("line"))
+	{
+		testResult = testLine<float>(testDuration);
+		Log::info() << " ";
+		testResult = testLine<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("plane"))
+	{
+		testResult = testPlane<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPlane<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("space"))
+	{
+		testResult = testSpace<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSpace<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasintersection"))
+	{
+		testResult = testHasIntersection<float>(testDuration);
+		Log::info() << " ";
+		testResult = testHasIntersection<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("expand"))
+	{
+		testResult = testExpand<float>(testDuration);
+		Log::info() << " ";
+		testResult = testExpand<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

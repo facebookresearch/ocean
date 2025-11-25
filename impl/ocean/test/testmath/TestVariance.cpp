@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 #include "ocean/math/Variance.h"
 
@@ -21,47 +23,48 @@ namespace Test
 namespace TestMath
 {
 
-bool TestVariance::test(const double testDuration)
+bool TestVariance::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Variance test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testAverage<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAverage<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDeviation<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDeviation<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRemove<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testRemove<double>(testDuration) && allSucceeded;
+	TestResult testResult("Variance test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("average"))
 	{
-		Log::info() << "Variance test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Variance test FAILED!";
+		testResult = testAverage<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAverage<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("deviation"))
+	{
+		testResult = testDeviation<float>(testDuration);
+		Log::info() << " ";
+		testResult = testDeviation<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("remove"))
+	{
+		testResult = testRemove<float>(testDuration);
+		Log::info() << " ";
+		testResult = testRemove<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -13,6 +13,7 @@
 #include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
@@ -25,47 +26,48 @@ namespace Test
 namespace TestMath
 {
 
-bool TestFisheyeCamera::test(const double testDuration)
+bool TestFisheyeCamera::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   FisheyeCamera test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testCameraConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCameraConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistortion<float>(640u, 480u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDistortion<double>(640u, 480u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorDistorted<float>(640u, 480u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVectorDistorted<double>(640u, 480u, testDuration) && allSucceeded;
+	TestResult testResult("FisheyeCamera test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("cameraconstructor"))
 	{
-		Log::info() <<  "FisheyeCamera test succeeded.";
-	}
-	else
-	{
-		Log::info() <<  "FisheyeCamera test FAILED";
+		testResult = testCameraConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCameraConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("distortion"))
+	{
+		testResult = testDistortion<float>(640u, 480u, testDuration);
+		Log::info() << " ";
+		testResult = testDistortion<double>(640u, 480u, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectordistorted"))
+	{
+		testResult = testVectorDistorted<float>(640u, 480u, testDuration);
+		Log::info() << " ";
+		testResult = testVectorDistorted<double>(640u, 480u, testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

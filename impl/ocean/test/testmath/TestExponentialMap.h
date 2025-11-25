@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_MATH_EXPORT TestExponentialMap
 		/**
 		 * Executes all tests.
 		 * @param testDuration Number of seconds for each test
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the constructors of the ExponentialMap.

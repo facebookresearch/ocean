@@ -7,6 +7,8 @@
 
 #include "ocean/test/testmath/TestRateCalculator.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 #include "ocean/math/RateCalculator.h"
 
@@ -19,29 +21,24 @@ namespace Test
 namespace TestMath
 {
 
-bool TestRateCalculator::test(const double testDuration, Worker& /*worker*/)
+bool TestRateCalculator::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   RateCalculator test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testRate(testDuration) && allSucceeded;
+	TestResult testResult("RateCalculator test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("rate"))
 	{
-		Log::info() << "RateCalculator test succeeded.";
-	}
-	else
-	{
-		Log::info() << "RateCalculator test FAILED";
+		testResult = testRate(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

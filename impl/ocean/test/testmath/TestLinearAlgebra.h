@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/math/SquareMatrix3.h"
 #include "ocean/math/Matrix.h"
 
@@ -33,9 +35,10 @@ class OCEAN_TEST_MATH_EXPORT TestLinearAlgebra
 		/**
 		 * Tests all linear algebra functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the Eigen system of a 3x3 square matrix.

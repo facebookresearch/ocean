@@ -13,6 +13,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -22,43 +24,43 @@ namespace Test
 namespace TestMath
 {
 
-bool TestCone3::test(const double testDuration)
+bool TestCone3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Cone3 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = testConstructor();
+	TestResult testResult("Cone3 test");
 
 	Log::info() << " ";
 
-	allSucceeded = testNearestIntersection<float>() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNearestIntersection<double>() && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = validateNearestIntersection<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = validateNearestIntersection<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "Cone3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Cone3 test FAILED!";
+		testResult = testConstructor();
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("nearestintersection"))
+	{
+		testResult = testNearestIntersection<float>();
+
+		Log::info() << " ";
+
+		testResult = testNearestIntersection<double>();
+
+		Log::info() << " ";
+
+		testResult = validateNearestIntersection<float>(testDuration);
+
+		Log::info() << " ";
+
+		testResult = validateNearestIntersection<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

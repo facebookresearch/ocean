@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_MATH_EXPORT TestBox2
 		/**
 		 * Tests the entire box functionalities.
 		 * @param testDuration Duration of each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the constructors.

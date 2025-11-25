@@ -13,6 +13,8 @@
 #include "ocean/math/Euler.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -22,49 +24,59 @@ namespace Test
 namespace TestMath
 {
 
-bool TestEuler::test(const double testDuration)
+bool TestEuler::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Euler test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testConversionToMatrix(testDuration) && allSucceeded;
+	TestResult testResult("Euler test");
 
 	Log::info() << " ";
 
-	allSucceeded = testConversionFromRotation(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testConversionFromMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDecomposeRotationMatrixToYXZ(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDecomposeRotationMatrixToXYZ(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testAdjustAngles(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("conversiontomatrix"))
 	{
-		Log::info() << "Euler test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Euler test FAILED!";
+		testResult = testConversionToMatrix(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("conversionfromrotation"))
+	{
+		testResult = testConversionFromRotation(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("conversionfrommatrix"))
+	{
+		testResult = testConversionFromMatrix(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("decomposerotationmatrixtoyxz"))
+	{
+		testResult = testDecomposeRotationMatrixToYXZ(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("decomposerotationmatrixtoxyz"))
+	{
+		testResult = testDecomposeRotationMatrixToXYZ(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("adjustangles"))
+	{
+		testResult = testAdjustAngles(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

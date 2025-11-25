@@ -12,6 +12,8 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Lookup2.h"
 #include "ocean/math/Random.h"
 
@@ -24,57 +26,73 @@ namespace Test
 namespace TestMath
 {
 
-bool TestLookup2::test(const double testDuration)
+bool TestLookup2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Lookup2 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testCenterLookupBinPositions(testDuration) && allSucceeded;
+	TestResult testResult("Lookup2 test");
 
 	Log::info() << " ";
 
-	allSucceeded = testCenterLookupClampedValues(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testAdvancedCenterLookupClampedValues(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCornerLookupNearestNeighbor(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCornerLookupBilinear(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCornerLookupBilinearValues(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCornerLookupBilinearSubsetValues(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testCornerLookupClampedValues(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("centerlookupbinpositions"))
 	{
-		Log::info() << "Lookup2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Lookup2 test FAILED!";
+		testResult = testCenterLookupBinPositions(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("centerlookupclampedvalues"))
+	{
+		testResult = testCenterLookupClampedValues(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("advancedcenterlookupclampedvalues"))
+	{
+		testResult = testAdvancedCenterLookupClampedValues(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cornerlookupnearestneighbor"))
+	{
+		testResult = testCornerLookupNearestNeighbor(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cornerlookupbilinear"))
+	{
+		testResult = testCornerLookupBilinear(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cornerlookupbilinearvalues"))
+	{
+		testResult = testCornerLookupBilinearValues(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cornerlookupbilinearsubsetvalues"))
+	{
+		testResult = testCornerLookupBilinearSubsetValues(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("cornerlookupclampedvalues"))
+	{
+		testResult = testCornerLookupClampedValues(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Euler.h"
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/Matrix.h"
@@ -29,71 +31,81 @@ namespace Test
 namespace TestMath
 {
 
-bool TestLinearAlgebra::test(const double testDuration)
+bool TestLinearAlgebra::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Linear Algebra Test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testEigenSystemSquareMatrix3<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testEigenSystemSquareMatrix3<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testEigenSystemMatrix<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testEigenSystemMatrix<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSingularValueDecomposition<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSingularValueDecomposition<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testQrDecomposition<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testQrDecomposition<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCholeskyDecomposition<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCholeskyDecomposition<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSolve<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSolve<double>(testDuration) && allSucceeded;
+	TestResult testResult("Linear Algebra Test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("eigensystemsquarematrix3"))
 	{
-		Log::info() << "Linear Algebra Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Linear Algebra Test FAILED!";
+		testResult = testEigenSystemSquareMatrix3<float>(testDuration);
+		Log::info() << " ";
+		testResult = testEigenSystemSquareMatrix3<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("eigensystemmatrix"))
+	{
+		testResult = testEigenSystemMatrix<float>(testDuration);
+		Log::info() << " ";
+		testResult = testEigenSystemMatrix<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("singularvaluedecomposition"))
+	{
+		testResult = testSingularValueDecomposition<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSingularValueDecomposition<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("qrdecomposition"))
+	{
+		testResult = testQrDecomposition<float>(testDuration);
+		Log::info() << " ";
+		testResult = testQrDecomposition<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("choleskydecomposition"))
+	{
+		testResult = testCholeskyDecomposition<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCholeskyDecomposition<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("solve"))
+	{
+		testResult = testSolve<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSolve<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

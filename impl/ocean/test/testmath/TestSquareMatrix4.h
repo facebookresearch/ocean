@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Worker.h"
 
 #include "ocean/math/SquareMatrix4.h"
@@ -36,9 +38,10 @@ class OCEAN_TEST_MATH_EXPORT TestSquareMatrix4
 		 * Tests all square matrix 4x4 functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object allowing to distribute computations
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the messenger function.

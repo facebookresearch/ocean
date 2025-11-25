@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/math/Matrix.h"
 
 namespace Ocean
@@ -32,9 +34,10 @@ class OCEAN_TEST_MATH_EXPORT TestMatrix
 		/**
 		 * Tests all matrix functions.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the element-based constructor.

@@ -15,6 +15,7 @@
 #include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix4.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -26,75 +27,88 @@ namespace Test
 namespace TestMath
 {
 
-bool TestHomogenousMatrix4::test(const double testDuration)
+bool TestHomogenousMatrix4::test(const double testDuration, const TestSelector& selector)
 {
-	Log::info() << "---   HomogenousMatrix4 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testWriteToMessenger() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testElementConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testElementConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvert<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testInvert<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDecomposition<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDecomposition<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testVectorConversion<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVectorConversion<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCopyElements<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testCopyElements<double>(testDuration) && allSucceeded;
+	TestResult testResult("HomogenousMatrix4 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("writetomessenger"))
 	{
-		Log::info() << "HomogenousMatrix4 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "HomogenousMatrix4 test FAILED.";
+		testResult = testWriteToMessenger();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("constructor"))
+	{
+		testResult = testConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("elementconstructor"))
+	{
+		testResult = testElementConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testElementConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("invert"))
+	{
+		testResult = testInvert<float>(testDuration);
+		Log::info() << " ";
+		testResult = testInvert<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("decomposition"))
+	{
+		testResult = testDecomposition<float>(testDuration);
+		Log::info() << " ";
+		testResult = testDecomposition<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("vectorconversion"))
+	{
+		testResult = testVectorConversion<float>(testDuration);
+		Log::info() << " ";
+		testResult = testVectorConversion<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copyelements"))
+	{
+		testResult = testCopyElements<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCopyElements<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

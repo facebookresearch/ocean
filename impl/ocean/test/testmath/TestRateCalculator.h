@@ -10,6 +10,8 @@
 
 #include "ocean/test/testmath/TestMath.h"
 
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Timestamp.h"
 
 namespace Ocean
@@ -45,9 +47,10 @@ class OCEAN_TEST_MATH_EXPORT TestRateCalculator
 		 * Starts all tests for the class.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the rate functionality.

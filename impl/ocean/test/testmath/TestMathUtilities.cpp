@@ -10,6 +10,8 @@
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Random.h"
 #include "ocean/math/MathUtilities.h"
 
@@ -22,29 +24,24 @@ namespace Test
 namespace TestMath
 {
 
-bool TestMathUtilities::test(const double testDuration)
+bool TestMathUtilities::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Utilities test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testEncodeFloatToUint8(testDuration) && allSucceeded;
+	TestResult testResult("Utilities test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("encodefloattouint8"))
 	{
-		Log::info() << "Utlities test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Utilities test FAILED!";
+		testResult = testEncodeFloatToUint8(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

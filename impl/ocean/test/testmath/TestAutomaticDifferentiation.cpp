@@ -16,6 +16,7 @@
 #include "ocean/math/StaticMatrix.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -27,65 +28,72 @@ namespace Test
 namespace TestMath
 {
 
-bool TestAutomaticDifferentiation::test(const double testDuration)
+bool TestAutomaticDifferentiation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Automatic scalar differentiation test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testSimple<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testSimple<double>(testDuration) && allSucceeded;
+	TestResult testResult("Automatic scalar differentiation test");
 
 	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
 
-	allSucceeded = testFunctions<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testFunctions<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNested<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNested<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomography<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testHomography<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPose<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPose<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("simple"))
 	{
-		Log::info() << "Differentiation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Differentiation test FAILED!";
+		testResult = testSimple<float>(testDuration);
+		Log::info() << " ";
+		testResult = testSimple<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("functions"))
+	{
+		testResult = testFunctions<float>(testDuration);
+		Log::info() << " ";
+		testResult = testFunctions<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("nested"))
+	{
+		testResult = testNested<float>(testDuration);
+		Log::info() << " ";
+		testResult = testNested<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homography"))
+	{
+		testResult = testHomography<float>(testDuration);
+		Log::info() << " ";
+		testResult = testHomography<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pose"))
+	{
+		testResult = testPose<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPose<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

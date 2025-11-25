@@ -14,6 +14,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Rotation.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -23,29 +25,24 @@ namespace Test
 namespace TestMath
 {
 
-bool TestExponentialMap::test(const double testDuration)
+bool TestExponentialMap::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   ExponentialMap test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testConstructors(testDuration) && allSucceeded;
+	TestResult testResult("ExponentialMap test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructors"))
 	{
-		Log::info() << "ExponentialMap test succeeded.";
-	}
-	else
-	{
-		Log::info() << "ExponentialMap test FAILED!";
+		testResult = testConstructors(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

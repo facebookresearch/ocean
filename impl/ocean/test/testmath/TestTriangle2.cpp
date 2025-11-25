@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
@@ -23,37 +25,38 @@ namespace Test
 namespace TestMath
 {
 
-bool TestTriangle2::test(const double testDuration)
+bool TestTriangle2::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Triangle2 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testIntersects(testDuration) && allSucceeded;
+	TestResult testResult("Triangle2 test");
 
 	Log::info() << " ";
 
-	allSucceeded = testIsCounterClockwise(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPadded(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("intersects"))
 	{
-		Log::info() << "Triangle2 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Triangle2 test FAILED!";
+		testResult = testIntersects(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("iscounterclockwise"))
+	{
+		testResult = testIsCounterClockwise(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("padded"))
+	{
+		testResult = testPadded(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -14,6 +14,8 @@
 #include "ocean/math/FourierTransformation.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -23,51 +25,52 @@ namespace Test
 namespace TestMath
 {
 
-bool TestFourierTransformation::test(const double testDuration)
+bool TestFourierTransformation::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Fourier Transformation test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testFourierTransform<float, false>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testFourierTransform<float, true>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testFourierTransform<double, false>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testFourierTransform<double, true>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testElementwiseMultiplication2<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testElementwiseMultiplication2<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testElementwiseDivision2<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testElementwiseDivision2<double>(testDuration) && allSucceeded;
+	TestResult testResult("Fourier Transformation test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("fouriertransform"))
 	{
-		Log::info() << "Fourier Transformation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Fourier Transformation test FAILED!";
+		testResult = testFourierTransform<float, false>(testDuration);
+		Log::info() << " ";
+		testResult = testFourierTransform<float, true>(testDuration);
+		Log::info() << " ";
+		testResult = testFourierTransform<double, false>(testDuration);
+		Log::info() << " ";
+		testResult = testFourierTransform<double, true>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("elementwisemultiplication2"))
+	{
+		testResult = testElementwiseMultiplication2<float>(testDuration);
+		Log::info() << " ";
+		testResult = testElementwiseMultiplication2<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("elementwisedivision2"))
+	{
+		testResult = testElementwiseDivision2<float>(testDuration);
+		Log::info() << " ";
+		testResult = testElementwiseDivision2<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

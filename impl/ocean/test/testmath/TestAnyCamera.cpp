@@ -15,6 +15,8 @@
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -24,39 +26,37 @@ namespace Test
 namespace TestMath
 {
 
-bool TestAnyCamera::test(const double testDuration)
+bool TestAnyCamera::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   AnyCamera test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testConstructor<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testConstructor<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPrincipalPoint<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPrincipalPoint<double>(testDuration) && allSucceeded;
+	TestResult testResult("AnyCamera test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "AnyCamera test succeeded.";
-	}
-	else
-	{
-		Log::info() << "AnyCamera test FAILED";
+		testResult = testConstructor<float>(testDuration);
+		Log::info() << " ";
+		testResult = testConstructor<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("principalpoint"))
+	{
+		testResult = testPrincipalPoint<float>(testDuration);
+		Log::info() << " ";
+		testResult = testPrincipalPoint<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

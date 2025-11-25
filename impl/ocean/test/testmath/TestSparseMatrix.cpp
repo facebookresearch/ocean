@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/SparseMatrix.h"
 #include "ocean/math/Random.h"
 
@@ -24,41 +26,42 @@ namespace Test
 namespace TestMath
 {
 
-bool TestSparseMatrix::test(const double testDuration)
+bool TestSparseMatrix::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---  Sparse Matrix test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testRank() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNonNegativeMatrixFactorization(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInvertDiagonal(testDuration) && allSucceeded;
+	TestResult testResult("Sparse Matrix test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("rank"))
 	{
-		Log::info() << "Sparse Matrix test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Sparse Matrix test FAILED!";
+		testResult = testRank();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("nonnegativematrixfactorization"))
+	{
+		testResult = testNonNegativeMatrixFactorization(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("invertdiagonal"))
+	{
+		testResult = testInvertDiagonal(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

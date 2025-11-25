@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Line3.h"
 #include "ocean/math/Plane3.h"
 #include "ocean/math/Random.h"
@@ -22,40 +24,42 @@ namespace Test
 namespace TestMath
 {
 
-bool TestPlane3::test(const double testDuration)
+bool TestPlane3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
-	bool allSucceeded = true;
 
-	Log::info() << "---   Plane3 test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testConstructorThreePoints(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntersectionLine(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testIntersectionPlane(testDuration) && allSucceeded;
+	TestResult testResult("Plane3 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructorthreepoints"))
 	{
-		Log::info() << "Plane3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Plane3 test FAILED!";
+		testResult = testConstructorThreePoints(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("intersectionline"))
+	{
+		testResult = testIntersectionLine(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("intersectionplane"))
+	{
+		testResult = testIntersectionPlane(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

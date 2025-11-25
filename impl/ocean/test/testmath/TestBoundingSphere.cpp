@@ -13,6 +13,8 @@
 #include "ocean/math/Box3.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -22,45 +24,52 @@ namespace Test
 namespace TestMath
 {
 
-bool TestBoundingSphere::test(const double testDuration)
+bool TestBoundingSphere::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Bounding sphere test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testConstructor(testDuration) && allSucceeded;
+	TestResult testResult("Bounding sphere test");
 
 	Log::info() << " ";
 
-	allSucceeded = testIntersections(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testIntersectionsTransformed(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPositiveFrontIntersection(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPositiveBackIntersection(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("constructor"))
 	{
-		Log::info() << "Bounding sphere test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Bounding sphere test FAILED!";
+		testResult = testConstructor(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("intersections"))
+	{
+		testResult = testIntersections(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("intersectionstransformed"))
+	{
+		testResult = testIntersectionsTransformed(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("positivefrontintersection"))
+	{
+		testResult = testPositiveFrontIntersection(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("positivebackintersection"))
+	{
+		testResult = testPositiveBackIntersection(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

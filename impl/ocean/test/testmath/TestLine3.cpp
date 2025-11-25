@@ -9,6 +9,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/math/Line3.h"
 #include "ocean/math/Random.h"
 #include "ocean/math/Rotation.h"
@@ -22,47 +24,48 @@ namespace Test
 namespace TestMath
 {
 
-bool TestLine3::test(const double testDuration)
+bool TestLine3::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Line3 test:   ---";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	allSucceeded = testIsOnLine<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testIsOnLine<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testNearestPoints<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNearestPoints<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDistance<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDistance<double>(testDuration) && allSucceeded;
+	TestResult testResult("Line3 test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("isonline"))
 	{
-		Log::info() << "Line3 test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Line3 test FAILED!";
+		testResult = testIsOnLine<float>(testDuration);
+		Log::info() << " ";
+		testResult = testIsOnLine<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("nearestpoints"))
+	{
+		testResult = testNearestPoints<float>(testDuration);
+		Log::info() << " ";
+		testResult = testNearestPoints<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("distance"))
+	{
+		testResult = testDistance<float>(testDuration);
+		Log::info() << " ";
+		testResult = testDistance<double>(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

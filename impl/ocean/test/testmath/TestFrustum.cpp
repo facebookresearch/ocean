@@ -11,6 +11,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/TestResult.h"
+
 namespace Ocean
 {
 
@@ -20,35 +22,33 @@ namespace Test
 namespace TestMath
 {
 
-bool TestFrustum::test(const double testDuration)
+bool TestFrustum::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Frustum test:   ---";
-	Log::info() << " ";
-
-	allSucceeded = testConstructors(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testIsInsidePoint(testDuration) && allSucceeded;
+	TestResult testResult("Frustum test");
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (selector.shouldRun("constructors"))
 	{
-		Log::info() << "Frustum test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frustum test FAILED!";
+		testResult = testConstructors(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("isinsidepoint"))
+	{
+		testResult = testIsInsidePoint(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
