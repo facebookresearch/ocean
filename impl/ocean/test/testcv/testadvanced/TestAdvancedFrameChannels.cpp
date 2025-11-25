@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameChannels.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -27,36 +29,35 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedFrameChannels::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/)
+bool TestAdvancedFrameChannels::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Advanced frame channels test:   ---";
+	TestResult testResult("Advanced frame channels test");
 	Log::info() << " ";
 
-	allSucceeded = testSeparateTo1Channel(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testZipChannels(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("separateto1channel"))
 	{
-		Log::info() << "Advanced frame channels test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced frame channels testFAILED!";
+		testResult = testSeparateTo1Channel(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("zipchannels"))
+	{
+		testResult = testZipChannels(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

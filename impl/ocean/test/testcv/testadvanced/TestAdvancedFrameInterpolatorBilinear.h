@@ -17,6 +17,8 @@
 
 #include "ocean/math/Vector2.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -60,9 +62,10 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedFrameInterpolatorBilinear
 		 * Tests all advanced bilinear interpolation filter functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the CPU load
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the pixel interpolation function for frames with 8 bit per channel and mask.

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameInterpolatorBilinear.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -33,53 +35,59 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedFrameInterpolatorBilinear::test(const double testDuration, Worker& worker)
+bool TestAdvancedFrameInterpolatorBilinear::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Advanced bilinear interpolation test:   ---";
+	TestResult testResult("Advanced bilinear interpolation test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testInterpolatePixelWithMask8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHomographyFilterMask(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("interpolatepixelwithmask8bitperchannel"))
 	{
-		Log::info() << "Advanced bilinear interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced bilinear interpolation test FAILED!";
+		testResult = testInterpolatePixelWithMask8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("interpolatesquare"))
+	{
+		testResult = testInterpolateSquare(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interpolatepatchwithmask"))
+	{
+		testResult = testInterpolatePatchWithMask(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("interpolatesquaremirror edborder"))
+	{
+		testResult = testInterpolateSquareMirroredBorder(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("homographyfiltermask"))
+	{
+		testResult = testHomographyFilterMask(testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

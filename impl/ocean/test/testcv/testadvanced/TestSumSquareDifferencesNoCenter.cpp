@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestSumSquareDifferencesNoCenter.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -27,29 +29,23 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestSumSquareDifferencesNoCenter::test(const double testDuration)
+bool TestSumSquareDifferencesNoCenter::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Advanced non-center sum square differences test:   ---";
+	TestResult testResult("Advanced non-center sum square differences test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPatch8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("patch8bitperchannel"))
 	{
-		Log::info() << "Advanced non-center sum square differences test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced non-center sum square differences test FAILED!";
+		testResult = testPatch8BitPerChannel(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestFrameRectification.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/Canvas.h"
@@ -34,60 +36,69 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestFrameRectification::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameRectification::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Rectification Test:   ---";
+	TestResult testResult("Frame Rectification test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testPlanarRectangleObject(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testArbitraryRectangleObject(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTriangleObject(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPlanarRectangleObjectMask(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testArbitraryRectangleObjectMask(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTriangleObjectMask(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("planarrectangleobject"))
 	{
-		Log::info() << "Frame Rectification Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Rectification Test FAILED!";
+		testResult = testPlanarRectangleObject(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("arbitraryrectangleobject"))
+	{
+		testResult = testArbitraryRectangleObject(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("triangleobject"))
+	{
+		testResult = testTriangleObject(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("planarrectangleobjectmask"))
+	{
+		testResult = testPlanarRectangleObjectMask(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("arbitraryrectangleobjectmask"))
+	{
+		testResult = testArbitraryRectangleObjectMask(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("triangleobjectmask"))
+	{
+		testResult = testTriangleObjectMask(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

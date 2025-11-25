@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameFilterGaussian.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -27,35 +29,32 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedFrameFilterGaussian::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestAdvancedFrameFilterGaussian::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Advanced Gaussian blur test:   ---";
+	TestResult testResult("Advanced Gaussian blur test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testFilter<uint8_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilter<float>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("uint8"))
 	{
-		Log::info() << "Advanced Gaussian blur test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced Gaussian blur test FAILED!";
+		testResult = testFilter<uint8_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("float"))
+	{
+		testResult = testFilter<float>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
@@ -110,15 +109,17 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 	Log::info() << "Testing advanced Gaussian filter with resolution " << width << "x" << height << " for element type '" << TypeNamer::name<T>() << "' with filter type '" << TypeNamer::name<TFilter>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
 	for (const unsigned int filterSize : {3u, 5u, 7u})
 	{
-		allSucceeded = testFilter<T, TFilter>(width, height, filterSize, testDuration, worker) && allSucceeded;
+		testResult = testFilter<T, TFilter>(width, height, filterSize, testDuration, worker);
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
+	Log::info() << " ";
+
+	if (testResult.succeeded())
 	{
 		Log::info() << "Validation: succeeded.";
 	}
@@ -127,7 +128,7 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 		Log::info() << "Validation: FAILED!";
 	}
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TFilter>

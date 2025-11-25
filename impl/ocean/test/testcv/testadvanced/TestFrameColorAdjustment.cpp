@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestFrameColorAdjustment.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -27,48 +29,45 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestFrameColorAdjustment::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestFrameColorAdjustment::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Frame Color Adjustment test:   ---";
+	TestResult testResult("Frame Color Adjustment test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAdjustmentNoMask<1u>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAdjustmentNoMask<2u>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAdjustmentNoMask<3u>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAdjustmentNoMask<4u>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testAdjustmentWithMask<1u>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAdjustmentWithMask<2u>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAdjustmentWithMask<3u>(width, height, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testAdjustmentWithMask<4u>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("adjustmentnomask"))
 	{
-		Log::info() << "Frame Color Adjustment test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame Color Adjustment test FAILED!";
+		testResult = testAdjustmentNoMask<1u>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testAdjustmentNoMask<2u>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testAdjustmentNoMask<3u>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testAdjustmentNoMask<4u>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("adjustmentwithmask"))
+	{
+		testResult = testAdjustmentWithMask<1u>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testAdjustmentWithMask<2u>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testAdjustmentWithMask<3u>(width, height, testDuration, worker);
+		Log::info() << " ";
+		testResult = testAdjustmentWithMask<4u>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

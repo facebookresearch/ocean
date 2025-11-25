@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSobel.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/cv/advanced/AdvancedFrameFilterSobel.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
@@ -24,15 +26,13 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedFrameFilterSobel::test(const unsigned int width, const unsigned int height, const unsigned int depth, const double testDuration, Worker& worker)
+bool TestAdvancedFrameFilterSobel::test(const unsigned int width, const unsigned int height, const unsigned int depth, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 3u && height > 3u && depth > 3u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   3D sobel filter test for: " << width << "x" << height << "x" << depth << ":   ---";
+	TestResult testResult("3D sobel filter test");
 	Log::info() << " ";
-
-	bool allSucceeded = true;
 
 	std::vector<unsigned char> buffer(size_t(width) * size_t(height) * size_t(depth));
 	unsigned char* const frame = buffer.data();
@@ -43,24 +43,23 @@ bool TestAdvancedFrameFilterSobel::test(const unsigned int width, const unsigned
 		frame[n] = (unsigned char)(RandomI::random(255u));
 	}
 
-	allSucceeded = testSinglePixel(frame, width, height, depth, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testFilterHorizontalVerticalMaximum8Bit(frame, width, height, depth, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("singlepixel"))
 	{
-		Log::info() << "3D sobel filter test: succeeded.";
-	}
-	else
-	{
-		Log::info() << "3D sobel filter test: FAILED!";
+		testResult = testSinglePixel(frame, width, height, depth, testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("filterhorizontalverticalmaximum8bit"))
+	{
+		testResult = testFilterHorizontalVerticalMaximum8Bit(frame, width, height, depth, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 bool TestAdvancedFrameFilterSobel::testSinglePixel(const unsigned char* frame, const unsigned int width, const unsigned int height, const unsigned int depth, const double testDuration)

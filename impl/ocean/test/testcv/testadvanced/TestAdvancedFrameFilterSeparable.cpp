@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSeparable.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -27,59 +29,68 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedFrameFilterSeparable::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestAdvancedFrameFilterSeparable::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Advanced separable frame filter test:   ---";
+	TestResult testResult("Advanced separable frame filter test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testFilter<uint8_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilter<uint16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilter<float>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterInPlace<uint8_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterInPlace<uint16_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFilterInPlace<float>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("uint8"))
 	{
-		Log::info() << "Advanced separable frame filter test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced separable frame filter test FAILED!";
+		testResult = testFilter<uint8_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("uint16"))
+	{
+		testResult = testFilter<uint16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("float"))
+	{
+		testResult = testFilter<float>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("uint8inplace"))
+	{
+		testResult = testFilterInPlace<uint8_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("uint16inplace"))
+	{
+		testResult = testFilterInPlace<uint16_t>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("floatinplace"))
+	{
+		testResult = testFilterInPlace<float>(width, height, testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

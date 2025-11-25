@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameShrinker.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -28,30 +30,23 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedFrameShrinker::test(const double testDuration, Worker& worker)
+bool TestAdvancedFrameShrinker::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Advanced Frame Shrinker Test:   ---";
+	TestResult testResult("Advanced Frame Shrinker test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testDivideByTwo(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-
-	if (allSucceeded)
+	if (selector.shouldRun("dividebytwo"))
 	{
-		Log::info() << "Advanced Frame Shrinker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced Frame Shrinker test FAILED!";
+		testResult = testDivideByTwo(testDuration, worker);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

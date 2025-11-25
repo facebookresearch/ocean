@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestPanoramaFrame.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -32,41 +34,41 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestPanoramaFrame::test(const double testDuration, Worker& worker)
+bool TestPanoramaFrame::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Panorama Frame Test:   ---";
+	TestResult testResult("Panorama Frame test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testCameraFrame2cameraFrame(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCameraFrame2panoramaSubFrame(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRecreation(worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("cameraframe2cameraframe"))
 	{
-		Log::info() << "Panorama Frame Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Panorama Frame Test FAILED!";
+		testResult = testCameraFrame2cameraFrame(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("cameraframe2panoramasubframe"))
+	{
+		testResult = testCameraFrame2panoramaSubFrame(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("recreation"))
+	{
+		testResult = testRecreation(worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

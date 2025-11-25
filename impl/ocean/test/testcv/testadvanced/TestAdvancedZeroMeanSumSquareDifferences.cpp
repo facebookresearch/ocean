@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedZeroMeanSumSquareDifferences.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -27,53 +29,59 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedZeroMeanSumSquareDifferences::test(const double testDuration)
+bool TestAdvancedZeroMeanSumSquareDifferences::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Advanced zero-mean sum square differences test:   ---";
+	TestResult testResult("Advanced zero-mean sum square differences test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testTwoSubPixelPatch8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testOneSubPixelPatch8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorderBuffer8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("twosubpixelpatch8bitperchannel"))
 	{
-		Log::info() << "Advanced zero-mean sum square differences test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced zero-mean sum square differences test FAILED!";
+		testResult = testTwoSubPixelPatch8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("onesubpixelpatch8bitperchannel"))
+	{
+		testResult = testOneSubPixelPatch8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchbuffer8bitperchannel"))
+	{
+		testResult = testPatchBuffer8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("patchmirroredborderbuffer8bitperchannel"))
+	{
+		testResult = testPatchMirroredBorderBuffer8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("twopixelpatchwithmask8bitperchannel"))
+	{
+		testResult = testTwoPixelPatchWithMask8BitPerChannel(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

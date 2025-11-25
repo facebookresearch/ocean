@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testadvanced/TestAdvancedMotion.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/WorkerPool.h"
@@ -29,47 +31,50 @@ namespace TestCV
 namespace TestAdvanced
 {
 
-bool TestAdvancedMotion::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestAdvancedMotion::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Advanced motion test:   ---";
+	TestResult testResult("Advanced motion test");
 	Log::info() << " ";
 
-	allSucceeded = testTrackPointSubPixelMirroredBorder(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTrackPointsSubPixelMirroredBorder(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testTrackPointsBidirectionalSubPixelMirroredBorder(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = stressTestTrackPointsBidirectionalSubPixelMirroredBorder(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("trackpointsubpixelmirrordborder"))
 	{
-		Log::info() << "Advanced motion test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Advanced motion testFAILED!";
+		testResult = testTrackPointSubPixelMirroredBorder(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("trackpointssubpixelmirrordborder"))
+	{
+		testResult = testTrackPointsSubPixelMirroredBorder(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("trackpointsbidirectionalsubpixelmirrordborder"))
+	{
+		testResult = testTrackPointsBidirectionalSubPixelMirroredBorder(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("stresstesttrackpointsbidirectionalsubpixelmirrordborder"))
+	{
+		testResult = stressTestTrackPointsBidirectionalSubPixelMirroredBorder(testDuration, worker);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

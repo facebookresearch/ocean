@@ -13,6 +13,8 @@
 
 #include "ocean/base/Worker.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -39,9 +41,10 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedFrameFilterGaussian : protected 
 		 * @param height The height of the test frame in pixel, with range [5, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the filter function.

@@ -20,6 +20,8 @@
 #include "ocean/test/testcv/testadvanced/TestPanoramaFrame.h"
 #include "ocean/test/testcv/testadvanced/TestSumSquareDifferencesNoCenter.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Frame.h"
@@ -55,9 +57,8 @@ bool testCVAdvanced(const double testDuration, Worker& worker, const unsigned in
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width >= 32u && height >= 32u);
 
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Advanced Computer Vision Library test");
 
-	Log::info() << "+++   Ocean Advanced Computer Vision Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -84,124 +85,123 @@ bool testCVAdvanced(const double testDuration, Worker& worker, const unsigned in
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("advancedframechannels") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedframechannels"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedFrameChannels::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedFrameChannels::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedframefilterseparable") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedframefilterseparable"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedFrameFilterSeparable::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedFrameFilterSeparable::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedframefiltergaussian") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedframefiltergaussian"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedFrameFilterGaussian::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedFrameFilterGaussian::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framecoloradjustment") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framecoloradjustment"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFrameColorAdjustment::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestFrameColorAdjustment::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedframeshrinker") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedframeshrinker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedFrameShrinker::test(testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedFrameShrinker::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedframefiltersobel") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedframefiltersobel"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedFrameFilterSobel::test(320u, 240u, 120u, testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedFrameFilterSobel::test(320u, 240u, 120u, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedframeinterpolatorbilinear") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedframeinterpolatorbilinear"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedFrameInterpolatorBilinear::test(testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedFrameInterpolatorBilinear::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedsumsquaredifferences") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedsumsquaredifferences"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedSumSquareDifferences::test(testDuration) && allSucceeded;
+		testResult = TestAdvancedSumSquareDifferences::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedzeromeansumsquaredifferences") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedzeromeansumsquaredifferences"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedZeroMeanSumSquareDifferences::test(testDuration) && allSucceeded;
+		testResult = TestAdvancedZeroMeanSumSquareDifferences::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("sumsquaredifferencesnocenter") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("sumsquaredifferencesnocenter"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestSumSquareDifferencesNoCenter::test(testDuration) && allSucceeded;
+		testResult = TestSumSquareDifferencesNoCenter::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("framerectification") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framerectification"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFrameRectification::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestFrameRectification::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("panoramaframe") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("panoramaframe"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPanoramaFrame::test(testDuration, worker) && allSucceeded;
+		testResult = TestPanoramaFrame::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("advancedmotion") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("advancedmotion"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestAdvancedMotion::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestAdvancedMotion::test(width, height, testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
@@ -209,16 +209,9 @@ bool testCVAdvanced(const double testDuration, Worker& worker, const unsigned in
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Advanced library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Advanced library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testCVAdvancedAsynchronInternal(const double testDuration, const unsigned int width, const unsigned int height, const std::string testFunctions)
