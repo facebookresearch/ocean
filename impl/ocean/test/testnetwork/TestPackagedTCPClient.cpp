@@ -7,6 +7,8 @@
 
 #include "ocean/test/testnetwork/TestPackagedTCPClient.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Thread.h"
@@ -54,29 +56,25 @@ void TestPackagedTCPClient::ServerReceiver::onReceive(const Network::PackagedTCP
 	buffers_.emplace_back(std::move(buffer));
 }
 
-bool TestPackagedTCPClient::test(const double testDuration)
+bool TestPackagedTCPClient::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   PackagedTCPClient test:   ---";
+	TestResult testResult("PackagedTCPClient test");
 	Log::info() << " ";
 
-	allSucceeded = testSendReceive(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("sendreceive"))
 	{
-		Log::info() << "PackagedTCPClient test succeeded.";
-	}
-	else
-	{
-		Log::info() << "PackagedTCPClient test FAILED!";
+		testResult = testSendReceive(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

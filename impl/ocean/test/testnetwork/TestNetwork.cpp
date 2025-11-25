@@ -10,6 +10,8 @@
 #include "ocean/test/testnetwork/TestPackagedTCPClient.h"
 #include "ocean/test/testnetwork/TestTCPClient.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -36,9 +38,8 @@ namespace TestNetwork
 
 bool testNetwork(const double testDuration, Worker& /*worker*/, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Network Library test");
 
-	Log::info() << "+++   Ocean Network Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -65,34 +66,33 @@ bool testNetwork(const double testDuration, Worker& /*worker*/, const std::strin
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("data") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("data"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestData::test(testDuration) && allSucceeded;
+		testResult = TestData::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("tcpclient") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("tcpclient"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestTCPClient::test(testDuration) && allSucceeded;
+		testResult = TestTCPClient::test(testDuration, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("packagedtcpclient") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("packagedtcpclient"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPackagedTCPClient::test(testDuration) && allSucceeded;
+		testResult = TestPackagedTCPClient::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
@@ -100,16 +100,9 @@ bool testNetwork(const double testDuration, Worker& /*worker*/, const std::strin
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Network Library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Network Library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testNetworkAsynchronInternal(const double testDuration, const std::string testFunctions)

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testnetwork/TestData.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -22,29 +24,25 @@ namespace Test
 namespace TestNetwork
 {
 
-bool TestData::test(const double testDuration)
+bool TestData::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   Data test:   ---";
+	TestResult testResult("Data test");
 	Log::info() << " ";
 
-	allSucceeded = testEndian(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("endian"))
 	{
-		Log::info() << "Data test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Data test FAILED!";
+		testResult = testEndian(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
