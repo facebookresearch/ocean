@@ -64,16 +64,16 @@ bool AMovieRecorder::setPreferredFrameType(const FrameType& type)
 		return false;
 	}
 
-	PixelFormats::AndroidMediaFormatColorRange colorRange = PixelFormats::AndroidMediaFormatColorRange::UNKNOWN;
+	PixelFormats::AndroidMediaFormatColorRange colorRange = PixelFormats::COLOR_RANGE_UNKNOWN;
 	const PixelFormats::AndroidMediaCodecColorFormat colorFormat = PixelFormats::pixelFormatToAndroidMediaCodecColorFormat(recorderFrameType.pixelFormat(), colorRange);
 
-	if (colorFormat == PixelFormats::AndroidMediaCodecColorFormat::UNKNOWN)
+	if (colorFormat == PixelFormats::COLOR_FORMAT_UNKNOWN)
 	{
 		Log::info() << "The preferred pixel format '" << FrameType::translatePixelFormat(recorderFrameType.pixelFormat()) << "' is not supported, using 'FORMAT_Y_UV12_LIMITED_RANGE' instead";
 
-		// FORMAT_Y_UV12_LIMITED_RANGE corresponds to COLOR_FormatYUV420SemiPlanar which is deprecated
-		// better would be to use FORMAT_Y_U_V12_LIMITED_RANGE which corresponds to COLOR_FormatYUV420Flexible
-		// unfortuately, COLOR_FormatYUV420Flexible does not seem to be well supported in native code (it's not possible to determine which underlying format is actually used)
+		// FORMAT_Y_UV12_LIMITED_RANGE corresponds to COLOR_FORMAT_YUV420SemiPlanar which is deprecated
+		// better would be to use FORMAT_Y_U_V12_LIMITED_RANGE which corresponds to COLOR_FORMAT_YUV420Flexible
+		// unfortuately, COLOR_FORMAT_YUV420Flexible does not seem to be well supported in native code (it's not possible to determine which underlying format is actually used)
 		// therefore, using the deprecated format instead
 
 		recorderFrameType.setPixelFormat(FrameType::FORMAT_Y_UV12_LIMITED_RANGE);
@@ -367,10 +367,10 @@ bool AMovieRecorder::createNewMediaCodec()
 		return false;
 	}
 
-	PixelFormats::AndroidMediaFormatColorRange colorRange = PixelFormats::AndroidMediaFormatColorRange::UNKNOWN;
+	PixelFormats::AndroidMediaFormatColorRange colorRange = PixelFormats::COLOR_RANGE_UNKNOWN;
 	const PixelFormats::AndroidMediaCodecColorFormat colorFormat = PixelFormats::pixelFormatToAndroidMediaCodecColorFormat(recorderFrameType.pixelFormat(), colorRange);
 
-	if (colorFormat == PixelFormats::AndroidMediaCodecColorFormat::UNKNOWN)
+	if (colorFormat == PixelFormats::COLOR_FORMAT_UNKNOWN)
 	{
 		Log::error() << "Color format '" << FrameType::translatePixelFormat(recorderFrameType.pixelFormat()) << "' not supported for video output!";
 		release();
@@ -390,7 +390,7 @@ bool AMovieRecorder::createNewMediaCodec()
 		NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_BIT_RATE, int(preferredBitrate_));
 	}
 
-	if (colorRange != PixelFormats::AndroidMediaFormatColorRange::UNKNOWN)
+	if (colorRange != PixelFormats::COLOR_RANGE_UNKNOWN)
 	{
 		NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_RANGE, int32_t(colorRange));
 	}

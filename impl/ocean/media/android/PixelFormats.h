@@ -34,16 +34,16 @@ class PixelFormats
 		 * The naming conventions match those defined in the Java class android.media.MediaCodecInfo.CodecCapabilities:
 		 * https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities
 		 */
-		enum class AndroidMediaCodecColorFormat : int32_t
+		enum AndroidMediaCodecColorFormat : int32_t
 		{
 			/// Unknown color format.
-			UNKNOWN = 0,
-			/// Android identifier for YUV420 color formats, deprecated use COLOR_FormatYUV420Flexible if possible.
-			COLOR_FormatYUV420Planar = 19,
-			// Android identifier for YUV420 color formats, identical to FORMAT_Y_UV12_LIMITED_RANGE, deprecated use COLOR_FormatYUV420Flexible if possible.
-			COLOR_FormatYUV420SemiPlanar = 21,
+			COLOR_FORMAT_UNKNOWN = 0,
+			/// Android identifier for YUV420 color formats, deprecated use COLOR_FORMAT_YUV420Flexible if possible.
+			COLOR_FORMAT_YUV420Planar = 19,
+			// Android identifier for YUV420 color formats, identical to FORMAT_Y_UV12_LIMITED_RANGE, deprecated use COLOR_FORMAT_YUV420Flexible if possible.
+			COLOR_FORMAT_YUV420SemiPlanar = 21,
 			/// Android identifier for YUV420 color formats, identical to FORMAT_Y_U_V12_LIMITED_RANGE
-			COLOR_FormatYUV420Flexible = 0x7f420888
+			COLOR_FORMAT_YUV420Flexible = 0x7f420888
 		};
 
 		/**
@@ -53,7 +53,7 @@ class PixelFormats
 		enum AndroidMediaFormatColorRange : int32_t
 		{
 			/// Unknown color range.
-			UNKNOWN = 0,
+			COLOR_RANGE_UNKNOWN = 0,
 			/// Full range. Y, Cr and Cb component values range from 0 to 255 for 8-bit content.
 			COLOR_RANGE_FULL = 1,
 			/// Limited range. Y component values range from 16 to 235 for 8-bit content. Cr, Cy values range from 16 to 240 for 8-bit content. This is the default for video content.

@@ -20,26 +20,26 @@ FrameType::PixelFormat PixelFormats::androidMediaCodecColorFormatToPixelFormat(c
 {
 	switch (androidFormat)
 	{
-		case AndroidMediaCodecColorFormat::COLOR_FormatYUV420Planar:
-		case AndroidMediaCodecColorFormat::COLOR_FormatYUV420Flexible:
+		case COLOR_FORMAT_YUV420Planar:
+		case COLOR_FORMAT_YUV420Flexible:
 		{
-			if (androidColorRange == AndroidMediaFormatColorRange::COLOR_RANGE_FULL)
+			if (androidColorRange == COLOR_RANGE_FULL)
 			{
 				return FrameType::FORMAT_Y_U_V12_FULL_RANGE;
 			}
 
-			ocean_assert(androidColorRange == AndroidMediaFormatColorRange::COLOR_RANGE_LIMITED);
+			ocean_assert(androidColorRange == COLOR_RANGE_LIMITED);
 			return FrameType::FORMAT_Y_U_V12_LIMITED_RANGE;
 		}
 
-		case AndroidMediaCodecColorFormat::COLOR_FormatYUV420SemiPlanar:
+		case COLOR_FORMAT_YUV420SemiPlanar:
 		{
-			if (androidColorRange == AndroidMediaFormatColorRange::COLOR_RANGE_FULL)
+			if (androidColorRange == COLOR_RANGE_FULL)
 			{
 				return FrameType::FORMAT_Y_UV12_FULL_RANGE;
 			}
 
-			ocean_assert(androidColorRange == AndroidMediaFormatColorRange::COLOR_RANGE_LIMITED);
+			ocean_assert(androidColorRange == COLOR_RANGE_LIMITED);
 			return FrameType::FORMAT_Y_UV12_LIMITED_RANGE;
 		}
 
@@ -55,27 +55,27 @@ PixelFormats::AndroidMediaCodecColorFormat PixelFormats::pixelFormatToAndroidMed
 	switch (pixelFormat)
 	{
 		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-			androidColorRange = AndroidMediaFormatColorRange::COLOR_RANGE_LIMITED;
-			return AndroidMediaCodecColorFormat::COLOR_FormatYUV420Flexible;
+			androidColorRange = COLOR_RANGE_LIMITED;
+			return COLOR_FORMAT_YUV420Flexible;
 
 		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-			androidColorRange = AndroidMediaFormatColorRange::COLOR_RANGE_FULL;
-			return AndroidMediaCodecColorFormat::COLOR_FormatYUV420Flexible;
+			androidColorRange = COLOR_RANGE_FULL;
+			return COLOR_FORMAT_YUV420Flexible;
 
 		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-			androidColorRange = AndroidMediaFormatColorRange::COLOR_RANGE_LIMITED;
-			return AndroidMediaCodecColorFormat::COLOR_FormatYUV420SemiPlanar;
+			androidColorRange = COLOR_RANGE_LIMITED;
+			return COLOR_FORMAT_YUV420SemiPlanar;
 
 		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
-			androidColorRange = AndroidMediaFormatColorRange::COLOR_RANGE_FULL;
-			return AndroidMediaCodecColorFormat::COLOR_FormatYUV420SemiPlanar;
+			androidColorRange = COLOR_RANGE_FULL;
+			return COLOR_FORMAT_YUV420SemiPlanar;
 
 		default:
 			break;
 	}
 
-	androidColorRange = AndroidMediaFormatColorRange::UNKNOWN;
-	return AndroidMediaCodecColorFormat::UNKNOWN;
+	androidColorRange = COLOR_RANGE_UNKNOWN;
+	return COLOR_FORMAT_UNKNOWN;
 }
 
 }
