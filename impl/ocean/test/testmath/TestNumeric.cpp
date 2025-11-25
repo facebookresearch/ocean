@@ -662,9 +662,13 @@ bool TestNumeric::testIsEqualDynamic()
 		allSucceeded = Numeric::isEqual<-4>(Scalar(n), Scalar(n), Numeric::eps()) && allSucceeded;
 
 		if (std::is_same<Scalar, double>::value)
+		{
 			allSucceeded = !Numeric::isEqual<-4>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
+		}
 		else
+		{
 			allSucceeded = !Numeric::isEqual<-2>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
+		}
 
 		allSucceeded = Numeric::isEqual<6>(Scalar(n), Scalar(n), Numeric::eps()) && allSucceeded;
 		allSucceeded = !Numeric::isEqual<6>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
@@ -792,22 +796,34 @@ bool TestNumeric::testAngleAdjustPositive(const double testDuration)
 			const Scalar value = Random::scalar(0, Numeric::pi2() - Numeric::eps());
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value + Numeric::pi2() * 5), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value + Numeric::pi2() * 6), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value - Numeric::pi2() * 5), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value - Numeric::pi2() * 6), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(Numeric::pi2()), 0, epsilon))
+			{
 				continue;
+			}
 
 			++validIterations;
 		}
@@ -845,22 +861,34 @@ bool TestNumeric::testAngleAdjustNull(const double testDuration)
 			const Scalar value = Random::scalar(-Numeric::pi() + Numeric::eps(), Numeric::pi());
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value + Numeric::pi2() * 5), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value + Numeric::pi2() * 6), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value - Numeric::pi2() * 5), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value - Numeric::pi2() * 6), value, epsilon))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(Numeric::pi2()), 0, epsilon))
+			{
 				continue;
+			}
 
 			++validIterations;
 		}
@@ -895,25 +923,39 @@ bool TestNumeric::testAngleIsEqual(const double testDuration)
 			const Scalar value = Random::scalar(0, Numeric::pi2());
 
 			if (!Numeric::angleIsWeakEqual(value, value + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			{
 				continue;
+			}
 
 			if (Numeric::angleIsWeakEqual(value + Random::scalar(Scalar(0.1), 1), value + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsWeakEqual(value, value - Numeric::pi2()))
+			{
 				continue;
+			}
 
 			if (Numeric::angleIsWeakEqual(value - Random::scalar(Scalar(0.1), 1), Numeric::pi2() - value))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsWeakEqual(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value - Numeric::pi2() + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			{
 				continue;
+			}
 
 			if (Numeric::angleIsWeakEqual(value + Random::scalar(Scalar(0.1), 1) + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::pi2() - value + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsWeakEqual(Numeric::eps(), Numeric::pi2() - Numeric::eps()))
+			{
 				continue;
+			}
 
 			++validIterations;
 		}
@@ -949,26 +991,38 @@ bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
 			Scalar offset = Random::scalar(-Numeric::deg2rad(20 - Numeric::eps()), Numeric::deg2rad(Scalar(20 - Numeric::eps())));
 
 			if (!Numeric::angleIsBelowThreshold(value, value + offset, Numeric::deg2rad(20)))
+			{
 				continue;
+			}
 
 			if (!Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::deg2rad(20)))
+			{
 				continue;
+			}
 
 			offset = Numeric::deg2rad(20) + Random::scalar(Numeric::eps(), Numeric::deg2rad(5));
 
 			if (Numeric::angleIsBelowThreshold(value, value + offset, Numeric::deg2rad(20)))
+			{
 				continue;
+			}
 
 			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::deg2rad(20)))
+			{
 				continue;
+			}
 
 			offset = -Numeric::deg2rad(20) - Random::scalar(Numeric::eps(), Numeric::deg2rad(5));
 
 			if (Numeric::angleIsBelowThreshold(value, value + offset, Numeric::deg2rad(20)))
+			{
 				continue;
+			}
 
 			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::deg2rad(20)))
+			{
 				continue;
+			}
 
 			++validIterations;
 		}
@@ -1006,7 +1060,9 @@ bool TestNumeric::testGaussianDistribution1(const double testDuration)
 			const Scalar testValue = 1 / (sigma * Numeric::sqrt(2 * Numeric::pi())) * Numeric::pow(Numeric::e(), - Scalar(0.5) * (x * x) / (sigma * sigma));
 
 			if (Numeric::isEqual(value, testValue))
+			{
 				validIterations++;
+			}
 
 			++iterations;
 		}
@@ -1047,7 +1103,9 @@ bool TestNumeric::testGaussianDistribution2(const double testDuration)
 			const Scalar testValue = Numeric::gaussianDistribution(x, sigmaX) * Numeric::gaussianDistribution(y, sigmaY);
 
 			if (Numeric::isEqual(value, testValue))
+			{
 				validIterations++;
+			}
 
 			++iterations;
 		}
@@ -1090,7 +1148,9 @@ bool TestNumeric::testGaussianDistribution3(const double testDuration)
 			const Scalar testValue = Numeric::gaussianDistribution(x, sigmaX) * Numeric::gaussianDistribution(y, sigmaY) * Numeric::gaussianDistribution(z, sigmaZ);
 
 			if (Numeric::isEqual(value, testValue))
+			{
 				++validIterations;
+			}
 
 			++iterations;
 		}
@@ -1112,39 +1172,63 @@ bool TestNumeric::testAbs()
 	bool allSucceeded = true;
 
 	if (NumericT<signed char>::abs(5) != (signed char)(5) || NumericT<signed char>::abs(-5) != (signed char)(5))
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<unsigned char>::abs(5) != (unsigned char)5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<short>::abs(5) != short(5) || NumericT<short>::abs(-5) != short(5))
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<unsigned short>::abs(5) != (unsigned short)5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::abs(5) != int(5) || NumericT<int>::abs(-5) != int(5))
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<unsigned int>::abs(5) != (unsigned int)5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<long long>::abs(5) != (long long)5 || NumericT<long long>::abs(-5) != (long long)5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<unsigned long long>::abs(5) != (unsigned long long)5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::abs(5.0f) != 5.0f || NumericT<float>::abs(-5.0f) != 5.0f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::abs(5.0) != 5.0 || NumericT<double>::abs(-5.0) != 5.0)
+	{
 		allSucceeded = false;
+	}
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -1353,28 +1437,38 @@ bool TestNumeric::testFloor(const double testDuration)
 	do
 	{
 		for (size_t n = 0; n < size; ++n)
+		{
 			values[n] = Random::scalar(-1000, 1000);
+		}
 
 		{
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performanceFloor);
 
 			for (size_t n = 0; n < size; ++n)
+			{
 				results[n] = int(Numeric::floor(values[n]));
+			}
 		}
 
 		{
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performanceCast);
 
 			for (size_t n = 0; n < size; ++n)
+			{
 				results[n] = int(values[n]);
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (results[0] == 0) // we make this dummy check to receive a serious result
+	{
 		Log::info() << "Performance: " << performanceFloor.averageMseconds() * 1000.0 / double(size) << "mys";
+	}
 	else
+	{
 		Log::info() << "Performance: " << performanceFloor.averageMseconds() * 1000.0 / double(size) << "mys";
+	}
 
 	Log::info() << "Performance integer casting: " << performanceCast.averageMseconds() * 1000.0 / double(size) << "mys";
 	Log::info() << "Performance factor: " << String::toAString(performanceFloor.averageMseconds() / performanceCast.averageMseconds(), 2u) << " (times slower)";
@@ -1401,28 +1495,38 @@ bool TestNumeric::testCeil(const double testDuration)
 	do
 	{
 		for (size_t n = 0; n < size; ++n)
+		{
 			values[n] = Random::scalar(-1000, 1000);
+		}
 
 		{
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performanceCeil);
 
 			for (size_t n = 0; n < size; ++n)
+			{
 				results[n] = int(Numeric::ceil(values[n]));
+			}
 		}
 
 		{
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performanceCast);
 
 			for (size_t n = 0; n < size; ++n)
+			{
 				results[n] = int(values[n]);
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (results[0] == 0) // we make this dummy check to receive a serious result
+	{
 		Log::info() << "Performance: " << performanceCeil.averageMseconds() * 1000.0 / double(size) << "mys";
+	}
 	else
+	{
 		Log::info() << "Performance: " << performanceCeil.averageMseconds() * 1000.0 / double(size) << "mys";
+	}
 
 	Log::info() << "Performance integer casting: " << performanceCast.averageMseconds() * 1000.0 / double(size) << "mys";
 	Log::info() << "Performance factor: " << String::toAString(performanceCeil.averageMseconds() / performanceCast.averageMseconds(), 2u) << " (times slower)";
@@ -1453,7 +1557,9 @@ bool TestNumeric::testLog2(const double testDuration)
 			const Scalar test = Numeric::pow(Scalar(2), valueLog2);
 
 			if (Numeric::isWeakEqual(value, test))
+			{
 				validIterations++;
+			}
 
 			iterations++;
 		}
@@ -1506,63 +1612,99 @@ bool TestNumeric::testSign(const double testDuration)
 	do
 	{
 		if (NumericT<signed char>::sign(0) != 0)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<signed char>::sign((signed char)(RandomI::random(1, 127))) != 1)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<signed char>::sign((signed char)(RandomI::random(-127, -1))) != -1)
+		{
 			allSucceeded = false;
+		}
 
 
 		if (NumericT<short>::sign(0) != 0)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<short>::sign(short(RandomI::random(1, 1000))) != 1)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<short>::sign(short(RandomI::random(-1000, -1))) != -1)
+		{
 			allSucceeded = false;
+		}
 
 
 		if (NumericT<int>::sign(0) != 0)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<int>::sign(RandomI::random(1, 1000)) != 1)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<int>::sign(RandomI::random(-1000, -1)) != -1)
+		{
 			allSucceeded = false;
+		}
 
 
 		if (NumericT<long long>::sign(0ll) != 0ll)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<long long>::sign(RandomI::random(1, 1000)) != 1ll)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<long long>::sign(RandomI::random(-1000, -1)) != -1ll)
+		{
 			allSucceeded = false;
+		}
 
 
 		if (NumericT<float>::sign(0.0f) != 0.0f)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<float>::sign(RandomF::scalar(0.01f, 100.0f)) != 1.0f)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<float>::sign(RandomF::scalar(-100.0f, -0.01f)) != -1.0f)
+		{
 			allSucceeded = false;
+		}
 
 
 		if (NumericT<double>::sign(0.0) != 0.0)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<double>::sign(RandomD::scalar(0.01, 100.0)) != 1.0)
+		{
 			allSucceeded = false;
+		}
 
 		if (NumericT<double>::sign(RandomD::scalar(-100.0, -0.01f)) != -1.0)
+		{
 			allSucceeded = false;
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1585,48 +1727,76 @@ bool TestNumeric::testCopySign()
 	bool allSucceeded = true;
 
 	if (NumericT<int>::copySign(-5, 1) != 5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::copySign(-5, -1) != -5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::copySign(5000, 4) != 5000)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::copySign(5000, -4) != -5000)
+	{
 		allSucceeded = false;
+	}
 
 
 	if (NumericT<float>::copySign(-5.123f, 1.555f) != 5.123f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::copySign(-5.123f, -1.678f) != -5.123f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::copySign(5000.456f, 4.321f) != 5000.456f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::copySign(5000.456f, -4.753f) != -5000.456f)
+	{
 		allSucceeded = false;
+	}
 
 
 	if (NumericT<double>::copySign(-5.123, 1.444) != 5.123)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::copySign(-5.123, -1.489) != -5.123)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::copySign(5000.456, 4.258) != 5000.456)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::copySign(5000.456, -4.654) != -5000.456)
+	{
 		allSucceeded = false;
+	}
 
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -1638,48 +1808,76 @@ bool TestNumeric::testInvertSign()
 	bool allSucceeded = true;
 
 	if (NumericT<int>::invertSign(-5, 1) != -5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::invertSign(-5, -1) != 5)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::invertSign(5000, 4) != -5000)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<int>::invertSign(5000, -4) != 5000)
+	{
 		allSucceeded = false;
+	}
 
 
 	if (NumericT<float>::invertSign(-5.123f, 1.555f) != -5.123f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::invertSign(-5.123f, -1.678f) != 5.123f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::invertSign(5000.456f, 4.321f) != -5000.456f)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<float>::invertSign(5000.456f, -4.753f) != 5000.456f)
+	{
 		allSucceeded = false;
+	}
 
 
 	if (NumericT<double>::invertSign(-5.123, 1.444) != -5.123)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::invertSign(-5.123, -1.489) != 5.123)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::invertSign(5000.456, 4.258) != -5000.456)
+	{
 		allSucceeded = false;
+	}
 
 	if (NumericT<double>::invertSign(5000.456, -4.654) != 5000.456)
+	{
 		allSucceeded = false;
+	}
 
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -2795,9 +2993,13 @@ bool TestNumeric::testDotProduct(const double testDuration)
 		while (startTimestamp + testDuration > Timestamp(true));
 
 		if (dummyValue == T(1))
+		{
 			Log::info() << "Standard performance as reference: " << String::toAString(performanceStandard.averageMseconds()) << "ms";
+		}
 		else
+		{
 			Log::info() << "Standard performance as reference: " << String::toAString(performanceStandard.averageMseconds()) << "ms";
+		}
 	}
 
 	{
@@ -2827,7 +3029,9 @@ bool TestNumeric::testDotProduct(const double testDuration)
 			const T test = dotProduct<T>(vectorA.data(), vectorB.data(), tSize);
 
 			if (NumericT<T>::isEqual(result, test, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(1000))))
+			{
 				validIterations++;
+			}
 
 			iterations++;
 		}

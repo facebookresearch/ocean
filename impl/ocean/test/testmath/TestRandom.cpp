@@ -65,9 +65,13 @@ bool TestRandom::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Random test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Random test FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -335,7 +339,9 @@ bool TestRandom::testStandardRandomVector3(const double testDuration)
 			const Vector3 vector = Random::vector3(range);
 
 			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z())
+			{
 				succeeded++;
+			}
 
 			iterations++;
 		}
@@ -372,7 +378,9 @@ bool TestRandom::testOceanRandomVector3(const double testDuration)
 			const Vector3 vector = Random::vector3(randomGenerator, range);
 
 			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z())
+			{
 				succeeded++;
+			}
 
 			iterations++;
 		}
@@ -407,7 +415,9 @@ bool TestRandom::testStandardRandomEuler(const double testDuration)
 			const Euler euler = Random::euler(range);
 
 			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range)
+			{
 				succeeded++;
+			}
 
 			iterations++;
 		}
@@ -444,7 +454,9 @@ bool TestRandom::testOceanRandomEuler(const double testDuration)
 			const Euler euler = Random::euler(randomGenerator, range);
 
 			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range)
+			{
 				succeeded++;
+			}
 
 			iterations++;
 		}

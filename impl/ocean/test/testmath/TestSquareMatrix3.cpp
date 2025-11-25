@@ -252,6 +252,7 @@ bool TestSquareMatrix3::testElementConstructor(const double testDuration)
 
 			unsigned int index = 0u;
 			for (unsigned int c = 0u; c < 3u; ++c)
+			{
 				for (unsigned int r = 0u; r < 3u; ++r)
 				{
 					floatTest(r, c) = floatValues[index];
@@ -264,60 +265,101 @@ bool TestSquareMatrix3::testElementConstructor(const double testDuration)
 
 					index++;
 				}
+			}
 
 			ocean_assert(index == 9u);
 
 			if (!floatMatrixA.isEqual(floatTest, float(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!floatMatrixB.isEqual(floatTest, float(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!floatMatrixBTransposed.isEqual(floatTestTransposed, float(epsilon)))
+			{
 				allSucceeded = false;
+			}
 
 			if (!floatMatrixC.isEqual(floatTest, float(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!floatMatrixD.isEqual(floatTest, float(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!floatMatrixDTransposed.isEqual(floatTestTransposed, float(epsilon)))
+			{
 				allSucceeded = false;
+			}
 
 
 			if (!doubleMatrixA.isEqual(doubleTest, double(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!doubleMatrixB.isEqual(doubleTest, double(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!doubleMatrixBTransposed.isEqual(doubleTestTransposed, double(epsilon)))
+			{
 				allSucceeded = false;
+			}
 
 			if (!doubleMatrixC.isEqual(doubleTest, double(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!doubleMatrixD.isEqual(doubleTest, double(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!doubleMatrixDTransposed.isEqual(doubleTestTransposed, double(epsilon)))
+			{
 				allSucceeded = false;
+			}
 
 
 			if (!scalarMatrixA.isEqual(scalarTest, Scalar(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!scalarMatrixB.isEqual(scalarTest, Scalar(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!scalarMatrixBTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)))
+			{
 				allSucceeded = false;
+			}
 
 			if (!scalarMatrixC.isEqual(scalarTest, Scalar(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!scalarMatrixD.isEqual(scalarTest, Scalar(epsilon)))
+			{
 				allSucceeded = false;
+			}
 			if (!scalarMatrixDTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)))
+			{
 				allSucceeded = false;
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -407,7 +449,9 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 			SquareMatrixT3<T> matrix;
 
 			for (unsigned int n = 0u; n < 9u; ++n)
+			{
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
 			const VectorT2<T> vector(RandomT<T>::scalar(randomGenerator, -valueRange, valueRange), RandomT<T>::scalar(randomGenerator, -valueRange, valueRange));
 
@@ -933,38 +977,58 @@ bool TestSquareMatrix3::testMatrixConversion(const double testDuration)
 			for (unsigned int i = 0u; i < 9u; ++i)
 			{
 				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_0[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_1[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_0[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_1[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_0[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_1[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_0[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_1[n][i])))
+				{
 					allSucceeded = false;
+				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -987,9 +1051,13 @@ bool TestSquareMatrix3::testSolve(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -999,9 +1067,13 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 	ocean_assert(testDuration > 0.0);
 
 	if (containsSingular)
+	{
 		Log::info() << "... with singular matrices:";
+	}
 	else
+	{
 		Log::info() << "... without singular matrices:";
+	}
 
 	unsigned long long iterations = 0ull;
 	unsigned long long validIterations = 0ull;
@@ -1032,7 +1104,9 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 		for (size_t n = 0 ; n < repetitions; ++n)
 		{
 			for (unsigned int i = 0u; i < matrices[n].elements(); ++i)
+			{
 				matrices[n][i] = Random::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
 			if (containsSingular && (n % 50) == 0)
 			{
@@ -1047,7 +1121,9 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 		performance.start();
 
 		for (size_t n = 0 ; n < repetitions; ++n)
+		{
 			solved[n] = (unsigned char)matrices[n].solve(bVectors[n], xVectors[n]);
+		}
 
 		performance.stop();
 
@@ -1056,7 +1132,9 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 			if (solved[n])
 			{
 				if (trueVectors[n].isEqual(xVectors[n], epsilon))
+				{
 					validIterations++;
+				}
 
 				residual += double((trueVectors[n] - xVectors[n]).length());
 				solvedIterations++;
@@ -1070,7 +1148,9 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 
 			}
 			else if (!matrices[n].isSingular())
+			{
 				invalidNonSingularIterations++;
+			}
 
 			iterations++;
 		}
@@ -1086,9 +1166,13 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 	if (containsSingular)
+	{
 		return percent >= 0.90;
+	}
 	else
+	{
 		return percent >= 0.99;
+	}
 }
 
 template <typename T>

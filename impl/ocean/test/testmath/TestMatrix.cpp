@@ -448,7 +448,9 @@ bool TestMatrix::testSelfTransposedSquareMatrix(const double testDuration)
 		Matrix matrix(RandomI::random(1u, 32u), RandomI::random(1u, 32u));
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
+		{
 			matrix(n) = Random::scalar(-valueRange, valueRange);
+		}
 
 		performance.start();
 			const Matrix squareMatrix = matrix.selfTransposedSquareMatrix();

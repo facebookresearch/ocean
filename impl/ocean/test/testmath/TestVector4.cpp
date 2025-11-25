@@ -202,7 +202,9 @@ bool TestVector4::testAngle(const double testDuration)
 				const Scalar testDegree = Numeric::rad2deg(test);
 
 				if (Numeric::isEqual(alphaDegree, testDegree, Scalar(0.01)))
+				{
 					validIterations++;
+				}
 
 				iterations++;
 			}
@@ -211,18 +213,30 @@ bool TestVector4::testAngle(const double testDuration)
 		bool localSucceeded = true;
 
 		if (Numeric::isNotEqual(Vector4(1, 0, 0, 0).angle(Vector4(1, 1, 0, 0)), Numeric::deg2rad(45)))
+		{
 			localSucceeded = false;
+		}
 		if (Numeric::isNotEqual(Vector4(5, 0, 0, 0).angle(Vector4(Scalar(7.4), Scalar(7.4), 0, 0)), Numeric::deg2rad(45)))
+		{
 			localSucceeded = false;
+		}
 		if (Numeric::isNotEqual(Vector4(0, -5, 0, 0).angle(Vector4(Scalar(-7.4), Scalar(-7.4), 0, 0)), Numeric::deg2rad(45)))
+		{
 			localSucceeded = false;
+		}
 		if (Numeric::isNotEqual(Vector4(5, 2, 0, 0).angle(Vector4(-10, -4, 0, 0)), Numeric::deg2rad(180)))
+		{
 			localSucceeded = false;
+		}
 		if (Numeric::isNotEqual(Vector4(Scalar(4.2), Scalar(4.2), 0, 0).angle(Vector4(Scalar(-7.44), Scalar(7.44), 0, 0)), Numeric::deg2rad(90)))
+		{
 			localSucceeded = false;
+		}
 
 		if (localSucceeded)
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -258,21 +272,35 @@ bool TestVector4::testLessOperator(const double testDuration)
 			bool testLess = false;
 
 			if (first[0] < second[0])
+			{
 				testLess = true;
+			}
 			if (first[0] == second[0] && first[1] < second[1])
+			{
 				testLess = true;
+			}
 			if (first[0] == second[0] && first[1] == second[1] && first[2] < second[2])
+			{
 				testLess = true;
+			}
 			if (first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] < second[3])
+			{
 				testLess = true;
+			}
 
 			if (less != testLess)
+			{
 				succeeded = false;
+			}
 
 			if (less)
+			{
 				dummyValue += 1u;
+			}
 			else
+			{
 				dummyValue += 2u;
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -280,16 +308,24 @@ bool TestVector4::testLessOperator(const double testDuration)
 	if (dummyValue % 2u == 0u)
 	{
 		if (succeeded)
+		{
 			Log::info() << "Validation: succeeded.";
+		}
 		else
+		{
 			Log::info() << "Validation: FAILED!";
+		}
 	}
 	else
 	{
 		if (succeeded)
+		{
 			Log::info() << "Validation: succeeded.";
+		}
 		else
+		{
 			Log::info() << "Validation: FAILED!";
+		}
 	}
 
 	return succeeded;
@@ -334,38 +370,58 @@ bool TestVector4::testVectorConversion(const double testDuration)
 			for (unsigned int i = 0u; i < 4u; ++i)
 			{
 				if (NumericD::isNotWeakEqual(vectorsD[n][i], convertedD2D_0[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(vectorsD[n][i], convertedD2D_1[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(vectorsD[n][i], double(convertedD2F_0[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(vectorsD[n][i], double(convertedD2F_1[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 
 				if (NumericF::isNotWeakEqual(vectorsF[n][i], convertedF2F_0[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(vectorsF[n][i], convertedF2F_1[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(vectorsF[n][i], float(convertedF2D_0[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(vectorsF[n][i], float(convertedF2D_1[n][i])))
+				{
 					allSucceeded = false;
+				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
