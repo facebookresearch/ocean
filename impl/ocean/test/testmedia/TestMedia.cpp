@@ -10,6 +10,9 @@
 #include "ocean/test/testmedia/TestOpenImageLibraries.h"
 #include "ocean/test/testmedia/TestSpecial.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #ifdef OCEAN_PLATFORM_BUILD_APPLE
 	#include "ocean/test/testmedia/TestAVFoundation.h"
 	#include "ocean/test/testmedia/TestImageIO.h"
@@ -19,8 +22,9 @@
 	#include "ocean/test/testmedia/TestWIC.h"
 #endif
 
-#include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+	#include "ocean/test/testmedia/TestAndroid.h"
+#endif
 
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
@@ -52,8 +56,6 @@ bool testMedia(const double testDuration, Worker& /*worker*/, const std::string&
 	ocean_assert(testDuration > 0.0);
 
 	TestResult testResult("Media Library test");
-
-	Log::info() << "+++   Ocean Media Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -136,6 +138,20 @@ bool testMedia(const double testDuration, Worker& /*worker*/, const std::string&
 		Log::info() << " ";
 
 		testResult = TestWIC::test(testDuration, subSelector);
+	}
+
+#endif
+
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+
+	if (TestSelector subSelector = selector.shouldRun("android"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestAndroid::test(testDuration, subSelector);
 	}
 
 #endif

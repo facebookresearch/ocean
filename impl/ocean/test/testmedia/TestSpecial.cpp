@@ -8,7 +8,6 @@
 #include "ocean/test/testmedia/TestSpecial.h"
 
 #include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"

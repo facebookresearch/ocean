@@ -8,7 +8,6 @@
 #include "ocean/test/testmedia/TestMovie.h"
 
 #include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/String.h"
 

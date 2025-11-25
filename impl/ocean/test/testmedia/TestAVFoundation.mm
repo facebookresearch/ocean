@@ -8,7 +8,6 @@
 #include "ocean/test/testmedia/TestAVFoundation.h"
 
 #include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
@@ -245,7 +244,7 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 				if (accessor)
 				{
 					FrameType::PixelFormat expectedPixelFormat = pixelFormatSpecifier.pixelFormat;
-					
+
 					if (accessYPlaneOnly)
 					{
 						switch (pixelFormatSpecifier.pixelFormat)
@@ -254,19 +253,19 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 							case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
 								expectedPixelFormat = FrameType::FORMAT_Y8_LIMITED_RANGE;
 								break;
-								
+
 							case FrameType::FORMAT_Y_UV12_FULL_RANGE:
 							case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
 								expectedPixelFormat = FrameType::FORMAT_Y8_FULL_RANGE;
 								break;
-								
+
 							default:
 								ocean_assert(false && "This should never happen!");
 								expectedPixelFormat = FrameType::FORMAT_UNDEFINED;
 								break;
 						}
 					}
-					
+
 					const FrameType expectedFrameType(width, height, expectedPixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
 					Frame& frame = accessor.frame();

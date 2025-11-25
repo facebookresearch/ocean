@@ -10,7 +10,6 @@
 #ifdef OCEAN_PLATFORM_BUILD_APPLE
 
 #include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
 #include "ocean/base/Build.h"

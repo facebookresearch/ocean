@@ -10,7 +10,6 @@
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
 #include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
