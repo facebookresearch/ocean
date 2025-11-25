@@ -55,7 +55,7 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 
 	if (!nativeMediaLibrarySubscription_)
 	{
-		Log::error() << "VideoRecorder: Native media library is not initialized";
+		Log::error() << "VideoDecoder: Native media library is not initialized";
 		return false;
 	}
 
@@ -134,11 +134,11 @@ bool VideoDecoder::stop()
 		return true;
 	}
 
-	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_stop(*decoder_);
+	const media_status_t stopStatus = NativeMediaLibrary::get().AMediaCodec_stop(*decoder_);
 
-	if (startStatus != AMEDIA_OK)
+	if (stopStatus != AMEDIA_OK)
 	{
-		Log::error() << "Failed to stop codec, status: " << startStatus;
+		Log::error() << "Failed to stop codec, status: " << stopStatus;
 		return false;
 	}
 
@@ -202,7 +202,7 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 
 		remainingData += bufferSize;
 		remainingSize -= bufferSize;
-		ocean_assert(remainingSize < size);
+		ocean_assert(remainingSize <= size);
 
 		const media_status_t queueStatus = nativeMediaLibrary.AMediaCodec_queueInputBuffer(*decoder_, size_t(inputBufferIndex), 0u /*offset*/, bufferSize, presentationTime, 0u);
 
@@ -366,7 +366,7 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 						if (pixelFormat == FrameType::FORMAT_Y_UV12_LIMITED_RANGE || pixelFormat == FrameType::FORMAT_Y_UV12_FULL_RANGE)
 						{
 							const size_t plane0Size = size_t(stride * sliceHeight);
-							const size_t plane1Size = size_t(stride * height / 2);
+							const size_t plane1Size = size_t(stride * sliceHeight / 2);
 
 							const size_t necessarySize = plane0Size + plane1Size;
 
@@ -384,7 +384,7 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 							ocean_assert(pixelFormat == FrameType::FORMAT_Y_U_V12_LIMITED_RANGE || pixelFormat == FrameType::FORMAT_Y_U_V12_FULL_RANGE);
 
 							const unsigned int width_2 = (unsigned int)(width) / 2u;
-							const unsigned int height_2 = (unsigned int)(height) / 2u;
+							const unsigned int sliceHeight_2 = (unsigned int)(sliceHeight) / 2u;
 
 							constexpr unsigned int paddingElements12 = 0u; // here we use a fixed number of padding elements, this is the best guess we can make for this pixel format
 
@@ -392,7 +392,7 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 							const unsigned int plane12StrideElements = width_2 + paddingElements12;
 
 							const size_t plane0Size = size_t(plane0StrideElements * sliceHeight);
-							const size_t plane12Size = size_t(plane12StrideElements * height_2);
+							const size_t plane12Size = size_t(plane12StrideElements * sliceHeight_2);
 
 							const size_t necessarySize = plane0Size + plane12Size * 2;
 
