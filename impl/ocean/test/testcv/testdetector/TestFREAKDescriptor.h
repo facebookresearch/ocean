@@ -16,6 +16,8 @@
 
 #include "ocean/math/PinholeCamera.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -52,9 +54,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestFREAKDescriptorT : public CV::Detector::
 		 * Invokes all test for the FREAK descriptor.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Test the function creating a blurred frame pyramid.

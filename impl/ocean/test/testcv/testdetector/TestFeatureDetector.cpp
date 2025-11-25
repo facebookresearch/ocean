@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestFeatureDetector.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 
@@ -28,29 +30,22 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestFeatureDetector::test(const Frame& testFrame, const double testDuration, Worker& worker)
+bool TestFeatureDetector::test(const Frame& testFrame, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   FeatureDetector test:   ---";
+	TestResult testResult("FeatureDetector test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testDetermineHarrisPoints(testFrame, testDuration, worker) && allSucceeded;
+	if (selector.shouldRun("determineharrispoints"))
+	{
+		testResult = testDetermineHarrisPoints(testFrame, testDuration, worker);
+	}
 
 	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "FeatureDetector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "FeatureDetector test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testdetector/TestORBDetector.h"
 #include "ocean/test/testcv/testdetector/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Utilities.h"
 
@@ -38,11 +40,11 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestORBDetector::test(const Frame& frame, const double testDuration, Worker& worker)
+bool TestORBDetector::test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   ORB detector test:   ---";
+	TestResult testResult("ORB detector test");
 	Log::info() << " ";
 
 	Frame yFrame;
@@ -54,46 +56,51 @@ bool TestORBDetector::test(const Frame& frame, const double testDuration, Worker
 		return false;
 	}
 
-	bool allSucceeded = true;
-
-	allSucceeded = testOrientationDetermination(testDuration, worker, yFrame) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDescriptorDetermination(testDuration, worker, yFrame) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetectReferenceFeaturesAndDetermineDescriptors(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHammingDistanceDetermination(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDescriptorMatching(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("orientationdetermination"))
 	{
-		Log::info() << "ORB detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "ORB detector test FAILED!";
+		testResult = testOrientationDetermination(testDuration, worker, yFrame);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("descriptordetermination"))
+	{
+		testResult = testDescriptorDetermination(testDuration, worker, yFrame);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("detectreferencefeaturesanddeterminedescriptors"))
+	{
+		testResult = testDetectReferenceFeaturesAndDetermineDescriptors(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hammingdistancedetermination"))
+	{
+		testResult = testHammingDistanceDetermination(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("descriptormatching"))
+	{
+		testResult = testDescriptorMatching(testDuration, worker);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestFrameChangeDetector.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Frame.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -31,35 +33,29 @@ namespace TestDetector
 
 using CV::Detector::FrameChangeDetector;
 
-bool TestFrameChangeDetector::test(const double testDuration, Worker& worker)
+bool TestFrameChangeDetector::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
-	Log::info() << "---   Frame change detector test:   ---";
+	TestResult testResult("Frame change detector test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	for (bool nonStaticInput : {false, true})
+	if (selector.shouldRun("input"))
 	{
-		for (bool simulateDeviceMotion : {false, true})
+		for (const bool nonStaticInput : {false, true})
 		{
-			for (bool forcedKeyframes : {false, true})
+			for (const bool simulateDeviceMotion : {false, true})
 			{
-				allSucceeded = testInput(testDuration, nonStaticInput, simulateDeviceMotion, forcedKeyframes, worker) && allSucceeded;
-				Log::info() << " ";
+				for (const bool forcedKeyframes : {false, true})
+				{
+					testResult = testInput(testDuration, nonStaticInput, simulateDeviceMotion, forcedKeyframes, worker);
+					Log::info() << " ";
+				}
 			}
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Frame change detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame change detector test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

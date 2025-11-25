@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestLineEvaluator.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
 
@@ -28,31 +30,28 @@ namespace TestDetector
 
 using namespace Ocean::CV::Detector;
 
-bool TestLineEvaluator::test(const double testDuration, Worker& /*worker*/)
+bool TestLineEvaluator::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Line evaluator test:   ---";
+	TestResult testResult("Line evaluator test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testMatchDetermination<float>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMatchDetermination<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("matchdeterminationfloat"))
 	{
-		Log::info() << "Line evaluator test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Line evaluator test FAILED!";
+		testResult = testMatchDetermination<float>(testDuration);
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("matchdeterminationdouble"))
+	{
+		testResult = testMatchDetermination<double>(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

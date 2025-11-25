@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestFREAKDescriptor.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -33,22 +35,23 @@ namespace TestDetector
 using namespace CV::Detector;
 
 template <size_t tSize>
-bool TestFREAKDescriptorT<tSize>::test(const double testDuration, Worker& worker)
+bool TestFREAKDescriptorT<tSize>::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	static_assert(tSize == 32 || tSize == 64, "The FREAK descriptor test is only defined for 32 and 64 bytes descriptor lengths");
 
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   FREAK descriptor test (" << (tSize == 32 ? "32" : "64") << " bytes):   ---";
+	TestResult testResult("FREAK descriptor test (" + std::string(tSize == 32 ? "32" : "64") + " bytes)");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	if (selector.shouldRun("createblurredframepyramid"))
+	{
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCreateBlurredFramePyramid(testDuration, worker) && allSucceeded;
+		testResult = testCreateBlurredFramePyramid(testDuration, worker);
+	}
 
 #ifdef OCEAN_USE_EXTERNAL_TEST_FREAK_DESCRIPTOR
 
@@ -56,22 +59,14 @@ bool TestFREAKDescriptorT<tSize>::test(const double testDuration, Worker& worker
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = TestFREAKDescriptorT_externalTests<tSize>(testDuration, worker) && allSucceeded;
+	testResult = TestFREAKDescriptorT_externalTests<tSize>(testDuration, worker);
 
 #endif // OCEAN_USE_EXTERNAL_TEST_FREAK_DESCRIPTOR
 
 	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "FREAK descriptor test (" << (tSize == 32 ? "32" : "64") << " bytes) succeeded.";
-	}
-	else
-	{
-		Log::info() << "FREAK descriptor test (" << (tSize == 32 ? "32" : "64") << " bytes) FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

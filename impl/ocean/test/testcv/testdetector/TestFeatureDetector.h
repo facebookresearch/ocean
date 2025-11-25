@@ -12,6 +12,8 @@
 
 #include "ocean/base/Frame.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -37,9 +39,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestFeatureDetector
 		 * @param testFrame Optional explicit test frame to be used, can be invalid
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const Frame& testFrame, const double testDuration, Worker& worker);
+		static bool test(const Frame& testFrame, const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the Harris corner detection.

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestPointTracking.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -31,43 +33,38 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestPointTracking::test(const Frame& frame, const double testDuration, Worker& worker)
+bool TestPointTracking::test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(frame && testDuration > 0.0);
 	ocean_assert(frame.width() >= 80u && frame.height() >= 80u);
 
-	Log::info() << "---   Point tracking test:   ---";
+	TestResult testResult("Point tracking test");
 	Log::info() << " ";
-
-	bool allSucceeded = true;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
 		if (CV::FrameConverter::Comfort::isSupported(frame.frameType(), FrameType::findPixelFormat(channels * 8u)))
 		{
-			if (channels > 1u)
-			{
-				Log::info() << " ";
-				Log::info() << "-";
-				Log::info() << " ";
-			}
+			const std::string testName = "motion" + std::to_string(channels) + "channels";
 
-			allSucceeded = testMotion(frame, channels, testDuration, worker) && allSucceeded;
+			if (selector.shouldRun(testName))
+			{
+				if (channels > 1u)
+				{
+					Log::info() << " ";
+					Log::info() << "-";
+					Log::info() << " ";
+				}
+
+				testResult = testMotion(frame, channels, testDuration, worker);
+			}
 		}
 	}
 
 	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Point tracking test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Point tracking test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channels, const double testDuration, Worker& worker)

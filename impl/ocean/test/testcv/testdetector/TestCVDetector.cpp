@@ -22,6 +22,8 @@
 #include "ocean/test/testcv/testdetector/TestPointTracking.h"
 #include "ocean/test/testcv/testdetector/TestShapeDetector.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/CommandArguments.h"
 #include "ocean/base/DateTime.h"
@@ -75,9 +77,8 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Computer Vision Detector Library test");
 
-	Log::info() << "+++   Ocean Computer Vision Detector Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -150,144 +151,143 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 		Log::info() << "Failed to converted the defined test frame to a Y8 test frame!";
 	}
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
 	Log::info() << " ";
 
-	if (testSet.empty() || testSet.find("linedetectorhough") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("linedetectorhough"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLineDetectorHough::test(testDuration, worker) && allSucceeded;
+		testResult = TestLineDetectorHough::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("linedetectorulf") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("linedetectorulf"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLineDetectorULF::test(testDuration, worker) && allSucceeded;
+		testResult = TestLineDetectorULF::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("fastdetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("fastdetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFASTDetector::test(yFrame, testDuration, worker) && allSucceeded;
+		testResult = TestFASTDetector::test(yFrame, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("harrisdetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("harrisdetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHarrisDetector::test(yFrame, testDuration, worker) && allSucceeded;
+		testResult = TestHarrisDetector::test(yFrame, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("orbdetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("orbdetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestORBDetector::test(yFrame, testDuration, worker) && allSucceeded;
+		testResult = TestORBDetector::test(yFrame, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("featuredetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("featuredetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFeatureDetector::test(yFrame, testDuration, worker) && allSucceeded;
+		testResult = TestFeatureDetector::test(yFrame, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("pointtracking") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("pointtracking"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestPointTracking::test(rgbFrame, testDuration, worker) && allSucceeded;
+		testResult = TestPointTracking::test(rgbFrame, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("lineevaluator") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("lineevaluator"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestLineEvaluator::test(testDuration, worker) && allSucceeded;
+		testResult = TestLineEvaluator::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("hemicube") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("hemicube"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestHemiCube::test(testDuration, worker) && allSucceeded;
+		testResult = TestHemiCube::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("messengercodedetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("messengercodedetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMessengerCodeDetector::test(testDuration, worker) && allSucceeded;
+		testResult = TestMessengerCodeDetector::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("descriptor") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("descriptor"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestDescriptor::test(testDuration, worker) && allSucceeded;
+		testResult = TestDescriptor::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("freakdescriptor32") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("freakdescriptor32"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFREAKDescriptor32::test(testDuration, worker) && allSucceeded;
+		testResult = TestFREAKDescriptor32::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("freakdescriptor64") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("freakdescriptor64"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFREAKDescriptor64::test(testDuration, worker) && allSucceeded;
+		testResult = TestFREAKDescriptor64::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("shapedetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("shapedetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestShapeDetector::test(testDuration) && allSucceeded;
+		testResult = TestShapeDetector::test(testDuration, subSelector);
   }
 
-	if (testSet.empty() || testSet.find("framechangedetector") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("framechangedetector"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestFrameChangeDetector::test(testDuration, worker) && allSucceeded;
+		testResult = TestFrameChangeDetector::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
@@ -295,14 +295,7 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Detector library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Detector library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
 #ifdef OCEAN_RUNTIME_STATIC
 		OCEAN_APPLY_IF_WINDOWS(Media::WIC::unregisterWICLibrary());
@@ -312,7 +305,7 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 		PluginManager::get().release();
 #endif
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testCVDetectorAsynchronInternal(const double testDuration, const std::string testImageFilename, const std::string testFunctions)

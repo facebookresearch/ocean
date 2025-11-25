@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestMessengerCodeDetector.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomI.h"
 #include "ocean/base/WorkerPool.h"
 
@@ -71,34 +73,53 @@ size_t TestMessengerCodeDetector::FileDataCollection::size()
 	return filenames_.size();
 }
 
-bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
+bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Messenger Code detector test:   ---";
+	TestResult testResult("Messenger Code detector test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	if (selector.shouldRun("extractcodecandidates"))
+	{
+		testResult = testExtractCodeCandidates(testDuration);
 
-	allSucceeded = testExtractCodeCandidates(testDuration) && allSucceeded;
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+	if (selector.shouldRun("bullseyedetectionartificial0"))
+	{
+		testResult = testBullseyeDetectionArtificial(0u, testDuration);
+		Log::info() << " ";
+	}
 
-	allSucceeded = testBullseyeDetectionArtificial(0u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testBullseyeDetectionArtificial(3u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testBullseyeDetectionArtificial(5u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testBullseyeDetectionArtificial(7u, testDuration) && allSucceeded;
+	if (selector.shouldRun("bullseyedetectionartificial3"))
+	{
+		testResult = testBullseyeDetectionArtificial(3u, testDuration);
+		Log::info() << " ";
+	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+	if (selector.shouldRun("bullseyedetectionartificial5"))
+	{
+		testResult = testBullseyeDetectionArtificial(5u, testDuration);
+		Log::info() << " ";
+	}
 
-	allSucceeded = testStressTest(testDuration, worker) && allSucceeded;
+	if (selector.shouldRun("bullseyedetectionartificial7"))
+	{
+		testResult = testBullseyeDetectionArtificial(7u, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("stresstest"))
+	{
+		testResult = testStressTest(testDuration, worker);
+	}
 
 #ifdef OCEAN_USE_TEST_DATA_COLLECTION
 
@@ -108,34 +129,35 @@ bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDetect1Bullseye(worker) && allSucceeded;
+	if (selector.shouldRun("detect1bullseye"))
+	{
+		testResult = testDetect1Bullseye(worker);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testDetect0Code(worker) && allSucceeded;
+	if (selector.shouldRun("detect0code"))
+	{
+		testResult = testDetect0Code(worker);
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
-	allSucceeded = testDetect1Code(worker) && allSucceeded;
+	if (selector.shouldRun("detect1code"))
+	{
+		testResult = testDetect1Code(worker);
+	}
 
 #endif // OCEAN_USE_TEST_DATA_COLLECTION
 
 	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Messenger Code detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Messenger Code detector test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

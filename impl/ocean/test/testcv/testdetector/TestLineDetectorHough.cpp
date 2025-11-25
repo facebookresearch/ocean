@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestLineDetectorHough.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -26,44 +28,43 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestLineDetectorHough::test(const double testDuration, Worker& worker)
+bool TestLineDetectorHough::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Line detector test:   ---";
+	TestResult testResult("Line detector test");
 	Log::info() << " ";
 
 	constexpr unsigned int width = 800u;
 	constexpr unsigned int height = 640u;
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAccumulatorJoin(width, height, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLineDetectorRandomFrame(testDuration, worker);
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testLineDetectorArtificialFrame(width, height, testDuration, worker);
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("accumulatorjoin"))
 	{
-		Log::info() << "Line detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Line detector test FAILED!";
+		testResult = testAccumulatorJoin(width, height, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("linedetectorrandomframe"))
+	{
+		testResult = testLineDetectorRandomFrame(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("linedetectorartificialframe"))
+	{
+		testResult = testLineDetectorArtificialFrame(width, height, testDuration, worker);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestDescriptor.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -25,29 +27,22 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestDescriptor::test(const double testDuration, Worker& /*worker*/)
+bool TestDescriptor::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Descriptor test:   ---";
+	TestResult testResult("Descriptor test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testCalculateHammingDistance(testDuration) && allSucceeded;
+	if (selector.shouldRun("calculatehammingdistance"))
+	{
+		testResult = testCalculateHammingDistance(testDuration);
+	}
 
 	Log::info() << " ";
+	Log::info() << testResult;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Descriptor test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Descriptor test FAILED!";
-	}
-
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

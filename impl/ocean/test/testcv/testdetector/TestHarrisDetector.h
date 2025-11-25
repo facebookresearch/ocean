@@ -12,6 +12,8 @@
 
 #include "ocean/cv/detector/HarrisCorner.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -37,9 +39,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestHarrisDetector
 		 * @param frame Test frame to be used for feature detection, invalid to use a random image
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const Frame& frame, const double testDuration, Worker& worker);
+		static bool test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the threshold function.

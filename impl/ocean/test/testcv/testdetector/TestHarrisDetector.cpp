@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testdetector/TestHarrisDetector.h"
 #include "ocean/test/testcv/testdetector/Utilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
@@ -30,14 +32,12 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestHarrisDetector::test(const Frame& frame, const double testDuration, Worker& worker)
+bool TestHarrisDetector::test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Harris corner detector test:   ---";
+	TestResult testResult("Harris corner detector test");
 	Log::info() << " ";
-
-	bool allSucceeded = true;
 
 	Frame yFrame;
 	if (frame.isValid() && !CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
@@ -48,62 +48,78 @@ bool TestHarrisDetector::test(const Frame& frame, const double testDuration, Wor
 		return false;
 	}
 
-	allSucceeded = testThreshold(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPixelAccuracy(testDuration, worker, yFrame) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPixelAccuracyCorners(1280u, 720u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSubPixelAccuracy(testDuration, worker, yFrame) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSubFrameDetection(testDuration, worker, yFrame) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCheckerboardDetection(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHarrisVotePixel(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHarrisVoteFrame(testDuration, worker, yFrame) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("threshold"))
 	{
-		Log::info() << "Harris corner detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Harris corner detector test FAILED!";
+		testResult = testThreshold(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("pixelaccuracy"))
+	{
+		testResult = testPixelAccuracy(testDuration, worker, yFrame);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("pixelaccuracycorners"))
+	{
+		testResult = testPixelAccuracyCorners(1280u, 720u, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("subpixelaccuracy"))
+	{
+		testResult = testSubPixelAccuracy(testDuration, worker, yFrame);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("subframedetection"))
+	{
+		testResult = testSubFrameDetection(testDuration, worker, yFrame);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("checkerboarddetection"))
+	{
+		testResult = testCheckerboardDetection(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("harrisvotepixel"))
+	{
+		testResult = testHarrisVotePixel(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("harrisvoteframe"))
+	{
+		testResult = testHarrisVoteFrame(testDuration, worker, yFrame);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

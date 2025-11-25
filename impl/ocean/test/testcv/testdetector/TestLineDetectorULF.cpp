@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestLineDetectorULF.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
@@ -25,83 +27,103 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestLineDetectorULF::test(const double testDuration, Worker& /*worker*/)
+bool TestLineDetectorULF::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   ULF Line detector test:   ---";
+	TestResult testResult("ULF Line detector test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testRowSums(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRowSqrSums(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRMSBarEdgeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalRMSBarEdgeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRMSBarLineDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testRMSStepEdgeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalRMSStepEdgeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testRMSStepLineDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testSDStepEdgeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testHorizontalSDStepEdgeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("rowsums"))
 	{
-		Log::info() << "ULF Line detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "ULF Line detector test FAILED!";
+		testResult = testRowSums(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("rowsqrsums"))
+	{
+		testResult = testRowSqrSums(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rmsbaredgedetector"))
+	{
+		testResult = testRMSBarEdgeDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalrmsbaredgedetector"))
+	{
+		testResult = testHorizontalRMSBarEdgeDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rmsbarlinedetector"))
+	{
+		testResult = testRMSBarLineDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rmsstepedgedetector"))
+	{
+		testResult = testRMSStepEdgeDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalrmsstepedgedetector"))
+	{
+		testResult = testHorizontalRMSStepEdgeDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("rmssteplinedetector"))
+	{
+		testResult = testRMSStepLineDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("sdstepedgedetector"))
+	{
+		testResult = testSDStepEdgeDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("horizontalsdstepedgedetector"))
+	{
+		testResult = testHorizontalSDStepEdgeDetector(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

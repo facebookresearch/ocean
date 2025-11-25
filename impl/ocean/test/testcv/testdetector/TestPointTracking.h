@@ -16,6 +16,8 @@
 #include "ocean/math/SquareMatrix3.h"
 #include "ocean/math/Vector2.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -41,9 +43,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestPointTracking
 		 * @param frame Test frame to be used for point detection and tracking, with frame dimension [80, infinity)x[80, infinity), must be valid
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const Frame& frame, const double testDuration, Worker& worker);
+		static bool test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector);
 
 	private:
 

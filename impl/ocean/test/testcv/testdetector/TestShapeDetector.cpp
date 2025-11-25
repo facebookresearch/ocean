@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestShapeDetector.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 
@@ -1836,47 +1838,49 @@ double TestShapeDetector::GradientVarianceBasedDetector::tShapeDetectorResponseM
 	return response;
 }
 
-bool TestShapeDetector::test(const double testDuration)
+bool TestShapeDetector::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Shape detector test:   ---";
+	TestResult testResult("Shape detector test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testGradientBasedTShapeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testGradientVarianceBasedTShapeDetectorHorizontalResponse(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testGradientVarianceBasedTShapeDetectorVerticalResponse(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testGradientVarianceBasedTShapeDetector(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("gradientbasedtshapedetector"))
 	{
-		Log::info() << "Shape detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Shape detector test FAILED!";
+		testResult = testGradientBasedTShapeDetector(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("gradientvariancebasedtshapedetectorhorizontalresponse"))
+	{
+		testResult = testGradientVarianceBasedTShapeDetectorHorizontalResponse(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("gradientvariancebasedtshapedetectorverticalresponse"))
+	{
+		testResult = testGradientVarianceBasedTShapeDetectorVerticalResponse(testDuration);
+
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("gradientvariancebasedtshapedetector"))
+	{
+		testResult = testGradientVarianceBasedTShapeDetector(testDuration);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

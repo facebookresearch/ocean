@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestFASTDetector.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 
 #include "ocean/cv/FrameConverter.h"
@@ -27,14 +29,12 @@ namespace TestCV
 namespace TestDetector
 {
 
-bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worker& worker)
+bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   FAST detector test:   ---";
+	TestResult testResult("FAST detector test");
 	Log::info() << " ";
-
-	bool allSucceeded = true;
 
 	Frame yFrame;
 
@@ -53,26 +53,24 @@ bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worke
 		yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	}
 
-	allSucceeded = testStandardStrength(yFrame, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testPreciseStrength(yFrame, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("standardstrength"))
 	{
-		Log::info() << "FAST detector test succeeded.";
-	}
-	else
-	{
-		Log::info() << "FAST detector test FAILED!";
+		testResult = testStandardStrength(yFrame, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("precisestrength"))
+	{
+		testResult = testPreciseStrength(yFrame, testDuration, worker);
+	}
+
+	Log::info() << " ";
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

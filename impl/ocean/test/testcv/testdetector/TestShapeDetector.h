@@ -14,6 +14,8 @@
 
 #include "ocean/cv/detector/ShapeDetector.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -435,9 +437,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 		/**
 		 * Tests the shape detector functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Test the gradient-based T-shape detector.

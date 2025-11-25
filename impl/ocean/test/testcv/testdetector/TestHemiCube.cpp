@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/TestHemiCube.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/cv/detector/HemiCube.h"
@@ -29,39 +31,42 @@ namespace TestDetector
 
 using namespace Ocean::CV::Detector;
 
-bool TestHemiCube::test(const double testDuration, Worker& /*worker*/)
+bool TestHemiCube::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Hemi cube test:   ---";
+	TestResult testResult("Hemi cube test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testAdd(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testLineFusion(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testMergeGreedyBruteForce(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testMerge(testDuration);
-
-	if (allSucceeded)
+	if (selector.shouldRun("add"))
 	{
-		Log::info() << "Hemi cube test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Hemi cube test FAILED!";
+		testResult = testAdd(testDuration);
+
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("linefusion"))
+	{
+		testResult = testLineFusion(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("mergegreedybruteforce"))
+	{
+		testResult = testMergeGreedyBruteForce(testDuration);
+
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("merge"))
+	{
+		testResult = testMerge(testDuration);
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

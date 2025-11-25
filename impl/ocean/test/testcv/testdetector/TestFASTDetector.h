@@ -12,6 +12,8 @@
 
 #include "ocean/cv/detector/FASTFeature.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -37,9 +39,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestFASTDetector
 		 * @param frame Test frame to be used for feature detection, must be valid with a dimension larger than 7x7
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const Frame& frame, const double testDuration, Worker& worker);
+		static bool test(const Frame& frame, const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Tests the FAST feature detector with standard strength determination.
