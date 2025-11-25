@@ -3028,7 +3028,7 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x18IF(const FisheyeCameraT<T
 	const VectorT3<T> dwyObject(dwy * objectPoint);
 	const VectorT3<T> dwzObject(dwz * objectPoint);
 
-	fisheyeCamera.template pointJacobian2x3IF<true>(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
+	fisheyeCamera.pointJacobian2x3IF(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
 
 	// jacobianPoseX[0, 1, 2] already set
 	jacobianPoseX[3] = jacobianPoseX[0] * dwxObject[0] + jacobianPoseX[1] * dwxObject[1] + jacobianPoseX[2] * dwxObject[2];

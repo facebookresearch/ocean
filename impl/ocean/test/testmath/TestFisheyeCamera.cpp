@@ -50,14 +50,6 @@ bool TestFisheyeCamera::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testVectorDistortionFree<float>(640u, 480u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVectorDistortionFree<double>(640u, 480u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testVectorDistorted<float>(640u, 480u, testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testVectorDistorted<double>(640u, 480u, testDuration) && allSucceeded;
@@ -96,16 +88,6 @@ TEST(TestFisheyeCamera, Distortion_float)
 TEST(TestFisheyeCamera, Distortion_double)
 {
 	EXPECT_TRUE(TestFisheyeCamera::testDistortion<double>(640u, 480u, GTEST_TEST_DURATION));
-}
-
-TEST(TestFisheyeCamera, VectorDistortionFree_float)
-{
-	EXPECT_TRUE(TestFisheyeCamera::testVectorDistortionFree<float>(640u, 480u, GTEST_TEST_DURATION));
-}
-
-TEST(TestFisheyeCamera, VectorDistortionFree_double)
-{
-	EXPECT_TRUE(TestFisheyeCamera::testVectorDistortionFree<double>(640u, 480u, GTEST_TEST_DURATION));
 }
 
 TEST(TestFisheyeCamera, VectorDistorted_float)
@@ -263,8 +245,8 @@ bool TestFisheyeCamera::testDistortion(const unsigned int width, const unsigned 
 			const VectorT2<T> distortedNormalized((distortedImagePoint.x() - fisheyeCamera.principalPointX()) * fisheyeCamera.inverseFocalLengthX(),
 													(distortedImagePoint.y() - fisheyeCamera.principalPointY()) * fisheyeCamera.inverseFocalLengthY());
 
-			const VectorT2<T> undistortedNormalized = fisheyeCamera.template undistortNormalized<true>(distortedNormalized);
-			const VectorT2<T> distortedNormalizedTest = fisheyeCamera.template distortNormalized<true>(undistortedNormalized);
+			const VectorT2<T> undistortedNormalized = fisheyeCamera.undistortNormalized(distortedNormalized);
+			const VectorT2<T> distortedNormalizedTest = fisheyeCamera.distortNormalized(undistortedNormalized);
 
 			if (distortedNormalizedTest.x() > T(-2) && distortedNormalizedTest.x() <= T(2) && distortedNormalizedTest.y() > T(-2) && distortedNormalizedTest.y() <= T(2))
 			{
@@ -279,57 +261,6 @@ bool TestFisheyeCamera::testDistortion(const unsigned int width, const unsigned 
 					scopedIteration.setInaccurate();
 				}
 			}
-		}
-	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
-}
-
-template <typename T>
-bool TestFisheyeCamera::testVectorDistortionFree(const unsigned int width, const unsigned int height, const double testDuration)
-{
-	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
-
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Vector test (" << TypeNamer::name<T>() << "):";
-
-	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.97, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-		const T focalLengthX = RandomT<T>::scalar(randomGenerator, T(400), T(700));
-		const T focalLengthY = focalLengthX + RandomT<T>::scalar(randomGenerator, T(-1), T(1));
-
-		const T principalPointX(RandomT<T>::scalar(randomGenerator, T(width) * T(0.5) - T(30), T(width) * T(0.5) + T(30)));
-		const T principalPointY(RandomT<T>::scalar(randomGenerator, T(height) * T(0.5) - T(30), T(height) * T(0.5) + T(30)));
-
-		const FisheyeCameraT<T> fisheyeCamera(width, height, focalLengthX, focalLengthY, principalPointX, principalPointY);
-
-		const VectorT2<T> imagePoint(RandomT<T>::scalar(randomGenerator, 0, T(width - 1)), RandomT<T>::scalar(randomGenerator, 0, T(height - 1)));
-		const VectorT3<T> rayVector(fisheyeCamera.vector(imagePoint));
-
-		if (NumericT<T>::isNotEqual(rayVector.length(), 1) || rayVector.z() > 0)
-		{
-			scopedIteration.setInaccurate();
-		}
-
-		const VectorT3<T> rayVectorFlipped(rayVector.x(), -rayVector.y(), -rayVector.z());
-		ocean_assert(rayVectorFlipped.isEqual(fisheyeCamera.vectorIF(imagePoint, true), NumericT<T>::eps()));
-
-		const VectorT2<T> projectedImagePoint = fisheyeCamera.template projectToImageIF<false>(rayVectorFlipped);
-
-		if (NumericT<T>::abs(projectedImagePoint.x() - imagePoint.x()) > 0.1 || NumericT<T>::abs(projectedImagePoint.y() - imagePoint.y()) > 0.1)
-		{
-			scopedIteration.setInaccurate();
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
@@ -386,7 +317,7 @@ bool TestFisheyeCamera::testVectorDistorted(const unsigned int width, const unsi
 
 		const VectorT3<T> rayVectorFlipped(rayVector.x(), -rayVector.y(), -rayVector.z());
 
-		const VectorT2<T> projectedImagePoint(fisheyeCamera.template projectToImageIF<true>(rayVectorFlipped));
+		const VectorT2<T> projectedImagePoint(fisheyeCamera.projectToImageIF(rayVectorFlipped));
 
 		if (NumericT<T>::abs(projectedImagePoint.x() - distortedImagePoint.x()) > 0.1 || NumericT<T>::abs(projectedImagePoint.y() - distortedImagePoint.y()) > 0.1)
 		{

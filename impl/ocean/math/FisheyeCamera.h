@@ -344,18 +344,14 @@ class FisheyeCameraT : public CameraT<T>
 		 * Returns the normalized distorted position of a given undistorted normalized position.
 		 * @param undistortedNormalized Undistorted normalized position to be distorted
 		 * @return Resulting distorted normalized position
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 */
-		template <bool tUseDistortionParameters = true>
 		VectorT2<T> distortNormalized(const VectorT2<T>& undistortedNormalized) const;
 
 		/**
 		 * Returns the normalized undistorted position of a given distorted normalized position.
 		 * @param distortedNormalized Distorted normalized position to be undistorted
 		 * @return Resulting undistorted normalized position
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 */
-		template <bool tUseDistortionParameters = true>
 		VectorT2<T> undistortNormalized(const VectorT2<T>& distortedNormalized) const;
 
 		/**
@@ -364,10 +360,8 @@ class FisheyeCameraT : public CameraT<T>
 		 * The default viewing direction of the standard camera is into the negative z-space with x-axis to the right, and y-axis upwards.
 		 * @param worldObjectPoint 3D object point which is located in the world
 		 * @return Resulting 2D image point within the camera frame
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see projectToImageIF().
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline VectorT2<T> projectToImage(const VectorT3<T>& worldObjectPoint) const;
 
 		/**
@@ -377,10 +371,8 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param world_T_camera The extrinsic camera matrix, must be valid
 		 * @param worldObjectPoint 3D object point which is located in the world
 		 * @return Resulting 2D image point within the camera frame
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see projectToImageIF().
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline VectorT2<T> projectToImage(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& worldObjectPoint) const;
 
 		/**
@@ -390,10 +382,8 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param flippedCamera_T_world Inverted and flipped extrinsic camera matrix, must be valid
 		 * @param worldObjectPoint 3D object point which is located in the world
 		 * @return Resulting 2D image point within the camera frame
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see projectToImage().
 		 */
-		template <bool tUseDistortionParameters = true>
 		VectorT2<T> projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& worldObjectPoint) const;
 
 		/**
@@ -402,10 +392,8 @@ class FisheyeCameraT : public CameraT<T>
 		 * The default viewing direction of the flipped camera is into the positive z-space with x-axis to the right, and y-axis downwards.
 		 * @param cameraFlippedObjectPoint 3D object point which is located in the flipped camera coordinate system
 		 * @return Resulting 2D image point within the camera frame
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see projectToImage().
 		 */
-		template <bool tUseDistortionParameters = true>
 		VectorT2<T> projectToImageIF(const VectorT3<T>& cameraFlippedObjectPoint) const;
 
 		/**
@@ -414,10 +402,8 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param distortedImagePoint 2D (distorted) position within the image, with range [0, width())x[0, height())
 		 * @param makeUnitVector True, to return a vector with length 1; False, to return a vector with any length
 		 * @return Unit vector pointing into the negative z-space
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see vectorIF(), ray().
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline VectorT3<T> vector(const VectorT2<T>& distortedImagePoint, const bool makeUnitVector = true) const;
 
 		/**
@@ -426,10 +412,8 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param distortedImagePoint 2D (distorted) position within the image, with range [0, width())x[0, height())
 		 * @param makeUnitVector True, to return a vector with length 1; False, to return a vector with any length
 		 * @return Normalized vector into the negative z-space
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see vector().
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline VectorT3<T> vectorIF(const VectorT2<T>& distortedImagePoint, const bool makeUnitVector = true) const;
 
 		/**
@@ -437,20 +421,16 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param distortedImagePoint 2D (distorted) position within the image, with range [0, width())x[0, height())
 		 * @param world_T_camera The pose of the camera, the extrinsic camera matrix, must be valid
 		 * @return The specified ray with direction pointing into the camera's negative z-space
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see vector().
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline LineT3<T> ray(const VectorT2<T>& distortedImagePoint, const HomogenousMatrixT4<T>& world_T_camera) const;
 
 		/**
 		 * Returns a ray starting at the camera's center and intersecting a given 2D point in the image.
 		 * @param distortedImagePoint 2D (distorted) position within the image, with range [0, width())x[0, height())
 		 * @return The specified ray with direction pointing into the camera's negative z-space
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 * @see vector().
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline LineT3<T> ray(const VectorT2<T>& distortedImagePoint) const;
 
 		/**
@@ -467,9 +447,7 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param flippedCameraObjectPoint The 3D object point defined in relation to the inverted and flipped camera pose (camera looking into the positive z-space with y-axis pointing down).
 		 * @param jx The resulting first row of the Jacobian matrix, must contain three elements, must be valid
 		 * @param jy The resulting second row of the Jacobian matrix, must contain three elements, must be valid
-		 * @tparam tUseDistortionParameters True, to use the camera's distortion parameter; False, to just scale the normalized image due to theta
 		 */
-		template <bool tUseDistortionParameters = true>
 		inline void pointJacobian2x3IF(const VectorT3<T>& flippedCameraObjectPoint, T* jx, T* jy) const;
 
 		/**
@@ -1006,7 +984,6 @@ inline bool FisheyeCameraT<T>::isInside(const VectorT2<T>& imagePoint, const T s
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 VectorT2<T> FisheyeCameraT<T>::distortNormalized(const VectorT2<T>& undistortedNormalized) const
 {
 	ocean_assert(isValid());
@@ -1047,7 +1024,7 @@ VectorT2<T> FisheyeCameraT<T>::distortNormalized(const VectorT2<T>& undistortedN
 
 	const T theta = NumericT<T>::atan(r);
 
-	if (tUseDistortionParameters && hasDistortionParameters_)
+	if (hasDistortionParameters_)
 	{
 		const T theta2 = theta * theta;
 		const T theta3 = theta2 * theta;
@@ -1088,129 +1065,108 @@ VectorT2<T> FisheyeCameraT<T>::distortNormalized(const VectorT2<T>& undistortedN
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 VectorT2<T> FisheyeCameraT<T>::undistortNormalized(const VectorT2<T>& distortedNormalized) const
 {
 	ocean_assert(isValid());
 
-	if constexpr (tUseDistortionParameters)
+	const VectorT2<T> distortedTangentialFree = tangentialFreeDistortion(distortedNormalized);
+
+	const T& k3 = radialDistortion_[0];
+	const T& k5 = radialDistortion_[1];
+	const T& k7 = radialDistortion_[2];
+	const T& k9 = radialDistortion_[3];
+	const T& k11 = radialDistortion_[4];
+	const T& k13 = radialDistortion_[5];
+
+	const T r = distortedTangentialFree.length();
+
+	if (NumericT<T>::isEqualEps(r))
 	{
-		const VectorT2<T> distortedTangentialFree = tangentialFreeDistortion(distortedNormalized);
-
-		const T& k3 = radialDistortion_[0];
-		const T& k5 = radialDistortion_[1];
-		const T& k7 = radialDistortion_[2];
-		const T& k9 = radialDistortion_[3];
-		const T& k11 = radialDistortion_[4];
-		const T& k13 = radialDistortion_[5];
-
-		const T r = distortedTangentialFree.length();
-
-		if (NumericT<T>::isEqualEps(r))
-		{
-			return VectorT2<T>(0, 0);
-		}
-
-		T theta = NumericT<T>::pow(r, T(0.3333333333333));
-
-		for (unsigned int n = 0u; n < 10u; ++n)
-		{
-			const T theta2 = theta * theta;
-			const T theta4 = theta2 * theta2;
-			const T theta6 = theta4 * theta2;
-			const T theta8 = theta6 * theta2;
-			const T theta10 = theta8 * theta2;
-			const T theta12 = theta10 * theta2;
-
-			const T error = theta * (T(1) + k3 * theta2 + k5 * theta4 + k7 * theta6 + k9 * theta8 + k11 * theta10 + k13 * theta12) - r;
-
-			const T df = T(1) + T(3) * k3 * theta2 + T(5) * k5 * theta4 + T(7) * k7 * theta6 + T(9) * k9 * theta8 + T(11) * k11 * theta10 + T(13) * k13 * theta12;
-
-			if constexpr (std::is_same_v<T, float>)
-			{
-				if (NumericT<T>::isNan(df) || NumericT<T>::isInf(df) || NumericT<T>::isEqualEps(df))
-				{
-					break;
-				}
-			}
-			else
-			{
-				if (NumericT<T>::isEqualEps(df))
-				{
-					break;
-				}
-			}
-
-			const T delta = error / df;
-
-			if constexpr (std::is_same_v<T, float>)
-			{
-				if (NumericT<T>::isNan(delta) || NumericT<T>::isInf(delta) || NumericT<T>::isEqualEps(delta))
-				{
-					break;
-				}
-			}
-			else
-			{
-				if (NumericT<T>::isEqualEps(delta))
-				{
-					break;
-				}
-			}
-
-			theta -= delta;
-		}
-
-		const T scale = NumericT<T>::tan(theta) / r;
-
-		return distortedTangentialFree * scale;
+		return VectorT2<T>(0, 0);
 	}
-	else
+
+	T theta = NumericT<T>::pow(r, T(0.3333333333333));
+
+	for (unsigned int n = 0u; n < 10u; ++n)
 	{
-		const T r = distortedNormalized.length();
+		const T theta2 = theta * theta;
+		const T theta4 = theta2 * theta2;
+		const T theta6 = theta4 * theta2;
+		const T theta8 = theta6 * theta2;
+		const T theta10 = theta8 * theta2;
+		const T theta12 = theta10 * theta2;
 
-		if (NumericT<T>::isEqualEps(r))
+		const T error = theta * (T(1) + k3 * theta2 + k5 * theta4 + k7 * theta6 + k9 * theta8 + k11 * theta10 + k13 * theta12) - r;
+
+		const T df = T(1) + T(3) * k3 * theta2 + T(5) * k5 * theta4 + T(7) * k7 * theta6 + T(9) * k9 * theta8 + T(11) * k11 * theta10 + T(13) * k13 * theta12;
+
+		if constexpr (std::is_same_v<T, float>)
 		{
-			return VectorT2<T>(0, 0);
+			if (NumericT<T>::isNan(df) || NumericT<T>::isInf(df) || NumericT<T>::isEqualEps(df))
+			{
+				break;
+			}
+		}
+		else
+		{
+			if (NumericT<T>::isEqualEps(df))
+			{
+				break;
+			}
 		}
 
-		const T scale = NumericT<T>::tan(r) / r;
+		const T delta = error / df;
 
-		return distortedNormalized * scale;
+		if constexpr (std::is_same_v<T, float>)
+		{
+			if (NumericT<T>::isNan(delta) || NumericT<T>::isInf(delta) || NumericT<T>::isEqualEps(delta))
+			{
+				break;
+			}
+		}
+		else
+		{
+			if (NumericT<T>::isEqualEps(delta))
+			{
+				break;
+			}
+		}
+
+		theta -= delta;
 	}
+
+	const T scale = NumericT<T>::tan(theta) / r;
+
+	return distortedTangentialFree * scale;
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline VectorT2<T> FisheyeCameraT<T>::projectToImage(const VectorT3<T>& worldObjectPoint) const
 {
 	ocean_assert(isValid());
 
-	return projectToImageIF<tUseDistortionParameters>(VectorT3<T>(worldObjectPoint.x(), -worldObjectPoint.y(), -worldObjectPoint.z()));
+	return projectToImageIF(VectorT3<T>(worldObjectPoint.x(), -worldObjectPoint.y(), -worldObjectPoint.z()));
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline VectorT2<T> FisheyeCameraT<T>::projectToImage(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& worldObjectPoint) const
 {
 	ocean_assert(isValid());
 
 	ocean_assert(world_T_camera.isValid());
-	return projectToImageIF<tUseDistortionParameters>(CameraT<T>::standard2InvertedFlipped(world_T_camera), worldObjectPoint);
+	return projectToImageIF(CameraT<T>::standard2InvertedFlipped(world_T_camera), worldObjectPoint);
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 VectorT2<T> FisheyeCameraT<T>::projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& worldObjectPoint) const
 {
 	ocean_assert(isValid());
 
 	ocean_assert(flippedCamera_T_world.isValid());
-	return projectToImageIF<tUseDistortionParameters>(flippedCamera_T_world * worldObjectPoint);
+	return projectToImageIF(flippedCamera_T_world * worldObjectPoint);
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 VectorT2<T> FisheyeCameraT<T>::projectToImageIF(const VectorT3<T>& cameraFlippedObjectPoint) const
 {
 	ocean_assert(isValid());
@@ -1219,19 +1175,18 @@ VectorT2<T> FisheyeCameraT<T>::projectToImageIF(const VectorT3<T>& cameraFlipped
 	const T invZ = T(1) / cameraFlippedObjectPoint.z();
 
 	const VectorT2<T> undistortedNormalized(cameraFlippedObjectPoint.x() * invZ, cameraFlippedObjectPoint.y() * invZ);
-	const VectorT2<T> distortedNormalizedImagePoint = distortNormalized<tUseDistortionParameters>(undistortedNormalized);
+	const VectorT2<T> distortedNormalizedImagePoint = distortNormalized(undistortedNormalized);
 
 	return VectorT2<T>(distortedNormalizedImagePoint.x() * focalLengthX() + principalPointX(), distortedNormalizedImagePoint.y() * focalLengthY() + principalPointY());
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline VectorT3<T> FisheyeCameraT<T>::vector(const VectorT2<T>& distortedImagePoint, const bool makeUnitVector) const
 {
 	ocean_assert(isValid());
 
 	const VectorT2<T> distortedNormalized((distortedImagePoint.x() - principalPointX_) * invFocalLengthX_, (distortedImagePoint.y() - principalPointY_) * invFocalLengthY_);
-	const VectorT2<T> undistortedNormalized = undistortNormalized<tUseDistortionParameters>(distortedNormalized);
+	const VectorT2<T> undistortedNormalized = undistortNormalized(distortedNormalized);
 
 	if (makeUnitVector)
 	{
@@ -1244,13 +1199,12 @@ inline VectorT3<T> FisheyeCameraT<T>::vector(const VectorT2<T>& distortedImagePo
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline VectorT3<T> FisheyeCameraT<T>::vectorIF(const VectorT2<T>& distortedImagePoint, const bool makeUnitVector) const
 {
 	ocean_assert(isValid());
 
 	const VectorT2<T> distortedNormalized((distortedImagePoint.x() - principalPointX_) * invFocalLengthX_, (distortedImagePoint.y() - principalPointY_) * invFocalLengthY_);
-	const VectorT2<T> undistortedNormalized = undistortNormalized<tUseDistortionParameters>(distortedNormalized);
+	const VectorT2<T> undistortedNormalized = undistortNormalized(distortedNormalized);
 
 	if (makeUnitVector)
 	{
@@ -1263,25 +1217,22 @@ inline VectorT3<T> FisheyeCameraT<T>::vectorIF(const VectorT2<T>& distortedImage
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline LineT3<T> FisheyeCameraT<T>::ray(const VectorT2<T>& distortedImagePoint, const HomogenousMatrixT4<T>& world_T_camera) const
 {
 	ocean_assert(isValid() && world_T_camera.isValid());
 
-	return LineT3<T>(world_T_camera.translation(), world_T_camera.rotationMatrix(vector<tUseDistortionParameters>(distortedImagePoint)));
+	return LineT3<T>(world_T_camera.translation(), world_T_camera.rotationMatrix(vector(distortedImagePoint)));
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline LineT3<T> FisheyeCameraT<T>::ray(const VectorT2<T>& distortedImagePoint) const
 {
 	ocean_assert(isValid());
 
-	return LineT3<T>(VectorT3<T>(0, 0, 0), vector<tUseDistortionParameters>(distortedImagePoint));
+	return LineT3<T>(VectorT3<T>(0, 0, 0), vector(distortedImagePoint));
 }
 
 template <typename T>
-template <bool tUseDistortionParameters>
 inline void FisheyeCameraT<T>::pointJacobian2x3IF(const VectorT3<T>& flippedCameraObjectPoint, T* jx, T* jy) const
 {
 	ocean_assert(isValid());
@@ -1300,52 +1251,27 @@ inline void FisheyeCameraT<T>::pointJacobian2x3IF(const VectorT3<T>& flippedCame
 	const T u_invW = u * invW;
 	const T v_invW = v * invW;
 
-	if constexpr (tUseDistortionParameters)
-	{
-		T jDistX[2];
-		T jDistY[2];
+	T jDistX[2];
+	T jDistY[2];
 
-		jacobianDistortNormalized2x2(u_invW, v_invW, radialDistortion_, tangentialDistortion_, jDistX, jDistY);
+	jacobianDistortNormalized2x2(u_invW, v_invW, radialDistortion_, tangentialDistortion_, jDistX, jDistY);
 
-		const T fx_jDistXx_invW = fx * jDistX[0] * invW;
-		const T fy_jDistYx_invW = fy * jDistY[0] * invW;
+	const T fx_jDistXx_invW = fx * jDistX[0] * invW;
+	const T fy_jDistYx_invW = fy * jDistY[0] * invW;
 
-		const T fx_jDistXy_invW = fx * jDistX[1] * invW;
-		const T fy_jDistYy_invW = fy * jDistY[1] * invW;
+	const T fx_jDistXy_invW = fx * jDistX[1] * invW;
+	const T fy_jDistYy_invW = fy * jDistY[1] * invW;
 
-		const T u_fx_jDistXx__ = u_invW * fx_jDistXx_invW + v_invW * fx_jDistXy_invW;
-		const T u_fy_jDistYx__ = u_invW * fy_jDistYx_invW + v_invW * fy_jDistYy_invW;
+	const T u_fx_jDistXx__ = u_invW * fx_jDistXx_invW + v_invW * fx_jDistXy_invW;
+	const T u_fy_jDistYx__ = u_invW * fy_jDistYx_invW + v_invW * fy_jDistYy_invW;
 
-		jx[0] = fx_jDistXx_invW;
-		jx[1] = fx_jDistXy_invW;
-		jx[2] = -u_fx_jDistXx__;
+	jx[0] = fx_jDistXx_invW;
+	jx[1] = fx_jDistXy_invW;
+	jx[2] = -u_fx_jDistXx__;
 
-		jy[0] = fy_jDistYx_invW;
-		jy[1] = fy_jDistYy_invW;
-		jy[2] = -u_fy_jDistYx__;
-	}
-	else
-	{
-		// J = | fx/w   0      -fx * u/w^2 |
-    	//     | 0      fy/w   -fy * v/w^2 |
-
-		const T fx_jDistXx_invW = fx * invW;
-		const T fy_jDistYx_invW = 0;
-
-		const T fx_jDistXy_invW = 0;
-		const T fy_jDistYy_invW = fy * invW;
-
-		const T u_fx_jDistXx__ = u_invW * fx_jDistXx_invW + v_invW;
-		const T u_fy_jDistYx__ = u_invW * fy_jDistYx_invW + v_invW;
-
-		jx[0] = fx_jDistXx_invW;
-		jx[1] = fx_jDistXy_invW;
-		jx[2] = -u_fx_jDistXx__;
-
-		jy[0] = fy_jDistYx_invW;
-		jy[1] = fy_jDistYy_invW;
-		jy[2] = -u_fy_jDistYx__;
-	}
+	jy[0] = fy_jDistYx_invW;
+	jy[1] = fy_jDistYy_invW;
+	jy[2] = -u_fy_jDistYx__;
 }
 
 template <typename T>

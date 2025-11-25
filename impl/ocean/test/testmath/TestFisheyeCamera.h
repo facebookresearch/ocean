@@ -53,16 +53,6 @@ class OCEAN_TEST_MATH_EXPORT TestFisheyeCamera
 		static bool testDistortion(const unsigned int width, const unsigned int height, const double testDuration);
 
 		/**
-		 * Tests the vector function with an undistorted camera.
-		 * @param width The width of the camera image in pixel
-		 * @param height The height of the camera image in pixel
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		template <typename T>
-		static bool testVectorDistortionFree(const unsigned int width, const unsigned int height, const double testDuration);
-
-		/**
 		 * Tests the vector function with a distorted camera.
 		 * @param width The width of the camera image in pixel
 		 * @param height The height of the camera image in pixel

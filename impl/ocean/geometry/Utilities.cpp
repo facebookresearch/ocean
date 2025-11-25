@@ -906,7 +906,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const FisheyeCamera& fisheyeCamera
 	const Vector3 cameraTranslation = worldObjectPointRay.point(distance);
 
 	// viewing vector in relation to identity camera pose
-	const Vector3 viewingVector = fisheyeCamera.vector<true>(distortedImagePoint);
+	const Vector3 viewingVector = fisheyeCamera.vector(distortedImagePoint);
 
 	// now we need to find a rotation of the camera so that the viewing vector is perpendicular with the ray of the object point
 
