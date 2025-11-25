@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testsegmentation/TestMaskCreator.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -27,30 +29,24 @@ namespace TestCV
 namespace TestSegmentation
 {
 
-bool TestMaskCreator::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestMaskCreator::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 32u && height >= 32u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Mask creator test:   ---";
+	TestResult testResult("Mask creator test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testJoinMasks(width, height, testDuration, worker) && allSucceeded;
+	if (selector.shouldRun("joinmasks"))
+	{
+		testResult = testJoinMasks(width, height, testDuration, worker);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Mask creator test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask creator test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

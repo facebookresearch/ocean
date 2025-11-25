@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testsegmentation/TestMaskAnalyzer.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Memory.h"
@@ -30,138 +32,186 @@ namespace TestCV
 namespace TestSegmentation
 {
 
-bool TestMaskAnalyzer::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+bool TestMaskAnalyzer::test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(width >= 32u && height >= 32u);
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Mask analyzer test:   ---";
+	TestResult testResult("Mask analyzer test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testHasMaskNeighbor4(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor4Center(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor5(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor5Center(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor8(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor8Center(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor9(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testHasMaskNeighbor9Center(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetermineDistancesToBorder(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFindBorderPixels4(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFindBorderPixels8(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFindNonUniquePixels4(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFindNonUniquePixels8(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testFindOutlinePixels4(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComputeChessboardDistanceTransform8Bit(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComputeL1DistanceTransform8Bit(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testComputeL2DistanceTransform8Bit(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDetectBoundingBoxes(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testCountMaskPixels(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("hasmaskneighbor4"))
 	{
-		Log::info() << "Mask analyzer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask analyzer test FAILED!";
+		testResult = testHasMaskNeighbor4(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("hasmaskneighbor4center"))
+	{
+		testResult = testHasMaskNeighbor4Center(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasmaskneighbor5"))
+	{
+		testResult = testHasMaskNeighbor5(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasmaskneighbor5center"))
+	{
+		testResult = testHasMaskNeighbor5Center(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasmaskneighbor8"))
+	{
+		testResult = testHasMaskNeighbor8(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasmaskneighbor8center"))
+	{
+		testResult = testHasMaskNeighbor8Center(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasmaskneighbor9"))
+	{
+		testResult = testHasMaskNeighbor9(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("hasmaskneighbor9center"))
+	{
+		testResult = testHasMaskNeighbor9Center(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determinedistancestoborder"))
+	{
+		testResult = testDetermineDistancesToBorder(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("findborderpixels4"))
+	{
+		testResult = testFindBorderPixels4(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("findborderpixels8"))
+	{
+		testResult = testFindBorderPixels8(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("findnonuniquepixels4"))
+	{
+		testResult = testFindNonUniquePixels4(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("findnonuniquepixels8"))
+	{
+		testResult = testFindNonUniquePixels8(width, height, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("findoutlinepixels4"))
+	{
+		testResult = testFindOutlinePixels4(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("computechessboarddistancetransform8bit"))
+	{
+		testResult = testComputeChessboardDistanceTransform8Bit(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("computel1distancetransform8bit"))
+	{
+		testResult = testComputeL1DistanceTransform8Bit(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("computel2distancetransform8bit"))
+	{
+		testResult = testComputeL2DistanceTransform8Bit(width, height, testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("detectboundingboxes"))
+	{
+		testResult = testDetectBoundingBoxes(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("countmaskpixels"))
+	{
+		testResult = testCountMaskPixels(testDuration);
+
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

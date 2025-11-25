@@ -10,6 +10,8 @@
 #include "ocean/test/testcv/testsegmentation/TestMaskAnalyzer.h"
 #include "ocean/test/testcv/testsegmentation/TestMaskCreator.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -40,9 +42,8 @@ bool testCVSegmentation(const double testDuration, Worker& worker, const unsigne
 	ocean_assert(width >= 32u && height >= 32u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Computer Vision Segmentation library test");
 
-	Log::info() << "+++   Ocean Computer Vision Segmentation library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -69,34 +70,33 @@ bool testCVSegmentation(const double testDuration, Worker& worker, const unsigne
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("maskanalyzer") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("maskanalyzer"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMaskAnalyzer::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestMaskAnalyzer::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("maskcreator") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("maskcreator"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestMaskCreator::test(width, height, testDuration, worker) && allSucceeded;
+		testResult = TestMaskCreator::test(width, height, testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("binpacking") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("binpacking"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestBinPacking::test(testDuration, worker) && allSucceeded;
+		testResult = TestBinPacking::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
@@ -104,16 +104,9 @@ bool testCVSegmentation(const double testDuration, Worker& worker, const unsigne
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Segmentation library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Segmentation library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testCVSegmentationAsynchronInternal(const double testDuration, const unsigned int width, const unsigned int height, const std::string testFunctions)

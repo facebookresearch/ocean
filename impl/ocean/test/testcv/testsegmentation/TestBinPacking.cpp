@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testsegmentation/TestBinPacking.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Frame.h"
 #include "ocean/base/RandomI.h"
 
@@ -26,29 +28,23 @@ namespace TestCV
 namespace TestSegmentation
 {
 
-bool TestBinPacking::test(const double testDuration, Worker& /*worker*/)
+bool TestBinPacking::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Bin packing test:   ---";
+	TestResult testResult("Bin packing test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testBinPacking(testDuration) && allSucceeded;
+	if (selector.shouldRun("binpacking"))
+	{
+		testResult = testBinPacking(testDuration);
+	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Mask analyzer test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask analyzer test FAILED!";
-	}
+	Log::info() << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
