@@ -74,9 +74,7 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 	static_assert(sizeof(int) == 4, "Invalid data type");
 	static_assert(sizeof(long long) == 8, "Invalid data type");
 
-	TestResult testResult;
-
-	Log::info() << "+++   Ocean Base Library test:   +++";
+	TestResult testResult("Ocean Base Library test");
 	Log::info() << " ";
 
 	Log::info() << "Data types:";
@@ -430,7 +428,7 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 	Log::info() << " ";
 	Log::info() << " ";
 
-	Log::info() << selector << " Ocean Base Library test " << testResult;
+	Log::info() << selector << " " << testResult;
 
 	return testResult.succeeded();
 }
