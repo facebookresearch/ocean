@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/testoculustags/TestUtilities.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
@@ -35,35 +37,34 @@ namespace TestOculusTags
 {
 
 
-bool TestUtilities::test(const double testDuration, Worker& /*worker*/)
+bool TestUtilities::test(const double testDuration, Worker& /*worker*/, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   OculusTag test:   ---";
+	TestResult testResult("OculusTag test");
 	Log::info() << " ";
 
-	allSucceeded = testSerializeDeserializeOculusTags(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testSerializeDeserializeTagSizeMap(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("serializedeserializeoculustags"))
 	{
-		Log::info() << "Utilities succeeded.";
-	}
-	else
-	{
-		Log::info() << "Utilities FAILED!";
+		testResult = testSerializeDeserializeOculusTags(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("serializedeserializetagsizemap"))
+	{
+		testResult = testSerializeDeserializeTagSizeMap(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

@@ -12,6 +12,8 @@
 
 #include "ocean/tracking/oculustags/OculusTagTracker.h"
 
+#include "ocean/test/TestSelector.h"
+
 
 namespace Ocean
 {
@@ -37,9 +39,10 @@ class OCEAN_TEST_TRACKING_OCULUSTAGS_EXPORT TestOculusTagTracker : protected Tra
 		 * Starts all tests for the Oculus Tag tracker class.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
+		 * @param selector The test selector to filter specific tests
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration, Worker& worker);
+		static bool test(const double testDuration, Worker& worker, const TestSelector& selector);
 
 		/**
 		 * Applies a stress test (with noisy data that never contains actual tags).

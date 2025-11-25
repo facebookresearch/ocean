@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/testoculustags/TestOculusTagTracker.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
@@ -31,29 +33,25 @@ namespace TestOculusTags
 {
 
 
-bool TestOculusTagTracker::test(const double testDuration, Worker& worker)
+bool TestOculusTagTracker::test(const double testDuration, Worker& worker, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
-	Log::info() << "---   OculusTag test:   ---";
+	TestResult testResult("OculusTag test");
 	Log::info() << " ";
 
-	allSucceeded = testStressTestNegative(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("stresstestnegative"))
 	{
-		Log::info() << "OculusTag test succeeded.";
-	}
-	else
-	{
-		Log::info() << "OculusTag test FAILED!";
+		testResult = testStressTestNegative(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST

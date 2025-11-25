@@ -7,6 +7,8 @@
 
 #include "ocean/test/testtracking/testoculustags/TestOculusTags.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/PluginManager.h"
@@ -43,9 +45,8 @@ namespace TestOculusTags
 
 bool test(const double testDuration, Worker& worker, const std::string& testFunctions)
 {
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Tracking Oculus Tag Library test");
 
-	Log::info() << "+++   Ocean Tracking Oculus Tag Library test:   +++";
 	Log::info() << " ";
 	Log::info() << "Test with: " << String::toAString(sizeof(Scalar)) << "byte floats";
 	Log::info() << " ";
@@ -74,25 +75,24 @@ bool test(const double testDuration, Worker& worker, const std::string& testFunc
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("oculustagtracker") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("oculustagtracker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestOculusTagTracker::test(testDuration, worker) && allSucceeded;
+		testResult = TestOculusTagTracker::test(testDuration, worker, subSelector);
 	}
 
-	if (testSet.empty() || testSet.find("utilities") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("utilities"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestUtilities::test(testDuration, worker) && allSucceeded;
+		testResult = TestUtilities::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
@@ -100,16 +100,9 @@ bool test(const double testDuration, Worker& worker, const std::string& testFunc
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Tracking Oculus Tag Library test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Tracking Oculus Tag Library test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 static void testAsynchronInternal(const double testDuration, const std::string testFunctions)
