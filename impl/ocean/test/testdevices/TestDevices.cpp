@@ -8,6 +8,9 @@
 #include "ocean/test/testdevices/TestDevices.h"
 #include "ocean/test/testdevices/TestGPSTracker.h"
 
+#include "ocean/test/TestResult.h"
+#include "ocean/test/TestSelector.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
@@ -37,9 +40,8 @@ bool testDevices(const double testDuration, Worker& /*worker*/, const std::strin
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	TestResult testResult("Ocean Devices Library test");
 
-	Log::info() << "+++   Ocean Devices Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
@@ -66,20 +68,15 @@ bool testDevices(const double testDuration, Worker& /*worker*/, const std::strin
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
-	const std::set<std::string> testSet(tests.begin(), tests.end());
+	const TestSelector selector(testFunctions);
 
-	if (testSet.empty() || testSet.find("gpstracker") != testSet.end())
+	if (TestSelector subSelector = selector.shouldRun("gpstracker"))
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-
-		if (!TestGPSTracker::test(testDuration))
-		{
-			allSucceeded = false;
-		}
+		testResult = TestGPSTracker::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
@@ -87,16 +84,9 @@ bool testDevices(const double testDuration, Worker& /*worker*/, const std::strin
 	Log::info() << " ";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Devices test succeeded.";
-	}
-	else
-	{
-		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Devices test FAILED!";
-	}
+	Log::info() << selector << " " << testResult;
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 /**

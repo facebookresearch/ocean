@@ -127,7 +127,6 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 
 	TestResult testResult("Computer Vision Library test");
 
-	Log::info() << "+++   Ocean Computer Vision Library test:   +++";
 	Log::info() << " ";
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41

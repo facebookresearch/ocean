@@ -10,6 +10,8 @@
 
 #include "ocean/test/testdevices/TestDevices.h"
 
+#include "ocean/test/TestSelector.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_DEVICES_EXPORT TestGPSTracker
 		/**
 		 * Invokes all tests.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param selector The selector defining which tests will be executed
 		 * @return True, if succeeded
 		 */
-		static bool test(const double testDuration);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests the parsing function of GPS locations.

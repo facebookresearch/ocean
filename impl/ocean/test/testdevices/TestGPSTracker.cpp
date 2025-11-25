@@ -7,6 +7,8 @@
 
 #include "ocean/test/testdevices/TestGPSTracker.h"
 
+#include "ocean/test/TestResult.h"
+
 #include "ocean/devices/GPSTracker.h"
 
 #include "ocean/math/Random.h"
@@ -21,41 +23,43 @@ namespace Test
 namespace TestDevices
 {
 
-bool TestGPSTracker::test(const double testDuration)
+bool TestGPSTracker::test(const double testDuration, const TestSelector& selector)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "---   Test GPSTracker:   ---";
+	TestResult testResult("GPSTracker test");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
-	allSucceeded = testParseGPSLocation(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testDecodePolyline() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testApproximatedDistanceBetweenLocations(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	if (allSucceeded)
+	if (selector.shouldRun("parsegpslocation"))
 	{
-		Log::info() << "GPSTracker test succeeded.";
-	}
-	else
-	{
-		Log::info() << "GPSTracker test FAILED!";
+		testResult = testParseGPSLocation(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	if (selector.shouldRun("decodepolyline"))
+	{
+		testResult = testDecodePolyline();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("approximateddistancebetweenlocations"))
+	{
+		testResult = testApproximatedDistanceBetweenLocations(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	Log::info() << testResult;
+
+	return testResult.succeeded();
 }
 
 #ifdef OCEAN_USE_GTEST
