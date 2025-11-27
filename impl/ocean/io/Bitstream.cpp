@@ -16,7 +16,7 @@ namespace IO
 {
 
 InputBitstream::InputBitstream(std::istream& stream) :
-	inputStream(stream)
+	inputStream_(stream)
 {
 	static_assert(sizeof(bool) == 1, "Invalid data type!");
 
@@ -41,10 +41,10 @@ InputBitstream::InputBitstream(std::istream& stream) :
 template <typename T>
 bool InputBitstream::read(T& value)
 {
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
-		inputStream.read((char*)&value, sizeof(T));
-		return inputStream.good();
+		inputStream_.read((char*)&value, sizeof(T));
+		return inputStream_.good();
 	}
 
 	return false;
@@ -58,13 +58,13 @@ bool OCEAN_IO_EXPORT InputBitstream::read(wchar_t& value)
 
 	// the wchar_t type needs a special handling as this data type may have size 1, 2 or 4 on individual platforms, thus we store 4 byte per object
 
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
 		int value32;
 
-		inputStream.read((char*)(&value32), sizeof(int));
+		inputStream_.read((char*)(&value32), sizeof(int));
 
-		if (inputStream.good())
+		if (inputStream_.good())
 		{
 			value = wchar_t(value32);
 			return true;
@@ -77,7 +77,7 @@ bool OCEAN_IO_EXPORT InputBitstream::read(wchar_t& value)
 template <>
 bool OCEAN_IO_EXPORT InputBitstream::read(std::string& value)
 {
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
 		unsigned int stringLength = 0u;
 
@@ -101,7 +101,7 @@ bool OCEAN_IO_EXPORT InputBitstream::read(std::wstring& value)
 
 	// the wchar_t type needs a special handling as this data type may have size 1, 2 or 4 on individual platforms, thus we store 4 byte per object
 
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
 		unsigned int stringLength = 0u;
 
@@ -129,11 +129,11 @@ bool OCEAN_IO_EXPORT InputBitstream::read(std::wstring& value)
 template <typename T>
 T InputBitstream::readDefault(const T& defaultValue)
 {
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
 		T value;
 
-		if (read<T>((T&)(value)))
+		if (read<T>(value))
 		{
 			return value;
 		}
@@ -151,10 +151,10 @@ bool InputBitstream::read(void* data, const size_t size)
 		return true;
 	}
 
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
-		inputStream.read((char*)(data), size);
-		return inputStream.good();
+		inputStream_.read((char*)(data), size);
+		return inputStream_.good();
 	}
 
 	return false;
@@ -168,59 +168,98 @@ bool InputBitstream::look(T& value)
 	return scope.read<T>(value);
 }
 
-unsigned long long InputBitstream::position() const
+uint64_t InputBitstream::position() const
 {
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
-		const std::streampos currentPosition = inputStream.tellg();
+		const std::streampos currentPosition = inputStream_.tellg();
 
-		if (inputStream.good())
+		if (inputStream_.good())
 		{
-			return (unsigned long long)(currentPosition);
+			ocean_assert(NumericT<uint64_t>::isInsideValueRange(currentPosition));
+
+			return uint64_t(currentPosition);
 		}
 	}
 
-	return (unsigned long long)(-1);
+	return uint64_t(-1);
 }
 
-unsigned long long InputBitstream::size() const
+uint64_t InputBitstream::size() const
 {
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
-		const std::streampos currentPosition = inputStream.tellg();
+		const std::streampos currentPosition = inputStream_.tellg();
 
-		inputStream.seekg(0, inputStream.end);
-		const unsigned long long value = (unsigned long long)(inputStream.tellg());
+		inputStream_.seekg(0, inputStream_.end);
+		const uint64_t value = uint64_t(inputStream_.tellg());
 
-		inputStream.seekg(currentPosition, inputStream.beg);
+		inputStream_.seekg(currentPosition, inputStream_.beg);
 
-		if (inputStream.good())
+		if (inputStream_.good())
 		{
 			return value;
 		}
 	}
 
-	return (unsigned long long)(-1);
+	return uint64_t(-1);
 }
 
-bool InputBitstream::setPosition(const unsigned long long position)
+bool InputBitstream::setPosition(const uint64_t position)
 {
-	if (inputStream.good())
+	if (inputStream_.good())
 	{
-		const unsigned long long currentSize = size();
+		const uint64_t currentSize = size();
 
-		if (currentSize != (unsigned long long)(-1) && position < currentSize)
+		if (currentSize != uint64_t(-1) && position <= currentSize)
 		{
-			inputStream.seekg(position, inputStream.beg);
-			return inputStream.good();
+			inputStream_.seekg(position, inputStream_.beg);
+			return inputStream_.good();
 		}
 	}
 
 	return false;
 }
 
+bool InputBitstream::skip(const uint64_t bytes)
+{
+	if (bytes == 0)
+	{
+		return true;
+	}
+
+	if (inputStream_.good())
+	{
+		const uint64_t currentPosition = position();
+
+		if (currentPosition != uint64_t(-1))
+		{
+			const uint64_t newPosition = currentPosition + bytes;
+			return setPosition(newPosition);
+		}
+	}
+
+	return false;
+}
+
+bool InputBitstream::isEndOfFile() const
+{
+	if (inputStream_.good())
+	{
+		const uint64_t currentPosition = position();
+		const uint64_t streamSize = size();
+
+		if (currentPosition != uint64_t(-1) && streamSize != uint64_t(-1))
+		{
+			return currentPosition >= streamSize;
+		}
+	}
+
+	return true;
+}
+
 OutputBitstream::OutputBitstream(std::ostream& stream) :
-	outputStream(stream)
+	outputStream_(stream)
 {
 	// nothing to do here
 }
@@ -228,10 +267,10 @@ OutputBitstream::OutputBitstream(std::ostream& stream) :
 template <typename T>
 bool OutputBitstream::write(const T& value)
 {
-	if (outputStream.good())
+	if (outputStream_.good())
 	{
-		outputStream.write((const char*)(&value), sizeof(T));
-		return outputStream.good();
+		outputStream_.write((const char*)(&value), sizeof(T));
+		return outputStream_.good();
 	}
 
 	return false;
@@ -245,12 +284,12 @@ bool OCEAN_IO_EXPORT OutputBitstream::write(const wchar_t& value)
 
 	// the wchar_t type needs a special handling as this data type may have size 1, 2 or 4 on individual platforms, thus we store 4 byte per object
 
-	if (outputStream.good())
+	if (outputStream_.good())
 	{
 		const int value32 = int(value);
 
-		outputStream.write((const char*)(&value32), sizeof(int));
-		return outputStream.good();
+		outputStream_.write((const char*)(&value32), sizeof(int));
+		return outputStream_.good();
 	}
 
 	return false;
@@ -259,9 +298,9 @@ bool OCEAN_IO_EXPORT OutputBitstream::write(const wchar_t& value)
 template <>
 bool OCEAN_IO_EXPORT OutputBitstream::write(const std::string& value)
 {
-	if (outputStream.good())
+	if (outputStream_.good())
 	{
-		ocean_assert(value.size() < NumericT<unsigned int>::maxValue());
+		ocean_assert(value.size() <= NumericT<unsigned int>::maxValue());
 
 		if (!write<unsigned int>((unsigned int)(value.size())))
 		{
@@ -277,9 +316,9 @@ bool OCEAN_IO_EXPORT OutputBitstream::write(const std::string& value)
 template <>
 bool OCEAN_IO_EXPORT OutputBitstream::write(const std::wstring& value)
 {
-	if (outputStream.good())
+	if (outputStream_.good())
 	{
-		ocean_assert(value.size() < NumericT<unsigned int>::maxValue());
+		ocean_assert(value.size() <= NumericT<unsigned int>::maxValue());
 
 		if (!write<unsigned int>((unsigned int)(value.size())))
 		{
@@ -309,24 +348,24 @@ bool OutputBitstream::write(const void* data, const size_t size)
 		return true;
 	}
 
-	if (outputStream.good())
+	if (outputStream_.good())
 	{
-		outputStream.write((const char*)(data), size);
-		return outputStream.good();
+		outputStream_.write((const char*)(data), size);
+		return outputStream_.good();
 	}
 
 	return false;
 }
 
-unsigned long long OutputBitstream::size() const
+uint64_t OutputBitstream::size() const
 {
-	if (outputStream.good())
+	if (outputStream_.good())
 	{
-		const unsigned long long value = (unsigned long long)outputStream.tellp();
+		const uint64_t value = uint64_t(outputStream_.tellp());
 		return value;
 	}
 
-	return (unsigned long long)(-1);
+	return uint64_t(-1);
 }
 
 template bool OCEAN_IO_EXPORT InputBitstream::read<bool>(bool&);

@@ -105,20 +105,33 @@ class OCEAN_IO_EXPORT InputBitstream
 		 * Returns the current position inside the bitstream, in bytes counting from the beginning of the stream.
 		 * @return The current stream position in bytes, -1 if the current position cannot be determined
 		 */
-		unsigned long long position() const;
+		uint64_t position() const;
 
 		/**
 		 * Returns the current size of the bitstream, in bytes.
 		 * @return The current stream size in bytes, -1 if the current size cannot be determined
 		 */
-		unsigned long long size() const;
+		uint64_t size() const;
 
 		/**
 		 * Sets the current position inside the bitstream explicitly.
-		 * @param position The new position inside the bitstream, in bytes counting from the beginning of the stream; with range [0, size())
+		 * @param position The new position inside the bitstream, in bytes counting from the beginning of the stream; with range [0, size()]
 		 * @return True, if succeeded
 		 */
-		bool setPosition(const unsigned long long position);
+		bool setPosition(const uint64_t position);
+
+		/**
+		 * Skips a specified number of bytes in the bitstream by moving the position forward.
+		 * @param bytes The number of bytes to skip, with range [0, infinity)
+		 * @return True, if succeeded
+		 */
+		bool skip(const uint64_t bytes);
+
+		/**
+		 * Returns whether the current position is at the end of the bitstream.
+		 * @return True, if the end of the stream has been reached
+		 */
+		bool isEndOfFile() const;
 
 		/**
 		 * Returns whether this bitstream object is valid and can be used.
@@ -129,7 +142,7 @@ class OCEAN_IO_EXPORT InputBitstream
 	protected:
 
 		/// The internal input stream object that this object encapsulates.
-		std::istream& inputStream;
+		std::istream& inputStream_;
 };
 
 /**
@@ -144,6 +157,7 @@ class ScopedInputBitstream : public InputBitstream
 
 		/**
 		 * Creates a new scoped input bitstream object from a given input bitstream object and stores the current stream position of the given stream object.
+		 * @param stream The input bitstream object that is encapsulated by this object
 		 */
 		inline ScopedInputBitstream(InputBitstream& stream);
 
@@ -154,14 +168,38 @@ class ScopedInputBitstream : public InputBitstream
 
 	protected:
 
+		/**
+		 * Deleted copy constructor.
+		 */
+		ScopedInputBitstream(const ScopedInputBitstream&) = delete;
+
+		/**
+		 * Deleted move constructor.
+		 */
+		inline ScopedInputBitstream(ScopedInputBitstream&&) = delete;
+
+		/**
+		 * Deleted copy operator.
+		 * @return Reference to this object
+		 */
+		ScopedInputBitstream& operator=(const ScopedInputBitstream&) = delete;
+
+		/**
+		 * Deleted move operator.
+		 * @return Reference to this object
+		 */
+		ScopedInputBitstream& operator=(ScopedInputBitstream&&) = delete;
+
+	protected:
+
 		/// The original stream position of the original bitstream object.
-		unsigned long long streamStartPosition_;
+		uint64_t streamStartPosition_ = uint64_t(-1);
 };
 
 /**
  * This class implements an output bitstream.
- * The implementation of the input bitstream is not thread-safe, thus ensure that the internal input stream object is not used within several threads concurrently.<br>
- * The bitstream support specific data type, see InputBitstream for detailed information.
+ * The implementation of the output bitstream is not thread-safe, thus ensure that the internal output stream object is not used within several threads concurrently.<br>
+ * The bitstream supports specific data types, see InputBitstream for detailed information.
  * @ingroup io
  */
 class OCEAN_IO_EXPORT OutputBitstream
@@ -189,7 +227,7 @@ class OCEAN_IO_EXPORT OutputBitstream
 		 * Writes a defined memory block from a given buffer into the stream and moves the internal position inside the bitstream accordingly.
 		 * If the write process fails, the new position of the bitstream may be arbitrary.
 		 * @param data The buffer that will be written, may be nullptr if size is 0
-		 * @param size The number of bytes that will be written, with range [0, infinity
+		 * @param size The number of bytes that will be written, with range [0, infinity)
 		 * @return True, if succeeded
 		 */
 		bool write(const void* data, const size_t size);
@@ -198,7 +236,7 @@ class OCEAN_IO_EXPORT OutputBitstream
 		 * Returns the current size of the bitstream, in bytes.
 		 * @return The current stream size in bytes, -1 if the current size cannot be determined
 		 */
-		unsigned long long size() const;
+		uint64_t size() const;
 
 		/**
 		 * Returns whether this bitstream object is valid and can be used.
@@ -209,12 +247,12 @@ class OCEAN_IO_EXPORT OutputBitstream
 	protected:
 
 		/// The internal output stream object that this object encapsulates.
-		std::ostream& outputStream;
+		std::ostream& outputStream_;
 };
 
 /**
  * This class implements a tag that allows to identify specific objects in an input/output stream.
- * A tag is an 64bit identifier that identifies one unique object type.<br>
+ * A tag is a 64-bit identifier that identifies one unique object type.
  * @ingroup io
  */
 class OCEAN_IO_EXPORT Tag
@@ -233,7 +271,7 @@ class OCEAN_IO_EXPORT Tag
 				/**
 				 * Definition of a set holding tag values.
 				 */
-				using TagSet = std::set<unsigned long long>;
+				using TagSet = std::unordered_set<unsigned long long>;
 
 			public:
 
@@ -247,7 +285,7 @@ class OCEAN_IO_EXPORT Tag
 			protected:
 
 				/// The set of registered tag values.
-				TagSet tagsSet;
+				TagSet tagsSet_;
 		};
 
 #endif // OCEAN_DEBUG
@@ -350,15 +388,14 @@ class OCEAN_IO_EXPORT Tag
 };
 
 inline ScopedInputBitstream::ScopedInputBitstream(InputBitstream& stream) :
-	InputBitstream(stream),
-	streamStartPosition_((unsigned long long)(-1))
+	InputBitstream(stream)
 {
 	streamStartPosition_ = position();
 }
 
 inline ScopedInputBitstream::~ScopedInputBitstream()
 {
-	if (streamStartPosition_ != (unsigned long long)(-1))
+	if (streamStartPosition_ != uint64_t(-1))
 	{
 		setPosition(streamStartPosition_);
 	}
@@ -366,12 +403,12 @@ inline ScopedInputBitstream::~ScopedInputBitstream()
 
 inline InputBitstream::operator bool() const
 {
-	return inputStream.good();
+	return inputStream_.good();
 }
 
 inline OutputBitstream::operator bool() const
 {
-	return outputStream.good();
+	return outputStream_.good();
 }
 
 inline Tag::Tag() :
@@ -427,8 +464,8 @@ inline bool Tag::TagManager::registerTag(const unsigned long long tag)
 {
 	static TagManager manager;
 
-	const bool newTag = manager.tagsSet.find(tag) == manager.tagsSet.end();
-	manager.tagsSet.insert(tag);
+	const bool newTag = manager.tagsSet_.find(tag) == manager.tagsSet_.end();
+	manager.tagsSet_.insert(tag);
 
 	return newTag;
 }
