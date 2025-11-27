@@ -128,6 +128,14 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 */
 		using FactoryFunction = std::function<SharedAnyCamera(const JSONParser::JSONValue& modelObject)>;
 
+		/**
+		 * Definition of a serializer function that converts an AnyCamera to a JSON string.
+		 * @param camera The camera object to serialize, must be valid
+		 * @param precision The number of decimal places to use in the JSON string, with range [0, infinity)
+		 * @return The JSON string representation of the camera, empty string if serialization failed
+		 */
+		using SerializerFunction = std::function<std::string(const AnyCamera& camera, const unsigned int precision)>;
+
 	protected:
 
 		/**
@@ -206,6 +214,11 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * Definition of a map mapping camera model names to factory functions.
 		 */
 		using FactoryFunctionMap = std::unordered_map<std::string, FactoryFunction>;
+
+		/**
+		 * Definition of a map mapping camera model names to serializer functions.
+		 */
+		using SerializerFunctionMap = std::unordered_map<std::string, SerializerFunction>;
 
 		/**
 		 * Definition of a map mapping camera names to calibration groups.
@@ -309,6 +322,15 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		bool registerFactoryFunction(const std::string& modelName, FactoryFunction&& factoryFunction);
 
 		/**
+		 * Registers a new camera serializer for a specific camera type.
+		 * Serializer functions are used to convert camera objects to JSON strings.
+		 * @param modelName The name of the camera model, e.g., "Ocean Pinhole", "Ocean Fisheye", must be valid
+		 * @param serializerFunction The serializer function to serialize cameras of the specified model, nullptr to unregister a serializer
+		 * @return True if the serializer was registered successfully, false if a serializer for the same model name already exists
+		 */
+		bool registerSerializerFunction(const std::string& modelName, SerializerFunction&& serializerFunction);
+
+		/**
 		 * Parses one camera calibration from a file or a string/buffer containing the JSON calibration object for only one camera model.
 		 * The provided JSON object must have the following structure:
 		 * <pre>
@@ -324,6 +346,16 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * @return The parsed camera object, nullptr in case of an error
 		 */
 		SharedAnyCamera parseCamera(const std::string& jsonCameraCalibrationFile, std::string&& jsonCameraCalibration = std::string()) const;
+
+		/**
+		 * Serializes an AnyCamera object to a JSON string that can be parsed back using parseCamera().
+		 * The resulting JSON string contains the camera model, resolution, configuration, and parameters.
+		 * @param camera The camera object to serialize, must be valid
+		 * @param precision The number of decimal places to use in the JSON string, with range [0, infinity)
+		 * @return The JSON string representation of the camera, empty string if serialization failed
+		 * @see parseCamera()
+		 */
+		std::string serializeCamera(const AnyCamera& camera, const unsigned int precision = 6u) const;
 
 		/**
 		 * Clears all registered calibrations and aliases.
@@ -344,7 +376,7 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 
 		/**
 		 * Protected default constructor.
-		 * Automatically registers the built-in factory functions for "Ocean Pinhole" and "Ocean Fisheye" camera models.
+		 * Automatically registers the built-in factory and serializer functions for "Ocean Pinhole" and "Ocean Fisheye" camera models.
 		 */
 		CameraCalibrationManager();
 
@@ -372,10 +404,29 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 */
 		static SharedAnyCamera createOceanFisheye(const JSONParser::JSONValue& modelObject);
 
+		/**
+		 * Serializer function able to serialize the "Ocean Pinhole" camera model to a JSON string.
+		 * @param camera The camera object to serialize, must be valid
+		 * @param precision The number of decimal places to use in the JSON string, with range [0, infinity)
+		 * @return The JSON string representation of the camera, empty string if serialization failed
+		 */
+		static std::string serializeOceanPinhole(const AnyCamera& camera, const unsigned int precision);
+
+		/**
+		 * Serializer function able to serialize the "Ocean Fisheye" camera model to a JSON string.
+		 * @param camera The camera object to serialize, must be valid
+		 * @param precision The number of decimal places to use in the JSON string, with range [0, infinity)
+		 * @return The JSON string representation of the camera, empty string if serialization failed
+		 */
+		static std::string serializeOceanFisheye(const AnyCamera& camera, const unsigned int precision);
+
 	protected:
 
 		/// The map mapping camera model names to factory functions.
 		FactoryFunctionMap factoryFunctionMap_;
+
+		/// The map mapping camera model names to serializer functions.
+		SerializerFunctionMap serializerFunctionMap_;
 
 		/// The map mapping camera names to calibration groups.
 		CameraMap cameraMap_;
@@ -395,9 +446,9 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 
 inline CameraCalibrationManager::CalibrationGroup::CalibrationGroup(const int32_t priority, const std::string& deviceProduct, const std::string& deviceVersion, const std::string& deviceSerial) :
 	priority_(priority),
-	deviceProduct_(std::move(deviceProduct)),
-	deviceVersion_(std::move(deviceVersion)),
-	deviceSerial_(std::move(deviceSerial))
+	deviceProduct_(deviceProduct),
+	deviceVersion_(deviceVersion),
+	deviceSerial_(deviceSerial)
 {
 	// nothing to do here
 }

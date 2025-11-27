@@ -11,6 +11,9 @@
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/FisheyeCamera.h"
 
+#include <iomanip>
+#include <sstream>
+
 namespace Ocean
 {
 
@@ -21,6 +24,9 @@ CameraCalibrationManager::CameraCalibrationManager()
 {
 	registerFactoryFunction(AnyCameraPinhole::WrappedCamera::name(), createOceanPinhole);
 	registerFactoryFunction(AnyCameraFisheye::WrappedCamera::name(), createOceanFisheye);
+
+	registerSerializerFunction(AnyCameraPinhole::WrappedCamera::name(), serializeOceanPinhole);
+	registerSerializerFunction(AnyCameraFisheye::WrappedCamera::name(), serializeOceanFisheye);
 }
 
 bool CameraCalibrationManager::CalibrationGroup::addCamera(SharedAnyCamera&& camera)
@@ -418,6 +424,26 @@ bool CameraCalibrationManager::registerFactoryFunction(const std::string& modelN
 	return factoryFunctionMap_.emplace(modelName, std::move(factoryFunction)).second;
 }
 
+bool CameraCalibrationManager::registerSerializerFunction(const std::string& modelName, SerializerFunction&& serializerFunction)
+{
+	ocean_assert(!modelName.empty());
+	if (modelName.empty())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	if (serializerFunction == nullptr)
+	{
+		ocean_assert(serializerFunctionMap_.contains(modelName));
+
+		serializerFunctionMap_.erase(modelName);
+	}
+
+	return serializerFunctionMap_.emplace(modelName, std::move(serializerFunction)).second;
+}
+
 SharedAnyCamera CameraCalibrationManager::parseCamera(const std::string& jsonCameraCalibrationFile, std::string&& jsonCameraCalibratio) const
 {
 	ocean_assert(!jsonCameraCalibrationFile.empty() || !jsonCameraCalibratio.empty());
@@ -454,6 +480,26 @@ SharedAnyCamera CameraCalibrationManager::parseCamera(const std::string& jsonCam
 	}
 
 	return iFactory->second(jsonValue);
+}
+
+std::string CameraCalibrationManager::serializeCamera(const AnyCamera& camera, const unsigned int precision) const
+{
+	ocean_assert(camera.isValid());
+	if (!camera.isValid())
+	{
+		return std::string();
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	const SerializerFunctionMap::const_iterator iSerializer = serializerFunctionMap_.find(camera.name());
+	if (iSerializer == serializerFunctionMap_.end())
+	{
+		Log::error() << "CameraCalibrationManager::serializeCamera(): No serializer registered for camera model '" << camera.name() << "'";
+		return std::string();
+	}
+
+	return iSerializer->second(camera, precision);
 }
 
 void CameraCalibrationManager::clear()
@@ -852,6 +898,145 @@ SharedAnyCamera CameraCalibrationManager::createOceanFisheye(const JSONParser::J
 
 	ocean_assert(false && "Invalid Ocean Fisheye camera model");
 	return nullptr;
+}
+
+std::string CameraCalibrationManager::serializeOceanPinhole(const AnyCamera& camera, const unsigned int precision)
+{
+	const AnyCameraPinhole* pinhole = dynamic_cast<const AnyCameraPinhole*>(&camera);
+
+	if (!pinhole)
+	{
+		Log::error() << "CameraCalibrationManager::serializeOceanPinhole(): Camera is not a Pinhole camera";
+		return std::string();
+	}
+
+	const PinholeCamera& pinholeCamera = pinhole->actualCamera();
+
+	unsigned int width = 0u;
+	unsigned int height = 0u;
+	Scalars parameters;
+	PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+
+	pinholeCamera.copyParameters(width, height, parameters, parameterConfiguration);
+
+	std::string parameterConfigurationString;
+
+	switch (parameterConfiguration)
+	{
+		case PinholeCamera::PC_UNKNOWN:
+			ocean_assert(false && "Unkown parameter configuration!");
+			break;
+
+		case PinholeCamera::PC_3_PARAMETERS_ONE_FOCAL_LENGTH:
+			parameterConfigurationString = "3_PARAMETERS_ONE_FOCAL_LENGTH";
+			break;
+
+		case PinholeCamera::PC_4_PARAMETERS:
+			parameterConfigurationString = "4_PARAMETERS";
+			break;
+
+		case PinholeCamera::PC_7_PARAMETERS_ONE_FOCAL_LENGTH:
+			parameterConfigurationString = "7_PARAMETERS_ONE_FOCAL_LENGTH";
+			break;
+
+		case PinholeCamera::PC_8_PARAMETERS:
+			parameterConfigurationString = "8_PARAMETERS";
+			break;
+	}
+
+	if (parameterConfigurationString.empty())
+	{
+		ocean_assert(false && "This should never happen!");
+		return std::string();
+	}
+
+	std::ostringstream jsonStream;
+	jsonStream << "{";
+	jsonStream << "\"resolution\":{\"width\":" << width << ",\"height\":" << height << "},";
+	jsonStream << "\"model\":\"" << camera.name() << "\",";
+	jsonStream << "\"configuration\":\"" << parameterConfigurationString << "\",";
+	jsonStream << "\"parameters\":[";
+	for (size_t i = 0; i < parameters.size(); ++i)
+	{
+		if (i > 0)
+		{
+			jsonStream << ",";
+		}
+		jsonStream << std::setprecision(precision) << parameters[i];
+	}
+	jsonStream << "]";
+	jsonStream << "}";
+
+	return jsonStream.str();
+}
+
+std::string CameraCalibrationManager::serializeOceanFisheye(const AnyCamera& camera, const unsigned int precision)
+{
+	const AnyCameraFisheye* fisheye = dynamic_cast<const AnyCameraFisheye*>(&camera);
+	if (!fisheye)
+	{
+		Log::error() << "CameraCalibrationManager::serializeOceanFisheye(): Camera is not a Fisheye camera";
+		return std::string();
+	}
+
+	const FisheyeCamera& fisheyeCamera = fisheye->actualCamera();
+
+	unsigned int width = 0u;
+	unsigned int height = 0u;
+	Scalars parameters;
+	FisheyeCamera::ParameterConfiguration parameterConfiguration = FisheyeCamera::PC_UNKNOWN;
+
+	fisheyeCamera.copyParameters(width, height, parameters, parameterConfiguration);
+
+	std::string parameterConfigurationString;
+
+	switch (parameterConfiguration)
+	{
+		case FisheyeCamera::PC_UNKNOWN:
+			ocean_assert(false && "Unkown parameter configuration!");
+			break;
+
+		case FisheyeCamera::PC_3_PARAMETERS_ONE_FOCAL_LENGTH:
+			parameterConfigurationString = "3_PARAMETERS_ONE_FOCAL_LENGTH";
+			break;
+
+		case FisheyeCamera::PC_4_PARAMETERS:
+			parameterConfigurationString = "4_PARAMETERS";
+			break;
+
+		case FisheyeCamera::PC_11_PARAMETERS_ONE_FOCAL_LENGTH:
+			parameterConfigurationString = "11_PARAMETERS_ONE_FOCAL_LENGTH";
+			break;
+
+		case FisheyeCamera::PC_12_PARAMETERS:
+			parameterConfigurationString = "12_PARAMETERS";
+			break;
+	};
+
+	if (parameterConfigurationString.empty())
+	{
+		ocean_assert(false && "This should never happen!");
+		return std::string();
+	}
+
+	std::ostringstream jsonStream;
+	jsonStream << "{";
+	jsonStream << "\"resolution\":{\"width\":" << width << ",\"height\":" << height << "},";
+	jsonStream << "\"model\":\"" << camera.name() << "\",";
+	jsonStream << "\"configuration\":\"" << parameterConfigurationString << "\",";
+	jsonStream << "\"parameters\":[";
+	for (size_t i = 0; i < parameters.size(); ++i)
+	{
+		if (i > 0)
+		{
+			jsonStream << ",";
+		}
+		jsonStream << std::setprecision(precision) << parameters[i];
+	}
+	jsonStream << "]";
+	jsonStream << "}";
+
+	return jsonStream.str();
 }
 
 }

@@ -142,7 +142,7 @@ bool testIO(const double testDuration, const std::string& testFunctions)
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		testResult = TestCameraCalibrationManager::test(subSelector);
+		testResult = TestCameraCalibrationManager::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";

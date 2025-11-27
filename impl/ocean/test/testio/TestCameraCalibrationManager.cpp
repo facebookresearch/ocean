@@ -11,6 +11,8 @@
 
 #include "ocean/io/CameraCalibrationManager.h"
 
+#include "ocean/math/Random.h"
+
 #include "ocean/test/Validation.h"
 
 namespace Ocean
@@ -22,8 +24,10 @@ namespace Test
 namespace TestIO
 {
 
-bool TestCameraCalibrationManager::test(const TestSelector& selector)
+bool TestCameraCalibrationManager::test(const double testDuration, const TestSelector& selector)
 {
+	ocean_assert(testDuration > 0.0);
+
 	TestResult testResult("Camera Calibration Manager test");
 	Log::info() << " ";
 
@@ -117,6 +121,15 @@ bool TestCameraCalibrationManager::test(const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("serializecamera"))
+	{
+		testResult = testSerializeCamera(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -172,6 +185,11 @@ TEST(TestCameraCalibrationManager, DeviceContextHierarchy)
 TEST(TestCameraCalibrationManager, DeviceContextIsolation)
 {
 	EXPECT_TRUE(TestCameraCalibrationManager::testDeviceContextIsolation());
+}
+
+TEST(TestCameraCalibrationManager, SerializeCamera)
+{
+	EXPECT_TRUE(TestCameraCalibrationManager::testSerializeCamera(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -1561,6 +1579,129 @@ bool TestCameraCalibrationManager::testDeviceContextIsolation()
 		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera B", 640, 480) == nullptr);
 		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera C", 640, 480) != nullptr);
 	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestCameraCalibrationManager::testSerializeCamera(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Camera serialization test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	TestableCalibrationManager manager;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
+
+		const Scalar principalX = Random::scalar(randomGenerator, Scalar(0.001), Scalar(width - 0.001));
+		const Scalar principalY = Random::scalar(randomGenerator, Scalar(0.001), Scalar(height - 0.001));
+
+		const Scalar focalX = Random::scalar(randomGenerator, Scalar(1), Scalar(1000));
+		const Scalar focalY = Random::scalar(randomGenerator, Scalar(1), Scalar(1000));
+
+		constexpr unsigned int precision = 12u;
+
+		{
+			// pinhole camera
+
+			PinholeCamera pinholeCamera(width, height, focalX, focalY, principalX, principalY);
+
+			if (RandomI::boolean(randomGenerator))
+			{
+				const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+				const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+
+				pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
+			}
+
+			if (RandomI::boolean(randomGenerator))
+			{
+				const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+				const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+
+				pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(k1, k2));
+			}
+
+			const AnyCameraPinhole camera(pinholeCamera);
+
+			std::string json = manager.serializeCamera(camera, precision);
+
+			OCEAN_EXPECT_FALSE(validation, json.empty());
+
+			if (!json.empty())
+			{
+				SharedAnyCamera parsedCamera = manager.parseCamera(std::string(), std::move(json));
+
+				OCEAN_EXPECT_TRUE(validation, parsedCamera != nullptr);
+
+				if (parsedCamera != nullptr)
+				{
+					OCEAN_EXPECT_TRUE(validation, camera.isEqual(*parsedCamera, Scalar(0.001)));
+				}
+			}
+		}
+
+		{
+			// fisheye camera
+
+			SharedAnyCamera camera;
+
+			if (RandomI::boolean(randomGenerator))
+			{
+				camera = std::make_shared<AnyCameraFisheye>(FisheyeCamera(width, height, focalX, focalY, principalX, principalY));
+			}
+			else
+			{
+
+				Scalars radialDistortion(6);
+				Scalars tangentialDistortion(2);
+
+				for (Scalar& value : radialDistortion)
+				{
+					value = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+				}
+
+				for (Scalar& value : tangentialDistortion)
+				{
+					value = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+				}
+
+				camera = std::make_shared<AnyCameraFisheye>(FisheyeCamera(width, height, focalX, focalY, principalX, principalY, radialDistortion.data(), tangentialDistortion.data()));
+			}
+
+			OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+
+			if (camera != nullptr)
+			{
+				std::string json = manager.serializeCamera(*camera, precision);
+
+				OCEAN_EXPECT_FALSE(validation, json.empty());
+
+				if (!json.empty())
+				{
+					SharedAnyCamera parsedCamera = manager.parseCamera(std::string(), std::move(json));
+
+					OCEAN_EXPECT_TRUE(validation, parsedCamera != nullptr);
+
+					if (parsedCamera != nullptr)
+					{
+						OCEAN_EXPECT_TRUE(validation, camera->isEqual(*parsedCamera, Scalar(0.001)));
+					}
+				}
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

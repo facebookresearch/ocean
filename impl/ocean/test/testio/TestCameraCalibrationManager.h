@@ -49,10 +49,11 @@ class OCEAN_TEST_IO_EXPORT TestCameraCalibrationManager
 
 		/**
 		 * Tests all camera calibration manager functions.
+		 * @param testDuration The number of seconds for each test
 		 * @param selector The test selector
 		 * @return True, if succeeded
 		 */
-		static bool test(const TestSelector& selector);
+		static bool test(const double testDuration, const TestSelector& selector);
 
 		/**
 		 * Tests basic camera registration from JSON string.
@@ -113,6 +114,13 @@ class OCEAN_TEST_IO_EXPORT TestCameraCalibrationManager
 		 * @return True, if succeeded
 		 */
 		static bool testDeviceContextIsolation();
+
+		/**
+		 * Tests camera serialization and deserialization (round-trip conversion).
+		 * @param testDuration The number of seconds for each test
+		 * @return True, if succeeded
+		 */
+		static bool testSerializeCamera(const double testDuration);
 };
 
 } // namespace TestIO
