@@ -657,8 +657,7 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 	invFocalLengthX_(0),
 	invFocalLengthY_(0),
 	principalPointX_(T(principalX)),
-	principalPointY_(T(principalY)),
-	hasDistortionParameters_(true)
+	principalPointY_(T(principalY))
 {
 	static_assert((std::is_same<TParameter, float>::value) || (std::is_same<TParameter, double>::value), "Invalid TParameter, must be 'float' or 'double'!");
 
@@ -674,6 +673,13 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 
 	tangentialDistortion_[0] = T(tangentialDistortion[0]);
 	tangentialDistortion_[1] = T(tangentialDistortion[1]);
+
+	hasDistortionParameters_ = NumericT<T>::isNotEqualEps(tangentialDistortion_[0]) || NumericT<T>::isNotEqualEps(tangentialDistortion_[1]);
+
+	for (unsigned int n = 0u; !hasDistortionParameters_ && n < 6u; ++n)
+	{
+		hasDistortionParameters_ = NumericT<T>::isNotEqualEps(radialDistortion_[n]);
+	}
 }
 
 template <typename T>
@@ -704,8 +710,6 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 			principalPointX_ = T(parameters[1]);
 			principalPointY_ = T(parameters[2]);
 
-			hasDistortionParameters_ = false;
-
 			break;
 		}
 
@@ -716,8 +720,6 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 
 			principalPointX_ = T(parameters[2]);
 			principalPointY_ = T(parameters[3]);
-
-			hasDistortionParameters_ = false;
 
 			break;
 		}
@@ -740,8 +742,6 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 			tangentialDistortion_[0] = T(parameters[9]);
 			tangentialDistortion_[1] = T(parameters[10]);
 
-			hasDistortionParameters_ = true;
-
 			break;
 		}
 
@@ -763,8 +763,6 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 			tangentialDistortion_[0] = T(parameters[10]);
 			tangentialDistortion_[1] = T(parameters[11]);
 
-			hasDistortionParameters_ = true;
-
 			break;
 		}
 
@@ -776,6 +774,13 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 	ocean_assert(NumericT<T>::isNotEqualEps(focalLengthX_) && NumericT<T>::isNotEqualEps(focalLengthY_));
 	invFocalLengthX_ = T(1) / focalLengthX_;
 	invFocalLengthY_ = T(1) / focalLengthY_;
+
+	hasDistortionParameters_ = NumericT<T>::isNotEqualEps(tangentialDistortion_[0]) || NumericT<T>::isNotEqualEps(tangentialDistortion_[1]);
+
+	for (unsigned int n = 0u; !hasDistortionParameters_ && n < 6u; ++n)
+	{
+		hasDistortionParameters_ = NumericT<T>::isNotEqualEps(radialDistortion_[n]);
+	}
 }
 
 template <typename T>
