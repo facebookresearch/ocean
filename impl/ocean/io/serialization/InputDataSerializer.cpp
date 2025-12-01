@@ -197,15 +197,16 @@ bool InputDataSerializer::isStarted() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return stream_ != nullptr;
+	return startTimestamp_.isValid();
 }
 
 bool InputDataSerializer::hasStopped() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (stream_ != nullptr)
+	if (startTimestamp_.isValid())
 	{
+		ocean_assert(stream_ != nullptr);
 		return false;
 	}
 
@@ -533,6 +534,7 @@ void InputDataSerializer::threadRun()
 	const ScopedLock scopedLock(lock_);
 
 	stream_ = nullptr;
+	startTimestamp_.toInvalid();
 }
 
 bool FileInputDataSerializer::setFilename(const std::string& filename)
