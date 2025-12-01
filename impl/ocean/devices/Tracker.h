@@ -54,16 +54,16 @@ class OCEAN_DEVICES_EXPORT Tracker : virtual public Measurement
 			TRACKER_6DOF = TRACKER_ORIENTATION_3DOF | TRACKER_POSITION_3DOF,
 			/// 6DOF scene tracker.
 			SCENE_TRACKER_6DOF = (1u << 2u) | TRACKER_6DOF,
-			/// GPS tracker.
-			TRACKER_GPS = (1u << 3u),
-			/// Tracker using a magnetic measurements.
-			TRACKER_MAGNETIC = (1u << 4u),
-			/// Tracker using a visual input for their measurements.
-			TRACKER_VISUAL = (1u << 5u),
-			/// Tracker allowing to register tracking objects at runtime.
-			TRACKER_OBJECT = (1u << 6u),
 			/// 3DOF gravity tracker.
-			TRACKER_GRAVITY_3DOF = (1u << 7u)
+			TRACKER_GRAVITY_3DOF = (1u << 3u),
+			/// GPS tracker.
+			TRACKER_GPS = (1u << 4u),
+			/// Tracker using a magnetic measurements.
+			TRACKER_MAGNETIC = (1u << 5u),
+			/// Tracker using a visual input for their measurements.
+			TRACKER_VISUAL = (1u << 6u),
+			/// Tracker allowing to register tracking objects at runtime.
+			TRACKER_OBJECT = (1u << 7u)
 		};
 
 		/**

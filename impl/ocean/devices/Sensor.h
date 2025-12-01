@@ -63,7 +63,7 @@ class OCEAN_DEVICES_EXPORT Sensor : virtual public Measurement
 		/**
 		 * Translates the sensor type from a readable string to a value.
 		 * @param sensorType The sensor type to translate
-		 * @return The tanslated value
+		 * @return The translated value
 		 */
 		static SensorType translateSensorType(const std::string& sensorType);
 

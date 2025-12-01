@@ -116,39 +116,44 @@ std::string Tracker::translateTrackerType(const TrackerType trackerType)
 {
 	std::string result;
 
-	if (trackerType & SCENE_TRACKER_6DOF)
+	if ((trackerType & SCENE_TRACKER_6DOF) == SCENE_TRACKER_6DOF)
 	{
 		result += "SCENE_TRACKER_6DOF ";
 	}
-	else if (trackerType & TRACKER_6DOF)
+	else if ((trackerType & TRACKER_6DOF) == TRACKER_6DOF)
 	{
 		result += "TRACKER_6DOF ";
 	}
-	else if (trackerType & TRACKER_ORIENTATION_3DOF)
+	else if ((trackerType & TRACKER_ORIENTATION_3DOF) == TRACKER_ORIENTATION_3DOF)
 	{
 		result += "TRACKER_ORIENTATION_3DOF ";
 	}
-	else if (trackerType & TRACKER_POSITION_3DOF)
+	else if ((trackerType & TRACKER_POSITION_3DOF) == TRACKER_POSITION_3DOF)
 	{
 		result += "TRACKER_POSITION_3DOF ";
 	}
 
-	if (trackerType & TRACKER_GPS)
+	if ((trackerType & TRACKER_GRAVITY_3DOF) == TRACKER_GRAVITY_3DOF)
+	{
+		result += "TRACKER_GRAVITY_3DOF ";
+	}
+
+	if ((trackerType & TRACKER_GPS) == TRACKER_GPS)
 	{
 		result += "TRACKER_GPS ";
 	}
 
-	if (trackerType & TRACKER_MAGNETIC)
+	if ((trackerType & TRACKER_MAGNETIC) == TRACKER_MAGNETIC)
 	{
 		result += "TRACKER_MAGNETIC ";
 	}
 
-	if (trackerType & TRACKER_VISUAL)
+	if ((trackerType & TRACKER_VISUAL) == TRACKER_VISUAL)
 	{
 		result += "TRACKER_VISUAL ";
 	}
 
-	if (trackerType & TRACKER_OBJECT)
+	if ((trackerType & TRACKER_OBJECT) == TRACKER_OBJECT)
 	{
 		result += "TRACKER_OBJECT ";
 	}
@@ -186,6 +191,11 @@ Tracker::TrackerType Tracker::translateTrackerType(const std::string& trackerTyp
 	else if (trackerType.find("TRACKER_POSITION_3DOF") != std::string::npos)
 	{
 		result = TrackerType(result | TRACKER_POSITION_3DOF);
+	}
+
+	if (trackerType.find("TRACKER_GRAVITY_3DOF") != std::string::npos)
+	{
+		result = TrackerType(result | TRACKER_GRAVITY_3DOF);
 	}
 
 	if (trackerType.find("TRACKER_GPS") != std::string::npos)

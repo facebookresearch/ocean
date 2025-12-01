@@ -52,19 +52,29 @@ std::string Sensor::translateSensorType(const SensorType sensorType)
 Sensor::SensorType Sensor::translateSensorType(const std::string& sensorType)
 {
 	if (sensorType == "SENSOR_INVALID")
+	{
 		return SENSOR_INVALID;
+	}
 
 	if (sensorType == "SENSOR_ACCELERATION_3DOF")
+	{
 		return SENSOR_ACCELERATION_3DOF;
+	}
 
 	if (sensorType == "SENSOR_LINEAR_ACCELERATION_3DOF")
+	{
 		return SENSOR_LINEAR_ACCELERATION_3DOF;
+	}
 
 	if (sensorType == "SENSOR_GYRO_RAW_3DOF")
+	{
 		return SENSOR_GYRO_RAW_3DOF;
+	}
 
 	if (sensorType == "SENSOR_GYRO_UNBIASED_3DOF")
+	{
 		return SENSOR_GYRO_UNBIASED_3DOF;
+	}
 
 	ocean_assert(false && "Unknown major type!");
 	return SENSOR_INVALID;
