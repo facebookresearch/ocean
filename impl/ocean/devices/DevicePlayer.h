@@ -34,7 +34,7 @@ using SharedDevicePlayer = std::shared_ptr<DevicePlayer>;
 
 /**
  * This class implements the abstract base class for all device players.
- * The device player can be used to re-play a previously captured data and exposing the data through devices.
+ * The device player can be used to replay a previously captured data and exposing the data through devices.
  * @ingroup devices
  */
 class OCEAN_DEVICES_EXPORT DevicePlayer
@@ -80,9 +80,9 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 
 		/**
 		 * Starts the replay.
-		 * The recording can be payed with individual speed, e.g., real-time, slower than real-time, faster than real-time.<br>
-		 * Further, the player support a stop-motion mode in which the player will play one frame by another.
-		 * @param speed The speed at which the recording will be played, e.g., 2 means two times faster than normal, with range (0, infinity), 'SPEED_USE_STOP_MOTION' to play the recording in a stop-motion (frame by frame) mode
+		 * The recording can be played with individual speed, e.g., real-time, slower than real-time, faster than real-time.<br>
+		 * Further, the player supports a stop-motion mode in which the player will play frame by frame.
+		 * @param speed The speed at which the recording will be played, e.g., 2 means two times faster than normal, with range (0, infinity) for normal playback, or 'SPEED_USE_STOP_MOTION' to play the recording in a stop-motion (frame by frame) mode
 		 * @return True, if succeeded
 		 * @see duration(), playNextFrame();
 		 */
@@ -96,7 +96,7 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 
 		/**
 		 * Plays the next frame of the recording, the player must be started with stop-motion mode ('SPEED_USE_STOP_MOTION').
-		 * In case the recording holds several media objects, the fist media objects is used to identify the next frame.<br>
+		 * In case the recording holds several media objects, the first media object is used to identify the next frame.<br>
 		 * This function will read all records which have been recorded before or at the same time as the next frame of the first media object.<br>
 		 * If the recording does not have any media object nothing happens.
 		 * @return The timestamp of the frame which has been played, invalid if no additional frame exists
