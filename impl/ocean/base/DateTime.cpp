@@ -294,6 +294,11 @@ std::string DateTime::localString()
 	return localStringDate() + std::string(" ") + localStringTime();
 }
 
+std::string DateTime::localStringForFile()
+{
+	return localStringDate('-') + std::string("_") + localStringTime(false, '-');
+}
+
 std::string DateTime::localStringDate(const char delimiter)
 {
 

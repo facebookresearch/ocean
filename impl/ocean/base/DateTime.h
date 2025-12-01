@@ -96,10 +96,20 @@ class OCEAN_BASE_EXPORT DateTime
 		static long long localMicroseconds();
 
 		/**
-		 * Returns the string of the local date and time.
-		 * @return Date and time string
+		 * Returns the string of the local date and time suitable for a text/log output.
+		 * The format of the resulting string is YYYY.MM.DD HH:MM:SS.
+		 * @return The resulting date and time string
+		 * @see localStringForFile().
 		 */
 		static std::string localString();
+
+		/**
+		 * Returns the string of the local date and time suitable for a filename.
+		 * The format of the resulting string is YYYY-MM-DD_HH-MM-SS.
+		 * @return The resulting date and time string
+		 * @see localString().
+		 */
+		static std::string localStringForFile();
 
 		/**
 		 * Returns the string of the local date.
