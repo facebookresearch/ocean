@@ -51,13 +51,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSample.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSerializer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataTimestamp.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestInputDataSerializer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestIOSerialization.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestMediaSerializer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestOutputDataSerializer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestVectorOutputStream.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSample.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSerializer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataTimestamp.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestInputDataSerializer.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestIOSerialization.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestMediaSerializer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestOutputDataSerializer.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestVectorOutputStream.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

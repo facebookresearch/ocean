@@ -20,6 +20,21 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestVectorOutputStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataTimestamp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestInputDataSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestOutputDataSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestIOSerialization.cpp">
@@ -29,6 +44,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestVectorOutputStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestDataTimestamp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestInputDataSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testio\testserialization\TestOutputDataSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
