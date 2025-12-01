@@ -315,7 +315,7 @@ jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_Pictur
 	}
 
 	std::string directory;
-	if (!Platform::Android::ResourceManager::getExternalFilesDirectory(env, currentActivity, directory))
+	if (!Platform::Android::ResourceManager::externalFilesDirectory(env, currentActivity, directory))
 	{
 		Log::error() << "Failed to determine the external file directory";
 		return false;

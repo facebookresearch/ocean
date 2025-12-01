@@ -281,15 +281,25 @@ class ResourceManager : public Singleton<ResourceManager>
 		inline bool isValid() const;
 
 		/**
-		 * Returns an app-specific external directory to store data
+		 * Returns an app-specific external directory to store data.
 		 * @param env The JNI environment of this application, must be valid
 		 * @param activity The Android main activity, must be valid
 		 * @param externalDirectoryName The resulting name of the app-specific external directory, will be terminated with the default separator of the current platform
 		 * @param externalDirectoryType The type of the external directory to be returned
 		 * @return True, if the directory exists and if it is readable and writable, otherwise false
-		 * @sa IO::Path::defaultSeparator()
+		 * @see IO::Path::defaultSeparator()
 		 */
-		static bool getExternalFilesDirectory(JNIEnv* env, jobject activity, std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType = ExternalDirectoryType::DEFAULT_TYPE);
+		static bool externalFilesDirectory(JNIEnv* env, jobject activity, std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType = ExternalDirectoryType::DEFAULT_TYPE);
+
+		/**
+		 * Returns an app-specific external directory to store data.
+		 * Internally, this function will use the NativeInterfaceManager to get access to the environment and the current activity.
+		 * @param externalDirectoryName The resulting name of the app-specific external directory, will be terminated with the default separator of the current platform
+		 * @param externalDirectoryType The type of the external directory to be returned
+		 * @return True, if the directory exists and if it is readable and writable, otherwise false
+		 * @see IO::Path::defaultSeparator()
+		 */
+		static bool externalFilesDirectory(std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType = ExternalDirectoryType::DEFAULT_TYPE);
 
 	protected:
 

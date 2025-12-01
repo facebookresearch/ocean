@@ -6,6 +6,7 @@
  */
 
 #include "ocean/platform/android/ResourceManager.h"
+#include "ocean/platform/android/NativeInterfaceManager.h"
 #include "ocean/platform/android/ScopedJNIEnvironment.h"
 #include "ocean/platform/android/ScopedJNIObject.h"
 #include "ocean/platform/android/Utilities.h"
@@ -86,7 +87,7 @@ bool ResourceManager::initialize(JavaVM* javaVM, jobject activity, AAssetManager
 		return false;
 	}
 
-	const bool hasExternalFilesDirectory = getExternalFilesDirectory(scopedJNIEnvironment.jniEnv(), activity, externalDirectoryName_, ExternalDirectoryType::DEFAULT_TYPE) || externalDirectoryName_.empty();
+	const bool hasExternalFilesDirectory = externalFilesDirectory(scopedJNIEnvironment.jniEnv(), activity, externalDirectoryName_, ExternalDirectoryType::DEFAULT_TYPE) || externalDirectoryName_.empty();
 
 	if (!hasExternalFilesDirectory)
 	{
@@ -314,7 +315,7 @@ bool ResourceManager::doesAssetDirectoryExist(const std::string& assetDirectoryN
 	return directoryIsNotEmpty;
 }
 
-bool ResourceManager::getExternalFilesDirectory(JNIEnv* env, jobject activity, std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType)
+bool ResourceManager::externalFilesDirectory(JNIEnv* env, jobject activity, std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType)
 {
 	ocean_assert(env != nullptr && activity != nullptr);
 
@@ -433,6 +434,27 @@ bool ResourceManager::getExternalFilesDirectory(JNIEnv* env, jobject activity, s
 	ocean_assert(!externalDirectoryName.empty() && externalDirectoryName.back() == IO::Path::defaultSeparator());
 
 	return true;
+}
+
+bool ResourceManager::externalFilesDirectory(std::string& externalDirectoryName, const ExternalDirectoryType externalDirectoryType)
+{
+	JNIEnv* env = NativeInterfaceManager::get().environment();
+
+	if (env == nullptr)
+	{
+		Log::error() << "ResourceManager: The NativeInterfaceManager is not initialized yet";
+		return false;
+	}
+
+	jobject currentActivity = NativeInterfaceManager::get().currentActivity();
+
+	if (currentActivity == nullptr)
+	{
+		Log::error() << "ResourceManager: The NativeInterfaceManager does not know the current activity";
+		return false;
+	}
+
+	return externalFilesDirectory(env, currentActivity, externalDirectoryName, externalDirectoryType);
 }
 
 }
