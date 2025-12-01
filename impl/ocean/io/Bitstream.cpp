@@ -21,6 +21,7 @@ InputBitstream::InputBitstream(std::istream& stream) :
 	static_assert(sizeof(bool) == 1, "Invalid data type!");
 
 	static_assert(sizeof(char) == 1, "Invalid data type!");
+	static_assert(sizeof(signed char) == 1, "Invalid data type!");
 	static_assert(sizeof(unsigned char) == 1, "Invalid data type!");
 
 	static_assert(sizeof(wchar_t) <= 4, "Invalid data type!");
@@ -173,13 +174,11 @@ uint64_t InputBitstream::position() const
 	if (inputStream_.good())
 	{
 		const std::streampos currentPosition = inputStream_.tellg();
+		const std::streamoff offset = currentPosition;
 
-		if (inputStream_.good())
-		{
-			ocean_assert(NumericT<uint64_t>::isInsideValueRange(currentPosition));
+		ocean_assert(NumericT<uint64_t>::isInsideValueRange(offset));
 
-			return uint64_t(currentPosition);
-		}
+		return uint64_t(offset);
 	}
 
 	return uint64_t(-1);
@@ -244,18 +243,28 @@ bool InputBitstream::skip(const uint64_t bytes)
 
 bool InputBitstream::isEndOfFile() const
 {
-	if (inputStream_.good())
+	if (inputStream_.eof())
 	{
-		const uint64_t currentPosition = position();
-		const uint64_t streamSize = size();
-
-		if (currentPosition != uint64_t(-1) && streamSize != uint64_t(-1))
-		{
-			return currentPosition >= streamSize;
-		}
+		return true;
 	}
 
-	return true;
+	return false;
+}
+
+bool InputBitstream::reset()
+{
+	if (inputStream_.eof())
+	{
+		inputStream_.clear();
+	}
+
+	if (inputStream_.good())
+	{
+		inputStream_.seekg(0, inputStream_.beg);
+		return inputStream_.good();
+	}
+
+	return false;
 }
 
 OutputBitstream::OutputBitstream(std::ostream& stream) :
@@ -370,6 +379,7 @@ uint64_t OutputBitstream::size() const
 
 template bool OCEAN_IO_EXPORT InputBitstream::read<bool>(bool&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<char>(char&);
+template bool OCEAN_IO_EXPORT InputBitstream::read<signed char>(signed char&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<unsigned char>(unsigned char&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<signed short>(signed short&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<unsigned short>(unsigned short&);
@@ -377,11 +387,14 @@ template bool OCEAN_IO_EXPORT InputBitstream::read<int>(int&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<unsigned int>(unsigned int&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<float>(float&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<double>(double&);
+template bool OCEAN_IO_EXPORT InputBitstream::read<long>(long&);
+template bool OCEAN_IO_EXPORT InputBitstream::read<unsigned long>(unsigned long&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<long long>(long long&);
 template bool OCEAN_IO_EXPORT InputBitstream::read<unsigned long long>(unsigned long long&);
 
 template bool OCEAN_IO_EXPORT InputBitstream::readDefault<bool>(const bool&);
 template char OCEAN_IO_EXPORT InputBitstream::readDefault<char>(const char&);
+template signed char OCEAN_IO_EXPORT InputBitstream::readDefault<signed char>(const signed char&);
 template unsigned char OCEAN_IO_EXPORT InputBitstream::readDefault<unsigned char>(const unsigned char&);
 template wchar_t OCEAN_IO_EXPORT InputBitstream::readDefault<wchar_t>(const wchar_t&);
 template signed short OCEAN_IO_EXPORT InputBitstream::readDefault<signed short>(const signed short&);
@@ -390,11 +403,14 @@ template int OCEAN_IO_EXPORT InputBitstream::readDefault<int>(const int&);
 template unsigned int OCEAN_IO_EXPORT InputBitstream::readDefault<unsigned int>(const unsigned int&);
 template float OCEAN_IO_EXPORT InputBitstream::readDefault<float>(const float&);
 template double OCEAN_IO_EXPORT InputBitstream::readDefault<double>(const double&);
+template long OCEAN_IO_EXPORT InputBitstream::readDefault<long>(const long&);
+template unsigned long OCEAN_IO_EXPORT InputBitstream::readDefault<unsigned long>(const unsigned long&);
 template long long OCEAN_IO_EXPORT InputBitstream::readDefault<long long>(const long long&);
 template unsigned long long OCEAN_IO_EXPORT InputBitstream::readDefault<unsigned long long>(const unsigned long long&);
 
 template bool OCEAN_IO_EXPORT InputBitstream::look<bool>(bool&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<char>(char&);
+template bool OCEAN_IO_EXPORT InputBitstream::look<signed char>(signed char&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<unsigned char>(unsigned char&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<wchar_t>(wchar_t&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<signed short>(signed short&);
@@ -403,11 +419,14 @@ template bool OCEAN_IO_EXPORT InputBitstream::look<int>(int&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<unsigned int>(unsigned int&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<float>(float&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<double>(double&);
+template bool OCEAN_IO_EXPORT InputBitstream::look<long>(long&);
+template bool OCEAN_IO_EXPORT InputBitstream::look<unsigned long>(unsigned long&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<long long>(long long&);
 template bool OCEAN_IO_EXPORT InputBitstream::look<unsigned long long>(unsigned long long&);
 
 template bool OCEAN_IO_EXPORT OutputBitstream::write<bool>(const bool&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<char>(const char&);
+template bool OCEAN_IO_EXPORT OutputBitstream::write<signed char>(const signed char&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<unsigned char>(const unsigned char&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<signed short>(const signed short&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<unsigned short>(const unsigned short&);
@@ -415,6 +434,8 @@ template bool OCEAN_IO_EXPORT OutputBitstream::write<int>(const int&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<unsigned int>(const unsigned int&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<float>(const float&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<double>(const double&);
+template bool OCEAN_IO_EXPORT OutputBitstream::write<long>(const long&);
+template bool OCEAN_IO_EXPORT OutputBitstream::write<unsigned long>(const unsigned long&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<long long>(const long long&);
 template bool OCEAN_IO_EXPORT OutputBitstream::write<unsigned long long>(const unsigned long long&);
 

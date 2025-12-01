@@ -55,7 +55,7 @@ class OCEAN_IO_EXPORT InputBitstream
 		 * Creates a new bitstream object.
 		 * @param stream The input stream object that is encapsulated by this object
 		 */
-		InputBitstream(std::istream& stream);
+		explicit InputBitstream(std::istream& stream);
 
 		/**
 		 * Reads a value from the bitstream and moves the internal position inside the bitstream accordingly.
@@ -128,10 +128,19 @@ class OCEAN_IO_EXPORT InputBitstream
 		bool skip(const uint64_t bytes);
 
 		/**
-		 * Returns whether the current position is at the end of the bitstream.
-		 * @return True, if the end of the stream has been reached
+		 * Returns whether the previous read attempt failed because the end of the stream has been reached.
+		 * @return True, if the end of the stream has been reached (after the a read attempt has failed)
+		 * @see reset().
 		 */
 		bool isEndOfFile() const;
+
+		/**
+		 * Resets the stream after the stream has reached the end of the stream.
+		 * The position will be set to the beginning of the stream.
+		 * @return True, if succeeded
+		 * @see isEndOfFile().
+		 */
+		bool reset();
 
 		/**
 		 * Returns whether this bitstream object is valid and can be used.
@@ -210,7 +219,7 @@ class OCEAN_IO_EXPORT OutputBitstream
 		 * Creates a new output bitstream object.
 		 * @param stream The output stream object that is encapsulated by this object
 		 */
-		OutputBitstream(std::ostream& stream);
+		explicit OutputBitstream(std::ostream& stream);
 
 		/**
 		 * Writes a data object to the stream and moves the internal position inside the bitstream accordingly.
