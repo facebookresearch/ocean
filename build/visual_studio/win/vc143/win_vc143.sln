@@ -2549,6 +2549,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ioserialization", "ocean\io
 		{FEA50A96-F160-4C9D-8313-7479649D0B2D} = {FEA50A96-F160-4C9D-8313-7479649D0B2D}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "serialization", "serialization", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demoioserializationinspector", "application\ocean\demo\io\serialization\inspector\win\demoioserializationinspector.vcxproj", "{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E355C9E-F8E4-496A-8EF8-EF20E2945E76} = {1E355C9E-F8E4-496A-8EF8-EF20E2945E76}
+		{7EF9186B-5F2C-47B0-8077-5D60AF030B68} = {7EF9186B-5F2C-47B0-8077-5D60AF030B68}
+		{CA10CC95-DDB8-406A-AA0F-AE5E9315EA50} = {CA10CC95-DDB8-406A-AA0F-AE5E9315EA50}
+		{E1C7E10F-0FFE-470F-B85C-FBE427FC5371} = {E1C7E10F-0FFE-470F-B85C-FBE427FC5371}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Shared Debug|Win32 = Shared Debug|Win32
@@ -7081,6 +7091,30 @@ Global
 		{CA10CC95-DDB8-406A-AA0F-AE5E9315EA50}.Static Release|Win32.Build.0 = Static Release|Win32
 		{CA10CC95-DDB8-406A-AA0F-AE5E9315EA50}.Static Release|x64.ActiveCfg = Static Release|x64
 		{CA10CC95-DDB8-406A-AA0F-AE5E9315EA50}.Static Release|x64.Build.0 = Static Release|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Profile|Win32.ActiveCfg = Shared Profile|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Profile|Win32.Build.0 = Shared Profile|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Profile|x64.Build.0 = Shared Profile|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Release|Win32.Build.0 = Shared Release|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Shared Release|x64.Build.0 = Shared Release|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Debug|x64.Build.0 = Static Debug|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Profile|Win32.ActiveCfg = Static Profile|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Profile|Win32.Build.0 = Static Profile|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Profile|x64.ActiveCfg = Static Profile|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Profile|x64.Build.0 = Static Profile|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Release|Win32.Build.0 = Static Release|Win32
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Release|x64.ActiveCfg = Static Release|x64
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F}.Static Release|x64.Build.0 = Static Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -7312,6 +7346,8 @@ Global
 		{0092645E-9963-4075-9ADC-5A5EADF220BC} = {B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797}
 		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F} = {1F742B1E-D6E7-43B2-BBFB-A0528FE64731}
 		{CA10CC95-DDB8-406A-AA0F-AE5E9315EA50} = {1F742B1E-D6E7-43B2-BBFB-A0528FE64731}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {35A87221-E63D-4C98-AFFB-7641E54B5AEE}
+		{A7E8F5C3-9D2B-4F1A-8E6C-3B9A5D7C1E4F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {798E790F-BB0E-45DA-9197-307224184B0A}
