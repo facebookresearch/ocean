@@ -20,8 +20,7 @@ AndroidOrientationTracker3DOF::AndroidOrientationTracker3DOF(const ASensor* sens
 	Device(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
 	AndroidDevice(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
 	Measurement(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	Sensor(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	AndroidSensor(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
+	AndroidEventDevice(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
 	Tracker(deviceNameAndroidOrientationTracker3DOF(), deviceTypeOrientationTracker3DOF()),
 	OrientationTracker3DOF(deviceNameAndroidOrientationTracker3DOF())
 {

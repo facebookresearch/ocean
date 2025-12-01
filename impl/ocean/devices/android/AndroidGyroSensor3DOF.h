@@ -9,7 +9,7 @@
 #define META_OCEAN_DEVICES_ANDROID_ANDROID_GYRO_SENSOR_3_DOF_H
 
 #include "ocean/devices/android/Android.h"
-#include "ocean/devices/android/AndroidSensor.h"
+#include "ocean/devices/android/AndroidEventDevice.h"
 
 #include "ocean/devices/GyroSensor3DOF.h"
 
@@ -27,7 +27,7 @@ namespace Android
  * @ingroup devicesandroid
  */
 class OCEAN_DEVICES_EXPORT AndroidGyroSensor3DOF :
-	virtual public AndroidSensor,
+	virtual public AndroidEventDevice,
 	virtual public GyroSensor3DOF
 {
 	friend class AndroidFactory;

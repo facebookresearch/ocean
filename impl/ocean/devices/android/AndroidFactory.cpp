@@ -7,12 +7,12 @@
 
 #include "ocean/devices/android/AndroidFactory.h"
 #include "ocean/devices/android/AndroidAccelerationSensor3DOF.h"
+#include "ocean/devices/android/AndroidEventDevice.h"
 #include "ocean/devices/android/AndroidGPSTracker.h"
 #include "ocean/devices/android/AndroidGravityTracker3DOF.h"
 #include "ocean/devices/android/AndroidGyroSensor3DOF.h"
 #include "ocean/devices/android/AndroidHeadingTracker3DOF.h"
 #include "ocean/devices/android/AndroidOrientationTracker3DOF.h"
-#include "ocean/devices/android/AndroidSensor.h"
 
 #include <android/api-level.h>
 
@@ -88,7 +88,7 @@ void AndroidFactory::registerCustomTimestampConverter(TimestampConverter&& times
 
 void AndroidFactory::registerDevices()
 {
-	ASensorManager* sensorManager = AndroidSensor::sensorManager();
+	ASensorManager* sensorManager = AndroidEventDevice::sensorManager();
 
 	if (!sensorManager)
 	{
@@ -124,7 +124,7 @@ void AndroidFactory::registerDevices()
 
 		switch (type)
 		{
-			case AndroidSensor::AST_ACCELEROMETER:
+			case AndroidEventDevice::AST_ACCELEROMETER:
 			{
 				Log::debug() << "Type: Accelerometer";
 
@@ -139,15 +139,15 @@ void AndroidFactory::registerDevices()
 				break;
 			}
 
-			case AndroidSensor::AST_MAGNETIC_FIELD:
+			case AndroidEventDevice::AST_MAGNETIC_FIELD:
 				Log::debug() << "Type: Magnetic field";
 				break;
 
-			case AndroidSensor::AST_ORIENTATION:
+			case AndroidEventDevice::AST_ORIENTATION:
 				Log::debug() << "Type: Orientation (deprecated)";
 				break;
 
-			case AndroidSensor::AST_GYROSCOPE:
+			case AndroidEventDevice::AST_GYROSCOPE:
 			{
 				Log::debug() << "Type: Gyroscope";
 
@@ -162,23 +162,23 @@ void AndroidFactory::registerDevices()
 				break;
 			}
 
-			case AndroidSensor::AST_LIGHT:
+			case AndroidEventDevice::AST_LIGHT:
 				Log::debug() << "Type: Light";
 				break;
 
-			case AndroidSensor::AST_PRESSURE:
+			case AndroidEventDevice::AST_PRESSURE:
 				Log::debug() << "Type: Pressure";
 				break;
 
-			case AndroidSensor::AST_TEMPERATURE:
+			case AndroidEventDevice::AST_TEMPERATURE:
 				Log::debug() << "Type Temperature";
 				break;
 
-			case AndroidSensor::AST_PROXIMITY:
+			case AndroidEventDevice::AST_PROXIMITY:
 				Log::debug() << "Type: Proximity";
 				break;
 
-			case AndroidSensor::AST_GRAVITY:
+			case AndroidEventDevice::AST_GRAVITY:
 				Log::debug() << "Type: Gravity";
 
 				if (sensorGravity_ == nullptr)
@@ -190,7 +190,7 @@ void AndroidFactory::registerDevices()
 
 				break;
 
-			case AndroidSensor::AST_LINEAR_ACCELERATION:
+			case AndroidEventDevice::AST_LINEAR_ACCELERATION:
 			{
 				Log::debug() << "Type: Linear Acceleration";
 
@@ -205,7 +205,7 @@ void AndroidFactory::registerDevices()
 				break;
 			}
 
-			case AndroidSensor::AST_ROTATION_VECTOR:
+			case AndroidEventDevice::AST_ROTATION_VECTOR:
 			{
 				Log::debug() << "Type: Rotation Vector";
 
@@ -220,19 +220,19 @@ void AndroidFactory::registerDevices()
 				break;
 			}
 
-			case AndroidSensor::AST_RELATIVE_HUMIDITY:
+			case AndroidEventDevice::AST_RELATIVE_HUMIDITY:
 				Log::debug() << "Type: Relative Humidity";
 				break;
 
-			case AndroidSensor::AST_AMBIENT_TEMPERATURE:
+			case AndroidEventDevice::AST_AMBIENT_TEMPERATURE:
 				Log::debug() << "Type: Ambient Temperature";
 				break;
 
-			case AndroidSensor::AST_MAGNETIC_FIELD_UNCALIBRATED:
+			case AndroidEventDevice::AST_MAGNETIC_FIELD_UNCALIBRATED:
 				Log::debug() << "Type: Magnetic Field Uncalibrated";
 				break;
 
-			case AndroidSensor::AST_GAME_ROTATION_VECTOR:
+			case AndroidEventDevice::AST_GAME_ROTATION_VECTOR:
 				Log::debug() << "Type: Game Rotation Vector";
 
 				if (sensorGameRotationVector_ == nullptr)
@@ -245,7 +245,7 @@ void AndroidFactory::registerDevices()
 
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 24
 
-			case AndroidSensor::AST_GYROSCOPE_UNCALIBRATED:
+			case AndroidEventDevice::AST_GYROSCOPE_UNCALIBRATED:
 			{
 				Log::debug() << "Type: Gyroscope Uncalibrated";
 
@@ -261,87 +261,87 @@ void AndroidFactory::registerDevices()
 			}
 #endif // __ANDROID_API__ >= 24
 
-			case AndroidSensor::AST_SIGNIFICANT_MOTION:
+			case AndroidEventDevice::AST_SIGNIFICANT_MOTION:
 				Log::debug() << "Type: Significant Motion";
 				break;
 
-			case AndroidSensor::AST_STEP_DETECTOR:
+			case AndroidEventDevice::AST_STEP_DETECTOR:
 				Log::debug() << "Type: Step Detector";
 				break;
 
-			case AndroidSensor::AST_STEP_COUNTER:
+			case AndroidEventDevice::AST_STEP_COUNTER:
 				Log::debug() << "Type: Step Counter";
 				break;
 
-			case AndroidSensor::AST_GEOMAGNETIC_ROTATION_VECTOR:
+			case AndroidEventDevice::AST_GEOMAGNETIC_ROTATION_VECTOR:
 				Log::debug() << "Type: Geomagnetic Rotation Vector";
 				break;
 
-			case AndroidSensor::AST_HEART_RATE:
+			case AndroidEventDevice::AST_HEART_RATE:
 				Log::debug() << "Type: Heart Rate";
 				break;
 
-			case AndroidSensor::AST_POSE_6DOF:
+			case AndroidEventDevice::AST_POSE_6DOF:
 				Log::debug() << "Type: Pose 6DOF";
 				break;
 
-			case AndroidSensor::AST_STATIONARY_DETECT:
+			case AndroidEventDevice::AST_STATIONARY_DETECT:
 				Log::debug() << "Type: Stationary Detect";
 				break;
 
-			case AndroidSensor::AST_MOTION_DETECT:
+			case AndroidEventDevice::AST_MOTION_DETECT:
 				Log::debug() << "Type: Motion Detect";
 				break;
 
-			case AndroidSensor::AST_HEART_BEAT:
+			case AndroidEventDevice::AST_HEART_BEAT:
 				Log::debug() << "Type: Heart Beat";
 				break;
 
-			case AndroidSensor::AST_DYNAMIC_SENSOR_META:
+			case AndroidEventDevice::AST_DYNAMIC_SENSOR_META:
 				Log::debug() << "Type: Dynamic Sensor Meta";
 				break;
 
-			case AndroidSensor::AST_ADDITIONAL_INFO:
+			case AndroidEventDevice::AST_ADDITIONAL_INFO:
 				Log::debug() << "Type: Additional Info";
 				break;
 
-			case AndroidSensor::AST_LOW_LATENCY_OFFBODY_DETECT:
+			case AndroidEventDevice::AST_LOW_LATENCY_OFFBODY_DETECT:
 				Log::debug() << "Type: Low Latency Offbody Detect";
 				break;
 
-			case AndroidSensor::AST_ACCELEROMETER_UNCALIBRATED:
+			case AndroidEventDevice::AST_ACCELEROMETER_UNCALIBRATED:
 				Log::debug() << "Type: Accelerometer Uncalibrated";
 				break;
 
-			case AndroidSensor::AST_HINGE_ANGLE:
+			case AndroidEventDevice::AST_HINGE_ANGLE:
 				Log::debug() << "Type: Hinge Angle";
 				break;
 
-			case AndroidSensor::AST_HEAD_TRACKER:
+			case AndroidEventDevice::AST_HEAD_TRACKER:
 				Log::debug() << "Type: Head Tracker";
 				break;
 
-			case AndroidSensor::AST_ACCELEROMETER_LIMITED_AXES:
+			case AndroidEventDevice::AST_ACCELEROMETER_LIMITED_AXES:
 				Log::debug() << "Type: Accelerometer Limited Axes";
 				break;
 
-			case AndroidSensor::AST_GYROSCOPE_LIMITED_AXES:
+			case AndroidEventDevice::AST_GYROSCOPE_LIMITED_AXES:
 				Log::debug() << "Type: Gyroscope Limited Axes";
 				break;
 
-			case AndroidSensor::AST_ACCELEROMETER_LIMITED_AXES_UNCALIBRATED:
+			case AndroidEventDevice::AST_ACCELEROMETER_LIMITED_AXES_UNCALIBRATED:
 				Log::debug() << "Type: Accelerometer Limited Axes Uncalibrated";
 				break;
 
-			case AndroidSensor::AST_GYROSCOPE_LIMITED_AXES_UNCALIBRATED:
+			case AndroidEventDevice::AST_GYROSCOPE_LIMITED_AXES_UNCALIBRATED:
 				Log::debug() << "Type: Gyroscope Limited Axes Uncalibrated";
 				break;
 
-			case AndroidSensor::AST_HEADING:
+			case AndroidEventDevice::AST_HEADING:
 				Log::debug() << "Type: Heading";
 				break;
 
-			case AndroidSensor::AST_END:
+			case AndroidEventDevice::AST_END:
 			ocean_assert(false && "This should never happen!");
 				break;
 
@@ -458,7 +458,7 @@ bool AndroidFactory::registerCustomDevice(const std::string& deviceName, const s
 		return false;
 	}
 
-	ASensorManager* sensorManager = AndroidSensor::sensorManager();
+	ASensorManager* sensorManager = AndroidEventDevice::sensorManager();
 
 	if (!sensorManager)
 	{

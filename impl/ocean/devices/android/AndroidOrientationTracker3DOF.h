@@ -9,7 +9,7 @@
 #define META_OCEAN_DEVICES_ANDROID_ANDROID_ORIENTATION_TRACKER_3_DOF_H
 
 #include "ocean/devices/android/Android.h"
-#include "ocean/devices/android/AndroidSensor.h"
+#include "ocean/devices/android/AndroidEventDevice.h"
 
 #include "ocean/devices/OrientationTracker3DOF.h"
 
@@ -55,7 +55,7 @@ namespace Android
  * @ingroup devicesandroid
  */
 class OCEAN_DEVICES_EXPORT AndroidOrientationTracker3DOF :
-	virtual public AndroidSensor,
+	virtual public AndroidEventDevice,
 	virtual public OrientationTracker3DOF
 {
 	friend class AndroidFactory;

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/devices/android/AndroidSensor.h"
+#include "ocean/devices/android/AndroidEventDevice.h"
 #include "ocean/devices/android/AndroidFactory.h"
 
 #include "ocean/platform/android/Utilities.h"
@@ -19,13 +19,13 @@ namespace Devices
 namespace Android
 {
 
-AndroidSensor::LooperManager::LooperManager() :
+AndroidEventDevice::LooperManager::LooperManager() :
 	looper_(nullptr)
 {
 	startThread();
 }
 
-ALooper* AndroidSensor::LooperManager::looper()
+ALooper* AndroidEventDevice::LooperManager::looper()
 {
 	while (looper_ == nullptr)
 	{
@@ -35,7 +35,7 @@ ALooper* AndroidSensor::LooperManager::looper()
 	return looper_;
 }
 
-void AndroidSensor::LooperManager::threadRun()
+void AndroidEventDevice::LooperManager::threadRun()
 {
 	ocean_assert(looper_ == nullptr);
 	looper_ = ALooper_prepare(ALOOPER_PREPARE_ALLOW_NON_CALLBACKS);
@@ -47,11 +47,10 @@ void AndroidSensor::LooperManager::threadRun()
 	}
 }
 
-AndroidSensor::AndroidSensor(const std::string& name, const DeviceType type) :
+AndroidEventDevice::AndroidEventDevice(const std::string& name, const DeviceType type) :
 	Device(name, type),
 	AndroidDevice(name, type),
 	Measurement(name, type),
-	Sensor(name, type),
 	timestampConverter_(timestampConverter())
 {
 	static_assert(int(ASENSOR_TYPE_ACCELEROMETER) == int(AST_ACCELEROMETER), "Invalid sensor type!");
@@ -70,7 +69,7 @@ AndroidSensor::AndroidSensor(const std::string& name, const DeviceType type) :
 	ocean_assert(sensorManager_);
 }
 
-bool AndroidSensor::start()
+bool AndroidEventDevice::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
@@ -95,12 +94,12 @@ bool AndroidSensor::start()
 	return isStarted_;
 }
 
-bool AndroidSensor::pause()
+bool AndroidEventDevice::pause()
 {
 	return stop();
 }
 
-bool AndroidSensor::stop()
+bool AndroidEventDevice::stop()
 {
 	const ScopedLock scopedLock(deviceLock);
 
@@ -121,7 +120,7 @@ bool AndroidSensor::stop()
 	return true;
 }
 
-ASensorManager* AndroidSensor::sensorManager()
+ASensorManager* AndroidEventDevice::sensorManager()
 {
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 26
 
@@ -135,7 +134,7 @@ ASensorManager* AndroidSensor::sensorManager()
 	{
 		if (!Platform::Android::Utilities::determinePackageName(packageName))
 		{
-			Log::error() << "AndroidSensor: Failed to determine package name, using backup package name";
+			Log::error() << "AndroidEventDevice: Failed to determine package name, using backup package name";
 
 			packageName = "com.meta.ocean";
 		}
@@ -146,7 +145,7 @@ ASensorManager* AndroidSensor::sensorManager()
 
 	if (sensorManager == nullptr)
 	{
-		Log::error() << "AndroidSensor: Failed to access sensor manager";
+		Log::error() << "AndroidEventDevice: Failed to access sensor manager";
 		ocean_assert(false && "Failed to access sensor manager");
 	}
 
@@ -159,7 +158,7 @@ ASensorManager* AndroidSensor::sensorManager()
 #endif
 }
 
-bool AndroidSensor::registerForEventFunction(ASensorManager* sensorManager)
+bool AndroidEventDevice::registerForEventFunction(ASensorManager* sensorManager)
 {
 	ocean_assert(sensorManager);
 
@@ -170,14 +169,14 @@ bool AndroidSensor::registerForEventFunction(ASensorManager* sensorManager)
 	return eventQueue_ != nullptr;
 }
 
-Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp)
+Timestamp AndroidEventDevice::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp)
 {
 
 #ifdef OCEAN_DEBUG
 	double debugDistance;
 	if (!timestampConverter_.isWithinRange(sensorEvent.timestamp, 0.1, &debugDistance))
 	{
-		Log::debug() << "AndroidSensor: Timestamp is not within range of 0.1 seconds, actual distance: " << debugDistance << "s";
+		Log::debug() << "AndroidEventDevice: Timestamp is not within range of 0.1 seconds, actual distance: " << debugDistance << "s";
 	}
 	else
 	{
@@ -190,7 +189,7 @@ Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Times
 	return timestampConverter_.toUnix(sensorEvent.timestamp);
 }
 
-TimestampConverter& AndroidSensor::timestampConverter()
+TimestampConverter& AndroidEventDevice::timestampConverter()
 {
 	return AndroidFactory::timestampConverter();
 }

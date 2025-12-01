@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_DEVICES_ANDROID_ANDROID_SENSOR_H
-#define META_OCEAN_DEVICES_ANDROID_ANDROID_SENSOR_H
+#ifndef META_OCEAN_DEVICES_ANDROID_ANDROID_EVENT_DEVICE_H
+#define META_OCEAN_DEVICES_ANDROID_ANDROID_EVENT_DEVICE_H
 
 #include "ocean/devices/android/Android.h"
 #include "ocean/devices/android/AndroidDevice.h"
@@ -15,7 +15,7 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Thread.h"
 
-#include "ocean/devices/Sensor.h"
+#include "ocean/devices/Measurement.h"
 
 #include <android/sensor.h>
 
@@ -36,9 +36,9 @@ namespace Android
  * The z-axis is perpendicular to the screen plane and pointing towards the user (a right handed coordinate system).
  * @ingroup devicesandroid
  */
-class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
+class OCEAN_DEVICES_ANDROID_EXPORT AndroidEventDevice :
 	virtual public AndroidDevice,
-	virtual public Sensor
+	virtual public Measurement
 {
 	protected:
 
@@ -168,11 +168,11 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 	protected:
 
 		/**
-		 * Creates a new sensor by its name and type.
+		 * Creates a new event device by its name and type.
 		 * @param name The name of the sensor
 		 * @param type Major and minor device type of the sensor
 		 */
-		AndroidSensor(const std::string& name, const DeviceType type);
+		AndroidEventDevice(const std::string& name, const DeviceType type);
 
 		/**
 		 * Registers this sensor for the event function.
@@ -232,7 +232,7 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 		TimestampConverter& timestampConverter_;
 };
 
-inline int AndroidSensor::onEventFunctionStatic(int fd, int events, void* data)
+inline int AndroidEventDevice::onEventFunctionStatic(int fd, int events, void* data)
 {
 	if (data == nullptr)
 	{
@@ -246,12 +246,12 @@ inline int AndroidSensor::onEventFunctionStatic(int fd, int events, void* data)
 		return 0;
 	}
 
-	AndroidSensor* androidSensor = dynamic_cast<AndroidSensor*>(androidDevice);
-	ocean_assert(androidSensor != nullptr);
+	AndroidEventDevice* androidEventDevice = dynamic_cast<AndroidEventDevice*>(androidDevice);
+	ocean_assert(androidEventDevice != nullptr);
 
-	if (androidSensor)
+	if (androidEventDevice)
 	{
-		return androidSensor->onEventFunction();
+		return androidEventDevice->onEventFunction();
 	}
 
 	return 0;
@@ -263,4 +263,4 @@ inline int AndroidSensor::onEventFunctionStatic(int fd, int events, void* data)
 
 }
 
-#endif // META_OCEAN_DEVICES_ANDROID_ANDROID_SENSOR_H
+#endif // META_OCEAN_DEVICES_ANDROID_ANDROID_EVENT_DEVICE_H

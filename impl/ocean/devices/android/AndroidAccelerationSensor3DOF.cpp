@@ -20,8 +20,8 @@ AndroidAccelerationSensor3DOF::AndroidAccelerationSensor3DOF(const SensorType se
 	Device(deviceNameAndroidAccelerationSensor3DOF(sensorType), deviceTypeAndroidAccelerationSensor3DOF(sensorType)),
 	AndroidDevice(deviceNameAndroidAccelerationSensor3DOF(sensorType), deviceTypeAndroidAccelerationSensor3DOF(sensorType)),
 	Measurement(deviceNameAndroidAccelerationSensor3DOF(sensorType), deviceTypeAndroidAccelerationSensor3DOF(sensorType)),
+	AndroidEventDevice(deviceNameAndroidAccelerationSensor3DOF(sensorType), deviceTypeAndroidAccelerationSensor3DOF(sensorType)),
 	Sensor(deviceNameAndroidAccelerationSensor3DOF(sensorType), deviceTypeAndroidAccelerationSensor3DOF(sensorType)),
-	AndroidSensor(deviceNameAndroidAccelerationSensor3DOF(sensorType), deviceTypeAndroidAccelerationSensor3DOF(sensorType)),
 	AccelerationSensor3DOF(deviceNameAndroidAccelerationSensor3DOF(sensorType), sensorType)
 {
 	ocean_assert(sensor != nullptr);

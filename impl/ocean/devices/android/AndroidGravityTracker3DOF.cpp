@@ -20,8 +20,7 @@ AndroidGravityTracker3DOF::AndroidGravityTracker3DOF(const ASensor* sensor) :
 	Device(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
 	AndroidDevice(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
 	Measurement(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
-	Sensor(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
-	AndroidSensor(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	AndroidEventDevice(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
 	Tracker(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
 	GravityTracker3DOF(deviceNameAndroidGravityTracker3DOF())
 {

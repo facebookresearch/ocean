@@ -20,8 +20,8 @@ AndroidGyroSensor3DOF::AndroidGyroSensor3DOF(const SensorType sensorType, const 
 	Device(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
 	AndroidDevice(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
 	Measurement(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
+	AndroidEventDevice(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
 	Sensor(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
-	AndroidSensor(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
 	GyroSensor3DOF(deviceNameAndroidGyroSensor3DOF(sensorType), sensorType)
 {
 	ocean_assert(sensor != nullptr);

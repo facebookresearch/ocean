@@ -29,7 +29,7 @@ namespace Android
  */
 class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 {
-	friend class AndroidSensor;
+	friend class AndroidEventDevice;
 
 	protected:
 

@@ -24,7 +24,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidAccelerationSensor3DOF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidSensor.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidEventDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidOrientationTracker3DOF.cpp">
@@ -59,7 +59,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidAccelerationSensor3DOF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidSensor.h">
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidEventDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidGyroSensor3DOF.h">

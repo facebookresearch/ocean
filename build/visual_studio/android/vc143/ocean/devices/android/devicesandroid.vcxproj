@@ -82,7 +82,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidGyroSensor3DOF.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidHeadingTracker3DOF.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidOrientationTracker3DOF.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidSensor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidEventDevice.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\Plugin.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +95,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidGyroSensor3DOF.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidHeadingTracker3DOF.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidOrientationTracker3DOF.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidSensor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\AndroidEventDevice.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\Plugin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
