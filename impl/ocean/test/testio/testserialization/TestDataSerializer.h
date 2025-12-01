@@ -46,17 +46,15 @@ class OCEAN_TEST_IO_SERIALIZATION_EXPORT TestDataSerializer
 
 		/**
 		 * Tests the ChannelConfiguration class.
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testChannelConfiguration(const double testDuration);
+		static bool testChannelConfiguration();
 
 		/**
 		 * Tests the Channel class.
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testChannel(const double testDuration);
+		static bool testChannel();
 };
 
 }

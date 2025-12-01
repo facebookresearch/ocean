@@ -46,10 +46,9 @@ class OCEAN_TEST_IO_SERIALIZATION_EXPORT TestInputDataSerializer
 
 		/**
 		 * Tests registering factory functions.
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testFactoryFunction(const double testDuration);
+		static bool testFactoryFunction();
 
 		/**
 		 * Tests the start/stop functionality.

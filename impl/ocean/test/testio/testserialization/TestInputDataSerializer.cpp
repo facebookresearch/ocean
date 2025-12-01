@@ -119,7 +119,7 @@ bool TestInputDataSerializer::test(const double testDuration, const TestSelector
 
 	if (selector.shouldRun("factoryfunction"))
 	{
-		testResult = testFactoryFunction(testDuration);
+		testResult = testFactoryFunction();
 
 		Log::info() << " ";
 		Log::info() << "-";
@@ -153,7 +153,7 @@ bool TestInputDataSerializer::test(const double testDuration, const TestSelector
 
 TEST(InputDataSerializer, FactoryFunction)
 {
-	EXPECT_TRUE(TestInputDataSerializer::testFactoryFunction(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestInputDataSerializer::testFactoryFunction());
 }
 
 TEST(InputDataSerializer, StartStop)
@@ -168,10 +168,8 @@ TEST(InputDataSerializer, Sample)
 
 #endif // OCEAN_USE_GTEST
 
-bool TestInputDataSerializer::testFactoryFunction(const double testDuration)
+bool TestInputDataSerializer::testFactoryFunction()
 {
-	ocean_assert(testDuration > 0.0);
-
 	Log::info() << "Factory function test:";
 
 	Validation validation;

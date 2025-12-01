@@ -31,7 +31,7 @@ namespace TestIO
 namespace TestSerialization
 {
 
-bool TestDataSerializer::test(const double testDuration, const TestSelector& selector)
+bool TestDataSerializer::test(const double /*testDuration*/, const TestSelector& selector)
 {
 	TestResult testResult("DataSerializer test");
 
@@ -39,7 +39,7 @@ bool TestDataSerializer::test(const double testDuration, const TestSelector& sel
 
 	if (selector.shouldRun("channelconfiguration"))
 	{
-		testResult = testChannelConfiguration(testDuration);
+		testResult = testChannelConfiguration();
 
 		Log::info() << " ";
 		Log::info() << "-";
@@ -48,7 +48,7 @@ bool TestDataSerializer::test(const double testDuration, const TestSelector& sel
 
 	if (selector.shouldRun("channel"))
 	{
-		testResult = testChannel(testDuration);
+		testResult = testChannel();
 
 		Log::info() << " ";
 		Log::info() << "-";
@@ -64,20 +64,18 @@ bool TestDataSerializer::test(const double testDuration, const TestSelector& sel
 
 TEST(DataSerializer, ChannelConfiguration)
 {
-	EXPECT_TRUE(TestDataSerializer::testChannelConfiguration(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestDataSerializer::testChannelConfiguration());
 }
 
 TEST(DataSerializer, Channel)
 {
-	EXPECT_TRUE(TestDataSerializer::testChannel(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestDataSerializer::testChannel());
 }
 
 #endif // OCEAN_USE_GTEST
 
-bool TestDataSerializer::testChannelConfiguration(const double testDuration)
+bool TestDataSerializer::testChannelConfiguration()
 {
-	ocean_assert(testDuration > 0.0);
-
 	Log::info() << "ChannelConfiguration test:";
 
 	Validation validation;
@@ -143,10 +141,8 @@ bool TestDataSerializer::testChannelConfiguration(const double testDuration)
 	return validation.succeeded();
 }
 
-bool TestDataSerializer::testChannel(const double testDuration)
+bool TestDataSerializer::testChannel()
 {
-	ocean_assert(testDuration > 0.0);
-
 	Log::info() << "Channel test:";
 
 	Validation validation;
