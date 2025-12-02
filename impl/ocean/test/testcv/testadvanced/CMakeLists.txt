@@ -106,6 +106,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_geometry
             ocean_math
             ocean_system
+            ocean_test
             ocean_test_testcv
     )
 

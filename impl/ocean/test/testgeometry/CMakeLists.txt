@@ -103,6 +103,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         PRIVATE
             ocean_geometry
             ocean_math
+            ocean_test
     )
 
     include(GoogleTest)

@@ -99,6 +99,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_base
         PRIVATE
             ocean_system
+            ocean_test
     )
 
     include(GoogleTest)

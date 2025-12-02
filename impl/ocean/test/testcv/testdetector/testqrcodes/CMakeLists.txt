@@ -123,6 +123,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_media
             ocean_media_openimagelibraries
             ocean_system
+            ocean_test
             ocean_test_testcv
             ocean_test_testcv_testdetector
     )

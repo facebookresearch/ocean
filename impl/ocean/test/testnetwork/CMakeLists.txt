@@ -101,6 +101,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS)
         PRIVATE
             ocean_network
             ocean_system
+            ocean_test
     )
 
     include(GoogleTest)

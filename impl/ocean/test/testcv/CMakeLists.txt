@@ -111,6 +111,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_cv
             ocean_geometry
             ocean_system
+            ocean_test
     )
 
     include(GoogleTest)

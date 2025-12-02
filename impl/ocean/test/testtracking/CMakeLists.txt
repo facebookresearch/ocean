@@ -119,6 +119,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_cv
             ocean_math
             ocean_system
+            ocean_test
             ocean_tracking_point
     )
 

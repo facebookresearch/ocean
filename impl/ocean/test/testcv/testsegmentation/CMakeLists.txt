@@ -106,6 +106,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_cv
             ocean_cv_segmentation
             ocean_system
+            ocean_test
             ocean_test_testcv
     )
 

@@ -142,6 +142,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS)
             ocean_cv
             ocean_geometry
             ocean_system
+            ocean_test
             ocean_test_testcv
             ${OpenCV_LIBS}
     )

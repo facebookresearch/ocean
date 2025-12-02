@@ -102,6 +102,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_io
             ocean_math
             ocean_system
+            ocean_test
     )
 
     if (ANDROID)
