@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>OceanDevicesSerialization</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>OceanDevicesSerialization</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright (c) Meta Platforms, Inc. and affiliates.</string>
+	<key>OceanPluginDependences</key>
+	<string>MEDIA</string>
+	<key>OceanPluginDescription</key>
+	<string>This plugin provides a Serialization library.</string>
+	<key>OceanPluginName</key>
+	<string>Ocean Devices Serialization</string>
+	<key>OceanPluginPriority</key>
+	<integer>0</integer>
+	<key>OceanPluginType</key>
+	<string>DEVICE</string>
+</dict>
+</plist>
