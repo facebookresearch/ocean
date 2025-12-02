@@ -4,16 +4,16 @@ index 1c6a987f9..7f858821d 100644
 +++ b/src/osx/carbon/dcscreen.cpp
 @@ -14,6 +14,7 @@
  #include "wx/osx/dcscreen.h"
- 
+
  #include "wx/osx/private.h"
 +#include "wx/osx/private/available.h"
  #include "wx/graphics.h"
- 
+
  wxIMPLEMENT_ABSTRACT_CLASS(wxScreenDCImpl, wxWindowDCImpl);
 @@ -70,13 +71,24 @@ wxBitmap wxScreenDCImpl::DoGetAsBitmap(const wxRect *subrect) const
- 
+
      CGImageRef image = NULL;
-     
+
 -    image = CGDisplayCreateImage(kCGDirectMainDisplay);
 -
 -    wxASSERT_MSG(image, wxT("wxScreenDC::GetAsBitmap - unable to get screenshot."));
@@ -31,13 +31,29 @@ index 1c6a987f9..7f858821d 100644
 +        image = CGDisplayCreateImage(kCGDirectMainDisplay);
 +#endif
 +    }
- 
+
 -    CGImageRelease(image);
 +    if ( image != NULL )
 +    {
 +        CGContextDrawImage(context, srcRect, image);
 +        CGImageRelease(image);
 +    }
- 
+
      CGContextRestoreGState(context);
  #else
+diff --git a/src/png/pngpriv.h b/src/png/pngpriv.h
+index 8cc352ff..1cfe55ab 100644
+--- a/src/png/pngpriv.h
++++ b/src/png/pngpriv.h
+@@ -526,7 +526,10 @@
+     */
+ #  include <float.h>
+
+-#  if (defined(__MWERKS__) && defined(macintosh)) || defined(applec) || \
++   /* fp.h is an obsolete PowerPC header not present in modern macOS SDKs.
++    * Only include it for actual legacy Mac compilers, not modern clang.
++    */
++#  if !defined(__clang__) && ((defined(__MWERKS__) && defined(macintosh)) || defined(applec) || \
+     defined(THINK_C) || defined(__SC__) || defined(TARGET_OS_MAC)
+    /* We need to check that <math.h> hasn't already been included earlier
+     * as it seems it doesn't agree with <fp.h>, yet we should really use
