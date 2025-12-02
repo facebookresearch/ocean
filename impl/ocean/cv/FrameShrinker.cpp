@@ -43,6 +43,9 @@ bool FrameShrinker::downsampleByTwo11(const Frame& source, Frame& target, Worker
 				downsampleByTwo8BitPerChannel11(source.constdata<uint8_t>(planeIndex), target.data<uint8_t>(planeIndex), source.planeWidth(planeIndex), source.planeHeight(planeIndex), source.planeChannels(planeIndex), source.paddingElements(planeIndex), target.paddingElements(planeIndex), worker);
 			}
 
+			target.setTimestamp(source.timestamp());
+			target.setRelativeTimestamp(source.relativeTimestamp());
+
 			return true;
 		}
 	}

@@ -449,8 +449,8 @@ inline bool FrameShrinker::downsampleByTwo11(Frame& frame, Worker* worker)
 		return false;
 	}
 
-	tmpFrame.setTimestamp(frame.timestamp());
-	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+	ocean_assert(frame.timestamp() == tmpFrame.timestamp());
+	ocean_assert(frame.relativeTimestamp() == tmpFrame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;
