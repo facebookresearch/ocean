@@ -260,7 +260,7 @@ bool TestInputDataSerializer::testStartStop(const double testDuration)
 
 		// After initialize(), serializer should not be started yet
 		OCEAN_EXPECT_FALSE(validation, serializer.isStarted());
-		OCEAN_EXPECT_TRUE(validation, serializer.hasStopped());
+		OCEAN_EXPECT_FALSE(validation, serializer.hasStopped());
 
 		// Start the serializer
 		OCEAN_EXPECT_TRUE(validation, serializer.start());

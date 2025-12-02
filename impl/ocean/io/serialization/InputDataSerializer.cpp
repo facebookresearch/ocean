@@ -30,9 +30,21 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 
 	const ScopedLock scopedLock(lock_);
 
+	if (state_ != S_IDLE)
+	{
+		ocean_assert(false && "The serializer has already been initialized!");
+		return false;
+	}
+
 	if (stream_)
 	{
 		ocean_assert(false && "The input bitstream has already been created!");
+		return false;
+	}
+
+	if (!sampleQueue_.empty())
+	{
+		ocean_assert(false && "The sample queue is still holding samples from a previous execution");
 		return false;
 	}
 
@@ -160,12 +172,20 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 		*isStreamCorrupted = !correctEndOfStreamIndication;
 	}
 
+	state_ = S_INITIALIZED;
+
 	return true;
 }
 
 bool InputDataSerializer::start()
 {
 	const ScopedLock scopedLock(lock_);
+
+	if (state_ != S_INITIALIZED)
+	{
+		ocean_assert(false && "The serializer has not yet been initialized or has been started already!");
+		return false;
+	}
 
 	if (!stream_)
 	{
@@ -176,6 +196,8 @@ bool InputDataSerializer::start()
 	ocean_assert(!startTimestamp_.isValid());
 	startTimestamp_.toNow();
 
+	state_ = S_STARTED;
+
 	return startThread();
 }
 
@@ -183,12 +205,21 @@ bool InputDataSerializer::stop()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (stream_ == nullptr)
+	if (state_ < S_STARTED)
 	{
+		ocean_assert(false && "The serializer has not yet been started!");
 		return false;
 	}
 
-	stopping_ = true;
+	if (state_ >= S_STOPPING)
+	{
+		return true;
+	}
+
+	ocean_assert(state_ == S_STARTED);
+	ocean_assert(stream_ != nullptr);
+
+	state_ = S_STOPPING;
 
 	return true;
 }
@@ -197,16 +228,15 @@ bool InputDataSerializer::isStarted() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return startTimestamp_.isValid();
+	return state_ >= S_STARTED && state_ < S_STOPPED;
 }
 
 bool InputDataSerializer::hasStopped() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (startTimestamp_.isValid())
+	if (state_ < S_STOPPED)
 	{
-		ocean_assert(stream_ != nullptr);
 		return false;
 	}
 
@@ -226,7 +256,7 @@ bool InputDataSerializer::registerFactoryFunction(const std::string& sampleType,
 
 	const ScopedLock scopedLock(lock_);
 
-	if (startTimestamp_.isValid())
+	if (state_ >= S_STARTED)
 	{
 		ocean_assert(false && "The serializer has been started already!");
 		return false;
@@ -247,7 +277,7 @@ bool InputDataSerializer::registerChannelEventFunction(const ChannelEventFunctio
 
 	const ScopedLock scopedLock(lock_);
 
-	if (startTimestamp_.isValid())
+	if (state_ >= S_STARTED)
 	{
 		ocean_assert(false && "The serializer has been started already!");
 		return false;
@@ -371,7 +401,7 @@ void InputDataSerializer::threadRun()
 	{
 		TemporaryScopedLock scopedTemporaryLock(lock_);
 
-			if (stopping_)
+			if (state_ >= S_STOPPING)
 			{
 				break;
 			}
@@ -534,7 +564,8 @@ void InputDataSerializer::threadRun()
 	const ScopedLock scopedLock(lock_);
 
 	stream_ = nullptr;
-	startTimestamp_.toInvalid();
+	state_ = S_STOPPED;
+
 }
 
 bool FileInputDataSerializer::setFilename(const std::string& filename)

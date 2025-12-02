@@ -137,7 +137,7 @@ class InputDataSerializer : public DataSerializer
 		[[nodiscard]] bool isStarted() const override;
 
 		/**
-		 * Returns whether the serializer has stopped.
+		 * Returns whether the serializer has stopped and all remaining samples have been retrieved.
 		 * @return True, if so
 		 * @see DataSerializer::hasStopped().
 		 */

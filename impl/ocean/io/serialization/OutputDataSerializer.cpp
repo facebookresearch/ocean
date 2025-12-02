@@ -22,6 +22,11 @@ bool OutputDataSerializer::start()
 {
 	const ScopedLock scopedLock(lock_);
 
+	if (state_ >= S_STARTED)
+	{
+		return true;
+	}
+
 	if (stream_)
 	{
 		ocean_assert(false && "The output bitstream has already been created!");
@@ -46,6 +51,8 @@ bool OutputDataSerializer::start()
 	ocean_assert(!startTimestamp_.isValid());
 	startTimestamp_.toNow();
 
+	state_ = S_STARTED;
+
 	return startThread();
 }
 
@@ -53,12 +60,21 @@ bool OutputDataSerializer::stop()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (stream_ == nullptr)
+	if (state_ < S_STARTED)
 	{
+		ocean_assert(false && "The serializer has not yet been started!");
 		return false;
 	}
 
-	stopping_ = true;
+	if (state_ >= S_STOPPING)
+	{
+		return true;
+	}
+
+	ocean_assert(state_ == S_STARTED);
+	ocean_assert(stream_ != nullptr);
+
+	state_ = S_STOPPING;
 
 	return true;
 }
@@ -67,14 +83,14 @@ bool OutputDataSerializer::isStarted() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return stream_ != nullptr;
+	return state_ >= S_STARTED && state_ < S_STOPPED;
 }
 
 bool OutputDataSerializer::hasStopped() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (stream_ != nullptr)
+	if (state_ < S_STOPPED)
 	{
 		return false;
 	}
@@ -177,7 +193,7 @@ void OutputDataSerializer::threadRun()
 
 			if (sampleQueue_.empty())
 			{
-				if (stopping_)
+				if (state_ >= S_STOPPING)
 				{
 					break;
 				}
@@ -290,6 +306,7 @@ void OutputDataSerializer::threadRun()
 	const ScopedLock scopedLock(lock_);
 
 	stream_ = nullptr;
+	state_ = S_STOPPED;
 }
 
 bool FileOutputDataSerializer::setFilename(const std::string& filename)

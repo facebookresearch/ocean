@@ -187,6 +187,23 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 
 	protected:
 
+		/**
+		 * Definition of individual states the serializer can have.
+		 */
+		enum State
+		{
+			/// The serializer has not yet been initialized or started.
+			S_IDLE,
+			/// The serializer has been initialized and is ready to start.
+			S_INITIALIZED,
+			/// The serializer has been started and is currently actively processing data samples.
+			S_STARTED,
+			/// The serializer is currently stopping but may still process remaining data samples.
+			S_STOPPING,
+			/// The serializer has been stopped and all active processing of data samples has finished. However, there may still be samples left which could be requested by the user.
+			S_STOPPED
+		};
+
 		/// Definition of a map mapping channel configurations to channel ids.
 		using ChannelConfigurationMap = std::unordered_map<ChannelConfiguration, ChannelId, ChannelConfiguration::Hash>;
 
@@ -316,8 +333,8 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 		/// The timestamp when the serializer was started.
 		Timestamp startTimestamp_;
 
-		/// True, if the serializer is currently stopping.
-		bool stopping_ = false;
+		/// The current state of the serializer.
+		State state_ = S_IDLE;
 
 		/// True, if the serializer succeeded; False, if an error occurred.
 		bool succeeded_ = true;
