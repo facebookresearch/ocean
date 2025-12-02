@@ -106,6 +106,34 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataTimestamp
 		bool operator==(const DataTimestamp& dataTimestamp) const;
 
 		/**
+		 * Returns whether this timestamp is less than another timestamp.
+		 * @param dataTimestamp The second timestamp to compare
+		 * @return True, if so
+		 */
+		bool operator<(const DataTimestamp& dataTimestamp) const;
+
+		/**
+		 * Returns whether this timestamp is less than or equal to another timestamp.
+		 * @param dataTimestamp The second timestamp to compare
+		 * @return True, if so
+		 */
+		bool operator<=(const DataTimestamp& dataTimestamp) const;
+
+		/**
+		 * Returns whether this timestamp is greater than another timestamp.
+		 * @param dataTimestamp The second timestamp to compare
+		 * @return True, if so
+		 */
+		bool operator>(const DataTimestamp& dataTimestamp) const;
+
+		/**
+		 * Returns whether this timestamp is greater than or equal to another timestamp.
+		 * @param dataTimestamp The second timestamp to compare
+		 * @return True, if so
+		 */
+		bool operator>=(const DataTimestamp& dataTimestamp) const;
+
+		/**
 		 * Reads a data timestamp from an input bitstream.
 		 * @param inputBitstream The input bitstream from which the timestamp will be read
 		 * @param dataTimestamp The resulting data timestamp

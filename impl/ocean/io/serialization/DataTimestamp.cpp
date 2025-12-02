@@ -35,6 +35,90 @@ bool DataTimestamp::operator==(const DataTimestamp& dataTimestamp) const
 	return true;
 }
 
+bool DataTimestamp::operator<(const DataTimestamp& dataTimestamp) const
+{
+	ocean_assert(isValid() && dataTimestamp.isValid());
+
+	if (valueType_ != dataTimestamp.valueType_)
+	{
+		ocean_assert(false && "Not matching value types!");
+		return false;
+	}
+
+	if (valueType_ == VT_DOUBLE)
+	{
+		return value_.doubleValue_ < dataTimestamp.value_.doubleValue_;
+	}
+	else if (valueType_ == VT_INT64)
+	{
+		return value_.intValue_ < dataTimestamp.value_.intValue_;
+	}
+
+	return false;
+}
+
+bool DataTimestamp::operator<=(const DataTimestamp& dataTimestamp) const
+{
+	ocean_assert(isValid() && dataTimestamp.isValid());
+
+	if (valueType_ != dataTimestamp.valueType_)
+	{
+		return false;
+	}
+
+	if (valueType_ == VT_DOUBLE)
+	{
+		return value_.doubleValue_ <= dataTimestamp.value_.doubleValue_;
+	}
+	else if (valueType_ == VT_INT64)
+	{
+		return value_.intValue_ <= dataTimestamp.value_.intValue_;
+	}
+
+	return false;
+}
+
+bool DataTimestamp::operator>(const DataTimestamp& dataTimestamp) const
+{
+	ocean_assert(isValid() && dataTimestamp.isValid());
+
+	if (valueType_ != dataTimestamp.valueType_)
+	{
+		ocean_assert(false && "Not matching value types!");
+		return false;
+	}
+
+	if (valueType_ == VT_DOUBLE)
+	{
+		return value_.doubleValue_ > dataTimestamp.value_.doubleValue_;
+	}
+	else if (valueType_ == VT_INT64)
+	{
+		return value_.intValue_ > dataTimestamp.value_.intValue_;
+	}
+
+	return false;
+}
+
+bool DataTimestamp::operator>=(const DataTimestamp& dataTimestamp) const
+{
+	if (valueType_ != dataTimestamp.valueType_)
+	{
+		return false;
+	}
+
+	if (valueType_ == VT_DOUBLE)
+	{
+		return value_.doubleValue_ >= dataTimestamp.value_.doubleValue_;
+	}
+	else if (valueType_ == VT_INT64)
+	{
+		return value_.intValue_ >= dataTimestamp.value_.intValue_;
+	}
+
+	return false;
+}
+
 bool DataTimestamp::read(InputBitstream& inputBitstream, DataTimestamp& dataTimestamp)
 {
 	uint8_t valueType = 0u;
