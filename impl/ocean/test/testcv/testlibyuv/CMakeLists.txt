@@ -5,16 +5,16 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(testadvanced)
-add_subdirectory(testdetector)
-add_subdirectory(testlibyuv)
-add_subdirectory(testopencv)
-add_subdirectory(testsegmentation)
-add_subdirectory(testsynthesis)
+if (MACOS OR ANDROID OR IOS OR LINUX)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
+    find_package(yuv QUIET)
 
-    set(OCEAN_TARGET_NAME "ocean_test_testcv")
+    if (NOT yuv_FOUND)
+        message(STATUS "Excluding 'ocean_test_testcv_testlibyuv' because libyuv hasn't been found.")
+        return()
+    endif()
+
+    set(OCEAN_TARGET_NAME "ocean_test_testcv_testlibyuv")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -27,14 +27,14 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     target_compile_definitions(${OCEAN_TARGET_NAME}
         PUBLIC
-            "${OCEAN_PREPROCESSOR_FLAGS}"
+            ${OCEAN_PREPROCESSOR_FLAGS}
     )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_CV_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_CV_LIBYUV_EXPORT")
     endif()
 
-    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     if (NOT WIN32)
         target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
@@ -46,10 +46,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_cv
             ocean_math
-            ocean_test
-        PRIVATE
-            ocean_geometry
+            ocean_platform
             ocean_system
+            ocean_test
+            ocean_test_testcv
+            yuv::yuv
     )
 
     if (ANDROID)
@@ -58,20 +59,27 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
             COMPONENT lib
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testcv
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testcv/testlibyuv
             COMPONENT include
     )
 
 endif()
 
-if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
+if (ANDROID OR IOS OR LINUX OR MACOS)
 
-    set(OCEAN_TARGET_NAME "ocean_test_testcv_gtest")
+    find_package(yuv QUIET)
+
+    if (NOT yuv_FOUND)
+        message(STATUS "Excluding 'ocean_test_testcv_testlibyuv_gtest' because libyuv hasn't been found.")
+        return()
+    endif()
+
+    set(OCEAN_TARGET_NAME "ocean_test_testcv_testlibyuv_gtest")
 
     find_package(GTest REQUIRED)
 
@@ -80,7 +88,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
-    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestCV.cpp")
+    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestLibyuv.cpp")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -92,10 +100,6 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             "${OCEAN_PREPROCESSOR_FLAGS}"
             "-DOCEAN_USE_GTEST"
     )
-
-    if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_CV_EXPORT")
-    endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
 
@@ -111,9 +115,17 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         PRIVATE
             ocean_cv
             ocean_geometry
+            ocean_math
+            ocean_platform
             ocean_system
             ocean_test
+            ocean_test_testcv
+            yuv::yuv
     )
+
+    if (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME} PRIVATE ocean_platform_android)
+    endif()
 
     include(GoogleTest)
     gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)

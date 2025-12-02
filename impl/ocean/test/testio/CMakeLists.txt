@@ -6,6 +6,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(testmaps)
+add_subdirectory(testserialization)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
