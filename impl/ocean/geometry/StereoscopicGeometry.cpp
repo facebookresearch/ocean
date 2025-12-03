@@ -129,8 +129,8 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 
 	if (gravityConstraints != nullptr)
 	{
-		ocean_assert(gravityConstraints->isCameraAlignedWithGravity(world_T_camera0, 0, Numeric::deg2rad(1)));
-		ocean_assert(gravityConstraints->isCameraAlignedWithGravity(world_T_camera1, 1, Numeric::deg2rad(1)));
+		ocean_assert(gravityConstraints->isCameraAlignedWithGravity(world_T_camera0, 0, gravityConstraints->maximalAngle()));
+		ocean_assert(gravityConstraints->isCameraAlignedWithGravity(world_T_camera1, 1, gravityConstraints->maximalAngle()));
 	}
 
 	// we do not have a pure rotational camera motion, so we need to determine the precise depths of the 3D object points and the corresponding camera pose of the second frame concurrently
