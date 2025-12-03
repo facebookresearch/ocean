@@ -1077,7 +1077,7 @@ bool Utilities::paintGravity(const AnyCamera& camera, Frame& frame, const Vector
 	ocean_assert(position.z() < -Numeric::eps());
 	ocean_assert(length > Numeric::eps());
 
-	Vector2 previousImagePosition = camera.principalPoint();
+	Vector2 previousImagePosition = camera.projectToImage(position);
 
 	for (unsigned int nSegment = 1u; nSegment <= segments; ++nSegment)
 	{
