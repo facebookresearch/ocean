@@ -3,6 +3,34 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+# Helper function to write version.txt for a library (when using --subdivide)
+# This helps the reorganization script know the library version
+#
+# Parameters:
+#   VERSION_STRING: The version string to write (e.g., "1.3.1", "3.4.0")
+#
+# Example usage:
+#   write_library_version("1.3.1")
+#
+function(write_library_version VERSION_STRING)
+	get_filename_component(INSTALL_DIR_NAME "${CMAKE_INSTALL_PREFIX}" NAME)
+
+	# List of known third-party library names (must match dependency names)
+	set(KNOWN_LIBS
+		"assimp" "curl" "eigen" "freetype" "giflib" "gl" "googletest"
+		"libjpeg-turbo" "libpng" "libtiff" "libusb" "libyuv"
+		"mbedtls" "openxr" "protozero" "tinyxml2" "vtzero" "wxwidgets" "zlib"
+		"android" "android_native_app_glue" "arcore-android-sdk"
+	)
+
+	# Only write version.txt when using --subdivide mode
+	if("${INSTALL_DIR_NAME}" IN_LIST KNOWN_LIBS)
+		# Write version.txt to install directory (with trailing newline)
+		install(CODE "file(WRITE \"${CMAKE_INSTALL_PREFIX}/version.txt\" \"${VERSION_STRING}\n\")")
+		message(STATUS "  Version: ${VERSION_STRING}")
+	endif()
+endfunction()
+
 # Helper function to get the install root for a dependency library
 # Handles both flat and per-library subdivision install structures
 #

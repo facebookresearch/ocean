@@ -31,12 +31,16 @@ if (LINUX)
   endif()
 endif()
 
+set(ASSIMP_GIT_TAG "v5.4.2")
+
 CPMAddPackage(
   NAME           assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
-  GIT_TAG        v5.4.2
+  GIT_TAG        ${ASSIMP_GIT_TAG}
   PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/assimp/assimp.patch"
 )
+
+write_library_version("${ASSIMP_GIT_TAG}")
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")

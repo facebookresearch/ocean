@@ -12,12 +12,16 @@ get_library_install_root("libjpeg-turbo" JPEG_ROOT)
 
 find_package(Git REQUIRED)
 
+set(LIBYUV_GIT_TAG "ce32eb773fd66239b794abee1e1ee53fdbc15bc0") # master as of 4/29/2024
+
 CPMAddPackage(
   NAME           libyuv
   GIT_REPOSITORY https://github.com/lemenkov/libyuv.git
-  GIT_TAG        ce32eb773fd66239b794abee1e1ee53fdbc15bc0 # master as of 4/29/2024
+  GIT_TAG        ${LIBYUV_GIT_TAG}
   PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/libyuv/libyuv.patch"
 )
+
+write_library_version("${LIBYUV_GIT_TAG}")
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")

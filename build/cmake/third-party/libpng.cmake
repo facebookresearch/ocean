@@ -25,12 +25,16 @@ set(PNG_EXECUTABLES OFF)
 set(PNG_FRAMEWORK OFF)
 set(PNG_DEBUG_POSTFIX "")
 
+set(LIBPNG_GIT_TAG "ed217e3e601d8e462f7fd1e04bed43ac42212429") # 1.6.43
+
 CPMAddPackage(
   NAME           libpng
   GIT_REPOSITORY https://github.com/pnggroup/libpng.git
-  GIT_TAG        ed217e3e601d8e462f7fd1e04bed43ac42212429 # 1.6.43
+  GIT_TAG        ${LIBPNG_GIT_TAG}
   PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/libpng/libpng.patch"
 )
+
+write_library_version("${LIBPNG_GIT_TAG}")
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")
