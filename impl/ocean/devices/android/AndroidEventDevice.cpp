@@ -174,15 +174,36 @@ Timestamp AndroidEventDevice::convertTimestamp(const ASensorEvent& sensorEvent, 
 
 #ifdef OCEAN_DEBUG
 	double debugDistance;
-	if (!timestampConverter_.isWithinRange(sensorEvent.timestamp, 0.1, &debugDistance))
+	if (!timestampConverter_.isWithinRange(sensorEvent.timestamp, 0.01, &debugDistance))
 	{
-		Log::debug() << "AndroidEventDevice: Timestamp is not within range of 0.1 seconds, actual distance: " << debugDistance << "s";
+		Log::debug() << "AndroidEventDevice: Timestamp is not within range of 10ms, actual distance: " << debugDistance * 1000.0 << "ms";
+
+		Log::debug() << "Raw sensor timestamp: " << sensorEvent.timestamp;
+		Log::debug() << "Current domain timestamp: " << timestampConverter_.currentDomainTimestampNs();
+
+		Log::debug() << "Monotonic: " << TimestampConverter::currentDomainTimestampNs(TimestampConverter::TD_MONOTONIC);
+
+#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+		Log::debug() << "Boot time: " << TimestampConverter::currentDomainTimestampNs(TimestampConverter::TD_BOOTTIME);
+#endif // OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+
+#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+		Log::debug() << "Up time raw: " << TimestampConverter::currentDomainTimestampNs(TimestampConverter::TD_UPTIME_RAW);
+#endif // OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+
+#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+		Log::debug() << "Virtual counter register: " << TimestampConverter::currentDomainTimestampNs(TimestampConverter::TD_VIRTUAL_COUNTER_REGISTER);
+#endif // OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+
+		Log::debug() << " ";
 	}
 	else
 	{
+#ifdef OCEAN_INTENSIVE_DEBUG
 		Log::debug() << "Sensor timestamp distance: " << sensorEvent.type << ": " << debugDistance * 1000.0 << "ms";
-	}
 #endif
+	}
+#endif // OCEAN_DEBUG
 
 	relativeTimestamp = Timestamp(Timestamp::nanoseconds2seconds(sensorEvent.timestamp));
 
