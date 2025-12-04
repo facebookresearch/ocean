@@ -9,7 +9,8 @@ if (MACOS OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_platform_wxwidgets")
 
-    find_package(wxWidgets REQUIRED)
+    # Use modern CMake config-file package (wxWidgets 3.3+)
+    find_package(wxWidgets REQUIRED CONFIG)
 
     if (LINUX)
         if(wxWidgets_USE_FILE)
