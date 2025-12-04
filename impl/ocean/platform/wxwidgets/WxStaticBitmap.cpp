@@ -31,7 +31,7 @@ WxStaticBitmap::WxStaticBitmap(wxWindow *parent, wxWindowID id, const wxBitmap& 
 #endif
 }
 
-#if wxMAJOR_VERSION >= 3 && wxMINOR_VERSION >= 2 && wxRELEASE_NUMBER >= 4
+#if wxCHECK_VERSION(3, 2, 4)
 	void WxStaticBitmap::SetBitmap(const wxBitmapBundle& bitmap)
 #else
 	void WxStaticBitmap::SetBitmap(const wxBitmap& bitmap)
