@@ -29,6 +29,8 @@ OTP_BUILD_CONFIG="release"
 OTP_VALID_LINKING_TYPES="static,shared"
 OTP_LINKING_TYPES="static"
 
+OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibility
+
 IOS_CMAKE_TOOLCHAIN_FILE="${SCRIPT_DIR}/ios-cmake/ios.toolchain.cmake"
 
 if ! [ -f "${IOS_CMAKE_TOOLCHAIN_FILE}" ]; then
@@ -68,6 +70,10 @@ display_help()
     echo "                Multiple values must be separated by commas. Default value if nothing is"
     echo "                specified: \"${OTP_LINKING_TYPES}\""
     echo ""
+    echo "  -s | --subdivide : Install each library into its own subdirectory. When enabled,"
+    echo "                libraries will be installed to {INSTALL_DIR}/library_name/{lib,include,...}."
+    echo "                Default: disabled (flat structure for backward compatibility)"
+    echo ""
     echo "  -h | --help : This summary"
     echo ""
 }
@@ -98,6 +104,10 @@ while [[ $# -gt 0 ]]; do
         OTP_LINKING_TYPES="$2"
         shift # past argument
         shift # past value
+        ;;
+        -s|--subdivide)
+        OTP_SUBDIVIDE_INSTALL="ON"
+        shift # past argument
         ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
@@ -153,6 +163,7 @@ function run_build {
     echo ""
 
     BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"--config ${BUILD_CONFIG} -- -parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
+        \"${OTP_SUBDIVIDE_INSTALL}\" \
         \"-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}\" \
         -GXcode \
         \"-DCMAKE_TOOLCHAIN_FILE=${IOS_CMAKE_TOOLCHAIN_FILE}\" \
