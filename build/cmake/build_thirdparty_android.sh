@@ -145,7 +145,9 @@ function run_build {
         "-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
         "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
         "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}" \
-        "-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}"
+        "-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}" \
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.26"
+
     if [ "$?" != 0 ]; then
         OTP_FAILED_BUILDS+=("${ANDROID_ABI} + ${LINKING_TYPE} + ${BUILD_CONFIG}")
     fi
