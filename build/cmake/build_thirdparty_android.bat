@@ -30,7 +30,7 @@ set ANDROID_SDK_VERSION=android-34
 @echo off
 setlocal enableDelayedExpansion
 
-set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install_thirdparty" -build:"%cd%\ocean_build_thirdparty" -config:"debug release" -link:"static" -archive:NULL -h: -sdk:%ANDROID_SDK_VERSION%"
+set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install_thirdparty" -build:"%cd%\ocean_build_thirdparty" -config:"debug release" -link:"static" -archive:NULL -subdivide:OFF -h: -sdk:%ANDROID_SDK_VERSION%"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -67,7 +67,7 @@ if !-h!==1 (
     echo Script to build the third-party libraries required by Ocean :
     echo(
     echo  %~n0  [-h] [-android_abi ABI_LIST] [-install INSTALL_DIR] [-build BUILD_DIR]
-    echo                    [-config BUILD_CONFIG] [-link LINKING_TYPE] [-archive ARCHIVE]
+    echo                    [-config BUILD_CONFIG] [-link LINKING_TYPE] [-archive ARCHIVE] [-subdivide ON/OFF]
     echo(
     echo Arguments:
     echo(
@@ -92,6 +92,10 @@ if !-h!==1 (
     echo                 Default value if nothing is specified: !-link!
     echo(
     echo   -sdk ANDROID_SDK_VERSION : Default value is %ANDROID_SDK_VERSION%
+    echo(
+    echo   -subdivide ON/OFF : Install each library into its own subdirectory. When enabled,
+    echo                 libraries will be installed to {INSTALL_DIR}\library_name\{lib,include,...}.
+    echo                 Default: OFF (flat structure for backward compatibility)
     echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
@@ -162,7 +166,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! "-j16" ^
+call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! "-j16" !-subdivide! ^
         "-GNinja" ^
         "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" ^
         "-DCMAKE_BUILD_TYPE=!BUILD_TYPE!" ^
