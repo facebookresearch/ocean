@@ -3,6 +3,8 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/ocean_third_party_utilities.cmake)
+
 message(CHECK_START "freetype")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
@@ -12,8 +14,8 @@ set(FT_DISABLE_BROTLI TRUE)
 set(FT_DISABLE_BZIP2 TRUE)
 set(FT_DISABLE_HARFBUZZ TRUE)
 
-set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
-set(PNG_ROOT ${CMAKE_INSTALL_PREFIX})
+get_library_install_root("zlib" ZLIB_ROOT)
+get_library_install_root("libpng" PNG_ROOT)
 
 CPMAddPackage(
   NAME           freetype

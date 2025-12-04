@@ -3,13 +3,15 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/ocean_third_party_utilities.cmake)
+
 message(CHECK_START "assimp")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 find_package(Git REQUIRED)
 
-set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
-set(JPEG_ROOT ${CMAKE_INSTALL_PREFIX})
+get_library_install_root("zlib" ZLIB_ROOT)
+get_library_install_root("libjpeg-turbo" JPEG_ROOT)
 
 if(BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "" ON)

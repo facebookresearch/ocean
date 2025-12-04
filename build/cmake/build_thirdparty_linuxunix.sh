@@ -29,6 +29,8 @@ OTP_LINKING_TYPES="static"
 
 OTP_ARCHIVE=""
 
+OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibility
+
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
 
@@ -66,6 +68,10 @@ display_help()
     echo ""
     echo " -a | --archive ARCHIVE: If specified, this will copy the contents of INSTALL_DIR after the build"
     echo "                into a ZIP archive; the path to this archive must exist."
+    echo ""
+    echo "  -s | --subdivide : Install each library into its own subdirectory. When enabled,"
+    echo "                libraries will be installed to {INSTALL_DIR}/library_name/{lib,include,...}."
+    echo "                Default: disabled (flat structure for backward compatibility)"
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -121,6 +127,7 @@ function run_build {
     echo ""
 
     eval "${OTP_SOURCE_DIR}/build_deps.sh" "${OCEAN_PLATFORM}" "${OTP_SOURCE_DIR}" "${BUILD_DIR}" \"${PAR_SWITCH}\" \
+          "${OTP_SUBDIVIDE_INSTALL}" \
           "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
           "-D${CONF_SWITCH}=${BUILD_CONFIG}" \
           "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}" "-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}" \
@@ -165,6 +172,10 @@ while [[ $# -gt 0 ]]; do
         OTP_ARCHIVE="$2"
         shift # past argument
         shift # past value
+        ;;
+        -s|--subdivide)
+        OTP_SUBDIVIDE_INSTALL="ON"
+        shift # past argument
         ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2

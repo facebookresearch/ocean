@@ -132,9 +132,42 @@ function run_build {
         echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"
         echo " "
 
-        CMAKE_CONFIGURE_COMMAND+="  \\
-    -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_DIR}\" \\
-    -DCMAKE_FIND_ROOT_PATH=\"${THIRD_PARTY_DIR}\" "
+        # Auto-detect if per-library subdivision was used
+        # Check if subdirectories like "zlib", "eigen", etc. exist
+        SUBDIVISION_DETECTED="false"
+        for known_lib in "zlib" "eigen" "libjpeg-turbo"; do
+            if [ -d "${THIRD_PARTY_DIR}/${known_lib}" ]; then
+                SUBDIVISION_DETECTED="true"
+                break
+            fi
+        done
+
+        if [ "${SUBDIVISION_DETECTED}" == "true" ]; then
+            # Build semicolon-separated list of all library subdirectories
+            echo "Detected per-library subdivision structure"
+            THIRD_PARTY_SUBDIRS=""
+            for libdir in "${THIRD_PARTY_DIR}"/*; do
+                if [ -d "$libdir" ]; then
+                    if [ -z "${THIRD_PARTY_SUBDIRS}" ]; then
+                        THIRD_PARTY_SUBDIRS="${libdir}"
+                    else
+                        THIRD_PARTY_SUBDIRS="${THIRD_PARTY_SUBDIRS};${libdir}"
+                    fi
+                fi
+            done
+
+            echo "CMAKE_PREFIX_PATH includes $(echo "${THIRD_PARTY_SUBDIRS}" | tr ';' '\n' | wc -l) library paths"
+
+            CMAKE_CONFIGURE_COMMAND+="  \\
+        -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_SUBDIRS}\" \\
+        -DCMAKE_FIND_ROOT_PATH=\"${THIRD_PARTY_SUBDIRS}\" "
+        else
+            # Flat structure (original behavior)
+            echo "Using flat third-party structure"
+            CMAKE_CONFIGURE_COMMAND+="  \\
+        -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_DIR}\" \\
+        -DCMAKE_FIND_ROOT_PATH=\"${THIRD_PARTY_DIR}\" "
+        fi
     fi
 
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"

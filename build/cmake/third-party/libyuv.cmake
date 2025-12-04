@@ -3,10 +3,12 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/ocean_third_party_utilities.cmake)
+
 message(CHECK_START "libyuv")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-set(JPEG_ROOT ${CMAKE_INSTALL_PREFIX})
+get_library_install_root("libjpeg-turbo" JPEG_ROOT)
 
 find_package(Git REQUIRED)
 
