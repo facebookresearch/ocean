@@ -14,7 +14,7 @@ set OCEAN_PLATFORM=windows
 @echo off
 setlocal enableDelayedExpansion
 
-set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -archive:NULL -h:"
+set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -archive:NULL -subdivide:OFF -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -51,7 +51,7 @@ if !-h!==1 (
     echo Script to build the third-party libraries required by Ocean :
     echo(
     echo  %~n0  [-h] [-install INSTALL_DIR] [-build BUILD_DIR] [-config BUILD_CONFIG]
-    echo                    [-link LINKING_TYPE] [-archive ARCHIVE]
+    echo                    [-link LINKING_TYPE] [-archive ARCHIVE] [-subdivide ON/OFF]
     echo(
     echo Arguments:
     echo(
@@ -73,6 +73,10 @@ if !-h!==1 (
     echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
+    echo(
+    echo   -subdivide ON/OFF : Install each library into its own subdirectory. When enabled,
+    echo                 libraries will be installed to {INSTALL_DIR}\library_name\{lib,include,...}.
+    echo                 Default: OFF (flat structure for backward compatibility)
     echo(
     echo   -h : This summary
     echo(
@@ -136,7 +140,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat windows %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! /m:16 "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" "-DCMAKE_CONFIGURATION_TYPES=!BUILD_TYPE!" "-DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS!" "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!" "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat windows %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! /m:16 !-subdivide! "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" "-DCMAKE_CONFIGURATION_TYPES=!BUILD_TYPE!" "-DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS!" "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!" "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 @echo off
 if %errorlevel% neq 0 (
