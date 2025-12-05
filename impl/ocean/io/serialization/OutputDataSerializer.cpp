@@ -86,11 +86,11 @@ bool OutputDataSerializer::isStarted() const
 	return state_ >= S_STARTED && state_ < S_STOPPED;
 }
 
-bool OutputDataSerializer::hasStopped() const
+bool OutputDataSerializer::hasFinished() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (state_ < S_STOPPED)
+	if (!hasStopped())
 	{
 		return false;
 	}

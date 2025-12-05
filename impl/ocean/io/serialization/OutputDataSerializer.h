@@ -102,11 +102,11 @@ class OutputDataSerializer : public DataSerializer
 		[[nodiscard]] bool isStarted() const override;
 
 		/**
-		 * Returns whether the serializer has stopped.
+		 * Returns whether the serializer has stopped and all remaining samples have been processed.
 		 * @return True, if so
-		 * @see DataSerializer::hasStopped().
+		 * @see DataSerializer::hasFinished().
 		 */
-		[[nodiscard]] bool hasStopped() const override;
+		[[nodiscard]] bool hasFinished() const override;
 
 	protected:
 

@@ -40,6 +40,18 @@ bool DataSerializer::stopAndWait(const double timeout)
 	return false;
 }
 
+bool DataSerializer::hasStopped() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (state_ < S_STOPPED)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 }
 
 }

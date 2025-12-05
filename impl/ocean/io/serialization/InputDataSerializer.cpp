@@ -231,11 +231,11 @@ bool InputDataSerializer::isStarted() const
 	return state_ >= S_STARTED && state_ < S_STOPPED;
 }
 
-bool InputDataSerializer::hasStopped() const
+bool InputDataSerializer::hasFinished() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (state_ < S_STOPPED)
+	if (!hasStopped())
 	{
 		return false;
 	}

@@ -224,7 +224,7 @@ Timestamp SerializerDevicePlayer::playNextFrame()
 
 		if (!samplePair.second)
 		{
-			if (inputSerializer_->hasStopped())
+			if (inputSerializer_->hasFinished())
 			{
 				// we have reached the end of the serializer data
 				break;
@@ -869,7 +869,7 @@ void SerializerDevicePlayer::processLookaheadSamples(const IO::Serialization::Da
 
 		if (!samplePair.second)
 		{
-			if (inputSerializer_->hasStopped())
+			if (inputSerializer_->hasFinished())
 			{
 				// we have reached the end of the serializer data
 				return;
@@ -1024,7 +1024,7 @@ void SerializerDevicePlayer::threadRun()
 
 		if (!sample)
 		{
-			if (inputSerializer_->hasStopped())
+			if (inputSerializer_->hasFinished())
 			{
 				// we have reached the end of the input data
 

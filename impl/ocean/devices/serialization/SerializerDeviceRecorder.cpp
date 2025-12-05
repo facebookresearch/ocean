@@ -845,7 +845,7 @@ void SerializerDeviceRecorder::threadRun()
 	{
 		outputSerializer_->stop();
 
-		while (!outputSerializer_->hasStopped())
+		while (!outputSerializer_->hasFinished())
 		{
 			Thread::sleep(1u);
 		}

@@ -139,9 +139,9 @@ class InputDataSerializer : public DataSerializer
 		/**
 		 * Returns whether the serializer has stopped and all remaining samples have been retrieved.
 		 * @return True, if so
-		 * @see DataSerializer::hasStopped().
+		 * @see DataSerializer::hasFinished().
 		 */
-		[[nodiscard]] bool hasStopped() const override;
+		[[nodiscard]] bool hasFinished() const override;
 
 		/**
 		 * Registers a factory function for a given sample type.
