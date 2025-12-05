@@ -830,6 +830,41 @@ bool DeviceSerializer::DataSampleGPSTracker::writeSample(IO::OutputBitstream& ou
 	return true;
 }
 
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSampleOrientationTracker3DOF::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleOrientationTracker3DOF>();
+}
+
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSampleAccelerationSensor3DOF::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleAccelerationSensor3DOF>();
+}
+
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSampleGyroSensor3DOF::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleGyroSensor3DOF>();
+}
+
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSampleGravityTracker3DOF::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleGravityTracker3DOF>();
+}
+
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSamplePositionTracker3DOF::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSamplePositionTracker3DOF>();
+}
+
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSampleTracker6DOF::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleTracker6DOF>();
+}
+
+IO::Serialization::UniqueDataSample DeviceSerializer::DataSampleGPSTracker::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleGPSTracker>();
+}
+
 }
 
 }

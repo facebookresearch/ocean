@@ -347,42 +347,42 @@ bool SerializerDevicePlayer::initializeDeviceFactories()
 {
 	ocean_assert(inputSerializer_);
 
-	if (!inputSerializer_->registerFactoryFunction(IO::Serialization::MediaSerializer::DataSampleFrame::sampleType(), SerializerDevicePlayer::createDataSampleFrame))
+	if (!inputSerializer_->registerSample<IO::Serialization::MediaSerializer::DataSampleFrame>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSampleOrientationTracker3DOF::sampleType(), SerializerDevicePlayer::createDataSampleOrientationTracker3DOF))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSampleOrientationTracker3DOF>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSampleAccelerationSensor3DOF::sampleType(), SerializerDevicePlayer::createDataSampleAccelerationSensor3DOF))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSampleAccelerationSensor3DOF>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSampleGyroSensor3DOF::sampleType(), SerializerDevicePlayer::createDataSampleGyroSensor3DOF))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSampleGyroSensor3DOF>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSampleGravityTracker3DOF::sampleType(), SerializerDevicePlayer::createDataSampleGravityTracker3DOF))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSampleGravityTracker3DOF>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSamplePositionTracker3DOF::sampleType(), SerializerDevicePlayer::createDataSamplePositionTracker3DOF))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSamplePositionTracker3DOF>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSampleTracker6DOF::sampleType(), SerializerDevicePlayer::createDataSampleTracker6DOF))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSampleTracker6DOF>())
 	{
 		return false;
 	}
 
-	if (!inputSerializer_->registerFactoryFunction(DeviceSerializer::DataSampleGPSTracker::sampleType(), SerializerDevicePlayer::createDataSampleGPSTracker))
+	if (!inputSerializer_->registerSample<DeviceSerializer::DataSampleGPSTracker>())
 	{
 		return false;
 	}
@@ -1104,46 +1104,6 @@ Device* SerializerDevicePlayer::createGPSTracker(const std::string& name, const 
 	ocean_assert_and_suppress_unused(deviceType == SerializationGPSTracker::deviceTypeSerializationGPSTracker(), deviceType);
 
 	return new SerializationGPSTracker(name);
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleFrame(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new IO::Serialization::MediaSerializer::DataSampleFrame());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleOrientationTracker3DOF(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSampleOrientationTracker3DOF());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleAccelerationSensor3DOF(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSampleAccelerationSensor3DOF());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleGyroSensor3DOF(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSampleGyroSensor3DOF());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleGravityTracker3DOF(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSampleGravityTracker3DOF());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSamplePositionTracker3DOF(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSamplePositionTracker3DOF());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleTracker6DOF(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSampleTracker6DOF());
-}
-
-IO::Serialization::UniqueDataSample SerializerDevicePlayer::createDataSampleGPSTracker(const std::string& /*sampleType*/)
-{
-	return IO::Serialization::UniqueDataSample(new DeviceSerializer::DataSampleGPSTracker());
 }
 
 }

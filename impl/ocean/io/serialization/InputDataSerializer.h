@@ -153,6 +153,16 @@ class InputDataSerializer : public DataSerializer
 		bool registerFactoryFunction(const std::string& sampleType, const FactoryFunction& factoryFunction);
 
 		/**
+		 * Registers a factory function for a sample type T.
+		 * The sample type T must provide static functions `sampleType()` and `createSample()`.
+		 * This is a convenience function that calls `registerFactoryFunction(T::sampleType(), T::createSample)`.
+		 * @tparam T The sample type which must provide `static const std::string& sampleType()` and `static UniqueDataSample createSample(const std::string&)`
+		 * @return True, if succeeded
+		 */
+		template <typename T>
+		bool registerSample();
+
+		/**
 		 * Registers a callback function that will be invoked whenever a new channel is parsed.
 		 * @param channelEventFunction The callback function to be invoked, must be valid
 		 * @return True if the callback was successfully registered, false otherwise
@@ -321,6 +331,12 @@ inline InputBitstream& FileInputDataSerializer::FileStream::inputBitstream()
 inline bool FileInputDataSerializer::FileStream::isValid() const
 {
 	return stream_.is_open() && !stream_.fail();
+}
+
+template <typename T>
+bool InputDataSerializer::registerSample()
+{
+	return registerFactoryFunction(T::sampleType(), T::createSample);
 }
 
 }

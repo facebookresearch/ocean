@@ -167,6 +167,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 */
 				static inline const std::string& sampleType();
 
+				/**
+				 * Factory function for creating a DataSampleOrientationTracker3DOF.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleOrientationTracker3DOF instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
+
 			protected:
 
 				/// The orientation measurements as quaternions.
@@ -235,6 +243,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 */
 				static inline const std::string& sampleType();
 
+				/**
+				 * Factory function for creating a DataSampleAccelerationSensor3DOF.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleAccelerationSensor3DOF instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
+
 			protected:
 
 				/// The acceleration measurements, each in [m / s^2].
@@ -302,6 +318,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 * @return The sample type
 				 */
 				static inline const std::string& sampleType();
+
+				/**
+				 * Factory function for creating a DataSampleGyroSensor3DOF.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleGyroSensor3DOF instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
 
 			protected:
 
@@ -377,6 +401,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 */
 				static inline const std::string& sampleType();
 
+				/**
+				 * Factory function for creating a DataSampleGravityTracker3DOF.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleGravityTracker3DOF instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
+
 			protected:
 
 				/// The gravity measurements.
@@ -450,6 +482,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 * @return The sample type
 				 */
 				static inline const std::string& sampleType();
+
+				/**
+				 * Factory function for creating a DataSamplePositionTracker3DOF.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSamplePositionTracker3DOF instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
 
 			protected:
 
@@ -530,6 +570,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 * @return The sample type
 				 */
 				static inline const std::string& sampleType();
+
+				/**
+				 * Factory function for creating a DataSampleTracker6DOF.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleTracker6DOF instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
 
 			protected:
 
@@ -676,6 +724,14 @@ class OCEAN_DEVICES_EXPORT DeviceSerializer
 				 * @return The sample type
 				 */
 				static inline const std::string& sampleType();
+
+				/**
+				 * Factory function for creating a DataSampleGPSTracker.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleGPSTracker instance
+				 */
+				static IO::Serialization::UniqueDataSample createSample(const std::string& sampleType);
 
 			protected:
 

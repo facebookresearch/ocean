@@ -396,62 +396,6 @@ class OCEAN_DEVICES_SERIALIZATION_EXPORT SerializerDevicePlayer :
 		 */
 		static Device* createGPSTracker(const std::string& name, const Device::DeviceType& deviceType);
 
-		/**
-		 * Factory function for creating SampleFrame objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleFrame(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSampleOrientationTracker3DOF objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleOrientationTracker3DOF(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSampleAccelerationSensor3DOF objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleAccelerationSensor3DOF(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSampleGyroSensor3DOF objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleGyroSensor3DOF(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSampleGravityTracker3DOF objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleGravityTracker3DOF(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSamplePositionTracker3DOF objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSamplePositionTracker3DOF(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSampleTracker6DOF objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleTracker6DOF(const std::string& sampleType);
-
-		/**
-		 * Factory function for creating DataSampleGPSTracker objects.
-		 * @param sampleType The sample type
-		 * @return The new sample object
-		 */
-		static IO::Serialization::UniqueDataSample createDataSampleGPSTracker(const std::string& sampleType);
-
 	protected:
 
 		/// The input data serializer for reading the content.

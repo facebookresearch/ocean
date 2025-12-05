@@ -153,6 +153,14 @@ class OCEAN_IO_SERIALIZATION_EXPORT MediaSerializer
 				 */
 				static const std::string& sampleType();
 
+				/**
+				 * Factory function for creating a DataSampleFrame.
+				 * This function can be used with InputDataSerializer::registerFactoryFunction().
+				 * @param sampleType The sample type (unused, but required by the factory function signature)
+				 * @return A new DataSampleFrame instance
+				 */
+				static UniqueDataSample createSample(const std::string& sampleType);
+
 			protected:
 
 				/// The encoded frame buffer.

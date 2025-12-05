@@ -215,6 +215,11 @@ const std::string& MediaSerializer::DataSampleFrame::sampleType()
 	return typeName;
 }
 
+UniqueDataSample MediaSerializer::DataSampleFrame::createSample(const std::string& /*sampleType*/)
+{
+	return std::make_unique<DataSampleFrame>();
+}
+
 }
 
 }
