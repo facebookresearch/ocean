@@ -12,6 +12,7 @@
 #include "ocean/base/Lock.h"
 
 #include <atomic>
+#include <deque>
 #include <cfloat>
 #include <limits>
 
@@ -347,6 +348,87 @@ class OCEAN_BASE_EXPORT TimestampConverter
 		 */
 		static constexpr int64_t invalidValue_ = std::numeric_limits<int64_t>::lowest();
 
+	protected:
+
+		/**
+		 * This class encapsulates the logic for calculating the offset between a domain time and unix time.
+		 * The calculator gathers timestamp pairs (domain and unix) and computes an averaged offset to reduce measurement noise.
+		 * Two modes are supported:
+		 * - Fixed mode: Accumulates measurements until the necessary count is reached, then the offset becomes final.
+		 * - Sliding window mode: Continuously updates the offset using the most recent N measurements.
+		 */
+		class OffsetCalculator
+		{
+			protected:
+
+				/**
+				 * Definition of a double-ended queue holding offsets between the domain time and the unix time.
+				 */
+				using OffsetQueue = std::deque<int64_t>;
+
+			public:
+
+				/**
+				 * Default constructor creating an invalid calculator.
+				 */
+				OffsetCalculator() = default;
+
+				/**
+				 * Creates a new offset calculator.
+				 * @param necessaryMeasurements The number of measurements necessary to determine the offset, with range [1, infinity)
+				 * @param useSlidingWindow True, to use a sliding window for continuous offset updates; False, to fix the offset after necessaryMeasurements
+				 */
+				OffsetCalculator(const size_t necessaryMeasurements, const bool useSlidingWindow);
+
+				/**
+				 * Calculates the domain-to-unix offset based on a new pair of timestamps.
+				 * This function accumulates measurements and returns the current averaged offset.
+				 * In fixed mode, once the necessary number of measurements is reached, isFinal is set to true.
+				 * In sliding window mode, isFinal is never set to true (the offset is continuously updated).
+				 * @param currentDomainTimestampNs The current domain timestamp, in nanoseconds
+				 * @param currentUnixTimestampNs The current unix timestamp, in nanoseconds
+				 * @param isFinal Output parameter set to true when the offset is finalized (only in fixed mode)
+				 * @return The averaged domain-to-unix offset, in nanoseconds
+				 */
+				int64_t domainToUnixOffsetNs(const int64_t currentDomainTimestampNs, const int64_t currentUnixTimestampNs, bool& isFinal);
+
+				/**
+				 * Returns the number of measurements accumulated so far.
+				 * In sliding window mode, this is capped at necessaryMeasurements.
+				 * @return The number of measurements
+				 */
+				inline size_t measurements() const;
+
+				/**
+				 * Returns whether this calculator is valid.
+				 * @return True, if the calculator was initialized with valid parameters
+				 */
+				inline bool isValid() const;
+
+			protected:
+
+				/// The initial domain timestamp, in nanoseconds.
+				int64_t initialDomainNs_ = invalidValue_;
+
+				/// The initial unix timestamp, in nanoseconds.
+				int64_t initialUnixNs_ = invalidValue_;
+
+				/// The measured sum of the domain to unix offsets, in nanoseconds.
+				int64_t sumDomainToUnixOffsetNs_ = 0;
+
+				/// The number of measurements.
+				size_t measurements_ = 0;
+
+				/// The number of necessary measurements before the converter keeps the determined offset fixed.
+				size_t necessaryMeasurements_ = 0;
+
+				/// True, if a sliding window is used to determine the average offset; False, to determine the average offset once based on several measurements.
+				bool useSlidingWindow_ = false;
+
+				/// The queue holding the domain to unix offsets, in case a sliding window is used to determine the average offset, in nanoseconds.
+				OffsetQueue domainToUnixOffsetQueueNs_;
+		};
+
 	public:
 
 		/**
@@ -363,20 +445,23 @@ class OCEAN_BASE_EXPORT TimestampConverter
 		/**
 		 * Creates a new converter object for a specific time domain.
 		 * @param timeDomain The time domain for which the converter will be created
+		 * @param useSlidingWindow True, to continuously update the offset using a sliding window of the most recent measurements; False, to fix the offset after necessaryMeasurements
 		 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
 		 */
-		explicit TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
+		TimestampConverter(const TimeDomain timeDomain, const bool useSlidingWindow, const size_t necessaryMeasurements = 100);
 
 #ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
 
 		/**
 		 * Creates a new converter object for a custom POSIX clock id.
 		 * @param timeDomain The time domain for which the converter will be created, must be TD_CUSTOM_POSIX
+		 * @param useSlidingWindow True, to continuously update the offset using a sliding window of the most recent measurements; False, to fix the offset after necessaryMeasurements
 		 * @param customPosixClockId The custom POSIX clock id to use for time conversion
 		 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
 		 */
-		explicit TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements);
-#endif
+		TimestampConverter(const TimeDomain timeDomain, const bool useSlidingWindow, const int customPosixClockId, const size_t necessaryMeasurements);
+
+#endif // OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
 
 		/**
 		 * Move constructor.
@@ -480,6 +565,17 @@ class OCEAN_BASE_EXPORT TimestampConverter
 	protected:
 
 		/**
+		 * Disabled copy constructor.
+		 */
+		TimestampConverter(const TimestampConverter&) = delete;
+
+		/**
+		 * Disabled copy operator.
+		 * @return Reference to this object
+		 */
+		TimestampConverter& operator=(const TimestampConverter&) = delete;
+
+		/**
 		 * Returns the POSIX clock id associated with a time domain.
 		 * @param timeDomain The time domain for which the associated POSIX clock id will be returned
 		 * @return The POSIX clock id associated with the specified time domain, -1 if no associated POSIX clock id exists
@@ -493,23 +589,14 @@ class OCEAN_BASE_EXPORT TimestampConverter
 		/// The time domain of this converter.
 		TimeDomain timeDomain_ = TD_INVALID;
 
-		/// The offset between the domain time and the unix time, in nanoseconds.
+		/// The average offset between the domain time and the unix time, in nanoseconds.
 		std::atomic_int64_t domainToUnixOffsetNs_ = invalidValue_;
 
-		/// The initial domain timestamp, in nanoseconds.
-		int64_t initialDomainNs_ = invalidValue_;
+		/// The calculator used to determine the offset between the domain time and the unix time.
+		OffsetCalculator offsetCalculator_;
 
-		/// The initial unix timestamp, in nanoseconds.
-		int64_t initialUnixNs_ = invalidValue_;
-
-		/// The measured sum of the domain to unix offsets, in nanoseconds.
-		int64_t sumDomainToUnixOffsetNs_ = 0;
-
-		/// The number of measurements.
-		size_t measurements_ = 0;
-
-		/// The number of necessary measurements before the converter keeps the determined offset fixed.
-		size_t necessaryMeasurements_ = 0;
+		/// Counter used to alternate the order of domain/unix timestamp sampling, reducing systematic measurement bias.
+		std::atomic<size_t> toggleCounter_ = 0;
 
 		/// The optional frequency of the domain time, in Hz (in case the domain time is not defined in nanoseconds).
 		uint64_t domainFrequency_ = 0ull;
@@ -726,6 +813,16 @@ constexpr double Timestamp::invalidTimestampValue()
 	return -DBL_MAX;
 }
 
+inline size_t TimestampConverter::OffsetCalculator::measurements() const
+{
+	return measurements_;
+}
+
+inline bool TimestampConverter::OffsetCalculator::isValid() const
+{
+	return necessaryMeasurements_ != 0;
+}
+
 inline TimestampConverter::TimestampConverter(TimestampConverter&& converter) noexcept
 {
 	*this = std::move(converter);
@@ -740,12 +837,12 @@ inline size_t TimestampConverter::measurements() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return measurements_;
+	return offsetCalculator_.measurements();
 }
 
 inline bool TimestampConverter::isValid() const
 {
-	return timeDomain_ != TD_INVALID && necessaryMeasurements_ != 0;
+	return timeDomain_ != TD_INVALID && offsetCalculator_.isValid();
 }
 
 inline TimestampConverter::operator bool() const

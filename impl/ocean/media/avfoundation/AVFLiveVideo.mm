@@ -60,7 +60,7 @@ using namespace Ocean;
 	{
 		delegateOnNewSampleCallback = onNewSampleCallback;
 
-		timestampConverter_ = TimestampConverter(TimestampConverter::TD_UPTIME_RAW);
+		timestampConverter_ = TimestampConverter(TimestampConverter::TD_UPTIME_RAW, false /*useSlidingWindow*/);
   	}
 
 	return self;
@@ -796,7 +796,7 @@ bool AVFLiveVideo::internalStart()
 			return false;
 		}
 	}
-	
+
 	waitingForFirstFrame_ = true;
 
 	ocean_assert(captureSession_ != nullptr);
@@ -859,7 +859,7 @@ void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera cam
 	if (!camera)
 	{
 		TemporaryScopedLock scopedLock(lock_);
-		
+
 		if (waitingForFirstFrame_)
 		{
 			waitingForFirstFrame_ = false;
@@ -882,11 +882,11 @@ void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera cam
 				Log::debug() << "AVFLiveVideo: Using custom camera calibration for '" << url() << "', camera name: " << camera_->name() << ", with fovX: " << Numeric::rad2deg(camera_->fovX()) << "deg";
 			}
 		}
-		
+
 		camera = camera_;
-		
+
 		scopedLock.release();
-		
+
 		if (!camera)
 		{
 			if (!approximatedCamera_ || width != approximatedCamera_->width() || height != approximatedCamera_->height())
@@ -902,9 +902,9 @@ void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera cam
 					approximatedCamera_ = nullptr;
 				}
 			}
-		
+
 			camera = approximatedCamera_;
-		}		
+		}
 	}
 
 	AVFFrameMedium::onNewSample(pixelBuffer, std::move(camera), unixTimestamp, frameTime);

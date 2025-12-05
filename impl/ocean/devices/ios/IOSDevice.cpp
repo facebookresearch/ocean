@@ -30,7 +30,7 @@ const std::string& IOSDevice::library() const
 
 TimestampConverter& IOSDevice::timestampConverter()
 {
-	static TimestampConverter timestampConverter(TimestampConverter::TD_UPTIME_RAW);
+	static TimestampConverter timestampConverter(TimestampConverter::TD_UPTIME_RAW, false /*useSlidingWindow*/);
 
 	return timestampConverter;
 }

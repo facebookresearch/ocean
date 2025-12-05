@@ -508,7 +508,7 @@ TimestampConverter& AndroidFactory::timestampConverter()
 	// The time in nanoseconds at which the event happened, and its behavior is identical to SensorEvent::timestamp in Java API.
 	// The time in nanoseconds at which the event happened. For a given sensor, each new sensor event should be monotonically increasing using the same time base as SystemClock.elapsedRealtimeNanos().
 
-	static TimestampConverter timestampConverter(TimestampConverter::TD_BOOTTIME);
+	static TimestampConverter timestampConverter(TimestampConverter::TD_BOOTTIME, false /*useSlidingWindow*/);
 
 	return timestampConverter;
 }

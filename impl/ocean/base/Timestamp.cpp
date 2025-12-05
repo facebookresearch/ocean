@@ -32,9 +32,85 @@ Timestamp& Timestamp::toNow()
 	return *this;
 }
 
-TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements) :
+TimestampConverter::OffsetCalculator::OffsetCalculator(const size_t necessaryMeasurements, const bool useSlidingWindow) :
+	necessaryMeasurements_(necessaryMeasurements),
+	useSlidingWindow_(useSlidingWindow)
+{
+	ocean_assert(necessaryMeasurements_ >= 1);
+}
+
+int64_t TimestampConverter::OffsetCalculator::domainToUnixOffsetNs(const int64_t currentDomainTimestampNs, const int64_t currentUnixTimestampNs, bool& isFinal)
+{
+	ocean_assert(currentDomainTimestampNs != invalidValue_);
+	ocean_assert(currentUnixTimestampNs != invalidValue_);
+
+	/*
+	 * We calculate the unix timestamp of the equivalent domain timestamp by gathering the unix and domain timestamp at the same point in time
+	 * unix = domain + offset
+	 */
+
+	if (initialDomainNs_ == invalidValue_)
+	{
+		ocean_assert(initialUnixNs_ == invalidValue_);
+		ocean_assert(sumDomainToUnixOffsetNs_ == 0ll);
+		ocean_assert(measurements_ == 0);
+
+		initialDomainNs_ = currentDomainTimestampNs;
+		initialUnixNs_ = currentUnixTimestampNs;
+	}
+
+	// we use the relative timestamps (in relation to the first measurement) to avoid that the summed offsets are getting out of bounds
+
+	const int64_t relativeDomain = currentDomainTimestampNs - initialDomainNs_;
+	const int64_t relativeUnix = currentUnixTimestampNs - initialUnixNs_;
+
+	const int64_t domainToUnixOffsetNs = relativeUnix - relativeDomain;
+
+	sumDomainToUnixOffsetNs_ += domainToUnixOffsetNs;
+	++measurements_;
+
+	if (useSlidingWindow_)
+	{
+		domainToUnixOffsetQueueNs_.push_back(domainToUnixOffsetNs);
+
+		if (domainToUnixOffsetQueueNs_.size() > necessaryMeasurements_)
+		{
+			const int64_t oldestDomainToUnixOffsetNs = domainToUnixOffsetQueueNs_.front();
+
+			sumDomainToUnixOffsetNs_ -= oldestDomainToUnixOffsetNs;
+			domainToUnixOffsetQueueNs_.pop_front();
+			--measurements_;
+		}
+
+		ocean_assert(domainToUnixOffsetQueueNs_.size() == measurements_);
+	}
+
+	int64_t averageRelativeDomainToUnixOffsetNs;
+
+	const int64_t measurements = int64_t(measurements_);
+
+	if (sumDomainToUnixOffsetNs_ >= 0ll)
+	{
+		averageRelativeDomainToUnixOffsetNs = (sumDomainToUnixOffsetNs_ + (measurements / 2)) / measurements;
+	}
+	else
+	{
+		averageRelativeDomainToUnixOffsetNs = (sumDomainToUnixOffsetNs_ - (measurements / 2)) / measurements;
+	}
+
+	const int64_t initialDomainToUnixOffsetNs = initialUnixNs_ - initialDomainNs_;
+
+	const int64_t averagedDomainToUnixOffsetNs = initialDomainToUnixOffsetNs + averageRelativeDomainToUnixOffsetNs;
+
+	ocean_assert(measurements_ <= necessaryMeasurements_);
+	isFinal = !useSlidingWindow_ && measurements_ == necessaryMeasurements_;
+
+	return averagedDomainToUnixOffsetNs;
+}
+
+TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const bool useSlidingWindow, const size_t necessaryMeasurements) :
 	timeDomain_(timeDomain),
-	necessaryMeasurements_(necessaryMeasurements)
+	offsetCalculator_(necessaryMeasurements, useSlidingWindow)
 {
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 	domainPosixClockId_ = posixClockId(timeDomain_);
@@ -51,15 +127,15 @@ TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t
 
 #ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
 
-TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements) :
+TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const bool useSlidingWindow, const int customPosixClockId, const size_t necessaryMeasurements) :
 	timeDomain_(TD_CUSTOM_POSIX),
-	necessaryMeasurements_(necessaryMeasurements),
+	offsetCalculator_(necessaryMeasurements, useSlidingWindow),
 	domainPosixClockId_(customPosixClockId)
 {
 	ocean_assert_and_suppress_unused(timeDomain == TD_CUSTOM_POSIX, timeDomain);
 }
 
-#endif
+#endif // OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
 
 Timestamp TimestampConverter::toUnix(const int64_t domainTimestampNs)
 {
@@ -96,7 +172,7 @@ Timestamp TimestampConverter::toUnix(const double domainTimestampSeconds)
 #ifdef OCEAN_INTENSIVE_DEBUG
 	if (domainToUnixOffsetNs_ == invalidValue_)
 	{
-		Log::debug() << "Input time: " << domainTimestampNs;
+		Log::debug() << "TimestampConverter: Invalid time offset, input time: " << domainTimestampSeconds;
 	}
 #endif
 
@@ -210,8 +286,6 @@ int64_t TimestampConverter::domainToUnixOffset()
 		return offsetNs;
 	}
 
-	const ScopedLock scopedLock(lock_);
-
 	// First, we determine the unix timestamp and the equivalent domain timestamp (a pair of both timestamps)
 	// then we determine the offset (averaged over several measurements)
 	// finally, we convert the provided domain timestamp to the corresponding unix timestamp by applying the determined (averaged) offset
@@ -227,7 +301,7 @@ int64_t TimestampConverter::domainToUnixOffset()
 
 	std::chrono::system_clock::time_point unixTimestampTimePoint;
 
-	if (measurements_ % 2 == 0)
+	if (++toggleCounter_ % 2 == 0) // using atomic variable instread of lock as it's not critical to toggle every time
 	{
 		domainNs = currentDomainTimestampNs();
 		unixTimestampTimePoint = std::chrono::system_clock::now();
@@ -245,7 +319,7 @@ int64_t TimestampConverter::domainToUnixOffset()
 
 	struct timespec unixTimestampSpec;
 
-	if (measurements_ % 2 == 0)
+	if (++toggleCounter_ % 2 == 0)
 	{
 		domainNs = currentDomainTimestampNs();
 		const int resultUnix = clock_gettime(CLOCK_REALTIME, &unixTimestampSpec);
@@ -265,47 +339,12 @@ int64_t TimestampConverter::domainToUnixOffset()
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
 
-	/*
-	 * We calculate the unix timestamp of the equivalent domain timestamp by gathering the unix and domain timestamp at the same point in time
-	 * unix = domain + offset
-	 */
+	const ScopedLock scopedLock(lock_);
 
-	if (initialDomainNs_ == invalidValue_)
-	{
-		ocean_assert(initialUnixNs_ == invalidValue_);
-		ocean_assert(sumDomainToUnixOffsetNs_ == 0ll);
-		ocean_assert(measurements_ == 0);
+	bool isFinal = false;
+	const int64_t domainToUnixOffsetNs = offsetCalculator_.domainToUnixOffsetNs(domainNs, unixNs, isFinal);
 
-		initialDomainNs_ = domainNs;
-		initialUnixNs_ = unixNs;
-	}
-
-	// we use the relative timestamps (in relation to the first measurement) to avoid that the summed offsets are getting out of bounds
-
-	const int64_t relativeDomain = domainNs - initialDomainNs_;
-	const int64_t relativeUnix = unixNs - initialUnixNs_;
-
-	sumDomainToUnixOffsetNs_ += relativeUnix - relativeDomain;
-	++measurements_;
-
-	int64_t averageRelativeDomainToUnixOffsetNs;
-
-	const int64_t measurements = int64_t(measurements_);
-
-	if (sumDomainToUnixOffsetNs_ >= 0ll)
-	{
-		averageRelativeDomainToUnixOffsetNs = (sumDomainToUnixOffsetNs_ + (measurements / 2)) / measurements;
-	}
-	else
-	{
-		averageRelativeDomainToUnixOffsetNs = (sumDomainToUnixOffsetNs_ - (measurements / 2)) / measurements;
-	}
-
-	const int64_t initialDomainToUnixOffsetNs = initialUnixNs_ - initialDomainNs_;
-
-	const int64_t domainToUnixOffsetNs = initialDomainToUnixOffsetNs + averageRelativeDomainToUnixOffsetNs;
-
-	if (measurements_ >= necessaryMeasurements_)
+	if (isFinal)
 	{
 		domainToUnixOffsetNs_ = domainToUnixOffsetNs;
 	}
@@ -313,11 +352,9 @@ int64_t TimestampConverter::domainToUnixOffset()
 #ifdef OCEAN_INTENSIVE_DEBUG
 		Log::debug() << " ";
 		Log::debug() << "TimestampConverter:";
-		Log::debug() << "Measurement iteration: " << measurements_;
 		Log::debug() << "Current domain time: " << domainNs;
 		Log::debug() << "Current unix time: " << unixNs;
 		Log::debug() << "Domain to unix offset: " << unixNs - domainNs;
-		Log::debug() << "Average relative domain to unix offset: " << averageRelativeDomainToUnixOffsetNs;
 		Log::debug() << "Averaged domain to unix offset: " << domainToUnixOffsetNs;
 
 		if (domainToUnixOffsetNs_ != invalidValue_)
@@ -339,20 +376,7 @@ TimestampConverter& TimestampConverter::operator=(TimestampConverter&& converter
 		domainToUnixOffsetNs_ = converter.domainToUnixOffsetNs_.load();
 		converter.domainToUnixOffsetNs_ = invalidValue_;
 
-		initialDomainNs_ = converter.initialDomainNs_;
-		converter.initialDomainNs_ = invalidValue_;
-
-		initialUnixNs_ = converter.initialUnixNs_;
-		converter.initialUnixNs_ = invalidValue_;
-
-		sumDomainToUnixOffsetNs_ = converter.sumDomainToUnixOffsetNs_;
-		converter.sumDomainToUnixOffsetNs_ = 0;
-
-		measurements_ = converter.measurements_;
-		converter.measurements_ = 0;
-
-		necessaryMeasurements_ = converter.necessaryMeasurements_;
-		converter.necessaryMeasurements_ = 0;
+		offsetCalculator_ = std::move(converter.offsetCalculator_);
 
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 		domainPosixClockId_ = converter.domainPosixClockId_;
