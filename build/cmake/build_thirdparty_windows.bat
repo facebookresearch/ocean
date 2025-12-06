@@ -3,18 +3,18 @@
 @REM This source code is licensed under the MIT license found in the
 @REM LICENSE file in the root directory of this source tree.
 
-echo off
+@echo off
 
 @REM Determine the location of the source directory from the location of this script
-set OCEAN_THIRD_PARTY_SOURCE_DIR="%~dp0..\..\build\cmake\third-party"
-set DEFAULT_BUILD_PATH=%cd%\ocean_build_thirdparty
-set DEFAULT_INSTALL_PATH=%cd%\ocean_install_thirdparty
-set OCEAN_PLATFORM=windows
+set "OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party"
+set "DEFAULT_BUILD_PATH=%cd%\ocean_build_thirdparty"
+set "DEFAULT_INSTALL_PATH=%cd%\ocean_install_thirdparty"
+set "OCEAN_PLATFORM=windows"
 
-@echo off
 setlocal enableDelayedExpansion
 
-set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -archive:NULL -subdivide:OFF -h:"
+set "options=-install:%DEFAULT_INSTALL_PATH% -build:%DEFAULT_BUILD_PATH% -config:debug,release -link:static,shared -archive:NULL -subdivide:OFF -h:"
+set "SHOW_HELP=0"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -22,7 +22,7 @@ if not "%~1"=="" (
   set "test=!options:*%~1:=! "
   if "!test!"=="!options! " (
       echo Error: Invalid option %~1
-      set -h=1
+      set SHOW_HELP=1
   ) else if "!test:~0,1!"==" " (
       set "%~1=1"
   ) else (
@@ -34,7 +34,7 @@ if not "%~1"=="" (
       set "val=%~2"
       call :escapeVal
       setlocal enableDelayedExpansion
-      for /f delims^=^ eol^= %%A in ("!val!") do endlocal&endlocal&set "%~1=%%A" !
+      for /f delims^=^ eol^= %%A in ("!val!") do endlocal&endlocal&set "%~1=%%A"
       shift /1
   )
   shift /1
@@ -47,7 +47,11 @@ set "val=%val:!=^!%"
 exit /b
 :endArgs
 
-if !-h!==1 (
+if "!SHOW_HELP!"=="1" goto :show_help
+goto :skip_help
+
+:show_help
+    setlocal disableDelayedExpansion
     echo Script to build the third-party libraries required by Ocean :
     echo(
     echo  %~n0  [-h] [-install INSTALL_DIR] [-build BUILD_DIR] [-config BUILD_CONFIG]
@@ -80,8 +84,10 @@ if !-h!==1 (
     echo(
     echo   -h : This summary
     echo(
+    endlocal
     exit /b
-)
+
+:skip_help
 
 set BUILD_FAILURES=
 
@@ -140,7 +146,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat windows %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! /m:16 !-subdivide! "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" "-DCMAKE_CONFIGURATION_TYPES=!BUILD_TYPE!" "-DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS!" "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!" "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+call "%OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat" windows "%OCEAN_THIRD_PARTY_SOURCE_DIR%" !BUILD_DIRECTORY! /m:16 !-subdivide! "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" "-DCMAKE_CONFIGURATION_TYPES=!BUILD_TYPE!" "-DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS!" "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!" "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 @echo off
 if %errorlevel% neq 0 (
