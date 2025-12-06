@@ -244,9 +244,25 @@ Timestamp SerializerDevicePlayer::playNextFrame()
 			// however, let's try to go through some additional samples to ensure that we have processed all samples with older or same timestamp
 
 			const IO::Serialization::DataTimestamp dataTimestamp = samplePair.second->dataTimestamp();
-			const double maxPlaybackTimestamp = samplePair.second->playbackTimestamp() + 0.5;
 
-			processLookaheadSamples(dataTimestamp, maxPlaybackTimestamp);
+			IO::Serialization::DataTimestamp lookaheadDataTimestamp = dataTimestamp;
+
+			if (stopMotionTolerance_.isValid())
+			{
+				ocean_assert(lookaheadDataTimestamp.isDouble() == stopMotionTolerance_.isDouble());
+				if (lookaheadDataTimestamp.isDouble() != stopMotionTolerance_.isDouble())
+				{
+					Log::error() << "The data timestamp and the tolerance timestamp are not of the same type!";
+
+					return Timestamp(false);
+				}
+
+				lookaheadDataTimestamp += stopMotionTolerance_;
+			}
+
+			const double maxPlaybackTimestamp = samplePair.second->playbackTimestamp() + 0.5; // 0.5 seconds
+
+			processLookaheadSamples(lookaheadDataTimestamp, maxPlaybackTimestamp);
 
 			processSample(samplePair.first, std::move(samplePair.second));
 
@@ -275,6 +291,21 @@ DevicePlayer::TransformationResult SerializerDevicePlayer::transformation(const 
 	// For now, transformation extraction is not implemented
 	// This could be extended to extract transformations from tracker devices
 	return TR_DOES_NOT_EXIST;
+}
+
+bool SerializerDevicePlayer::setStopMotionTolerance(const IO::Serialization::DataTimestamp& stopMotionTolerance)
+{
+	ocean_assert(stopMotionTolerance.isValid());
+	if (!stopMotionTolerance.isValid())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	stopMotionTolerance_ = stopMotionTolerance;
+
+	return true;
 }
 
 bool SerializerDevicePlayer::isPlaying() const

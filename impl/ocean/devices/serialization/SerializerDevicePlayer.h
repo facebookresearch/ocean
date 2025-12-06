@@ -230,6 +230,17 @@ class OCEAN_DEVICES_SERIALIZATION_EXPORT SerializerDevicePlayer :
 		inline bool isStarted() const override;
 
 		/**
+		 * Sets the tolerance for stop-motion playback mode.
+		 * The tolerance defines a time window beyond the current frame's timestamp within which additional samples will be processed together with the frame.
+		 * This is useful when sensor samples (e.g., tracker data) have timestamps slightly newer than the corresponding video frame but should still be associated with it.
+		 * The tolerance must have the same value type (double or int64) as the data timestamps in the recording.
+		 * @param stopMotionTolerance The tolerance to add to each frame's timestamp, must be valid
+		 * @return True, if the tolerance was set successfully
+		 * @see playNextFrame().
+		 */
+		bool setStopMotionTolerance(const IO::Serialization::DataTimestamp& stopMotionTolerance);
+
+		/**
 		 * Returns whether this player is currently playing.
 		 * @return True, if so
 		 */
@@ -427,6 +438,9 @@ class OCEAN_DEVICES_SERIALIZATION_EXPORT SerializerDevicePlayer :
 
 		/// The sample queue holding pending samples for the stop-motion mode.
 		SampleQueue stopMotionSampleQueue_;
+
+		/// The tolerance for stop-motion playback defining a time window beyond the current frame's timestamp for sample processing.
+		IO::Serialization::DataTimestamp stopMotionTolerance_;
 };
 
 inline SerializerDevicePlayer::FrameMediumData::FrameMediumData(const Media::PixelImageRef& pixelImage) :
