@@ -99,6 +99,22 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataTimestamp
 		inline bool isValid() const;
 
 		/**
+		 * Adds two timestamps and returns the result.
+		 * Both timestamps must have the same value type.
+		 * @param dataTimestamp The second timestamp to add
+		 * @return The sum of both timestamps
+		 */
+		inline DataTimestamp operator+(const DataTimestamp& dataTimestamp) const;
+
+		/**
+		 * Adds another timestamp to this timestamp.
+		 * Both timestamps must have the same value type.
+		 * @param dataTimestamp The timestamp to add
+		 * @return Reference to this timestamp
+		 */
+		inline DataTimestamp& operator+=(const DataTimestamp& dataTimestamp);
+
+		/**
 		 * Returns whether two timestamps are equal.
 		 * @param dataTimestamp The second timestamp to compare
 		 * @return True, if so
@@ -223,6 +239,50 @@ inline double DataTimestamp::forceDouble() const
 inline bool DataTimestamp::isValid() const
 {
 	return valueType_ != VT_INVALID;
+}
+
+inline DataTimestamp DataTimestamp::operator+(const DataTimestamp& dataTimestamp) const
+{
+	ocean_assert(isValid() && dataTimestamp.isValid());
+
+	if (valueType_ != dataTimestamp.valueType_)
+	{
+		ocean_assert(false && "Value types do not match");
+		return DataTimestamp();
+	}
+
+	if (valueType_ == VT_DOUBLE)
+	{
+		return DataTimestamp(value_.doubleValue_ + dataTimestamp.value_.doubleValue_);
+	}
+	else
+	{
+		ocean_assert(valueType_ == VT_INT64);
+		return DataTimestamp(value_.intValue_ + dataTimestamp.value_.intValue_);
+	}
+}
+
+inline DataTimestamp& DataTimestamp::operator+=(const DataTimestamp& dataTimestamp)
+{
+	ocean_assert(isValid() && dataTimestamp.isValid());
+
+	if (valueType_ != dataTimestamp.valueType_)
+	{
+		ocean_assert(false && "Value types do not match");
+		return *this;
+	}
+
+	if (valueType_ == VT_DOUBLE)
+	{
+		value_.doubleValue_ += dataTimestamp.value_.doubleValue_;
+	}
+	else
+	{
+		ocean_assert(valueType_ == VT_INT64);
+		value_.intValue_ += dataTimestamp.value_.intValue_;
+	}
+
+	return *this;
 }
 
 }
