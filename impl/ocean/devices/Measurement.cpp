@@ -199,6 +199,7 @@ Measurement::SampleRef Measurement::sample(const Timestamp& timestamp, const Int
 	if (interpolationStrategy == IS_TIMESTAMP_INTERPOLATE)
 	{
 		const double delta = lowerDelta + upperDelta;
+		ocean_assert(NumericD::isEqual(delta, double(iUpper->first - iLower->first)));
 
 		if (NumericD::isEqualEps(delta))
 		{
