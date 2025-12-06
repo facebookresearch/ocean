@@ -230,15 +230,20 @@ FrameType::PixelFormat Bitmap::internalPixelFormat(const FrameType::PixelFormat 
 
 	switch ((std::underlying_type<FrameType::PixelFormat>::type)(pixelFormat))
 	{
-		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_FULL_RANGE:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
 		case FrameType::genericPixelFormat<uint8_t, 1u>():
-			return FrameType::FORMAT_Y8;
+			return FrameType::FORMAT_Y8_FULL_RANGE;
 
 		case FrameType::FORMAT_RGB24:
-		case FrameType::FORMAT_Y_U_V12:
-		case FrameType::FORMAT_Y_UV12:
-		case FrameType::FORMAT_Y_V_U12:
-		case FrameType::FORMAT_Y_VU12:
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
+		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
 		case FrameType::FORMAT_YUYV16:
 		case FrameType::FORMAT_BGGR10_PACKED:
 		case FrameType::FORMAT_RGGB10_PACKED:
