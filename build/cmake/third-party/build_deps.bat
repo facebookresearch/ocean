@@ -32,13 +32,15 @@ set CMAKE_ARGS=!CMAKE_ARGS! "%arg%"
 @REM Extract base install prefix
 echo !arg! | findstr /B /C:"-DCMAKE_INSTALL_PREFIX=" >nul
 if !ERRORLEVEL! EQU 0 (
-    set BASE_INSTALL_PREFIX=!arg:-DCMAKE_INSTALL_PREFIX=!
+    set "temparg=!arg!"
+    for /F "tokens=1* delims==" %%A in ("!temparg!") do set "BASE_INSTALL_PREFIX=%%B"
 )
 
 @REM Extract base find root path
 echo !arg! | findstr /B /C:"-DCMAKE_FIND_ROOT_PATH=" >nul
 if !ERRORLEVEL! EQU 0 (
-    set BASE_FIND_ROOT_PATH=!arg:-DCMAKE_FIND_ROOT_PATH=!
+    set "temparg=!arg!"
+    for /F "tokens=1* delims==" %%A in ("!temparg!") do set "BASE_FIND_ROOT_PATH=%%B"
 )
 
 shift
