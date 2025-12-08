@@ -13,6 +13,8 @@
 
 #include "ocean/base/RandomGenerator.h"
 
+#include <cmath>
+
 namespace Ocean
 {
 

@@ -8,6 +8,8 @@
 #include "ocean/test/testdevices/TestGPSTracker.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/devices/GPSTracker.h"
 
@@ -88,7 +90,7 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 	Log::info() << "Testing parseGPSLocation():";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -102,31 +104,31 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 		if (Devices::GPSTracker::parseGPSLocation("GPS Location ,", parsedLatitude, parsedLongitude)
 				|| Devices::GPSTracker::parseGPSLocation("GPS Location ,", parsedLatitude, parsedLongitude, &parsedAltitude))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (Devices::GPSTracker::parseGPSLocation("GPS Location ,,", parsedLatitude, parsedLongitude)
 				|| Devices::GPSTracker::parseGPSLocation("GPS Location ,,", parsedLatitude, parsedLongitude, &parsedAltitude))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (Devices::GPSTracker::parseGPSLocation("GPS Location , ,", parsedLatitude, parsedLongitude)
 				|| Devices::GPSTracker::parseGPSLocation("GPS Location , ,", parsedLatitude, parsedLongitude, &parsedAltitude))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (Devices::GPSTracker::parseGPSLocation("GPS Location 0.1234, ", parsedLatitude, parsedLongitude)
 				|| Devices::GPSTracker::parseGPSLocation("GPS Location 0.1234, ", parsedLatitude, parsedLongitude, &parsedAltitude))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (Devices::GPSTracker::parseGPSLocation("GPS Location 0.1234, 0.5678, ", parsedLatitude, parsedLongitude)
 				|| Devices::GPSTracker::parseGPSLocation("GPS Location 0.1234, 0.5678, ", parsedLatitude, parsedLongitude, &parsedAltitude))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -151,12 +153,12 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 			{
 				if (!NumericD::isEqual(latitude, parsedLatitude, 0.000001) || !NumericD::isEqual(longitude, parsedLongitude, 0.000001) || parsedAltitude != NumericD::maxValue())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			// invalid string
@@ -174,7 +176,7 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 
 				if (Devices::GPSTracker::parseGPSLocation(locationString, parsedLatitude, parsedLongitude, usedParsedAltitude))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -194,18 +196,18 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 			{
 				if (usedParsedAltitude == nullptr)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else if (!NumericD::isEqual(latitude, parsedLatitude, 0.000001) || !NumericD::isEqual(longitude, parsedLongitude, 0.000001) || !NumericD::isEqual(altitude, parsedAltitude, 0.000001))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
 				if (usedParsedAltitude != nullptr)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -224,23 +226,16 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 
 				if (Devices::GPSTracker::parseGPSLocation(locationString, parsedLatitude, parsedLongitude, usedParsedAltitude))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
-	while(startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestGPSTracker::testDecodePolyline()
@@ -249,7 +244,7 @@ bool TestGPSTracker::testDecodePolyline()
 
 	constexpr double threshold = 0.0001;
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	std::vector<Devices::GPSTracker::Location> locations;
 	if (Devices::GPSTracker::decodePolyline("_p~iF~ps|U_ulLnnqC_mqNvxq`@", 5u, locations))
@@ -267,19 +262,19 @@ bool TestGPSTracker::testDecodePolyline()
 			{
 				if (NumericD::isNotEqual(locations[n].latitude(), coordinates[n][0], threshold) || NumericD::isNotEqual(locations[n].longitude(), coordinates[n][1], threshold))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 		else
 		{
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	locations.clear();
@@ -307,31 +302,24 @@ bool TestGPSTracker::testDecodePolyline()
 			{
 				if (NumericD::isNotEqual(locations[n].latitude(), coordinates[n][0], threshold) || NumericD::isNotEqual(locations[n].longitude(), coordinates[n][1], threshold))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 		else
 		{
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestGPSTracker::testApproximatedDistanceBetweenLocations(const double testDuration)
@@ -345,13 +333,14 @@ bool TestGPSTracker::testApproximatedDistanceBetweenLocations(const double testD
 
 	RandomGenerator randomGenerator;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const double latitudeA = RandomD::scalar(randomGenerator, -90.0, 90.0);
 		const double longitudeA = RandomD::scalar(randomGenerator, -180.0, 180.0);
 
@@ -382,21 +371,16 @@ bool TestGPSTracker::testApproximatedDistanceBetweenLocations(const double testD
 
 		const double approximatedDistance = Devices::GPSTracker::approximatedDistanceBetweenLocations(locationA, locationB, earthRadius);
 
-		if (NumericD::isEqual(randomDistance, approximatedDistance, 2.0))
+		if (!NumericD::isEqual(randomDistance, approximatedDistance, 2.0))
 		{
-			++validIterations;
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
-	while(startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 } // namespace TestDevices
