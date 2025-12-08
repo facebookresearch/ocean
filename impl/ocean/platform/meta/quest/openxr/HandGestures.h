@@ -103,17 +103,41 @@ class HandGestures
 		 */
 		static bool isHandSpreading(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_hand, const Scalar maxAngle = Numeric::deg2rad(20), const Scalar minTipDistance = Scalar(0.025));
 
-		/**
-		 * Returns whether a hand is making a grab gesture (whether the hand is grabbing a ball like object).
-		 * @param jointPositions The positions of the joints of a hand, defined in world, either XR_HAND_JOINT_COUNT_EXT positions (or zero to fail)
-		 * @param isLeft True, if the hand is a left hand; False, if the hand is a right hand
-		 * @param world_T_hand The resulting transformation between hand and world, with origin in the center of the hand, with y-axis along the middle finger, with z-axis upwards away from the hand, and x-axis to the right
-		 * @param minAngle The minimal median angle between bones of the fingers, in radian, with range [0, maxAngle)
-		 * @param maxAngle The maximal median angle between bones of the fingers, in radian, with range (minAngle, PI)
-		 * @param minTipDistance The minimal distance between all fingertips and the thumb, in meter, with range [0, infinity)
-		 * @return True, if so
-		 */
-		static bool isHandGrabbing(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_hand, const Scalar minAngle = Numeric::deg2rad(25), const Scalar maxAngle = Numeric::deg2rad(65), const Scalar minTipDistance = Scalar(0.04));
+	/**
+	 * Returns whether a hand is making a grab gesture (whether the hand is grabbing a ball like object).
+	 * @param jointPositions The positions of the joints of a hand, defined in world, either XR_HAND_JOINT_COUNT_EXT positions (or zero to fail)
+	 * @param isLeft True, if the hand is a left hand; False, if the hand is a right hand
+	 * @param world_T_hand The resulting transformation between hand and world, with origin in the center of the hand, with y-axis along the middle finger, with z-axis upwards away from the hand, and x-axis to the right
+	 * @param minAngle The minimal median angle between bones of the fingers, in radian, with range [0, maxAngle)
+	 * @param maxAngle The maximal median angle between bones of the fingers, in radian, with range (minAngle, PI)
+	 * @param minTipDistance The minimal distance between all fingertips and the thumb, in meter, with range [0, infinity)
+	 * @return True, if so
+	 */
+	static bool isHandGrabbing(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_hand, const Scalar minAngle = Numeric::deg2rad(25), const Scalar maxAngle = Numeric::deg2rad(65), const Scalar minTipDistance = Scalar(0.04));
+
+	/**
+	 * Returns whether a hand is making a thumbs up gesture (thumb extended upward with other fingers curled).
+	 * @param jointPositions The positions of the joints of a hand, defined in world, either XR_HAND_JOINT_COUNT_EXT positions (or zero to fail)
+	 * @param isLeft True, if the hand is a left hand; False, if the hand is a right hand
+	 * @param world_T_thumb The resulting transformation between thumb and world, with origin at the thumb tip, y-axis along the thumb (from base to tip), z-axis perpendicular to hand plane (away from palm), and x-axis to complete right-handed frame
+	 * @param maxThumbAngle The maximal angle between bones of the thumb, in radian, with range [0, PI)
+	 * @param minOtherFingerAngle The minimal median angle between bones in other fingers (to ensure they are curled), in radian, with range [0, PI)
+	 * @param maxTipDistance The maximal distance between fingertips (not including thumb) to ensure they are clustered, in meter, with range [0, infinity)
+	 * @return True, if so
+	 */
+	static bool isThumbUp(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_thumb, const Scalar maxThumbAngle = Numeric::deg2rad(20), const Scalar minOtherFingerAngle = Numeric::deg2rad(35), const Scalar maxTipDistance = Scalar(0.04));
+
+	/**
+	 * Returns whether a hand is making a thumbs down gesture (thumb extended downward with other fingers curled).
+	 * @param jointPositions The positions of the joints of a hand, defined in world, either XR_HAND_JOINT_COUNT_EXT positions (or zero to fail)
+	 * @param isLeft True, if the hand is a left hand; False, if the hand is a right hand
+	 * @param world_T_thumb The resulting transformation between thumb and world, with origin at the thumb tip, y-axis along the thumb (from base to tip), z-axis perpendicular to hand plane (away from palm), and x-axis to complete right-handed frame
+	 * @param maxThumbAngle The maximal angle between bones of the thumb, in radian, with range [0, PI)
+	 * @param minOtherFingerAngle The minimal median angle between bones in other fingers (to ensure they are curled), in radian, with range [0, PI)
+	 * @param maxTipDistance The maximal distance between fingertips (not including thumb) to ensure they are clustered, in meter, with range [0, infinity)
+	 * @return True, if so
+	 */
+	static bool isThumbDown(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_thumb, const Scalar maxThumbAngle = Numeric::deg2rad(20), const Scalar minOtherFingerAngle = Numeric::deg2rad(35), const Scalar maxTipDistance = Scalar(0.04));
 };
 
 }

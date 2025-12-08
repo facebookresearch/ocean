@@ -424,6 +424,143 @@ bool HandGestures::isHandGrabbing(const Vectors3& jointPositions, const bool isL
 	return true;
 }
 
+namespace
+{
+
+bool validateThumbStraight(const Vectors3& jointPositions, const Scalar maxThumbAngle)
+{
+	constexpr Index32 thumbJointsArray[4] = {XR_HAND_JOINT_THUMB_METACARPAL_EXT, XR_HAND_JOINT_THUMB_PROXIMAL_EXT, XR_HAND_JOINT_THUMB_DISTAL_EXT, XR_HAND_JOINT_THUMB_TIP_EXT};
+	const Indices32 thumbJoints(thumbJointsArray, thumbJointsArray + 4);
+
+	Scalar resultMaxAngle;
+	return HandGestures::determineBoneAngles(jointPositions, thumbJoints, nullptr, &resultMaxAngle) && resultMaxAngle <= maxThumbAngle;
+}
+
+bool validateFingerCurled(const Vectors3& jointPositions, const Indices32& jointIndices, const Scalar minAngle)
+{
+	Scalar resultMedianAngle;
+	return HandGestures::determineBoneAngles(jointPositions, jointIndices, nullptr, nullptr, &resultMedianAngle) && resultMedianAngle >= minAngle;
+}
+
+bool validateOtherFingersCurled(const Vectors3& jointPositions, const Scalar minOtherFingerAngle)
+{
+	constexpr Index32 indexJointsArray[3] = {XR_HAND_JOINT_INDEX_PROXIMAL_EXT, XR_HAND_JOINT_INDEX_INTERMEDIATE_EXT, XR_HAND_JOINT_INDEX_DISTAL_EXT};
+	constexpr Index32 middleJointsArray[3] = {XR_HAND_JOINT_MIDDLE_PROXIMAL_EXT, XR_HAND_JOINT_MIDDLE_INTERMEDIATE_EXT, XR_HAND_JOINT_MIDDLE_DISTAL_EXT};
+	constexpr Index32 ringJointsArray[3] = {XR_HAND_JOINT_RING_PROXIMAL_EXT, XR_HAND_JOINT_RING_INTERMEDIATE_EXT, XR_HAND_JOINT_RING_DISTAL_EXT};
+	constexpr Index32 littleJointsArray[3] = {XR_HAND_JOINT_LITTLE_PROXIMAL_EXT, XR_HAND_JOINT_LITTLE_INTERMEDIATE_EXT, XR_HAND_JOINT_LITTLE_DISTAL_EXT};
+
+	const Indices32 indexJoints(indexJointsArray, indexJointsArray + 3);
+	const Indices32 middleJoints(middleJointsArray, middleJointsArray + 3);
+	const Indices32 ringJoints(ringJointsArray, ringJointsArray + 3);
+	const Indices32 littleJoints(littleJointsArray, littleJointsArray + 3);
+
+	return validateFingerCurled(jointPositions, indexJoints, minOtherFingerAngle)
+		&& validateFingerCurled(jointPositions, middleJoints, minOtherFingerAngle)
+		&& validateFingerCurled(jointPositions, ringJoints, minOtherFingerAngle)
+		&& validateFingerCurled(jointPositions, littleJoints, minOtherFingerAngle);
+}
+
+bool validateFingerTipsTogether(const Vectors3& jointPositions, const Scalar maxTipDistance)
+{
+	const Scalar sqrMaxTipDistance = Numeric::sqr(maxTipDistance);
+
+	return jointPositions[XR_HAND_JOINT_INDEX_TIP_EXT].sqrDistance(jointPositions[XR_HAND_JOINT_MIDDLE_TIP_EXT]) <= sqrMaxTipDistance
+		&& jointPositions[XR_HAND_JOINT_MIDDLE_TIP_EXT].sqrDistance(jointPositions[XR_HAND_JOINT_RING_TIP_EXT]) <= sqrMaxTipDistance
+		&& jointPositions[XR_HAND_JOINT_RING_TIP_EXT].sqrDistance(jointPositions[XR_HAND_JOINT_LITTLE_TIP_EXT]) <= sqrMaxTipDistance;
+}
+
+bool computeThumbTransform(const Vectors3& jointPositions, const bool isLeft, const Vector3& thumbDirection, HomogenousMatrix4& world_T_thumb)
+{
+	Vector3 xAxis = jointPositions[XR_HAND_JOINT_LITTLE_PROXIMAL_EXT] - jointPositions[XR_HAND_JOINT_INDEX_PROXIMAL_EXT];
+
+	if (isLeft)
+	{
+		xAxis = -xAxis;
+	}
+
+	Vector3 yAxis = thumbDirection;
+	Vector3 zAxis = xAxis.cross(yAxis);
+
+	if (!zAxis.normalize() || !yAxis.normalize())
+	{
+		return false;
+	}
+
+	xAxis = yAxis.cross(zAxis);
+
+	const Vector3& position = jointPositions[XR_HAND_JOINT_THUMB_TIP_EXT];
+
+	world_T_thumb = HomogenousMatrix4(xAxis, yAxis, zAxis, position);
+
+	return true;
+}
+
+}
+
+bool HandGestures::isThumbUp(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_thumb, const Scalar maxThumbAngle, const Scalar minOtherFingerAngle, const Scalar maxTipDistance)
+{
+	if (jointPositions.size() != XR_HAND_JOINT_COUNT_EXT)
+	{
+		return false;
+	}
+
+	ocean_assert(maxThumbAngle >= 0 && maxThumbAngle < Numeric::pi());
+	ocean_assert(minOtherFingerAngle >= 0 && minOtherFingerAngle < Numeric::pi());
+	ocean_assert(maxTipDistance >= 0);
+
+	if (!validateThumbStraight(jointPositions, maxThumbAngle) || !validateOtherFingersCurled(jointPositions, minOtherFingerAngle) || !validateFingerTipsTogether(jointPositions, maxTipDistance))
+	{
+		return false;
+	}
+
+	Vector3 thumbDirection = jointPositions[XR_HAND_JOINT_THUMB_TIP_EXT] - jointPositions[XR_HAND_JOINT_THUMB_METACARPAL_EXT];
+
+	if (!thumbDirection.normalize())
+	{
+		return false;
+	}
+
+	constexpr Scalar minUpDotProduct = Scalar(0.7);
+	if (thumbDirection.y() < minUpDotProduct)
+	{
+		return false;
+	}
+
+	return computeThumbTransform(jointPositions, isLeft, thumbDirection, world_T_thumb);
+}
+
+bool HandGestures::isThumbDown(const Vectors3& jointPositions, const bool isLeft, HomogenousMatrix4& world_T_thumb, const Scalar maxThumbAngle, const Scalar minOtherFingerAngle, const Scalar maxTipDistance)
+{
+	if (jointPositions.size() != XR_HAND_JOINT_COUNT_EXT)
+	{
+		return false;
+	}
+
+	ocean_assert(maxThumbAngle >= 0 && maxThumbAngle < Numeric::pi());
+	ocean_assert(minOtherFingerAngle >= 0 && minOtherFingerAngle < Numeric::pi());
+	ocean_assert(maxTipDistance >= 0);
+
+	if (!validateThumbStraight(jointPositions, maxThumbAngle) || !validateOtherFingersCurled(jointPositions, minOtherFingerAngle) || !validateFingerTipsTogether(jointPositions, maxTipDistance))
+	{
+		return false;
+	}
+
+	Vector3 thumbDirection = jointPositions[XR_HAND_JOINT_THUMB_TIP_EXT] - jointPositions[XR_HAND_JOINT_THUMB_METACARPAL_EXT];
+
+	if (!thumbDirection.normalize())
+	{
+		return false;
+	}
+
+	constexpr Scalar maxDownDotProduct = Scalar(-0.7);
+	if (thumbDirection.y() > maxDownDotProduct)
+	{
+		return false;
+	}
+
+	return computeThumbTransform(jointPositions, isLeft, thumbDirection, world_T_thumb);
+}
+
 }
 
 }
