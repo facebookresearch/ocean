@@ -53,10 +53,18 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestDevices.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestGPSTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestGravityTracker3DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestOrientationTracker3DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestPositionTracker3DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestTracker6DOF.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestDevices.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestGPSTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestGravityTracker3DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestOrientationTracker3DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestPositionTracker3DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestTracker6DOF.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{196C6E0C-D918-4EA3-9FE8-8DD57203EEF5}</ProjectGuid>

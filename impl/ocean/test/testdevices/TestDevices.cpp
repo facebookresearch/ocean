@@ -7,6 +7,10 @@
 
 #include "ocean/test/testdevices/TestDevices.h"
 #include "ocean/test/testdevices/TestGPSTracker.h"
+#include "ocean/test/testdevices/TestGravityTracker3DOF.h"
+#include "ocean/test/testdevices/TestOrientationTracker3DOF.h"
+#include "ocean/test/testdevices/TestPositionTracker3DOF.h"
+#include "ocean/test/testdevices/TestTracker6DOF.h"
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
@@ -77,6 +81,42 @@ bool testDevices(const double testDuration, Worker& /*worker*/, const std::strin
 		Log::info() << " ";
 		Log::info() << " ";
 		testResult = TestGPSTracker::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("gravitytracker3dof"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestGravityTracker3DOF::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("orientationtracker3dof"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestOrientationTracker3DOF::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("positiontracker3dof"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestPositionTracker3DOF::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("tracker6dof"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestTracker6DOF::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
