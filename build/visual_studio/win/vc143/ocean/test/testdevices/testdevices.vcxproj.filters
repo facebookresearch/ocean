@@ -11,6 +11,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestAccelerationSensor3DOF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestDevices.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -31,6 +34,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestAccelerationSensor3DOF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testdevices\TestDevices.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -6,6 +6,7 @@
  */
 
 #include "ocean/test/testdevices/TestDevices.h"
+#include "ocean/test/testdevices/TestAccelerationSensor3DOF.h"
 #include "ocean/test/testdevices/TestGPSTracker.h"
 #include "ocean/test/testdevices/TestGravityTracker3DOF.h"
 #include "ocean/test/testdevices/TestOrientationTracker3DOF.h"
@@ -73,6 +74,15 @@ bool testDevices(const double testDuration, Worker& /*worker*/, const std::strin
 	Log::info() << " ";
 
 	const TestSelector selector(testFunctions);
+
+	if (TestSelector subSelector = selector.shouldRun("accelerationsensor3dof"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestAccelerationSensor3DOF::test(testDuration, subSelector);
+	}
 
 	if (TestSelector subSelector = selector.shouldRun("gpstracker"))
 	{

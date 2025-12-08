@@ -114,6 +114,12 @@ class OCEAN_DEVICES_EXPORT AccelerationSensor3DOF : virtual public Sensor
 		 * Destructs a 3DOF acceleration sensor device.
 		 */
 		~AccelerationSensor3DOF() override;
+
+		/**
+		 * Interpolates between two 3DOF acceleration sensor samples.
+		 * @see Measurement::interpolateSamples().
+		 */
+		SampleRef interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const override;
 };
 
 inline AccelerationSensor3DOF::DeviceType AccelerationSensor3DOF::deviceTypeAccelerationSensor3DOF(const SensorType sensorType)
