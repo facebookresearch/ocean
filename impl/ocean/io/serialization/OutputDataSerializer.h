@@ -57,6 +57,9 @@ class OutputDataSerializer : public DataSerializer
 		/// Definition of a unique pointer holding a stream.
 		using UniqueStream = std::unique_ptr<Stream>;
 
+		/// Definition of a FIFO queue holding sample pairs.
+		using SampleQueue = std::queue<SamplePair>;
+
 	public:
 
 		/**
@@ -139,6 +142,9 @@ class OutputDataSerializer : public DataSerializer
 
 		/// The map mapping channel configurations to channel ids.
 		ChannelConfigurationMap channelConfigurationMap_;
+
+		/// The queue holding samples which are pending to be written.
+		SampleQueue sampleQueue_;
 };
 
 /**

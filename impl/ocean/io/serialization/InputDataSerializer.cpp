@@ -310,7 +310,7 @@ UniqueDataSample InputDataSerializer::sample(ChannelId& channelId, const double 
 		ocean_assert(startTimestamp_.isValid());
 		const double playbackTimestamp = double(currentTimestamp - startTimestamp_);
 
-		const double samplePlaybackTimestamp = sampleQueue_.front().second->playbackTimestamp();
+		const double samplePlaybackTimestamp = sampleQueue_.top().second->playbackTimestamp();
 
 		if (samplePlaybackTimestamp > playbackTimestamp * speed)
 		{
@@ -318,11 +318,10 @@ UniqueDataSample InputDataSerializer::sample(ChannelId& channelId, const double 
 		}
 	}
 
-	channelId = sampleQueue_.front().first;
-	UniqueDataSample sample = std::move(sampleQueue_.front().second);
-	sampleQueue_.pop();
+	SamplePair samplePair = sampleQueue_.popTop();
+	channelId = samplePair.first;
 
-	return sample;
+	return std::move(samplePair.second);
 }
 
 DataSerializer::ChannelConfiguration InputDataSerializer::channelConfiguration(const ChannelId channelId) const

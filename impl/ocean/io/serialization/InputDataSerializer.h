@@ -101,6 +101,37 @@ class InputDataSerializer : public DataSerializer
 		/// Definition of a map mapping channel ids to extended channels.
 		using ExtendedChannelMap = std::unordered_map<ChannelId, ExtendedChannel>;
 
+		/**
+		 * Comparator for SamplePair that orders by playback timestamp (min-heap).
+		 * Samples with smaller playback timestamps have higher priority.
+		 */
+		struct SamplePairComparator
+		{
+			/**
+			 * Compares two sample pairs by their playback timestamps.
+			 * @param sampleA The first sample pair
+			 * @param sampleB The second sample pair
+			 * @return True if 'sampleA' should come after 'sampleB' (i.e., 'sampleA' has a larger timestamp)
+			 */
+			inline bool operator()(const SamplePair& sampleA, const SamplePair& sampleB) const;
+		};
+
+		/**
+		 * A priority queue that allows moving elements out.
+		 * This extends std::priority_queue to provide access to the underlying container
+		 * for proper move semantics when popping elements.
+		 */
+		class SampleQueue : public std::priority_queue<SamplePair, std::vector<SamplePair>, SamplePairComparator>
+		{
+			public:
+
+				/**
+				 * Pops the top element from the queue.
+				 * @return The top element, moved out of the queue
+				 */
+				inline SamplePair popTop();
+		};
+
 	public:
 
 		/**
@@ -226,6 +257,9 @@ class InputDataSerializer : public DataSerializer
 		/// The callback function which is invoked whenever a new channel is parsed.
 		ChannelEventFunction channelEventFunction_;
 
+		/// The priority queue holding samples which are pending to be retrieved, ordered by playback timestamp (smallest first).
+		SampleQueue sampleQueue_;
+
 		/// The maximum number of pending samples in the queue.
 		static constexpr size_t maxPendingSampleQueueSize_ = 100;
 };
@@ -308,6 +342,23 @@ inline InputDataSerializer::ExtendedChannel::ExtendedChannel(const Channel& chan
 	factoryFunction_(factoryFunction)
 {
 	// nothing to do here
+}
+
+inline bool InputDataSerializer::SamplePairComparator::operator()(const SamplePair& sampleA, const SamplePair& sampleB) const
+{
+	return sampleA.second->playbackTimestamp() > sampleB.second->playbackTimestamp();
+}
+
+inline InputDataSerializer::SamplePair InputDataSerializer::SampleQueue::popTop()
+{
+	ocean_assert(!empty());
+
+	std::pop_heap(c.begin(), c.end(), comp);
+
+	SamplePair result = std::move(c.back());
+	c.pop_back();
+
+	return result;
 }
 
 inline FileInputDataSerializer::FileStream::FileStream(const std::string& filename) :

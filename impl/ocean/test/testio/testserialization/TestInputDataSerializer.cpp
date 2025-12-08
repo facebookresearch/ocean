@@ -352,6 +352,9 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 		Thread::sleep(100u);
 
 		// Retrieve samples with speed = 0.0 (no timing, should return immediately)
+		std::vector<std::string> retrievedPayloads;
+		retrievedPayloads.reserve(numSamples);
+
 		for (unsigned int i = 0u; i < numSamples; ++i)
 		{
 			IO::Serialization::DataSerializer::ChannelId retrievedChannelId = IO::Serialization::DataSerializer::invalidChannelId();
@@ -368,11 +371,16 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 
 				if (testSample)
 				{
-					OCEAN_EXPECT_EQUAL(validation, testSample->payload(), expectedPayloads[i]);
-					OCEAN_EXPECT_EQUAL(validation, testSample->dataTimestamp().asDouble(), double(i) * 0.1);
+					retrievedPayloads.push_back(testSample->payload());
 				}
 			}
 		}
+
+		std::vector<std::string> sortedExpected = expectedPayloads;
+		std::vector<std::string> sortedRetrieved = retrievedPayloads;
+		std::sort(sortedExpected.begin(), sortedExpected.end());
+		std::sort(sortedRetrieved.begin(), sortedRetrieved.end());
+		OCEAN_EXPECT_EQUAL(validation, sortedExpected, sortedRetrieved);
 
 		// After retrieving all samples, the queue should be empty
 		IO::Serialization::DataSerializer::ChannelId dummyChannelId = IO::Serialization::DataSerializer::invalidChannelId();

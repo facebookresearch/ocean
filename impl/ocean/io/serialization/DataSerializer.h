@@ -210,9 +210,6 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 		/// Definition of a pair holding a channel id and a unique data sample.
 		using SamplePair = std::pair<ChannelId, UniqueDataSample>;
 
-		/// Definition of a queue holding sample pairs.
-		using SampleQueue = std::queue<SamplePair>;
-
 		/**
 		 * This class implements a data sample holding channel configuration information.
 		 */
@@ -345,9 +342,6 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 
 		/// True, if the serializer succeeded; False, if an error occurred.
 		bool succeeded_ = true;
-
-		/// The queue holding samples which are pending to be processed.
-		SampleQueue sampleQueue_;
 
 		/// The lock for thread-safe access.
 		mutable Lock lock_;
