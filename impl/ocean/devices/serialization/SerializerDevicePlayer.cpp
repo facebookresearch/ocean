@@ -1048,6 +1048,8 @@ void SerializerDevicePlayer::threadRun()
 
 	ocean_assert(isStarted_);
 
+	double lastPlaybackTimestamp = NumericD::minValue();
+
 	while (!shouldThreadStop())
 	{
 		IO::Serialization::DataSerializer::ChannelId channelId = IO::Serialization::DataSerializer::invalidChannelId();
@@ -1065,6 +1067,13 @@ void SerializerDevicePlayer::threadRun()
 			Thread::sleep(1u);
 			continue;
 		}
+
+		if (sample->playbackTimestamp() < lastPlaybackTimestamp)
+		{
+			Log::warning() << "SerializerDevicePlayer: Playback timestamp is out of order, received " << String::toAString(sample->playbackTimestamp(), 6u) << " but last was " << String::toAString(lastPlaybackTimestamp, 6u);
+		}
+
+		lastPlaybackTimestamp = sample->playbackTimestamp();
 
 		processSample(channelId, std::move(sample));
 	}
