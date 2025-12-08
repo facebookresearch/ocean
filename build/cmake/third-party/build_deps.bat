@@ -73,10 +73,11 @@ for /F "eol=# usebackq delims=" %%d in ("%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependen
         @REM Per-library subdivision mode
         set LIB_INSTALL_PREFIX=%BASE_INSTALL_PREFIX%\%%d
         set LIB_FIND_ROOT_PATH=!PREVIOUS_LIBS_PATH!
+        set LIB_PREFIX_PATH=!PREVIOUS_LIBS_PATH!
 
         echo Installing to: !LIB_INSTALL_PREFIX!
 
-        @REM Build cmake args with modified install prefix and find root path
+        @REM Build cmake args with modified install prefix, find root path, and prefix path
         set LIB_CMAKE_ARGS=
         for %%a in (!CMAKE_ARGS!) do (
             set argval=%%~a
@@ -88,9 +89,20 @@ for /F "eol=# usebackq delims=" %%d in ("%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependen
                 if !ERRORLEVEL! EQU 0 (
                     set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "-DCMAKE_FIND_ROOT_PATH=!LIB_FIND_ROOT_PATH!"
                 ) else (
-                    set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "!argval!"
+                    echo !argval! | findstr /B /C:"-DCMAKE_PREFIX_PATH=" >nul
+                    if !ERRORLEVEL! EQU 0 (
+                        set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "-DCMAKE_PREFIX_PATH=!LIB_PREFIX_PATH!"
+                    ) else (
+                        set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "!argval!"
+                    )
                 )
             )
+        )
+
+        @REM Also explicitly add CMAKE_PREFIX_PATH if not already in CMAKE_ARGS
+        echo !CMAKE_ARGS! | findstr /C:"-DCMAKE_PREFIX_PATH=" >nul
+        if !ERRORLEVEL! NEQ 0 (
+            set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "-DCMAKE_PREFIX_PATH=!LIB_PREFIX_PATH!"
         )
 
         cmake -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d !LIB_CMAKE_ARGS!
