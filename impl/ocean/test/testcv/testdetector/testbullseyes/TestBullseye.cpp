@@ -137,7 +137,7 @@ bool TestBullseye::testBullseyeIsValid(const double testDuration, RandomGenerato
 
 		if (isValid)
 		{
-			bullseye = createRandomValidBullseye(randomGenerator);
+			bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 		}
 
 		if (bullseye.isValid() != isValid)
@@ -194,7 +194,7 @@ bool TestBullseye::testBullseyeConstructor(const double testDuration, RandomGene
 
 		// Test parameterized constructor with valid values
 		{
-			const Bullseye bullseye = createRandomValidBullseye(randomGenerator);
+			const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
 			if (!bullseye.isValid())
 			{
@@ -238,7 +238,7 @@ bool TestBullseye::testBullseyePosition(const double testDuration, RandomGenerat
 
 	do
 	{
-		const Bullseye bullseye = createRandomValidBullseye(randomGenerator);
+		const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
 		if (bullseye.position().x() < Scalar(0) || bullseye.position().y() < Scalar(0))
 		{
@@ -271,7 +271,7 @@ bool TestBullseye::testBullseyeRadius(const double testDuration, RandomGenerator
 
 	do
 	{
-		const Bullseye bullseye = createRandomValidBullseye(randomGenerator);
+		const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
 		if (bullseye.radius() <= Scalar(0))
 		{
@@ -304,7 +304,7 @@ bool TestBullseye::testBullseyeGrayThreshold(const double testDuration, RandomGe
 
 	do
 	{
-		const Bullseye bullseye = createRandomValidBullseye(randomGenerator);
+		const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
 		if (bullseye.grayThreshold() == 0u || bullseye.grayThreshold() >= 256u)
 		{
@@ -323,15 +323,6 @@ bool TestBullseye::testBullseyeGrayThreshold(const double testDuration, RandomGe
 	}
 
 	return allSucceeded;
-}
-
-Bullseye TestBullseye::createRandomValidBullseye(RandomGenerator& randomGenerator)
-{
-	const Vector2 position(Random::scalar(randomGenerator, Scalar(0), Scalar(4096)), Random::scalar(randomGenerator, Scalar(0), Scalar(4096)));
-	const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), Scalar(1024));
-	const unsigned int grayThreshold = RandomI::random(randomGenerator, 1u, 255u);
-
-	return Bullseye(position, radius, grayThreshold);
 }
 
 } // namespace TestBullseyes

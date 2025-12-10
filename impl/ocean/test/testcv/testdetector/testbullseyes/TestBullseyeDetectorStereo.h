@@ -13,6 +13,8 @@
 
 #include "ocean/cv/detector/bullseyes/BullseyeDetectorStereo.h"
 
+#include "ocean/cv/detector/bullseyes/Bullseye.h"
+
 namespace Ocean
 {
 
@@ -35,6 +37,27 @@ namespace TestBullseyes
 class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorStereo : protected CV::Detector::Bullseyes::BullseyeDetectorStereo
 {
 	public:
+
+		/**
+		 * Helper struct containing a randomized stereo camera setup for testing.
+		 */
+		struct StereoTestSetup
+		{
+			/// Camera A (left camera)
+			SharedAnyCamera cameraA;
+
+			/// Camera B (right camera)
+			SharedAnyCamera cameraB;
+
+			/// Transformation from device to world coordinates
+			HomogenousMatrix4 world_T_device;
+
+			/// Transformation from camera A to world coordinates
+			HomogenousMatrix4 world_T_cameraA;
+
+			/// Transformation from camera B to world coordinates
+			HomogenousMatrix4 world_T_cameraB;
+		};
 
 		/**
 		 * Tests the BullseyeDetectorStereo functions.
@@ -104,6 +127,34 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorStereo : prote
 		 * @return True, if succeeded
 		 */
 		static bool testComputeCostMatrix(const double testDuration, RandomGenerator& randomGenerator);
+
+	protected:
+
+		/**
+		 * Creates a randomized stereo camera setup for testing.
+		 * @param randomGenerator The random generator to use
+		 * @return A StereoTestSetup with randomized cameras and poses
+		 */
+		static StereoTestSetup createRandomStereoSetup(RandomGenerator& randomGenerator);
+
+		/**
+		 * Creates a random 3D world point that is visible in both cameras of the stereo setup.
+		 * @param randomGenerator The random generator to use
+		 * @param setup The stereo test setup containing cameras and poses
+		 * @param worldPoint The resulting world point (output)
+		 * @param imagePointA The projection of the world point in camera A (output)
+		 * @param imagePointB The projection of the world point in camera B (output)
+		 * @return True if a valid visible point was generated, false otherwise
+		 */
+		static bool createRandomVisibleWorldPoint(RandomGenerator& randomGenerator, const StereoTestSetup& setup, Vector3& worldPoint, Vector2& imagePointA, Vector2& imagePointB);
+
+		/**
+		 * Creates a bullseye at a given position with random diameter and threshold.
+		 * @param randomGenerator The random generator to use
+		 * @param position The 2D position for the bullseye
+		 * @return A Bullseye at the specified position with random parameters
+		 */
+		static CV::Detector::Bullseyes::Bullseye createRandomBullseyeAtPosition(RandomGenerator& randomGenerator, const Vector2& position);
 };
 
 } // namespace TestBullseyes

@@ -83,10 +83,9 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestUtilities
 		 */
 		static bool testDrawBullseyes(const double testDuration, RandomGenerator& randomGenerator);
 
-	protected:
-
 		/**
-		 * Creates a random valid bullseye with random position, radius, and gray threshold
+		 * Creates a random valid bullseye with random position, radius, and gray threshold.
+		 * This is a shared helper function used by multiple test classes.
 		 * @param randomGenerator A random generator that will be used to generate test data
 		 * @return A valid bullseye with random parameters
 		 */

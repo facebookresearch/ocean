@@ -9,6 +9,8 @@
 
 #include "ocean/test/testcv/testdetector/testbullseyes/TestCVDetectorBullseyes.h"
 
+#include "ocean/test/testcv/testdetector/testbullseyes/TestUtilities.h"
+
 #include "ocean/base/RandomGenerator.h"
 
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
@@ -87,15 +89,6 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseye
 		 * @return True, if succeeded
 		 */
 		static bool testBullseyeGrayThreshold(const double testDuration, RandomGenerator& randomGenerator);
-
-	protected:
-
-		/**
-		 * Creates a random valid bullseye with random position, radius, and gray threshold
-		 * @param randomGenerator A random generator that will be used to generate test data
-		 * @return A valid bullseye with random parameters
-		 */
-		static Bullseye createRandomValidBullseye(RandomGenerator& randomGenerator);
 };
 
 } // namespace TestBullseyes
