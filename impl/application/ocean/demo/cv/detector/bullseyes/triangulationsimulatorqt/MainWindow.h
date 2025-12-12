@@ -246,6 +246,10 @@ class MainWindow : public QMainWindow
 		QLabel* deltaXLabel_ = nullptr;
 		QLabel* deltaYLabel_ = nullptr;
 
+		// Cone filter controls
+		QCheckBox* useConeCheckBox_ = nullptr;
+		QDoubleSpinBox* coneAngleSpinBox_ = nullptr;
+
 		// Statistics labels
 		QLabel* meanErrorLabel_ = nullptr;
 		QLabel* p50ErrorLabel_ = nullptr;

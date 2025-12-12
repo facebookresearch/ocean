@@ -132,6 +132,12 @@ struct SimulationConfig
 	/// When randomize=true: random in [-deltaY, +deltaY]
 	/// When randomize=false: exact offset
 	Scalar deltaY = Scalar(0.0);
+
+	/// Whether to filter points to a cone volume
+	bool useConeFilter = false;
+
+	/// Half-angle of the cone in degrees (from -Z axis)
+	Scalar coneHalfAngleDegrees = Scalar(25.0);
 };
 
 /**
@@ -362,6 +368,14 @@ class Scene
 		 */
 		void updateCameraTransform();
 
+		/**
+		 * Creates a wireframe cone visualization.
+		 * @param halfAngleRadians The half-angle of the cone in radians
+		 * @param length The length of the cone (depth)
+		 * @return The transform node containing the cone geometry
+		 */
+		Rendering::TransformRef createConeVisualization(Scalar halfAngleRadians, Scalar length);
+
 	protected:
 
 		/// The rendering engine
@@ -405,6 +419,9 @@ class Scene
 
 		/// Transform for the coordinate axes
 		Rendering::TransformRef axesTransform_;
+
+		/// Transform for the cone filter visualization
+		Rendering::TransformRef coneTransform_;
 
 		/// 3D positions of grid points
 		Vectors3 gridPoints_;

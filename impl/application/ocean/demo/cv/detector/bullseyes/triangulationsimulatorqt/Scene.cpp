@@ -530,6 +530,21 @@ void Scene::runSimulation()
 					continue;
 				}
 
+				// Check if point is inside the cone (if cone filter is enabled)
+				if (config_.useConeFilter)
+				{
+					const Scalar coneHalfAngleRad = Numeric::deg2rad(config_.coneHalfAngleDegrees);
+					const Vector3 pointDir = worldPoint.normalizedOrZero();
+					const Vector3 coneAxis(0, 0, -1);
+					const Scalar cosAngle = pointDir * coneAxis;
+					const Scalar cosHalfAngle = Numeric::cos(coneHalfAngleRad);
+
+					if (worldPoint.z() >= 0 || cosAngle < cosHalfAngle)
+					{
+						continue;
+					}
+				}
+
 				// Simulate triangulation with noise/offset applied
 				// Error metric: angular error (radians) - angle between ray to ground truth and ray to triangulated point
 				// as seen from the perturbed camera(s). If both cameras are perturbed, use the larger angle.
@@ -721,6 +736,11 @@ void Scene::updateVisualization()
 		scene_->removeChild(errorLinesTransform_);
 		errorLinesTransform_.release();
 	}
+	if (coneTransform_)
+	{
+		scene_->removeChild(coneTransform_);
+		coneTransform_.release();
+	}
 
 	// Create cameras for frustum visualization
 	const PinholeCamera leftCamera = createPinholeCameraFromConfig(config_.leftCamera);
@@ -743,6 +763,17 @@ void Scene::updateVisualization()
 	{
 		rightCameraTransform_->setTransformation(HomogenousMatrix4(Vector3(halfBaseline, 0, 0)));
 		scene_->addChild(rightCameraTransform_);
+	}
+
+	// Create cone visualization if enabled
+	if (config_.useConeFilter)
+	{
+		const Scalar coneHalfAngleRad = Numeric::deg2rad(config_.coneHalfAngleDegrees);
+		coneTransform_ = createConeVisualization(coneHalfAngleRad, config_.backDepthMeters);
+		if (coneTransform_)
+		{
+			scene_->addChild(coneTransform_);
+		}
 	}
 
 	// Create colorized points at the triangulated (noisy) locations
@@ -924,6 +955,61 @@ RGBAColor Scene::heatmapColor(Scalar errorRadians, const ColorizationConfig& con
 	}
 
 	return RGBAColor(r, g, b);
+}
+
+Rendering::TransformRef Scene::createConeVisualization(Scalar halfAngleRadians, Scalar length)
+{
+	if (engine_.isNull())
+	{
+		return Rendering::TransformRef();
+	}
+
+	// Create wireframe cone along -Z axis
+	// The cone has its apex at the origin and extends to z = -length
+
+	constexpr unsigned int numSegments = 36u;  // Number of segments around the base circle
+	constexpr unsigned int numRadialLines = 12u;  // Number of lines from apex to base
+
+	const Scalar baseRadius = length * Numeric::tan(halfAngleRadians);
+
+	Vectors3 vertices;
+	Rendering::VertexIndexGroups lineGroups;
+
+	// Apex point at origin
+	vertices.push_back(Vector3(0, 0, 0));  // index 0
+
+	// Base circle points
+	for (unsigned int i = 0u; i < numSegments; ++i)
+	{
+		const Scalar angle = Scalar(i) * Numeric::pi2() / Scalar(numSegments);
+		const Scalar x = baseRadius * Numeric::cos(angle);
+		const Scalar y = baseRadius * Numeric::sin(angle);
+		vertices.push_back(Vector3(x, y, -length));  // indices 1 to numSegments
+	}
+
+	// Create radial lines from apex to base
+	for (unsigned int i = 0u; i < numRadialLines; ++i)
+	{
+		const unsigned int baseIndex = 1u + (i * numSegments / numRadialLines);
+		Rendering::VertexIndices line;
+		line.push_back(0);  // apex
+		line.push_back(baseIndex);
+		lineGroups.push_back(line);
+	}
+
+	// Create base circle
+	for (unsigned int i = 0u; i < numSegments; ++i)
+	{
+		Rendering::VertexIndices line;
+		line.push_back(1u + i);
+		line.push_back(1u + ((i + 1u) % numSegments));
+		lineGroups.push_back(line);
+	}
+
+	// Semi-transparent white color (10% opacity)
+	const RGBAColor coneColor(1.0f, 1.0f, 1.0f, 0.1f);
+
+	return Rendering::Utilities::createLines(*engine_, vertices, lineGroups, coneColor, Scalar(1));
 }
 
 }

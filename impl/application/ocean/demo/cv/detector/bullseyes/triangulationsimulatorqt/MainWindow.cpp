@@ -167,6 +167,28 @@ QWidget* MainWindow::createConfigPanel()
 		connect(baselineSpinBox_, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::onConfigChanged);
 	}
 
+	// Cone Filter group
+	{
+		QGroupBox* group = new QGroupBox("Cone Filter");
+		QFormLayout* form = new QFormLayout(group);
+
+		useConeCheckBox_ = new QCheckBox();
+		useConeCheckBox_->setChecked(false);
+		form->addRow("Enable:", useConeCheckBox_);
+
+		coneAngleSpinBox_ = new QDoubleSpinBox();
+		coneAngleSpinBox_->setRange(0.0, 180.0);
+		coneAngleSpinBox_->setSingleStep(1.0);
+		coneAngleSpinBox_->setValue(25.0);
+		coneAngleSpinBox_->setSuffix(" deg");
+		form->addRow("Half-Angle:", coneAngleSpinBox_);
+
+		layout->addWidget(group);
+
+		connect(useConeCheckBox_, &QCheckBox::toggled, this, &MainWindow::onConfigChanged);
+		connect(coneAngleSpinBox_, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::onConfigChanged);
+	}
+
 	// RGB Camera group
 	{
 		QGroupBox* group = new QGroupBox("Left Camera (Yellow)");
@@ -478,6 +500,9 @@ SimulationConfig MainWindow::collectConfiguration()
 	config.numRepetitions = (unsigned int)repetitionsSpinBox_->value();
 	config.deltaX = Scalar(deltaXSpinBox_->value());
 	config.deltaY = Scalar(deltaYSpinBox_->value());
+
+	config.useConeFilter = useConeCheckBox_->isChecked();
+	config.coneHalfAngleDegrees = Scalar(coneAngleSpinBox_->value());
 
 	return config;
 }
