@@ -41,6 +41,22 @@ class OCEAN_RENDERING_EXPORT ParallelView : virtual public View
 		 */
 		ObjectType type() const override;
 
+		/**
+		 * Returns the width of the orthographic viewing box in world units.
+		 * @return The view width in world units
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 */
+		virtual Scalar width() const;
+
+		/**
+		 * Sets the width of the orthographic viewing box in world units.
+		 * The height is automatically derived from the width and aspect ratio.
+		 * @param width The view width in world units, with range (0, infinity)
+		 * @return True if succeeded
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 */
+		virtual bool setWidth(const Scalar width);
+
 	protected:
 
 		/**
