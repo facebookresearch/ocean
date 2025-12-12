@@ -13,7 +13,12 @@
 #include "ocean/rendering/Engine.h"
 #include "ocean/rendering/WindowFramebuffer.h"
 
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QSpinBox>
 
 class QTimer;
 
@@ -56,6 +61,23 @@ class MainWindow : public QMainWindow
 	protected:
 
 		/**
+		 * Creates the configuration panel widget.
+		 * @return The configuration panel widget
+		 */
+		QWidget* createConfigPanel();
+
+		/**
+		 * Collects current values from UI controls into a configuration.
+		 * @return The current configuration
+		 */
+		SimulationConfig collectConfiguration();
+
+		/**
+		 * Updates the statistics display labels.
+		 */
+		void updateStatisticsDisplay();
+
+		/**
 		 * Event function for mouse press events.
 		 * @see QWidget::mousePressEvent().
 		 */
@@ -92,6 +114,11 @@ class MainWindow : public QMainWindow
 		void requestRender();
 
 		/**
+		 * Slot called when any configuration parameter changes.
+		 */
+		void onConfigChanged();
+
+		/**
 		 * Slot for render timer timeout.
 		 */
 		void onRender();
@@ -109,6 +136,46 @@ class MainWindow : public QMainWindow
 
 		/// Render timer
 		QTimer* renderTimer_ = nullptr;
+
+		// Depth range controls
+		QDoubleSpinBox* frontDepthSpinBox_ = nullptr;
+		QDoubleSpinBox* backDepthSpinBox_ = nullptr;
+		QDoubleSpinBox* spacingSpinBox_ = nullptr;
+
+		// Baseline control
+		QDoubleSpinBox* baselineSpinBox_ = nullptr;
+
+		// Left camera controls
+		QComboBox* leftCameraTypeCombo_ = nullptr;
+		QSpinBox* leftWidthSpinBox_ = nullptr;
+		QSpinBox* leftHeightSpinBox_ = nullptr;
+		QDoubleSpinBox* leftHfovSpinBox_ = nullptr;
+
+		// Right camera controls
+		QComboBox* rightCameraTypeCombo_ = nullptr;
+		QSpinBox* rightWidthSpinBox_ = nullptr;
+		QSpinBox* rightHeightSpinBox_ = nullptr;
+		QDoubleSpinBox* rightHfovSpinBox_ = nullptr;
+
+		// Simulation controls
+		QCheckBox* randomizeCheckBox_ = nullptr;
+		QComboBox* perturbationModeCombo_ = nullptr;
+		QSpinBox* repetitionsSpinBox_ = nullptr;
+		QDoubleSpinBox* deltaXSpinBox_ = nullptr;
+		QDoubleSpinBox* deltaYSpinBox_ = nullptr;
+		QLabel* repetitionsLabel_ = nullptr;
+		QLabel* deltaXLabel_ = nullptr;
+		QLabel* deltaYLabel_ = nullptr;
+
+		// Statistics labels
+		QLabel* meanErrorLabel_ = nullptr;
+		QLabel* p50ErrorLabel_ = nullptr;
+		QLabel* p90ErrorLabel_ = nullptr;
+		QLabel* p95ErrorLabel_ = nullptr;
+		QLabel* numPointsLabel_ = nullptr;
+
+		/// Flag to prevent recursive updates
+		bool updatingConfig_ = false;
 
 		/// Flag to track if scene has been initialized
 		bool sceneInitialized_ = false;
