@@ -10,6 +10,7 @@
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
+#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/RGBAColor.h"
 #include "ocean/math/Vector2.h"
@@ -248,6 +249,23 @@ class Scene
 		void updateVisualization();
 
 		/**
+		 * Creates a PinholeCamera from a camera configuration (for visualization).
+		 * @param config The camera configuration
+		 * @return The created pinhole camera
+		 */
+		static PinholeCamera createPinholeCameraFromConfig(const CameraConfig& config);
+
+		/**
+		 * Creates the camera frustum geometry.
+		 * @param camera The camera to create the frustum for
+		 * @param color The color of the frustum lines
+		 * @param nearDist The near plane distance
+		 * @param farDist The far plane distance
+		 * @return The transform node containing the frustum geometry
+		 */
+		Rendering::TransformRef createCameraFrustum(const PinholeCamera& camera, const RGBAColor& color, Scalar nearDist, Scalar farDist);
+
+		/**
 		 * Updates the camera transform based on orbit parameters.
 		 */
 		void updateCameraTransform();
@@ -265,6 +283,12 @@ class Scene
 
 		/// The perspective view
 		Rendering::PerspectiveViewRef perspectiveView_;
+
+		/// Transform for the left camera frustum
+		Rendering::TransformRef leftCameraTransform_;
+
+		/// Transform for the right camera frustum
+		Rendering::TransformRef rightCameraTransform_;
 
 		/// Transform for the coordinate axes
 		Rendering::TransformRef axesTransform_;
