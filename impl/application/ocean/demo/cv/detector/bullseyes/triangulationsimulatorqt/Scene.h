@@ -27,6 +27,7 @@
 #include "ocean/rendering/Transform.h"
 #include "ocean/rendering/View.h"
 
+#include <utility>
 #include <vector>
 
 namespace Ocean
@@ -375,6 +376,65 @@ class Scene
 		 * @return The transform node containing the cone geometry
 		 */
 		Rendering::TransformRef createConeVisualization(Scalar halfAngleRadians, Scalar length);
+
+		/**
+		 * Computes the angular error between ground truth and triangulated point.
+		 * @param cameraPosition The position of the camera
+		 * @param groundTruthPoint The actual world point
+		 * @param triangulatedPoint The triangulated point
+		 * @return The angular error in radians
+		 */
+		static Scalar computeAngularError(const Vector3& cameraPosition, const Vector3& groundTruthPoint, const Vector3& triangulatedPoint);
+
+		/**
+		 * Checks if a world point is visible in both cameras and passes filters.
+		 * @param worldPoint The world point to check
+		 * @param leftCamera The left camera
+		 * @param rightCamera The right camera
+		 * @param flippedLeftCamera_T_world Transform from world to flipped left camera
+		 * @param flippedRightCamera_T_world Transform from world to flipped right camera
+		 * @param useConeFilter Whether to apply cone filter
+		 * @param coneHalfAngleDegrees Half-angle of the cone in degrees
+		 * @param leftProjection Output: the projection in the left camera
+		 * @param rightProjection Output: the projection in the right camera
+		 * @return True if the point is visible in both cameras and passes all filters
+		 */
+		static bool isPointVisible(const Vector3& worldPoint, const SharedAnyCamera& leftCamera, const SharedAnyCamera& rightCamera, const HomogenousMatrix4& flippedLeftCamera_T_world, const HomogenousMatrix4& flippedRightCamera_T_world, bool useConeFilter, Scalar coneHalfAngleDegrees, Vector2& leftProjection, Vector2& rightProjection);
+
+		/**
+		 * Applies perturbation to projection coordinates based on mode.
+		 * @param leftProjection The left camera projection
+		 * @param rightProjection The right camera projection
+		 * @param perturbationMode The perturbation mode
+		 * @param deltaX The X perturbation delta
+		 * @param deltaY The Y perturbation delta
+		 * @param useRandom Whether to use random noise or fixed offset
+		 * @param randomGenerator Random generator for noise (only used if useRandom is true)
+		 * @return Pair of perturbed projections (left, right)
+		 */
+		static std::pair<Vector2, Vector2> applyPerturbation(const Vector2& leftProjection, const Vector2& rightProjection, PerturbationMode perturbationMode, Scalar deltaX, Scalar deltaY, bool useRandom, RandomGenerator& randomGenerator);
+
+		/**
+		 * Triangulates a point and computes angular error based on perturbation mode.
+		 * @param leftCamera The left camera
+		 * @param rightCamera The right camera
+		 * @param world_T_leftCamera Transform from left camera to world
+		 * @param world_T_rightCamera Transform from right camera to world
+		 * @param leftProjection The (perturbed) left projection
+		 * @param rightProjection The (perturbed) right projection
+		 * @param worldPoint The ground truth world point
+		 * @param perturbationMode The perturbation mode for error computation
+		 * @param triangulatedPoint Output: the triangulated point
+		 * @return The angular error in radians, or -1 if triangulation failed
+		 */
+		static Scalar triangulateAndComputeError(const SharedAnyCamera& leftCamera, const SharedAnyCamera& rightCamera, const HomogenousMatrix4& world_T_leftCamera, const HomogenousMatrix4& world_T_rightCamera, const Vector2& leftProjection, const Vector2& rightProjection, const Vector3& worldPoint, PerturbationMode perturbationMode, Vector3& triangulatedPoint);
+
+		/**
+		 * Computes statistics from the point errors.
+		 * @param errors The vector of error values
+		 * @return The computed statistics
+		 */
+		static SimulationStats computeStatistics(const std::vector<Scalar>& errors);
 
 	protected:
 

@@ -483,6 +483,148 @@ PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
 		Scalar(config.width) * Scalar(0.5), Scalar(config.height) * Scalar(0.5));
 }
 
+Scalar Scene::computeAngularError(const Vector3& cameraPosition, const Vector3& groundTruthPoint, const Vector3& triangulatedPoint)
+{
+	const Vector3 rayToGroundTruth = (groundTruthPoint - cameraPosition).normalizedOrZero();
+	const Vector3 rayToTriangulated = (triangulatedPoint - cameraPosition).normalizedOrZero();
+
+	// Angle between rays: acos(dot product), clamped to avoid numerical issues
+	const Scalar dotProduct = std::max(Scalar(-1), std::min(Scalar(1), rayToGroundTruth * rayToTriangulated));
+	return Numeric::acos(dotProduct);
+}
+
+bool Scene::isPointVisible(const Vector3& worldPoint, const SharedAnyCamera& leftCamera, const SharedAnyCamera& rightCamera, const HomogenousMatrix4& flippedLeftCamera_T_world, const HomogenousMatrix4& flippedRightCamera_T_world, bool useConeFilter, Scalar coneHalfAngleDegrees, Vector2& leftProjection, Vector2& rightProjection)
+{
+	// Check visibility in both cameras - only use points visible from BOTH
+	if (!leftCamera->isObjectPointInFrontIF(flippedLeftCamera_T_world, worldPoint) || !rightCamera->isObjectPointInFrontIF(flippedRightCamera_T_world, worldPoint))
+	{
+		return false;
+	}
+
+	leftProjection = leftCamera->projectToImageIF(flippedLeftCamera_T_world, worldPoint);
+	rightProjection = rightCamera->projectToImageIF(flippedRightCamera_T_world, worldPoint);
+
+	if (!leftCamera->isInside(leftProjection) || !rightCamera->isInside(rightProjection))
+	{
+		return false;
+	}
+
+	// Check if point is inside the cone (if cone filter is enabled)
+	if (useConeFilter)
+	{
+		const Scalar coneHalfAngleRad = Numeric::deg2rad(coneHalfAngleDegrees);
+		const Vector3 pointDir = worldPoint.normalizedOrZero();
+		const Vector3 coneAxis(0, 0, -1);
+		const Scalar cosAngle = pointDir * coneAxis;
+		const Scalar cosHalfAngle = Numeric::cos(coneHalfAngleRad);
+
+		if (worldPoint.z() >= 0 || cosAngle < cosHalfAngle)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+std::pair<Vector2, Vector2> Scene::applyPerturbation(const Vector2& leftProjection, const Vector2& rightProjection, PerturbationMode perturbationMode, Scalar deltaX, Scalar deltaY, bool useRandom, RandomGenerator& randomGenerator)
+{
+	Scalar offsetLeftX = Scalar(0);
+	Scalar offsetLeftY = Scalar(0);
+	Scalar offsetRightX = Scalar(0);
+	Scalar offsetRightY = Scalar(0);
+
+	const bool perturbLeft = (perturbationMode == PerturbationMode::BOTH || perturbationMode == PerturbationMode::LEFT_ONLY);
+	const bool perturbRight = (perturbationMode == PerturbationMode::BOTH || perturbationMode == PerturbationMode::RIGHT_ONLY);
+
+	if (useRandom)
+	{
+		if (perturbLeft)
+		{
+			offsetLeftX = Random::scalar(randomGenerator, -deltaX, deltaX);
+			offsetLeftY = Random::scalar(randomGenerator, -deltaY, deltaY);
+		}
+		if (perturbRight)
+		{
+			offsetRightX = Random::scalar(randomGenerator, -deltaX, deltaX);
+			offsetRightY = Random::scalar(randomGenerator, -deltaY, deltaY);
+		}
+	}
+	else
+	{
+		if (perturbLeft)
+		{
+			offsetLeftX = deltaX;
+			offsetLeftY = deltaY;
+		}
+		if (perturbRight)
+		{
+			offsetRightX = deltaX;
+			offsetRightY = deltaY;
+		}
+	}
+
+	return std::make_pair(
+		Vector2(leftProjection.x() + offsetLeftX, leftProjection.y() + offsetLeftY),
+		Vector2(rightProjection.x() + offsetRightX, rightProjection.y() + offsetRightY));
+}
+
+Scalar Scene::triangulateAndComputeError(const SharedAnyCamera& leftCamera, const SharedAnyCamera& rightCamera, const HomogenousMatrix4& world_T_leftCamera, const HomogenousMatrix4& world_T_rightCamera, const Vector2& leftProjection, const Vector2& rightProjection, const Vector3& worldPoint, PerturbationMode perturbationMode, Vector3& triangulatedPoint)
+{
+	const Line3 leftRay = leftCamera->ray(leftProjection, world_T_leftCamera);
+	const Line3 rightRay = rightCamera->ray(rightProjection, world_T_rightCamera);
+
+	if (!leftRay.nearestPoint(rightRay, triangulatedPoint))
+	{
+		return Scalar(-1);
+	}
+
+	const Vector3 leftCameraPosition = world_T_leftCamera.translation();
+	const Vector3 rightCameraPosition = world_T_rightCamera.translation();
+
+	if (perturbationMode == PerturbationMode::LEFT_ONLY)
+	{
+		return computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
+	}
+	else if (perturbationMode == PerturbationMode::RIGHT_ONLY)
+	{
+		return computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
+	}
+	else // BOTH
+	{
+		const Scalar leftAngularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
+		const Scalar rightAngularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
+		return std::max(leftAngularError, rightAngularError);
+	}
+}
+
+SimulationStats Scene::computeStatistics(const std::vector<Scalar>& errors)
+{
+	SimulationStats stats;
+
+	if (errors.empty())
+	{
+		return stats;
+	}
+
+	std::vector<Scalar> sortedErrors = errors;
+	std::sort(sortedErrors.begin(), sortedErrors.end());
+
+	Scalar sum = 0;
+	for (const Scalar& error : sortedErrors)
+	{
+		sum += error;
+	}
+
+	stats.meanError = sum / Scalar(sortedErrors.size());
+	stats.p50Error = sortedErrors[sortedErrors.size() / 2];
+	stats.p90Error = sortedErrors[size_t(Scalar(sortedErrors.size()) * Scalar(0.9))];
+	stats.p95Error = sortedErrors[size_t(Scalar(sortedErrors.size()) * Scalar(0.95))];
+	stats.numValidPoints = sortedErrors.size();
+
+	return stats;
+}
+
 void Scene::runSimulation()
 {
 	gridPoints_.clear();
@@ -505,8 +647,7 @@ void Scene::runSimulation()
 
 	// Generate point grid - use generous bounds centered at device origin
 	// Points are at negative Z values (in front of cameras which look toward -Z)
-	// Use back depth to determine grid extent (larger depth = wider FOV coverage needed)
-	const Scalar maxHalfWidth = config_.backDepthMeters * Scalar(1.5);  // Generous extent
+	const Scalar maxHalfWidth = config_.backDepthMeters * Scalar(1.5);
 
 	for (Scalar z = -config_.backDepthMeters; z <= -config_.frontDepthMeters + Numeric::eps(); z += config_.spacingMeters)
 	{
@@ -516,163 +657,43 @@ void Scene::runSimulation()
 			{
 				const Vector3 worldPoint(x, y, z);
 
-				// Check visibility in both cameras - only use points visible from BOTH
-				if (!leftCamera->isObjectPointInFrontIF(flippedLeftCamera_T_world, worldPoint) || !rightCamera->isObjectPointInFrontIF(flippedRightCamera_T_world, worldPoint))
+				Vector2 leftProjection, rightProjection;
+				if (!isPointVisible(worldPoint, leftCamera, rightCamera, flippedLeftCamera_T_world, flippedRightCamera_T_world, config_.useConeFilter, config_.coneHalfAngleDegrees, leftProjection, rightProjection))
 				{
 					continue;
 				}
 
-				const Vector2 leftProjection = leftCamera->projectToImageIF(flippedLeftCamera_T_world, worldPoint);
-				const Vector2 rightProjection = rightCamera->projectToImageIF(flippedRightCamera_T_world, worldPoint);
-
-				if (!leftCamera->isInside(leftProjection) || !rightCamera->isInside(rightProjection))
-				{
-					continue;
-				}
-
-				// Check if point is inside the cone (if cone filter is enabled)
-				if (config_.useConeFilter)
-				{
-					const Scalar coneHalfAngleRad = Numeric::deg2rad(config_.coneHalfAngleDegrees);
-					const Vector3 pointDir = worldPoint.normalizedOrZero();
-					const Vector3 coneAxis(0, 0, -1);
-					const Scalar cosAngle = pointDir * coneAxis;
-					const Scalar cosHalfAngle = Numeric::cos(coneHalfAngleRad);
-
-					if (worldPoint.z() >= 0 || cosAngle < cosHalfAngle)
-					{
-						continue;
-					}
-				}
-
-				// Simulate triangulation with noise/offset applied
-				// Error metric: angular error (radians) - angle between ray to ground truth and ray to triangulated point
-				// as seen from the perturbed camera(s). If both cameras are perturbed, use the larger angle.
 				Scalar maxError = 0;
 				Vector3 maxErrorTriangulatedPoint = worldPoint;
-
-				// Camera positions for angular error computation
-				const Vector3 leftCameraPosition = world_T_leftCamera.translation();
-				const Vector3 rightCameraPosition = world_T_rightCamera.translation();
-
-				// Helper lambda to compute angular error from a camera position
-				auto computeAngularError = [](const Vector3& cameraPosition, const Vector3& groundTruthPoint, const Vector3& triangulatedPoint) -> Scalar
-				{
-					const Vector3 rayToGroundTruth = (groundTruthPoint - cameraPosition).normalizedOrZero();
-					const Vector3 rayToTriangulated = (triangulatedPoint - cameraPosition).normalizedOrZero();
-
-					// Angle between rays: acos(dot product), clamped to avoid numerical issues
-					const Scalar dotProduct = std::max(Scalar(-1), std::min(Scalar(1), rayToGroundTruth * rayToTriangulated));
-					return Numeric::acos(dotProduct);
-				};
 
 				if (config_.randomize)
 				{
 					// Random mode: run multiple trials and retain max error
 					for (unsigned int trial = 0u; trial < config_.numRepetitions; ++trial)
 					{
-						// Generate uniform noise in range [-delta, +delta]
-						Scalar noiseLeftX = Scalar(0);
-						Scalar noiseLeftY = Scalar(0);
-						Scalar noiseRightX = Scalar(0);
-						Scalar noiseRightY = Scalar(0);
-
-						// Apply noise based on perturbation mode
-						if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::LEFT_ONLY)
-						{
-							noiseLeftX = Random::scalar(randomGenerator_, -config_.deltaX, config_.deltaX);
-							noiseLeftY = Random::scalar(randomGenerator_, -config_.deltaY, config_.deltaY);
-						}
-
-						if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
-						{
-							noiseRightX = Random::scalar(randomGenerator_, -config_.deltaX, config_.deltaX);
-							noiseRightY = Random::scalar(randomGenerator_, -config_.deltaY, config_.deltaY);
-						}
-
-						const Vector2 noisyLeftProjection(leftProjection.x() + noiseLeftX, leftProjection.y() + noiseLeftY);
-						const Vector2 noisyRightProjection(rightProjection.x() + noiseRightX, rightProjection.y() + noiseRightY);
-
-						// Triangulate using rays
-						const Line3 leftRay = leftCamera->ray(noisyLeftProjection, world_T_leftCamera);
-						const Line3 rightRay = rightCamera->ray(noisyRightProjection, world_T_rightCamera);
+						const auto [perturbedLeft, perturbedRight] = applyPerturbation(leftProjection, rightProjection, config_.perturbationMode, config_.deltaX, config_.deltaY, true, randomGenerator_);
 
 						Vector3 triangulatedPoint;
-						if (leftRay.nearestPoint(rightRay, triangulatedPoint))
+						const Scalar error = triangulateAndComputeError(leftCamera, rightCamera, world_T_leftCamera, world_T_rightCamera, perturbedLeft, perturbedRight, worldPoint, config_.perturbationMode, triangulatedPoint);
+
+						if (error >= 0 && error > maxError)
 						{
-							// Compute angular error from perturbed camera(s)
-							Scalar angularError = 0;
-
-							if (config_.perturbationMode == PerturbationMode::LEFT_ONLY)
-							{
-								angularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
-							}
-							else if (config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
-							{
-								angularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
-							}
-							else // BOTH
-							{
-								const Scalar leftAngularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
-								const Scalar rightAngularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
-								angularError = std::max(leftAngularError, rightAngularError);
-							}
-
-							if (angularError > maxError)
-							{
-								maxError = angularError;
-								maxErrorTriangulatedPoint = triangulatedPoint;
-							}
+							maxError = error;
+							maxErrorTriangulatedPoint = triangulatedPoint;
 						}
 					}
 				}
 				else
 				{
 					// Fixed mode: apply exact delta offset once
-					Scalar offsetLeftX = Scalar(0);
-					Scalar offsetLeftY = Scalar(0);
-					Scalar offsetRightX = Scalar(0);
-					Scalar offsetRightY = Scalar(0);
-
-					// Apply offset based on perturbation mode
-					if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::LEFT_ONLY)
-					{
-						offsetLeftX = config_.deltaX;
-						offsetLeftY = config_.deltaY;
-					}
-
-					if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
-					{
-						offsetRightX = config_.deltaX;
-						offsetRightY = config_.deltaY;
-					}
-
-					const Vector2 offsetLeftProjection(leftProjection.x() + offsetLeftX, leftProjection.y() + offsetLeftY);
-					const Vector2 offsetRightProjection(rightProjection.x() + offsetRightX, rightProjection.y() + offsetRightY);
-
-					// Triangulate using rays
-					const Line3 leftRay = leftCamera->ray(offsetLeftProjection, world_T_leftCamera);
-					const Line3 rightRay = rightCamera->ray(offsetRightProjection, world_T_rightCamera);
+					const auto [perturbedLeft, perturbedRight] = applyPerturbation(leftProjection, rightProjection, config_.perturbationMode, config_.deltaX, config_.deltaY, false, randomGenerator_);
 
 					Vector3 triangulatedPoint;
-					if (leftRay.nearestPoint(rightRay, triangulatedPoint))
-					{
-						// Compute angular error from perturbed camera(s)
-						if (config_.perturbationMode == PerturbationMode::LEFT_ONLY)
-						{
-							maxError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
-						}
-						else if (config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
-						{
-							maxError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
-						}
-						else // BOTH
-						{
-							const Scalar leftAngularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
-							const Scalar rightAngularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
-							maxError = std::max(leftAngularError, rightAngularError);
-						}
+					const Scalar error = triangulateAndComputeError(leftCamera, rightCamera, world_T_leftCamera, world_T_rightCamera, perturbedLeft, perturbedRight, worldPoint, config_.perturbationMode, triangulatedPoint);
 
+					if (error >= 0)
+					{
+						maxError = error;
 						maxErrorTriangulatedPoint = triangulatedPoint;
 					}
 				}
@@ -684,28 +705,7 @@ void Scene::runSimulation()
 		}
 	}
 
-	// Compute statistics
-	if (!pointErrors_.empty())
-	{
-		std::vector<Scalar> sortedErrors = pointErrors_;
-		std::sort(sortedErrors.begin(), sortedErrors.end());
-
-		Scalar sum = 0;
-		for (const Scalar& error : sortedErrors)
-		{
-			sum += error;
-		}
-
-		stats_.meanError = sum / Scalar(sortedErrors.size());
-		stats_.p50Error = sortedErrors[sortedErrors.size() / 2];
-		stats_.p90Error = sortedErrors[size_t(Scalar(sortedErrors.size()) * Scalar(0.9))];
-		stats_.p95Error = sortedErrors[size_t(Scalar(sortedErrors.size()) * Scalar(0.95))];
-		stats_.numValidPoints = sortedErrors.size();
-	}
-	else
-	{
-		stats_ = SimulationStats();
-	}
+	stats_ = computeStatistics(pointErrors_);
 }
 
 void Scene::updateVisualization()
