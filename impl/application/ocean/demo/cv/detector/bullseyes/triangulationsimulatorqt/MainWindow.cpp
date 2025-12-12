@@ -526,6 +526,21 @@ void MainWindow::mousePressEvent(QMouseEvent* event)
 		return;
 	}
 
+	// Only handle mouse events over the OpenGL widget
+	QWidget* glWidget = dynamic_cast<QWidget*>(&*framebuffer_);
+	if (glWidget)
+	{
+		QPoint globalPos = event->globalPos();
+		QRect glRect = glWidget->geometry();
+		glRect.moveTopLeft(glWidget->parentWidget()->mapToGlobal(glRect.topLeft()));
+
+		if (!glRect.contains(globalPos))
+		{
+			event->ignore();
+			return;
+		}
+	}
+
 	int button = 0;
 	if (event->button() == Qt::LeftButton)
 	{
@@ -545,6 +560,21 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
 	if (!sceneInitialized_)
 	{
 		return;
+	}
+
+	// Only handle mouse events over the OpenGL widget
+	QWidget* glWidget = dynamic_cast<QWidget*>(&*framebuffer_);
+	if (glWidget)
+	{
+		QPoint globalPos = event->globalPos();
+		QRect glRect = glWidget->geometry();
+		glRect.moveTopLeft(glWidget->parentWidget()->mapToGlobal(glRect.topLeft()));
+
+		if (!glRect.contains(globalPos))
+		{
+			event->ignore();
+			return;
+		}
 	}
 
 	int buttons = 0;
@@ -576,6 +606,23 @@ void MainWindow::wheelEvent(QWheelEvent* event)
 	if (!sceneInitialized_)
 	{
 		return;
+	}
+
+	// Only handle wheel events over the OpenGL widget
+	QWidget* glWidget = dynamic_cast<QWidget*>(&*framebuffer_);
+	if (glWidget)
+	{
+		// Check if the event position is within the GL widget's geometry
+		QPoint globalPos = event->globalPos();
+		QRect glRect = glWidget->geometry();
+		glRect.moveTopLeft(glWidget->parentWidget()->mapToGlobal(glRect.topLeft()));
+
+		if (!glRect.contains(globalPos))
+		{
+			// Let the event propagate to child widgets (e.g., spinboxes)
+			event->ignore();
+			return;
+		}
 	}
 
 	scene_.handleMouseWheel(event->angleDelta().y());
