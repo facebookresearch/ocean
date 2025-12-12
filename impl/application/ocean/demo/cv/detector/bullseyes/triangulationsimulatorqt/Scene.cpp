@@ -7,17 +7,20 @@
 
 #include "application/ocean/demo/cv/detector/bullseyes/triangulationsimulatorqt/Scene.h"
 
+#include "ocean/base/Messenger.h"
+#include "ocean/base/RandomI.h"
+
 #include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/Line3.h"
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Random.h"
-#include "ocean/math/RGBAColor.h"
-#include "ocean/math/SquareMatrix3.h"
 
 #include "ocean/rendering/Utilities.h"
 
 #include "ocean/rendering/AttributeSet.h"
 #include "ocean/rendering/BlendAttribute.h"
+#include "ocean/rendering/Cone.h"
+#include "ocean/rendering/Cylinder.h"
 #include "ocean/rendering/Geometry.h"
 #include "ocean/rendering/Material.h"
 
@@ -84,10 +87,20 @@ bool Scene::initialize(const Rendering::EngineRef& engine, const Rendering::Fram
 	perspectiveView_->setFovX(Numeric::deg2rad(60));
 	perspectiveView_->setBackgroundColor(RGBAColor(0.1f, 0.1f, 0.15f));
 
+	// Create parallel (orthographic) view
+	parallelView_ = engine_->factory().createParallelView();
+	if (parallelView_)
+	{
+		parallelView_->setNearDistance(Scalar(0.01));
+		parallelView_->setFarDistance(Scalar(100.0));
+		parallelView_->setWidth(Scalar(4.0));  // Default view width in world units
+		parallelView_->setBackgroundColor(RGBAColor(0.1f, 0.1f, 0.15f));
+	}
+
 	// Set initial view to perspective
 	framebuffer_->setView(perspectiveView_);
 
-	// Set lighting mode
+	// Set two-sided lighting and disable culling to handle geometry with incorrect normals
 	framebuffer_->setLightingMode(Rendering::PrimitiveAttribute::LM_SINGLE_SIDE_LIGHTING);
 	framebuffer_->setCullingMode(Rendering::PrimitiveAttribute::CULLING_DEFAULT);
 
@@ -173,14 +186,19 @@ void Scene::handleMouseMove(const Vector2& position, int buttons)
 	// Right button: Pan
 	else if (buttons & 2)
 	{
-		const HomogenousMatrix4 world_T_view = perspectiveView_->transformation();
-		const Vector3 right = world_T_view.rotation() * Vector3(1, 0, 0);
-		const Vector3 up = world_T_view.rotation() * Vector3(0, 1, 0);
+		// Get transformation from the current active view
+		const Rendering::ViewRef currentView = framebuffer_->view();
+		if (currentView)
+		{
+			const HomogenousMatrix4 world_T_view = currentView->transformation();
+			const Vector3 right = world_T_view.rotation() * Vector3(1, 0, 0);
+			const Vector3 up = world_T_view.rotation() * Vector3(0, 1, 0);
 
-		orbitCenter_ -= right * delta.x() * Scalar(0.001);
-		orbitCenter_ += up * delta.y() * Scalar(0.001);
+			orbitCenter_ -= right * delta.x() * Scalar(0.001);
+			orbitCenter_ += up * delta.y() * Scalar(0.001);
 
-		updateCameraTransform();
+			updateCameraTransform();
+		}
 	}
 
 	lastMousePosition_ = position;
@@ -198,11 +216,177 @@ void Scene::handleMouseWheel(int delta)
 
 void Scene::resetCamera()
 {
+	isOrbiting_ = false;
 	orbitRotation_ = Quaternion(Vector3(1, 0, 0), Numeric::deg2rad(-30)) * Quaternion(Vector3(0, 1, 0), Numeric::deg2rad(-30));
 	orbitDistance_ = Scalar(3.0);
-	orbitCenter_ = Vector3(0, 0, Scalar(-0.5));
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
 
 	updateCameraTransform();
+}
+
+void Scene::setCameraTop()
+{
+	isOrbiting_ = false;
+	// Look down from above (-90 deg around X)
+	orbitRotation_ = Quaternion(Vector3(1, 0, 0), Numeric::deg2rad(-90));
+	orbitDistance_ = Scalar(2.0);
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+
+	updateCameraTransform();
+}
+
+void Scene::setCameraBottom()
+{
+	isOrbiting_ = false;
+	// Look up from below (+90 deg around X), with 180 deg rotation around Z for consistent orientation
+	orbitRotation_ = Quaternion(Vector3(1, 0, 0), Numeric::deg2rad(90)) * Quaternion(Vector3(0, 0, 1), Numeric::pi());
+	orbitDistance_ = Scalar(2.0);
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+
+	updateCameraTransform();
+}
+
+void Scene::setCameraLeft()
+{
+	isOrbiting_ = false;
+	orbitRotation_ = Quaternion(Vector3(0, 1, 0), Numeric::deg2rad(-90));
+	orbitDistance_ = Scalar(2.0);
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+
+	updateCameraTransform();
+}
+
+void Scene::setCameraRight()
+{
+	isOrbiting_ = false;
+	orbitRotation_ = Quaternion(Vector3(0, 1, 0), Numeric::deg2rad(90));
+	orbitDistance_ = Scalar(2.0);
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+
+	updateCameraTransform();
+}
+
+void Scene::setCameraFront()
+{
+	isOrbiting_ = false;
+	orbitRotation_ = Quaternion(true);  // Identity - looking along -Z
+	orbitDistance_ = Scalar(2.0);
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+
+	updateCameraTransform();
+}
+
+void Scene::setCameraBack()
+{
+	isOrbiting_ = false;
+	orbitRotation_ = Quaternion(Vector3(0, 1, 0), Numeric::pi());
+	orbitDistance_ = Scalar(2.0);
+	orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+
+	updateCameraTransform();
+}
+
+void Scene::setOrbiting(bool orbiting)
+{
+	if (orbiting && !isOrbiting_)
+	{
+		// Start orbiting from default position
+		// The default view has a -30 degree Y rotation, so start from that angle
+		orbitAngle_ = Numeric::deg2rad(Scalar(-30));
+		orbitDistance_ = Scalar(3.0);
+		orbitCenter_ = Vector3(0, 0, -(config_.frontDepthMeters + config_.backDepthMeters) * Scalar(0.5));
+	}
+	isOrbiting_ = orbiting;
+}
+
+bool Scene::isOrbiting() const
+{
+	return isOrbiting_;
+}
+
+void Scene::setProjectionMode(ProjectionMode mode)
+{
+	if (projectionMode_ == mode)
+	{
+		return;
+	}
+
+	projectionMode_ = mode;
+
+	if (framebuffer_.isNull())
+	{
+		return;
+	}
+
+	if (mode == ProjectionMode::PERSPECTIVE)
+	{
+		if (perspectiveView_)
+		{
+			framebuffer_->setView(perspectiveView_);
+		}
+	}
+	else
+	{
+		// Use true orthographic projection via ParallelView
+		if (parallelView_)
+		{
+			framebuffer_->setView(parallelView_);
+		}
+	}
+
+	// Update camera transform for the new view
+	updateCameraTransform();
+}
+
+ProjectionMode Scene::projectionMode() const
+{
+	return projectionMode_;
+}
+
+void Scene::updateOrbiting()
+{
+	if (!isOrbiting_)
+	{
+		return;
+	}
+
+	// Slowly orbit around Y axis (half speed: 0.25 degrees per frame)
+	orbitAngle_ += Numeric::deg2rad(Scalar(0.25));
+	if (orbitAngle_ > Numeric::pi2())
+	{
+		orbitAngle_ -= Numeric::pi2();
+	}
+
+	// Orbit in xz-plane with fixed y height
+	// Camera position: orbit around scene center at fixed height
+	const Scalar cameraHeight = orbitDistance_ * Numeric::sin(Numeric::deg2rad(Scalar(30)));  // Match default view tilt
+	const Scalar horizontalRadius = orbitDistance_ * Numeric::cos(Numeric::deg2rad(Scalar(30)));
+
+	const Scalar cameraX = orbitCenter_.x() + horizontalRadius * Numeric::sin(orbitAngle_);
+	const Scalar cameraZ = orbitCenter_.z() + horizontalRadius * Numeric::cos(orbitAngle_);
+	const Vector3 cameraPosition(cameraX, orbitCenter_.y() + cameraHeight, cameraZ);
+
+	// Look at orbit center
+	const Vector3 lookDirection = (orbitCenter_ - cameraPosition).normalizedOrZero();
+
+	// Build camera orientation
+	Vector3 cameraZAxis = -lookDirection;  // Camera looks along -Z
+	Vector3 cameraXAxis = Vector3(0, 1, 0).cross(cameraZAxis).normalizedOrZero();
+	Vector3 cameraYAxis = cameraZAxis.cross(cameraXAxis);
+
+	const SquareMatrix3 rotation(cameraXAxis, cameraYAxis, cameraZAxis);
+
+	// Update view transform
+	const HomogenousMatrix4 transform(cameraPosition, rotation);
+	if (perspectiveView_)
+	{
+		perspectiveView_->setTransformation(transform);
+	}
+	if (parallelView_)
+	{
+		parallelView_->setTransformation(transform);
+		parallelView_->setWidth(orbitDistance_ * Scalar(1.5));
+	}
 }
 
 void Scene::updateCameraTransform()
@@ -212,32 +396,91 @@ void Scene::updateCameraTransform()
 	const Vector3 cameraPosition = orbitCenter_ + offset;
 
 	// Calculate camera orientation (look at orbit center)
-	const Vector3 cameraZAxis = (cameraPosition - orbitCenter_).normalizedOrZero();
+	// These are the camera's local coordinate axes in world space
+	const Vector3 cameraZAxis = (cameraPosition - orbitCenter_).normalizedOrZero();  // Camera looks along -Z
 
-	// Use world Y as up reference for level horizon
-	Vector3 upReference = Vector3(0, 1, 0);
+	// Determine the up reference for computing camera orientation
+	// For most views, use world Y as up. For top/bottom views (looking along Y axis),
+	// use the rotated up reference to allow Z-axis rotation to be respected.
+	Vector3 upReference;
 	const Scalar dotWithWorldY = Numeric::abs(cameraZAxis.y());
 	if (dotWithWorldY > Scalar(0.99))
 	{
 		// Looking nearly straight up or down - use rotated up reference
 		upReference = orbitRotation_ * Vector3(0, 1, 0);
 	}
+	else
+	{
+		// Normal view - use world Y as up for a level horizon
+		upReference = Vector3(0, 1, 0);
+	}
 
+	// Compute camera X axis perpendicular to both Z axis and up reference
 	Vector3 cameraXAxis = upReference.cross(cameraZAxis).normalizedOrZero();
+
+	// Handle degenerate case when upReference is parallel to cameraZAxis
 	if (cameraXAxis.isNull())
 	{
+		// Fall back to world Z as reference
 		cameraXAxis = Vector3(0, 0, cameraZAxis.y() > 0 ? 1 : -1).cross(cameraZAxis).normalizedOrZero();
 	}
 
 	const Vector3 cameraYAxis = cameraZAxis.cross(cameraXAxis);
 
 	const SquareMatrix3 rotation(cameraXAxis, cameraYAxis, cameraZAxis);
+
+	// Update view transform
 	const HomogenousMatrix4 transform(cameraPosition, rotation);
 
+	// Update both views with the same transform
 	if (perspectiveView_)
 	{
 		perspectiveView_->setTransformation(transform);
 	}
+
+	if (parallelView_)
+	{
+		parallelView_->setTransformation(transform);
+
+		// Also update the parallel view's width based on orbit distance to maintain similar framing
+		// This makes the orthographic view show approximately the same content as perspective at the focus point
+		parallelView_->setWidth(orbitDistance_ * Scalar(1.5));
+	}
+}
+
+SharedAnyCamera Scene::createCameraFromConfig(const CameraConfig& config)
+{
+	// Compute focal length from HFOV: tan(hfov/2) = (width/2) / focalLength
+	// => focalLength = (width/2) / tan(hfov/2)
+	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
+	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
+
+	const Scalar principalX = Scalar(config.width) * Scalar(0.5);
+	const Scalar principalY = Scalar(config.height) * Scalar(0.5);
+
+	if (config.type == AnyCameraType::FISHEYE)
+	{
+		// Use FisheyeCamera with equidistant projection (no distortion for now)
+		const Scalar radialDistortion[6] = {Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0)};
+		const Scalar tangentialDistortion[2] = {Scalar(0), Scalar(0)};
+
+		return std::make_shared<AnyCameraFisheye>(FisheyeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY, radialDistortion, tangentialDistortion));
+	}
+
+	// Default: Pinhole camera
+	return std::make_shared<AnyCameraPinhole>(PinholeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY));
+}
+
+PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
+{
+	// Compute focal length from HFOV
+	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
+	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
+
+	return PinholeCamera(
+		config.width, config.height,
+		focalLength, focalLength,
+		Scalar(config.width) * Scalar(0.5), Scalar(config.height) * Scalar(0.5));
 }
 
 void Scene::runSimulation()
@@ -549,41 +792,6 @@ void Scene::updateVisualization()
 			}
 		}
 	}
-}
-
-PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
-{
-	// Compute focal length from HFOV
-	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
-	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
-
-	return PinholeCamera(
-		config.width, config.height,
-		focalLength, focalLength,
-		Scalar(config.width) * Scalar(0.5), Scalar(config.height) * Scalar(0.5));
-}
-
-SharedAnyCamera Scene::createCameraFromConfig(const CameraConfig& config)
-{
-	// Compute focal length from HFOV: tan(hfov/2) = (width/2) / focalLength
-	// => focalLength = (width/2) / tan(hfov/2)
-	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
-	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
-
-	const Scalar principalX = Scalar(config.width) * Scalar(0.5);
-	const Scalar principalY = Scalar(config.height) * Scalar(0.5);
-
-	if (config.type == AnyCameraType::FISHEYE)
-	{
-		// Use FisheyeCamera with equidistant projection (no distortion for now)
-		const Scalar radialDistortion[6] = {Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0)};
-		const Scalar tangentialDistortion[2] = {Scalar(0), Scalar(0)};
-
-		return std::make_shared<AnyCameraFisheye>(FisheyeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY, radialDistortion, tangentialDistortion));
-	}
-
-	// Default: Pinhole camera
-	return std::make_shared<AnyCameraPinhole>(PinholeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY));
 }
 
 Rendering::TransformRef Scene::createCameraFrustum(const PinholeCamera& camera, const RGBAColor& color, Scalar nearDist, Scalar farDist)

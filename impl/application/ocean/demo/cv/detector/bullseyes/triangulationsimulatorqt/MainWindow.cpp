@@ -20,6 +20,7 @@
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QScrollArea>
 
 namespace Ocean
@@ -85,6 +86,9 @@ MainWindow::MainWindow(QWidget* parent) :
 	}
 
 	// Note: Scene initialization is deferred until first render when OpenGL is ready
+
+	// Create menu bar
+	createMenuBar();
 
 	// Set up render timer (single-shot for on-demand rendering)
 	renderTimer_ = new QTimer(this);
@@ -415,6 +419,39 @@ QWidget* MainWindow::createConfigPanel()
 	return panel;
 }
 
+void MainWindow::createMenuBar()
+{
+	QMenuBar* menuBar = new QMenuBar(this);
+	setMenuBar(menuBar);
+
+	// View menu
+	QMenu* viewMenu = menuBar->addMenu("View");
+
+	// Camera submenu
+	QMenu* cameraMenu = viewMenu->addMenu("Camera");
+	cameraMenu->addAction("Reset", this, &MainWindow::onResetCamera, tr("Ctrl+0"));
+	cameraMenu->addSeparator();
+	cameraMenu->addAction("Front", this, &MainWindow::onCameraFront, tr("Ctrl+1"));
+	cameraMenu->addAction("Back", this, &MainWindow::onCameraBack, tr("Ctrl+2"));
+	cameraMenu->addSeparator();
+	cameraMenu->addAction("Left", this, &MainWindow::onCameraLeft, tr("Ctrl+3"));
+	cameraMenu->addAction("Right", this, &MainWindow::onCameraRight, tr("Ctrl+4"));
+	cameraMenu->addSeparator();
+	cameraMenu->addAction("Top", this, &MainWindow::onCameraTop, tr("Ctrl+5"));
+	cameraMenu->addAction("Bottom", this, &MainWindow::onCameraBottom, tr("Ctrl+6"));
+	cameraMenu->addSeparator();
+	orbitingAction_ = cameraMenu->addAction("Orbiting", this, &MainWindow::onCameraOrbiting, tr("Ctrl+7"));
+	orbitingAction_->setCheckable(true);
+
+	// Projection submenu
+	QMenu* projectionMenu = viewMenu->addMenu("Projection");
+	perspectiveAction_ = projectionMenu->addAction("Perspective", this, &MainWindow::onProjectionPerspective, tr("Ctrl+8"));
+	perspectiveAction_->setCheckable(true);
+	perspectiveAction_->setChecked(true);  // Default to perspective
+	orthogonalAction_ = projectionMenu->addAction("Orthogonal", this, &MainWindow::onProjectionOrthogonal, tr("Ctrl+9"));
+	orthogonalAction_->setCheckable(true);
+}
+
 SimulationConfig MainWindow::collectConfiguration()
 {
 	SimulationConfig config;
@@ -567,7 +604,115 @@ void MainWindow::onRender()
 			updateStatisticsDisplay();
 		}
 
+		// Update orbiting animation if active
+		if (scene_.isOrbiting())
+		{
+			scene_.updateOrbiting();
+			// Request another render for continuous orbiting animation
+			requestRender();
+		}
+
+		// Update orbiting action checkmark
+		if (orbitingAction_ && orbitingAction_->isChecked() != scene_.isOrbiting())
+		{
+			orbitingAction_->setChecked(scene_.isOrbiting());
+		}
+
 		framebuffer_->render();
+	}
+}
+
+void MainWindow::onResetCamera()
+{
+	if (sceneInitialized_)
+	{
+		scene_.resetCamera();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraTop()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setCameraTop();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraBottom()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setCameraBottom();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraLeft()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setCameraLeft();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraRight()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setCameraRight();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraFront()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setCameraFront();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraBack()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setCameraBack();
+		requestRender();
+	}
+}
+
+void MainWindow::onCameraOrbiting()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setOrbiting(!scene_.isOrbiting());
+		requestRender();
+	}
+}
+
+void MainWindow::onProjectionPerspective()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setProjectionMode(ProjectionMode::PERSPECTIVE);
+		perspectiveAction_->setChecked(true);
+		orthogonalAction_->setChecked(false);
+		requestRender();
+	}
+}
+
+void MainWindow::onProjectionOrthogonal()
+{
+	if (sceneInitialized_)
+	{
+		scene_.setProjectionMode(ProjectionMode::ORTHOGONAL);
+		perspectiveAction_->setChecked(false);
+		orthogonalAction_->setChecked(true);
+		requestRender();
 	}
 }
 

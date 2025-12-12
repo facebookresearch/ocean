@@ -20,9 +20,12 @@
 
 #include "ocean/rendering/Engine.h"
 #include "ocean/rendering/Framebuffer.h"
+#include "ocean/rendering/ParallelView.h"
 #include "ocean/rendering/PerspectiveView.h"
+#include "ocean/rendering/PointLight.h"
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Transform.h"
+#include "ocean/rendering/View.h"
 
 #include <vector>
 
@@ -55,6 +58,17 @@ enum class PerturbationMode : uint32_t
 	LEFT_ONLY = 1u,
 	/// Apply noise to right camera only
 	RIGHT_ONLY = 2u
+};
+
+/**
+ * Projection mode for scene rendering.
+ */
+enum class ProjectionMode : uint32_t
+{
+	/// Perspective projection (realistic)
+	PERSPECTIVE = 0u,
+	/// Orthogonal/parallel projection
+	ORTHOGONAL = 1u
 };
 
 /**
@@ -240,6 +254,65 @@ class Scene
 		 */
 		void resetCamera();
 
+		/**
+		 * Sets the camera to a top-down view.
+		 */
+		void setCameraTop();
+
+		/**
+		 * Sets the camera to a bottom-up view.
+		 */
+		void setCameraBottom();
+
+		/**
+		 * Sets the camera to a left side view.
+		 */
+		void setCameraLeft();
+
+		/**
+		 * Sets the camera to a right side view.
+		 */
+		void setCameraRight();
+
+		/**
+		 * Sets the camera to a front view.
+		 */
+		void setCameraFront();
+
+		/**
+		 * Sets the camera to a back view.
+		 */
+		void setCameraBack();
+
+		/**
+		 * Starts or stops the orbiting animation.
+		 * @param orbiting True to start orbiting, false to stop
+		 */
+		void setOrbiting(bool orbiting);
+
+		/**
+		 * Returns whether the camera is currently orbiting.
+		 * @return True if orbiting
+		 */
+		bool isOrbiting() const;
+
+		/**
+		 * Updates the orbiting animation (call each frame).
+		 */
+		void updateOrbiting();
+
+		/**
+		 * Sets the projection mode.
+		 * @param mode The projection mode to set
+		 */
+		void setProjectionMode(ProjectionMode mode);
+
+		/**
+		 * Returns the current projection mode.
+		 * @return The current projection mode
+		 */
+		ProjectionMode projectionMode() const;
+
 	protected:
 
 		/**
@@ -253,18 +326,18 @@ class Scene
 		void updateVisualization();
 
 		/**
-		 * Creates a PinholeCamera from a camera configuration (for visualization).
-		 * @param config The camera configuration
-		 * @return The created pinhole camera
-		 */
-		static PinholeCamera createPinholeCameraFromConfig(const CameraConfig& config);
-
-		/**
 		 * Creates an AnyCamera from a camera configuration.
 		 * @param config The camera configuration
 		 * @return The created camera
 		 */
 		static SharedAnyCamera createCameraFromConfig(const CameraConfig& config);
+
+		/**
+		 * Creates a PinholeCamera from a camera configuration (for visualization).
+		 * @param config The camera configuration
+		 * @return The created pinhole camera
+		 */
+		static PinholeCamera createPinholeCameraFromConfig(const CameraConfig& config);
 
 		/**
 		 * Creates the camera frustum geometry.
@@ -300,8 +373,23 @@ class Scene
 		/// The scene
 		Rendering::SceneRef scene_;
 
-		/// The perspective view
+		/// The perspective view (used for both perspective and simulated orthogonal)
 		Rendering::PerspectiveViewRef perspectiveView_;
+
+		/// The parallel (orthographic) view for true orthogonal projection
+		Rendering::ParallelViewRef parallelView_;
+
+		/// Current projection mode
+		ProjectionMode projectionMode_ = ProjectionMode::PERSPECTIVE;
+
+		/// Current configuration
+		SimulationConfig config_;
+
+		/// Current colorization configuration
+		ColorizationConfig colorizationConfig_;
+
+		/// Current statistics
+		SimulationStats stats_;
 
 		/// Transform for the left camera frustum
 		Rendering::TransformRef leftCameraTransform_;
@@ -327,15 +415,6 @@ class Scene
 		/// Error values for each grid point
 		std::vector<Scalar> pointErrors_;
 
-		/// Current configuration
-		SimulationConfig config_;
-
-		/// Current colorization configuration
-		ColorizationConfig colorizationConfig_;
-
-		/// Current statistics
-		SimulationStats stats_;
-
 		/// Last mouse position
 		Vector2 lastMousePosition_;
 
@@ -350,6 +429,12 @@ class Scene
 
 		/// Random generator for simulation
 		RandomGenerator randomGenerator_;
+
+		/// Whether the camera is currently orbiting
+		bool isOrbiting_ = false;
+
+		/// Orbit animation angle (radians)
+		Scalar orbitAngle_ = Scalar(0);
 };
 
 }

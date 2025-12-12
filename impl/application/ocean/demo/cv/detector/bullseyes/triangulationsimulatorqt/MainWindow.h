@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 
+class QAction;
 class QTimer;
 
 namespace Ocean
@@ -67,6 +68,11 @@ class MainWindow : public QMainWindow
 		 * @return The configuration panel widget
 		 */
 		QWidget* createConfigPanel();
+
+		/**
+		 * Creates the menu bar.
+		 */
+		void createMenuBar();
 
 		/**
 		 * Collects current values from UI controls into a configuration.
@@ -124,6 +130,56 @@ class MainWindow : public QMainWindow
 		 * Slot for render timer timeout.
 		 */
 		void onRender();
+
+		/**
+		 * Slot for reset camera menu action.
+		 */
+		void onResetCamera();
+
+		/**
+		 * Slot for camera top view menu action.
+		 */
+		void onCameraTop();
+
+		/**
+		 * Slot for camera bottom view menu action.
+		 */
+		void onCameraBottom();
+
+		/**
+		 * Slot for camera left view menu action.
+		 */
+		void onCameraLeft();
+
+		/**
+		 * Slot for camera right view menu action.
+		 */
+		void onCameraRight();
+
+		/**
+		 * Slot for camera front view menu action.
+		 */
+		void onCameraFront();
+
+		/**
+		 * Slot for camera back view menu action.
+		 */
+		void onCameraBack();
+
+		/**
+		 * Slot for camera orbiting menu action.
+		 */
+		void onCameraOrbiting();
+
+		/**
+		 * Slot for perspective projection menu action.
+		 */
+		void onProjectionPerspective();
+
+		/**
+		 * Slot for orthogonal projection menu action.
+		 */
+		void onProjectionOrthogonal();
 
 		/**
 		 * Slot called when any colorization parameter changes.
@@ -213,6 +269,15 @@ class MainWindow : public QMainWindow
 
 		/// Flag to track if a render is pending
 		bool renderPending_ = false;
+
+		/// Orbiting menu action (for toggling checkmark)
+		QAction* orbitingAction_ = nullptr;
+
+		/// Perspective projection menu action (for toggling checkmark)
+		QAction* perspectiveAction_ = nullptr;
+
+		/// Orthogonal projection menu action (for toggling checkmark)
+		QAction* orthogonalAction_ = nullptr;
 };
 
 }
