@@ -96,7 +96,39 @@ bool Scene::initialize(const Rendering::EngineRef& engine, const Rendering::Fram
 	// Reset camera to default view
 	resetCamera();
 
+	// Run initial simulation
+	runSimulation();
+	updateVisualization();
+
 	return true;
+}
+
+void Scene::updateConfiguration(const SimulationConfig& config)
+{
+	config_ = config;
+	runSimulation();
+	updateVisualization();
+}
+
+const SimulationConfig& Scene::configuration() const
+{
+	return config_;
+}
+
+const SimulationStats& Scene::statistics() const
+{
+	return stats_;
+}
+
+void Scene::updateColorization(const ColorizationConfig& config)
+{
+	colorizationConfig_ = config;
+	updateVisualization();
+}
+
+const ColorizationConfig& Scene::colorization() const
+{
+	return colorizationConfig_;
 }
 
 void Scene::handleMousePress(int /*button*/, const Vector2& position)
@@ -198,6 +230,16 @@ void Scene::updateCameraTransform()
 	{
 		perspectiveView_->setTransformation(transform);
 	}
+}
+
+void Scene::runSimulation()
+{
+	// Stub - simulation logic will be added later
+}
+
+void Scene::updateVisualization()
+{
+	// Stub - visualization logic will be added later
 }
 
 }
