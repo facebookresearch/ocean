@@ -17,6 +17,7 @@
 #include <QtGui/QWheelEvent>
 
 #include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QColorDialog>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QScrollArea>
@@ -357,6 +358,58 @@ QWidget* MainWindow::createConfigPanel()
 		layout->addWidget(group);
 	}
 
+	// Colorization group
+	{
+		QGroupBox* group = new QGroupBox("Colorization");
+		QFormLayout* form = new QFormLayout(group);
+
+		// Min angle spin box with low color button
+		minAngleSpinBox_ = new QDoubleSpinBox();
+		minAngleSpinBox_->setRange(0.0, 90.0);
+		minAngleSpinBox_->setSingleStep(0.1);
+		minAngleSpinBox_->setDecimals(2);
+		minAngleSpinBox_->setSuffix(QString::fromUtf8("\u00B0"));  // degree symbol
+		minAngleSpinBox_->setValue(0.0);
+		connect(minAngleSpinBox_, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::onColorizationChanged);
+
+		lowColorButton_ = new QPushButton();
+		lowColorButton_->setStyleSheet(QString("background-color: %1").arg(lowColor_.name()));
+		lowColorButton_->setFixedWidth(40);
+		connect(lowColorButton_, &QPushButton::clicked, this, &MainWindow::onChooseLowColor);
+
+		QHBoxLayout* minAngleLayout = new QHBoxLayout();
+		minAngleLayout->setContentsMargins(0, 0, 0, 0);
+		minAngleLayout->addWidget(minAngleSpinBox_);
+		minAngleLayout->addWidget(lowColorButton_);
+		QWidget* minAngleWidget = new QWidget();
+		minAngleWidget->setLayout(minAngleLayout);
+		form->addRow(minAngleWidget);
+
+		// Max angle spin box with high color button
+		maxAngleSpinBox_ = new QDoubleSpinBox();
+		maxAngleSpinBox_->setRange(0.01, 90.0);
+		maxAngleSpinBox_->setSingleStep(0.1);
+		maxAngleSpinBox_->setDecimals(2);
+		maxAngleSpinBox_->setSuffix(QString::fromUtf8("\u00B0"));  // degree symbol
+		maxAngleSpinBox_->setValue(0.5);
+		connect(maxAngleSpinBox_, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MainWindow::onColorizationChanged);
+
+		highColorButton_ = new QPushButton();
+		highColorButton_->setStyleSheet(QString("background-color: %1").arg(highColor_.name()));
+		highColorButton_->setFixedWidth(40);
+		connect(highColorButton_, &QPushButton::clicked, this, &MainWindow::onChooseHighColor);
+
+		QHBoxLayout* maxAngleLayout = new QHBoxLayout();
+		maxAngleLayout->setContentsMargins(0, 0, 0, 0);
+		maxAngleLayout->addWidget(maxAngleSpinBox_);
+		maxAngleLayout->addWidget(highColorButton_);
+		QWidget* maxAngleWidget = new QWidget();
+		maxAngleWidget->setLayout(maxAngleLayout);
+		form->addRow(maxAngleWidget);
+
+		layout->addWidget(group);
+	}
+
 	layout->addStretch();
 
 	return panel;
@@ -516,6 +569,52 @@ void MainWindow::onRender()
 
 		framebuffer_->render();
 	}
+}
+
+void MainWindow::onColorizationChanged()
+{
+	if (updatingConfig_ || !sceneInitialized_)
+	{
+		return;
+	}
+
+	const ColorizationConfig config = collectColorizationConfig();
+	scene_.updateColorization(config);
+	requestRender();
+}
+
+void MainWindow::onChooseLowColor()
+{
+	QColor color = QColorDialog::getColor(lowColor_, this, "Choose Low Color");
+	if (color.isValid())
+	{
+		lowColor_ = color;
+		lowColorButton_->setStyleSheet(QString("background-color: %1").arg(lowColor_.name()));
+		onColorizationChanged();
+	}
+}
+
+void MainWindow::onChooseHighColor()
+{
+	QColor color = QColorDialog::getColor(highColor_, this, "Choose High Color");
+	if (color.isValid())
+	{
+		highColor_ = color;
+		highColorButton_->setStyleSheet(QString("background-color: %1").arg(highColor_.name()));
+		onColorizationChanged();
+	}
+}
+
+ColorizationConfig MainWindow::collectColorizationConfig()
+{
+	ColorizationConfig config;
+
+	config.minAngleDegrees = Scalar(minAngleSpinBox_->value());
+	config.maxAngleDegrees = Scalar(maxAngleSpinBox_->value());
+	config.lowColor = RGBAColor(lowColor_.redF(), lowColor_.greenF(), lowColor_.blueF());
+	config.highColor = RGBAColor(highColor_.redF(), highColor_.greenF(), highColor_.blueF());
+
+	return config;
 }
 
 }

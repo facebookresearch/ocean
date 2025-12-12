@@ -13,11 +13,13 @@
 #include "ocean/rendering/Engine.h"
 #include "ocean/rendering/WindowFramebuffer.h"
 
+#include <QtGui/QColor>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 
 class QTimer;
@@ -123,6 +125,27 @@ class MainWindow : public QMainWindow
 		 */
 		void onRender();
 
+		/**
+		 * Slot called when any colorization parameter changes.
+		 */
+		void onColorizationChanged();
+
+		/**
+		 * Slot for choosing the low color.
+		 */
+		void onChooseLowColor();
+
+		/**
+		 * Slot for choosing the high color.
+		 */
+		void onChooseHighColor();
+
+		/**
+		 * Collects current colorization values from UI controls.
+		 * @return The current colorization configuration
+		 */
+		ColorizationConfig collectColorizationConfig();
+
 	protected:
 
 		/// The rendering engine
@@ -173,6 +196,14 @@ class MainWindow : public QMainWindow
 		QLabel* p90ErrorLabel_ = nullptr;
 		QLabel* p95ErrorLabel_ = nullptr;
 		QLabel* numPointsLabel_ = nullptr;
+
+		// Colorization controls
+		QDoubleSpinBox* minAngleSpinBox_ = nullptr;
+		QDoubleSpinBox* maxAngleSpinBox_ = nullptr;
+		QPushButton* lowColorButton_ = nullptr;
+		QPushButton* highColorButton_ = nullptr;
+		QColor lowColor_ = QColor(0, 255, 0);  // Green
+		QColor highColor_ = QColor(255, 0, 0);  // Red
 
 		/// Flag to prevent recursive updates
 		bool updatingConfig_ = false;
