@@ -8,6 +8,8 @@
 #ifndef META_APPLICATION_OCEAN_DEMO_CV_DETECTOR_BULLSEYES_TRIANGULATION_SIMULATOR_QT_SCENE_H
 #define META_APPLICATION_OCEAN_DEMO_CV_DETECTOR_BULLSEYES_TRIANGULATION_SIMULATOR_QT_SCENE_H
 
+#include "ocean/base/RandomGenerator.h"
+
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/PinholeCamera.h"
@@ -21,6 +23,8 @@
 #include "ocean/rendering/PerspectiveView.h"
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Transform.h"
+
+#include <vector>
 
 namespace Ocean
 {
@@ -256,6 +260,13 @@ class Scene
 		static PinholeCamera createPinholeCameraFromConfig(const CameraConfig& config);
 
 		/**
+		 * Creates an AnyCamera from a camera configuration.
+		 * @param config The camera configuration
+		 * @return The created camera
+		 */
+		static SharedAnyCamera createCameraFromConfig(const CameraConfig& config);
+
+		/**
 		 * Creates the camera frustum geometry.
 		 * @param camera The camera to create the frustum for
 		 * @param color The color of the frustum lines
@@ -264,6 +275,14 @@ class Scene
 		 * @return The transform node containing the frustum geometry
 		 */
 		Rendering::TransformRef createCameraFrustum(const PinholeCamera& camera, const RGBAColor& color, Scalar nearDist, Scalar farDist);
+
+		/**
+		 * Computes a heatmap color based on error value using the colorization config.
+		 * @param errorRadians The error value in radians
+		 * @param config The colorization configuration
+		 * @return The heatmap color
+		 */
+		static RGBAColor heatmapColor(Scalar errorRadians, const ColorizationConfig& config);
 
 		/**
 		 * Updates the camera transform based on orbit parameters.
@@ -290,8 +309,23 @@ class Scene
 		/// Transform for the right camera frustum
 		Rendering::TransformRef rightCameraTransform_;
 
+		/// Transform for the point grid
+		Rendering::TransformRef pointsTransform_;
+
+		/// Transform for the error lines (connecting ground truth to triangulated points)
+		Rendering::TransformRef errorLinesTransform_;
+
 		/// Transform for the coordinate axes
 		Rendering::TransformRef axesTransform_;
+
+		/// 3D positions of grid points
+		Vectors3 gridPoints_;
+
+		/// 3D positions of triangulated points (with max error)
+		Vectors3 triangulatedPoints_;
+
+		/// Error values for each grid point
+		std::vector<Scalar> pointErrors_;
 
 		/// Current configuration
 		SimulationConfig config_;
@@ -313,6 +347,9 @@ class Scene
 
 		/// Orbit camera center
 		Vector3 orbitCenter_;
+
+		/// Random generator for simulation
+		RandomGenerator randomGenerator_;
 };
 
 }

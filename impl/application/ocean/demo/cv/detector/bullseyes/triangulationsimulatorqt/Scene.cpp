@@ -7,7 +7,10 @@
 
 #include "application/ocean/demo/cv/detector/bullseyes/triangulationsimulatorqt/Scene.h"
 
+#include "ocean/math/FisheyeCamera.h"
+#include "ocean/math/Line3.h"
 #include "ocean/math/Numeric.h"
+#include "ocean/math/Random.h"
 #include "ocean/math/RGBAColor.h"
 #include "ocean/math/SquareMatrix3.h"
 
@@ -239,7 +242,212 @@ void Scene::updateCameraTransform()
 
 void Scene::runSimulation()
 {
-	// Stub - simulation logic will be added later
+	gridPoints_.clear();
+	triangulatedPoints_.clear();
+	pointErrors_.clear();
+
+	// Create cameras from configuration
+	const SharedAnyCamera leftCamera = createCameraFromConfig(config_.leftCamera);
+	const SharedAnyCamera rightCamera = createCameraFromConfig(config_.rightCamera);
+
+	// Camera transformations (world_T_camera)
+	// Device origin is at center between cameras
+	// Left camera at -baseline/2, Right camera at +baseline/2
+	const Scalar halfBaseline = config_.baselineMeters * Scalar(0.5);
+	const HomogenousMatrix4 world_T_leftCamera(Vector3(-halfBaseline, 0, 0));
+	const HomogenousMatrix4 world_T_rightCamera(Vector3(halfBaseline, 0, 0));
+
+	const HomogenousMatrix4 flippedLeftCamera_T_world = AnyCamera::standard2InvertedFlipped(world_T_leftCamera);
+	const HomogenousMatrix4 flippedRightCamera_T_world = AnyCamera::standard2InvertedFlipped(world_T_rightCamera);
+
+	// Generate point grid - use generous bounds centered at device origin
+	// Points are at negative Z values (in front of cameras which look toward -Z)
+	// Use back depth to determine grid extent (larger depth = wider FOV coverage needed)
+	const Scalar maxHalfWidth = config_.backDepthMeters * Scalar(1.5);  // Generous extent
+
+	for (Scalar z = -config_.backDepthMeters; z <= -config_.frontDepthMeters + Numeric::eps(); z += config_.spacingMeters)
+	{
+		for (Scalar x = -maxHalfWidth; x <= maxHalfWidth + Numeric::eps(); x += config_.spacingMeters)
+		{
+			for (Scalar y = -maxHalfWidth; y <= maxHalfWidth + Numeric::eps(); y += config_.spacingMeters)
+			{
+				const Vector3 worldPoint(x, y, z);
+
+				// Check visibility in both cameras - only use points visible from BOTH
+				if (!leftCamera->isObjectPointInFrontIF(flippedLeftCamera_T_world, worldPoint) || !rightCamera->isObjectPointInFrontIF(flippedRightCamera_T_world, worldPoint))
+				{
+					continue;
+				}
+
+				const Vector2 leftProjection = leftCamera->projectToImageIF(flippedLeftCamera_T_world, worldPoint);
+				const Vector2 rightProjection = rightCamera->projectToImageIF(flippedRightCamera_T_world, worldPoint);
+
+				if (!leftCamera->isInside(leftProjection) || !rightCamera->isInside(rightProjection))
+				{
+					continue;
+				}
+
+				// Simulate triangulation with noise/offset applied
+				// Error metric: angular error (radians) - angle between ray to ground truth and ray to triangulated point
+				// as seen from the perturbed camera(s). If both cameras are perturbed, use the larger angle.
+				Scalar maxError = 0;
+				Vector3 maxErrorTriangulatedPoint = worldPoint;
+
+				// Camera positions for angular error computation
+				const Vector3 leftCameraPosition = world_T_leftCamera.translation();
+				const Vector3 rightCameraPosition = world_T_rightCamera.translation();
+
+				// Helper lambda to compute angular error from a camera position
+				auto computeAngularError = [](const Vector3& cameraPosition, const Vector3& groundTruthPoint, const Vector3& triangulatedPoint) -> Scalar
+				{
+					const Vector3 rayToGroundTruth = (groundTruthPoint - cameraPosition).normalizedOrZero();
+					const Vector3 rayToTriangulated = (triangulatedPoint - cameraPosition).normalizedOrZero();
+
+					// Angle between rays: acos(dot product), clamped to avoid numerical issues
+					const Scalar dotProduct = std::max(Scalar(-1), std::min(Scalar(1), rayToGroundTruth * rayToTriangulated));
+					return Numeric::acos(dotProduct);
+				};
+
+				if (config_.randomize)
+				{
+					// Random mode: run multiple trials and retain max error
+					for (unsigned int trial = 0u; trial < config_.numRepetitions; ++trial)
+					{
+						// Generate uniform noise in range [-delta, +delta]
+						Scalar noiseLeftX = Scalar(0);
+						Scalar noiseLeftY = Scalar(0);
+						Scalar noiseRightX = Scalar(0);
+						Scalar noiseRightY = Scalar(0);
+
+						// Apply noise based on perturbation mode
+						if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::LEFT_ONLY)
+						{
+							noiseLeftX = Random::scalar(randomGenerator_, -config_.deltaX, config_.deltaX);
+							noiseLeftY = Random::scalar(randomGenerator_, -config_.deltaY, config_.deltaY);
+						}
+
+						if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
+						{
+							noiseRightX = Random::scalar(randomGenerator_, -config_.deltaX, config_.deltaX);
+							noiseRightY = Random::scalar(randomGenerator_, -config_.deltaY, config_.deltaY);
+						}
+
+						const Vector2 noisyLeftProjection(leftProjection.x() + noiseLeftX, leftProjection.y() + noiseLeftY);
+						const Vector2 noisyRightProjection(rightProjection.x() + noiseRightX, rightProjection.y() + noiseRightY);
+
+						// Triangulate using rays
+						const Line3 leftRay = leftCamera->ray(noisyLeftProjection, world_T_leftCamera);
+						const Line3 rightRay = rightCamera->ray(noisyRightProjection, world_T_rightCamera);
+
+						Vector3 triangulatedPoint;
+						if (leftRay.nearestPoint(rightRay, triangulatedPoint))
+						{
+							// Compute angular error from perturbed camera(s)
+							Scalar angularError = 0;
+
+							if (config_.perturbationMode == PerturbationMode::LEFT_ONLY)
+							{
+								angularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
+							}
+							else if (config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
+							{
+								angularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
+							}
+							else // BOTH
+							{
+								const Scalar leftAngularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
+								const Scalar rightAngularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
+								angularError = std::max(leftAngularError, rightAngularError);
+							}
+
+							if (angularError > maxError)
+							{
+								maxError = angularError;
+								maxErrorTriangulatedPoint = triangulatedPoint;
+							}
+						}
+					}
+				}
+				else
+				{
+					// Fixed mode: apply exact delta offset once
+					Scalar offsetLeftX = Scalar(0);
+					Scalar offsetLeftY = Scalar(0);
+					Scalar offsetRightX = Scalar(0);
+					Scalar offsetRightY = Scalar(0);
+
+					// Apply offset based on perturbation mode
+					if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::LEFT_ONLY)
+					{
+						offsetLeftX = config_.deltaX;
+						offsetLeftY = config_.deltaY;
+					}
+
+					if (config_.perturbationMode == PerturbationMode::BOTH || config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
+					{
+						offsetRightX = config_.deltaX;
+						offsetRightY = config_.deltaY;
+					}
+
+					const Vector2 offsetLeftProjection(leftProjection.x() + offsetLeftX, leftProjection.y() + offsetLeftY);
+					const Vector2 offsetRightProjection(rightProjection.x() + offsetRightX, rightProjection.y() + offsetRightY);
+
+					// Triangulate using rays
+					const Line3 leftRay = leftCamera->ray(offsetLeftProjection, world_T_leftCamera);
+					const Line3 rightRay = rightCamera->ray(offsetRightProjection, world_T_rightCamera);
+
+					Vector3 triangulatedPoint;
+					if (leftRay.nearestPoint(rightRay, triangulatedPoint))
+					{
+						// Compute angular error from perturbed camera(s)
+						if (config_.perturbationMode == PerturbationMode::LEFT_ONLY)
+						{
+							maxError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
+						}
+						else if (config_.perturbationMode == PerturbationMode::RIGHT_ONLY)
+						{
+							maxError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
+						}
+						else // BOTH
+						{
+							const Scalar leftAngularError = computeAngularError(leftCameraPosition, worldPoint, triangulatedPoint);
+							const Scalar rightAngularError = computeAngularError(rightCameraPosition, worldPoint, triangulatedPoint);
+							maxError = std::max(leftAngularError, rightAngularError);
+						}
+
+						maxErrorTriangulatedPoint = triangulatedPoint;
+					}
+				}
+
+				gridPoints_.push_back(worldPoint);
+				triangulatedPoints_.push_back(maxErrorTriangulatedPoint);
+				pointErrors_.push_back(maxError);
+			}
+		}
+	}
+
+	// Compute statistics
+	if (!pointErrors_.empty())
+	{
+		std::vector<Scalar> sortedErrors = pointErrors_;
+		std::sort(sortedErrors.begin(), sortedErrors.end());
+
+		Scalar sum = 0;
+		for (const Scalar& error : sortedErrors)
+		{
+			sum += error;
+		}
+
+		stats_.meanError = sum / Scalar(sortedErrors.size());
+		stats_.p50Error = sortedErrors[sortedErrors.size() / 2];
+		stats_.p90Error = sortedErrors[size_t(Scalar(sortedErrors.size()) * Scalar(0.9))];
+		stats_.p95Error = sortedErrors[size_t(Scalar(sortedErrors.size()) * Scalar(0.95))];
+		stats_.numValidPoints = sortedErrors.size();
+	}
+	else
+	{
+		stats_ = SimulationStats();
+	}
 }
 
 void Scene::updateVisualization()
@@ -259,6 +467,16 @@ void Scene::updateVisualization()
 	{
 		scene_->removeChild(rightCameraTransform_);
 		rightCameraTransform_.release();
+	}
+	if (pointsTransform_)
+	{
+		scene_->removeChild(pointsTransform_);
+		pointsTransform_.release();
+	}
+	if (errorLinesTransform_)
+	{
+		scene_->removeChild(errorLinesTransform_);
+		errorLinesTransform_.release();
 	}
 
 	// Create cameras for frustum visualization
@@ -283,6 +501,54 @@ void Scene::updateVisualization()
 		rightCameraTransform_->setTransformation(HomogenousMatrix4(Vector3(halfBaseline, 0, 0)));
 		scene_->addChild(rightCameraTransform_);
 	}
+
+	// Create colorized points at the triangulated (noisy) locations
+	if (!triangulatedPoints_.empty() && !pointErrors_.empty())
+	{
+		// Generate colors based on colorization config
+		RGBAColors colors;
+		colors.reserve(triangulatedPoints_.size());
+		for (size_t i = 0; i < pointErrors_.size(); ++i)
+		{
+			colors.push_back(heatmapColor(pointErrors_[i], colorizationConfig_));
+		}
+
+		pointsTransform_ = Rendering::Utilities::createPoints(*engine_, triangulatedPoints_, RGBAColor(1.0f, 1.0f, 1.0f), Scalar(3), colors);
+		if (pointsTransform_)
+		{
+			scene_->addChild(pointsTransform_);
+		}
+
+		// Create error lines connecting ground truth to triangulated points
+		if (!triangulatedPoints_.empty())
+		{
+			// Build vertices and line groups for error visualization
+			Vectors3 lineVertices;
+			lineVertices.reserve(gridPoints_.size() * 2);
+
+			Rendering::VertexIndexGroups lineGroups;
+			lineGroups.reserve(gridPoints_.size());
+
+			for (size_t i = 0; i < gridPoints_.size(); ++i)
+			{
+				const unsigned int baseIndex = (unsigned int)(lineVertices.size());
+				lineVertices.push_back(gridPoints_[i]);
+				lineVertices.push_back(triangulatedPoints_[i]);
+
+				Rendering::VertexIndices line;
+				line.push_back(baseIndex);
+				line.push_back(baseIndex + 1);
+				lineGroups.push_back(line);
+			}
+
+			// Use a light gray color for the error lines
+			errorLinesTransform_ = Rendering::Utilities::createLines(*engine_, lineVertices, lineGroups, RGBAColor(0.7f, 0.7f, 0.7f), Scalar(1));
+			if (errorLinesTransform_)
+			{
+				scene_->addChild(errorLinesTransform_);
+			}
+		}
+	}
 }
 
 PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
@@ -295,6 +561,29 @@ PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
 		config.width, config.height,
 		focalLength, focalLength,
 		Scalar(config.width) * Scalar(0.5), Scalar(config.height) * Scalar(0.5));
+}
+
+SharedAnyCamera Scene::createCameraFromConfig(const CameraConfig& config)
+{
+	// Compute focal length from HFOV: tan(hfov/2) = (width/2) / focalLength
+	// => focalLength = (width/2) / tan(hfov/2)
+	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
+	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
+
+	const Scalar principalX = Scalar(config.width) * Scalar(0.5);
+	const Scalar principalY = Scalar(config.height) * Scalar(0.5);
+
+	if (config.type == AnyCameraType::FISHEYE)
+	{
+		// Use FisheyeCamera with equidistant projection (no distortion for now)
+		const Scalar radialDistortion[6] = {Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0)};
+		const Scalar tangentialDistortion[2] = {Scalar(0), Scalar(0)};
+
+		return std::make_shared<AnyCameraFisheye>(FisheyeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY, radialDistortion, tangentialDistortion));
+	}
+
+	// Default: Pinhole camera
+	return std::make_shared<AnyCameraPinhole>(PinholeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY));
 }
 
 Rendering::TransformRef Scene::createCameraFrustum(const PinholeCamera& camera, const RGBAColor& color, Scalar nearDist, Scalar farDist)
@@ -394,6 +683,39 @@ Rendering::TransformRef Scene::createCameraFrustum(const PinholeCamera& camera, 
 	}
 
 	return result;
+}
+
+RGBAColor Scene::heatmapColor(Scalar errorRadians, const ColorizationConfig& config)
+{
+	// Convert thresholds from degrees to radians
+	const Scalar minRadians = Numeric::deg2rad(config.minAngleDegrees);
+	const Scalar maxRadians = Numeric::deg2rad(config.maxAngleDegrees);
+
+	// Normalize error to [0, 1]
+	const Scalar range = maxRadians - minRadians;
+	const Scalar t = (range > Numeric::eps()) ? std::max(Scalar(0), std::min(Scalar(1), (errorRadians - minRadians) / range)) : Scalar(0);
+
+	// Interpolate between lowColor and highColor through yellow
+	float r, g, b;
+
+	if (t < Scalar(0.5))
+	{
+		// Low color to Yellow
+		const float localT = float(t * Scalar(2));
+		r = config.lowColor.red() + localT * (1.0f - config.lowColor.red());
+		g = config.lowColor.green() + localT * (1.0f - config.lowColor.green());
+		b = config.lowColor.blue() * (1.0f - localT);
+	}
+	else
+	{
+		// Yellow to High color
+		const float localT = float((t - Scalar(0.5)) * Scalar(2));
+		r = 1.0f + localT * (config.highColor.red() - 1.0f);
+		g = 1.0f - localT * (1.0f - config.highColor.green());
+		b = localT * config.highColor.blue();
+	}
+
+	return RGBAColor(r, g, b);
 }
 
 }
