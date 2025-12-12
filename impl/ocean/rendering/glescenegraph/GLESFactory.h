@@ -139,6 +139,12 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFactory : public Factory
 		ObjectRef createPerspectiveView() const override;
 
 		/**
+		 * Creates a new parallel view object.
+		 * @see Factory::createParallelView().
+		 */
+		ObjectRef createParallelView() const override;
+
+		/**
 		 * Creates a new phantom attribute.
 		 * @see Factory::createPhantomAttribute().
 		 */

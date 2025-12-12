@@ -98,6 +98,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESMediaTexture2D.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESNode.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESParallelView.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPerspectiveView.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPhantomAttribute.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPointLight.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESMediaTexture2D.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESNode.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESParallelView.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPerspectiveView.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPhantomAttribute.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPointLight.cpp" />

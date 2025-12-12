@@ -50,7 +50,9 @@
 		5D3FC5941D8BF5B800AF4130 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
 		5D3FC5951D8BF5B800AF4130 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
 		5D3FC5961D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		FA0000031D8BF5B800AF4130 /* GLESParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = FA0000011D8BF5B800AF4130 /* GLESParallelView.h */; };
 		5D3FC5971D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		FA0000041D8BF5B800AF4130 /* GLESParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = FA0000011D8BF5B800AF4130 /* GLESParallelView.h */; };
 		5D3FC5981D8BF5B800AF4130 /* GLESPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */; };
 		5D3FC5991D8BF5B800AF4130 /* GLESPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */; };
 		5D3FC59A1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
@@ -140,7 +142,9 @@
 		5D3FC62A1D8BF5C900AF4130 /* GLESObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */; };
 		5D3FC62B1D8BF5C900AF4130 /* GLESObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */; };
 		5D3FC62C1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		FA0000071D8BF5C900AF4130 /* GLESParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA0000021D8BF5C900AF4130 /* GLESParallelView.cpp */; };
 		5D3FC62D1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		FA0000081D8BF5C900AF4130 /* GLESParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA0000021D8BF5C900AF4130 /* GLESParallelView.cpp */; };
 		5D3FC62E1D8BF5C900AF4130 /* GLESPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */; };
 		5D3FC62F1D8BF5C900AF4130 /* GLESPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */; };
 		5D3FC6301D8BF5C900AF4130 /* GLESPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */; };
@@ -189,6 +193,7 @@
 		5D3FC65D1D8BF5C900AF4130 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
 		5D3FC6641D8BFA5300AF4130 /* GLESShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */; };
 		5D3FC6651D8BFA5300AF4130 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		FA0000091D8BFA5300AF4130 /* GLESParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA0000021D8BF5C900AF4130 /* GLESParallelView.cpp */; };
 		5D3FC6661D8BFA5300AF4130 /* GLESTriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */; };
 		5D3FC6671D8BFA5300AF4130 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
 		5D3FC6681D8BFA5300AF4130 /* GLESSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */; };
@@ -253,6 +258,7 @@
 		5D3FC6AA1D8BFA5300AF4130 /* GLESSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */; };
 		5D3FC6AB1D8BFA5300AF4130 /* GLESTextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */; };
 		5D3FC6AC1D8BFA5300AF4130 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		FA0000051D8BFA5300AF4130 /* GLESParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = FA0000011D8BF5B800AF4130 /* GLESParallelView.h */; };
 		5D3FC6AD1D8BFA5300AF4130 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
 		5D3FC6AE1D8BFA5300AF4130 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
 		5D3FC6AF1D8BFA5300AF4130 /* GLESShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5561D8BF5B800AF4130 /* GLESShape.h */; };
@@ -424,6 +430,7 @@
 		93F1C4CD243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */; };
 		C041ED321DABF21100BF5D76 /* GLESShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */; };
 		C041ED331DABF21100BF5D76 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		FA00000A1DABF21100BF5D76 /* GLESParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA0000021D8BF5C900AF4130 /* GLESParallelView.cpp */; };
 		C041ED341DABF21100BF5D76 /* GLESTriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */; };
 		C041ED351DABF21100BF5D76 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
 		C041ED361DABF21100BF5D76 /* GLESSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */; };
@@ -488,6 +495,7 @@
 		C041ED781DABF21100BF5D76 /* GLESSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */; };
 		C041ED791DABF21100BF5D76 /* GLESTextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */; };
 		C041ED7A1DABF21100BF5D76 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		FA0000061DABF21100BF5D76 /* GLESParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = FA0000011D8BF5B800AF4130 /* GLESParallelView.h */; };
 		C041ED7B1DABF21100BF5D76 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
 		C041ED7C1DABF21100BF5D76 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
 		C041ED7D1DABF21100BF5D76 /* GLESShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5561D8BF5B800AF4130 /* GLESShape.h */; };
@@ -540,6 +548,7 @@
 		5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESNode.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESNode.h; sourceTree = "<group>"; };
 		5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESObject.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESObject.h; sourceTree = "<group>"; };
 		5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPerspectiveView.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPerspectiveView.h; sourceTree = "<group>"; };
+		FA0000011D8BF5B800AF4130 /* GLESParallelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESParallelView.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESParallelView.h; sourceTree = "<group>"; };
 		5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPointLight.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPointLight.h; sourceTree = "<group>"; };
 		5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPrimitive.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitive.h; sourceTree = "<group>"; };
 		5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPrimitiveAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitiveAttribute.h; sourceTree = "<group>"; };
@@ -585,6 +594,7 @@
 		5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESNode.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESNode.cpp; sourceTree = "<group>"; };
 		5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESObject.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESObject.cpp; sourceTree = "<group>"; };
 		5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPerspectiveView.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPerspectiveView.cpp; sourceTree = "<group>"; };
+		FA0000021D8BF5C900AF4130 /* GLESParallelView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESParallelView.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESParallelView.cpp; sourceTree = "<group>"; };
 		5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPointLight.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPointLight.cpp; sourceTree = "<group>"; };
 		5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitive.cpp; sourceTree = "<group>"; };
 		5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPrimitiveAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitiveAttribute.cpp; sourceTree = "<group>"; };
@@ -736,6 +746,7 @@
 				5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */,
 				5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */,
 				5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */,
+				FA0000021D8BF5C900AF4130 /* GLESParallelView.cpp */,
 				5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */,
 				5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */,
 				93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */,
@@ -807,6 +818,7 @@
 				5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */,
 				5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */,
 				5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */,
+				FA0000011D8BF5B800AF4130 /* GLESParallelView.h */,
 				5F2D60141E2F724F00CB35C0 /* GLESPhantomAttribute.h */,
 				5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */,
 				93686C3E26AF3EB1003CAF6E /* GLESPoints.h */,
@@ -889,6 +901,7 @@
 				5D3FC5AA1D8BF5B800AF4130 /* GLESSphere.h in Headers */,
 				5D3FC5B61D8BF5B800AF4130 /* GLESTextures.h in Headers */,
 				5D3FC5961D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */,
+				FA0000031D8BF5B800AF4130 /* GLESParallelView.h in Headers */,
 				5D3FC59A1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */,
 				5D3FC5941D8BF5B800AF4130 /* GLESObject.h in Headers */,
 				5D3FC5A81D8BF5B800AF4130 /* GLESShape.h in Headers */,
@@ -952,6 +965,7 @@
 				5D3FC5AB1D8BF5B800AF4130 /* GLESSphere.h in Headers */,
 				5D3FC5B71D8BF5B800AF4130 /* GLESTextures.h in Headers */,
 				5D3FC5971D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */,
+				FA0000041D8BF5B800AF4130 /* GLESParallelView.h in Headers */,
 				5D3FC59B1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */,
 				93A3E70928F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
 				5D3FC5951D8BF5B800AF4130 /* GLESObject.h in Headers */,
@@ -1021,6 +1035,7 @@
 				5D3FC6AA1D8BFA5300AF4130 /* GLESSphere.h in Headers */,
 				5D3FC6AB1D8BFA5300AF4130 /* GLESTextures.h in Headers */,
 				5D3FC6AC1D8BFA5300AF4130 /* GLESPerspectiveView.h in Headers */,
+				FA0000051D8BFA5300AF4130 /* GLESParallelView.h in Headers */,
 				5D3FC6AD1D8BFA5300AF4130 /* GLESPrimitive.h in Headers */,
 				93A3E70A28F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
 				5D3FC6AE1D8BFA5300AF4130 /* GLESObject.h in Headers */,
@@ -1090,6 +1105,7 @@
 				C041ED781DABF21100BF5D76 /* GLESSphere.h in Headers */,
 				C041ED791DABF21100BF5D76 /* GLESTextures.h in Headers */,
 				C041ED7A1DABF21100BF5D76 /* GLESPerspectiveView.h in Headers */,
+				FA0000061DABF21100BF5D76 /* GLESParallelView.h in Headers */,
 				C041ED7B1DABF21100BF5D76 /* GLESPrimitive.h in Headers */,
 				93A3E70B28F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
 				C041ED7C1DABF21100BF5D76 /* GLESObject.h in Headers */,
@@ -1309,6 +1325,7 @@
 				93A3E71128F72DD8003E5044 /* Apple.cpp in Sources */,
 				5D3FC63C1D8BF5C900AF4130 /* GLESShaderProgram.cpp in Sources */,
 				5D3FC62C1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */,
+				FA0000071D8BF5C900AF4130 /* GLESParallelView.cpp in Sources */,
 				5D3FC6521D8BF5C900AF4130 /* GLESTriangles.cpp in Sources */,
 				93A3E71528F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
 				5D3FC65C1D8BF5C900AF4130 /* GLESView.cpp in Sources */,
@@ -1380,6 +1397,7 @@
 				93A3E71228F72DD8003E5044 /* Apple.cpp in Sources */,
 				5D3FC63D1D8BF5C900AF4130 /* GLESShaderProgram.cpp in Sources */,
 				5D3FC62D1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */,
+				FA0000081D8BF5C900AF4130 /* GLESParallelView.cpp in Sources */,
 				5D3FC6531D8BF5C900AF4130 /* GLESTriangles.cpp in Sources */,
 				93A3E71628F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
 				5D3FC65D1D8BF5C900AF4130 /* GLESView.cpp in Sources */,
@@ -1451,6 +1469,7 @@
 				93A3E71328F72DD8003E5044 /* Apple.cpp in Sources */,
 				5D3FC6641D8BFA5300AF4130 /* GLESShaderProgram.cpp in Sources */,
 				5D3FC6651D8BFA5300AF4130 /* GLESPerspectiveView.cpp in Sources */,
+				FA0000091D8BFA5300AF4130 /* GLESParallelView.cpp in Sources */,
 				5D3FC6661D8BFA5300AF4130 /* GLESTriangles.cpp in Sources */,
 				93A3E71728F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
 				5D3FC6671D8BFA5300AF4130 /* GLESView.cpp in Sources */,
@@ -1522,6 +1541,7 @@
 				93A3E71428F72DD8003E5044 /* Apple.cpp in Sources */,
 				C041ED321DABF21100BF5D76 /* GLESShaderProgram.cpp in Sources */,
 				C041ED331DABF21100BF5D76 /* GLESPerspectiveView.cpp in Sources */,
+				FA00000A1DABF21100BF5D76 /* GLESParallelView.cpp in Sources */,
 				C041ED341DABF21100BF5D76 /* GLESTriangles.cpp in Sources */,
 				93A3E71828F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
 				C041ED351DABF21100BF5D76 /* GLESView.cpp in Sources */,

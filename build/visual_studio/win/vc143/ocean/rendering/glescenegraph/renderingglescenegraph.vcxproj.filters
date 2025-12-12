@@ -74,6 +74,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESParallelView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPerspectiveView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -263,6 +266,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESParallelView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPerspectiveView.h">

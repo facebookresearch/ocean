@@ -22,6 +22,7 @@
 #include "ocean/rendering/glescenegraph/GLESLOD.h"
 #include "ocean/rendering/glescenegraph/GLESMaterial.h"
 #include "ocean/rendering/glescenegraph/GLESMediaTexture2D.h"
+#include "ocean/rendering/glescenegraph/GLESParallelView.h"
 #include "ocean/rendering/glescenegraph/GLESPerspectiveView.h"
 #include "ocean/rendering/glescenegraph/GLESPhantomAttribute.h"
 #include "ocean/rendering/glescenegraph/GLESPointLight.h"
@@ -141,6 +142,11 @@ ObjectRef GLESFactory::createMediaTexture2D() const
 ObjectRef GLESFactory::createPerspectiveView() const
 {
 	return createReference(new GLESPerspectiveView());
+}
+
+ObjectRef GLESFactory::createParallelView() const
+{
+	return createReference(new GLESParallelView());
 }
 
 ObjectRef GLESFactory::createPhantomAttribute() const
