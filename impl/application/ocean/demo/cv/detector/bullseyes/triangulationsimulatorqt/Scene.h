@@ -333,6 +333,29 @@ class Scene
 		void updateVisualization();
 
 		/**
+		 * Creates the camera frustum geometry.
+		 * @param camera The camera to create the frustum for
+		 * @param color The color of the frustum lines
+		 * @param nearDist The near plane distance
+		 * @param farDist The far plane distance
+		 * @return The transform node containing the frustum geometry
+		 */
+		Rendering::TransformRef createCameraFrustum(const PinholeCamera& camera, const RGBAColor& color, Scalar nearDist, Scalar farDist);
+
+		/**
+		 * Updates the camera transform based on orbit parameters.
+		 */
+		void updateCameraTransform();
+
+		/**
+		 * Creates a wireframe cone visualization.
+		 * @param halfAngleRadians The half-angle of the cone in radians
+		 * @param length The length of the cone (depth)
+		 * @return The transform node containing the cone geometry
+		 */
+		Rendering::TransformRef createConeVisualization(Scalar halfAngleRadians, Scalar length);
+
+		/**
 		 * Creates an AnyCamera from a camera configuration.
 		 * @param config The camera configuration
 		 * @return The created camera
@@ -347,35 +370,12 @@ class Scene
 		static PinholeCamera createPinholeCameraFromConfig(const CameraConfig& config);
 
 		/**
-		 * Creates the camera frustum geometry.
-		 * @param camera The camera to create the frustum for
-		 * @param color The color of the frustum lines
-		 * @param nearDist The near plane distance
-		 * @param farDist The far plane distance
-		 * @return The transform node containing the frustum geometry
-		 */
-		Rendering::TransformRef createCameraFrustum(const PinholeCamera& camera, const RGBAColor& color, Scalar nearDist, Scalar farDist);
-
-		/**
 		 * Computes a heatmap color based on error value using the colorization config.
 		 * @param errorRadians The error value in radians
 		 * @param config The colorization configuration
 		 * @return The heatmap color
 		 */
 		static RGBAColor heatmapColor(Scalar errorRadians, const ColorizationConfig& config);
-
-		/**
-		 * Updates the camera transform based on orbit parameters.
-		 */
-		void updateCameraTransform();
-
-		/**
-		 * Creates a wireframe cone visualization.
-		 * @param halfAngleRadians The half-angle of the cone in radians
-		 * @param length The length of the cone (depth)
-		 * @return The transform node containing the cone geometry
-		 */
-		Rendering::TransformRef createConeVisualization(Scalar halfAngleRadians, Scalar length);
 
 		/**
 		 * Computes the angular error between ground truth and triangulated point.

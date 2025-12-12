@@ -448,41 +448,6 @@ void Scene::updateCameraTransform()
 	}
 }
 
-SharedAnyCamera Scene::createCameraFromConfig(const CameraConfig& config)
-{
-	// Compute focal length from HFOV: tan(hfov/2) = (width/2) / focalLength
-	// => focalLength = (width/2) / tan(hfov/2)
-	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
-	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
-
-	const Scalar principalX = Scalar(config.width) * Scalar(0.5);
-	const Scalar principalY = Scalar(config.height) * Scalar(0.5);
-
-	if (config.type == AnyCameraType::FISHEYE)
-	{
-		// Use FisheyeCamera with equidistant projection (no distortion for now)
-		const Scalar radialDistortion[6] = {Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0)};
-		const Scalar tangentialDistortion[2] = {Scalar(0), Scalar(0)};
-
-		return std::make_shared<AnyCameraFisheye>(FisheyeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY, radialDistortion, tangentialDistortion));
-	}
-
-	// Default: Pinhole camera
-	return std::make_shared<AnyCameraPinhole>(PinholeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY));
-}
-
-PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
-{
-	// Compute focal length from HFOV
-	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
-	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
-
-	return PinholeCamera(
-		config.width, config.height,
-		focalLength, focalLength,
-		Scalar(config.width) * Scalar(0.5), Scalar(config.height) * Scalar(0.5));
-}
-
 Scalar Scene::computeAngularError(const Vector3& cameraPosition, const Vector3& groundTruthPoint, const Vector3& triangulatedPoint)
 {
 	const Vector3 rayToGroundTruth = (groundTruthPoint - cameraPosition).normalizedOrZero();
@@ -924,39 +889,6 @@ Rendering::TransformRef Scene::createCameraFrustum(const PinholeCamera& camera, 
 	return result;
 }
 
-RGBAColor Scene::heatmapColor(Scalar errorRadians, const ColorizationConfig& config)
-{
-	// Convert thresholds from degrees to radians
-	const Scalar minRadians = Numeric::deg2rad(config.minAngleDegrees);
-	const Scalar maxRadians = Numeric::deg2rad(config.maxAngleDegrees);
-
-	// Normalize error to [0, 1]
-	const Scalar range = maxRadians - minRadians;
-	const Scalar t = (range > Numeric::eps()) ? std::max(Scalar(0), std::min(Scalar(1), (errorRadians - minRadians) / range)) : Scalar(0);
-
-	// Interpolate between lowColor and highColor through yellow
-	float r, g, b;
-
-	if (t < Scalar(0.5))
-	{
-		// Low color to Yellow
-		const float localT = float(t * Scalar(2));
-		r = config.lowColor.red() + localT * (1.0f - config.lowColor.red());
-		g = config.lowColor.green() + localT * (1.0f - config.lowColor.green());
-		b = config.lowColor.blue() * (1.0f - localT);
-	}
-	else
-	{
-		// Yellow to High color
-		const float localT = float((t - Scalar(0.5)) * Scalar(2));
-		r = 1.0f + localT * (config.highColor.red() - 1.0f);
-		g = 1.0f - localT * (1.0f - config.highColor.green());
-		b = localT * config.highColor.blue();
-	}
-
-	return RGBAColor(r, g, b);
-}
-
 Rendering::TransformRef Scene::createConeVisualization(Scalar halfAngleRadians, Scalar length)
 {
 	if (engine_.isNull())
@@ -1010,6 +942,74 @@ Rendering::TransformRef Scene::createConeVisualization(Scalar halfAngleRadians, 
 	const RGBAColor coneColor(1.0f, 1.0f, 1.0f, 0.1f);
 
 	return Rendering::Utilities::createLines(*engine_, vertices, lineGroups, coneColor, Scalar(1));
+}
+
+SharedAnyCamera Scene::createCameraFromConfig(const CameraConfig& config)
+{
+	// Compute focal length from HFOV: tan(hfov/2) = (width/2) / focalLength
+	// => focalLength = (width/2) / tan(hfov/2)
+	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
+	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
+
+	const Scalar principalX = Scalar(config.width) * Scalar(0.5);
+	const Scalar principalY = Scalar(config.height) * Scalar(0.5);
+
+	if (config.type == AnyCameraType::FISHEYE)
+	{
+		// Use FisheyeCamera with equidistant projection (no distortion for now)
+		const Scalar radialDistortion[6] = {Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0), Scalar(0)};
+		const Scalar tangentialDistortion[2] = {Scalar(0), Scalar(0)};
+
+		return std::make_shared<AnyCameraFisheye>(FisheyeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY, radialDistortion, tangentialDistortion));
+	}
+
+	// Default: Pinhole camera
+	return std::make_shared<AnyCameraPinhole>(PinholeCamera(config.width, config.height, focalLength, focalLength, principalX, principalY));
+}
+
+PinholeCamera Scene::createPinholeCameraFromConfig(const CameraConfig& config)
+{
+	// Compute focal length from HFOV
+	const Scalar hfovRadians = Numeric::deg2rad(config.hfovDegrees);
+	const Scalar focalLength = Scalar(config.width) * Scalar(0.5) / Numeric::tan(hfovRadians * Scalar(0.5));
+
+	return PinholeCamera(
+		config.width, config.height,
+		focalLength, focalLength,
+		Scalar(config.width) * Scalar(0.5), Scalar(config.height) * Scalar(0.5));
+}
+
+RGBAColor Scene::heatmapColor(Scalar errorRadians, const ColorizationConfig& config)
+{
+	// Convert thresholds from degrees to radians
+	const Scalar minRadians = Numeric::deg2rad(config.minAngleDegrees);
+	const Scalar maxRadians = Numeric::deg2rad(config.maxAngleDegrees);
+
+	// Normalize error to [0, 1]
+	const Scalar range = maxRadians - minRadians;
+	const Scalar t = (range > Numeric::eps()) ? std::max(Scalar(0), std::min(Scalar(1), (errorRadians - minRadians) / range)) : Scalar(0);
+
+	// Interpolate between lowColor and highColor through yellow
+	float r, g, b;
+
+	if (t < Scalar(0.5))
+	{
+		// Low color to Yellow
+		const float localT = float(t * Scalar(2));
+		r = config.lowColor.red() + localT * (1.0f - config.lowColor.red());
+		g = config.lowColor.green() + localT * (1.0f - config.lowColor.green());
+		b = config.lowColor.blue() * (1.0f - localT);
+	}
+	else
+	{
+		// Yellow to High color
+		const float localT = float((t - Scalar(0.5)) * Scalar(2));
+		r = 1.0f + localT * (config.highColor.red() - 1.0f);
+		g = 1.0f - localT * (1.0f - config.highColor.green());
+		b = localT * config.highColor.blue();
+	}
+
+	return RGBAColor(r, g, b);
 }
 
 }
