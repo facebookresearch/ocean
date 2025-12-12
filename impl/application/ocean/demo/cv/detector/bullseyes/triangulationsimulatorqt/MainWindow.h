@@ -56,6 +56,36 @@ class MainWindow : public QMainWindow
 	protected:
 
 		/**
+		 * Event function for mouse press events.
+		 * @see QWidget::mousePressEvent().
+		 */
+		void mousePressEvent(QMouseEvent* event) override;
+
+		/**
+		 * Event function for mouse move events.
+		 * @see QWidget::mouseMoveEvent().
+		 */
+		void mouseMoveEvent(QMouseEvent* event) override;
+
+		/**
+		 * Event function for mouse release events.
+		 * @see QWidget::mouseReleaseEvent().
+		 */
+		void mouseReleaseEvent(QMouseEvent* event) override;
+
+		/**
+		 * Event function for mouse wheel events.
+		 * @see QWidget::wheelEvent().
+		 */
+		void wheelEvent(QWheelEvent* event) override;
+
+		/**
+		 * Event function for resize events.
+		 * @see QWidget::resizeEvent().
+		 */
+		void resizeEvent(QResizeEvent* event) override;
+
+		/**
 		 * Requests a render on the next frame.
 		 * Call this whenever the scene needs to be redrawn.
 		 */

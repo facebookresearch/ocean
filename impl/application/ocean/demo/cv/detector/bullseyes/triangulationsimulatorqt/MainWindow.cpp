@@ -11,6 +11,9 @@
 
 #include <QtCore/QTimer>
 
+#include <QtGui/QMouseEvent>
+#include <QtGui/QWheelEvent>
+
 #include <QtWidgets/QBoxLayout>
 
 namespace Ocean
@@ -83,6 +86,55 @@ MainWindow::~MainWindow()
 	{
 		renderTimer_->stop();
 	}
+}
+
+void MainWindow::mousePressEvent(QMouseEvent* event)
+{
+	int button = 0;
+	if (event->button() == Qt::LeftButton)
+	{
+		button = 1;
+	}
+	else if (event->button() == Qt::RightButton)
+	{
+		button = 2;
+	}
+
+	scene_.handleMousePress(button, Vector2(Scalar(event->pos().x()), Scalar(event->pos().y())));
+	requestRender();
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent* event)
+{
+	int buttons = 0;
+	if (event->buttons() & Qt::LeftButton)
+	{
+		buttons |= 1;
+	}
+	if (event->buttons() & Qt::RightButton)
+	{
+		buttons |= 2;
+	}
+
+	scene_.handleMouseMove(Vector2(Scalar(event->pos().x()), Scalar(event->pos().y())), buttons);
+	requestRender();
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent* /*event*/)
+{
+	requestRender();
+}
+
+void MainWindow::wheelEvent(QWheelEvent* event)
+{
+	scene_.handleMouseWheel(event->angleDelta().y());
+	requestRender();
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+	QMainWindow::resizeEvent(event);
+	requestRender();
 }
 
 void MainWindow::requestRender()
