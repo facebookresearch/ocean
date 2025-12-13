@@ -344,11 +344,11 @@ void SerializerDeviceRecorder::recordSample(const Measurement* sender, const Mea
 {
 	ocean_assert(sender != nullptr);
 
-	if (const Sensor* sensor = dynamic_cast<const Sensor*>(sender))
+	if (dynamic_cast<const Sensor*>(sender))
 	{
 		recordSensorSample(sender, sample, sampleCreationTimestamp);
 	}
-	else if (const Tracker* tracker = dynamic_cast<const Tracker*>(sender))
+	else if (dynamic_cast<const Tracker*>(sender))
 	{
 		recordTrackerSample(sender, sample, sampleCreationTimestamp);
 	}
