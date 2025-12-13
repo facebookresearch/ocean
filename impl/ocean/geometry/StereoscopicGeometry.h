@@ -48,9 +48,10 @@ class OCEAN_GEOMETRY_EXPORT StereoscopicGeometry
 		 * @param maxArbitrarySqrError The maximal squared pixel error between a projected object point and a corresponding image point so that the pair counts as valid for arbitrary camera motion
 		 * @param iterations The number of iterations that will be applied finding a better pose result
 		 * @param rotationalMotionMinimalValidCorrespondencesPercent The minimal number of valid correspondences (defined as percent of the entire number of correspondences) that are necessary so that the camera motion is accepted to be pure rotational, with range [0, 1]
+		 * @param baselineDistance Optional fixed baseline distance between both cameras; if positive, the translation and object points will be scaled so that the distance between both cameras equals this value, with range (0, infinity), -1 to disable
 		 * @return True, if succeeded
 		 */
-		static inline bool cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints = nullptr, Indices32* validIndices = nullptr, const Scalar maxRotationalSqrError = Scalar(1.5 * 1.5), const Scalar maxArbitrarySqrError = Scalar(3.5 * 3.5), const unsigned int iterations = 100u, const Scalar rotationalMotionMinimalValidCorrespondencesPercent = Scalar(0.9));
+		static inline bool cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints = nullptr, Indices32* validIndices = nullptr, const Scalar maxRotationalSqrError = Scalar(1.5 * 1.5), const Scalar maxArbitrarySqrError = Scalar(3.5 * 3.5), const unsigned int iterations = 100u, const Scalar rotationalMotionMinimalValidCorrespondencesPercent = Scalar(0.9), const Scalar baselineDistance = Scalar(-1));
 
 		/**
 		 * Determines the pose transformation between two given camera frames from which corresponding image point pairs are given.
@@ -70,9 +71,10 @@ class OCEAN_GEOMETRY_EXPORT StereoscopicGeometry
 		 * @param maxArbitrarySqrError The maximal squared pixel error between a projected object point and a corresponding image point so that the pair counts as valid for arbitrary camera motion
 		 * @param iterations The number of iterations that will be applied finding a better pose result
 		 * @param rotationalMotionMinimalValidCorrespondencesPercent The minimal number of valid correspondences (defined as percent of the entire number of correspondences) that are necessary so that the camera motion is accepted to be pure rotational, with range [0, 1]
+		 * @param baselineDistance Optional fixed baseline distance between both cameras; if positive, the translation and object points will be scaled so that the distance between both cameras equals this value, with range (0, infinity), -1 to disable
 		 * @return True, if succeeded
 		 */
-		static bool cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera0, HomogenousMatrix4& world_T_camera1, const GravityConstraints* gravityConstraints = nullptr, Vectors3* objectPoints = nullptr, Indices32* validIndices = nullptr, const Scalar maxRotationalSqrError = Scalar(1.5 * 1.5), const Scalar maxArbitrarySqrError = Scalar(3.5 * 3.5), const unsigned int iterations = 100u, const Scalar rotationalMotionMinimalValidCorrespondencesPercent = Scalar(0.9));
+		static bool cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera0, HomogenousMatrix4& world_T_camera1, const GravityConstraints* gravityConstraints = nullptr, Vectors3* objectPoints = nullptr, Indices32* validIndices = nullptr, const Scalar maxRotationalSqrError = Scalar(1.5 * 1.5), const Scalar maxArbitrarySqrError = Scalar(3.5 * 3.5), const unsigned int iterations = 100u, const Scalar rotationalMotionMinimalValidCorrespondencesPercent = Scalar(0.9), const Scalar baselineDistance = Scalar(-1));
 
 		/**
 		 * Determines valid correspondences between 2D image points and 3D camera points for two individual camera frames concurrently.
@@ -98,11 +100,11 @@ class OCEAN_GEOMETRY_EXPORT StereoscopicGeometry
 		static bool determineValidCorrespondencesIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera0_T_world, const HomogenousMatrix4& flippedCamera1_T_world, const TAccessorObjectPoints& objectPoints, const TAccessorImagePoints0& imagePoints0, const TAccessorImagePoints1& imagePoints1, Indices32& validIndices, const Scalar maxSqrError = Scalar(3.5 * 3.5), const bool onlyFrontObjectPoints = true, Scalar* totalSqrError = nullptr, const size_t minimalValidCorrespondences = 0);
 };
 
-inline bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent)
+inline bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent, const Scalar baselineDistance)
 {
 	HomogenousMatrix4 world_T_camera0(false);
 
-	if (!cameraPose(camera, accessorImagePoints0, accessorImagePoints1, randomGenerator, world_T_camera0, world_T_camera1, nullptr /*gravityConstraints*/, objectPoints, validIndices, maxRotationalSqrError, maxArbitrarySqrError, iterations, rotationalMotionMinimalValidCorrespondencesPercent))
+	if (!cameraPose(camera, accessorImagePoints0, accessorImagePoints1, randomGenerator, world_T_camera0, world_T_camera1, nullptr /*gravityConstraints*/, objectPoints, validIndices, maxRotationalSqrError, maxArbitrarySqrError, iterations, rotationalMotionMinimalValidCorrespondencesPercent, baselineDistance))
 	{
 		return false;
 	}

@@ -21,7 +21,7 @@ namespace Ocean
 namespace Geometry
 {
 
-bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera0, HomogenousMatrix4& world_T_camera1, const GravityConstraints* gravityConstraints, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent)
+bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera0, HomogenousMatrix4& world_T_camera1, const GravityConstraints* gravityConstraints, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent, const Scalar baselineDistance)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(accessorImagePoints0.size() >= 5);
@@ -354,6 +354,65 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 	}
 
 	ocean_assert(bestObjectPoints.size() == bestIndices.size());
+
+	if (baselineDistance > Scalar(0))
+	{
+		const Vector3 translation = world_T_camera1.translation() - world_T_camera0.translation();
+		const Scalar currentBaseline = translation.length();
+
+		if (currentBaseline > Numeric::eps())
+		{
+#ifdef OCEAN_DEBUG
+			Scalar debugSqrProjectionErrorBefore = Scalar(0);
+
+			for (size_t i = 0; i < bestIndices.size(); ++i)
+			{
+				const Vector3& objectPoint = bestObjectPoints[i];
+				const Index32 index = bestIndices[i];
+
+				const Vector2 projectedPoint0 = camera.projectToImage(world_T_camera0, objectPoint);
+				const Vector2 projectedPoint1 = camera.projectToImage(world_T_camera1, objectPoint);
+
+				debugSqrProjectionErrorBefore += projectedPoint0.sqrDistance(imagePoints0[index]);
+				debugSqrProjectionErrorBefore += projectedPoint1.sqrDistance(imagePoints1[index]);
+
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera0_T_world, objectPoint));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera1), objectPoint));
+			}
+#endif // OCEAN_DEBUG
+
+			const Scalar scaleFactor = baselineDistance / currentBaseline;
+
+			const Vector3 normalizedTranslation = world_T_camera0.translation() + translation * scaleFactor;
+			world_T_camera1 = HomogenousMatrix4(normalizedTranslation, world_T_camera1.rotation());
+
+			for (Vector3& objectPoint : bestObjectPoints)
+			{
+				objectPoint = (objectPoint - world_T_camera0.translation()) * scaleFactor + world_T_camera0.translation();
+			}
+
+#ifdef OCEAN_DEBUG
+			Scalar debugSqrProjectionErrorAfter = Scalar(0);
+
+			for (size_t i = 0; i < bestIndices.size(); ++i)
+			{
+				const Vector3& objectPoint = bestObjectPoints[i];
+				const Index32 index = bestIndices[i];
+
+				const Vector2 projectedPoint0 = camera.projectToImage(world_T_camera0, objectPoint);
+				const Vector2 projectedPoint1 = camera.projectToImage(world_T_camera1, objectPoint);
+
+				debugSqrProjectionErrorAfter += projectedPoint0.sqrDistance(imagePoints0[index]);
+				debugSqrProjectionErrorAfter += projectedPoint1.sqrDistance(imagePoints1[index]);
+
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera0_T_world, objectPoint));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera1), objectPoint));
+			}
+
+			ocean_assert(Numeric::isEqual(debugSqrProjectionErrorBefore, debugSqrProjectionErrorAfter, Scalar(1)) && "Projection error changed after baseline adjustment");
+#endif // OCEAN_DEBUG
+		}
+	}
 
 	if (objectPoints != nullptr)
 	{
