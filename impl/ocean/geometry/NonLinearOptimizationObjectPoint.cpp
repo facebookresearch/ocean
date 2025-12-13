@@ -6,6 +6,7 @@
  */
 
 #include "ocean/geometry/NonLinearOptimizationObjectPoint.h"
+#include "ocean/geometry/AbsoluteTransformation.h"
 #include "ocean/geometry/Error.h"
 #include "ocean/geometry/Jacobian.h"
 #include "ocean/geometry/NonLinearUniversalOptimizationSparse.h"
@@ -2938,7 +2939,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 				subMatrixD(2, 0) = subMatrixD(0, 2);
 				subMatrixD(2, 1) = subMatrixD(1, 2);
 
-				ocean_assert(!subMatrixD.isNull());
+				ocean_assert(!subMatrixD.isNull() && "May indicate that the 3D object points are too far away from the camera(s)");
 			}
 
 #ifdef OCEAN_DEBUG
@@ -3626,7 +3627,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 #endif
 };
 
-bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const bool applyAbsolutePoseAlignment)
 {
 	ocean_assert(world_T_optimizedCameras == nullptr || world_T_cameras.size() == world_T_optimizedCameras->size());
 	ocean_assert(optimizedObjectPoints == nullptr || objectPoints.size() == optimizedObjectPoints->size());
@@ -3648,7 +3649,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const ConstI
 	HomogenousMatrices4 flippedOptimizedCameras_T_world;
 	NonconstArrayAccessor<HomogenousMatrix4> optimizedPosesAccessorIF(flippedOptimizedCameras_T_world, world_T_optimizedCameras != nullptr ? world_T_optimizedCameras->size() : 0);
 
-	if (!optimizeObjectPointsAndPosesIF(cameras, ConstArrayAccessor<HomogenousMatrix4>(flippedCamera_T_world), objectPoints, correspondenceGroups, optimizedPosesAccessorIF.pointer(), optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
+	if (!optimizeObjectPointsAndPosesIF(cameras, ConstArrayAccessor<HomogenousMatrix4>(flippedCamera_T_world), objectPoints, correspondenceGroups, optimizedPosesAccessorIF.pointer(), optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors, nullptr /*gravityConstraints*/, applyAbsolutePoseAlignment))
 	{
 		return false;
 	}
@@ -3664,7 +3665,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const ConstI
 	return true;
 }
 
-bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const GravityConstraints* gravityConstraints)
+bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const GravityConstraints* gravityConstraints, const bool applyAbsolutePoseAlignment)
 {
 	ocean_assert(flippedOptimizedCameras_T_world == nullptr || flippedCameras_T_world.size() == flippedOptimizedCameras_T_world->size());
 	ocean_assert(optimizedObjectPoints == nullptr || objectPoints.size() == optimizedObjectPoints->size());
@@ -3683,6 +3684,8 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(const Cons
 	const ScopedConstMemoryAccessor<HomogenousMatrix4> scopedAccessor_flippedCameras_T_world(flippedCameras_T_world);
 	for (size_t n = 0; n < flippedCameras_T_world.size(); ++n)
 	{
+		ocean_assert_accuracy(scopedAccessor_flippedCameras_T_world[n].rotationMatrix().isOrthonormal());
+
 		scoped_flippedOptimizedCameras_T_world[n] = scopedAccessor_flippedCameras_T_world[n];
 	}
 
@@ -3724,46 +3727,148 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(const Cons
 	NonconstTemplateArrayAccessor<HomogenousMatrix4> accessor_flippedOptimizedCameras_T_world(scoped_flippedOptimizedCameras_T_world.data(), scoped_flippedOptimizedCameras_T_world.size());
 	NonconstTemplateArrayAccessor<Vector3> objectPointsAccessor(scopedOptimizedObjectPoints.data(), scopedOptimizedObjectPoints.size());
 
+	bool optimizationResult = false;
+
 	switch (estimator)
 	{
 		case Estimator::ET_LINEAR:
 		{
 			ObjectPointsPosesProvider<Estimator::ET_LINEAR> provider(cameras, accessor_flippedOptimizedCameras_T_world, objectPointsAccessor, correspondenceGroups, onlyFrontObjectPoints, gravityConstraints);
-			return advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			optimizationResult = advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			break;
 		}
 
 		case Estimator::ET_HUBER:
 		{
 			ObjectPointsPosesProvider<Estimator::ET_HUBER> provider(cameras, accessor_flippedOptimizedCameras_T_world, objectPointsAccessor, correspondenceGroups, onlyFrontObjectPoints, gravityConstraints);
-			return advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			optimizationResult = advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			break;
 		}
 
 		case Estimator::ET_TUKEY:
 		{
 			ObjectPointsPosesProvider<Estimator::ET_TUKEY> provider(cameras, accessor_flippedOptimizedCameras_T_world, objectPointsAccessor, correspondenceGroups, onlyFrontObjectPoints, gravityConstraints);
-			return advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			optimizationResult = advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			break;
 		}
 
 		case Estimator::ET_CAUCHY:
 		{
 			ObjectPointsPosesProvider<Estimator::ET_CAUCHY> provider(cameras, accessor_flippedOptimizedCameras_T_world, objectPointsAccessor, correspondenceGroups, onlyFrontObjectPoints, gravityConstraints);
-			return advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			optimizationResult = advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			break;
 		}
 
 		case Estimator::ET_SQUARE:
 		{
 			ObjectPointsPosesProvider<Estimator::ET_SQUARE> provider(cameras, accessor_flippedOptimizedCameras_T_world, objectPointsAccessor, correspondenceGroups, onlyFrontObjectPoints, gravityConstraints);
-			return advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			optimizationResult = advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+			break;
 		}
 
 		case Estimator::ET_INVALID:
 		{
-			break;
+			ocean_assert(false && "Invalid estimator type!");
+			return false;
 		}
 	}
 
-	ocean_assert(false && "This should never happen!");
-	return false;
+	if (!optimizationResult)
+	{
+		return false;
+	}
+
+	if (applyAbsolutePoseAlignment && flippedCameras_T_world.size() >= 2)
+	{
+		HomogenousMatrices4 world_T_originalCameras(flippedCameras_T_world.size());
+		HomogenousMatrices4 world_T_optimizedCameras(scoped_flippedOptimizedCameras_T_world.size());
+
+		for (size_t n = 0; n < flippedCameras_T_world.size(); ++n)
+		{
+			world_T_originalCameras[n] = AnyCamera::invertedFlipped2Standard(scopedAccessor_flippedCameras_T_world[n]);
+			world_T_optimizedCameras[n] = AnyCamera::invertedFlipped2Standard(scoped_flippedOptimizedCameras_T_world[n]);
+		}
+
+		HomogenousMatrix4 original_T_optimized(false);
+		Scalar scale = Scalar(1);
+
+		if (AbsoluteTransformation::calculateTransformation(world_T_optimizedCameras.data(), world_T_originalCameras.data(), world_T_originalCameras.size(), original_T_optimized, AbsoluteTransformation::ScaleErrorType::Symmetric, &scale))
+		{
+			// Extract rotation and translation from the transformation
+
+			// We apply the similarity transformation manually to keep camera rotations orthonormal:
+			// - For camera poses: R_new = R_transform * R_camera (no scale on rotation)
+			//                     t_new = scale * R_transform * t_camera + t_transform
+			// - For object points: p_new = scale * R_transform * p + t_transform
+
+			const SquareMatrix3 transformRotation = original_T_optimized.rotationMatrix();
+			ocean_assert(transformRotation.isOrthonormal());
+			const Vector3 transformTranslation = original_T_optimized.translation();
+
+#ifdef OCEAN_DEBUG
+			Scalar debugSqrProjectionErrorBefore = Scalar(0);
+
+			for (size_t n = 0; n < correspondenceGroups.groups(); ++n)
+			{
+				const Vector3& objectPoint = scopedOptimizedObjectPoints[n];
+
+				for (size_t i = 0; i < correspondenceGroups.groupElements(n); ++i)
+				{
+					Index32 poseIndex;
+					Vector2 imagePoint;
+					correspondenceGroups.element(n, i, poseIndex, imagePoint);
+
+					const Vector2 projectedPoint = cameras[poseIndex]->projectToImageIF(scoped_flippedOptimizedCameras_T_world[poseIndex], objectPoint);
+					debugSqrProjectionErrorBefore += projectedPoint.sqrDistance(imagePoint);
+				}
+			}
+#endif // OCEAN_DEBUG
+
+			for (size_t n = 0; n < scoped_flippedOptimizedCameras_T_world.size(); ++n)
+			{
+				const SquareMatrix3 cameraRotation = world_T_optimizedCameras[n].rotationMatrix();
+				const Vector3 cameraTranslation = world_T_optimizedCameras[n].translation();
+
+				const SquareMatrix3 newRotation = transformRotation * cameraRotation;
+				const Vector3 newTranslation = (transformRotation * cameraTranslation) * scale + transformTranslation;
+
+				const HomogenousMatrix4 world_T_camera(newTranslation, newRotation);
+				ocean_assert(world_T_camera.rotationMatrix().isOrthonormal());
+
+				scoped_flippedOptimizedCameras_T_world[n] = AnyCamera::standard2InvertedFlipped(world_T_camera);
+			}
+
+			for (size_t n = 0; n < scopedOptimizedObjectPoints.size(); ++n)
+			{
+				scopedOptimizedObjectPoints[n] = (transformRotation * scopedOptimizedObjectPoints[n]) * scale + transformTranslation;
+			}
+
+#ifdef OCEAN_DEBUG
+			Scalar debugSqrProjectionErrorAfter = Scalar(0);
+
+			for (size_t n = 0; n < correspondenceGroups.groups(); ++n)
+			{
+				const Vector3& objectPoint = scopedOptimizedObjectPoints[n];
+
+				for (size_t i = 0; i < correspondenceGroups.groupElements(n); ++i)
+				{
+					Index32 poseIndex;
+					Vector2 imagePoint;
+					correspondenceGroups.element(n, i, poseIndex, imagePoint);
+
+					const Vector2 projectedPoint = cameras[poseIndex]->projectToImageIF(scoped_flippedOptimizedCameras_T_world[poseIndex], objectPoint);
+					debugSqrProjectionErrorAfter += projectedPoint.sqrDistance(imagePoint);
+
+					ocean_assert(AnyCamera::isObjectPointInFrontIF(scoped_flippedOptimizedCameras_T_world[poseIndex], objectPoint) && "Object point is behind camera after scale adjustment");
+				}
+			}
+
+			ocean_assert(Numeric::isEqual(debugSqrProjectionErrorBefore, debugSqrProjectionErrorAfter, Scalar(1)) && "Projection error changed after scale adjustment");
+#endif // OCEAN_DEBUG
+		}
+	}
+
+	return true;
 }
 
 /**

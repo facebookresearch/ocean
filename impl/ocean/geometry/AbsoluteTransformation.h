@@ -60,7 +60,7 @@ class OCEAN_GEOMETRY_EXPORT AbsoluteTransformation
 		 * The implementation follows "Comparing two sets of corresponding six degree of freedom data, Shah, 2011"<br>
 		 * Beware: This function does not support outliers.
 		 * @param leftWorld_T_transformations The individual transformations defined in the left world, must be valid
-		 * @param rightWorld_T_transformations The idividual transformations defines in the right world, one for each transformation in the left world, must be valid
+		 * @param rightWorld_T_transformations The individual transformations defines in the right world, one for each transformation in the left world, must be valid
 		 * @param correspondences The number of given transformation correspondences, with range [1, infinity)
 		 * @param rightWorld_T_leftWorld The resulting transformation between the left world and the right world
 		 * @param scaleErrorType The error type to use for the scale computation
@@ -73,7 +73,7 @@ class OCEAN_GEOMETRY_EXPORT AbsoluteTransformation
 		 * Calculates the absolute transformation between two sets of 6-DOF transformations which may contain outliers.
 		 * The implementation follows "Comparing two sets of corresponding six degree of freedom data, Shah, 2011"<br>
 		 * @param leftWorld_T_transformations The individual transformations defined in the left world, must be valid
-		 * @param rightWorld_T_transformations The idividual transformations defines in the right world, one for each transformation in the left world, must be valid
+		 * @param rightWorld_T_transformations The individual transformations defines in the right world, one for each transformation in the left world, must be valid
 		 * @param correspondences the number of given transformation correspondences, with range [1, infinity)
 		 * @param rightWorld_T_leftWorld The resulting transformation between the left world and the right world
 		 * @param inlierRate The rate of inlier in the given input data with range (0, 1)
@@ -88,7 +88,7 @@ class OCEAN_GEOMETRY_EXPORT AbsoluteTransformation
 		/**
 		 * Removes the outliers from the set of 6-DOF input transformations.
 		 * @param leftWorld_T_transformations The individual transformations defined in the left world, must be valid
-		 * @param rightWorld_T_transformations The idividual transformations defines in the right world, one for each transformation in the left world, must be valid
+		 * @param rightWorld_T_transformations The individual transformations defines in the right world, one for each transformation in the left world, must be valid
 		 * @param correspondences the number of given transformation correspondences, with range [1, infinity)
 		 * @param rightWorld_T_leftWorld The transformation between the left world and the right world
 		 * @param leftWorld_T_subsetTransformations The resulting inlier transformations for 'leftWorld_T_transformations'
