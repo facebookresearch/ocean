@@ -9,7 +9,11 @@
 
 #include "ocean/base/Messenger.h"
 
+#include "ocean/cv/FrameTransposer.h"
+
 #include "ocean/io/File.h"
+
+#include "ocean/platform/win/Keyboard.h"
 
 #include <commdlg.h>
 
@@ -101,6 +105,11 @@ void PreviewMainWindow::onIdle()
 
 				if (frame.isValid())
 				{
+					if (rotationAngle_ != 0)
+					{
+						CV::FrameTransposer::Comfort::rotate(frame, rotationAngle_);
+					}
+
 					onFrame(frame);
 					return;
 				}
@@ -109,6 +118,26 @@ void PreviewMainWindow::onIdle()
 	}
 
 	Sleep(1);
+}
+
+void PreviewMainWindow::onKeyDown(const int key)
+{
+	std::string keyString;
+	if (Platform::Win::Keyboard::translateVirtualkey((unsigned int)(key), keyString))
+	{
+		if (keyString == "R")
+		{
+			rotationAngle_ = (rotationAngle_ + 90) % 360;
+
+			Log::info() << "Rotation angle: " << rotationAngle_ << " degrees";
+		}
+		else if (keyString == "L")
+		{
+			rotationAngle_ = (rotationAngle_ - 90 + 360) % 360;
+
+			Log::info() << "Rotation angle: " << rotationAngle_ << " degrees";
+		}
+	}
 }
 
 void PreviewMainWindow::onFrame(const Frame& frame)

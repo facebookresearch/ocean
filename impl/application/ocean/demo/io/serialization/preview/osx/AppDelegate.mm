@@ -16,6 +16,8 @@
 #include "ocean/io/serialization/InputDataSerializer.h"
 #include "ocean/io/serialization/MediaSerializer.h"
 
+#include "ocean/cv/FrameTransposer.h"
+
 #include "ocean/media/imageio/ImageIO.h"
 
 #include "ocean/platform/apple/System.h"
@@ -32,6 +34,12 @@
 
 	/// Timer for updating the view
 	NSTimer* updateTimer_;
+
+	/// The current rotation angle in degrees (0, 90, 180, 270)
+	int rotationAngle_;
+
+	/// The local event monitor for key events.
+	id keyEventMonitor_;
 }
 
 /// The window object.
@@ -129,11 +137,31 @@
 	}
 
 	// Set up timer to update frames
-	updateTimer_ = [NSTimer scheduledTimerWithTimeInterval:1.0 / 60.0
-		target:self
-		selector:@selector(updateFrame)
-		userInfo:nil
-		repeats:YES];
+	updateTimer_ = [NSTimer scheduledTimerWithTimeInterval:1.0 / 60.0 target:self selector:@selector(updateFrame) userInfo:nil repeats:YES];
+
+	rotationAngle_ = 0;
+
+	keyEventMonitor_ = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent*(NSEvent* event)
+	{
+		NSString* characters = [event charactersIgnoringModifiers];
+		if ([characters length] == 1)
+		{
+			unichar character = [characters characterAtIndex:0];
+			if (character == 'r')
+			{
+				self->rotationAngle_ = (self->rotationAngle_ + 90) % 360;
+
+				Log::info() << "Rotation angle: " << self->rotationAngle_ << " degrees";
+			}
+			else if (character == 'l')
+			{
+				self->rotationAngle_ = (self->rotationAngle_ - 90 + 360) % 360;
+
+				Log::info() << "Rotation angle: " << self->rotationAngle_ << " degrees";
+			}
+		}
+		return event;
+	}];
 }
 
 - (void)updateFrame
@@ -156,6 +184,11 @@
 
 			if (frame.isValid())
 			{
+				if (rotationAngle_ != 0)
+				{
+					CV::FrameTransposer::Comfort::rotate(frame, rotationAngle_);
+				}
+
 				frameView_.setFrame(frame);
 			}
 		}
@@ -167,6 +200,12 @@
  */
 - (void)applicationWillTerminate:(NSNotification*)aNotification
 {
+	if (keyEventMonitor_ != nil)
+	{
+		[NSEvent removeMonitor:keyEventMonitor_];
+		keyEventMonitor_ = nil;
+	}
+
 	[updateTimer_ invalidate];
 	updateTimer_ = nil;
 

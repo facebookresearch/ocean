@@ -59,6 +59,12 @@ class PreviewMainWindow :
 		void onIdle() override;
 
 		/**
+		 * Function for keyboard button down events.
+		 * @see Window::onKeyDown().
+		 */
+		void onKeyDown(const int key) override;
+
+		/**
 		 * Event function if a new frame has arrived.
 		 * @param frame New frame
 		 */
@@ -85,6 +91,9 @@ class PreviewMainWindow :
 
 		/// The filename to open.
 		std::wstring filename_;
+
+		/// The current rotation angle in degrees (0, 90, 180, 270).
+		int rotationAngle_ = 0;
 };
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_IO_SERIALIZATION_PREVIEW_WIN_PREVIEW_MAIN_WINDOW_H
