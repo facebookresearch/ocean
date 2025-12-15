@@ -65,10 +65,23 @@ class PreviewMainWindow :
 		void onKeyDown(const int key) override;
 
 		/**
+		 * Event function for drag&drop events for files.
+		 * @see Window::onDragAndDrop().
+		 */
+		void onDragAndDrop(const Files& files) override;
+
+		/**
 		 * Event function if a new frame has arrived.
 		 * @param frame New frame
 		 */
 		void onFrame(const Frame& frame);
+
+		/**
+		 * Loads and starts playing a serialization file.
+		 * @param filename The filename of the serialization file to load
+		 * @return True, if succeeded
+		 */
+		bool loadFile(const std::wstring& filename);
 
 		/**
 		 * Stops the serializer and releases resources.
@@ -84,7 +97,7 @@ class PreviewMainWindow :
 	protected:
 
 		/// The input serializer.
-		IO::Serialization::FileInputDataSerializer serializer_;
+		std::unique_ptr<IO::Serialization::FileInputDataSerializer> serializer_;
 
 		/// The timestamp of the most recent input frame.
 		Timestamp frameTimestamp_;

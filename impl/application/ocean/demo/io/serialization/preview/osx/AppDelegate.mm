@@ -24,13 +24,23 @@
 
 #include "ocean/platform/apple/macos/FrameView.h"
 
+/**
+ * A custom view that accepts drag and drop of files.
+ */
+@interface DragDropView : NSView
+
+/// The app delegate to notify when a file is dropped.
+@property (weak) AppDelegate* appDelegate;
+
+@end
+
 @interface AppDelegate ()
 {
 	/// The view displaying the frames
 	Platform::Apple::MacOS::FrameView frameView_;
 
 	/// The input serializer.
-	IO::Serialization::FileInputDataSerializer serializer_;
+	std::unique_ptr<IO::Serialization::FileInputDataSerializer> serializer_;
 
 	/// Timer for updating the view
 	NSTimer* updateTimer_;
@@ -40,6 +50,9 @@
 
 	/// The local event monitor for key events.
 	id keyEventMonitor_;
+
+	/// The drag and drop overlay view.
+	DragDropView* dragDropView_;
 }
 
 /// The window object.
@@ -47,6 +60,71 @@
 
 /// The view object.
 @property (weak) IBOutlet NSView* mainWindowView;
+
+/**
+ * Loads and starts playing a serialization file.
+ * @param filename The filename of the serialization file to load
+ * @return True, if succeeded
+ */
+- (bool)loadFile:(const std::string&)filename;
+
+/**
+ * Stops the serializer.
+ */
+- (void)stopSerializer;
+
+@end
+
+@implementation DragDropView
+
+- (instancetype)initWithFrame:(NSRect)frameRect
+{
+	self = [super initWithFrame:frameRect];
+	if (self)
+	{
+		[self registerForDraggedTypes:@[NSPasteboardTypeFileURL]];
+	}
+	return self;
+}
+
+- (NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender
+{
+	NSPasteboard* pasteboard = [sender draggingPasteboard];
+
+	if ([[pasteboard types] containsObject:NSPasteboardTypeFileURL])
+	{
+		return NSDragOperationCopy;
+	}
+
+	return NSDragOperationNone;
+}
+
+- (BOOL)performDragOperation:(id<NSDraggingInfo>)sender
+{
+	NSPasteboard* pasteboard = [sender draggingPasteboard];
+
+	if ([[pasteboard types] containsObject:NSPasteboardTypeFileURL])
+	{
+		NSURL* fileURL = [NSURL URLFromPasteboard:pasteboard];
+		if (fileURL != nil && _appDelegate != nil)
+		{
+			const std::string filename = std::string([[fileURL path] UTF8String]);
+			const IO::File file(filename);
+
+			if (file.extension() != "osn")
+			{
+				Log::warning() << "Dropped file is not an .osn file";
+				return NO;
+			}
+
+			[_appDelegate stopSerializer];
+
+			return [_appDelegate loadFile:filename] ? YES : NO;
+		}
+	}
+
+	return NO;
+}
 
 @end
 
@@ -64,6 +142,18 @@
 	Media::ImageIO::registerImageIOLibrary();
 #endif
 
+	// Create the frame view
+	frameView_ = Platform::Apple::MacOS::FrameView([_mainWindowView frame]);
+	frameView_.nsView().autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+
+	[_mainWindowView addSubview:frameView_.nsView()];
+
+	// Create and add the drag and drop view
+	dragDropView_ = [[DragDropView alloc] initWithFrame:[_mainWindowView bounds]];
+	dragDropView_.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+	dragDropView_.appDelegate = self;
+	[_mainWindowView addSubview:dragDropView_];
+
 	// Open file dialog
 	NSOpenPanel* openPanel = [NSOpenPanel openPanel];
 	[openPanel setTitle:@"Open Serialization File"];
@@ -74,66 +164,14 @@
 
 	NSInteger result = [openPanel runModal];
 
-	if (result != NSModalResponseOK)
+	if (result == NSModalResponseOK)
 	{
-		return;
-	}
-
-	NSURL* fileURL = [[openPanel URLs] firstObject];
-	if (fileURL == nil)
-	{
-		return;
-	}
-
-	const std::string filename = std::string([[fileURL path] UTF8String]);
-	const IO::File file(filename);
-
-	if (!file.exists())
-	{
-		Log::error() << "The input file does not exist: '" << file() << "'";
-		return;
-	}
-
-	Log::info() << "Opening serialization file: '" << file() << "'";
-
-	if (!serializer_.setFilename(file()))
-	{
-		Log::error() << "Failed to set the filename";
-		return;
-	}
-
-	if (!serializer_.registerSample<IO::Serialization::MediaSerializer::DataSampleFrame>())
-	{
-		Log::error() << "Failed to register factory function";
-		return;
-	}
-
-	IO::Serialization::DataSerializer::Channels channels;
-	if (!serializer_.initialize(&channels))
-	{
-		Log::error() << "Failed to initialize the serializer";
-		return;
-	}
-
-	Log::info() << "Found " << channels.size() << " channel(s)";
-
-	for (size_t n = 0; n < channels.size(); ++n)
-	{
-		const IO::Serialization::DataSerializer::Channel& channel = channels[n];
-		Log::info() << "Channel #" << (n + 1) << ": " << channel.name() << " (" << channel.sampleType() << ")";
-	}
-
-	// Create the frame view
-	frameView_ = Platform::Apple::MacOS::FrameView([_mainWindowView frame]);
-	frameView_.nsView().autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-
-	[_mainWindowView addSubview:frameView_.nsView()];
-
-	// Start the serializer
-	if (!serializer_.start())
-	{
-		Log::error() << "Failed to start the serializer";
-		return;
+		NSURL* fileURL = [[openPanel URLs] firstObject];
+		if (fileURL != nil)
+		{
+			const std::string filename = std::string([[fileURL path] UTF8String]);
+			[self loadFile:filename];
+		}
 	}
 
 	// Set up timer to update frames
@@ -166,13 +204,13 @@
 
 - (void)updateFrame
 {
-	if (!serializer_.isStarted())
+	if (!serializer_ || !serializer_->isStarted())
 	{
 		return;
 	}
 
 	IO::Serialization::DataSerializer::ChannelId channelId = IO::Serialization::DataSerializer::invalidChannelId();
-	IO::Serialization::UniqueDataSample sample = serializer_.sample(channelId, 1.0);
+	IO::Serialization::UniqueDataSample sample = serializer_->sample(channelId, 1.0);
 
 	if (sample)
 	{
@@ -209,10 +247,12 @@
 	[updateTimer_ invalidate];
 	updateTimer_ = nil;
 
-	if (serializer_.isStarted())
+	if (serializer_ && serializer_->isStarted())
 	{
-		serializer_.stopAndWait();
+		serializer_->stopAndWait();
 	}
+
+	serializer_.reset();
 
 	frameView_ = Platform::Apple::MacOS::FrameView();
 
@@ -230,6 +270,65 @@
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
 {
 	return YES;
+}
+
+- (bool)loadFile:(const std::string&)filename
+{
+	const IO::File file(filename);
+
+	if (!file.exists())
+	{
+		Log::error() << "The input file does not exist: '" << file() << "'";
+		return false;
+	}
+
+	Log::info() << "Opening serialization file: '" << file() << "'";
+
+	// Create a fresh serializer instance
+	serializer_ = std::make_unique<IO::Serialization::FileInputDataSerializer>();
+
+	if (!serializer_->setFilename(file()))
+	{
+		Log::error() << "Failed to set the filename";
+		return false;
+	}
+
+	if (!serializer_->registerSample<IO::Serialization::MediaSerializer::DataSampleFrame>())
+	{
+		Log::error() << "Failed to register factory function";
+		return false;
+	}
+
+	IO::Serialization::DataSerializer::Channels channels;
+	if (!serializer_->initialize(&channels))
+	{
+		Log::error() << "Failed to initialize the serializer";
+		return false;
+	}
+
+	Log::info() << "Found " << channels.size() << " channel(s)";
+
+	for (size_t n = 0; n < channels.size(); ++n)
+	{
+		const IO::Serialization::DataSerializer::Channel& channel = channels[n];
+		Log::info() << "Channel #" << (n + 1) << ": " << channel.name() << " (" << channel.sampleType() << ")";
+	}
+
+	if (!serializer_->start())
+	{
+		Log::error() << "Failed to start the serializer";
+		return false;
+	}
+
+	return true;
+}
+
+- (void)stopSerializer
+{
+	if (serializer_ && serializer_->isStarted())
+	{
+		serializer_->stopAndWait();
+	}
 }
 
 @end
