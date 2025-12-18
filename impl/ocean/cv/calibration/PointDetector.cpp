@@ -557,7 +557,14 @@ bool PointDetector::optimizePoints(const Frame& yFrame, const Points& points, co
 
 		if (pointRadius <= 3u)
 		{
-			CV::Advanced::AdvancedMotionSSD::trackPointsSubPixelMirroredBorder<7u>(yPointPatternImages, yFrame, patternPoints, framePoints, trackedFramePoints, searchRadius, searchRadius, CV::FramePyramid::DM_FILTER_11, coarsestLayerRadius, worker);
+			if (yFrame.pixels() <= 640u * 480u)
+			{
+				CV::Advanced::AdvancedMotionSSD::trackPointsSubPixelMirroredBorder<5u>(yPointPatternImages, yFrame, patternPoints, framePoints, trackedFramePoints, searchRadius, searchRadius, CV::FramePyramid::DM_FILTER_11, coarsestLayerRadius, worker);
+			}
+			else
+			{
+				CV::Advanced::AdvancedMotionSSD::trackPointsSubPixelMirroredBorder<7u>(yPointPatternImages, yFrame, patternPoints, framePoints, trackedFramePoints, searchRadius, searchRadius, CV::FramePyramid::DM_FILTER_11, coarsestLayerRadius, worker);
+			}
 		}
 		else
 		{
