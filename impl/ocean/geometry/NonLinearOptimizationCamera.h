@@ -197,20 +197,23 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
 		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
+		 * @param distortionConstrainmentFactor Factor used to constrain higher-order distortion parameters based on the magnitude of lower-order ones during optimization, with range [0, infinity); 0 to disable constrainment
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @param intermediateErrors Optional resulting intermediate averaged pixel errors for the individual optimization steps, in relation to the defined estimator
 		 * @return True, if succeeded
 		 * @see optimizeCameraPoseIF().
 		 */
-		static bool optimizeCameraPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const OptimizationStrategy optimizationStrategy = OS_ALL_PARAMETERS_AFTER_ANOTHER, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeCameraPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const OptimizationStrategy optimizationStrategy = OS_ALL_PARAMETERS_AFTER_ANOTHER, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, const Scalar distortionConstrainmentFactor = Scalar(0), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
 		 * The given poses must be inverted and flipped around the new x axis by 180 degree.<br>
-		 * @see optimizeCameraPose().
+		 * All parameters are identical to optimizeCameraPoses(), with the exception that the poses are flipped.
+		 * @param distortionConstrainmentFactor Factor used to constrain higher-order distortion parameters based on the magnitude of lower-order ones during optimization, with range [0, infinity); 0 to disable constrainment
+		 * @see optimizeCameraPoses().
 		 */
-		static bool optimizeCameraPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const OptimizationStrategy optimizationStrategy = OS_ALL_PARAMETERS_AFTER_ANOTHER, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeCameraPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const OptimizationStrategy optimizationStrategy = OS_ALL_PARAMETERS_AFTER_ANOTHER, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, const Scalar distortionConstrainmentFactor = Scalar(0), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Deprecated.

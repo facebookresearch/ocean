@@ -299,9 +299,76 @@ void CalibrationDebugElements::updateCameraCalibratorCorrespondences(const Eleme
 		yText += 20;
 	}
 
-	CV::Canvas::drawText(rgbFrame, "Points: " + String::toAString(percent* 100.0, 1u) + "%", 5, yText, CV::Canvas::white(), CV::Canvas::black());
+	CV::Canvas::drawText(rgbFrame, "Points: " + String::toAString(percent * 100.0, 1u) + "%", 5, yText, CV::Canvas::white(), CV::Canvas::black());
 
 	updateElement(elementId, std::move(rgbFrame));
+}
+
+void CalibrationDebugElements::updateCameraCalibratorCalibrationBoard(const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, const AnyCamera& camera, const HomogenousMatrix4& board_T_camera, const CalibrationBoard::ObjectPointIds& objectPointIds, const Vectors3& objectPoints, const Vectors2& imagePoints)
+{
+	if (!isElementActive(EI_CAMERA_CALIBRATOR_CALIBRATION_BOARD))
+	{
+		return;
+	}
+
+	ocean_assert(objectPointIds.size() == objectPoints.size());
+	ocean_assert(objectPointIds.size() == imagePoints.size());
+
+	Frame rgbFrame;
+	if (!CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
+
+	for (unsigned int y = 0u; y < rgbFrame.height(); ++y)
+	{
+		uint8_t* row = rgbFrame.row<uint8_t>(y);
+
+		for (unsigned int x = 0u; x < rgbFrame.width() * 3u; ++x)
+		{
+			row[x] /= 4u;
+		}
+	}
+
+	Utilities::paintCalibrationBoardOutline(rgbFrame, camera, board_T_camera, calibrationBoard, CV::Canvas::blue());
+
+	const HomogenousMatrix4 flippedCamera_T_board = Camera::standard2InvertedFlipped(board_T_camera);
+
+	AnyCameraClipper cameraClipper(camera.clone());
+
+	for (size_t n = 0; n < objectPointIds.size(); ++n)
+	{
+		const Vector3& objectPoint = objectPoints[n];
+		const Vector2& imagePoint = imagePoints[n];
+
+		const Vector2 projectedObjectPoint = camera.projectToImageIF(flippedCamera_T_board, objectPoint);
+
+		CV::Canvas::line<1u>(rgbFrame, imagePoint, projectedObjectPoint, CV::Canvas::green());
+	}
+
+	const CalibrationBoard::ObjectPointIdSet objectPointIdSet(objectPointIds.cbegin(), objectPointIds.cend());
+
+	CalibrationBoard::ObjectPointIds allObjectPointIds;
+	const Vectors3& allObjectPoints = calibrationBoard.objectPoints(&allObjectPointIds);
+
+	for (size_t n = 0; n < allObjectPointIds.size(); ++n)
+	{
+		const CalibrationBoard::ObjectPointId& objectPointId = allObjectPointIds[n];
+
+		if (!objectPointIdSet.contains(objectPointId))
+		{
+			const Vector3& objectPoint = allObjectPoints[n];
+
+			Vector2 imagePoint;
+			if (cameraClipper.projectToImageIF(flippedCamera_T_board, objectPoint, &imagePoint))
+			{
+				CV::Canvas::point<3u>(rgbFrame, imagePoint, CV::Canvas::red());
+			}
+		}
+	}
+
+	updateElement(EI_CAMERA_CALIBRATOR_CALIBRATION_BOARD, std::move(rgbFrame));
 }
 
 void CalibrationDebugElements::updateCameraCalibratorCameraBoundary(const AnyCameraClipper& cameraClipper)

@@ -95,7 +95,7 @@ class OCEAN_CV_CALIBRATION_EXPORT CameraCalibrator
 		};
 
 		/**
-		 * Definition of individual calibration stages, **TODO** not yet used.
+		 * Definition of individual calibration stages.
 		 */
 		enum CalibrationStage : uint32_t
 		{
@@ -150,10 +150,12 @@ class OCEAN_CV_CALIBRATION_EXPORT CameraCalibrator
 
 		/**
 		 * Finalizes the calibration and determines the precise camera profile.
-		 * This function should be call after all images have been handled.
+		 * This function should be called after all images have been handled.
+		 * If the calibration stage transitions from CS_DETERMINE_INITIAL_CAMERA_FOV to CS_CALIBRATE_CAMERA, the observations will be cleared and an additional iteration is required.
+		 * @param needAdditionalIteration True, if the calibration requires an additional iteration (all images need to be processed again); False, if the calibration is complete
 		 * @return True, if succeeded
 		 */
-		bool finalize();
+		bool finalize(bool& needAdditionalIteration);
 
 		/**
 		 * Returns the current calibration stage.
@@ -274,11 +276,13 @@ class OCEAN_CV_CALIBRATION_EXPORT CameraCalibrator
 		 * @param optimizationStrategy The optimization strategy to be used
 		 * @param board_T_optimizedCameras Optional resulting camera poses, one for each observation, with default camera pointing towards the negative z-space with y-axis upwards; nullptr if not of interest
 		 * @param estimatorType The estimator type to be used
+		 * @param startWithFocalLength True, to start the optimization with a camera profile containing only the focal length (resetting distortion parameters); False, to use the full camera profile from the observations as initial guess
+		 * @param distortionConstrainmentFactor The factor used to constrain higher-order distortion parameters based on lower-order ones during optimization, with range [0, infinity); 0 to disable constrainment
 		 * @param initialError Optional resulting initial projection error, with range [0, infinity)
 		 * @param finalError Optional resulting final projection error, with range [0, infinity)
 		 * @return The resulting precise camera profile, nullptr if the camera profile could not be determined
 		 */
-		static SharedAnyCamera determinePreciseCamera(const CalibrationBoardObservation* observations, const size_t numberObservations, const OptimizationStrategy optimizationStrategy, HomogenousMatrices4* board_T_optimizedCameras = nullptr, const Geometry::Estimator::EstimatorType estimatorType = Geometry::Estimator::ET_SQUARE, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static SharedAnyCamera determinePreciseCamera(const CalibrationBoardObservation* observations, const size_t numberObservations, const OptimizationStrategy optimizationStrategy, HomogenousMatrices4* board_T_optimizedCameras = nullptr, const Geometry::Estimator::EstimatorType estimatorType = Geometry::Estimator::ET_SQUARE, const bool startWithFocalLength = true, const Scalar distortionConstrainmentFactor = Scalar(2), Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 	protected:
 

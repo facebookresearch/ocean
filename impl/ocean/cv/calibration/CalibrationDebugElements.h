@@ -88,7 +88,16 @@ class CalibrationDebugElements final :
 			/// CameraCalibrator: Image visualizing the third iteration while the initial camera fov is optimized.
 			EI_CAMERA_CALIBRATOR_OPTIMIZED_INITIAL_FOV_ITERATION_2,
 			/// CameraCalibrator: Image visualizing the optimized camera pose with additional correspondences, this is the final step in the per-image optimization.
-			EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES,
+			EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0,
+			/// CameraCalibrator: Image visualizing the optimized camera pose with additional correspondences after the final refinement in the per-image optimization.
+			EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0_FINAL,
+			/// CameraCalibrator: Image visualizing the optimized camera pose with additional correspondences during the second calibration stage.
+			EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1,
+			/// CameraCalibrator: Image visualizing the optimized camera pose with additional correspondences after the final refinement during the second calibration stage.
+			EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1_FINAL,
+			/// CameraCalibrator: Image visualizing the calibration board with detected and undetected points.
+			EI_CAMERA_CALIBRATOR_CALIBRATION_BOARD,
+
 			/// CameraCalibrator: Image visualizing the camera boundary of the final camera profile in the per-image optimization.
 			EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY,
 
@@ -184,6 +193,20 @@ class CalibrationDebugElements final :
 		 * @param text Optional text to be painted in the image
 		 */
 		void updateCameraCalibratorCorrespondences(const ElementId elementId, const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, const AnyCamera& camera, const HomogenousMatrix4& board_T_camera, const CalibrationBoard::ObjectPointIds& objectPointIds, const Vectors3& objectPoints, const Vectors2& imagePoints, const std::string& text = std::string());
+
+		/**
+		 * Updates a camera calibrator element visualizing the calibration board with detected and undetected points.
+		 * Detected points are shown with green lines connecting image points to projected object points.
+		 * Undetected points from the calibration board are shown in red.
+		 * @param yFrame The frame in which the calibration board has been detected, must be valid
+		 * @param calibrationBoard The calibration board which was detected, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param board_T_camera The camera pose transforming camera to board, must be valid
+		 * @param objectPointIds The ids of the object points which have been detected, at least one
+		 * @param objectPoints The 3D object points which have been detected, one for each object point id
+		 * @param imagePoints The 2D image points which have been detected, one for each object point
+		 */
+		void updateCameraCalibratorCalibrationBoard(const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, const AnyCamera& camera, const HomogenousMatrix4& board_T_camera, const CalibrationBoard::ObjectPointIds& objectPointIds, const Vectors3& objectPoints, const Vectors2& imagePoints);
 
 		/**
 		 * Updates a camera calibrator element visualizing the camera boundary of a camera profile.

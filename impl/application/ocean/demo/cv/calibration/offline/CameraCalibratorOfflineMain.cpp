@@ -162,51 +162,71 @@ using namespace Ocean::CV::Calibration;
 
 	CameraCalibrator cameraCalibrator(calibrationBoard, initialCameraProperties);
 
-	for (size_t imageIndex = 0; imageIndex < imageFiles.size(); ++imageIndex)
+	for (size_t iteration = 0; iteration < 3; ++iteration)
 	{
-		const IO::File& imageFile = imageFiles[imageIndex];
-
-		const Frame frame = IO::Image::readImage(imageFile());
-
-		Log::info() << "Handling image " << imageFile.name() << " ...";
-
-		const CameraCalibrator::ImageResult imageResult = cameraCalibrator.handleImage(imageIndex, frame, WorkerPool::get().scopedWorker()());
-
-		if (debugOutputDirectory.isValid())
+		for (size_t imageIndex = 0; imageIndex < imageFiles.size(); ++imageIndex)
 		{
-			writeDebugOutput(imageFile, debugOutputDirectory);
-		}
+			const IO::File& imageFile = imageFiles[imageIndex];
 
-		if (imageResult == CameraCalibrator::IR_BOARD_WAS_DETECTED)
-		{
-			const CalibrationBoardObservation& latestObservation = cameraCalibrator.latestObservation();
+			const Frame frame = IO::Image::readImage(imageFile());
 
-			const double percent = NumericD::ratio(double(latestObservation.imagePoints().size()), double(calibrationBoard.numberPoints()), 0.0);
+			Log::info() << "Handling image " << imageFile.name() << " ...";
 
-			Log::info() << "Detected " << latestObservation.imagePoints().size() << " of " << calibrationBoard.numberPoints() << " points (" + String::toAString(percent * 100.0, 1u) + "%), visual coverage in the image: " << String::toAString(latestObservation.coverage() * 100.0f, 1u) << "%";
+			const CameraCalibrator::ImageResult imageResult = cameraCalibrator.handleImage(imageIndex, frame, WorkerPool::get().scopedWorker()());
 
-			const AnyCamera& camera = *latestObservation.camera();
-
-			if (camera.name() == AnyCameraPinhole::WrappedCamera::name())
+			if (debugOutputDirectory.isValid())
 			{
-				Log::info() << "Initial camera: PINHOLE, with " << String::toAString(Numeric::rad2deg(camera.fovX()), 1u) << " fovX";
+				const IO::Directory directory = debugOutputDirectory + IO::Directory(String::toAString(iteration));
+
+				if (!directory.exists() && !directory.create())
+				{
+					Log::error() << "The debug output directory '" << directory() << "' could not be created.";
+					return 1;
+				}
+
+				writeDebugOutput(imageFile, directory);
+			}
+
+			if (imageResult == CameraCalibrator::IR_BOARD_WAS_DETECTED)
+			{
+				const CalibrationBoardObservation& latestObservation = cameraCalibrator.latestObservation();
+
+				const double percent = NumericD::ratio(double(latestObservation.imagePoints().size()), double(calibrationBoard.numberPoints()), 0.0);
+
+				Log::info() << "Detected " << latestObservation.imagePoints().size() << " of " << calibrationBoard.numberPoints() << " points (" + String::toAString(percent * 100.0, 1u) + "%), visual coverage in the image: " << String::toAString(latestObservation.coverage() * 100.0f, 1u) << "%";
+
+				const AnyCamera& camera = *latestObservation.camera();
+
+				if (camera.name() == AnyCameraPinhole::WrappedCamera::name())
+				{
+					Log::info() << "Initial camera: PINHOLE, with " << String::toAString(Numeric::rad2deg(camera.fovX()), 1u) << " fovX";
+				}
+				else
+				{
+					Log::info() << "Initial camera: FISHEYE, with " << String::toAString(Numeric::rad2deg(camera.fovX()), 1u) << " fovX";
+				}
 			}
 			else
 			{
-				Log::info() << "Initial camera: FISHEYE, with " << String::toAString(Numeric::rad2deg(camera.fovX()), 1u) << " fovX";
+				Log::info() << "No board detected";
 			}
+
+			Log::info() << " ";
 		}
-		else
+
+		bool needAdditionalIteration = false;
+		if (!cameraCalibrator.finalize(needAdditionalIteration))
 		{
-			Log::info() << "No board detected";
+			Log::error() << "Failed to finalize the camera calibration.";
+			break;
 		}
 
-		Log::info() << " ";
-	}
+		if (!needAdditionalIteration)
+		{
+			break;
+		}
 
-	if (!cameraCalibrator.finalize())
-	{
-		Log::error() << "Failed to finalize the camera calibration.";
+		ocean_assert(iteration == 0 && "Only the very first iteration should need an additional iteration");
 	}
 
 	if (outputDirectory.isValid())
@@ -570,9 +590,49 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 		}
 	}
 
-	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES, true))
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences0.png"));
+
+		if (!IO::Image::writeImage(debugFrame, outputFile()))
+		{
+			Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+		}
+	}
+
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0_FINAL, true))
+	{
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences0_final.png"));
+
+		if (!IO::Image::writeImage(debugFrame, outputFile()))
+		{
+			Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+		}
+	}
+
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1, true))
+	{
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences1.png"));
+
+		if (!IO::Image::writeImage(debugFrame, outputFile()))
+		{
+			Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+		}
+	}
+
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1_FINAL, true))
+	{
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences1_final.png"));
+
+		if (!IO::Image::writeImage(debugFrame, outputFile()))
+		{
+			Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+		}
+	}
+
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_CALIBRATION_BOARD, true))
+	{
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_15_cameracalibrator_calibration_board.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -582,7 +642,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_15_cameracalibrator_camera_boundary.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_16_cameracalibrator_camera_boundary.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{

@@ -100,7 +100,8 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 	}
 	else
 	{
-		ocean_assert(false && "**TODO** not yet supported");
+		ocean_assert(camera_);
+		initialCamera = camera_;
 	}
 
 	ocean_assert(initialCamera);
@@ -183,10 +184,15 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 		CalibrationDebugElements::get().updateCameraCalibratorInitialCameraPoseWithValidMarkerCandidates(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_INITIAL_CAMERA_POSE_WITH_VALID_MARKER_CANDIDATES, yFrame_, points, markerCandidates_, usedInitialMarkerCandidateIndices, metricCalibrationBoard_, *initialCamera, board_T_initialCamera);
 	}
 
-	constexpr OptimizationStrategy optimizationStrategy = OptimizationStrategy::OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER;
+	HomogenousMatrix4 board_T_camera = board_T_initialCamera;
+	SharedAnyCamera camera = initialCamera;
 
-	HomogenousMatrix4 board_T_camera(false);
-	SharedAnyCamera camera = optimizeCamera(*initialCamera, board_T_initialCamera, points, usedInitialMarkerCandidateIndices, optimizationStrategy, &board_T_camera);
+	if (calibrationStage_ == CS_DETERMINE_INITIAL_CAMERA_FOV)
+	{
+		constexpr OptimizationStrategy optimizationStrategy = OptimizationStrategy::OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER;
+
+		camera = optimizeCamera(*initialCamera, board_T_initialCamera, points, usedInitialMarkerCandidateIndices, optimizationStrategy, &board_T_camera);
+	}
 
 	if (!camera)
 	{
@@ -227,11 +233,16 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 
 	if (calibrationStage_ == CS_DETERMINE_INITIAL_CAMERA_FOV)
 	{
+		constexpr OptimizationStrategy optimizationStrategy = OptimizationStrategy::OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER;
+
 		HomogenousMatrices4 board_T_optimizedCameras;
 		Scalar initialError;
 		Scalar finalError;
 
-		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, &initialError, &finalError);
+		constexpr bool startWithFocalLength = true;
+		constexpr Scalar distortionConstrainmentFactor = Scalar(2);
+
+		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
 
 		if (!optimizedCamera)
 		{
@@ -269,7 +280,7 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 		observation = CalibrationBoardObservation(imageId, optimizedCamera, board_T_camera, std::move(objectPointIds), std::move(objectPoints), std::move(imagePoints));
 
 		board_T_optimizedCameras.clear();
-		optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, &initialError, &finalError);
+		optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
 
 		if (!optimizedCamera)
 		{
@@ -289,20 +300,97 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 
 	constexpr Scalar tightMaximalProjectionError = 2;
 
+	OptimizationStrategy optimizationStrategy = OptimizationStrategy::OS_INVALID;
+
+	if (calibrationStage_ == CS_DETERMINE_INITIAL_CAMERA_FOV)
+	{
+		optimizationStrategy = OptimizationStrategy::OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER;
+	}
+	else
+	{
+		optimizationStrategy = OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER;
+	}
+
 	CalibrationBoard::ObjectPointIds additionalObjectPointIds;
 	Vectors3 additionalObjectPoints;
 	Vectors2 additionalImagePoints;
 
-	if (determineAdditionalCorrespondences(metricCalibrationBoard_, observation, points, pointsDistributionArray, additionalObjectPointIds, additionalObjectPoints, additionalImagePoints, tightMaximalProjectionError))
-	{
-		if (!additionalObjectPointIds.empty())
-		{
-			observation.addCorrespondences(additionalObjectPointIds, additionalObjectPoints, additionalImagePoints);
+	size_t iterationIndex = 0;
 
-			if constexpr (CalibrationDebugElements::allowDebugging_)
+	while (true)
+	{
+		additionalObjectPointIds.clear();
+		additionalObjectPoints.clear();
+		additionalImagePoints.clear();
+
+		if (determineAdditionalCorrespondences(metricCalibrationBoard_, observation, points, pointsDistributionArray, additionalObjectPointIds, additionalObjectPoints, additionalImagePoints, tightMaximalProjectionError))
+		{
+			if (!additionalObjectPointIds.empty())
 			{
-				CalibrationDebugElements::get().updateCameraCalibratorCorrespondences(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES, yFrame_, metricCalibrationBoard_, *observation.camera(), observation.board_T_camera(), observation.objectPointIds(), observation.objectPoints(), observation.imagePoints(), "Additional points: " + String::toAString(additionalObjectPointIds.size()));
+				observation.addCorrespondences(additionalObjectPointIds, additionalObjectPoints, additionalImagePoints);
+
+				if constexpr (CalibrationDebugElements::allowDebugging_)
+				{
+					CalibrationDebugElements::ElementId elementId = CalibrationDebugElements::EI_INVALID;
+
+					if (optimizationStrategy == OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER)
+					{
+						elementId = iterationIndex == 0 ? CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1 : CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1_FINAL;
+					}
+					else
+					{
+						elementId = iterationIndex == 0 ? CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0 : CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0_FINAL;
+					}
+
+					CalibrationDebugElements::get().updateCameraCalibratorCorrespondences(elementId, yFrame_, metricCalibrationBoard_, *observation.camera(), observation.board_T_camera(), observation.objectPointIds(), observation.objectPoints(), observation.imagePoints(), "Additional points: " + String::toAString(additionalObjectPointIds.size()));
+				}
 			}
+		}
+
+		++iterationIndex;
+
+		if (additionalObjectPointIds.empty())
+		{
+			if (optimizationStrategy == OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER)
+			{
+				break;
+			}
+
+			optimizationStrategy = OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER;
+			iterationIndex = 0;
+		}
+
+		HomogenousMatrices4 board_T_optimizedCameras;
+		Scalar initialError;
+		Scalar finalError;
+
+		constexpr bool startWithFocalLength = true;
+		constexpr Scalar distortionConstrainmentFactor = Scalar(2);
+
+		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
+
+		if (!optimizedCamera)
+		{
+			ocean_assert(false && "This should never happen!");
+			return IR_BOARD_WAS_NOT_DETECTED;
+		}
+
+		const HomogenousMatrix4& board_T_optimizedCamera = board_T_optimizedCameras.front();
+
+		observation = CalibrationBoardObservation(optimizedCamera, board_T_optimizedCamera, std::move(observation));
+	}
+
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updateCameraCalibratorCalibrationBoard(yFrame_, metricCalibrationBoard_, *observation.camera(), observation.board_T_camera(), observation.objectPointIds(), observation.objectPoints(), observation.imagePoints());
+	}
+
+	for (const CalibrationBoardObservation& existingObservation : observations_)
+	{
+		if (existingObservation.imageId() == observation.imageId())
+		{
+			ocean_assert(false && "This should never happen!");
+			return IR_ERROR;
 		}
 	}
 
@@ -311,35 +399,52 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 	return IR_BOARD_WAS_DETECTED;
 }
 
-bool CameraCalibrator::finalize()
+bool CameraCalibrator::finalize(bool& needAdditionalIteration)
 {
+	needAdditionalIteration = false;
+
 	if (observations_.empty())
 	{
 		return false;
 	}
 
-	HomogenousMatrices4 board_T_optimizedCameras;
-	Scalar initialError;
-	Scalar finalError;
-	camera_ = CameraCalibrator::determinePreciseCamera(observations_.data(), observations_.size(), CameraCalibrator::OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, &initialError, &finalError);
-
-	if (!camera_)
+	for (size_t iteration = 0; iteration < 2; ++iteration)
 	{
-		cameraProjectionError_ = Numeric::maxValue();
+		HomogenousMatrices4 board_T_optimizedCameras;
 
-		return false;
+		bool startWithFocalLength = true;
+		Scalar distortionConstrainmentFactor = Scalar(2);
+		const CameraCalibrator::OptimizationStrategy optimizationStrategy = CameraCalibrator::OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER;
+
+		if (iteration == 1)
+		{
+			startWithFocalLength = false;
+			distortionConstrainmentFactor = Scalar(2.5);
+		}
+
+		Scalar initialError = Numeric::maxValue();
+		Scalar finalError = Numeric::maxValue();
+
+		camera_ = CameraCalibrator::determinePreciseCamera(observations_.data(), observations_.size(), optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
+
+		if (!camera_)
+		{
+			cameraProjectionError_ = Numeric::maxValue();
+
+			return false;
+		}
+
+		ocean_assert(board_T_optimizedCameras.size() == observations_.size());
+
+		for (size_t nObservation = 0; nObservation < observations_.size(); ++nObservation)
+		{
+			CalibrationBoardObservation& observation = observations_[nObservation];
+
+			observation.updateCamera(camera_, board_T_optimizedCameras[nObservation]);
+		}
+
+		cameraProjectionError_ = finalError;
 	}
-
-	ocean_assert(board_T_optimizedCameras.size() == observations_.size());
-
-	for (size_t nObservation = 0; nObservation < observations_.size(); ++nObservation)
-	{
-		CalibrationBoardObservation& observation = observations_[nObservation];
-
-		observation.updateCamera(camera_, board_T_optimizedCameras[nObservation]);
-	}
-
-	cameraProjectionError_ = finalError;
 
 	if constexpr (CalibrationDebugElements::allowDebugging_)
 	{
@@ -358,6 +463,17 @@ bool CameraCalibrator::finalize()
 		CalibrationDebugElements::get().updateDistortionElement(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DISTORTION_GRID, *camera_, true);
 		CalibrationDebugElements::get().updateDistortionElement(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DISTORTION_VECTORS, *camera_, false);
 	}
+
+	ocean_assert(calibrationStage_ == CS_DETERMINE_INITIAL_CAMERA_FOV || calibrationStage_ == CS_CALIBRATE_CAMERA);
+
+	if (calibrationStage_ == CS_DETERMINE_INITIAL_CAMERA_FOV)
+	{
+		observations_.clear();
+
+		needAdditionalIteration = true;
+	}
+
+	calibrationStage_ = CS_CALIBRATE_CAMERA;
 
 	return true;
 }
@@ -795,8 +911,10 @@ SharedAnyCamera CameraCalibrator::optimizeCamera(const AnyCamera& camera, const 
 
 	constexpr unsigned int iterations = 20u;
 
+	constexpr Scalar distortionConstrainmentFactor = Scalar(2);
+
 	Scalars debugIntermediateErrors;
-	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(camera, ConstElementAccessor<HomogenousMatrix4>(1, board_T_camera), ConstElementAccessor<Vectors3>(1, objectPoints), ConstElementAccessor<Vectors2>(1, imagePoints), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, initialError, finalError, &debugIntermediateErrors))
+	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(camera, ConstElementAccessor<HomogenousMatrix4>(1, board_T_camera), ConstElementAccessor<Vectors3>(1, objectPoints), ConstElementAccessor<Vectors2>(1, imagePoints), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, distortionConstrainmentFactor, initialError, finalError, &debugIntermediateErrors))
 	{
 		return nullptr;
 	}
@@ -845,7 +963,7 @@ SharedAnyCamera CameraCalibrator::determineInitialCameraFieldOfView(const unsign
 	return nullptr;
 }
 
-SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardObservation* observations, const size_t numberObservations, const Geometry::NonLinearOptimizationCamera::OptimizationStrategy optimizationStrategy, HomogenousMatrices4* board_T_optimizedCameras, const Geometry::Estimator::EstimatorType estimatorType, Scalar* initialError, Scalar* finalError)
+SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardObservation* observations, const size_t numberObservations, const Geometry::NonLinearOptimizationCamera::OptimizationStrategy optimizationStrategy, HomogenousMatrices4* board_T_optimizedCameras, const Geometry::Estimator::EstimatorType estimatorType, const bool startWithFocalLength, const Scalar distortionConstrainmentFactor, Scalar* initialError, Scalar* finalError)
 {
 	ocean_assert(observations != nullptr && numberObservations >= 1);
 	ocean_assert(optimizationStrategy != Geometry::NonLinearOptimizationCamera::OS_INVALID);
@@ -867,21 +985,28 @@ SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardO
 
 		if (!camera)
 		{
-			if (observation.camera()->name() == AnyCameraFisheye::WrappedCamera::name())
+			if (startWithFocalLength)
 			{
-				const AnyCameraFisheye& anyCameraFisheye = (const AnyCameraFisheye&)(*observation.camera());
-				const FisheyeCamera& fisheyeCamera = anyCameraFisheye.actualCamera();
+				if (observation.camera()->name() == AnyCameraFisheye::WrappedCamera::name())
+				{
+					const AnyCameraFisheye& anyCameraFisheye = (const AnyCameraFisheye&)(*observation.camera());
+					const FisheyeCamera& fisheyeCamera = anyCameraFisheye.actualCamera();
 
-				camera = std::make_shared<AnyCameraFisheye>(FisheyeCamera(fisheyeCamera.width(), fisheyeCamera.height(), fisheyeCamera.fovX()));
+					camera = std::make_shared<AnyCameraFisheye>(FisheyeCamera(fisheyeCamera.width(), fisheyeCamera.height(), fisheyeCamera.fovX()));
+				}
+				else
+				{
+					ocean_assert(observation.camera()->name() == AnyCameraPinhole::WrappedCamera::name());
+
+					const AnyCameraPinhole& anyCameraPinhole = (const AnyCameraPinhole&)(*observation.camera());
+					const PinholeCamera& pinholeCamera = anyCameraPinhole.actualCamera();
+
+					camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(pinholeCamera.width(), pinholeCamera.height(), pinholeCamera.fovX()));
+				}
 			}
 			else
 			{
-				ocean_assert(observation.camera()->name() == AnyCameraPinhole::WrappedCamera::name());
-
-				const AnyCameraPinhole& anyCameraPinhole = (const AnyCameraPinhole&)(*observation.camera());
-				const PinholeCamera& pinholeCamera = anyCameraPinhole.actualCamera();
-
-				camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(pinholeCamera.width(), pinholeCamera.height(), pinholeCamera.fovX()));
+				camera = observation.camera();
 			}
 		}
 
@@ -908,7 +1033,7 @@ SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardO
 	constexpr unsigned int iterations = 100u;
 
 	Scalars debugIntermediateErrors;
-	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_cameras), ConstArrayAccessor<Vectors3>(objectPointGroups), ConstArrayAccessor<Vectors2>(imagePointGroups), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, initialError, finalError, &debugIntermediateErrors))
+	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_cameras), ConstArrayAccessor<Vectors3>(objectPointGroups), ConstArrayAccessor<Vectors2>(imagePointGroups), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, distortionConstrainmentFactor, initialError, finalError, &debugIntermediateErrors))
 	{
 		return nullptr;
 	}
