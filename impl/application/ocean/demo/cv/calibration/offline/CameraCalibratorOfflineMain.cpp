@@ -19,6 +19,8 @@
 #include "ocean/cv/calibration/CameraCalibrator.h"
 #include "ocean/cv/calibration/Utilities.h"
 
+#include "ocean/io/CameraCalibrationManager.h"
+
 #include "ocean/io/image/Image.h"
 
 using namespace Ocean::CV::Calibration;
@@ -391,6 +393,8 @@ using namespace Ocean::CV::Calibration;
 		std::ofstream stream(outputFile().c_str(), std::ios::binary);
 
 		stream << cameraInformation;
+
+		stream << "\n\nJSON camera calibration:\n" << IO::CameraCalibrationManager::get().serializeCamera(*camera, 8u);
 	}
 
 	return 0;
