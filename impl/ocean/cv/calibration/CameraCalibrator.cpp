@@ -213,7 +213,7 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 
 	if constexpr (CalibrationDebugElements::allowDebugging_)
 	{
-		CalibrationDebugElements::get().updateCameraCalibratorCorrespondences(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_OPTIMIZED_CAMERA_POSE_WITH_ADDITIONAL_POINTS, yFrame_, metricCalibrationBoard_, *camera, board_T_initialCamera, objectPointIds, objectPoints, imagePoints);
+		CalibrationDebugElements::get().updateCameraCalibratorCorrespondences(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_OPTIMIZED_CAMERA_POSE_WITH_ADDITIONAL_POINTS, yFrame_, metricCalibrationBoard_, *camera, board_T_camera, objectPointIds, objectPoints, imagePoints);
 	}
 
 	ocean_assert(board_T_camera.isValid());
@@ -426,7 +426,7 @@ bool CameraCalibrator::determineInitialPoseWithValidMarkerCandidates(const AnyCa
 
 		if (!metricCalibrationBoard_.determineCameraPose(camera, markerCandidateAccessor, points, randomGenerator_, board_T_camera, Scalar(10), &iterationUsedMarkerCandidatesAccessorIndices))
 		{
-			return false;
+			break;
 		}
 
 		ocean_assert(iterationUsedMarkerCandidatesAccessorIndices.size() >= 1);
@@ -542,7 +542,7 @@ bool CameraCalibrator::optimizeCameraPoseWithAdditionalPointsFromMarkerCandidate
 
 	while (true)
 	{
-		bool foundNewCoordiante = false;
+		bool foundNewCoordinate = false;
 
 		for (unsigned int y = 0u; y < reusableMarkerCoordinateUsageFrame_.height(); ++y)
 		{
@@ -554,13 +554,13 @@ bool CameraCalibrator::optimizeCameraPoseWithAdditionalPointsFromMarkerCandidate
 					{
 						additionalMarkerCoordinates.emplace_back(x, y);
 
-						foundNewCoordiante = true;
+						foundNewCoordinate = true;
 					}
 				}
 			}
 		}
 
-		if (!foundNewCoordiante)
+		if (!foundNewCoordinate)
 		{
 			break;
 		}
