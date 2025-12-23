@@ -57,7 +57,7 @@ Vectors2 FeatureDetector::filterStrongHarrisPoints(const uint8_t* yFrame, const 
 
 	for (unsigned int n = 0u; n < positions.size(); ++n)
 	{
-		intensities.push_back(IntensityVector2(positions[n], votes[n]));
+		intensities.emplace_back(positions[n], votes[n]);
 	}
 
 	std::sort(intensities.begin(), intensities.end());
