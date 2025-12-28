@@ -2048,7 +2048,10 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 		ocean_assert(gravityConstraints->numberCameras() == 2);
 		ocean_assert(gravityConstraints->isCameraAlignedWithGravityIF(firstFlippedCamera_T_world, 0, Numeric::deg2rad(1)));
 
-		internalSecondFlippedCamera_T_world = gravityConstraints->alignCameraWithGravityIF(internalSecondFlippedCamera_T_world, 1);
+		if (gravityConstraints->weightFactor() > Scalar(0.75))
+		{
+			internalSecondFlippedCamera_T_world = gravityConstraints->alignCameraWithGravityIF(internalSecondFlippedCamera_T_world, 1);
+		}
 	}
 
 	ScopedNonconstMemoryAccessor<Vector3> scopedOptimizedObjectPoints(optimizedObjectPoints, objectPoints.size());
