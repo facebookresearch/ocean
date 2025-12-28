@@ -151,7 +151,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 		if (cylinder.nearestIntersection(ray, objectPoint))
 		{
 			ocean_assert(anyCamera.projectToImage(world_T_camera, objectPoint).sqrDistance(imagePoint) < 1);
-			ocean_assert(anyCamera.isObjectPointInFrontIF(CameraT<Scalar>::standard2InvertedFlipped(world_T_camera), objectPoint));
+			ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), objectPoint));
 
 			result.emplace_back(objectPoint);
 
@@ -187,7 +187,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 		if (cylinder.nearestIntersection(ray, objectPoint))
 		{
 			ocean_assert(pinholeCamera.projectToImage<true>(pose, objectPoint, distortImagePoints).sqrDistance(imagePoint) < 1);
-			ocean_assert(pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(pose), objectPoint));
+			ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(pose), objectPoint));
 
 			result.push_back(objectPoint);
 
@@ -220,7 +220,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 		if (cone.nearestIntersection(ray, objectPoint))
 		{
 			ocean_assert(anyCamera.projectToImage(world_T_camera, objectPoint).sqrDistance(imagePoint) < 1);
-			ocean_assert(anyCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), objectPoint));
+			ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), objectPoint));
 
 			result.emplace_back(objectPoint);
 
@@ -256,7 +256,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 		if (cone.nearestIntersection(ray, objectPoint))
 		{
 			ocean_assert(pinholeCamera.projectToImage<true>(pose, objectPoint, distortImagePoints).sqrDistance(imagePoint) < 1);
-			ocean_assert(pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(pose), objectPoint));
+			ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(pose), objectPoint));
 
 			result.push_back(objectPoint);
 
@@ -351,8 +351,8 @@ void Utilities::triangulateObjectPoints(const AnyCamera& camera0, const AnyCamer
 	objectPoints.clear();
 	validIndices.clear();
 
-	const HomogenousMatrix4 flippedCamera0_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera0));
-	const HomogenousMatrix4 flippedCamera1_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera1));
+	const HomogenousMatrix4 flippedCamera0_T_world(Camera::standard2InvertedFlipped(world_T_camera0));
+	const HomogenousMatrix4 flippedCamera1_T_world(Camera::standard2InvertedFlipped(world_T_camera1));
 
 	Vector3 objectPoint;
 
@@ -364,17 +364,33 @@ void Utilities::triangulateObjectPoints(const AnyCamera& camera0, const AnyCamer
 		const Line3 ray0 = camera0.ray(imagePoint0, world_T_camera0);
 		const Line3 ray1 = camera1.ray(imagePoint1, world_T_camera1);
 
-		if (ray0.nearestPoint(ray1, objectPoint))
+		if (!ray0.nearestPoint(ray1, objectPoint))
 		{
-			if (!onlyFrontPoints || (AnyCamera::isObjectPointInFrontIF(flippedCamera0_T_world, objectPoint) && PinholeCamera::isObjectPointInFrontIF(flippedCamera1_T_world, objectPoint))) // we accept any object points OR the object point lies in front of both cameras
+			continue;
+		}
+
+		if (onlyFrontPoints)
+		{
+			// let's ensure that the object point is on front of both camera
+
+			if (!Camera::isObjectPointInFrontIF(flippedCamera0_T_world, objectPoint) || !Camera::isObjectPointInFrontIF(flippedCamera1_T_world, objectPoint))
 			{
-				if (maximalSqrError < 0 || (camera0.projectToImageIF(flippedCamera0_T_world, objectPoint).sqrDistance(imagePoint0) <= maximalSqrError && camera1.projectToImageIF(flippedCamera1_T_world, objectPoint).sqrDistance(imagePoint1) <= maximalSqrError)) // any error OR the projective error in both cameras is small enough
-				{
-					objectPoints.emplace_back(objectPoint);
-					validIndices.emplace_back(Index32(n));
-				}
+				continue;
 			}
 		}
+
+		if (maximalSqrError >= Scalar(0))
+		{
+			// let's ensure that the projection error is within the defined threshold
+
+			if (camera0.projectToImageIF(flippedCamera0_T_world, objectPoint).sqrDistance(imagePoint0) > maximalSqrError || camera1.projectToImageIF(flippedCamera1_T_world, objectPoint).sqrDistance(imagePoint1) > maximalSqrError)
+			{
+				continue;
+			}
+		}
+
+		objectPoints.emplace_back(objectPoint);
+		validIndices.emplace_back(Index32(n));
 	}
 }
 
@@ -420,7 +436,7 @@ size_t Utilities::countFrontObjectPointsIF(const PinholeCamera& pinholeCamera, c
 
 	for (size_t n = 0; n < numberObjectPoints; ++n)
 	{
-		if (PinholeCamera::isObjectPointInFrontIF(invertedFlippedPose, objectPoints[n]))
+		if (Camera::isObjectPointInFrontIF(invertedFlippedPose, objectPoints[n]))
 		{
 			result++;
 		}
@@ -881,7 +897,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const PinholeCamera& pinholeCamera
 	const Quaternion pointRay_R_viewingVector(-viewingVector, worldObjectPointRay.direction());
 
 	ocean_assert(pinholeCamera.projectToImage<true>(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector), worldObjectPointRay.point(), pinholeCamera.hasDistortionParameters()).sqrDistance(distortedImagePoint) < Numeric::sqr(1));
-	ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector)), worldObjectPointRay.point()));
+	ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector)), worldObjectPointRay.point()));
 
 	// we have one degree of freedom left: the rotation around the viewing vector
 
@@ -890,7 +906,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const PinholeCamera& pinholeCamera
 	const HomogenousMatrix4 world_T_camera = HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector * rotationAroundViewingVector);
 
 	ocean_assert(pinholeCamera.projectToImage<true>(world_T_camera, worldObjectPointRay.point(), pinholeCamera.hasDistortionParameters()).sqrDistance(distortedImagePoint) < Numeric::sqr(1));
-	ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), worldObjectPointRay.point()));
+	ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), worldObjectPointRay.point()));
 
 	return world_T_camera;
 }
@@ -913,7 +929,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const FisheyeCamera& fisheyeCamera
 	const Quaternion pointRay_R_viewingVector(-viewingVector, worldObjectPointRay.direction());
 
 	ocean_assert(fisheyeCamera.projectToImage(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector), worldObjectPointRay.point()).sqrDistance(distortedImagePoint) < Numeric::sqr(1));
-	ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector)), worldObjectPointRay.point()));
+	ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector)), worldObjectPointRay.point()));
 
 	// we have one degree of freedom left: the rotation around the viewing vector
 
@@ -922,7 +938,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const FisheyeCamera& fisheyeCamera
 	const HomogenousMatrix4 world_T_camera = HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector * rotationAroundViewingVector);
 
 	ocean_assert(fisheyeCamera.projectToImage(world_T_camera, worldObjectPointRay.point()).sqrDistance(distortedImagePoint) < Numeric::sqr(1));
-	ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), worldObjectPointRay.point()));
+	ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), worldObjectPointRay.point()));
 
 	return world_T_camera;
 }
@@ -945,7 +961,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const AnyCamera& anyCamera, const 
 	const Quaternion pointRay_R_viewingVector(-viewingVector, worldObjectPointRay.direction());
 
 	ocean_assert(anyCamera.projectToImage(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector), worldObjectPointRay.point()).sqrDistance(distortedImagePoint) < Numeric::sqr(1));
-	ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector)), worldObjectPointRay.point()));
+	ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector)), worldObjectPointRay.point()));
 
 	// we have one degree of freedom left: the rotation around the viewing vector
 
@@ -954,7 +970,7 @@ HomogenousMatrix4 Utilities::randomCameraPose(const AnyCamera& anyCamera, const 
 	const HomogenousMatrix4 world_T_camera = HomogenousMatrix4(cameraTranslation, pointRay_R_viewingVector * rotationAroundViewingVector);
 
 	ocean_assert(anyCamera.projectToImage(world_T_camera, worldObjectPointRay.point()).sqrDistance(distortedImagePoint) < Numeric::sqr(1));
-	ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), worldObjectPointRay.point()));
+	ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), worldObjectPointRay.point()));
 
 	return world_T_camera;
 }
