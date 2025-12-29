@@ -240,7 +240,7 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 
 		ssdPerformanceNearestNeighbor.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	startTimestamp.toNow();
 
@@ -341,7 +341,7 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue >= 0.0)
 	{
@@ -504,7 +504,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 		ssdPerformanceRadiusSearch.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	startTimestamp.toNow();
 
@@ -662,7 +662,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "KD Radius Search performance: Best: " << performanceRadiusSearch.bestMseconds() << "ms, worst: " << performanceRadiusSearch.worstMseconds() << "ms, average: " << performanceRadiusSearch.averageMseconds() << "ms";
 	Log::info() << "Brute Force performance: Best: " << ssdPerformanceRadiusSearch.bestMseconds() << "ms, worst: " << ssdPerformanceRadiusSearch.worstMseconds() << "ms, average: " << ssdPerformanceRadiusSearch.averageMseconds() << "ms";

@@ -357,7 +357,7 @@ bool TestFrameFilterMax::testMax(const unsigned int width, const unsigned int he
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 1u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 1u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 1u) << "ms";
@@ -491,7 +491,7 @@ bool TestFrameFilterMax::testMaxInPlace(const unsigned int width, const unsigned
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 1u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 1u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 1u) << "ms";

@@ -286,7 +286,7 @@ bool TestFourierTransformation::testFourierTransform(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -434,7 +434,7 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -557,7 +557,7 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

@@ -362,7 +362,7 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 			++totalNumberTrials;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	// Inconsistent results can occasionally pop up when (1) a is nearly 0 in the quadratic
 	// equation solver or (2) the ray is nearly parallel with the cone surface. Both of these cases

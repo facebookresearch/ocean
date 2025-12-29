@@ -258,7 +258,7 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo8BitInteger(const unsign
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -350,7 +350,7 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo32BitFloat(const unsigne
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -446,7 +446,7 @@ bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(con
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -523,7 +523,7 @@ bool TestFrameFilterTemplate::testPixel8BitPerChannel(const unsigned int width, 
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (allSucceeded)

@@ -297,7 +297,7 @@ bool TestFrameFilterSobel::testHorizontalVerticalFilter8BitPerChannel(const unsi
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -546,7 +546,7 @@ bool TestFrameFilterSobel::testHorizontalVerticalMaximumAbsolute8BitPerChannel(c
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -665,7 +665,7 @@ bool TestFrameFilterSobel::testDiagonalFilter8BitPerChannel(const unsigned int w
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -784,7 +784,7 @@ bool TestFrameFilterSobel::testFilter8BitPerChannel(const unsigned int width, co
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -880,7 +880,7 @@ bool TestFrameFilterSobel::testComfort(const double testDuration, Worker& worker
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1010,7 +1010,7 @@ bool TestFrameFilterSobel::testFilterPixelCoreHorizontalVertical3Squared1Channel
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

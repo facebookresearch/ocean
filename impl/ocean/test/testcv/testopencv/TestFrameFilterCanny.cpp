@@ -130,7 +130,7 @@ void TestFrameFilterCanny::filterCannySobel(const unsigned int width, const unsi
 
 		iterations++;
 	}
-	while (iterations < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iterations < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: best/worst/average/median in ms";
 	Log::info() << "  OpenCV: " << String::toAString(performanceOpenCV.bestMseconds(), 3u) << " / " << String::toAString(performanceOpenCV.worstMseconds(), 3u) << " / " << String::toAString(performanceOpenCV.averageMseconds(), 3u) << " / " << String::toAString(performanceOpenCV.medianMseconds(), 3u) << " ms";

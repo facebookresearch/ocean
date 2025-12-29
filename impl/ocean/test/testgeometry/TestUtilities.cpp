@@ -180,7 +180,7 @@ bool TestUtilities::testCreateObjectPoints(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -298,7 +298,7 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -407,7 +407,7 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -464,7 +464,7 @@ bool TestUtilities::testRandomCameraPosePinhole(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -517,7 +517,7 @@ bool TestUtilities::testRandomCameraPoseFisheye(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

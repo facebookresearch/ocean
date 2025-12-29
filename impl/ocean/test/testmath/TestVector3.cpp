@@ -250,7 +250,7 @@ bool TestVector3::testIsParallel(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const double percent = double(validIterations) / double(iterations);
 
@@ -298,7 +298,7 @@ bool TestVector3::testIsUnit(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const double percent = double(validIterations) / double(iterations);
 
@@ -381,7 +381,7 @@ bool TestVector3::testAngle(const double testDuration)
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -437,7 +437,7 @@ bool TestVector3::testPerpendicular(const double testDuration)
 			succeeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (succeeded)
 	{
@@ -500,7 +500,7 @@ bool TestVector3::testLessOperator(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -609,7 +609,7 @@ bool TestVector3::testVectorConversion(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

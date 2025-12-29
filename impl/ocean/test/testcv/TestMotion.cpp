@@ -401,7 +401,7 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	for (unsigned int radius = 1u; radius < radiusSteps; ++radius)
 	{

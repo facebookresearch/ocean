@@ -165,7 +165,7 @@ void TestFrameShrinker::testDivideByTwo(const unsigned int sourceWidth, const un
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (libyuvIterations != 0ull)
 	{

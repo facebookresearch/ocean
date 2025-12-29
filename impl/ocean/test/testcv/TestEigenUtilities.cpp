@@ -391,7 +391,7 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -452,7 +452,7 @@ bool TestEigenUtilities::testToEigenVector(const double testDuration)
 			ocean_assert(allSucceeded); // DEBUG
 		}
 	}
-	while(startTimestamp + testDuration > Timestamp(true));
+	while(!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

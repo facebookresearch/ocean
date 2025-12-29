@@ -247,7 +247,7 @@ bool TestMicroQRCodeDetector2D::testStressTest(const double testDuration, Worker
 			OCEAN_EXPECT_EQUAL(validation, codes.size(), observations.size());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Stress test: " << validation;
 
@@ -322,7 +322,7 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(con
 		{MicroQRCode::EM_ALPHANUMERIC, 1u, 13u, MicroQRCode::ECC_25},
 		{MicroQRCode::EM_BYTE, 1u, 9u, MicroQRCode::ECC_25},
 	}};
-	
+
 	do
 	{
 		// Create a synthetic Micro QR code

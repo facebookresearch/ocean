@@ -233,7 +233,7 @@ bool TestAnyCamera::testConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0u);
 	const double percent = double(lowPrecision) / double(iterations);
@@ -303,7 +303,7 @@ bool TestAnyCamera::testPrincipalPoint(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

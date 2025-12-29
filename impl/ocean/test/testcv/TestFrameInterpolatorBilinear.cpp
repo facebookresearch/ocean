@@ -905,7 +905,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1204,7 +1204,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1423,7 +1423,7 @@ bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double te
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1884,7 +1884,7 @@ bool TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 			sumAverageError += averageAbsError;
 			maximalError = max(maximalError, maximalAbsError);
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSinglecore.medianMseconds(), 3u) << "ms";
@@ -2023,7 +2023,7 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width,
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Median performance: " << performanceSinglecore.medianMseconds() << "ms";
@@ -2130,7 +2130,7 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 			maximalError = max(maximalError, maximalAbsErrorToInteger);
 			measurements++;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSinglecore.medianMseconds(), 3u) << "ms";
@@ -2274,7 +2274,7 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 				measurements++;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSinglecore.medianMseconds(), 3u) << "ms";
@@ -2400,7 +2400,7 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To224x224_8BitP
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "General performance: Best: " << String::toAString(performanceGeneral.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceGeneral.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceGeneral.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceGeneral.medianMseconds(), 3u) << "ms";
 	Log::info() << "Special performance: Best: " << String::toAString(performanceSpecial.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSpecial.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSpecial.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSpecial.medianMseconds(), 3u) << "ms";
@@ -2510,7 +2510,7 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "General performance: Best: " << String::toAString(performanceGeneral.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceGeneral.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceGeneral.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceGeneral.medianMseconds(), 3u) << "ms";
 	Log::info() << "Special performance: Best: " << String::toAString(performanceSpecial.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSpecial.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSpecial.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSpecial.medianMseconds(), 3u) << "ms";
@@ -2633,7 +2633,7 @@ bool TestFrameInterpolatorBilinear::testLookup(const unsigned int width, const u
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSinglecore.medianMseconds(), 3u) << "ms";
@@ -2790,7 +2790,7 @@ bool TestFrameInterpolatorBilinear::testResampleCameraImage(const double testDur
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (allSucceeded)
@@ -2887,7 +2887,7 @@ bool TestFrameInterpolatorBilinear::testLookupMask(const unsigned int width, con
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSinglecore.medianMseconds(), 3u) << "ms";
@@ -2983,7 +2983,7 @@ bool TestFrameInterpolatorBilinear::testRotateFrame(const unsigned int width, co
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceSinglecore.medianMseconds(), 3u) << "ms";
@@ -3220,7 +3220,7 @@ bool TestFrameInterpolatorBilinear::testPatchIntensitySum1Channel(const unsigned
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 

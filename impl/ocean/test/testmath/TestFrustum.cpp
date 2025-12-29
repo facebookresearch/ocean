@@ -107,7 +107,7 @@ bool TestFrustum::testConstructors(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -220,7 +220,7 @@ bool TestFrustum::testIsInsidePoint(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

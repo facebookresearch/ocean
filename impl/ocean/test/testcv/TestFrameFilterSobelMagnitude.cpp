@@ -229,7 +229,7 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -330,7 +330,7 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -431,7 +431,7 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -532,7 +532,7 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";

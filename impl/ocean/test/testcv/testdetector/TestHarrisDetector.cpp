@@ -203,7 +203,7 @@ bool TestHarrisDetector::testThreshold(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -307,7 +307,7 @@ bool TestHarrisDetector::testPixelAccuracy(const double testDuration, Worker& wo
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Found " << foundFeaturesPerformanceIteration << " Harris features";
@@ -408,7 +408,7 @@ bool TestHarrisDetector::testPixelAccuracyCorners(const unsigned int width, cons
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -506,7 +506,7 @@ bool TestHarrisDetector::testSubPixelAccuracy(const double testDuration, Worker&
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Found " << foundFeaturesPerformanceIteration << " Harris features";
@@ -632,7 +632,7 @@ bool TestHarrisDetector::testSubFrameDetection(const double testDuration, Worker
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -722,7 +722,7 @@ bool TestHarrisDetector::testCheckerboardDetection(const double testDuration, Wo
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -819,7 +819,7 @@ bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& 
 			return false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -944,7 +944,7 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

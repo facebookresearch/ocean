@@ -300,7 +300,7 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	std::sort(initialErrors.begin(), initialErrors.end());
 	std::sort(optimizedErrors.begin(), optimizedErrors.end());

@@ -914,7 +914,7 @@ bool TestZeroMeanSumSquareDifferences::testPatch8BitPerChannel(const unsigned in
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1009,7 +1009,7 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const unsigned i
 			offsets0[n] = RandomI::random(randomGenerator, height * frame0.strideElements() - tBufferSize);
 			offsets1[n] = RandomI::random(randomGenerator, height * frame1.strideElements() - tBufferSize);
 		}
-		
+
 		const uint8_t* const data0 = frame0.constdata<uint8_t>();
 		const uint8_t* const data1 = frame1.constdata<uint8_t>();
 
@@ -1170,7 +1170,7 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const unsigned i
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1462,7 +1462,7 @@ bool TestZeroMeanSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsig
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1719,7 +1719,7 @@ bool TestZeroMeanSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(con
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

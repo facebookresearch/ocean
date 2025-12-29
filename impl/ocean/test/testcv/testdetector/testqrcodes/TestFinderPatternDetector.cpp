@@ -263,7 +263,7 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(finderPatternsTotal != 0u);
 

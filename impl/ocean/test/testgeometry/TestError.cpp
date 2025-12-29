@@ -191,7 +191,7 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -294,7 +294,7 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 			++distortionIteration;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -394,7 +394,7 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -528,7 +528,7 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -686,7 +686,7 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

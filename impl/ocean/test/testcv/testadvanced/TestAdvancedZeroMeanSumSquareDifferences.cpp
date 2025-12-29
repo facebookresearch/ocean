@@ -955,7 +955,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testTwoSubPixelPatch8BitPerChanne
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1181,7 +1181,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testOneSubPixelPatch8BitPerChanne
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1410,7 +1410,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPatchBuffer8BitPerChannel(con
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1638,7 +1638,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPatchMirroredBorderBuffer8Bit
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1856,7 +1856,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testTwoPixelPatchWithMask8BitPerC
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

@@ -235,7 +235,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int n
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageInitialError /= Scalar(iterations);
@@ -324,7 +324,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int n
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageIdealNoisyError /= Scalar(iterations);
@@ -438,7 +438,7 @@ bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const unsigned 
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageInitialSqrError /= Scalar(iterations);
@@ -606,7 +606,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned in
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageInitialSqrError /= Scalar(iterations);

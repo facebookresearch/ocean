@@ -158,7 +158,7 @@ bool TestMaskAnalyzer::testDetectBoundingBox(const unsigned int width, const uns
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
@@ -240,7 +240,7 @@ bool TestMaskAnalyzer::testDetectBoundingBoxWithRoughGuess(const unsigned int wi
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -365,7 +365,7 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << "ms";
@@ -461,7 +461,7 @@ bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance Average: " << performance.averageMseconds() << "ms" << ", worst: " << performance.worstMseconds() << "ms";
 

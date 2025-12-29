@@ -31,34 +31,34 @@ TestMoveBehavior::OperationCounter::OperationCounter() :
 {
 	// nothing to do here
 }
-	
+
 void TestMoveBehavior::OperationCounter::increment(const bool constructor, const bool copyConstructor, const bool moveConstructor, const bool assignOperator, const bool moveOperator)
 {
 	ocean_assert((unsigned int)constructor + (unsigned int)copyConstructor + (unsigned int)moveConstructor + (unsigned int)assignOperator + (unsigned int)moveOperator == 1u);
 
 	const ScopedLock scopedLock(lock_);
 
-	if (constructor)	
+	if (constructor)
 	{
 		++constructor_;
 	}
 
-	if (copyConstructor)	
+	if (copyConstructor)
 	{
 		++copyConstructor_;
 	}
 
-	if (moveConstructor)	
+	if (moveConstructor)
 	{
 		++moveConstructor_;
 	}
 
-	if (assignOperator)	
+	if (assignOperator)
 	{
 		++assignOperator_;
 	}
 
-	if (moveOperator)	
+	if (moveOperator)
 	{
 		++moveOperator_;
 	}
@@ -227,14 +227,14 @@ bool TestMoveBehavior::test(const double testDuration, const TestSelector& selec
 
 	return testResult.succeeded();
 }
-	
+
 #ifdef OCEAN_USE_GTEST
 
 TEST(TestMoveBehavior, NonExceptObject)
 {
 	EXPECT_TRUE(TestMoveBehavior::testNonExceptObject(GTEST_TEST_DURATION));
 }
-	
+
 #endif // OCEAN_USE_GTEST
 
 bool TestMoveBehavior::testDefaultObject(const double testDuration)
@@ -244,7 +244,7 @@ bool TestMoveBehavior::testDefaultObject(const double testDuration)
 	OperationCounter::get().reset();
 
 	bool allSucceeded = true;
-	
+
 	const Timestamp startTimestamp(true);
 
 	do
@@ -279,7 +279,7 @@ bool TestMoveBehavior::testDefaultObject(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Constructor calls: " << OperationCounter::get().constructor();
 	Log::info() << "Copy constructor calls: " << OperationCounter::get().copyConstructor();
@@ -308,7 +308,7 @@ bool TestMoveBehavior::testNonExceptObject(const double testDuration)
 	OperationCounter::get().reset();
 
 	bool allSucceeded = true;
-	
+
 	const Timestamp startTimestamp(true);
 
 	do
@@ -343,7 +343,7 @@ bool TestMoveBehavior::testNonExceptObject(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Constructor calls: " << OperationCounter::get().constructor();
 	Log::info() << "Copy constructor calls: " << OperationCounter::get().copyConstructor();

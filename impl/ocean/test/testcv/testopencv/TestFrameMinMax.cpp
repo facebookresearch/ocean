@@ -172,7 +172,7 @@ void TestFrameMinMax::testMinLocation(const unsigned int width, const unsigned i
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance OpenCV: [" << String::toAString(performanceOpenCV.bestMseconds(), 3u) << ", " << String::toAString(performanceOpenCV.medianMseconds(), 3u) << ", " << String::toAString(performanceOpenCV.worstMseconds(), 3u) << "] ms";
 	Log::info() << "Performance Ocean: [" << String::toAString(performanceOcean.bestMseconds(), 3u) << ", " << String::toAString(performanceOcean.medianMseconds(), 3u) << ", " << String::toAString(performanceOcean.worstMseconds(), 3u) << "] ms";
@@ -252,7 +252,7 @@ void TestFrameMinMax::testMaxLocation(const unsigned int width, const unsigned i
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance OpenCV: [" << String::toAString(performanceOpenCV.bestMseconds(), 3u) << ", " << String::toAString(performanceOpenCV.medianMseconds(), 3u) << ", " << String::toAString(performanceOpenCV.worstMseconds(), 3u) << "] ms";
 	Log::info() << "Performance Ocean: [" << String::toAString(performanceOcean.bestMseconds(), 3u) << ", " << String::toAString(performanceOcean.medianMseconds(), 3u) << ", " << String::toAString(performanceOcean.worstMseconds(), 3u) << "] ms";

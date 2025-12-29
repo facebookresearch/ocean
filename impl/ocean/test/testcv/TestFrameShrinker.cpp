@@ -470,7 +470,7 @@ bool TestFrameShrinker::testRowDownsamplingByTwoThreeRows8Bit121(const double te
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -942,7 +942,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << "ms, median: " << performanceSinglecore.medianMseconds() << "ms";
@@ -1026,7 +1026,7 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 			maximalError = max(maximalError, maximalAbsError);
 			measurements++;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (textOutput)
@@ -1113,7 +1113,7 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int source
 
 			allSucceeded = validateDownsampleBinayMaskByTwo11(sourceFrame.constdata<uint8_t>(), targetFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u) && allSucceeded;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (textOutput)
@@ -1198,7 +1198,7 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int s
 			maximalError = max(maximalError, maximalAbsError);
 			measurements++;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (textOutput)

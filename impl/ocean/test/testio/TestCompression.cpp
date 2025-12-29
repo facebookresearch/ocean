@@ -102,7 +102,7 @@ bool TestCompression::testGzipCompression(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Compression: Best: " << performanceCompression.bestMseconds() << "ms, worst: " << performanceCompression.worstMseconds() << "ms, average: " << performanceCompression.averageMseconds() << "ms";
 	Log::info() << "Decompression: Best: " << performanceDecompression.bestMseconds() << "ms, worst: " << performanceDecompression.worstMseconds() << "ms, average: " << performanceDecompression.averageMseconds() << "ms";

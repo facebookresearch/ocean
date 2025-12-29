@@ -171,7 +171,7 @@ bool TestApproximation::testSqrt8(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -217,7 +217,7 @@ bool TestApproximation::testSqrt16(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -259,7 +259,7 @@ bool TestApproximation::testSqrt17(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -410,7 +410,7 @@ bool TestApproximation::testExp(const double testDuration)
 			errors.push_back(NumericD::abs(double(accurateExps[n]) - double(approximatedExps[n])));
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(!errors.empty());
 	std::sort(errors.begin(), errors.end());
@@ -487,7 +487,7 @@ bool TestApproximation::validateAtan2(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

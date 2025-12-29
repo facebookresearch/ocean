@@ -80,7 +80,7 @@ bool TestBase64::testEncodingDecoding(const double testDuration)
 
 		allSucceeded = std::equal(message.begin(), message.end(), decodedBuffer.begin()) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

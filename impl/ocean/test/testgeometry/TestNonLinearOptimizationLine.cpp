@@ -162,7 +162,7 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageInitialError /= Scalar(iterations);
@@ -271,7 +271,7 @@ bool TestNonLinearOptimizationLine::testOptimizeLineNoisy(const unsigned int num
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageIdealNoisyError /= Scalar(iterations);

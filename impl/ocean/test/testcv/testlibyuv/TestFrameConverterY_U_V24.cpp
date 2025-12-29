@@ -176,7 +176,7 @@ bool TestFrameConverterY_U_V24::testConvertY_U_V24ToBGRA32Precision6Bit(const do
 
 			iteration++;
 		}
-		while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 		if (libyuvIterations != 0ull)
 		{

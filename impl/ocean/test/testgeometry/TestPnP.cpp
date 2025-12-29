@@ -176,7 +176,7 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Average performance: " << performance.averageMseconds() << "ms";
 

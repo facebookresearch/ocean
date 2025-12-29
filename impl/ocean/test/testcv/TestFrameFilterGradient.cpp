@@ -397,7 +397,7 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << "ms";
@@ -486,7 +486,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << "ms";
@@ -606,7 +606,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -718,7 +718,7 @@ bool TestFrameFilterGradient::testFilterHorizontal1x2LinedIntegralImage(const do
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -830,7 +830,7 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

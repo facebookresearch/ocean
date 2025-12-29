@@ -121,7 +121,7 @@ bool TestPerformance::performancePerspectiveWarp(const unsigned int width, const
 			cv::warpPerspective(cvFrame, cvOutputFrame, cvTransformationInv, cvOutputFrame.size(), cv::INTER_LINEAR);
 		timerOpenCV.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Ocean, best: " << String::toAString(timerOcean.bestMseconds(), 2u) + "ms, avg: " + String::toAString(timerOcean.averageMseconds(), 2u) << "ms, median: " << String::toAString(timerOcean.medianMseconds(), 2u) << "ms";
 	Log::info() << "OpenCV, best: " << String::toAString(timerOpenCV.bestMseconds(), 2u) + "ms, avg: " + String::toAString(timerOpenCV.averageMseconds(), 2u) << "ms, median: " << String::toAString(timerOpenCV.medianMseconds(), 2u) << "ms";

@@ -172,7 +172,7 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);

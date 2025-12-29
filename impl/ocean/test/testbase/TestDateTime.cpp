@@ -157,7 +157,7 @@ bool TestDateTime::testConversion(const double testDuration)
 		}
 		performanceBackward.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Forward performance: " << performanceForward.averageMseconds() << "mys";
 	Log::info() << "Backward performance: " << performanceBackward.averageMseconds() << "mys";

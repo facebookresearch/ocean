@@ -339,7 +339,7 @@ bool TestLinearAlgebra::testEigenSystemMatrix(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 
@@ -437,7 +437,7 @@ bool TestLinearAlgebra::testCholeskyDecomposition(const double testDuration)
 
 			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -527,7 +527,7 @@ bool TestLinearAlgebra::testSolve(const double testDuration)
 
 			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -668,7 +668,7 @@ bool TestLinearAlgebra::testSingularValueDecompositionStatic(const double testDu
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "... with dimension 4x5:";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
@@ -732,7 +732,7 @@ bool TestLinearAlgebra::testSingularValueDecompositionDynamic(const double testD
 
 			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -836,7 +836,7 @@ bool TestLinearAlgebra::testQrDecompositionStatic(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 
@@ -895,7 +895,7 @@ bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
 
 			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);

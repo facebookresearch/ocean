@@ -304,7 +304,7 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 			yFrame0 = std::move(yFrame1);
 		}
 	}
-	while (iterations < 100ull || startTimestamp + testDuration > Timestamp(true));
+	while (iterations < 100ull || !startTimestamp.hasTimePassed(testDuration));
 
 	if (failed)
 	{
@@ -458,7 +458,7 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

@@ -176,7 +176,7 @@ bool TestFrameConverterY_VU12::testConvertY_VU12ToBGRA32(const double testDurati
 
 			iteration++;
 		}
-		while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 		if (libyuvIterations != 0ull)
 		{

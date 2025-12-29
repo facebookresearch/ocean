@@ -443,7 +443,7 @@ bool TestStaticMatrix::testTranspose(const double testDuration)
 			allSucceeded = testTranspose<25, 25>() && allSucceeded;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -576,7 +576,7 @@ bool TestStaticMatrix::testMatrixAdd(const double testDuration)
 
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -711,7 +711,7 @@ bool TestStaticMatrix::testMatrixAddTransposed(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -821,7 +821,7 @@ bool TestStaticMatrix::testScalarMultiplication(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -954,7 +954,7 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -1042,7 +1042,7 @@ bool TestStaticMatrix::testMatrixMultiplication(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -1210,7 +1210,7 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft(const double testD
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -1354,7 +1354,7 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight(const double test
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -1579,7 +1579,7 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

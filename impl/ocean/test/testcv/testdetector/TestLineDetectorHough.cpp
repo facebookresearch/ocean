@@ -199,7 +199,7 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -328,7 +328,7 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 		++iterations;
 	}
-	while (iterations < minimalIterations || startTimestamp + testDuration > Timestamp(true));
+	while (iterations < minimalIterations || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance static threshold: " << performance0.averageMseconds() << "ms";
 	Log::info() << "Performance dynamic threshold: " << performance1.averageMseconds() << "ms";

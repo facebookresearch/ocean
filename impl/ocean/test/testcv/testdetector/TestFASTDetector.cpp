@@ -168,7 +168,7 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Found " << foundFeatures << " FAST features";
@@ -277,7 +277,7 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		if (singlecoreFeatures.size() != multicoreFeatures.size())

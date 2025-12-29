@@ -173,7 +173,7 @@ bool TestRandom::testStandardRandomSingleThreaded(const double testDuration)
 		calculateStandardRandomValues(randomValues.data(), 0u, number);
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 
@@ -204,7 +204,7 @@ bool TestRandom::testStandardRandomMultiThreaded(const double testDuration)
 		worker.executeFunction(Worker::Function::createStatic(&TestRandom::calculateStandardRandomValues, randomValues.data(), 0u, 0u), 0u, number);
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double ys = timer.yseconds() / (double(iterations) * double(number));
@@ -236,7 +236,7 @@ bool TestRandom::testOceanRandomSingleThreaded(const double testDuration)
 		calculateOceanRandomValues(&randomGenerator, randomValues.data(), 0u, number);
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 
@@ -268,7 +268,7 @@ bool TestRandom::testOceanRandomMultiThreaded(const double testDuration)
 		worker.executeFunction(Worker::Function::createStatic(&TestRandom::calculateOceanRandomValues, &randomGenerator, randomValues.data(), 0u, 0u), 0u, number);
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double ys = timer.yseconds() / (double(iterations) * double(number));
@@ -300,7 +300,7 @@ bool TestRandom::testStandardRandomTriple(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 
@@ -333,7 +333,7 @@ bool TestRandom::testOceanRandomTriple(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 
@@ -370,7 +370,7 @@ bool TestRandom::testStandardRandomVector3(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -409,7 +409,7 @@ bool TestRandom::testOceanRandomVector3(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -446,7 +446,7 @@ bool TestRandom::testStandardRandomEuler(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -485,7 +485,7 @@ bool TestRandom::testOceanRandomEuler(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);

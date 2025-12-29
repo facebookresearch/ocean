@@ -164,7 +164,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 				scopedObjects.pop_back();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		scopedObjects.clear();
 
@@ -208,7 +208,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 				scopedObjects.pop_back();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		scopedObjects.clear();
 
@@ -274,7 +274,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 				scopedObjects.pop_back();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		scopedObjects.clear();
 
@@ -332,7 +332,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 				scopedObjects.pop_back();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		scopedObjects.clear();
 
@@ -411,7 +411,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 			counterMap().clear();
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (allSucceeded)

@@ -225,7 +225,7 @@ void TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (opencvIterations != 0ull)
 	{
@@ -369,7 +369,7 @@ void TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (opencvIterations != 0ull)
 	{
@@ -544,7 +544,7 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (iterationOcean != 0ull)
 	{

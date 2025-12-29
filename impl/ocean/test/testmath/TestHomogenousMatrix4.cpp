@@ -263,7 +263,7 @@ bool TestHomogenousMatrix4::testConstructor(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, result.isNull());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Uninitialized performance: " << performanceDefault;
 	Log::info() << "Identity matrix performance: " << performanceOne;
@@ -390,7 +390,7 @@ bool TestHomogenousMatrix4::testElementConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -558,7 +558,7 @@ bool TestHomogenousMatrix4::testInvert(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance inverted(): " << performanceInverted;
 	Log::info() << "Performance invert(): " << performanceInvert;
@@ -654,7 +654,7 @@ bool TestHomogenousMatrix4::testDecomposition(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -737,7 +737,7 @@ bool TestHomogenousMatrix4::testVectorConversion(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -852,7 +852,7 @@ bool TestHomogenousMatrix4::testCopyElements(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(HomogenousMatrixT4<T>(rowAlignedValuesD)).transposed().isEqual(SquareMatrixT4<T>(matrix), NumericT<T>::weakEps()));
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

@@ -222,7 +222,7 @@ bool TestLookup2::testCenterLookupBinPositions(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -336,7 +336,7 @@ bool TestLookup2::testCenterLookupClampedValues(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -439,7 +439,7 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -511,7 +511,7 @@ bool TestLookup2::testCornerLookupNearestNeighbor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -569,7 +569,7 @@ bool TestLookup2::testCornerLookupBilinear(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -706,7 +706,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance individuals: " << performanceIndividuals.medianMseconds() << "ms";
 	Log::info() << "Performance rows: " << performanceRows.medianMseconds() << "ms, " << String::toAString(performanceIndividuals.median() / performanceRows.median(), 2u) << "x";
@@ -789,7 +789,7 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -903,7 +903,7 @@ bool TestLookup2::testCornerLookupClampedValues(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

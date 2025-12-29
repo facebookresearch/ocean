@@ -236,7 +236,7 @@ bool TestNonMaximumSuppression::testSuppressionInFrame(const unsigned int width,
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore creation: " << performanceSinglecoreCreation.averageMseconds() << "ms";
@@ -408,7 +408,7 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	return allSucceeded;
 }

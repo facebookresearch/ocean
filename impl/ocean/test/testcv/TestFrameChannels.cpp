@@ -2676,7 +2676,7 @@ bool TestFrameChannels::testCopyChannel(const unsigned int width, const unsigned
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";
@@ -2772,7 +2772,7 @@ bool TestFrameChannels::testSetChannel(const unsigned int width, const unsigned 
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";
@@ -2892,7 +2892,7 @@ bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width,
 						allSucceeded = false;
 					}
 				}
-				while (startTimestamp + testDuration > Timestamp(true));
+				while (!startTimestamp.hasTimePassed(testDuration));
 			}
 		}
 
@@ -2995,7 +2995,7 @@ bool TestFrameChannels::testApplyBivariateOperator(const double testDuration, Wo
 						return false;
 					}
 				}
-				while (startTimestamp + testDuration > Timestamp(true));
+				while (!startTimestamp.hasTimePassed(testDuration));
 			}
 		}
 
@@ -3225,7 +3225,7 @@ bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testD
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "In-place:";
@@ -3397,7 +3397,7 @@ bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testD
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "In-place:";
@@ -3501,7 +3501,7 @@ bool TestFrameChannels::testTransformGeneric(const unsigned int width, const uns
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";
@@ -3661,7 +3661,7 @@ bool TestFrameChannels::testReverseChannelOrder(const unsigned int width, const 
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";
@@ -3795,7 +3795,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double t
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3916,7 +3916,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels6BitPrecision(
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4043,7 +4043,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4144,7 +4144,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels10BitPrecision
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4298,7 +4298,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double t
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4397,7 +4397,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo2Channels(const double 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4524,7 +4524,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4600,7 +4600,7 @@ bool TestFrameChannels::testReverseRowPixelOrder(const double testDuration)
 		allSucceeded = validateReverseRowPixelOrder<double, 4u>(randomGenerator) && allSucceeded;
 		allSucceeded = validateReverseRowPixelOrder<double, 5u>(randomGenerator) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4676,7 +4676,7 @@ bool TestFrameChannels::testReverseRowChannelOrder(const double testDuration)
 		allSucceeded = validateReverseRowChannelOrder<double, 4u>(randomGenerator) && allSucceeded;
 		allSucceeded = validateReverseRowChannelOrder<double, 5u>(randomGenerator) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4746,7 +4746,7 @@ bool TestFrameChannels::testShuffleRowChannels(const double testDuration)
 
 		allSucceeded = validateShuffleRowChannels<float, 3u, 6u, 0x120021u>(randomGenerator) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4792,7 +4792,7 @@ bool TestFrameChannels::testShuffleRowChannelsAndSetLastChannelValue(const doubl
 		// 4 channels to 4 channels, e.g., for BGR32 to RGBA32
 		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 4u, 4u, 0x012u>(randomGenerator) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4826,7 +4826,7 @@ bool TestFrameChannels::testNarrowRow16BitPerChannels(const double testDuration)
 		allSucceeded = validateNarrowRow16BitPerChannels<4u>(randomGenerator) && allSucceeded;
 		allSucceeded = validateNarrowRow16BitPerChannels<5u>(randomGenerator) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

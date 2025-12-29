@@ -270,7 +270,7 @@ bool TestWorker::testDelay(const double testDuration, Worker& worker)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 
@@ -353,7 +353,7 @@ bool TestWorker::testStaticWorkerSumOfSquares(const double testDuration, Worker&
 			staticWorkerFunctionSumOfSquares(values.data(), 0u, numberValues);
 		performance.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Single threaded performance: Best: " << performance.bestMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
@@ -366,7 +366,7 @@ bool TestWorker::testStaticWorkerSumOfSquares(const double testDuration, Worker&
 			worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionSumOfSquares, values.data(), 0u, 0u), 0, numberValues, 1u, 2u);
 		multicorePerformance.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Multi threaded performance: Best: " << multicorePerformance.bestMseconds() << "ms, average: " << multicorePerformance.averageMseconds() << "ms";
 	Log::info() << "Multicore boost factor: Best: " << String::toAString(performance.best() / multicorePerformance.best(), 1u) << "x, average: " << String::toAString(performance.average() / multicorePerformance.average(), 1u) << "x";
@@ -400,7 +400,7 @@ bool TestWorker::testStaticWorkerSumOfSquareRoots(const double testDuration, Wor
 			staticWorkerFunctionSumOfSquareRoots(values.data(), 0u, numberValues);
 		performance.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Single threaded performance: Best: " << performance.bestMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
@@ -413,7 +413,7 @@ bool TestWorker::testStaticWorkerSumOfSquareRoots(const double testDuration, Wor
 			worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionSumOfSquareRoots, values.data(), 0u, 0u), 0, numberValues, 1u, 2u);
 		multicorePerformance.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Multi threaded performance: Best: " << multicorePerformance.bestMseconds() << "ms, average: " << multicorePerformance.averageMseconds() << "ms";
 	Log::info() << "Multicore boost factor: Best: " << String::toAString(performance.best() / multicorePerformance.best(), 1u) << "x, average: " << String::toAString(performance.average() / multicorePerformance.average(), 1u) << "x";

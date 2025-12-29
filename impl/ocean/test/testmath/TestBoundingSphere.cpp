@@ -153,7 +153,7 @@ bool TestBoundingSphere::testConstructor(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -269,7 +269,7 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -378,7 +378,7 @@ bool TestBoundingSphere::testIntersectionsTransformed(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -546,7 +546,7 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -744,7 +744,7 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

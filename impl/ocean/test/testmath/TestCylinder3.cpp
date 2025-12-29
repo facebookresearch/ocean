@@ -306,7 +306,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	// Sanity-check the times we allowed a disagreement.
 	if (testId > 0u)

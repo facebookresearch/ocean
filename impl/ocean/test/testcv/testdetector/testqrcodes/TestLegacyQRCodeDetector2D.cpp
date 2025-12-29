@@ -200,7 +200,7 @@ bool TestLegacyQRCodeDetector2D::testStressTest(const double testDuration, Worke
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

@@ -1119,7 +1119,7 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 		Log::info() << " ";
 		Log::info() << " ";
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
@@ -1349,7 +1349,7 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 
@@ -1431,7 +1431,7 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 		Log::info() << " ";
 		Log::info() << " ";
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
@@ -1636,7 +1636,7 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 
@@ -1718,7 +1718,7 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 		Log::info() << " ";
 		Log::info() << " ";
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
@@ -1964,7 +1964,7 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 
@@ -2047,7 +2047,7 @@ bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorde
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 

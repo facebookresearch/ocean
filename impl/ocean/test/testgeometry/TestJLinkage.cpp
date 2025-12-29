@@ -250,7 +250,7 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 
 			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -387,7 +387,7 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 			iterations += (unsigned long long)leftImagePoints.size();
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -546,7 +546,7 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 
 				++iterations;
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 
 			ocean_assert(iterations != 0ull);
 			const double percent = double(validIterations) / double(iterations);
@@ -723,7 +723,7 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 				++iterations;
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 
 			ocean_assert(iterations != 0ull);
 			const double percent = double(validIterations) / double(iterations);

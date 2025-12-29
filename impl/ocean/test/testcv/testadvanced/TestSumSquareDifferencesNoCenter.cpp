@@ -384,7 +384,7 @@ bool TestSumSquareDifferencesNoCenter::testPatch8BitPerChannel(const unsigned in
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

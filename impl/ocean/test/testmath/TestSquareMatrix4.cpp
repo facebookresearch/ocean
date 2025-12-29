@@ -502,7 +502,7 @@ bool TestSquareMatrix4::testVectorMultiplication(const double testDuration, Work
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Standard performance as reference: " << String::toAString(performanceStandard.averageMseconds()) << "ms";
 		Log::info() << " ";
@@ -722,7 +722,7 @@ bool TestSquareMatrix4::testMatrixMultiplication(const double testDuration)
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Standard performance as reference: " << String::toAString(performanceStandard.averageMseconds()) << "ms";
 		Log::info() << " ";

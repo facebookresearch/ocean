@@ -232,7 +232,7 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	return allSucceeded;
 }
@@ -384,7 +384,7 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	return allSucceeded;
 }

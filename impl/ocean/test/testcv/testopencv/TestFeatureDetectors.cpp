@@ -292,7 +292,7 @@ bool TestFeatureDetectors::testHarrisCornerDetector(const cv::Mat& frame, const 
 		cv::goodFeaturesToTrack(grayFrame, corners, static_cast<int>(cornersCount), threshold, minDistance, cv::noArray(), 3, true);
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Actually detected: " << corners.size() << " feature points";
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";
@@ -338,7 +338,7 @@ bool TestFeatureDetectors::testFASTFeatureDectector(const cv::Mat& frame, const 
 
 		cv::FAST(grayFrame, keypoints, threshold, useNonMaximumSuppression);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Actually detected: " << keypoints.size() << " feature points";
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";
@@ -389,7 +389,7 @@ bool TestFeatureDetectors::testSURFFeatureDectector(const cv::Mat& frame, const 
 			surf->detectAndCompute(grayFrame, cv::noArray(), keypoints, descriptors);
 			ocean_assert(size_t(descriptors.size().height) == keypoints.size());
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 	else
 	{
@@ -402,7 +402,7 @@ bool TestFeatureDetectors::testSURFFeatureDectector(const cv::Mat& frame, const 
 
 			surf->detect(grayFrame, keypoints);
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Actually detected: " << keypoints.size() << " feature points";

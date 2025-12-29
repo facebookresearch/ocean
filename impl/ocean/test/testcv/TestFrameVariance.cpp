@@ -161,7 +161,7 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
@@ -311,7 +311,7 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 			maxErrorStandardDeviation = std::max(maxErrorMean, currentErrorStandardDeviation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << String::toAString(performance.bestMseconds(), 3u) << "/" << String::toAString(performance.medianMseconds(), 3u) << "/" << String::toAString(performance.worstMseconds(), 3u) << " ms";
 	Log::info() << "Max. errors (mean/variance/stddev): " << String::toAString(maxErrorMean, 3u) << "/" << String::toAString(maxErrorVariance, 3u) << "/" << String::toAString(maxErrorStandardDeviation, 3u);

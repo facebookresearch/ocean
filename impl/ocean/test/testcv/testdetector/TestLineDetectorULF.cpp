@@ -239,7 +239,7 @@ bool TestLineDetectorULF::testRowSums(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -401,7 +401,7 @@ bool TestLineDetectorULF::testRowSqrSums(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -521,7 +521,7 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 		maxAbsErrorsPercent.push_back(maxAbsErrorPercent);
 		averageAbsErrorsPercent.push_back(averageAbsErrorPercent);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	std::sort(maxAbsErrors.begin(), maxAbsErrors.end());
 	std::sort(maxAbsErrorsPercent.begin(), maxAbsErrorsPercent.end());
@@ -700,7 +700,7 @@ bool TestLineDetectorULF::testRMSBarLineDetector(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -823,7 +823,7 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 		maxAbsErrorsPercent.push_back(maxAbsErrorPercent);
 		averageAbsErrorsPercent.push_back(averageAbsErrorPercent);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	std::sort(maxAbsErrors.begin(), maxAbsErrors.end());
 	std::sort(maxAbsErrorsPercent.begin(), maxAbsErrorsPercent.end());
@@ -1005,7 +1005,7 @@ bool TestLineDetectorULF::testRMSStepLineDetector(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1066,7 +1066,7 @@ bool TestLineDetectorULF::testSDStepEdgeDetector(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1193,7 +1193,7 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 
 		++iteration;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance vertical: " << performanceVertical.medianMseconds() << "ms, including " << performanceVerticalTranspose.medianMseconds() << "ms for transpose";
 	Log::info() << "Performance horizontal: " << performanceHorizontal.medianMseconds() << "ms";

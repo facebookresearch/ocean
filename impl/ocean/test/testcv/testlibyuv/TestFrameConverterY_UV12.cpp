@@ -174,7 +174,7 @@ bool TestFrameConverterY_UV12::testConvertY_UV12ToBGR24(const double testDuratio
 
 			iteration++;
 		}
-		while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 		if (libyuvIterations != 0ull)
 		{

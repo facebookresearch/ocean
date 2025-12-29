@@ -267,7 +267,7 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << anyCamera->name() << ":";
 
@@ -455,7 +455,7 @@ bool TestP3P::testP3PWithRays(const double testDuration)
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -516,7 +516,7 @@ bool TestP3P::testP3PWithPointsStressTest(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -571,7 +571,7 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 		const unsigned int numberPoses = Geometry::P3P::poses<T>(objectPoints, rays, world_T_cameras);
 		dummyValue += numberPoses;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2ull == 0ull)
 	{

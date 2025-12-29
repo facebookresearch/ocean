@@ -158,7 +158,7 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(constIterations != 0u);
 

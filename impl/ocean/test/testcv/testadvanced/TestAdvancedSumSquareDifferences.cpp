@@ -1268,7 +1268,7 @@ bool TestAdvancedSumSquareDifferences::testTwoSubPixelPatch8BitPerChannel(const 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1494,7 +1494,7 @@ bool TestAdvancedSumSquareDifferences::testOneSubPixelPatch8BitPerChannel(const 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1723,7 +1723,7 @@ bool TestAdvancedSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsig
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1951,7 +1951,7 @@ bool TestAdvancedSumSquareDifferences::testPatchMirroredBorderBuffer8BitPerChann
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -2163,7 +2163,7 @@ bool TestAdvancedSumSquareDifferences::testTwoPixelPatchWithMask8BitPerChannel(c
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -2379,7 +2379,7 @@ bool TestAdvancedSumSquareDifferences::testTwoSubPixelPatchWithMask8BitPerChanne
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -2584,7 +2584,7 @@ bool TestAdvancedSumSquareDifferences::testTwoPixelPatchWithRejectingMask8BitPer
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

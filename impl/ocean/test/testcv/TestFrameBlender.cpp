@@ -213,7 +213,7 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 		}
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -391,7 +391,7 @@ bool TestFrameBlender::testBlendWithConstantValue(const double testDuration, Wor
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -523,7 +523,7 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 		}
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -624,7 +624,7 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 		}
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -689,7 +689,7 @@ bool TestFrameBlender::testSubFrame(const FrameType::PixelFormat sourcePixelForm
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -760,7 +760,7 @@ bool TestFrameBlender::testFullFrame(const FrameType::PixelFormat sourcePixelFor
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";

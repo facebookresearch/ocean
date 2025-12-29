@@ -449,7 +449,7 @@ bool TestJSONParser::testPrimitives(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -566,7 +566,7 @@ bool TestJSONParser::testArrays(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -1069,7 +1069,7 @@ bool TestJSONParser::testRandomJSON(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

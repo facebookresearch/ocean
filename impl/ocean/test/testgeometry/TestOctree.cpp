@@ -196,7 +196,7 @@ bool TestOctree::testConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceBisectedBoundingBoxes.measurements() >= 1u);
 	ocean_assert(performanceTightBoundingBoxes.measurements() >= 1u);
@@ -344,7 +344,7 @@ bool TestOctree::testClosestPoints(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceBruteForce.measurements() >= 1u);
 	ocean_assert(performanceBisectedBoundingBoxes.measurements() >= 1u);
@@ -501,7 +501,7 @@ bool TestOctree::testIntersectingLeavesForRays(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceBruteForce.measurements() >= 1u);
 	ocean_assert(performanceBisectedBoundingBoxes.measurements() >= 1u);
@@ -578,7 +578,7 @@ bool TestOctree::testEdgeCases(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

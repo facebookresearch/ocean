@@ -5310,7 +5310,7 @@ bool TestJacobian::testPoseFisheyeCameraJacobian2x18(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive;
 	Log::info() << "Performance: " << performance;

@@ -189,7 +189,7 @@ bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channe
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Performance: " << String::toAString(performanceSinglecore.averageMseconds()) << "ms";

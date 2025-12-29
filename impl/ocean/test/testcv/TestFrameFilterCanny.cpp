@@ -168,7 +168,7 @@ bool TestFrameFilterCanny::testFilterCannyScharr(const unsigned int performanceW
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 

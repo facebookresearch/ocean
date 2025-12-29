@@ -414,7 +414,7 @@ bool TestMessengerCodeDetector::testExtractCodeCandidates(const double testDurat
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -580,7 +580,7 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 		}
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(bullseyesTotal != 0ull);
 
@@ -634,7 +634,7 @@ bool TestMessengerCodeDetector::testStressTest(const double testDuration, Worker
 
 		dummyValue += codes.size();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	// we actually do not validate the result, but we simply try to crash the detector instead
 	// using dummyValue to ensure that the compiler is actually calling detectMessengerCodes()

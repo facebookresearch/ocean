@@ -215,7 +215,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -366,7 +366,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

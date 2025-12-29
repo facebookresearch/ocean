@@ -677,7 +677,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 			detectionAccuracyErrors.emplace_back(distance);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	std::sort(detectionAccuracyErrors.begin(), detectionAccuracyErrors.end());
 	const Scalar detectionAccuracyErrorP50 = detectionAccuracyErrors[detectionAccuracyErrors.size() / 2];
@@ -760,7 +760,7 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 			break;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

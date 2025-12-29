@@ -166,7 +166,7 @@ bool TestVector4::testIsUnit(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const double percent = double(validIterations) / double(iterations);
 
@@ -249,7 +249,7 @@ bool TestVector4::testAngle(const double testDuration)
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -312,7 +312,7 @@ bool TestVector4::testLessOperator(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -421,7 +421,7 @@ bool TestVector4::testVectorConversion(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

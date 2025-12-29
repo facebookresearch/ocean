@@ -87,7 +87,7 @@ bool TestAdvancedFrameFilterSobel::testSinglePixel(const unsigned char* frame, c
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -122,7 +122,7 @@ bool TestAdvancedFrameFilterSobel::testFilterHorizontalVerticalMaximum8Bit(const
 		CV::Advanced::AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(frame, sobel, width, height, depth);
 		performance.stop();
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 

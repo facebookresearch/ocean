@@ -657,7 +657,7 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Single-core performance: Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << ", median: " << performanceSinglecore.medianMseconds() << "ms";
@@ -750,7 +750,7 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 						allSucceeded = false;
 					}
 				}
-				while (startTimestamp + testDuration > Timestamp(true));
+				while (!startTimestamp.hasTimePassed(testDuration));
 			}
 
 			Log::info() << "Standard performance: Best: " << performanceStandard.bestMseconds() << "ms, worst: " << performanceStandard.worstMseconds() << "ms, average: " << performanceStandard.averageMseconds() << ", median: " << performanceStandard.medianMseconds() << "ms";
@@ -841,7 +841,7 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 						allSucceeded = false;
 					}
 				}
-				while (startTimestamp + testDuration > Timestamp(true));
+				while (!startTimestamp.hasTimePassed(testDuration));
 			}
 
 			Log::info() << "Standard performance: Best: " << performanceStandard.bestMseconds() << "ms, worst: " << performanceStandard.worstMseconds() << "ms, average: " << performanceStandard.averageMseconds() << ", median: " << performanceStandard.medianMseconds() << "ms";
@@ -937,7 +937,7 @@ bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& wor
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

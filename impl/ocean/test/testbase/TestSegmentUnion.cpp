@@ -166,7 +166,7 @@ bool TestSegmentUnion::testUnionSize(const double testDuration)
 			{
 				testElements.insert(i, 1u);
 			}
-		
+
 			segmentUnion.addSegment(T(startPosition), T(stopPosition));
 		}
 
@@ -192,7 +192,7 @@ bool TestSegmentUnion::testUnionSize(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -245,7 +245,7 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 			{
 				testElements.insert(i, 1u);
 			}
-		
+
 			segmentUnion.addSegment(T(startPosition), T(stopPosition));
 		}
 
@@ -274,7 +274,7 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 		const SegmentUnion<T> intersectionUnion = segmentUnion.intersection(T(rangeStartPosition), T(rangeStopPosition));
 
 		if (!testElements.isEmpty())
-		{	
+		{
 			const typename SegmentUnion<T>::SegmentMap& segmentMap = intersectionUnion.segments();
 
 			ptrdiff_t segmentStart = testElements.firstIndex();
@@ -291,7 +291,7 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 					allSucceeded = false;
 					break;
 				}
-			
+
 				ptrdiff_t segmentStop = segmentStart + 1;
 				while (segmentStop < testElements.endIndex() && testElements[segmentStop] != 0u)
 				{
@@ -323,7 +323,7 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -376,7 +376,7 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 			{
 				testElements.insert(i, 1u);
 			}
-		
+
 			segmentUnion.addSegment(T(startPosition), T(stopPosition));
 		}
 
@@ -397,7 +397,7 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 				{
 					continue;
 				}
-			
+
 				const ptrdiff_t nonActiveBlockStart = i; // inclusive
 
 				while (++i < testElements.endIndex())
@@ -411,7 +411,7 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 				const ptrdiff_t nonActiveBlockEnd = i; // exclusive
 
 				const unsigned int blockSize = (unsigned int)(nonActiveBlockEnd - nonActiveBlockStart);
-				
+
 				maximalNonActiveElements = std::max(maximalNonActiveElements, blockSize);
 			}
 		}
@@ -423,7 +423,7 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

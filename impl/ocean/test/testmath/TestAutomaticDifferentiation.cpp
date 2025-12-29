@@ -625,7 +625,7 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -953,7 +953,7 @@ bool TestAutomaticDifferentiation::testFunctions(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -1115,7 +1115,7 @@ bool TestAutomaticDifferentiation::testNested(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -1257,7 +1257,7 @@ bool TestAutomaticDifferentiation::testHomography(const double testDuration)
 
 		validation.addIterations(accurateJacobians, jacobians.size());
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance automatic: " << performanceAutomatic;
 	Log::info() << "Performance direct: " << performanceDirect;
@@ -1409,7 +1409,7 @@ bool TestAutomaticDifferentiation::testPose(const double testDuration)
 		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(testJacobians.data(), pinholeCamera, flippedCamera_P_world, objectPoints.data(), objectPoints.size(), false);
 #endif
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance automatic: " << performanceAutomatic;
 	return true;

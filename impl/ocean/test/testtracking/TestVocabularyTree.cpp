@@ -441,7 +441,7 @@ bool TestVocabularyTree::testDetermineClustersMeanForBinaryDescriptor(const doub
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -554,7 +554,7 @@ bool TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(const doubl
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -722,7 +722,7 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceSinglecore.measurements() >= 1u);
 	ocean_assert(performanceMulticore.measurements() >= 1u);
@@ -1020,7 +1020,7 @@ bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceQueryBruteForce.measurements() >= 1u);
 	Log::info() << "Brute-force Performance: " << String::toAString(performanceQueryBruteForce.average(), 2u) << "s";
@@ -1236,7 +1236,7 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceQueryBruteForce.measurements() >= 1u);
 	Log::info() << "Brute-force Performance: " << String::toAString(performanceQueryBruteForce.average(), 2u) << "s";
@@ -1434,7 +1434,7 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(performanceQueryBruteForce.measurements() >= 1u);
 	Log::info() << "Brute-force Performance: " << String::toAString(performanceQueryBruteForce.average(), 2u) << "s";

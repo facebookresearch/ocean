@@ -306,7 +306,7 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Default performance: " << performanceDefault.averageMseconds() << "ms";
 	Log::info() << "Consistency performance: " << performanceConsistency.averageMseconds() << "ms";
@@ -447,7 +447,7 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Default performance: " << performanceDefault.averageMseconds() << "ms";
 	Log::info() << "Consistency performance: " << performanceConsistency.averageMseconds() << "ms";
@@ -571,7 +571,7 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const unsigned int c
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 

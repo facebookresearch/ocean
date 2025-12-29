@@ -368,7 +368,7 @@ bool TestSquareMatrix3::testElementConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -427,7 +427,7 @@ bool TestSquareMatrix3::testQuaternionConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -525,7 +525,7 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -583,7 +583,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Standard performance as reference: " << String::toAString(performanceStandard.averageMseconds()) << "ms";
 		Log::info() << " ";
@@ -644,7 +644,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -705,7 +705,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -767,7 +767,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);
@@ -937,7 +937,7 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 			++validIterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -1037,7 +1037,7 @@ bool TestSquareMatrix3::testMatrixConversion(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1173,7 +1173,7 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

@@ -191,7 +191,7 @@ bool TestFrameConverterRGBA32::testConvertRGBA32ToY8(const double testDuration, 
 
 			iteration++;
 		}
-		while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 		if (libyuvIterations != 0ull)
 		{

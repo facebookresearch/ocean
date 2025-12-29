@@ -225,7 +225,7 @@ bool TestHSVAColor::testIsEqual(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -313,7 +313,7 @@ bool TestHSVAColor::testAccessors(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -403,7 +403,7 @@ bool TestHSVAColor::testConversionRGBA(const double testDuration)
 
 		OCEAN_EXPECT_EQUAL(validation, inputColor.alpha(), outputColor.alpha());
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -486,7 +486,7 @@ bool TestHSVAColor::testInterpolate(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

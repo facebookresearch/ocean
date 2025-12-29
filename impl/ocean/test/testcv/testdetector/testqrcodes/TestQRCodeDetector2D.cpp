@@ -247,7 +247,7 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 			OCEAN_EXPECT_EQUAL(validation, codes.size(), observations.size());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Stress test: " << validation;
 

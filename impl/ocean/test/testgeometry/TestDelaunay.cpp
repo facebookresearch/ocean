@@ -135,7 +135,7 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);

@@ -698,7 +698,7 @@ bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -795,7 +795,7 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -888,7 +888,7 @@ bool TestSpecial::testBmpImageEncodeDecode(const unsigned int width, const unsig
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -959,7 +959,7 @@ bool TestSpecial::testBmpDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1043,7 +1043,7 @@ bool TestSpecial::testPfmImageEncodeDecode(const unsigned int width, const unsig
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -1124,7 +1124,7 @@ bool TestSpecial::testPfmDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1211,7 +1211,7 @@ bool TestSpecial::testNpyImageEncodeDecode(const unsigned int width, const unsig
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -1286,7 +1286,7 @@ bool TestSpecial::testNpyDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1356,7 +1356,7 @@ bool TestSpecial::testOcnDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1415,7 +1415,7 @@ bool TestSpecial::testDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{

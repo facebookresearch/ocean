@@ -244,7 +244,7 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 				elementSet.erase(*i);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const double boostBest = hashPerformance.best() == 0 ? -1 : stdPerformance.best() / hashPerformance.best();
 	const double boostWorst = hashPerformance.worst() == 0 ? -1 : stdPerformance.worst() / hashPerformance.worst();
@@ -397,7 +397,7 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 			--tableSize;
 		}
 	}
-	while (succeeded && startTimestamp + testDuration > Timestamp(true));
+	while (succeeded && !startTimestamp.hasTimePassed(testDuration));
 
 	if (succeeded)
 		Log::info() << "Validation: succeeded.";
@@ -521,7 +521,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 			--tableSize;
 		}
 	}
-	while (succeeded && startTimestamp + testDuration > Timestamp(true));
+	while (succeeded && !startTimestamp.hasTimePassed(testDuration));
 
 	if (succeeded)
 		Log::info() << "Validation: succeeded.";
@@ -654,7 +654,7 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 			--tableSize;
 		}
 	}
-	while (succeeded && startTimestamp + testDuration > Timestamp(true));
+	while (succeeded && !startTimestamp.hasTimePassed(testDuration));
 
 	if (succeeded)
 		Log::info() << "Validation: succeeded.";

@@ -269,7 +269,7 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -431,7 +431,7 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCameraPoses(const
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 

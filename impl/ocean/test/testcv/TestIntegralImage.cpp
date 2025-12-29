@@ -711,7 +711,7 @@ bool TestIntegralImage::testIntegralImage(const unsigned int width, const unsign
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -845,7 +845,7 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -908,7 +908,7 @@ bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const u
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1004,7 +1004,7 @@ bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1113,7 +1113,7 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned in
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1230,7 +1230,7 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1367,7 +1367,7 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1430,7 +1430,7 @@ bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, cons
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1526,7 +1526,7 @@ bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int widt
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1622,7 +1622,7 @@ bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1718,7 +1718,7 @@ bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned in
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
 
@@ -1835,7 +1835,7 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 
@@ -1967,7 +1967,7 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 

@@ -165,7 +165,7 @@ bool TestEuler::testConversionToMatrix(const double testDuration)
 
 		iterations += constIterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);
@@ -230,7 +230,7 @@ bool TestEuler::testConversionFromRotation(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);
@@ -375,7 +375,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);
@@ -528,7 +528,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);
@@ -681,7 +681,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);
@@ -798,7 +798,7 @@ bool TestEuler::testAdjustAngles(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	double percent = double(validIterations) / double(iterations);

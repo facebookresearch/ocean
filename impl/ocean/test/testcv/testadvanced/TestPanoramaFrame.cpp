@@ -287,7 +287,7 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 
@@ -380,7 +380,7 @@ bool TestPanoramaFrame::testCameraFrame2panoramaSubFrame(const double testDurati
 
 			iterations++;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations > 0ull);
 		const double percent = double(validIterations) / double(iterations);

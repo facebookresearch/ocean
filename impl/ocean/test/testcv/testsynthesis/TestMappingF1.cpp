@@ -389,7 +389,7 @@ bool TestMappingF1::testApplyMapping(const unsigned int width, const unsigned in
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: " << performanceSinglecore;
@@ -517,7 +517,7 @@ bool TestMappingF1::testSumSquaredDifference5x5Mask(const unsigned int width, co
 			validExecutions += uint64_t(validResults);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 3u) << "ms, average: " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 
@@ -681,7 +681,7 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 			break;
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -830,7 +830,7 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 			break;
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -951,7 +951,7 @@ bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const
 			break;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -1277,7 +1277,7 @@ bool TestMappingF1::testTwoPixelPatchOneSubPixelPatch8BitPerChannel(const unsign
 			OCEAN_EXPECT_EQUAL(validation, resultsDefault[n], ssdTest);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

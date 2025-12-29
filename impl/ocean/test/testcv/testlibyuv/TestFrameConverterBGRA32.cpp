@@ -185,7 +185,7 @@ bool TestFrameConverterBGRA32::testConvertBGRA32ToY8FullRange(const double testD
 
 			iteration++;
 		}
-		while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 		if (libyuvIterations != 0ull)
 		{

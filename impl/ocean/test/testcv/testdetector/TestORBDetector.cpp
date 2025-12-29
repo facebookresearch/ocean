@@ -201,7 +201,7 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performanceSinglecore;
 
@@ -297,7 +297,7 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performanceSinglecore;
 
@@ -344,7 +344,7 @@ bool TestORBDetector::testDetectReferenceFeaturesAndDetermineDescriptors(const d
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -407,7 +407,7 @@ bool TestORBDetector::testHammingDistanceDetermination(const double testDuration
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummy > 1u)
 	{
@@ -511,7 +511,7 @@ bool TestORBDetector::testDescriptorMatching(const double testDuration, Worker& 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performanceSinglecore;
 

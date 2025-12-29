@@ -474,7 +474,7 @@ bool runTestPnP(const double testDuration, const PinholeCamera& camera, const si
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	std::sort(projectionErrors.begin(), projectionErrors.end());
 

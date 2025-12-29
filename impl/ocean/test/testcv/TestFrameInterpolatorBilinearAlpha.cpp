@@ -326,7 +326,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -463,7 +463,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

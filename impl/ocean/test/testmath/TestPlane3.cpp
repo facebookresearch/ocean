@@ -221,7 +221,7 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -273,7 +273,7 @@ bool TestPlane3::testIntersectionLine(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -331,7 +331,7 @@ bool TestPlane3::testIntersectionPlane(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);

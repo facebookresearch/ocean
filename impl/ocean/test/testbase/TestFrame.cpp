@@ -805,7 +805,7 @@ bool TestFrame::testPlaneContructors(const double testDuration)
 		allSucceeded = testPlaneContructors<float>(width, height, channels, paddingElements) && allSucceeded;
 		allSucceeded = testPlaneContructors<double>(width, height, channels, paddingElements) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -930,7 +930,7 @@ bool TestFrame::testPlaneCopyContructors(const double testDuration)
 		allSucceeded = testPlaneCopyContructors<float>(width, height, channels, paddingElements) && allSucceeded;
 		allSucceeded = testPlaneCopyContructors<double>(width, height, channels, paddingElements) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1045,7 +1045,7 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1136,7 +1136,7 @@ bool TestFrame::testFrameSpecificationNonGenericPixelFormats(const double testDu
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1384,7 +1384,7 @@ bool TestFrame::testConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1810,7 +1810,7 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2054,7 +2054,7 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2305,7 +2305,7 @@ bool TestFrame::testCopyOperator(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2433,7 +2433,7 @@ bool TestFrame::testPlaneInitializer(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2644,7 +2644,7 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2738,7 +2738,7 @@ bool TestFrame::testRelease(const double testDuration)
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -2976,7 +2976,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3065,7 +3065,7 @@ bool TestFrame::testTimestamp(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3316,7 +3316,7 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3617,7 +3617,7 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3783,7 +3783,7 @@ bool TestFrame::testSetFrameType(const double testDuration)
 			readOnlyFrame.setValue(0x80u);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -3943,7 +3943,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4044,7 +4044,7 @@ bool TestFrame::testCopy(const double testDuration)
 				allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4258,7 +4258,7 @@ bool TestFrame::testMakeContinuous(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4680,7 +4680,7 @@ bool TestFrame::testSetValue(const double testDuration)
 				break;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4828,7 +4828,7 @@ bool TestFrame::testContainsValue(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -5151,7 +5151,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -5414,7 +5414,7 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

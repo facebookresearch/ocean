@@ -722,7 +722,7 @@ bool TestFrameNormalizer::testNormalizerToUint8(const double testDuration, Worke
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1014,7 +1014,7 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 
 		maxAbsoluteError = std::max(maxAbsoluteError, currentMaxAbsoluteError);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Max. absolute error: " << String::toAString(maxAbsoluteError, 5u);
 
@@ -1196,7 +1196,7 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

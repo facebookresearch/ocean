@@ -83,7 +83,7 @@ bool TestMathUtilities::testEncodeFloatToUint8(const double testDuration)
 		sumError += double(NumericF::abs(error));
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Maximal error: " << String::toAString(maxError, 10u) << ", average error: " << String::toAString(sumError / double(iterations), 10u);
 

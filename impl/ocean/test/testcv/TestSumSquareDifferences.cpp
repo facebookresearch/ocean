@@ -1022,7 +1022,7 @@ bool TestSumSquareDifferences::testPatch8BitPerChannel(const unsigned int width,
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1250,7 +1250,7 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const unsigned int width
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1509,7 +1509,7 @@ bool TestSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsigned int 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1741,7 +1741,7 @@ bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const unsigned in
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1984,7 +1984,7 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

@@ -220,7 +220,7 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 				return;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (libyuvIterations != 0ull)

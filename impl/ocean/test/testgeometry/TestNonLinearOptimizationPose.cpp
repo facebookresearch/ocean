@@ -327,7 +327,7 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageTranslationError /= Scalar(iterations);
@@ -899,7 +899,7 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	averageTranslationError /= Scalar(iterations);

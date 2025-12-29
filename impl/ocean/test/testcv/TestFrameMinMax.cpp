@@ -187,7 +187,7 @@ bool TestFrameMinMax::testDetermineMinValue(const double testDuration)
 			allSucceeded = testDetermineMinValue<double>(width, height, paddingElements) && allSucceeded;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
@@ -274,7 +274,7 @@ bool TestFrameMinMax::testDetermineMaxValue(const double testDuration)
 			allSucceeded = testDetermineMaxValue<double>(width, height, paddingElements) && allSucceeded;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
@@ -434,7 +434,7 @@ bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const 
 					}
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
 		Log::info() << "Singlecore Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << "ms";
@@ -518,7 +518,7 @@ bool TestFrameMinMax::testCountElementsOutsideRange(const double testDuration)
 			allSucceeded = testDetermineMaxValue<double>(width, height, paddingElements) && allSucceeded;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 

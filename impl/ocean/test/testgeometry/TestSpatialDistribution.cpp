@@ -176,7 +176,7 @@ bool TestSpatialDistribution::testIdealBins(const double testDuration)
 		OCEAN_EXPECT_GREATER_EQUAL(validation, verticalBins, minimalVerticalBins);
 		OCEAN_EXPECT_LESS_EQUAL(validation, verticalBins, height);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -225,7 +225,7 @@ bool TestSpatialDistribution::testIdealBinsNeighborhood9(const double testDurati
 		OCEAN_EXPECT_GREATER_EQUAL(validation, verticalBins, minimalVerticalBins);
 		OCEAN_EXPECT_LESS_EQUAL(validation, verticalBins, maximalVerticalBins);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -359,7 +359,7 @@ bool TestSpatialDistribution::testMinimalSqrDistances(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Brute force performance: " << performanceBruteForce.averageMseconds() << "ms";
 	Log::info() << "Distribution performance: " << performanceDistributionCreation.averageMseconds() + performanceDistributionSearch.averageMseconds() << "ms (creation: " << performanceDistributionCreation.averageMseconds() << "ms + search: " << performanceDistributionSearch.averageMseconds() << "ms)";
@@ -450,7 +450,7 @@ bool TestSpatialDistribution::testDistribute(const double testDuration)
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -543,7 +543,7 @@ bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -634,7 +634,7 @@ bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDu
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -719,7 +719,7 @@ bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

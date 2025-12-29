@@ -181,7 +181,7 @@ bool TestFrameConverterY_U_V12::testConvertY_U_V12ToRGBA32Precision6Bit(const do
 
 			iteration++;
 		}
-		while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 		if (libyuvIterations != 0ull)
 		{

@@ -183,7 +183,7 @@ bool TestTriangle2::testIntersects(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (someFailed)
 	{
@@ -320,7 +320,7 @@ bool TestTriangle2::testIsCounterClockwise(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -508,7 +508,7 @@ bool TestTriangle2::testPadded(const double testDuration)
 			++numberSuccessfulTrials;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const Scalar ratioSuccessfulTrials = Scalar(numberSuccessfulTrials) / Scalar(totalNumberTrials);
 	Log::info() << "Successful trial ratio: " << (ratioSuccessfulTrials * Scalar(100)) << "%.";

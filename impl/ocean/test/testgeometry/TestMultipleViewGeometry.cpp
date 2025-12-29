@@ -193,7 +193,7 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
@@ -293,7 +293,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
@@ -382,7 +382,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
@@ -496,7 +496,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 

@@ -649,7 +649,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1259,7 +1259,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0u, "Invalid number of locations!");
 
@@ -1528,7 +1528,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0u, "Invalid number of locations!");
 
@@ -1739,7 +1739,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0u, "Invalid number of locations!");
 
@@ -2103,7 +2103,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Median performance: " << performanceSinglecore.medianMseconds() << "ms";

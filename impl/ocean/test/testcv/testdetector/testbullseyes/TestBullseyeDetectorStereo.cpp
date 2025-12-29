@@ -285,7 +285,7 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -550,7 +550,7 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -667,7 +667,7 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded > 0u)
 	{
@@ -756,7 +756,7 @@ bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDura
 			break;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -854,7 +854,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -963,7 +963,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1090,7 +1090,7 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

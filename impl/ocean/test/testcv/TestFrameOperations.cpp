@@ -183,7 +183,7 @@ bool TestFrameOperations::testSubtraction(const unsigned int performanceWidth, c
 					return false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 

@@ -257,7 +257,7 @@ bool TestMatrix::testElementConstructor(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -333,7 +333,7 @@ bool TestMatrix::testSubMatrixConstructor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -386,7 +386,7 @@ bool TestMatrix::testSelfSquareMatrix(const double testDuration)
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -442,7 +442,7 @@ bool TestMatrix::testSelfTransposedSquareMatrixExistingResult(const double testD
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -494,7 +494,7 @@ bool TestMatrix::testSelfTransposedSquareMatrix(const double testDuration)
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -560,7 +560,7 @@ bool TestMatrix::testWeightedSelfTransposedSquareMatrixExistingResult(const doub
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -695,7 +695,7 @@ bool TestMatrix::testInvert(const double testDuration)
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -745,7 +745,7 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 			performance.stop();
 
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	}
@@ -851,7 +851,7 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(validIterations) / double(iterations);
@@ -887,7 +887,7 @@ bool TestMatrix::testRank(const double testDuration)
 		performance.stop();
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance (" << size << "^2): " << performance.averageMseconds() << "ms";
 
@@ -1092,7 +1092,7 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 				c = a * b;
 			performance.stop();
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance (" << size << "^2): " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 	}
@@ -1127,7 +1127,7 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 			performance.stop();
 
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance (" << size << "^2): " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 	}
@@ -1161,7 +1161,7 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 		allSucceeded = validateMatrixMultiplication(a, b, c) && allSucceeded;
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

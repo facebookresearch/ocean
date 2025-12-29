@@ -181,7 +181,7 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 
 		++iteration;
 	}
-	while (iteration < 4u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 4u || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance OpenCV (14641): [" << String::toAString(performanceOpenCV14641.bestMseconds(), 3u) << ", " << String::toAString(performanceOpenCV14641.medianMseconds(), 3u) << ", " << String::toAString(performanceOpenCV14641.worstMseconds(), 3u) << "] ms";
 	Log::info() << "Performance Ocean (14641): [" << String::toAString(performanceOcean14641.bestMseconds(), 3u) << ", " << String::toAString(performanceOcean14641.medianMseconds(), 3u) << ", " << String::toAString(performanceOcean14641.worstMseconds(), 3u) << "] ms";
@@ -254,7 +254,7 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 
 		iteration++;
 	}
-	while (iteration < 3u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 3u || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance OpenCV (14641): [" << String::toAString(performanceOpenCV14641.bestMseconds(), 3u) << ", " << String::toAString(performanceOpenCV14641.medianMseconds(), 3u) << ", " << String::toAString(performanceOpenCV14641.worstMseconds(), 3u) << "] ms";
 	Log::info() << "Performance Ocean (14641): [" << String::toAString(performanceOcean14641.bestMseconds(), 3u) << ", " << String::toAString(performanceOcean14641.medianMseconds(), 3u) << ", " << String::toAString(performanceOcean14641.worstMseconds(), 3u) << "] ms";

@@ -212,7 +212,7 @@ bool TestHashMap::testPerformanceSingleIntegers(const unsigned int number, const
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const double boostBest = hashPerformance.best() == 0 ? -1 : stdPerformance.best() / hashPerformance.best();
 	const double boostWorst = hashPerformance.worst() == 0 ? -1 : stdPerformance.worst() / hashPerformance.worst();

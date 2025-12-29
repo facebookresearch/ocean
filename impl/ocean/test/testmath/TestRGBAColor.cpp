@@ -194,7 +194,7 @@ bool TestRGBAColor::testConstructorColorTemperature(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -303,7 +303,7 @@ bool TestRGBAColor::testIsEqual(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -391,7 +391,7 @@ bool TestRGBAColor::testAccessors(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -466,7 +466,7 @@ bool TestRGBAColor::testConversionHSVA(const double testDuration)
 
 		OCEAN_EXPECT_EQUAL(validation, inputColor.alpha(), outputColor.alpha());
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

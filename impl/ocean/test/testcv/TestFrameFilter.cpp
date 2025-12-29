@@ -216,7 +216,7 @@ bool TestFrameFilter::testMagnitude(const double testDuration, Worker& worker)
 				break;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -359,7 +359,7 @@ bool TestFrameFilter::testNormalizeValue(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

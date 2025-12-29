@@ -200,7 +200,7 @@ bool TestSumAbsoluteDifferences::testDifferenceBetweenFramesWithOnePlane(const d
 				allSucceeded = false;
 		};
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -330,7 +330,7 @@ bool TestSumAbsoluteDifferences::testDifferenceBetweenFramesWithSeveralPlanes(co
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1212,7 +1212,7 @@ bool TestSumAbsoluteDifferences::testPatch8BitPerChannel(const unsigned int widt
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1298,7 +1298,7 @@ bool TestSumAbsoluteDifferences::testBuffer8BitPerChannel(const unsigned int wid
 		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
 		offsets0[0] = 0;
 		offsets1[0] = 0;
-		
+
 		offsets0[1] = height * frame0.strideElements() - tBufferSize;
 		offsets1[1] = height * frame1.strideElements() - tBufferSize;
 
@@ -1440,7 +1440,7 @@ bool TestSumAbsoluteDifferences::testBuffer8BitPerChannel(const unsigned int wid
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1700,7 +1700,7 @@ bool TestSumAbsoluteDifferences::testPatchBuffer8BitPerChannel(const unsigned in
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 
@@ -1891,7 +1891,7 @@ bool TestSumAbsoluteDifferences::testPatchMirroredBorder8BitPerChannel(const uns
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0, "Invalid number of locations!");
 

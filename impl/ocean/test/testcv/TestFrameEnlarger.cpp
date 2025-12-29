@@ -306,7 +306,7 @@ bool TestFrameEnlarger::testAddBorder(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -368,7 +368,7 @@ bool TestFrameEnlarger::testAddBorderNearestPixel(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -430,7 +430,7 @@ bool TestFrameEnlarger::testAddBorderMirrored(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -530,7 +530,7 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const u
 
 				allSucceeded = validationMultiplyByTwo(source, target) && allSucceeded;
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 
@@ -618,7 +618,7 @@ bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

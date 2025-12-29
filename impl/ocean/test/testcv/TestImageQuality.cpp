@@ -172,7 +172,7 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -283,7 +283,7 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

@@ -450,7 +450,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	// output errors
 	ocean_assert(iterations != 0ull);
@@ -666,7 +666,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	// output errors
 	ocean_assert(iterations != 0ull);

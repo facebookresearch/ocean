@@ -977,7 +977,7 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1083,7 +1083,7 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const unsigned int width, 
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -1155,7 +1155,7 @@ bool TestOpenImageLibraries::testJpgDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1242,7 +1242,7 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const unsigned int width, 
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -1315,7 +1315,7 @@ bool TestOpenImageLibraries::testPngDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1386,7 +1386,7 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const unsigned int width, 
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -1459,7 +1459,7 @@ bool TestOpenImageLibraries::testTifDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1535,7 +1535,7 @@ bool TestOpenImageLibraries::testGifDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1615,7 +1615,7 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const unsigned int width,
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
@@ -1688,7 +1688,7 @@ bool TestOpenImageLibraries::testWebpDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{
@@ -1838,7 +1838,7 @@ bool TestOpenImageLibraries::testDecodeStressTest()
 			dummyValue += 2u;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (dummyValue % 2u == 0u)
 	{

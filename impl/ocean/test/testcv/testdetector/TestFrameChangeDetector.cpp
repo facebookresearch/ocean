@@ -267,7 +267,7 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Total number of sequences tested: " << numberTests;
 	Log::info() << "Total number of frames: " << numberFrames;

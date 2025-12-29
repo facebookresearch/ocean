@@ -137,7 +137,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 		++iteration;
 	}
-	while (iteration < 3u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 3u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (performanceLibYUV.measurements() != 0u)
 	{

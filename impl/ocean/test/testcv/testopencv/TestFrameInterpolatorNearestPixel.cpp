@@ -217,7 +217,7 @@ void TestFrameInterpolatorNearestPixel::testHomography(const unsigned int width,
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (opencvIterations != 0ull)
 	{
@@ -360,7 +360,7 @@ void TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width, con
 
 		iteration++;
 	}
-	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || !startTimestamp.hasTimePassed(testDuration));
 
 	if (oceanIterations != 0ull)
 	{

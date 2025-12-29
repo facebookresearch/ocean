@@ -362,7 +362,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -426,7 +426,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -494,7 +494,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -575,7 +575,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -639,7 +639,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -707,7 +707,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -795,7 +795,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -862,7 +862,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -940,7 +940,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1016,7 +1016,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1094,7 +1094,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1170,7 +1170,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1237,7 +1237,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1328,7 +1328,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1394,7 +1394,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1473,7 +1473,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1551,7 +1551,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1631,7 +1631,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1709,7 +1709,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -1777,7 +1777,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 
@@ -2604,7 +2604,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -2681,7 +2681,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -2752,7 +2752,7 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -2838,7 +2838,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -2917,7 +2917,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

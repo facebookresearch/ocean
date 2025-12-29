@@ -1078,7 +1078,7 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -1116,7 +1116,7 @@ bool TestFrameConverter::testCast(const double testDuration)
 		allSucceeded = testCast<int64_t>(width, height, channels) && allSucceeded;
 		allSucceeded = testCast<uint64_t>(width, height, channels) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1159,7 +1159,7 @@ bool TestFrameConverter::testNormalizedCast(const double testDuration)
 		allSucceeded = testNormalizedCast<int64_t>(width, height, channels, RandomI::random(-100, 100), RandomI::random(-1000, 1000)) && allSucceeded;
 		allSucceeded = testNormalizedCast<uint64_t>(width, height, channels, RandomI::random(0u, 100u), RandomI::random(0, 1000)) && allSucceeded;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1304,7 +1304,7 @@ bool TestFrameConverter::testSubFrameMask(const double testDuration)
 			return false;
 		}
 	}
-	while (performance.measurements() == 0u && startTimestamp + testDuration > Timestamp(true));
+	while (performance.measurements() == 0u && !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance first: " << performance.firstMseconds() << "ms";
 	Log::info() << "Performance average: " << performance.averageMseconds() << "ms";
@@ -1627,7 +1627,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd1Plane2ChannelsDowns
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1864,7 +1864,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd1Plane2ChannelsDowns
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2095,7 +2095,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDown
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2316,7 +2316,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDown
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2465,7 +2465,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2616,7 +2616,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2705,7 +2705,7 @@ bool TestFrameConverter::testMapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPer
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2769,7 +2769,7 @@ bool TestFrameConverter::testMapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPer
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2857,7 +2857,7 @@ bool TestFrameConverter::testMapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2945,7 +2945,7 @@ bool TestFrameConverter::testMapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3186,7 +3186,7 @@ bool TestFrameConverter::testMapOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampl
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3414,7 +3414,7 @@ bool TestFrameConverter::testMapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsamp
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3657,7 +3657,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd2Planes1ChannelDowns
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3900,7 +3900,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4167,7 +4167,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4398,7 +4398,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4647,7 +4647,7 @@ bool TestFrameConverter::testMapOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampl
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -4885,7 +4885,7 @@ bool TestFrameConverter::testMapTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsamp
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -5039,7 +5039,7 @@ bool TestFrameConverter::testConvertOneRow_3Planes1Channel_To_1Plane3Channels_8B
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -5179,7 +5179,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane3ChannelsWith2ChannelsDownsampl
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -5319,7 +5319,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane3ChannelsWith2ChannelsDownsampl
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -5400,7 +5400,7 @@ bool TestFrameConverter::testConversionMatrices(const double testDuration)
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Y range: [" << yMin << ", " << yMax << "], expected to be [0, 255]";
 		Log::info() << "U range: [" << uMin << ", " << uMax << "], expected to be [0, 255]";
@@ -5566,7 +5566,7 @@ bool TestFrameConverter::testSubFrame(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	return allSucceeded;
 }
@@ -5823,7 +5823,7 @@ bool TestFrameConverter::testPatchFrameMirroredBorder(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

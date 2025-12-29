@@ -288,7 +288,7 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (fatalError)
 	{
@@ -508,7 +508,7 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (fatalError)
 	{
@@ -565,7 +565,7 @@ bool TestBresenham::testNumberLinePixels(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

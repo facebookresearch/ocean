@@ -125,7 +125,7 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

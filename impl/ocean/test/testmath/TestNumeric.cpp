@@ -1531,7 +1531,7 @@ bool TestNumeric::testFloor(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (results[0] == 0) // we make this dummy check to receive a serious result
 	{
@@ -1589,7 +1589,7 @@ bool TestNumeric::testCeil(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (results[0] == 0) // we make this dummy check to receive a serious result
 	{
@@ -1636,7 +1636,7 @@ bool TestNumeric::testLog2(const double testDuration)
 			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	const double percent = double(validIterations) / double(iterations);
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
@@ -1778,7 +1778,7 @@ bool TestNumeric::testSign(const double testDuration)
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2165,7 +2165,7 @@ bool TestNumeric::testIsNan(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2366,7 +2366,7 @@ bool TestNumeric::testIsInf(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3012,7 +3012,7 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -3062,7 +3062,7 @@ bool TestNumeric::testDotProduct(const double testDuration)
 				dummyValue += dotProduct(vectorA.data(), vectorB.data(), tSize);
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		if (dummyValue == T(1))
 		{
@@ -3107,7 +3107,7 @@ bool TestNumeric::testDotProduct(const double testDuration)
 
 			iterations++;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(validIterations) / double(iterations);

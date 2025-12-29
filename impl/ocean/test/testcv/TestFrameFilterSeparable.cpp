@@ -516,7 +516,7 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	return allSucceeded;
 }
@@ -653,7 +653,7 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Standard performance: Best: " << performanceStandard.bestMseconds() << "ms, worst: " << performanceStandard.worstMseconds() << "ms, average: " << performanceStandard.averageMseconds() << ", median: " << performanceStandard.medianMseconds() << "ms";
@@ -741,7 +741,7 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Standard performance: Best: " << performanceStandard.bestMseconds() << "ms, worst: " << performanceStandard.worstMseconds() << "ms, average: " << performanceStandard.averageMseconds() << ", median: " << performanceStandard.medianMseconds() << "ms";
@@ -827,7 +827,7 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 				allSucceeded = false;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Single-core performance: Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << ", median: " << performanceSinglecore.medianMseconds() << "ms";
@@ -953,7 +953,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 
 		iterations++;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1102,7 +1102,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 			maximalError = max(maximalError, maximalAbsError);
 			measurements++;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	if (width > 64u)

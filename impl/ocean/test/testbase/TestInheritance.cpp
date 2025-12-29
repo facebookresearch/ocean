@@ -315,24 +315,24 @@ bool TestInheritance::test(const double testDuration, const TestSelector& select
 
 	return testResult.succeeded();
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
+
 TEST(TestInheritance, Normal)
 {
 	EXPECT_TRUE(TestInheritance::testNormal(GTEST_TEST_DURATION));
 }
-	
+
 TEST(TestInheritance, Virtual)
 {
 	EXPECT_TRUE(TestInheritance::testVirtual(GTEST_TEST_DURATION));
 }
-	
+
 TEST(TestInheritance, Diamond)
 {
 	EXPECT_TRUE(TestInheritance::testDiamond(GTEST_TEST_DURATION));
 }
-	
+
 #endif // OCEAN_USE_GTEST
 
 bool TestInheritance::testNormal(const double testDuration)
@@ -589,7 +589,7 @@ bool TestInheritance::testNormal(const double testDuration)
 
 		parameter += 1.5;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (result > 0 || result <= 0)
 	{
@@ -773,7 +773,7 @@ bool TestInheritance::testVirtual(const double testDuration)
 
 		parameter += 1.5;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (result > 0 || result <= 0)
 	{
@@ -1012,7 +1012,7 @@ bool TestInheritance::testDiamond(const double testDuration)
 
 		parameter += 1.5;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (result > 0 || result <= 0)
 	{

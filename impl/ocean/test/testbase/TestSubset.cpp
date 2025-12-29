@@ -434,7 +434,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 		firstIteration = false;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 
 	if (allSucceeded)
@@ -645,7 +645,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 		firstIteration = false;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 
 	if (allSucceeded)
@@ -733,7 +733,7 @@ bool TestSubset::hasIntersectingElement(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

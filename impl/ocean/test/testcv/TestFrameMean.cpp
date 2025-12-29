@@ -253,7 +253,7 @@ bool TestFrameMean::testAddToFrameIndividually(const unsigned int performanceWid
 					allSucceeded = false;
 				}
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
+			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 	}
 
@@ -412,7 +412,7 @@ bool TestFrameMean::testMeanValue(const unsigned int width, const unsigned int h
 
 			++iterations;
 		}
-		while (iterations < 2u || startTimestamp + testDuration > Timestamp(true));
+		while (iterations < 2u || !startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << performanceSinglecore.bestMseconds() << "ms, worst: " << performanceSinglecore.worstMseconds() << "ms, average: " << performanceSinglecore.averageMseconds() << "ms, median: " << performanceSinglecore.medianMseconds() << "ms";

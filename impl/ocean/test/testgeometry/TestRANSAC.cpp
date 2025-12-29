@@ -373,7 +373,7 @@ bool TestRANSAC::testIterations(const double testDuration)
 			OCEAN_EXPECT_LESS_EQUAL(validation, iterationsLow, iterationsHigh);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -617,7 +617,7 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 					scopedIteration.setInaccurate();
 				}
 			}
-			while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+			while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 			Log::info() << indentation2 << "Performance: " << performance;
 
@@ -736,7 +736,7 @@ bool TestRANSAC::testP3PZoom(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -878,7 +878,7 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 				}
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -1042,7 +1042,7 @@ bool TestRANSAC::testHomographyMatrix(const double testDuration, const bool refi
 				}
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance single-core: " << performanceSinglecore;
 		Log::info() << "Performance multi-core: " << performanceMulticore;
@@ -1265,7 +1265,7 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 				}
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance single-core: " << performanceSinglecore;
 		Log::info() << "Performance multi-core: " << performanceMulticore;

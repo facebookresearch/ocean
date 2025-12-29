@@ -249,7 +249,7 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 		break;
 #endif
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
