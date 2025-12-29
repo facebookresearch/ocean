@@ -5553,6 +5553,75 @@ void NonLinearOptimizationObjectPoint::optimizeObjectPointsForFixedPosesIFSubset
 	}
 }
 
+size_t NonLinearOptimizationObjectPoint::clampDistantObjectPoints(const Box3& cameraBoundingBox, Vector3* objectPoints, const size_t numberObjectPoints, const Scalar maximalDistanceFactor)
+{
+	ocean_assert(cameraBoundingBox.isValid());
+	ocean_assert(maximalDistanceFactor > 0);
+
+	const Scalar diagonal = cameraBoundingBox.diagonal();
+
+	if (Numeric::isEqualEps(diagonal))
+	{
+		return 0;
+	}
+
+	const Scalar maximalDistance = diagonal * maximalDistanceFactor;
+	const Vector3 boundingBoxCenter = cameraBoundingBox.center();
+
+	size_t adjusted = 0;
+
+	for (size_t n = 0; n < numberObjectPoints; ++n)
+	{
+		Vector3& objectPoint = objectPoints[n];
+
+		if (boundingBoxCenter.sqrDistance(objectPoint) > Numeric::sqr(maximalDistance))
+		{
+			Vector3 direction = objectPoint - boundingBoxCenter;
+
+			if (direction.normalize())
+			{
+				objectPoint = boundingBoxCenter + direction * maximalDistance;
+
+				++adjusted;
+			}
+			else
+			{
+				ocean_assert(false && "This should never happen!");
+			}
+		}
+	}
+
+	return adjusted;
+}
+
+size_t NonLinearOptimizationObjectPoint::clampDistantObjectPoints(const HomogenousMatrix4* world_T_cameras, const size_t numberCameras, Vector3* objectPoints, const size_t numberObjectPoints, const Scalar maximalDistanceFactor)
+{
+	ocean_assert(world_T_cameras != nullptr && numberCameras >= 1);
+
+	Box3 cameraBoundingBox;
+
+	for (size_t n = 0; n < numberCameras; ++n)
+	{
+		cameraBoundingBox += world_T_cameras[n].translation();
+	}
+
+	return clampDistantObjectPoints(cameraBoundingBox, objectPoints, numberObjectPoints, maximalDistanceFactor);
+}
+
+size_t NonLinearOptimizationObjectPoint::clampDistantObjectPointsIF(const HomogenousMatrix4* flippedCameras_T_world, const size_t numberCameras, Vector3* objectPoints, const size_t numberObjectPoints, const Scalar maximalDistanceFactor)
+{
+	ocean_assert(flippedCameras_T_world != nullptr && numberCameras >= 1);
+
+	Box3 cameraBoundingBox;
+
+	for (size_t n = 0; n < numberCameras; ++n)
+	{
+		cameraBoundingBox += Camera::invertedFlipped2Standard(flippedCameras_T_world[n]).translation();
+	}
+
+	return clampDistantObjectPoints(cameraBoundingBox, objectPoints, numberObjectPoints, maximalDistanceFactor);
+}
+
 }
 
 }

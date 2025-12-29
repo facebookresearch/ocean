@@ -635,6 +635,55 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 */
 		static bool optimizeObjectPointsAndOrientationalPosesIF(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
+		/**
+		 * Clamps object points that are too far from a given bounding box.
+		 * Object points located at a distance exceeding the bounding box diagonal multiplied by the maximal distance factor are moved to the boundary distance along the same direction from the center.
+		 * Extremely distant object points can cause numerical instability in Bundle Adjustment because small angular errors in the camera orientation translate to large positional errors for distant points, leading to poorly conditioned Jacobian matrices.
+		 * @param cameraBoundingBox The bounding box defining the valid region, must be valid
+		 * @param objectPoints The object points to be clamped, will be modified in place, can be nullptr if numberObjectPoints is 0
+		 * @param numberObjectPoints The number of object points, with range [0, infinity)
+		 * @param maximalDistanceFactor The factor to multiply with the bounding box diagonal to get the maximal allowed distance, with range (0, infinity)
+		 * @return The number of object points that were clamped
+		 */
+		static size_t clampDistantObjectPoints(const Box3& cameraBoundingBox, Vector3* objectPoints, const size_t numberObjectPoints, const Scalar maximalDistanceFactor);
+
+		/**
+		 * Clamps object points that are too far from the camera baseline.
+		 * Object points located at a distance exceeding the camera bounding box diagonal multiplied by the maximal distance factor are moved to the boundary distance along the same direction from the center.
+		 * Extremely distant object points can cause numerical instability in Bundle Adjustment because small angular errors in the camera orientation translate to large positional errors for distant points, leading to poorly conditioned Jacobian matrices.
+		 * @param world_T_cameras The camera poses defining the bounding box, at least one
+		 * @param numberCameras The number of camera poses, with range [1, infinity)
+		 * @param objectPoints The object points to be clamped, will be modified in place, can be nullptr if numberObjectPoints is 0
+		 * @param numberObjectPoints The number of object points, with range [0, infinity)
+		 * @param maximalDistanceFactor The factor to multiply with the camera bounding box diagonal to get the maximal allowed distance, with range (0, infinity)
+		 * @return The number of object points that were clamped
+		 */
+		static size_t clampDistantObjectPoints(const HomogenousMatrix4* world_T_cameras, const size_t numberCameras, Vector3* objectPoints, const size_t numberObjectPoints, const Scalar maximalDistanceFactor);
+
+		/**
+		 * Clamps object points that are too far from the camera baseline.
+		 * Object points located at a distance exceeding the camera bounding box diagonal multiplied by the maximal distance factor are moved to the boundary distance along the same direction from the center.
+		 * Extremely distant object points can cause numerical instability in Bundle Adjustment because small angular errors in the camera orientation translate to large positional errors for distant points, leading to poorly conditioned Jacobian matrices.
+		 * @param flippedCameras_T_world The inverted and flipped camera poses, at least one
+		 * @param numberCameras The number of camera poses, with range [1, infinity)
+		 * @param objectPoints The object points to be clamped, will be modified in place, can be nullptr if numberObjectPoints is 0
+		 * @param numberObjectPoints The number of object points, with range [0, infinity)
+		 * @param maximalDistanceFactor The factor to multiply with the camera bounding box diagonal to get the maximal allowed distance, with range (0, infinity)
+		 * @return The number of object points that were clamped
+		 */
+		static size_t clampDistantObjectPointsIF(const HomogenousMatrix4* flippedCameras_T_world, const size_t numberCameras, Vector3* objectPoints, const size_t numberObjectPoints, const Scalar maximalDistanceFactor);
+
+		/**
+		 * Clamps object points that are too far from the camera baseline.
+		 * Object points located at a distance exceeding the camera bounding box diagonal multiplied by the maximal distance factor are moved to the boundary distance along the same direction from the center.
+		 * Extremely distant object points can cause numerical instability in Bundle Adjustment because small angular errors in the camera orientation translate to large positional errors for distant points, leading to poorly conditioned Jacobian matrices.
+		 * @param world_T_cameras The camera poses defining the bounding box, must not be empty
+		 * @param objectPoints The object points to be clamped, will be modified in place
+		 * @param maximalDistanceFactor The factor to multiply with the camera bounding box diagonal to get the maximal allowed distance, with range (0, infinity)
+		 * @return The number of object points that were clamped
+		 */
+		static inline size_t clampDistantObjectPoints(const HomogenousMatrices4& world_T_cameras, Vectors3& objectPoints, const Scalar maximalDistanceFactor);
+
 	protected:
 
 		/**
@@ -917,6 +966,10 @@ inline bool NonLinearOptimizationObjectPoint::slowOptimizeObjectPointsAndPosesIF
 	return slowOptimizeObjectPointsAndPosesIF(anyCameraPinhole, posesIF, objectPoints, correspondenceGroups, optimizedPosesIF, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors);
 }
 
+inline size_t NonLinearOptimizationObjectPoint::clampDistantObjectPoints(const HomogenousMatrices4& world_T_cameras, Vectors3& objectPoints, const Scalar maximalDistanceFactor)
+{
+	return clampDistantObjectPoints(world_T_cameras.data(), world_T_cameras.size(), objectPoints.data(), objectPoints.size(), maximalDistanceFactor);
+}
 
 }
 

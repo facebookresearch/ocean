@@ -256,6 +256,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 		 * @return True, if succeeded
 		 */
 		static bool testOptimizeObjectPointRotationalPoses(const PinholeCamera& patternCamera, const unsigned int numberObservations, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers, const bool useRoughObjectPoint);
+
+		/**
+		 * Tests the clampDistantObjectPoints function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testClampDistantObjectPoints(const double testDuration);
 };
 
 }

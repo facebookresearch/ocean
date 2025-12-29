@@ -34,104 +34,113 @@ namespace TestGeometry
 bool TestNonLinearOptimizationObjectPoint::test(const double testDuration, Worker* worker, const TestSelector& selector)
 {
 	TestResult testResult("Object point non linear optimization test");
+	Log::info() << " ";
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointspinholecamera"))
 	{
 		testResult = testNonLinearOptimizationObjectPointsPinholeCamera(testDuration, worker);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointfisheyecamera"))
 	{
 		testResult = testNonLinearOptimizationObjectPointFisheyeCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointanycamera"))
 	{
 		testResult = testNonLinearOptimizationObjectPointAnyCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointstereoanycamera"))
 	{
 		testResult = testNonLinearOptimizationObjectPointStereoAnyCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointanycameras"))
 	{
 		testResult = testNonLinearOptimizationObjectPointAnyCameras(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointstereofisheyecamera"))
 	{
 		testResult = testNonLinearOptimizationObjectPointStereoFisheyeCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationoneposeobjectpoints"))
 	{
 		testResult = testNonLinearOptimizationOnePoseObjectPoints(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationtwoposesobjectpoints"))
 	{
 		testResult = testNonLinearOptimizationTwoPosesObjectPoints(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationposesobjectpoints"))
 	{
 		testResult = testNonLinearOptimizationPosesObjectPoints(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationorientationalposesobjectpoints"))
 	{
 		testResult = testNonLinearOptimizationOrientationalPosesObjectPoints(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("optimizeobjectpointrotationalposes"))
 	{
 		testResult = testOptimizeObjectPointRotationalPoses(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("clampdistantobjectpoints"))
+	{
+		testResult = testClampDistantObjectPoints(testDuration);
 	}
 
 	Log::info() << " ";
-
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -472,6 +481,11 @@ TEST(TestNonLinearOptimizationObjectPoint, OptimizeObjectPointRotationalPoses_50
 	}
 }
 
+TEST(TestNonLinearOptimizationObjectPoint, ClampDistantObjectPoints)
+{
+	EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testClampDistantObjectPoints(GTEST_TEST_DURATION));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointsPinholeCamera(const double testDuration, Worker* worker)
@@ -703,7 +717,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -858,7 +872,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -1028,7 +1042,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -1260,7 +1274,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -1431,7 +1445,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -1658,7 +1672,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -2355,7 +2369,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -3077,7 +3091,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -3373,7 +3387,7 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 			performance.stop();
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	std::sort(initialErrors.begin(), initialErrors.end());
 	std::sort(optimizedErrors.begin(), optimizedErrors.end());
@@ -3439,6 +3453,128 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 	}
 
 	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestNonLinearOptimizationObjectPoint::testClampDistantObjectPoints(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing clampDistantObjectPoints():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	constexpr Scalar maximalDistanceFactor = Scalar(10);
+	constexpr Scalar boundingBoxSize = Scalar(10);
+	constexpr Scalar extremeDistanceFactor = Scalar(100);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const size_t numberCameras = size_t(RandomI::random(randomGenerator, 1u, 50u));
+		const size_t numberObjectPoints = size_t(RandomI::random(randomGenerator, 1u, 100u));
+
+		HomogenousMatrices4 world_T_cameras(numberCameras);
+
+		for (size_t n = 0; n < numberCameras; ++n)
+		{
+			const Vector3 translation = Random::vector3(randomGenerator, -boundingBoxSize, boundingBoxSize);
+			const Quaternion rotation = Random::quaternion(randomGenerator);
+
+			world_T_cameras[n] = HomogenousMatrix4(translation, rotation);
+		}
+
+		Box3 cameraBoundingBox;
+		for (const HomogenousMatrix4& world_T_camera : world_T_cameras)
+		{
+			cameraBoundingBox += world_T_camera.translation();
+		}
+
+		const Scalar diagonal = cameraBoundingBox.diagonal();
+
+		if (Numeric::isEqualEps(diagonal))
+		{
+			continue;
+		}
+
+		const Scalar maximalDistance = diagonal * maximalDistanceFactor;
+		const Vector3 boundingBoxCenter = cameraBoundingBox.center();
+
+		Vectors3 objectPoints(numberObjectPoints);
+		Vectors3 originalObjectPoints(numberObjectPoints);
+
+		for (size_t n = 0; n < numberObjectPoints; ++n)
+		{
+			Vector3 objectPoint = boundingBoxCenter + Random::vector3(randomGenerator, -maximalDistance * Scalar(0.5), maximalDistance * Scalar(0.5));
+
+			if (RandomI::random(randomGenerator, 1u, 100u) <= 20u) // 20%
+			{
+				const Vector3 direction = Random::vector3(randomGenerator);
+				objectPoint = boundingBoxCenter + direction * (maximalDistance * extremeDistanceFactor);
+			}
+
+			objectPoints[n] = objectPoint;
+			originalObjectPoints[n] = objectPoint;
+		}
+
+		size_t adjusted = 0;
+
+		if (RandomI::boolean(randomGenerator))
+		{
+			adjusted = clampDistantObjectPoints(world_T_cameras, objectPoints, maximalDistanceFactor);
+		}
+		else
+		{
+			HomogenousMatrices4 flippedCameras_T_world(numberCameras);
+
+			for (size_t n = 0; n < numberCameras; ++n)
+			{
+				flippedCameras_T_world[n] = PinholeCamera::standard2InvertedFlipped(world_T_cameras[n]);
+			}
+
+			adjusted = clampDistantObjectPointsIF(flippedCameras_T_world.data(), flippedCameras_T_world.size(), objectPoints.data(), objectPoints.size(), maximalDistanceFactor);
+		}
+
+		size_t expectedAdjusted = 0;
+
+		for (size_t n = 0; n < numberObjectPoints; ++n)
+		{
+			const Vector3& objectPoint = objectPoints[n];
+			const Vector3& originalPoint = originalObjectPoints[n];
+
+			const Scalar distanceFromCenter = boundingBoxCenter.distance(objectPoint);
+			const Scalar originalDistanceFromCenter = boundingBoxCenter.distance(originalPoint);
+
+			OCEAN_EXPECT_TRUE(validation, distanceFromCenter <= maximalDistance + Numeric::weakEps());
+
+			if (originalDistanceFromCenter <= maximalDistance)
+			{
+				OCEAN_EXPECT_TRUE(validation, objectPoint.isEqual(originalPoint, Numeric::weakEps()));
+			}
+			else
+			{
+				++expectedAdjusted;
+
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(distanceFromCenter, maximalDistance, Numeric::weakEps()));
+
+				Vector3 originalDirection = originalPoint - boundingBoxCenter;
+				Vector3 clampedDirection = objectPoint - boundingBoxCenter;
+
+				if (originalDirection.normalize() && clampedDirection.normalize())
+				{
+					OCEAN_EXPECT_TRUE(validation, originalDirection.isEqual(clampedDirection, Numeric::weakEps()));
+				}
+			}
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, adjusted, expectedAdjusted);
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
