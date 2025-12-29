@@ -399,7 +399,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::popcount128(const __m128i value)
 
 #else
 
-	return (unsigned int)__popcnt(_mm_cvtsi128_si32(value)) + (unsigned int)__popcnt(_mm_cvtsi128_si32(_mm_srli_si128(value, 4))) + (unsigned int)__popcnt(_mm_cvtsi128_si32(_mm_srli_si128(value, 4))) + (unsigned int)__popcnt(_mm_cvtsi128_si32(_mm_srli_si128(value, 4)));
+	return (unsigned int)__popcnt(_mm_cvtsi128_si32(value)) + (unsigned int)__popcnt(_mm_cvtsi128_si32(_mm_srli_si128(value, 4))) + (unsigned int)__popcnt(_mm_cvtsi128_si32(_mm_srli_si128(value, 8))) + (unsigned int)__popcnt(_mm_cvtsi128_si32(_mm_srli_si128(value, 12)));
 
 #endif
 }
