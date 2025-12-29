@@ -1274,7 +1274,7 @@ inline bool SpatialDistribution::DistributionArray::operator==(const Distributio
 		return false;
 	}
 
-	return indexGroups_ == distributionArray.indexGroups_ && hasCopiedNeighborhood8_ && distributionArray.hasCopiedNeighborhood8_;
+	return indexGroups_ == distributionArray.indexGroups_ && hasCopiedNeighborhood8_ == distributionArray.hasCopiedNeighborhood8_;
 }
 
 inline bool SpatialDistribution::DistributionArray::operator!=(const DistributionArray& distributionArray) const
@@ -1548,7 +1548,7 @@ inline bool SpatialDistribution::OccupancyArray::operator()(const Vector2& point
 	const unsigned int xBin = horizontalBin(point.x());
 	const unsigned int yBin = verticalBin(point.y());
 
-	return xBin < horizontalBins_ && yBin < horizontalBins_ && occupancy_[yBin * horizontalBins_ + xBin] != 0u;
+	return xBin < horizontalBins_ && yBin < verticalBins_ && occupancy_[yBin * horizontalBins_ + xBin] != 0u;
 }
 
 inline bool SpatialDistribution::OccupancyArray::operator[](const unsigned int index) const
@@ -1658,7 +1658,7 @@ SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(co
 	ocean_assert(verticalBins > 0);
 
 	ocean_assert(Scalar(horizontalBins) <= width);
-	ocean_assert(Scalar(verticalBins) <= width);
+	ocean_assert(Scalar(verticalBins) <= height);
 
 	// reserve enough array elements
 	DistributionArray indexArray(left, top, width, height, horizontalBins, verticalBins);

@@ -321,7 +321,7 @@ SpatialDistribution::OccupancyArray SpatialDistribution::createOccupancyArray(co
 	ocean_assert(verticalBins > 0u);
 
 	ocean_assert(Scalar(horizontalBins) <= width);
-	ocean_assert(Scalar(verticalBins) <= width);
+	ocean_assert(Scalar(verticalBins) <= height);
 
 	// reserve enough array elements
 	OccupancyArray occupancyArray(left, top, width, height, horizontalBins, verticalBins);
