@@ -281,6 +281,13 @@ class FREAKDescriptorT : public FREAKDescriptor
 		OCEAN_FORCE_INLINE unsigned int distance(const FREAKDescriptorT<tSize>& descriptor) const;
 
 		/**
+		 * Returns the minimal distance between this descriptor and a vector of descriptors.
+		 * @param descriptors The vector of descriptors to compare against, must not be empty
+		 * @return The minimal distance between this descriptor and any of the given descriptors (the hamming distance), with range [0, tSize * 8]
+		 */
+		unsigned int distance(const std::vector<FREAKDescriptorT<tSize>>& descriptors) const;
+
+		/**
 		 * Returns true if this is a valid descriptor
 		 * @return True if this is a valid descriptor, otherwise false
 		 */
@@ -297,6 +304,22 @@ class FREAKDescriptorT : public FREAKDescriptor
 		 * @return Reference to this object
 		 */
 		inline FREAKDescriptorT& operator=(const FREAKDescriptorT<tSize>&) noexcept = default;
+
+		/**
+		 * Returns the minimal distance between a descriptor and a vector of descriptors.
+		 * This is a static function that can be used as a function pointer for template functions.
+		 * @param descriptor The descriptor to compare, must be valid
+		 * @param descriptors The vector of descriptors to compare against, must not be empty
+		 * @return The minimal distance between the descriptor and any of the given descriptors (the hamming distance), with range [0, tSize * 8]
+		 */
+		static unsigned int calculateDistance(const FREAKDescriptorT<tSize>& descriptor, const std::vector<FREAKDescriptorT<tSize>>& descriptors);
+
+		/**
+		 * Returns the descriptor matching threshold based on a percentage of the descriptor size.
+		 * @param percent The percentage of the descriptor bits to use as threshold, with range [0, 100]
+		 * @return The threshold value (number of bits that can differ), with range [0, tSize * 8]
+		 */
+		static constexpr unsigned int descriptorMatchingThreshold(const unsigned int percent);
 
 		/**
 		 * Compute a FREAK descriptor for a single image point.
@@ -580,6 +603,45 @@ OCEAN_FORCE_INLINE unsigned int FREAKDescriptorT<tSize>::distance(const FREAKDes
 	ocean_assert(bestDistance != (unsigned int)(-1));
 
 	return bestDistance;
+}
+
+template <size_t tSize>
+unsigned int FREAKDescriptorT<tSize>::distance(const std::vector<FREAKDescriptorT<tSize>>& descriptors) const
+{
+	ocean_assert(isValid());
+	ocean_assert(!descriptors.empty());
+
+	unsigned int bestDistance = (unsigned int)(-1);
+
+	for (const FREAKDescriptorT<tSize>& descriptor : descriptors)
+	{
+		ocean_assert(descriptor.isValid());
+
+		const unsigned int currentDistance = distance(descriptor);
+
+		if (currentDistance < bestDistance)
+		{
+			bestDistance = currentDistance;
+		}
+	}
+
+	return bestDistance;
+}
+
+template <size_t tSize>
+unsigned int FREAKDescriptorT<tSize>::calculateDistance(const FREAKDescriptorT<tSize>& descriptor, const std::vector<FREAKDescriptorT<tSize>>& descriptors)
+{
+	return descriptor.distance(descriptors);
+}
+
+template <size_t tSize>
+constexpr unsigned int FREAKDescriptorT<tSize>::descriptorMatchingThreshold(const unsigned int percent)
+{
+	ocean_assert(percent <= 100u);
+
+	constexpr size_t descriptorBits = tSize * 8;
+
+	return (unsigned int)(descriptorBits * percent / 100u);
 }
 
 template <size_t tSize>
