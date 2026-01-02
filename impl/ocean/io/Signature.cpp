@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#ifdef OCEAN_IO_SIGNATURE_ENABLED
+
 #include "ocean/io/Signature.h"
 
 #include <openssl/md5.h>
@@ -227,3 +229,5 @@ bool Signature::determineSignatureSubjectName(const std::wstring& filePath, std:
 }
 
 }
+
+#endif // OCEAN_IO_SIGNATURE_ENABLED
