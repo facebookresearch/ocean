@@ -17,7 +17,7 @@ function(write_library_version VERSION_STRING)
 
 	# List of known third-party library names (must match dependency names)
 	set(KNOWN_LIBS
-		"assimp" "curl" "eigen" "freetype" "giflib" "gl" "googletest"
+		"assimp" "curl" "directshow" "eigen" "freetype" "giflib" "gl" "googletest"
 		"libjpeg-turbo" "libpng" "libtiff" "libusb" "libyuv"
 		"mbedtls" "openxr" "protozero" "tinyxml2" "vtzero" "wxwidgets" "zlib"
 		"android" "android_native_app_glue" "arcore-android-sdk"
@@ -56,7 +56,7 @@ function(get_library_install_root LIBRARY_NAME OUTPUT_VAR)
 
 	# List of known third-party library names (must match dependency names)
 	set(KNOWN_LIBS
-		"assimp" "curl" "eigen" "freetype" "giflib" "gl" "googletest"
+		"assimp" "curl" "directshow" "eigen" "freetype" "giflib" "gl" "googletest"
 		"libjpeg-turbo" "libpng" "libtiff" "libusb" "libyuv"
 		"mbedtls" "openxr" "protozero" "tinyxml2" "vtzero" "wxwidgets" "zlib"
 		"android" "android_native_app_glue" "arcore-android-sdk"
