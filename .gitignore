@@ -1,3 +1,5 @@
+.vs
+.vs/*
 bin
 bin/*
 bin_cmake
