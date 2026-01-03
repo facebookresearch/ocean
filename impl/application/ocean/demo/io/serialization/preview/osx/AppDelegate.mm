@@ -20,6 +20,8 @@
 
 #include "ocean/media/imageio/ImageIO.h"
 
+#include "ocean/media/imageio/Image.h"
+
 #include "ocean/platform/apple/System.h"
 
 #include "ocean/platform/apple/macos/FrameView.h"
@@ -53,6 +55,12 @@
 
 	/// The drag and drop overlay view.
 	DragDropView* dragDropView_;
+
+	/// True if the next frame should be saved to disk.
+	bool saveNextFrame_;
+
+	/// Counter for saved frames.
+	unsigned int savedFrameCounter_;
 }
 
 /// The window object.
@@ -178,6 +186,8 @@
 	updateTimer_ = [NSTimer scheduledTimerWithTimeInterval:1.0 / 60.0 target:self selector:@selector(updateFrame) userInfo:nil repeats:YES];
 
 	rotationAngle_ = 0;
+	saveNextFrame_ = false;
+	savedFrameCounter_ = 0u;
 
 	keyEventMonitor_ = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent*(NSEvent* event)
 	{
@@ -196,6 +206,10 @@
 				self->rotationAngle_ = (self->rotationAngle_ - 90 + 360) % 360;
 
 				Log::info() << "Rotation angle: " << self->rotationAngle_ << " degrees";
+			}
+			else if (character == 's')
+			{
+				self->saveNextFrame_ = true;
 			}
 		}
 		return event;
@@ -225,6 +239,22 @@
 				if (rotationAngle_ != 0)
 				{
 					CV::FrameTransposer::Comfort::rotate(frame, rotationAngle_);
+				}
+
+				if (saveNextFrame_)
+				{
+					saveNextFrame_ = false;
+
+					const std::string filename = std::string(std::getenv("HOME")) + "/Desktop/frame_" + std::to_string(savedFrameCounter_++) + ".png";
+
+					if (Media::ImageIO::Image::writeImage(frame, filename, true))
+					{
+						Log::info() << "Saved frame to: " << filename;
+					}
+					else
+					{
+						Log::error() << "Failed to save frame to: " << filename;
+					}
 				}
 
 				frameView_.setFrame(frame);
