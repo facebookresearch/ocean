@@ -271,7 +271,8 @@ bool GLESTexture2D::needsSecondaryTextureObjects(const FrameType& frameType)
 		case FrameType::FORMAT_RGBA32:
 		case FrameType::FORMAT_RGBA4444:
 		case FrameType::FORMAT_YA16:
-		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
+		case FrameType::FORMAT_Y8_FULL_RANGE:
 		case FrameType::FORMAT_Y10_PACKED:
 		case FrameType::FORMAT_RGGB10_PACKED:
 			return false;
@@ -322,7 +323,8 @@ bool GLESTexture2D::determineInternalFrameType(const FrameType& frameType, Frame
 		case FrameType::FORMAT_RGBA32:
 		case FrameType::FORMAT_RGBA4444:
 		case FrameType::FORMAT_YA16:
-		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
+		case FrameType::FORMAT_Y8_FULL_RANGE:
 			internalFrameType = frameType;
 			return true;
 
@@ -439,7 +441,8 @@ bool GLESTexture2D::determinePrimaryTextureProperties(const FrameType& frameType
 			type = GL_UNSIGNED_BYTE;
 			return true;
 
-		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
+		case FrameType::FORMAT_Y8_FULL_RANGE:
 			width = frameType.width();
 			height = frameType.height();
 #ifdef OCEAN_RENDERING_GLES_USE_ES
@@ -552,7 +555,8 @@ bool GLESTexture2D::determineSecondaryTextureProperties(const FrameType& frameTy
 		case FrameType::FORMAT_RGBA32:
 		case FrameType::FORMAT_RGBA4444:
 		case FrameType::FORMAT_YA16:
-		case FrameType::FORMAT_Y8:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
+		case FrameType::FORMAT_Y8_FULL_RANGE:
 			width = 0u;
 			height = 0u;
 			format = 0;

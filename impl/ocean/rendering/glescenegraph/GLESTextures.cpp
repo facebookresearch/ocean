@@ -98,7 +98,8 @@ GLESAttribute::ProgramType GLESTextures::necessaryShader() const
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_BGRA);
 				break;
 
-			case FrameType::FORMAT_Y8:
+			case FrameType::FORMAT_Y8_LIMITED_RANGE: // we are currently using the same shader for limited and full value range, may have a minor impact on color precision
+			case FrameType::FORMAT_Y8_FULL_RANGE:
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_Y);
 				break;
 
