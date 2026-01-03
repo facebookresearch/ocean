@@ -128,28 +128,31 @@ class OCEAN_RENDERING_GLES_EXPORT GLESUndistortedBackground :
 	protected:
 
 		/// Triangle strips for the background geometry.
-		TriangleStripsRef backgroundTriangleStrips;
+		TriangleStripsRef triangleStrips_;
 
 		/// Vertexset for the background geometry.
-		VertexSetRef backgroundVertexSet;
+		VertexSetRef vertexSet_;
 
 		/// Textures object holding the 2D texture.
-		TexturesRef backgroundTextures;
+		TexturesRef textures_;
 
 		/// Attribute set holding rendering attributes of the background object.
-		AttributeSetRef backgroundAttributeSet;
+		AttributeSetRef attributeSet_;
 
 		/// Number of horizontal elements.
-		unsigned int backgroundHorizontalElements;
+		unsigned int horizontalElements_ = 0u;
 
 		/// Number of vertical elements.
-		unsigned int backgroundVerticalElements;
+		unsigned int verticalElements_ = 0u;
 
 		/// Timestamp of the camera frame type.
-		Timestamp backgroundCameraTimestamp;
+		Timestamp cameraTimestamp_;
 
-		SquareMatrix4 backgroundNormalizedCameraFrustumMatrix;
-		Texture2DRef backgroundOffsetTexture;
+		/// The normalized camera frustum matrix mapping 3D points to texture coordinates [0, 1], combining frustum projection, texture scaling, and inverse background transform.
+		SquareMatrix4 normalizedCameraFrustumMatrix_;
+
+		/// Optional texture storing per-pixel offset data for additional distortion correction during background rendering.
+		Texture2DRef offsetTexture_;
 };
 
 }

@@ -6,7 +6,6 @@
  */
 
 #include "ocean/rendering/glescenegraph/GLESUndistortedBackground.h"
-#include "ocean/rendering/glescenegraph/GLESTriangleStrips.h"
 
 #include "ocean/rendering/DepthAttribute.h"
 
@@ -25,28 +24,28 @@ GLESUndistortedBackground::GLESUndistortedBackground() :
 	GLESBackground(),
 	UndistortedBackground(),
 #ifdef OCEAN_HARDWARE_REDUCED_PERFORMANCE
-	backgroundHorizontalElements(1),
-	backgroundVerticalElements(1)
+	horizontalElements_(1u),
+	verticalElements_(1u)
 #else
-	backgroundHorizontalElements(20),
-	backgroundVerticalElements(20)
+	horizontalElements_(20u),
+	verticalElements_(20u)
 #endif
 {
-	backgroundTriangleStrips = engine().factory().createTriangleStrips();
-	backgroundVertexSet = engine().factory().createVertexSet();
-	backgroundTextures = engine().factory().createTextures();
+	triangleStrips_ = engine().factory().createTriangleStrips();
+	vertexSet_ = engine().factory().createVertexSet();
+	textures_ = engine().factory().createTextures();
 	texture_ = engine().factory().createMediaTexture2D();
-	backgroundAttributeSet = engine().factory().createAttributeSet();
+	attributeSet_ = engine().factory().createAttributeSet();
 
 	DepthAttributeRef depthAttribute = engine().factory().createDepthAttribute();
 	depthAttribute->setTestingEnabled(false);
 	depthAttribute->setWritingEnabled(false);
-	backgroundAttributeSet->addAttribute(depthAttribute);
+	attributeSet_->addAttribute(depthAttribute);
 
-	backgroundTextures->setTexture(texture_, 0);
-	backgroundAttributeSet->addAttribute(backgroundTextures);
+	textures_->setTexture(texture_, 0);
+	attributeSet_->addAttribute(textures_);
 
-	backgroundTriangleStrips->setVertexSet(backgroundVertexSet);
+	triangleStrips_->setVertexSet(vertexSet_);
 
 	registerDynamicUpdateObject();
 }
@@ -58,12 +57,12 @@ GLESUndistortedBackground::~GLESUndistortedBackground()
 
 const Timestamp& GLESUndistortedBackground::cameraTimestamp() const
 {
-	return backgroundCameraTimestamp;
+	return cameraTimestamp_;
 }
 
 const SquareMatrix4& GLESUndistortedBackground::normalizedCameraFrustumMatrix() const
 {
-	return backgroundNormalizedCameraFrustumMatrix;
+	return normalizedCameraFrustumMatrix_;
 }
 
 Texture2DRef GLESUndistortedBackground::texture() const
@@ -73,38 +72,38 @@ Texture2DRef GLESUndistortedBackground::texture() const
 
 Texture2DRef GLESUndistortedBackground::offsetTexture() const
 {
-	return backgroundOffsetTexture;
+	return offsetTexture_;
 }
 
 unsigned int GLESUndistortedBackground::horizontalElements() const
 {
-	return backgroundHorizontalElements;
+	return horizontalElements_;
 }
 
 unsigned int GLESUndistortedBackground::verticalElements() const
 {
-	return backgroundVerticalElements;
+	return verticalElements_;
 }
 
 void GLESUndistortedBackground::setHorizontalElements(const unsigned int elements)
 {
-	if (elements < 1 || backgroundHorizontalElements == elements)
+	if (elements < 1 || horizontalElements_ == elements)
 	{
 		return;
 	}
 
-	backgroundHorizontalElements = elements;
+	horizontalElements_ = elements;
 	cameraChanged_ = true;
 }
 
 void GLESUndistortedBackground::setVerticalElements(const unsigned int elements)
 {
-	if (elements < 1 || backgroundVerticalElements == elements)
+	if (elements < 1 || verticalElements_ == elements)
 	{
 		return;
 	}
 
-	backgroundVerticalElements = elements;
+	verticalElements_ = elements;
 	cameraChanged_ = true;
 }
 
@@ -130,12 +129,12 @@ void GLESUndistortedBackground::addToTraverser(const GLESFramebuffer& /*framebuf
 
 	const SquareMatrix3 normalMatrix(camera_T_parent.rotationMatrix().inverted().transposed());
 
-	traverser.addRenderable(backgroundTriangleStrips, backgroundAttributeSet, HomogenousMatrix4(backgroundPosition, backgroundOrientation), normalMatrix, lights);
+	traverser.addRenderable(triangleStrips_, attributeSet_, HomogenousMatrix4(backgroundPosition, backgroundOrientation), normalMatrix, lights);
 }
 
 void GLESUndistortedBackground::onMediumCameraChanged(const Timestamp timestamp)
 {
-	backgroundCameraTimestamp = timestamp;
+	cameraTimestamp_ = timestamp;
 
 	rebuildPrimitive();
 }
@@ -143,7 +142,7 @@ void GLESUndistortedBackground::onMediumCameraChanged(const Timestamp timestamp)
 void GLESUndistortedBackground::rebuildPrimitive()
 {
 	ocean_assert(mediumCamera_);
-	ocean_assert(backgroundHorizontalElements > 0u && backgroundVerticalElements > 0u);
+	ocean_assert(horizontalElements_ > 0u && verticalElements_ > 0u);
 	ocean_assert(backgroundDistance > Numeric::eps());
 
 	const SquareMatrix4 frustumMatrix(mediumCamera_.frustumMatrix(Scalar(0.01), backgroundDistance));
@@ -158,28 +157,29 @@ void GLESUndistortedBackground::rebuildPrimitive()
 
 	const SquareMatrix4 scalingMatrix(scalingValues);
 
-	backgroundNormalizedCameraFrustumMatrix = scalingMatrix * frustumMatrix * HomogenousMatrix4(backgroundPosition, backgroundOrientation).inverted();
+	normalizedCameraFrustumMatrix_ = scalingMatrix * frustumMatrix * HomogenousMatrix4(backgroundPosition, backgroundOrientation).inverted();
 
 	const Scalar left = -Numeric::tan(mediumCamera_.fovXLeft()) * backgroundDistance;
 	const Scalar right = Numeric::tan(mediumCamera_.fovXRight()) * backgroundDistance;
 	const Scalar top = Numeric::tan(mediumCamera_.fovYTop()) * backgroundDistance;
 	const Scalar bottom = -Numeric::tan(mediumCamera_.fovYBottom()) * backgroundDistance;
 
-	const Scalar horizontalStep = (right - left) / Scalar(backgroundHorizontalElements);
-	const Scalar verticalStep = (top - bottom) / Scalar(backgroundVerticalElements);
+	const Scalar horizontalStep = (right - left) / Scalar(horizontalElements_);
+	const Scalar verticalStep = (top - bottom) / Scalar(verticalElements_);
 
 	Vertices vertices;
 	Normals normals;
 	TextureCoordinates textureCoordinates;
-	VertexIndexGroups strips(backgroundVerticalElements);
-	unsigned int vertexCount = (unsigned int)(-1);
+	VertexIndexGroups strips(verticalElements_);
 
-	for (unsigned int y = 0; y < backgroundVerticalElements; y++)
+	unsigned int vertexCount = 0u;
+
+	for (unsigned int y = 0; y < verticalElements_; y++)
 	{
 		VertexIndices& strip = strips[y];
 
-		const Scalar yTexelTop = Scalar(y) / Scalar(backgroundVerticalElements);
-		const Scalar yTexelBottom = Scalar(y + 1) / Scalar(backgroundVerticalElements);
+		const Scalar yTexelTop = Scalar(y) / Scalar(verticalElements_);
+		const Scalar yTexelBottom = Scalar(y + 1) / Scalar(verticalElements_);
 
 		const Scalar yPixelTop = Scalar(mediumCamera_.height() - 1) * yTexelTop;
 		const Scalar yPixelBottom = Scalar(mediumCamera_.height() - 1) * yTexelBottom;
@@ -187,12 +187,12 @@ void GLESUndistortedBackground::rebuildPrimitive()
 		ocean_assert(yPixelTop >= 0 && yPixelTop < Scalar(mediumCamera_.height()));
 		ocean_assert(yPixelBottom >= 0 && yPixelBottom < Scalar(mediumCamera_.height()));
 
-		for (unsigned int x = 0; x <= backgroundHorizontalElements; x++)
+		for (unsigned int x = 0; x <= horizontalElements_; x++)
 		{
-			vertices.push_back(Vertex(left + Scalar(x) * horizontalStep, top - Scalar(y) * verticalStep, -backgroundDistance));
-			vertices.push_back(Vertex(left + Scalar(x) * horizontalStep, top - Scalar(y + 1) * verticalStep, -backgroundDistance));
+			vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y) * verticalStep, -backgroundDistance);
+			vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y + 1) * verticalStep, -backgroundDistance);
 
-			const Scalar xTexel = Scalar(x) / Scalar(backgroundHorizontalElements);
+			const Scalar xTexel = Scalar(x) / Scalar(horizontalElements_);
 			const Scalar xPixel = Scalar(mediumCamera_.width() - 1) * xTexel;
 			ocean_assert(xPixel >= 0 && xPixel < Scalar(mediumCamera_.width()));
 
@@ -208,22 +208,22 @@ void GLESUndistortedBackground::rebuildPrimitive()
 			const Scalar xDistortedTexelBottom = distortedBottom.x() / Scalar(mediumCamera_.width() - 1);
 			const Scalar yDistortedTexelBottom = distortedBottom.y() / Scalar(mediumCamera_.height() - 1);
 
-			textureCoordinates.push_back(TextureCoordinate(xDistortedTexelTop, 1 - yDistortedTexelTop));
-			textureCoordinates.push_back(TextureCoordinate(xDistortedTexelBottom, 1 - yDistortedTexelBottom));
+			textureCoordinates.emplace_back(xDistortedTexelTop, 1 - yDistortedTexelTop);
+			textureCoordinates.emplace_back(xDistortedTexelBottom, 1 - yDistortedTexelBottom);
 
-			strip.push_back(++vertexCount);
-			strip.push_back(++vertexCount);
+			strip.push_back(vertexCount++);
+			strip.push_back(vertexCount++);
 		}
 	}
 
 	normals.insert(normals.begin(), vertices.size(), Vector3(0, 0, 1));
 
-	backgroundVertexSet->setTextureCoordinates(textureCoordinates, 0);
-	backgroundVertexSet->setVertices(vertices);
-	backgroundVertexSet->setNormals(normals);
+	vertexSet_->setTextureCoordinates(textureCoordinates, 0);
+	vertexSet_->setVertices(vertices);
+	vertexSet_->setNormals(normals);
 
-	backgroundTriangleStrips->setVertexSet(backgroundVertexSet);
-	backgroundTriangleStrips->setStrips(strips);
+	triangleStrips_->setVertexSet(vertexSet_);
+	triangleStrips_->setStrips(strips);
 }
 
 }
