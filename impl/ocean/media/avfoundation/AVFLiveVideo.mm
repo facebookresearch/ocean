@@ -874,7 +874,7 @@ void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera cam
 				}
 				else
 				{
-					Log::debug() << "AVFLiveVideo: No precise camera calibration found for '" << url() << "', using default as provided by Android";
+					Log::debug() << "AVFLiveVideo: No precise camera calibration found for '" << url() << "', using default as provided by Apple";
 				}
 			}
 			else
