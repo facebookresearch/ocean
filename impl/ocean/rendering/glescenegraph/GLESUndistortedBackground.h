@@ -140,10 +140,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESUndistortedBackground :
 		AttributeSetRef attributeSet_;
 
 		/// Number of horizontal elements.
-		unsigned int horizontalElements_ = 0u;
+		unsigned int horizontalElements_ = 20u;
 
 		/// Number of vertical elements.
-		unsigned int verticalElements_ = 0u;
+		unsigned int verticalElements_ = 20u;
 
 		/// Timestamp of the camera frame type.
 		Timestamp cameraTimestamp_;

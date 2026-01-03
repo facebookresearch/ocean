@@ -6,11 +6,6 @@
  */
 
 #include "ocean/rendering/UndistortedBackground.h"
-#include "ocean/rendering/Engine.h"
-
-#include "ocean/io/LegacyCameraCalibrationManager.h"
-
-#include "ocean/math/AnyCamera.h"
 
 namespace Ocean
 {
@@ -34,7 +29,7 @@ const Media::FrameMediumRef& UndistortedBackground::medium() const
 	return medium_;
 }
 
-const PinholeCamera& UndistortedBackground::camera() const
+const SharedAnyCamera& UndistortedBackground::camera() const
 {
 	return mediumCamera_;
 }
@@ -49,7 +44,8 @@ void UndistortedBackground::setMedium(const Media::FrameMediumRef& medium)
 	const ScopedLock scopedLock(objectLock);
 
 	medium_ = medium;
-	mediumCamera_ = PinholeCamera();
+
+	mediumCamera_ = nullptr;
 
 	if (texture_)
 	{
@@ -97,28 +93,29 @@ void UndistortedBackground::onDynamicUpdate(const ViewRef& /*view*/, const Times
 
 		if (anyCamera)
 		{
-			if (anyCamera->name() == AnyCameraPinhole::WrappedCamera::name())
+			if (mediumCamera_ != nullptr)
 			{
-				const PinholeCamera& pinholeCamera = ((const AnyCameraPinhole&)(*anyCamera)).actualCamera();
-
-				if (mediumCamera_ != pinholeCamera)
+				if (mediumCamera_.get() != anyCamera.get())
 				{
-					mediumCamera_ = pinholeCamera;
-					cameraChanged_ = true;
+					if (!mediumCamera_->isEqual(*anyCamera))
+					{
+						cameraChanged_ = true;
+					}
 				}
 			}
 			else
 			{
-				ocean_assert(false && "Current not supported!");
+				mediumCamera_ = anyCamera;
+				cameraChanged_ = true;
 			}
 		}
 		else
 		{
-			if (!mediumCamera_.isValid() && frame)
+			if (!mediumCamera_ && frame)
 			{
 				Log::warning() << "Using default field of view in UndistortedBackground node";
 
-				mediumCamera_ = PinholeCamera(frame->width(), frame->height(), Numeric::deg2rad(60));
+				mediumCamera_ = std::make_shared<AnyCameraPinhole>(PinholeCamera(frame->width(), frame->height(), Numeric::deg2rad(60)));
 				cameraChanged_ = true;
 			}
 		}

@@ -216,22 +216,26 @@ bool GLFrameView::screen2frame(const Scalar xScreen, const Scalar yScreen, Scala
 		ocean_assert(background_);
 		ocean_assert(framebuffer_);
 
-		const PinholeCamera camera(background_->camera());
-		const Quaternion backgroundOrientation = background_->orientation();
+		const SharedAnyCamera camera(background_->camera());
 
-		unsigned int left, top, width, height;
-		framebuffer_->viewport(left, top, width, height);
+		if (camera)
+		{
+			const Quaternion backgroundOrientation = background_->orientation();
 
-		const Line3 pickingRay(framebuffer_->view()->viewingRay((unsigned int)(xScreen + Scalar(0.5)), (unsigned int)(yScreen + Scalar(0.5)), (unsigned int)width, (unsigned int)height));
+			unsigned int left, top, width, height;
+			framebuffer_->viewport(left, top, width, height);
 
-		Vector3 direction(backgroundOrientation.inverted() * pickingRay.direction());
+			const Line3 pickingRay(framebuffer_->view()->viewingRay((unsigned int)(xScreen + Scalar(0.5)), (unsigned int)(yScreen + Scalar(0.5)), (unsigned int)width, (unsigned int)height));
 
-		const Vector2 cameraCoordinate(camera.projectToImage<true>(HomogenousMatrix4(true), direction, false));
+			Vector3 direction(backgroundOrientation.inverted() * pickingRay.direction());
 
-		xFrame = cameraCoordinate.x();
-		yFrame = cameraCoordinate.y();
+			const Vector2 cameraCoordinate(camera->projectToImage(HomogenousMatrix4(true), direction));
 
-		return true;
+			xFrame = cameraCoordinate.x();
+			yFrame = cameraCoordinate.y();
+
+			return true;
+		}
 	}
 	catch (...)
 	{

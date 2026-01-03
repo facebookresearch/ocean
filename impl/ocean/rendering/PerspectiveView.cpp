@@ -58,7 +58,7 @@ Scalar PerspectiveView::idealFovX(bool* validCamera) const
 		return fovX();
 	}
 
-	const PinholeCamera backgroundCamera(background->camera());
+	const SharedAnyCamera backgroundCamera(background->camera());
 	if (!backgroundCamera)
 	{
 		return fovX();
@@ -67,9 +67,9 @@ Scalar PerspectiveView::idealFovX(bool* validCamera) const
 	const Vectors2 corners =
 	{
 		Vector2(0, 0),
-		Vector2(0, Scalar(backgroundCamera.height() - 1u)),
-		Vector2(Scalar(backgroundCamera.width() - 1u), Scalar(backgroundCamera.height() - 1u)),
-		Vector2(Scalar(backgroundCamera.width() - 1u), 0)
+		Vector2(0, Scalar(backgroundCamera->height() - 1u)),
+		Vector2(Scalar(backgroundCamera->width() - 1u), Scalar(backgroundCamera->height() - 1u)),
+		Vector2(Scalar(backgroundCamera->width() - 1u), 0)
 	};
 
 	Scalar minAbsoluteHorizontal = Numeric::maxValue();
@@ -77,12 +77,16 @@ Scalar PerspectiveView::idealFovX(bool* validCamera) const
 
 	for (const Vector2& corner : corners)
 	{
-		const Vector2 undistorted = backgroundCamera.undistort<true>(corner);
+		Vector3 vector = backgroundCamera->vectorIF(corner);
 
-		const Vector3 vector = background->orientation() * backgroundCamera.vectorToPlane(undistorted, 1);
+		ocean_assert(vector.z() > 0);
+		vector /= vector.z();
+		ocean_assert(vector.z() == 1);
 
-		minAbsoluteHorizontal = std::min(minAbsoluteHorizontal, Numeric::abs(vector.x()));
-		minAbsoluteVertical = std::min(minAbsoluteVertical, Numeric::abs(vector.y()));
+		const Vector3 rotatedVector = background->orientation() * vector;
+
+		minAbsoluteHorizontal = std::min(minAbsoluteHorizontal, Numeric::abs(rotatedVector.x()));
+		minAbsoluteVertical = std::min(minAbsoluteVertical, Numeric::abs(rotatedVector.y()));
 	}
 
 	if (Numeric::isEqualEps(minAbsoluteHorizontal) || Numeric::isEqualEps(minAbsoluteVertical))

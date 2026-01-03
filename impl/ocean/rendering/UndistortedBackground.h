@@ -13,7 +13,7 @@
 #include "ocean/rendering/DynamicObject.h"
 #include "ocean/rendering/MediaTexture2D.h"
 
-#include "ocean/math/PinholeCamera.h"
+#include "ocean/math/AnyCamera.h"
 
 #include "ocean/media/FrameMedium.h"
 
@@ -37,7 +37,7 @@ using UndistortedBackgroundRef = SmartObjectRef<UndistortedBackground>;
  * This class is the base class for all undistorted backgrounds.<br>
  * The undistorted background uses a frame medium object as background image<br>
  * and uses corresponding camera calibration parameters for correct visualization.<br>
- * @see FrameMedium, PinholeCamera
+ * @see FrameMedium, AnyCamera
  * @ingroup rendering
  */
 class OCEAN_RENDERING_EXPORT UndistortedBackground :
@@ -69,7 +69,7 @@ class OCEAN_RENDERING_EXPORT UndistortedBackground :
 		 * Returns the camera object related to the background image.
 		 * @return Current camera object
 		 */
-		virtual const PinholeCamera& camera() const;
+		virtual const SharedAnyCamera& camera() const;
 
 		/**
 		 * Returns the display type of this background object.
@@ -135,7 +135,7 @@ class OCEAN_RENDERING_EXPORT UndistortedBackground :
 		Media::FrameMediumRef medium_;
 
 		/// The camera profile of the medium for the last update timestamp.
-		PinholeCamera mediumCamera_;
+		SharedAnyCamera mediumCamera_;
 
 		/// True, if the camera has changed since the last update.
 		bool cameraChanged_ = false;

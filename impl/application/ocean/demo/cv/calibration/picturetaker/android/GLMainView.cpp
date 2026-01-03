@@ -284,11 +284,11 @@ bool GLMainView::render()
 
 		const bool isNotRoated = Numeric::isEqualEps(view_R_background.angle());
 
-		const PinholeCamera& camera = background_->camera();
+		const SharedAnyCamera camera = background_->camera();
 
-		if (camera.isValid())
+		if (camera)
 		{
-			const Scalar backgroundFovX = isNotRoated ? camera.fovX() : camera.fovY();
+			const Scalar backgroundFovX = isNotRoated ? camera->fovX() : camera->fovY();
 
 			ocean_assert(framebuffer_);
 			const Rendering::PerspectiveViewRef view = framebuffer_->view();

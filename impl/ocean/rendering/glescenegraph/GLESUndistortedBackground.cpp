@@ -22,14 +22,7 @@ namespace GLESceneGraph
 
 GLESUndistortedBackground::GLESUndistortedBackground() :
 	GLESBackground(),
-	UndistortedBackground(),
-#ifdef OCEAN_HARDWARE_REDUCED_PERFORMANCE
-	horizontalElements_(1u),
-	verticalElements_(1u)
-#else
-	horizontalElements_(20u),
-	verticalElements_(20u)
-#endif
+	UndistortedBackground()
 {
 	triangleStrips_ = engine().factory().createTriangleStrips();
 	vertexSet_ = engine().factory().createVertexSet();
@@ -145,74 +138,124 @@ void GLESUndistortedBackground::rebuildPrimitive()
 	ocean_assert(horizontalElements_ > 0u && verticalElements_ > 0u);
 	ocean_assert(backgroundDistance > Numeric::eps());
 
-	const SquareMatrix4 frustumMatrix(mediumCamera_.frustumMatrix(Scalar(0.01), backgroundDistance));
-
-	const Scalar scalingValues[16] =
+	if (!mediumCamera_)
 	{
-		texture_->imageTextureRatio().x() * Scalar(0.5), 0, 0, 0,
-		0, texture_->imageTextureRatio().y() * Scalar(0.5), 0, 0,
-		0, 0, Scalar(0.5), 0,
-		texture_->imageTextureRatio().x() * Scalar(0.5), texture_->imageTextureRatio().y() * Scalar(0.5), Scalar(0.5), 1
-	};
-
-	const SquareMatrix4 scalingMatrix(scalingValues);
-
-	normalizedCameraFrustumMatrix_ = scalingMatrix * frustumMatrix * HomogenousMatrix4(backgroundPosition, backgroundOrientation).inverted();
-
-	const Scalar left = -Numeric::tan(mediumCamera_.fovXLeft()) * backgroundDistance;
-	const Scalar right = Numeric::tan(mediumCamera_.fovXRight()) * backgroundDistance;
-	const Scalar top = Numeric::tan(mediumCamera_.fovYTop()) * backgroundDistance;
-	const Scalar bottom = -Numeric::tan(mediumCamera_.fovYBottom()) * backgroundDistance;
-
-	const Scalar horizontalStep = (right - left) / Scalar(horizontalElements_);
-	const Scalar verticalStep = (top - bottom) / Scalar(verticalElements_);
+		return;
+	}
 
 	Vertices vertices;
 	Normals normals;
 	TextureCoordinates textureCoordinates;
 	VertexIndexGroups strips(verticalElements_);
 
-	unsigned int vertexCount = 0u;
-
-	for (unsigned int y = 0; y < verticalElements_; y++)
+	if (mediumCamera_->name() == AnyCameraPinhole::WrappedCamera::name())
 	{
-		VertexIndices& strip = strips[y];
+		const AnyCameraPinhole& anyCameraPinhole = dynamic_cast<const AnyCameraPinhole&>(*mediumCamera_);
+		const PinholeCamera& pinholeCamera = anyCameraPinhole.actualCamera();
 
-		const Scalar yTexelTop = Scalar(y) / Scalar(verticalElements_);
-		const Scalar yTexelBottom = Scalar(y + 1) / Scalar(verticalElements_);
+		const SquareMatrix4 frustumMatrix(pinholeCamera.frustumMatrix(Scalar(0.01), backgroundDistance));
 
-		const Scalar yPixelTop = Scalar(mediumCamera_.height() - 1) * yTexelTop;
-		const Scalar yPixelBottom = Scalar(mediumCamera_.height() - 1) * yTexelBottom;
-
-		ocean_assert(yPixelTop >= 0 && yPixelTop < Scalar(mediumCamera_.height()));
-		ocean_assert(yPixelBottom >= 0 && yPixelBottom < Scalar(mediumCamera_.height()));
-
-		for (unsigned int x = 0; x <= horizontalElements_; x++)
+		const Scalar scalingValues[16] =
 		{
-			vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y) * verticalStep, -backgroundDistance);
-			vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y + 1) * verticalStep, -backgroundDistance);
+			texture_->imageTextureRatio().x() * Scalar(0.5), 0, 0, 0,
+			0, texture_->imageTextureRatio().y() * Scalar(0.5), 0, 0,
+			0, 0, Scalar(0.5), 0,
+			texture_->imageTextureRatio().x() * Scalar(0.5), texture_->imageTextureRatio().y() * Scalar(0.5), Scalar(0.5), 1
+		};
 
-			const Scalar xTexel = Scalar(x) / Scalar(horizontalElements_);
-			const Scalar xPixel = Scalar(mediumCamera_.width() - 1) * xTexel;
-			ocean_assert(xPixel >= 0 && xPixel < Scalar(mediumCamera_.width()));
+		const SquareMatrix4 scalingMatrix(scalingValues);
 
-			const Vector2 undistortedTop(xPixel, yPixelTop);
-			const Vector2 undistortedBottom(xPixel, yPixelBottom);
+		normalizedCameraFrustumMatrix_ = scalingMatrix * frustumMatrix * HomogenousMatrix4(backgroundPosition, backgroundOrientation).inverted();
 
-			const Vector2 distortedTop(mediumCamera_.distort<true>(undistortedTop));
-			const Vector2 distortedBottom(mediumCamera_.distort<true>(undistortedBottom));
+		const Scalar left = -Numeric::tan(pinholeCamera.fovXLeft()) * backgroundDistance;
+		const Scalar right = Numeric::tan(pinholeCamera.fovXRight()) * backgroundDistance;
+		const Scalar top = Numeric::tan(pinholeCamera.fovYTop()) * backgroundDistance;
+		const Scalar bottom = -Numeric::tan(pinholeCamera.fovYBottom()) * backgroundDistance;
 
-			const Scalar xDistortedTexelTop = distortedTop.x() / Scalar(mediumCamera_.width() - 1);
-			const Scalar yDistortedTexelTop = distortedTop.y() / Scalar(mediumCamera_.height() - 1);
+		const Scalar horizontalStep = (right - left) / Scalar(horizontalElements_);
+		const Scalar verticalStep = (top - bottom) / Scalar(verticalElements_);
 
-			const Scalar xDistortedTexelBottom = distortedBottom.x() / Scalar(mediumCamera_.width() - 1);
-			const Scalar yDistortedTexelBottom = distortedBottom.y() / Scalar(mediumCamera_.height() - 1);
+		unsigned int vertexCount = 0u;
 
-			textureCoordinates.emplace_back(xDistortedTexelTop, 1 - yDistortedTexelTop);
-			textureCoordinates.emplace_back(xDistortedTexelBottom, 1 - yDistortedTexelBottom);
+		for (unsigned int y = 0; y < verticalElements_; y++)
+		{
+			VertexIndices& strip = strips[y];
 
-			strip.push_back(vertexCount++);
-			strip.push_back(vertexCount++);
+			const Scalar yTexelTop = Scalar(y) / Scalar(verticalElements_);
+			const Scalar yTexelBottom = Scalar(y + 1) / Scalar(verticalElements_);
+
+			const Scalar yPixelTop = Scalar(pinholeCamera.height() - 1) * yTexelTop;
+			const Scalar yPixelBottom = Scalar(pinholeCamera.height() - 1) * yTexelBottom;
+
+			ocean_assert(yPixelTop >= 0 && yPixelTop < Scalar(pinholeCamera.height()));
+			ocean_assert(yPixelBottom >= 0 && yPixelBottom < Scalar(pinholeCamera.height()));
+
+			for (unsigned int x = 0; x <= horizontalElements_; x++)
+			{
+				vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y) * verticalStep, -backgroundDistance);
+				vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y + 1) * verticalStep, -backgroundDistance);
+
+				const Scalar xTexel = Scalar(x) / Scalar(horizontalElements_);
+				const Scalar xPixel = Scalar(pinholeCamera.width() - 1) * xTexel;
+				ocean_assert(xPixel >= 0 && xPixel < Scalar(pinholeCamera.width()));
+
+				const Vector2 undistortedTop(xPixel, yPixelTop);
+				const Vector2 undistortedBottom(xPixel, yPixelBottom);
+
+				const Vector2 distortedTop(pinholeCamera.distort<true>(undistortedTop));
+				const Vector2 distortedBottom(pinholeCamera.distort<true>(undistortedBottom));
+
+				const Scalar xDistortedTexelTop = distortedTop.x() / Scalar(pinholeCamera.width() - 1);
+				const Scalar yDistortedTexelTop = distortedTop.y() / Scalar(pinholeCamera.height() - 1);
+
+				const Scalar xDistortedTexelBottom = distortedBottom.x() / Scalar(pinholeCamera.width() - 1);
+				const Scalar yDistortedTexelBottom = distortedBottom.y() / Scalar(pinholeCamera.height() - 1);
+
+				textureCoordinates.emplace_back(xDistortedTexelTop, 1 - yDistortedTexelTop);
+				textureCoordinates.emplace_back(xDistortedTexelBottom, 1 - yDistortedTexelBottom);
+
+				strip.push_back(vertexCount++);
+				strip.push_back(vertexCount++);
+			}
+		}
+	}
+	else
+	{
+		normalizedCameraFrustumMatrix_.toNull();
+
+		unsigned int vertexCount = 0u;
+
+		for (unsigned int y = 0; y < verticalElements_; y++)
+		{
+			VertexIndices& strip = strips[y];
+
+			const Scalar yTexelTop = Scalar(y) / Scalar(verticalElements_);
+			const Scalar yTexelBottom = Scalar(y + 1) / Scalar(verticalElements_);
+
+			const Scalar yPixelTop = Scalar(mediumCamera_->height() - 1) * yTexelTop;
+			const Scalar yPixelBottom = Scalar(mediumCamera_->height() - 1) * yTexelBottom;
+
+			ocean_assert(yPixelTop >= 0 && yPixelTop < Scalar(mediumCamera_->height()));
+			ocean_assert(yPixelBottom >= 0 && yPixelBottom < Scalar(mediumCamera_->height()));
+
+			for (unsigned int x = 0; x <= horizontalElements_; x++)
+			{
+				const Scalar xTexel = Scalar(x) / Scalar(horizontalElements_);
+				const Scalar xPixel = Scalar(mediumCamera_->width() - 1) * xTexel;
+				ocean_assert(xPixel >= 0 && xPixel < Scalar(mediumCamera_->width()));
+
+				const Vector3 topRay = mediumCamera_->vector(Vector2(xPixel, yPixelTop), true /*makeUnitVector*/) * backgroundDistance;
+				const Vector3 bottomRay = mediumCamera_->vector(Vector2(xPixel, yPixelBottom), true /*makeUnitVector*/) * backgroundDistance;
+
+				vertices.push_back(topRay);
+				vertices.push_back(bottomRay);
+
+				textureCoordinates.emplace_back(xTexel, Scalar(1) - yTexelTop);
+				textureCoordinates.emplace_back(xTexel, Scalar(1) - yTexelBottom);
+
+				strip.push_back(vertexCount++);
+				strip.push_back(vertexCount++);
+			}
 		}
 	}
 

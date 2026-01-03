@@ -65,11 +65,11 @@ using namespace Ocean;
 
 		const bool isNotRoated = Numeric::isEqualEps(view_R_background.angle());
 
-		const PinholeCamera& camera = renderingUndistortedBackground_->camera();
+		const SharedAnyCamera camera = renderingUndistortedBackground_->camera();
 
-		if (camera.isValid())
+		if (camera)
 		{
-			const Scalar backgroundFovX = isNotRoated ? camera.fovX() : camera.fovY();
+			const Scalar backgroundFovX = isNotRoated ? camera->fovX() : camera->fovY();
 
 			constexpr Scalar borderAngle = Numeric::deg2rad(2);
 			renderingView_->setFovX(backgroundFovX + borderAngle);

@@ -213,9 +213,10 @@ using namespace Ocean;
 
 	const Vector3 objectPoint = viewCamera.vector(Vector2(Scalar(viewPoint.x), Scalar(viewPoint.y)));
 
-	const PinholeCamera mediumCamera = renderingUndistortedBackground_->camera();
+	const SharedAnyCamera mediumCamera = renderingUndistortedBackground_->camera();
+	ocean_assert(mediumCamera);
 
-	const Vector2 mediumPoint = mediumCamera.projectToImage<true>(HomogenousMatrix4(true), objectPoint, false);
+	const Vector2 mediumPoint = mediumCamera->projectToImage(HomogenousMatrix4(true), objectPoint);
 
 	return CGPointMake(double(mediumPoint.x()), double(mediumPoint.y()));
 }
