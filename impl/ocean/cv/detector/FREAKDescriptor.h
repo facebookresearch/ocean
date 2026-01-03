@@ -306,8 +306,15 @@ class FREAKDescriptorT : public FREAKDescriptor
 		inline FREAKDescriptorT& operator=(const FREAKDescriptorT<tSize>&) noexcept = default;
 
 		/**
+		 * Returns the distance between two descriptors.
+		 * @param descriptorA The first descriptor to use, must be valid
+		 * @param descriptorB The second descriptor to use, must be valid
+		 * @return The distance between both descriptors
+		 */
+		static unsigned int calculateDistance(const FREAKDescriptorT<tSize>& descriptorA, const FREAKDescriptorT<tSize>& descriptorB);
+
+		/**
 		 * Returns the minimal distance between a descriptor and a vector of descriptors.
-		 * This is a static function that can be used as a function pointer for template functions.
 		 * @param descriptor The descriptor to compare, must be valid
 		 * @param descriptors The vector of descriptors to compare against, must not be empty
 		 * @return The minimal distance between the descriptor and any of the given descriptors (the hamming distance), with range [0, tSize * 8]
@@ -626,6 +633,12 @@ unsigned int FREAKDescriptorT<tSize>::distance(const std::vector<FREAKDescriptor
 	}
 
 	return bestDistance;
+}
+
+template <size_t tSize>
+unsigned int FREAKDescriptorT<tSize>::calculateDistance(const FREAKDescriptorT<tSize>& descriptorA, const FREAKDescriptorT<tSize>& descriptorB)
+{
+	return descriptorA.distance(descriptorB);
 }
 
 template <size_t tSize>
