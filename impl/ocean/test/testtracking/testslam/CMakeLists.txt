@@ -5,12 +5,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(testoculustags)
-add_subdirectory(testslam)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "ocean_test_testtracking")
+    set(OCEAN_TARGET_NAME "ocean_test_testtracking_testslam")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -27,7 +24,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_SLAM_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
@@ -42,25 +39,17 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_math
             ocean_test
-            ocean_tracking
+            ocean_test_testtracking
+            ocean_tracking_slam
         PRIVATE
             ocean_cv
             ocean_cv_detector
             ocean_geometry
-            ocean_media
             ocean_system
-            ocean_tracking_point
     )
 
     if (ANDROID)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PRIVATE
-                ocean_media_android
-                ocean_media_openimagelibraries
-                ocean_platform_android
-                ocean_platform_linux
-                ocean_tracking_pattern
-        )
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android)
     endif()
 
     # Installation
@@ -70,7 +59,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testtracking
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testtracking/testslam
             COMPONENT include
     )
 
@@ -78,7 +67,7 @@ endif()
 
 if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_test_testtracking_gtest")
+    set(OCEAN_TARGET_NAME "ocean_test_testtracking_testslam_gtest")
 
     find_package(GTest REQUIRED)
 
@@ -87,8 +76,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
-    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestTracking.cpp")
-    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestPatternTracker.cpp")
+    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestSLAM.cpp")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -101,8 +89,8 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             "-DOCEAN_USE_GTEST"
     )
 
-    if(BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_EXPORT")
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_SLAM_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
@@ -118,10 +106,16 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_base
         PRIVATE
             ocean_cv
+            ocean_cv_detector
+            ocean_devices
+            ocean_devices_serialization
+            ocean_geometry
+            ocean_io
             ocean_math
             ocean_system
             ocean_test
-            ocean_tracking_point
+            ocean_test_testtracking
+            ocean_tracking_slam
     )
 
     include(GoogleTest)
