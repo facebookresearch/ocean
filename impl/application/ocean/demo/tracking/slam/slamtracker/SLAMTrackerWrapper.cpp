@@ -386,12 +386,13 @@ bool SLAMTrackerWrapper::trackNewFrame(Frame& outputFrame, bool* lastFrameReache
 
 	HomogenousMatrix4 world_T_camera(false);
 
-	const Vector3 cameraGravity = sensorAccessor_.cameraGravity(device_Q_camera, frameTimestamp_);
-	const Quaternion anyWorld_Q_camera = sensorAccessor_.anyWorld_Q_camera(device_Q_camera, frameTimestamp_);
-
 	Tracking::SLAM::TrackerMono::DebugData debugData;
 
+	const Vector3 cameraGravity = sensorAccessor_.cameraGravity(device_Q_camera, frameTimestamp_);
+
 #ifndef DISABLE_TRACKING
+
+	const Quaternion anyWorld_Q_camera = sensorAccessor_.anyWorld_Q_camera(device_Q_camera, frameTimestamp_);
 
 	if (warmupTimestamp_.isInvalid())
 	{
