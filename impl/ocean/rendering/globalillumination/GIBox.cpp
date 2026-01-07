@@ -206,7 +206,7 @@ void GIBox::rebuildPrimitives()
 
 	for (unsigned int n = 0; n < 12; n++)
 	{
-		triangleFaces.push_back(TriangleFace(index));
+		triangleFaces.emplace_back(index);
 		index += 3;
 	}
 
