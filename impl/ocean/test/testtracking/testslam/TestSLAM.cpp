@@ -6,6 +6,7 @@
  */
 
 #include "ocean/test/testtracking/testslam/TestSLAM.h"
+#include "ocean/test/testtracking/testslam/TestFramePyramidManager.h"
 #include "ocean/test/testtracking/testslam/TestLocalizedObjectPoint.h"
 
 #include "ocean/test/TestResult.h"
@@ -81,6 +82,15 @@ bool testSLAM(const double testDuration, Worker& /*worker*/, const std::string& 
 		Log::info() << " ";
 		Log::info() << " ";
 		testResult = TestLocalizedObjectPoint::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("framepyramidmanager"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestFramePyramidManager::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
