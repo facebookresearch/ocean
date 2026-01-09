@@ -278,7 +278,7 @@ Frame Utilities::visualizeDistortionValidity(const AnyCameraClipper& cameraClipp
 
 	const unsigned int width = camera.width();
 	const unsigned int height = camera.height();
-	
+
 	const Scalar diagonal = Numeric::sqrt(Scalar(width * width + height * height));
 
 	const Scalar width_2 = Scalar(width) * Scalar(0.5);
@@ -303,7 +303,7 @@ Frame Utilities::visualizeDistortionValidity(const AnyCameraClipper& cameraClipp
 		for (const FiniteLine2& cameraBoundarySegment : cameraBoundarySegments)
 		{
 			const Vector2 nextPoint = camera.projectToImageIF(Vector3(cameraBoundarySegment.point1(), Scalar(1)));
-			
+
 			if (previousPoint.sqrDistance(nextPoint) <= Numeric::sqr(diagonal))
 			{
 				constexpr uint8_t black = 0x00u;
@@ -343,7 +343,7 @@ Frame Utilities::visualizeDistortionValidity(const AnyCameraClipper& cameraClipp
 
 			const Vector2 point0 = Vector2(normalizedPoint0.x() * xRadiusNormalization, normalizedPoint0.y() * yRadiusNormalization);
 			const Vector2 point1 = Vector2(normalizedPoint1.x() * xRadiusNormalization, normalizedPoint1.y() * yRadiusNormalization);
-			
+
 			if (point0.sqrDistance(point1) <= Numeric::sqr(diagonal))
 			{
 				constexpr uint8_t black = 0x00u;
