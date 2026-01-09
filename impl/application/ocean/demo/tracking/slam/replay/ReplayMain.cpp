@@ -18,12 +18,9 @@
 
 #include "ocean/devices/serialization/SerializerDevicePlayer.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
 #include "ocean/io/File.h"
 
-#include "ocean/media/ImageSequence.h"
 #include "ocean/media/Manager.h"
-#include "ocean/media/Movie.h"
 #include "ocean/media/MovieRecorder.h"
 
 #include "ocean/tracking/Utilities.h"

@@ -31,6 +31,10 @@
 #include "ocean/scenedescription/Manager.h"
 #include "ocean/scenedescription/Scene.h"
 
+#include "ocean/scenedescription/sdl/assimp/Assimp.h"
+#include "ocean/scenedescription/sdl/obj/OBJ.h"
+#include "ocean/scenedescription/sdx/x3d/X3D.h"
+
 #include "ocean/tracking/slam/TrackerMono.h"
 
 #if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
@@ -45,10 +49,6 @@
 	#include "ocean/media/mediafoundation/MediaFoundation.h"
 	#include "ocean/rendering/glescenegraph/windows/Windows.h"
 #endif
-
-#include "ocean/scenedescription/sdl/assimp/Assimp.h"
-#include "ocean/scenedescription/sdl/obj/OBJ.h"
-#include "ocean/scenedescription/sdx/x3d/X3D.h"
 
 using namespace Ocean;
 using namespace Ocean::Tracking::SLAM;
