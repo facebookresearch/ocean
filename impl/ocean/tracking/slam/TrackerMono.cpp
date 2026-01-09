@@ -3243,7 +3243,7 @@ bool TrackerMono::determineBundleAdjustmentTopology(const Index32 necessaryMapVe
 				ocean_assert(Camera::isObjectPointInFrontIF(flippedCamera_T_world, localizedObjectPoint.position()));
 #endif
 
-				objectPointToObservations[objectPointId].emplace_back(poseIndex, imagePoint);
+				objectPointToObservations[objectPointId].emplace_back(Index32(poseIndex), imagePoint);
 			}
 		}
 
