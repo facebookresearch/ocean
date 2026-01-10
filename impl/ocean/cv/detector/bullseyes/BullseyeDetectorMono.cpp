@@ -6,6 +6,7 @@
  */
 
 #include "ocean/cv/detector/bullseyes/BullseyeDetectorMono.h"
+#include "ocean/cv/detector/bullseyes/BullseyesDebugElements.h"
 
 #include "ocean/cv/FramePyramid.h"
 
@@ -406,6 +407,8 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 		if (segment_5_size >= blackRingSegmentMin && segment_5_size <= blackRingSegmentMax)
 		{
 			// we have a valid combination of segments
+
+			BullseyesDebugElements::get().drawBullseyeCandidateInRow(yFrame, y, segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size);
 
 			const unsigned int xCenter = (segment_3_start_black + segment_4_start_white + 1u) / 2u;
 

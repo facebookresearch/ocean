@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50A1B0012F0000000000001A /* BullseyesDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000000 /* BullseyesDebugElements.h */; };
+		50A1B0012F0000000000001B /* BullseyesDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000000 /* BullseyesDebugElements.h */; };
+		50A1B0012F0000000000001C /* BullseyesDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000000 /* BullseyesDebugElements.h */; };
+		50A1B0012F0000000000001D /* BullseyesDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000000 /* BullseyesDebugElements.h */; };
+		50A1B0022F0000000000001A /* BullseyesDebugElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000001 /* BullseyesDebugElements.cpp */; };
+		50A1B0022F0000000000001B /* BullseyesDebugElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000001 /* BullseyesDebugElements.cpp */; };
+		50A1B0022F0000000000001C /* BullseyesDebugElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000001 /* BullseyesDebugElements.cpp */; };
+		50A1B0022F0000000000001D /* BullseyesDebugElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A1B0002F00000000000001 /* BullseyesDebugElements.cpp */; };
 		50663C402EA0240C00368918 /* TransitionHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = 50663C3F2EA0240C00368918 /* TransitionHistory.h */; };
 		50663C412EA0240C00368918 /* TransitionHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = 50663C3F2EA0240C00368918 /* TransitionHistory.h */; };
 		50663C422EA0240C00368918 /* TransitionHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = 50663C3F2EA0240C00368918 /* TransitionHistory.h */; };
@@ -62,6 +70,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		50A1B0002F00000000000000 /* BullseyesDebugElements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BullseyesDebugElements.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/BullseyesDebugElements.h; sourceTree = "<group>"; };
+		50A1B0002F00000000000001 /* BullseyesDebugElements.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BullseyesDebugElements.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/BullseyesDebugElements.cpp; sourceTree = "<group>"; };
 		50663C3F2EA0240C00368918 /* TransitionHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TransitionHistory.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/TransitionHistory.h; sourceTree = "<group>"; };
 		50663C442EA0246F00368918 /* TransitionHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TransitionHistory.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/TransitionHistory.cpp; sourceTree = "<group>"; };
 		506C93002EABEB53007A28EC /* BullseyeDetectorMono.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BullseyeDetectorMono.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/BullseyeDetectorMono.h; sourceTree = "<group>"; };
@@ -121,6 +131,7 @@
 				506C93002EABEB53007A28EC /* BullseyeDetectorMono.h */,
 				506C930A2EABECB8007A28EC /* BullseyeDetectorStereo.h */,
 				509E2DA529809C5D00E0DD7E /* Bullseyes.h */,
+				50A1B0002F00000000000000 /* BullseyesDebugElements.h */,
 				50663C3F2EA0240C00368918 /* TransitionHistory.h */,
 				50927F792EA00E4A00B6244F /* Utilities.h */,
 			);
@@ -154,6 +165,7 @@
 				509D72E92E9DBB950005EC30 /* Bullseye.cpp */,
 				506C93052EABEBE7007A28EC /* BullseyeDetectorMono.cpp */,
 				506C930F2EABECDA007A28EC /* BullseyeDetectorStereo.cpp */,
+				50A1B0002F00000000000001 /* BullseyesDebugElements.cpp */,
 				50663C442EA0246F00368918 /* TransitionHistory.cpp */,
 				50927F7E2EA00E6900B6244F /* Utilities.cpp */,
 			);
@@ -171,6 +183,7 @@
 				506C93012EABEB53007A28EC /* BullseyeDetectorMono.h in Headers */,
 				506C93162EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA729809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				50A1B0012F0000000000001A /* BullseyesDebugElements.h in Headers */,
 				506C930B2EABECB8007A28EC /* BullseyeDetectorStereo.h in Headers */,
 				50663C412EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E62E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -185,6 +198,7 @@
 				506C93042EABEB53007A28EC /* BullseyeDetectorMono.h in Headers */,
 				506C93152EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA829809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				50A1B0012F0000000000001B /* BullseyesDebugElements.h in Headers */,
 				506C930E2EABECB8007A28EC /* BullseyeDetectorStereo.h in Headers */,
 				50663C422EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E82E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -199,6 +213,7 @@
 				506C93022EABEB53007A28EC /* BullseyeDetectorMono.h in Headers */,
 				506C93172EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA629809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				50A1B0012F0000000000001C /* BullseyesDebugElements.h in Headers */,
 				506C930C2EABECB8007A28EC /* BullseyeDetectorStereo.h in Headers */,
 				50663C432EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E52E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -213,6 +228,7 @@
 				506C93032EABEB53007A28EC /* BullseyeDetectorMono.h in Headers */,
 				506C93182EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA929809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				50A1B0012F0000000000001D /* BullseyesDebugElements.h in Headers */,
 				506C930D2EABECB8007A28EC /* BullseyeDetectorStereo.h in Headers */,
 				50663C402EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E72E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -381,6 +397,7 @@
 				506C931C2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93072EABEBE7007A28EC /* BullseyeDetectorMono.cpp in Sources */,
 				506C93132EABECDA007A28EC /* BullseyeDetectorStereo.cpp in Sources */,
+				50A1B0022F0000000000001A /* BullseyesDebugElements.cpp in Sources */,
 				50927F812EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72EC2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
@@ -394,6 +411,7 @@
 				506C931A2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93082EABEBE7007A28EC /* BullseyeDetectorMono.cpp in Sources */,
 				506C93102EABECDA007A28EC /* BullseyeDetectorStereo.cpp in Sources */,
+				50A1B0022F0000000000001B /* BullseyesDebugElements.cpp in Sources */,
 				50927F822EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72EA2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
@@ -407,6 +425,7 @@
 				506C931B2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93062EABEBE7007A28EC /* BullseyeDetectorMono.cpp in Sources */,
 				506C93122EABECDA007A28EC /* BullseyeDetectorStereo.cpp in Sources */,
+				50A1B0022F0000000000001C /* BullseyesDebugElements.cpp in Sources */,
 				50927F802EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72ED2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
@@ -420,6 +439,7 @@
 				506C931D2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93092EABEBE7007A28EC /* BullseyeDetectorMono.cpp in Sources */,
 				506C93112EABECDA007A28EC /* BullseyeDetectorStereo.cpp in Sources */,
+				50A1B0022F0000000000001D /* BullseyesDebugElements.cpp in Sources */,
 				50927F7F2EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72EB2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
