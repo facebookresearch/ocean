@@ -253,6 +253,11 @@ bool DebugElements::elementIfActivate(const uint32_t elementId, Frame& frame, co
 	return true;
 }
 
+Frame DebugElements::elementForCurrentHierarchy(const uint32_t elementId, const bool popElement)
+{
+	return element(elementId, hierarchy_, popElement);
+}
+
 std::vector<DebugElements::Hierarchy> DebugElements::hierarchies(const uint32_t elementId) const
 {
 	const ScopedLock scopedLock(lock_);

@@ -240,6 +240,17 @@ class OCEAN_BASE_EXPORT DebugElements
 		bool elementIfActivate(const uint32_t elementId, Frame& frame, const Hierarchy& hierarchy, const bool popElement = false);
 
 		/**
+		 * Returns the most recent debug frame of a specific debug element for the current hierarchy.
+		 * The current hierarchy is defined by previous calls to pushHierarchyItem() and popHierarchyItem().
+		 * Beware: Due to performance reasons, the specific debug element must be activated before calling this function.
+		 * @param elementId The id for which the frame will be returned
+		 * @param popElement True, to remove the debug element; False, to keep the debug element until it gets updated again
+		 * @return The copy of the frame which is associated with the id and current hierarchy, an invalid frame in case the element does not exist
+		 * @see isElementActive(), pushHierarchyItem(), popHierarchyItem().
+		 */
+		Frame elementForCurrentHierarchy(const uint32_t elementId, const bool popElement = false);
+
+		/**
 		 * Returns all existing hierarchies for a given element id.
 		 * @param elementId The id for which all hierarchies will be returned
 		 * @return The hierarchies of the element, an empty vector if the element does not exist
