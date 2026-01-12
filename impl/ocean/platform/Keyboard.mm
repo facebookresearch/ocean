@@ -25,57 +25,57 @@ namespace Platform
 
 bool Keyboard::isKeyDownApple(const Key key, const bool synchron)
 {
-  ocean_assert(key != KEY_NONE);
+	ocean_assert(key != KEY_NONE);
 
-  const UInt32 state = synchron ? GetCurrentEventKeyModifiers() : GetCurrentKeyModifiers();
+	const UInt32 state = synchron ? GetCurrentEventKeyModifiers() : GetCurrentKeyModifiers();
 
-  // optionKey = 0x0100 Left Command Key down?
-  // optionKey = 0x0100 Right Command Key down?
+	// optionKey = 0x0100 Left Command Key down?
+	// optionKey = 0x0100 Right Command Key down?
 
-  switch (key)
-  {
-    case KEY_SHIFT_LEFT:
-      // shiftKey = 0x0200 Shift key down?
-      return (state & 0x0200u) != 0u;
+	switch (key)
+	{
+		case KEY_SHIFT_LEFT:
+			// shiftKey = 0x0200 Shift key down?
+			return (state & 0x0200u) != 0u;
 
-    case KEY_SHIFT_RIGHT:
-      // rightShiftKey = 0x0200 Right Shift Key down?
-      return (state & 0x0200u) != 0u;
+		case KEY_SHIFT_RIGHT:
+			// rightShiftKey = 0x0200 Right Shift Key down?
+			return (state & 0x0200u) != 0u;
 
-    case KEY_CONTROL_LEFT:
-      // controlKey = 0x1000 Control key down?
-      return (state & 0x1000u) != 0u;
+		case KEY_CONTROL_LEFT:
+			// controlKey = 0x1000 Control key down?
+			return (state & 0x1000u) != 0u;
 
-    case KEY_CONTROL_RIGHT:
-      // rightControlKey = 0x1000 Right Control Key down?
-      return (state & 0x1000u) != 0u;
+		case KEY_CONTROL_RIGHT:
+			// rightControlKey = 0x1000 Right Control Key down?
+			return (state & 0x1000u) != 0u;
 
-    case KEY_MENU_LEFT:
-      // optionKey = 0x0800 Option key down?
-      return (state & 0x800u) != 0u;
+		case KEY_MENU_LEFT:
+			// optionKey = 0x0800 Option key down?
+			return (state & 0x800u) != 0u;
 
-    case KEY_MENU_RIGHT:
-      // rightOptionKey = 0x0800 Right Option Key down?
-      return (state & 0x0800u) != 0u;
+		case KEY_MENU_RIGHT:
+			// rightOptionKey = 0x0800 Right Option Key down?
+			return (state & 0x0800u) != 0u;
 
-    case KEY_SPACE:
-      return keyStateApple(kVK_Space, synchron);
+		case KEY_SPACE:
+			return keyStateApple(kVK_Space, synchron);
 
-    default:
-      break;
-  }
+		default:
+			break;
+	}
 
-  ocean_assert(false && "Invalid key");
-  return false;
+	ocean_assert(false && "Invalid key");
+	return false;
 }
 
 bool Keyboard::keyStateApple(const unsigned short nVirtualKey, const bool synchron)
 {
-  unsigned char keyMap[16] = {0};
+	unsigned char keyMap[16] = {0};
 
-  GetKeys((BigEndianUInt32*)&keyMap);
+	GetKeys((BigEndianUInt32*)&keyMap);
 
-  return 0 != ((keyMap[nVirtualKey >> 3u] >> (nVirtualKey & 7u)) & 1u);
+	return 0 != ((keyMap[nVirtualKey >> 3u] >> (nVirtualKey & 7u)) & 1u);
 }
 
 } // namespace Platform

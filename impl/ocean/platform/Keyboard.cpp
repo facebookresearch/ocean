@@ -18,14 +18,18 @@ bool Keyboard::allKeysDown(const Key keys, const bool synchron)
 	static_assert(KEY_LAST_UNIQUE_VALUE <= 0x40000000, "Invalid KEY_LAST_UNIQUE_VALUE value");
 
 	if (keys == KEY_NONE)
+	{
 		return true;
+	}
 
 	Key value = Key(1);
 
 	while (value <= KEY_LAST_UNIQUE_VALUE)
 	{
 		if ((keys & value) != 0 && !isKeyDown(value, synchron))
+		{
 			return false;
+		}
 
 		value = Key(value << 1);
 	}
@@ -38,14 +42,18 @@ bool Keyboard::oneKeyDown(const Key keys, const bool synchron)
 	static_assert(KEY_LAST_UNIQUE_VALUE <= 0x40000000, "Invalid KEY_LAST_UNIQUE_VALUE value");
 
 	if (keys == KEY_NONE)
+	{
 		return true;
+	}
 
 	Key value = Key(1);
 
 	while (value <= KEY_LAST_UNIQUE_VALUE)
 	{
 		if ((keys & value) != 0 && isKeyDown(value, synchron))
+		{
 			return true;
+		}
 
 		value = Key(value << 1);
 	}
@@ -57,19 +65,19 @@ bool Keyboard::isKeyDown(const Key key, const bool synchron)
 {
 #if defined(_WINDOWS)
 
-  return isKeyDownWindows(key, synchron);
+	return isKeyDownWindows(key, synchron);
 
 #elif defined(__APPLE__)
 
-  return isKeyDownApple(key, synchron);
+	return isKeyDownApple(key, synchron);
 
 #else
 
 	OCEAN_SUPPRESS_UNUSED_WARNING(key);
 	OCEAN_SUPPRESS_UNUSED_WARNING(synchron);
 
-  ocean_assert(false && "Missing implementation!");
-  return false;
+	ocean_assert(false && "Missing implementation!");
+	return false;
 
 #endif
 }
@@ -122,7 +130,9 @@ bool Keyboard::keyStateWindows(const int nVirtualKey, const bool synchron)
 		return (GetKeyState(nVirtualKey) & 0xF0) != 0;
 	}
 	else
+	{
 		return GetAsyncKeyState(nVirtualKey) != 0;
+	}
 }
 
 #endif // defined(_WINDOWS)
@@ -132,16 +142,24 @@ Keyboard::Key Keyboard::currentKeyState(const bool synchron)
 	Key key = KEY_NONE;
 
 	if (oneKeyDown(KEY_SHIFT, synchron))
+	{
 		key = Key(key | KEY_SHIFT);
+	}
 
 	if (oneKeyDown(KEY_CONTROL, synchron))
+	{
 		key = Key(key | KEY_CONTROL);
+	}
 
 	if (oneKeyDown(KEY_MENU, synchron))
+	{
 		key = Key(key | KEY_MENU);
+	}
 
 	if (oneKeyDown(KEY_SPACE, synchron))
+	{
 		key = Key(key | KEY_SPACE);
+	}
 
 	return key;
 }

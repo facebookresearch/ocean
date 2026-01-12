@@ -16,9 +16,9 @@
 #include <Foundation/Foundation.h>
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE==1
-  #include <UIKit/UIKit.h>
+	#include <UIKit/UIKit.h>
 #else
-  #include <CoreFoundation/CoreFoundation.h>
+	#include <CoreFoundation/CoreFoundation.h>
 #endif
 
 namespace Ocean
@@ -40,7 +40,7 @@ void Utilities::showMessageBoxApple(const std::string& title, const std::string&
 	UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
 
 	[alertController addAction:defaultAction];
-	[[[UIApplication sharedApplication].delegate.window rootViewController]  presentViewController:alertController animated:YES completion:nil];
+	[[[UIApplication sharedApplication].delegate.window rootViewController] presentViewController:alertController animated:YES completion:nil];
 
 #endif
 }
