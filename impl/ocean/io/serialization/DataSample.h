@@ -40,6 +40,10 @@ using UniqueDataSample = std::unique_ptr<DataSample>;
 
 /**
  * This class implements a base class for data samples.
+ * A data sample represents a single unit of data that can be serialized and deserialized through bitstreams.<br>
+ * Each sample contains two timestamps: a data timestamp representing when the data was originally captured (e.g., the camera frame timestamp), and a playback timestamp representing the relative time offset from when serialization started.<br>
+ * Derived classes must implement the type() function to identify the sample type and should override readSample()/writeSample() to serialize their specific data.<br>
+ * The class also provides helper functions for reading/writing common mathematical types like HomogenousMatrix4, Quaternion, and Vector3 with float precision.
  * @ingroup ioserialization
  */
 class OCEAN_IO_SERIALIZATION_EXPORT DataSample

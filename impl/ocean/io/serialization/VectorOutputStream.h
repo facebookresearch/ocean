@@ -24,7 +24,8 @@ namespace Serialization
 /**
  * This class implements an output stream that writes to an internal vector buffer.
  * The class provides a memory-based alternative to file or network streams, allowing efficient in-memory buffering of stream data.<br>
- * The implementation uses a custom stream buffer (VectorStreamBuffer) that stores data in a std::vector.
+ * This is particularly useful for scenarios where data needs to be serialized to memory before being processed or transmitted, rather than written directly to a file.<br>
+ * The implementation uses a custom stream buffer (VectorStreamBuffer) that stores data in a std::vector, providing automatic memory management and resizing.
  * @ingroup ioserialization
  */
 class OCEAN_IO_SERIALIZATION_EXPORT VectorOutputStream : public std::ostream
@@ -33,6 +34,8 @@ class OCEAN_IO_SERIALIZATION_EXPORT VectorOutputStream : public std::ostream
 
 		/**
 		 * This class implements a custom stream buffer that stores data in a vector.
+		 * The class extends std::streambuf to provide a memory-backed buffer that grows dynamically as data is written.<br>
+		 * It supports standard streambuf operations including overflow handling, batch writes via xsputn, and seeking within the buffer.
 		 */
 		class VectorStreamBuffer : public std::streambuf
 		{

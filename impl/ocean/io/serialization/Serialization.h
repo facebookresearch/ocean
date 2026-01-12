@@ -25,6 +25,17 @@ namespace Serialization
  * @{
  * The Ocean IO Serialization Library provides functionalities for data serialization and deserialization.
  * The library supports streaming binary data with timestamps and channels for recording and playback.
+ *
+ * The library is organized around the following core components:<br>
+ * - DataSerializer: The abstract base class for all serializers, defining the channel and sample management interface.<br>
+ * - OutputDataSerializer: Serializes data samples to a stream (e.g., file or network) for recording purposes.<br>
+ * - InputDataSerializer: Deserializes data samples from a stream for playback with configurable speed control.<br>
+ * - DataSample: The abstract base class for all data samples, containing timestamps for both recording and playback.<br>
+ * - DataTimestamp: A flexible timestamp class supporting both double and int64_t representations.<br>
+ * - MediaSerializer: Provides specialized data samples for media content, e.g., DataSampleFrame for Ocean::Frame objects with optional camera models.<br>
+ * - VectorOutputStream: A memory-based output stream implementation for in-memory buffering.
+ *
+ * Typical usage involves creating an output serializer to record data samples into channels, or creating an input serializer to play back previously recorded data with timing control.
  * @}
  */
 

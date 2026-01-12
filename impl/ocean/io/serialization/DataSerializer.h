@@ -28,8 +28,10 @@ namespace Serialization
 
 /**
  * This class implements the base class for data serializers.
- * Data serializers are used to serialize and deserialize data samples across multiple channels.
- * Each channel can have a different sample type, name, and content type.
+ * Data serializers are used to serialize and deserialize data samples across multiple channels.<br>
+ * Each channel can have a different sample type, name, and content type, allowing heterogeneous data to be organized and streamed together.<br>
+ * The class provides a thread-based architecture where the actual serialization/deserialization happens asynchronously in a background thread.<br>
+ * Derived classes (InputDataSerializer and OutputDataSerializer) implement the specific read or write functionality.
  * @ingroup ioserialization
  */
 class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
@@ -47,6 +49,8 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 
 		/**
 		 * This class holds channel configuration (sample type, name, and content type).
+		 * A channel configuration uniquely identifies the type and purpose of a data channel without including the runtime channel id.<br>
+		 * The sample type describes the class type of data samples (e.g., "DataSampleFrame"), the name provides a user-friendly identifier (e.g., "camera_left"), and the content type describes the semantic meaning of the data (e.g., "RGB_FRAME").
 		 */
 		class ChannelConfiguration
 		{
@@ -125,6 +129,8 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 
 		/**
 		 * This class implements a channel with configuration and channel id.
+		 * A channel extends ChannelConfiguration by adding a unique channel id that is assigned at runtime during serialization.<br>
+		 * The channel id is used to efficiently identify and route data samples within the serialization stream.
 		 */
 		class Channel : public ChannelConfiguration
 		{
@@ -212,6 +218,8 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 
 		/**
 		 * This class implements a data sample holding channel configuration information.
+		 * This internal class is used to serialize channel configuration as a special sample type, allowing the configuration to be embedded in the data stream alongside regular samples.<br>
+		 * When a new channel is encountered during playback, the configuration sample is read first to establish the channel's metadata.
 		 */
 		class DataSampleChannelConfiguration :
 			public DataSample,

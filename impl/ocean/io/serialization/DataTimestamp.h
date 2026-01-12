@@ -23,6 +23,9 @@ namespace Serialization
 
 /**
  * This class implements a data timestamp which can hold either a double or int64_t value.
+ * The dual-type design allows the timestamp to represent both floating-point time values (e.g., seconds with fractional precision) and integer-based timestamps (e.g., nanoseconds or frame indices).<br>
+ * Arithmetic and comparison operations are supported, but both operands must have the same value type.<br>
+ * The class provides serialization support through static read/write functions for use with bitstreams.
  * @ingroup ioserialization
  */
 class OCEAN_IO_SERIALIZATION_EXPORT DataTimestamp

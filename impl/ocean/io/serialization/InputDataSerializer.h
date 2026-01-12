@@ -24,7 +24,11 @@ namespace Serialization
 
 /**
  * This class implements an input data serializer.
- * The input data serializer deserializes data samples from a stream (e.g., file or network).
+ * The input data serializer deserializes data samples from a stream (e.g., file or network) and provides playback functionality with configurable speed.<br>
+ * Before starting playback, factory functions must be registered for each expected sample type so that the serializer can construct the appropriate sample objects when reading from the stream.<br>
+ * Samples for which no factory function is registered are simply skipped during playback.<br>
+ * Samples are returned through the sample() function in playback order, with optional speed control for real-time or accelerated playback.<br>
+ * The class uses a background thread to continuously read and buffer samples, ensuring smooth playback without blocking.
  * @ingroup ioserialization
  */
 class InputDataSerializer : public DataSerializer
@@ -266,6 +270,8 @@ class InputDataSerializer : public DataSerializer
 
 /**
  * This class implements a file-based input data serializer.
+ * This specialization of InputDataSerializer reads serialized data from a binary file on disk.<br>
+ * Use setFilename() to configure the input file path before calling initialize() and start().
  * @ingroup ioserialization
  */
 class FileInputDataSerializer : public InputDataSerializer

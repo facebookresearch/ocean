@@ -28,6 +28,8 @@ namespace Serialization
 
 /**
  * This class implements media serialization functionalities.
+ * The class provides specialized data sample types for common media content, particularly image frames.<br>
+ * It contains the DataSampleFrame nested class for serializing Ocean::Frame objects with optional camera models and device-to-camera transformations.
  * @ingroup ioserialization
  */
 class OCEAN_IO_SERIALIZATION_EXPORT MediaSerializer
@@ -36,13 +38,15 @@ class OCEAN_IO_SERIALIZATION_EXPORT MediaSerializer
 
 		/**
 		 * This class implements a sample for Ocean::Frame objects.
+		 * The class supports encoding/decoding of image frames along with optional camera models and device-to-camera transformations.
 		 *
-		 * The class supports two primary use cases:
-		 * 1. Automatic encoding/decoding:
-		 *    A Frame can be provided and will be automatically encoded using the Ocean Image library with a preferred encoding type (e.g., "ocn" or "jpg").
-		 *    The frame() function will decode the data on-demand.
-		 * 2. Custom encoded data: An already encoded buffer can be provided directly (e.g., an mp4 frame with custom imageType).
-		 *    In this case, the user is responsible for decoding the data. The buffer() function provides direct access to the encoded data for custom decoding.
+		 * The class supports two primary use cases:<br>
+		 * 1. Automatic encoding/decoding:<br>
+		 *    A Frame can be provided and will be automatically encoded using the Ocean Image library with a preferred encoding type (e.g., "ocn" or "jpg").<br>
+		 *    The frame() function will decode the data on-demand.<br>
+		 * 2. Custom encoded data: An already encoded buffer can be provided directly (e.g., an mp4 frame with custom imageType).<br>
+		 *    In this case, the user is responsible for decoding the data.<br>
+		 *    The buffer() function provides direct access to the encoded data for custom decoding.
 		 */
 		class DataSampleFrame : public DataSample
 		{

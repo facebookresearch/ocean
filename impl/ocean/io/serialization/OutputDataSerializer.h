@@ -22,7 +22,10 @@ namespace Serialization
 
 /**
  * This class implements an output data serializer.
- * The output data serializer serializes data samples to a stream (e.g., file or network).
+ * The output data serializer serializes data samples to a stream (e.g., file or network) for recording purposes.<br>
+ * Before adding samples, channels must be created using addChannel() which assigns a unique channel id for each distinct sample type, name, and content type combination.<br>
+ * Samples are added via addSample() and are written to the stream asynchronously by a background thread, allowing the caller to continue without blocking.<br>
+ * When stopping, all queued samples are written before the serializer terminates, ensuring no data is lost.
  * @ingroup ioserialization
  */
 class OutputDataSerializer : public DataSerializer
@@ -149,6 +152,8 @@ class OutputDataSerializer : public DataSerializer
 
 /**
  * This class implements a file-based output data serializer.
+ * This specialization of OutputDataSerializer writes serialized data to a binary file on disk.<br>
+ * Use setFilename() to configure the output file path before calling start().
  * @ingroup ioserialization
  */
 class FileOutputDataSerializer : public OutputDataSerializer
