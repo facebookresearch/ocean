@@ -56,7 +56,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\Platform.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\ResourceManager.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\System.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\UniqueId.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\Utilities.h" />
   </ItemGroup>
   <ItemGroup>

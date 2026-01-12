@@ -14,9 +14,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\UniqueId.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\platform\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>

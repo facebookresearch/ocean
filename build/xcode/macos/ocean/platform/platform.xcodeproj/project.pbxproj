@@ -14,7 +14,6 @@
 		5D9863321D8B5EE900DEDB00 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB46AF1C6B9E2400F618DC /* ResourceManager.cpp */; };
 		5D9863331D8B5EE900DEDB00 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCAD46A1BDA3BFD00577574 /* System.cpp */; };
 		5D9863391D8B5EE900DEDB00 /* Mouse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCEFE261BEBCDBF00B3972E /* Mouse.h */; };
-		5D98633A1D8B5EE900DEDB00 /* UniqueId.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F81BB3FFFC009C258F /* UniqueId.h */; };
 		5D98633C1D8B5EE900DEDB00 /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F71BB3FFFC009C258F /* Platform.h */; };
 		5D98633D1D8B5EE900DEDB00 /* ResourceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEB46AD1C6B9E1400F618DC /* ResourceManager.h */; };
 		5D98633E1D8B5EE900DEDB00 /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCAD4671BDA3B3700577574 /* System.h */; };
@@ -24,8 +23,6 @@
 		5DCAD46B1BDA3BFD00577574 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCAD46A1BDA3BFD00577574 /* System.cpp */; };
 		5DCAD46C1BDA3BFD00577574 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCAD46A1BDA3BFD00577574 /* System.cpp */; };
 		5DCE53FA1BB3FFFC009C258F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F71BB3FFFC009C258F /* Platform.h */; };
-		5DCE53FB1BB3FFFC009C258F /* UniqueId.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F81BB3FFFC009C258F /* UniqueId.h */; };
-		5DCE54011BB4005E009C258F /* UniqueId.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F81BB3FFFC009C258F /* UniqueId.h */; };
 		5DCE54031BB4005E009C258F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F71BB3FFFC009C258F /* Platform.h */; };
 		5DCEFE211BEBCB4D00B3972E /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCEFE201BEBCB4D00B3972E /* Keyboard.cpp */; };
 		5DCEFE221BEBCB4D00B3972E /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCEFE201BEBCB4D00B3972E /* Keyboard.cpp */; };
@@ -54,7 +51,6 @@
 		C041EC7F1DABEE3600BF5D76 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB46AF1C6B9E2400F618DC /* ResourceManager.cpp */; };
 		C041EC801DABEE3600BF5D76 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCAD46A1BDA3BFD00577574 /* System.cpp */; };
 		C041EC841DABEE3600BF5D76 /* Mouse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCEFE261BEBCDBF00B3972E /* Mouse.h */; };
-		C041EC851DABEE3600BF5D76 /* UniqueId.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F81BB3FFFC009C258F /* UniqueId.h */; };
 		C041EC871DABEE3600BF5D76 /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE53F71BB3FFFC009C258F /* Platform.h */; };
 		C041EC881DABEE3600BF5D76 /* ResourceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEB46AD1C6B9E1400F618DC /* ResourceManager.h */; };
 		C041EC891DABEE3600BF5D76 /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCAD4671BDA3B3700577574 /* System.h */; };
@@ -69,7 +65,6 @@
 		5DCAD46A1BDA3BFD00577574 /* System.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = System.cpp; path = ../../../../../impl/ocean/platform/System.cpp; sourceTree = "<group>"; };
 		5DCE53E41BB3FF19009C258F /* libOceanPlatformD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DCE53F71BB3FFFC009C258F /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../../../../../impl/ocean/platform/Platform.h; sourceTree = "<group>"; };
-		5DCE53F81BB3FFFC009C258F /* UniqueId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UniqueId.h; path = ../../../../../impl/ocean/platform/UniqueId.h; sourceTree = "<group>"; };
 		5DCE54071BB4005E009C258F /* libOceanPlatformD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DCEFE201BEBCB4D00B3972E /* Keyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keyboard.cpp; path = ../../../../../impl/ocean/platform/Keyboard.cpp; sourceTree = "<group>"; };
 		5DCEFE231BEBCB7400B3972E /* Keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keyboard.h; path = ../../../../../impl/ocean/platform/Keyboard.h; sourceTree = "<group>"; };
@@ -158,7 +153,6 @@
 				5DCE53F71BB3FFFC009C258F /* Platform.h */,
 				5DEB46AD1C6B9E1400F618DC /* ResourceManager.h */,
 				5DCAD4671BDA3B3700577574 /* System.h */,
-				5DCE53F81BB3FFFC009C258F /* UniqueId.h */,
 				9341F1141FBCE3EF00DF6F04 /* Utilities.h */,
 			);
 			name = "Header Files";
@@ -172,7 +166,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D9863391D8B5EE900DEDB00 /* Mouse.h in Headers */,
-				5D98633A1D8B5EE900DEDB00 /* UniqueId.h in Headers */,
 				5D98633C1D8B5EE900DEDB00 /* Platform.h in Headers */,
 				5D98633D1D8B5EE900DEDB00 /* ResourceManager.h in Headers */,
 				9341F1171FBCE3EF00DF6F04 /* Utilities.h in Headers */,
@@ -186,7 +179,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DCEFE271BEBCDBF00B3972E /* Mouse.h in Headers */,
-				5DCE53FB1BB3FFFC009C258F /* UniqueId.h in Headers */,
 				5DCE53FA1BB3FFFC009C258F /* Platform.h in Headers */,
 				5DEB46AE1C6B9E1400F618DC /* ResourceManager.h in Headers */,
 				9341F1151FBCE3EF00DF6F04 /* Utilities.h in Headers */,
@@ -200,7 +192,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DCEFE281BEBCDBF00B3972E /* Mouse.h in Headers */,
-				5DCE54011BB4005E009C258F /* UniqueId.h in Headers */,
 				5DCE54031BB4005E009C258F /* Platform.h in Headers */,
 				5DEB46B21C6B9E3200F618DC /* ResourceManager.h in Headers */,
 				9341F1161FBCE3EF00DF6F04 /* Utilities.h in Headers */,
@@ -214,7 +205,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C041EC841DABEE3600BF5D76 /* Mouse.h in Headers */,
-				C041EC851DABEE3600BF5D76 /* UniqueId.h in Headers */,
 				C041EC871DABEE3600BF5D76 /* Platform.h in Headers */,
 				C041EC881DABEE3600BF5D76 /* ResourceManager.h in Headers */,
 				9341F1181FBCE3EF00DF6F04 /* Utilities.h in Headers */,
