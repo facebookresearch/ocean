@@ -5,19 +5,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(android)
-add_subdirectory(arcore)
-add_subdirectory(arkit)
-add_subdirectory(ios)
-add_subdirectory(mapbuilding)
-add_subdirectory(pattern)
-add_subdirectory(rmv)
-add_subdirectory(serialization)
-add_subdirectory(slam)
-
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_devices")
+    set(OCEAN_TARGET_NAME "ocean_devices_serialization")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -31,7 +21,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_DEVICES_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_DEVICES_SERIALIZATION_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
@@ -44,6 +34,8 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            ocean_devices
+            ocean_io_serialization
             ocean_math
             ocean_media
     )
@@ -55,7 +47,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/devices
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/devices/serialization
             COMPONENT include
     )
 
