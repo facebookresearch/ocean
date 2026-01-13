@@ -649,7 +649,7 @@ inline Scalar Estimator::robustWeight<Estimator::ET_LINEAR>(const Scalar value, 
 
 	const Scalar absValue = Numeric::abs(value);
 
-	return std::min(Scalar(1) / absValue, maximalWeight());
+	return std::min(Numeric::ratio(Scalar(1), absValue, maximalWeight()), maximalWeight());
 }
 
 template <>
@@ -664,7 +664,7 @@ inline Scalar Estimator::robustWeight<Estimator::ET_HUBER>(const Scalar value, c
 		return Scalar(1);
 	}
 
-	return std::min(sigma / absValue, maximalWeight());
+	return std::min(Numeric::ratio(sigma, absValue, maximalWeight()), maximalWeight());
 }
 
 template <>
@@ -687,7 +687,7 @@ inline Scalar Estimator::robustWeight<Estimator::ET_CAUCHY>(const Scalar value, 
 {
 	ocean_assert(sigma > 0);
 
-	return Scalar(1) / (Scalar(1) + Numeric::sqr(value / sigma));
+	return Numeric::ratio(Scalar(1), (Scalar(1) + Numeric::sqr(value / sigma)), maximalWeight());
 }
 
 inline Scalar Estimator::robustWeight(const Scalar value, const Scalar sigma, const EstimatorType estimator)
@@ -738,12 +738,7 @@ inline Scalar Estimator::robustWeightSquare<Estimator::ET_LINEAR>(const Scalar s
 	ocean_assert(sqrValue >= 0);
 	ocean_assert_and_suppress_unused(sqrSigma == Scalar(0), sqrSigma);
 
-	if (sqrValue < Numeric::sqr(Numeric::weakEps()))
-	{
-		return Scalar(1) / Numeric::weakEps();
-	}
-
-	return Scalar(1) / Numeric::sqrt(sqrValue);
+	return std::min(Numeric::ratio(Scalar(1), Numeric::sqrt(sqrValue), maximalWeight()), maximalWeight());
 }
 
 template <>
@@ -756,7 +751,7 @@ inline Scalar Estimator::robustWeightSquare<Estimator::ET_HUBER>(const Scalar sq
 		return Scalar(1);
 	}
 
-	return std::min(Numeric::sqrt(sqrSigma / sqrValue), maximalWeight());
+	return std::min(Numeric::sqrt(Numeric::ratio(sqrSigma, sqrValue, maximalWeight() * maximalWeight())), maximalWeight());
 }
 
 template <>
@@ -777,7 +772,7 @@ inline Scalar Estimator::robustWeightSquare<Estimator::ET_CAUCHY>(const Scalar s
 {
 	ocean_assert(sqrSigma > 0);
 
-	return Scalar(1) / Scalar(1 + sqrValue / sqrSigma);
+	return Numeric::ratio(Scalar(1), Scalar(1) + sqrValue / sqrSigma, maximalWeight());
 }
 
 inline Scalar Estimator::robustWeightSquare(const Scalar sqrValue, const Scalar sqrSigma, const EstimatorType estimator)
