@@ -251,7 +251,7 @@ void MessengerCodeWrapper::release()
 #endif
 }
 
-bool MessengerCodeWrapper::detectAndDecode(Frame& frame, double& time, std::vector<std::string>& messages, bool* lastFrameReached)
+bool MessengerCodeWrapper::detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached)
 {
 	if (lastFrameReached)
 	{

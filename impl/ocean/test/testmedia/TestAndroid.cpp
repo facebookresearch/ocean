@@ -76,7 +76,7 @@ bool TestAndroid::testVideoEncoderDecoder(const double testDuration)
 	do
 	{
 		// Test different codecs
-		const std::vector<std::string> mimeTypes =
+		const Strings mimeTypes =
 		{
 			"video/avc",  // H.264
 			"video/hevc"  // H.265

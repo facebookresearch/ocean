@@ -240,13 +240,13 @@ class BinaryAnalyzer : protected Ocean::Thread
 				 * Returns all alias names of this symbol (not demangled alias names).
 				 * @return The alias names, if any
 				 */
-				inline const std::vector<std::string>& aliasNames() const;
+				inline const Ocean::Strings& aliasNames() const;
 
 				/**
 				 * Returns all readable alias names of this symbol.
 				 * @return The alias names, if any
 				 */
-				inline const std::vector<std::string>& readableAliasNames() const;
+				inline const Ocean::Strings& readableAliasNames() const;
 
 				/**
 				 * Returns the ids of all parent symbols of this symbol.
@@ -332,10 +332,10 @@ class BinaryAnalyzer : protected Ocean::Thread
 				std::string readableName_;
 
 				/// The alias names of this symbol.
-				std::vector<std::string> aliasNames_;
+				Ocean::Strings aliasNames_;
 
 				/// The readable alias names of this symbol.
-				std::vector<std::string> readableAliasNames_;
+				Ocean::Strings readableAliasNames_;
 
 				/// The set holding the ids of all parent symbols.
 				SymbolIdSet parentSymbols_;
@@ -879,14 +879,14 @@ inline const std::string& BinaryAnalyzer::Symbol::readableName() const
 	}
 }
 
-inline const std::vector<std::string>& BinaryAnalyzer::Symbol::aliasNames() const
+inline const Ocean::Strings& BinaryAnalyzer::Symbol::aliasNames() const
 {
 	ocean_assert(aliasNames_.size() == readableAliasNames_.size());
 
 	return aliasNames_;
 }
 
-inline const std::vector<std::string>& BinaryAnalyzer::Symbol::readableAliasNames() const
+inline const Ocean::Strings& BinaryAnalyzer::Symbol::readableAliasNames() const
 {
 	ocean_assert(aliasNames_.size() == readableAliasNames_.size());
 

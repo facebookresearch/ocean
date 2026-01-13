@@ -62,7 +62,7 @@ void GLMainView::threadRun()
 		// We check whether the platform-independent detector has some new image to process
 
 		Frame resultingFrame;
-		std::vector<std::string> messages;
+		Strings messages;
 		detector2DWrapper_.detectAndDecode(resultingFrame, resultingAlignerPerformance, messages);
 
 		if (resultingFrame.isValid())

@@ -153,7 +153,7 @@ class OCEAN_DEVICES_EXPORT DeviceRefManager : public Singleton<DeviceRefManager>
 		 * @param library The name of the library to which the devices belong, must be valid
 		 * @return The names of all currently existing devices
 		 */
-		std::vector<std::string> devicesFromLibrary(const std::string& library) const;
+		Strings devicesFromLibrary(const std::string& library) const;
 
 		/**
 		 * Adds a callback function which is called whenever a new device is created or deleted.

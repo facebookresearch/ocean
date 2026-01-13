@@ -76,7 +76,7 @@ class Wrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True if the processing was successful, otherwise false
 		 */
-		bool detectAndDecode(Frame& frame, double& time, std::vector<std::string>& messages, bool* lastFrameReached = nullptr);
+		bool detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Move operator.

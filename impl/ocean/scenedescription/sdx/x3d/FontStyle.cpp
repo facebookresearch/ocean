@@ -180,7 +180,7 @@ void FontStyle::applyToText(Rendering::Text& text) const
 	}
 }
 
-bool FontStyle::applyFontToText(Rendering::Text& text, const std::vector<std::string>& fontFamilyNames, const std::string& fontStyleName)
+bool FontStyle::applyFontToText(Rendering::Text& text, const Strings& fontFamilyNames, const std::string& fontStyleName)
 {
 	if (fontFamilyNames.empty())
 	{

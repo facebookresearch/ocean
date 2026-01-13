@@ -890,7 +890,7 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 
 	bool allSucceeded = true;
 
-	std::vector<std::string> encoderTypes(1, "bmp");
+	Strings encoderTypes(1, "bmp");
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_JPG
 	encoderTypes.push_back("jpg");
@@ -1711,7 +1711,7 @@ bool TestOpenImageLibraries::testBufferImageRecorder(const FrameType& frameType,
 
 #ifdef OCEAN_DEBUG
 	// we simply ensure that the one and only registered library is our OpenImageLibraries media library
-	const std::vector<std::string> libraryNames = Media::Manager::get().libraries();
+	const Strings libraryNames = Media::Manager::get().libraries();
 	ocean_assert(libraryNames.size() == 1 && libraryNames.front() == Media::OpenImageLibraries::nameOpenImageLibrariesLibrary());
 #endif
 

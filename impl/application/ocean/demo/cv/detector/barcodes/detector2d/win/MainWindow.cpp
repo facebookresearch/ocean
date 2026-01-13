@@ -30,7 +30,7 @@ void MainWindow::onIdle()
 {
 	Frame resultingDetectorFrame;
 	double resultingDetectorPerformance;
-	std::vector<std::string> messages;
+	Strings messages;
 
 	const bool allSucceeded = wrapper_.detectAndDecode(resultingDetectorFrame, resultingDetectorPerformance, messages);
 

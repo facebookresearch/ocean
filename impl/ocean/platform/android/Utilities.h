@@ -49,7 +49,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		 * @param strings Std strings to be converted, can be empty
 		 * @return Resulting Java native string
 		 */
-		static jobjectArray toJavaStringArray(JNIEnv* env, const std::vector<std::string>& strings);
+		static jobjectArray toJavaStringArray(JNIEnv* env, const Strings& strings);
 
 		/**
 		 * Converts a Java native list with string to a vector of strings.
@@ -58,7 +58,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		 * @param strings The resulting vector of strings
 		 * @return True, if succeeded
 		 */
-		static bool toVector(JNIEnv* env, jobject javaStringList, std::vector<std::string>& strings);
+		static bool toVector(JNIEnv* env, jobject javaStringList, Strings& strings);
 
 		/**
 		 * Converts a Java native list with integer to a vector of integers.

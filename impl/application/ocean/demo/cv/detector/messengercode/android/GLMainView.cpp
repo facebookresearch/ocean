@@ -64,7 +64,7 @@ void GLMainView::threadRun()
 	{
 		// We check whether the platform-independent detector has some new image to process
 
-		std::vector<std::string> messages;
+		Strings messages;
 		messengerCodeWrapper_.detectAndDecode(resultingFrame, resultingPerformance, messages);
 
 		if (resultingFrame.isValid())

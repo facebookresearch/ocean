@@ -32,7 +32,7 @@ using namespace Ocean::Platform::Apple::MacOS;
  * @param columnNames The names of the columns the outline view will have, at least one
  * @return The instance of the new outline view
  */
--(id)initWithFrame:(NSRect)frameRect andOwner:(TreeView*)owner andNamesOfColumns:(const std::vector<std::string>&)columnNames;
+-(id)initWithFrame:(NSRect)frameRect andOwner:(TreeView*)owner andNamesOfColumns:(const Ocean::Strings&)columnNames;
 
 /**
  * Sets or changes the owner of this outline view object.
@@ -80,7 +80,9 @@ using namespace Ocean::Platform::Apple::MacOS;
 -(void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	if (cellImage == nil)
+	{
 		[super drawWithFrame:cellFrame inView:controlView];
+	}
 	else
 	{
 		NSSize imageSize = [cellImage size];
@@ -115,7 +117,7 @@ using namespace Ocean::Platform::Apple::MacOS;
 
 @implementation NSOceanPlatformAppleMacOSOutlineView
 
--(id)initWithFrame:(NSRect)frameRect andOwner:(TreeView*)owner andNamesOfColumns:(const std::vector<std::string>&)columnNames
+-(id)initWithFrame:(NSRect)frameRect andOwner:(TreeView*)owner andNamesOfColumns:(const Ocean::Strings&)columnNames
 {
 	ocean_assert(owner && columnNames.size() >= 1);
 	viewOwner = nullptr;
@@ -142,7 +144,9 @@ using namespace Ocean::Platform::Apple::MacOS;
 			[self addTableColumn:column];
 
 			if (n == 0u)
+			{
 				[self setOutlineTableColumn:column];
+			}
 		}
 
 		[self setColumnAutoresizingStyle:NSTableViewSequentialColumnAutoresizingStyle];

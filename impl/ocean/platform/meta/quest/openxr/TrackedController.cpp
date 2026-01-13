@@ -610,7 +610,7 @@ TrackedController& TrackedController::operator=(TrackedController&& trackedContr
 	return *this;
 }
 
-void TrackedController::translateButtons(const ButtonType buttons, std::vector<std::string>& translatedButtons)
+void TrackedController::translateButtons(const ButtonType buttons, Strings& translatedButtons)
 {
 	translatedButtons.clear();
 

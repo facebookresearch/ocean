@@ -18,7 +18,7 @@
 #include "ocean/platform/win/Keyboard.h"
 #include "ocean/platform/win/Utilities.h"
 
-ImageAnalyzerMainWindow::ImageAnalyzerMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::string>& filenames) :
+ImageAnalyzerMainWindow::ImageAnalyzerMainWindow(HINSTANCE instance, const std::wstring& name, const Strings& filenames) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),

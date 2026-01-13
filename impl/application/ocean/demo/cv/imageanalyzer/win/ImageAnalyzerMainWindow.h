@@ -33,7 +33,7 @@ class ImageAnalyzerMainWindow :
 		 * @param name The name of the main window
 		 * @param filenames The filenames of all images to be loaded
 		 */
-		ImageAnalyzerMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::string>& filenames);
+		ImageAnalyzerMainWindow(HINSTANCE instance, const std::wstring& name, const Strings& filenames);
 
 		/**
 		 * Destructs the main window.

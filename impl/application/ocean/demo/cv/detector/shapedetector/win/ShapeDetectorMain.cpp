@@ -45,7 +45,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		return 0;
 	}
 
-	const std::vector<std::string> filenames = commandArguments.namelessValues();
+	const Strings filenames = commandArguments.namelessValues();
 
 	RandomI::initialize();
 

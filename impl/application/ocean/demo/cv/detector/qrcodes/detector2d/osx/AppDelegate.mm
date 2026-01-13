@@ -77,7 +77,7 @@
 {
 	double qrCodePerformance;
 
-	std::vector<std::string> decodedMessages;
+	Strings decodedMessages;
 	Vectors2 previousPoints, currentPoints;
 
 	bool reachedLastFrame = false;

@@ -513,7 +513,7 @@ bool TestQRCodeEncoder::convertCSVToQRCodeVerificationItem(const std::string& li
 
 	// Split current line at ','
 
-	std::vector<std::string> tokens;
+	Strings tokens;
 	std::string::size_type begin = lineCSV.find_first_not_of(' ');
 
 	while (begin < lineCSV.size())

@@ -188,7 +188,7 @@ Instance::operator XrInstance() const
 	return xrInstance_;
 }
 
-bool Instance::determineApiLayers(std::vector<std::string>* apiLayers)
+bool Instance::determineApiLayers(Strings* apiLayers)
 {
 	if (apiLayers != nullptr)
 	{
@@ -246,7 +246,7 @@ bool Instance::determineApiLayers(std::vector<std::string>* apiLayers)
 	return true;
 }
 
-Instance::XrExtensionPropertyGroups Instance::determineExtensionProperties(std::vector<std::string>* extensionNames)
+Instance::XrExtensionPropertyGroups Instance::determineExtensionProperties(Strings* extensionNames)
 {
 	if (extensionNames != nullptr)
 	{

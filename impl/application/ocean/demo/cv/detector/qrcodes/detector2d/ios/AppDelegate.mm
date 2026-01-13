@@ -128,7 +128,7 @@
 
 	// we check whether the platform independent tracker has some new image to process
 
-	std::vector<std::string> messages;
+	Strings messages;
 
 	Frame resultingFrame;
 	const bool detectedCode = detectorWrapper_.detectAndDecode(resultingFrame, resultingPerformance, messages) && resultingFrame.isValid();

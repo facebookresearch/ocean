@@ -120,7 +120,7 @@ bool testCVDetectorQRCodes(const double testDuration, Worker& worker, const std:
 
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Ocean::Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
+	Strings tests(Ocean::Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
 	if (testSet.empty() || testSet.find("qrcodedecoder") != testSet.end())

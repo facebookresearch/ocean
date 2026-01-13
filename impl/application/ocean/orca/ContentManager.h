@@ -77,7 +77,7 @@ class ContentManager :
 		/**
 		 * Definition of a vector holding filenames.
 		 */
-		using Filenames = std::vector<std::string>;
+		using Filenames = Strings;
 
 	private:
 

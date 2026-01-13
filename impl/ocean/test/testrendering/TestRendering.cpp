@@ -22,7 +22,7 @@ bool testRendering(const double /*testDuration*/, Worker& /*worker*/)
 
 	Log::info() << "+++   Ocean Rendering Library test:   +++";
 
-	std::vector<std::string> tests;
+	Strings tests;
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
 	if (allSucceeded)

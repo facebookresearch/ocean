@@ -266,7 +266,7 @@ bool Manager::unregisterFactory(const std::string& factory)
 	if (DeviceRefManager::get().isEmpty(factory) == false)
 	{
 #ifdef OCEAN_DEBUG
-		const std::vector<std::string> remainingDevices = DeviceRefManager::get().devicesFromLibrary(factory);
+		const Strings remainingDevices = DeviceRefManager::get().devicesFromLibrary(factory);
 
 		Log::warning() << "<debug> The following devices of library '" << factory << "' are still in use:";
 		for (const std::string& remainingDevice : remainingDevices)

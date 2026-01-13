@@ -32,7 +32,7 @@ namespace TestQRCodes
 
 using namespace CV::Detector::QRCodes;
 
-TestLegacyQRCodeDetector2D::FileDataCollection::FileDataCollection(std::vector<std::string>&& filenames) :
+TestLegacyQRCodeDetector2D::FileDataCollection::FileDataCollection(Strings&& filenames) :
 	filenames_(std::move(filenames))
 {
 	ocean_assert(!filenames_.empty());
@@ -402,7 +402,7 @@ TestDataManager::ScopedSubscriptions TestLegacyQRCodeDetector2D_registerTestData
 	TestDataManager::ScopedSubscriptions scopedSubscriptions;
 
 	{
-		std::vector<std::string> filenames0Code =
+		Strings filenames0Code =
 		{
 			absolutePath + "qrcode/detection_0_qrcodes/0001.png",
 			absolutePath + "qrcode/detection_0_qrcodes/0002.png",
@@ -438,7 +438,7 @@ TestDataManager::ScopedSubscriptions TestLegacyQRCodeDetector2D_registerTestData
 	}
 
 	{
-		std::vector<std::string> filenames1Code =
+		Strings filenames1Code =
 		{
 			absolutePath + "qrcode/detection_1_qrcode/0001.png",
 			absolutePath + "qrcode/detection_1_qrcode/0002.png",

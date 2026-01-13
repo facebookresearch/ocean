@@ -77,7 +77,7 @@ class OCEAN_BASE_EXPORT PluginManager : public Singleton<PluginManager>
 		/**
 		 * Definition of a vector holding plugin names.
 		 */
-		using Names = std::vector<std::string>;
+		using Names = Strings;
 
 	private:
 

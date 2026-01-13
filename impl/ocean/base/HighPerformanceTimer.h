@@ -452,8 +452,8 @@ class OCEAN_BASE_EXPORT HighPerformanceStatistic
  *     HighPerformanceBenchmark::get().stop();
  *
  *     // Get the normal or hierarchical performance report
- *     const std::vector<std::string> report = HighPerformanceBenchmark::get().report();
- *     const std::vector<std::string> reportWithHierarchies = HighPerformanceBenchmark::get().reportWithHierarchies();
+ *     const Strings report = HighPerformanceBenchmark::get().report();
+ *     const Strings reportWithHierarchies = HighPerformanceBenchmark::get().reportWithHierarchies();
  * }
  * </pre>
  *
@@ -692,7 +692,7 @@ class OCEAN_BASE_EXPORT HighPerformanceBenchmark : public Singleton<HighPerforma
 		 * @param referenceCategory Optional reference category for to add relative performance values to the report
 		 * @return The report as readable string, one string for each line in the report
 		 */
-		std::vector<std::string> report(const std::string& referenceCategory = std::string()) const;
+		Strings report(const std::string& referenceCategory = std::string()) const;
 
 		/**
 		 * Creates a performance report for a hierarchy of categories as a human-readable string.
@@ -708,7 +708,7 @@ class OCEAN_BASE_EXPORT HighPerformanceBenchmark : public Singleton<HighPerforma
 		 * @param categoryNameDelimiter The optional delimiter that is used to separate levels of categories in a hierarchy
 		 * @return True, if the generation of the report was successful, otherwise false
 		 */
-		bool reportWithHierarchies(std::vector<std::string>& report, const std::string& referenceCategory = std::string(), const std::string& categoryNameDelimiter = "::") const;
+		bool reportWithHierarchies(Strings& report, const std::string& referenceCategory = std::string(), const std::string& categoryNameDelimiter = "::") const;
 
 		/**
 		 * Returns the number of measurements of a specific category.

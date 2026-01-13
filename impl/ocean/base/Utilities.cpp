@@ -11,9 +11,9 @@
 namespace Ocean
 {
 
-std::vector<std::string> Utilities::separateValues(const std::string& values, const char delimiter, const bool removeQuotes, const bool trim)
+Strings Utilities::separateValues(const std::string& values, const char delimiter, const bool removeQuotes, const bool trim)
 {
-	std::vector<std::string> result;
+	Strings result;
 
 	std::string::size_type pos = 0;
 

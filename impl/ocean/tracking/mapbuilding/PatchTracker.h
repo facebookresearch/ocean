@@ -252,7 +252,7 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT PatchTracker : public DescriptorHandling
 		 * @param unifiedDescriptorExtractor The feature extractor to be used, must be valid
 		 * @return True, if succeeded
 		 */
-		static bool trackRecording(Devices::DevicePlayer& devicePlayer, const std::vector<std::string>& worldTrackerNames, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor);
+		static bool trackRecording(Devices::DevicePlayer& devicePlayer, const Strings& worldTrackerNames, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor);
 
 		/**
 		 * Removes flaky object points from the database.

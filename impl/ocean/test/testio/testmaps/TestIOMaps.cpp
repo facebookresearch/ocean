@@ -45,7 +45,7 @@ bool testIOMaps(const double testDuration, Worker& /*worker*/, const std::string
 	Log::info() << "+++   Ocean IO Maps Library test:   +++";
 	Log::info() << " ";
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
+	Strings tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
 	if (testSet.empty() || testSet.find("basemap") != testSet.end())

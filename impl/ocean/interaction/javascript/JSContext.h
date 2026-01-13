@@ -95,7 +95,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSContext
 		 * Returns a corresponding filenames of the scripts managed by this context object
 		 * @return Names of all script files
 		 */
-		inline const std::vector<std::string>& filenames() const;
+		inline const Strings& filenames() const;
 
 		/**
 		 * Adds a new script to this context.
@@ -280,7 +280,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSContext
 		std::weak_ptr<JSContext> thisJSContext_;
 
 		/// Name of the file the initial script is defined inside.
-		std::vector<std::string> filenames_;
+		Strings filenames_;
 
 		/// True, if the context contains a preUpdate function.
 		bool hasPreUpdateFunction_ = false;
@@ -329,7 +329,7 @@ inline std::shared_ptr<JSContext> JSContext::currentJSContext()
 	return currentJSContext_.lock();
 }
 
-inline const std::vector<std::string>& JSContext::filenames() const
+inline const Strings& JSContext::filenames() const
 {
 	return filenames_;
 }

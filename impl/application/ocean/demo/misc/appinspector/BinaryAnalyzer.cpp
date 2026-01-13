@@ -646,7 +646,7 @@ void BinaryAnalyzer::writeToJsonConfig(IO::JSONConfig& config)
 		symbolNode["ParentSymbols"] = std::vector<int>(symbol.parentSymbols().begin(), symbol.parentSymbols().end());
 
 		symbolNode["LoadedAddressesSize"] = (int)symbol.loadedAddressed().size();
-		std::vector<std::string> addresses;
+		Strings addresses;
 		std::transform(std::begin(symbol.loadedAddressed()), std::end(symbol.loadedAddressed()), std::back_inserter(addresses), [](Address64 d) { return std::to_string(d); });
 		symbolNode["LoadedAddress"] = addresses;
 
@@ -908,7 +908,7 @@ bool BinaryAnalyzer::readFromDataFileV2(IO::InputBitstream& bitstream)
 
 
 		// alias names
-		std::vector<std::string> aliasNames;
+		Strings aliasNames;
 
 		unsigned long long aliasNamesSize = 0ull;
 		if (!bitstream.read<unsigned long long>(aliasNamesSize))
@@ -927,7 +927,7 @@ bool BinaryAnalyzer::readFromDataFileV2(IO::InputBitstream& bitstream)
 
 
 		// readable alias names
-		std::vector<std::string> readableAliasNames;
+		Strings readableAliasNames;
 
 		unsigned long long readableAliasNamesSize = 0ull;
 		if (!bitstream.read<unsigned long long>(readableAliasNamesSize))

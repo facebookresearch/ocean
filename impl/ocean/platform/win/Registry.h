@@ -66,7 +66,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Registry
 		/**
 		 * Definition of a vector holding key or value names.
 		 */
-		using Names = std::vector<std::string>;
+		using Names = Strings;
 
 	public:
 

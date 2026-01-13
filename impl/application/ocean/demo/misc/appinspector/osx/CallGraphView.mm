@@ -81,7 +81,7 @@ bool CallGraphView::addGraph()
 
 		const std::string aliasString = symbol.readableAliasNames().empty() ? std::string() : (std::string(" (") + String::toAString(symbol.readableAliasNames().size()) + std::string(" alias) "));
 
-		std::vector<std::string> texts = {"[" + String::toAString(symbol.size()) + "] " + aliasString + String::toAString(symbol.readableName()) + linkSuffix};
+		Strings texts = {"[" + String::toAString(symbol.size()) + "] " + aliasString + String::toAString(symbol.readableName()) + linkSuffix};
 		const TreeItemRef rootTreeItem = createItem(std::move(texts), treeItemId);
 		registerTreeItem(rootTreeItem->id(), symbol.id());
 

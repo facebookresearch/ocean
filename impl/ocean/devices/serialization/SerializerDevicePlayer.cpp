@@ -326,7 +326,7 @@ void SerializerDevicePlayer::release()
 
 	if (inputSerializer_)
 	{
-		std::vector<std::string> deviceNames;
+		Strings deviceNames;
 		deviceNames.reserve(channelDeviceMap_.size());
 
 		for (const ChannelDeviceMap::value_type& iDevice : channelDeviceMap_)

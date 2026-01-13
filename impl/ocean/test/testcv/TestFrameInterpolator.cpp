@@ -289,7 +289,7 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 	ocean_assert(targetWidth >= 4u && targetHeight >= 4u);
 	ocean_assert(testDuration > 0.0);
 
-	const std::vector<std::string> resizeMethodStrings =
+	const Strings resizeMethodStrings =
 	{
 		"Invalid",
 		"Nearest Pixel",

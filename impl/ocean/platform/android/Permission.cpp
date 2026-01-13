@@ -78,7 +78,7 @@ bool Permission::hasPermission(JavaVM* javaVM, jobject activity, const std::stri
 	return true;
 }
 
-bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const std::vector<std::string>& permissions, const bool translate)
+bool Permission::requestPermissions(JavaVM* javaVM, jobject activity, const Strings& permissions, const bool translate)
 {
 	ocean_assert(javaVM != nullptr);
 	ocean_assert(activity != nullptr);

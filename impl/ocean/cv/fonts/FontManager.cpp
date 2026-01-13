@@ -89,24 +89,24 @@ bool FontManager::hasFont(const std::string& familyName, const std::string& styl
 	return false;
 }
 
-std::vector<std::string> FontManager::familyNames() const
+Strings FontManager::familyNames() const
 {
 	if (ftFontManager_)
 	{
 		return ftFontManager_->familyNames();
 	}
 
-	return std::vector<std::string>();
+	return Strings();
 }
 
-std::vector<std::string> FontManager::styleNames(const std::string& familyName) const
+Strings FontManager::styleNames(const std::string& familyName) const
 {
 	if (ftFontManager_)
 	{
 		return ftFontManager_->styleNames(familyName);
 	}
 
-	return std::vector<std::string>();
+	return Strings();
 }
 
 std::string FontManager::systemDefaultFontFamily(std::string* styleName)

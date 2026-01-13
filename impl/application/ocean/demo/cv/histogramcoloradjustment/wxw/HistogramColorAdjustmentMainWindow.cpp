@@ -221,7 +221,7 @@ void HistogramColorAdjustmentMainWindow::onIdle(wxIdleEvent& /*event*/)
 	// nothing to do here
 }
 
-bool HistogramColorAdjustmentMainWindow::onFileDragAndDropFrame(const std::vector<std::string> &files)
+bool HistogramColorAdjustmentMainWindow::onFileDragAndDropFrame(const Strings &files)
 {
 	if (files.empty())
 	{
@@ -231,7 +231,7 @@ bool HistogramColorAdjustmentMainWindow::onFileDragAndDropFrame(const std::vecto
 	return loadFrame(files.front());
 }
 
-bool HistogramColorAdjustmentMainWindow::onFileDragAndDropReference(const std::vector<std::string> &files)
+bool HistogramColorAdjustmentMainWindow::onFileDragAndDropReference(const Strings &files)
 {
 	if (files.empty())
 	{

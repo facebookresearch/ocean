@@ -170,7 +170,7 @@ class OCEAN_IO_EXPORT FileConfig : public Config
 				 * Returns this value as multi string.
 				 * @see Config::Value::operator().
 				 */
-				std::vector<std::string> operator()(const std::vector<std::string>& value) const override;
+				Strings operator()(const Strings& value) const override;
 
 				/**
 				 * Sets this value as boolean.
@@ -218,7 +218,7 @@ class OCEAN_IO_EXPORT FileConfig : public Config
 				 * Sets this value as multi string.
 				 * @see Config::Value::operator=().
 				 */
-				bool operator=(const std::vector<std::string>& values) override;
+				bool operator=(const Strings& values) override;
 
 				/**
 				 * Returns a sub value specified by it's name
@@ -268,7 +268,7 @@ class OCEAN_IO_EXPORT FileConfig : public Config
 				 * Returns the string values of this object.
 				 * @return Parsed number value
 				 */
-				std::vector<std::string> stringValues() const;
+				Strings stringValues() const;
 
 			private:
 

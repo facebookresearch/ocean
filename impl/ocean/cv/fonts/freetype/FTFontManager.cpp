@@ -375,11 +375,11 @@ bool FTFontManager::hasFont(const std::string& familyName, const std::string& st
 	return true;
 }
 
-std::vector<std::string> FTFontManager::familyNames() const
+Strings FTFontManager::familyNames() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	std::vector<std::string> result;
+	Strings result;
 	result.reserve(familyMap_.size());
 
 	for (FamilyMap::const_iterator i = familyMap_.cbegin(); i != familyMap_.cend(); ++i)
@@ -390,7 +390,7 @@ std::vector<std::string> FTFontManager::familyNames() const
 	return result;
 }
 
-std::vector<std::string> FTFontManager::styleNames(const std::string& familyName) const
+Strings FTFontManager::styleNames(const std::string& familyName) const
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -398,10 +398,10 @@ std::vector<std::string> FTFontManager::styleNames(const std::string& familyName
 
 	if (iFamily == familyMap_.cend())
 	{
-		return std::vector<std::string>();
+		return Strings();
 	}
 
-	std::vector<std::string> result;
+	Strings result;
 
 	result.reserve(familyMap_.size());
 

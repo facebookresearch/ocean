@@ -28,7 +28,7 @@ void Detector3DMainWindow::onIdle()
 {
 	Frame resultingDetectorFrame;
 	double resultingDetectorPerformance;
-	std::vector<std::string> messages;
+	Strings messages;
 
 	const bool foundQRCodes = detectorWrapper_.detectAndDecode(resultingDetectorFrame, resultingDetectorPerformance, messages);
 

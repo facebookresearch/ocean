@@ -93,7 +93,7 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 				/**
 				 * Definition of a vector holding header lines.
 				 */
-				using Lines = std::vector<std::string>;
+				using Lines = Strings;
 
 			public:
 

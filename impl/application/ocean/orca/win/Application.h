@@ -54,7 +54,7 @@ class Application : public CWinApp
 		/**
 		 * Definition of a vector holding filenames.
 		 */
-		using Filenames = std::vector<std::string>;
+		using Filenames = Strings;
 
 		/**
 		 * Definition of a set holding predefined configuration parameters.

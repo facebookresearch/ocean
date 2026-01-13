@@ -54,7 +54,7 @@ jstring Utilities::toJavaString(JNIEnv* env, const std::string& stdString)
 	return env->NewStringUTF(stdString.c_str());
 }
 
-jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const std::vector<std::string>& strings)
+jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const Strings& strings)
 {
 	ocean_assert(env != nullptr);
 
@@ -68,7 +68,7 @@ jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const std::vector<std::st
 	return result;
 }
 
-bool Utilities::toVector(JNIEnv* env, jobject javaStringList, std::vector<std::string>& strings)
+bool Utilities::toVector(JNIEnv* env, jobject javaStringList, Strings& strings)
 {
 	ocean_assert(env != nullptr);
 	ocean_assert(javaStringList != nullptr);

@@ -98,7 +98,7 @@ std::vector<double> Config::Value::operator()(const std::vector<double>& value) 
 	return value;
 }
 
-std::vector<std::string> Config::Value::operator()(const std::vector<std::string>& value) const
+Strings Config::Value::operator()(const Strings& value) const
 {
 	return value;
 }
@@ -138,7 +138,7 @@ bool Config::Value::operator=(const std::vector<double>& /*values*/)
 	return false;
 }
 
-bool Config::Value::operator=(const std::vector<std::string>& /*values*/)
+bool Config::Value::operator=(const Strings& /*values*/)
 {
 	return false;
 }

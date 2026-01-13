@@ -173,7 +173,7 @@ class MainWindow : public wxFrame
 		 * On drag and drop file event function.
 		 * @param files Event files
 		 */
-		bool onFileDragAndDrop(const std::vector<std::string> &files);
+		bool onFileDragAndDrop(const Strings &files);
 
 	private:
 

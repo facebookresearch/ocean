@@ -322,8 +322,8 @@ bool TestMovie::testEncodeDecode()
 	Log::info() << "Encode/decode tests:";
 	Log::info() << " ";
 
-	const std::vector<std::string> encoderNames(libraryNamesEncoder());
-	const std::vector<std::string> decoderNames(libraryNamesDecoder());
+	const Strings encoderNames(libraryNamesEncoder());
+	const Strings decoderNames(libraryNamesDecoder());
 
 	bool allSucceeded = true;
 
@@ -388,8 +388,8 @@ bool TestMovie::testLoop()
 	Log::info() << "Loop test:";
 	Log::info() << " ";
 
-	const std::vector<std::string> encoderNames(libraryNamesEncoder());
-	const std::vector<std::string> decoderNames(libraryNamesDecoder());
+	const Strings encoderNames(libraryNamesEncoder());
+	const Strings decoderNames(libraryNamesDecoder());
 
 	bool allSucceeded = true;
 
@@ -578,8 +578,8 @@ bool TestMovie::testPause()
 	Log::info() << "Pause test:";
 	Log::info() << " ";
 
-	const std::vector<std::string> encoderNames(libraryNamesEncoder());
-	const std::vector<std::string> decoderNames(libraryNamesDecoder());
+	const Strings encoderNames(libraryNamesEncoder());
+	const Strings decoderNames(libraryNamesDecoder());
 
 	bool allSucceeded = true;
 
@@ -837,9 +837,9 @@ void TestMovie::unregisterMediaLibraries()
 #endif // OCEAN_RUNTIME_SHARED
 }
 
-std::vector<std::string> TestMovie::libraryNamesEncoder()
+Strings TestMovie::libraryNamesEncoder()
 {
-	std::vector<std::string> encoderNames;
+	Strings encoderNames;
 
 #if defined(OCEAN_PLATFORM_BUILD_APPLE)
 	encoderNames.emplace_back(Media::AVFoundation::nameAVFLibrary());
@@ -852,9 +852,9 @@ std::vector<std::string> TestMovie::libraryNamesEncoder()
 	return encoderNames;
 }
 
-std::vector<std::string> TestMovie::libraryNamesDecoder()
+Strings TestMovie::libraryNamesDecoder()
 {
-	std::vector<std::string> decoderNames;
+	Strings decoderNames;
 
 #if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
 	decoderNames.emplace_back(Media::AVFoundation::nameAVFLibrary());

@@ -307,7 +307,7 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 
 		// Create a temporary file with data first
 		const unsigned int numSamples = RandomI::random(randomGenerator, 3u, 10u);
-		std::vector<std::string> expectedPayloads;
+		Strings expectedPayloads;
 		expectedPayloads.reserve(numSamples);
 
 		{
@@ -352,7 +352,7 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 		Thread::sleep(100u);
 
 		// Retrieve samples with speed = 0.0 (no timing, should return immediately)
-		std::vector<std::string> retrievedPayloads;
+		Strings retrievedPayloads;
 		retrievedPayloads.reserve(numSamples);
 
 		for (unsigned int i = 0u; i < numSamples; ++i)
@@ -376,8 +376,8 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 			}
 		}
 
-		std::vector<std::string> sortedExpected = expectedPayloads;
-		std::vector<std::string> sortedRetrieved = retrievedPayloads;
+		Strings sortedExpected = expectedPayloads;
+		Strings sortedRetrieved = retrievedPayloads;
 		std::sort(sortedExpected.begin(), sortedExpected.end());
 		std::sort(sortedRetrieved.begin(), sortedRetrieved.end());
 		OCEAN_EXPECT_EQUAL(validation, sortedExpected, sortedRetrieved);

@@ -18,7 +18,7 @@ namespace Test
 
 TestSelector::TestSelector(const std::string& testFunctions)
 {
-	const std::vector<std::string> tests = Utilities::separateValues(String::toLower(testFunctions), ',', true, true);
+	const Strings tests = Utilities::separateValues(String::toLower(testFunctions), ',', true, true);
 
 	patterns_ = Patterns(tests.begin(), tests.end());
 

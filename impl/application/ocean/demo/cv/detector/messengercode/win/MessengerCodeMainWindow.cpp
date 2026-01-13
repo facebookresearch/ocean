@@ -28,7 +28,7 @@ void MessengerCodeMainWindow::onIdle()
 {
 	Frame resultingFrame;
 	double resultingPerformance;
-	std::vector<std::string> messages;
+	Strings messages;
 
 	messengerCodeWrapper_.detectAndDecode(resultingFrame, resultingPerformance, messages);
 

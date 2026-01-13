@@ -109,12 +109,12 @@ std::string Text::availableDefaultFont(std::string* /*styleName*/) const
 	throw NotSupportedException("Text::availableDefaultFont() is not supported.");
 }
 
-std::vector<std::string> Text::availableFamilyNames() const
+Strings Text::availableFamilyNames() const
 {
 	throw NotSupportedException("Text::availableFamilyNames() is not supported.");
 }
 
-std::vector<std::string> Text::availableStyleNames(const std::string& /*familyName*/) const
+Strings Text::availableStyleNames(const std::string& /*familyName*/) const
 {
 	throw NotSupportedException("Text::availableStyleNames() is not supported.");
 }

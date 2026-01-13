@@ -463,7 +463,7 @@ std::string ShapeDetectorMainWindow::ModifiedGradientVarianceBasedParameters::tr
 	return "Invalid";
 }
 
-ShapeDetectorMainWindow::ShapeDetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::string>& filenames) :
+ShapeDetectorMainWindow::ShapeDetectorMainWindow(HINSTANCE instance, const std::wstring& name, const Strings& filenames) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),

@@ -29,7 +29,7 @@ NavigationInfo::NavigationInfo(const SDXEnvironment* environment) :
 	speed_(1),
 	transitionTime_(Timestamp(1.0)),
 	transitionType_("LINEAR"),
-	type_(std::vector<std::string>({"EXAMINE", "ANY"})),
+	type_(Strings({"EXAMINE", "ANY"})),
 	visibilityLimit_(0)
 {
 	static NodeSpecification specification(specifyNode());

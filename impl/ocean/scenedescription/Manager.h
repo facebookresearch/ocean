@@ -109,7 +109,7 @@ class OCEAN_SCENEDESCRIPTION_EXPORT Manager :
 		/**
 		 * Definition of a vector holding library names.
 		 */
-		using LibraryNames = std::vector<std::string>;
+		using LibraryNames = Strings;
 
 	protected:
 

@@ -167,13 +167,13 @@ class OCEAN_TEST_MEDIA_EXPORT TestMovie
 		 * Returns the names of media libraries support movie encoding.
 		 * @return The names of all available libraries
 		 */
-		static std::vector<std::string> libraryNamesEncoder();
+		static Strings libraryNamesEncoder();
 
 		/**
 		 * Returns the names of media libraries support movie decoding.
 		 * @return The names all available libraries
 		 */
-		static std::vector<std::string> libraryNamesDecoder();
+		static Strings libraryNamesDecoder();
 
 		/**
 		 * Creates a movie and writes it to a file.

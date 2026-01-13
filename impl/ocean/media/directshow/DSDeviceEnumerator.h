@@ -37,7 +37,7 @@ class DSDeviceEnumerator
 		/**
 		 * Definition of a vector holding object names.
 		 */
-		using Names = std::vector<std::string>;
+		using Names = Strings;
 
 	protected:
 

@@ -80,11 +80,11 @@ bool DeviceRefManager::isEmpty(const std::string& library) const
 	return true;
 }
 
-std::vector<std::string> DeviceRefManager::devicesFromLibrary(const std::string& library) const
+Strings DeviceRefManager::devicesFromLibrary(const std::string& library) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	std::vector<std::string> result;
+	Strings result;
 
 	for (DeviceMap::const_iterator i = deviceMap_.cbegin(); i != deviceMap_.cend(); ++i)
 	{

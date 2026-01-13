@@ -104,7 +104,7 @@ class HistogramMainWindow : public wxFrame
 		 * @param files Names of the files
 		 * @return True, if the files are accepted
 		 */
-		bool onFileDragAndDrop(const std::vector<std::string> &files);
+		bool onFileDragAndDrop(const Strings &files);
 
 		/**
 		 * Draws a histogram into a bitmap.

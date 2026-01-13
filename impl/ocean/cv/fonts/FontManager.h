@@ -98,14 +98,14 @@ class OCEAN_CV_FONTS_EXPORT FontManager : public Singleton<FontManager>
 		 * Returns the family names of all registered fonts.
 		 * @return The family names of all registered fonts
 		 */
-		std::vector<std::string> familyNames() const;
+		Strings familyNames() const;
 
 		/**
 		 * Returns the style names of all registered fonts with specified family name.
 		 * @param familyName The family name of the fonts for which all style names will be returned
 		 * @return The style names of all registered fonts
 		 */
-		std::vector<std::string> styleNames(const std::string& familyName) const;
+		Strings styleNames(const std::string& familyName) const;
 
 		/**
 		 * Returns whether this manager is valid and ready to use.

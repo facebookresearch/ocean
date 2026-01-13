@@ -213,7 +213,7 @@ class OCEAN_BASE_EXPORT Config
 				 * @param value Default value which will be returned if this value holds no string
 				 * @return Internal value
 				 */
-				virtual std::vector<std::string> operator()(const std::vector<std::string>& value) const;
+				virtual Strings operator()(const Strings& value) const;
 
 				/**
 				 * Sets this value as boolean.
@@ -276,7 +276,7 @@ class OCEAN_BASE_EXPORT Config
 				 * @param values The values to set
 				 * @return True, if succeeded
 				 */
-				virtual bool operator=(const std::vector<std::string>& values);
+				virtual bool operator=(const Strings& values);
 
 				/**
 				 * Returns the first sub value specified by it's name or creates a new value if no existing.

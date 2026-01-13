@@ -142,7 +142,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 	Indices32 setInteger32;
 	Indices64 setInteger64;
-	std::vector<std::string> setString;
+	Strings setString;
 
 	bool allSucceeded = true;
 	bool firstIteration = true;
@@ -342,7 +342,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 
 		{
-			const std::vector<std::string> strings = Subset::subset(setString, subsetIndicesSet);
+			const Strings strings = Subset::subset(setString, subsetIndicesSet);
 
 			if (strings.size() != subsetIndicesSet.size())
 			{
@@ -351,7 +351,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
 				{
@@ -360,7 +360,7 @@ bool TestSubset::testSubset(const double testDuration)
 			}
 		}
 		{
-			const std::vector<std::string> strings = Subset::subset(setString.data(), setString.size(), subsetIndicesSet);
+			const Strings strings = Subset::subset(setString.data(), setString.size(), subsetIndicesSet);
 
 			if (strings.size() != subsetIndicesSet.size())
 			{
@@ -369,7 +369,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
 				{
@@ -378,7 +378,7 @@ bool TestSubset::testSubset(const double testDuration)
 			}
 		}
 		{
-			const std::vector<std::string> strings = Subset::subset(setString, subsetIndicesArray);
+			const Strings strings = Subset::subset(setString, subsetIndicesArray);
 
 			if (strings.size() != subsetIndicesSet.size())
 			{
@@ -387,7 +387,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
 				{
@@ -396,7 +396,7 @@ bool TestSubset::testSubset(const double testDuration)
 			}
 		}
 		{
-			const std::vector<std::string> strings = Subset::subset(setString.data(), setString.size(), subsetIndicesArray);
+			const Strings strings = Subset::subset(setString.data(), setString.size(), subsetIndicesArray);
 
 			if (strings.size() != subsetIndicesSet.size())
 			{
@@ -405,7 +405,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
 				{
@@ -414,7 +414,7 @@ bool TestSubset::testSubset(const double testDuration)
 			}
 		}
 		{
-			const std::vector<std::string> strings = Subset::subset(setString.data(), setString.size(), subsetIndicesArray.data(), subsetIndicesArray.size());
+			const Strings strings = Subset::subset(setString.data(), setString.size(), subsetIndicesArray.data(), subsetIndicesArray.size());
 
 			if (strings.size() != subsetIndicesSet.size())
 			{
@@ -423,7 +423,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
 				{
@@ -461,7 +461,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 	Indices32 setInteger32;
 	Indices64 setInteger64;
-	std::vector<std::string> setString;
+	Strings setString;
 
 	bool allSucceeded = true;
 	bool firstIteration = true;
@@ -606,7 +606,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 		}
 
 		{
-			const std::vector<std::string> strings = Subset::invertedSubset(setString, subsetIndicesSet);
+			const Strings strings = Subset::invertedSubset(setString, subsetIndicesSet);
 
 			if (strings.size() != invertedSubsetIndicesSet.size())
 			{
@@ -615,7 +615,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || invertedSubsetIndicesSet.find(TIndex(value)) == invertedSubsetIndicesSet.end())
 				{
@@ -625,7 +625,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 		}
 
 		{
-			const std::vector<std::string> strings = Subset::invertedSubset(setString.data(), setString.size(), subsetIndicesSet);
+			const Strings strings = Subset::invertedSubset(setString.data(), setString.size(), subsetIndicesSet);
 
 			if (strings.size() != invertedSubsetIndicesSet.size())
 			{
@@ -634,7 +634,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			int value = -1;
 
-			for (std::vector<std::string>::const_iterator i = strings.begin(); i != strings.end(); ++i)
+			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
 				if (!String::isInteger32(*i, &value) || value < 0 || invertedSubsetIndicesSet.find(TIndex(value)) == invertedSubsetIndicesSet.end())
 				{

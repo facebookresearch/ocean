@@ -396,7 +396,7 @@ ApplicationInterface::StringVector JSOcean::resolveFilenames(const v8::FunctionC
 				continue;
 			}
 
-			std::vector<std::string> filenames;
+			Strings filenames;
 			if (hasValue(info, (unsigned int)(n), filenames))
 			{
 				for (const std::string& internalFilename : filenames)

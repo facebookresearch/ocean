@@ -108,7 +108,7 @@ bool TestCommandArguments::testParse()
 			}
 		}
 
-		const std::vector<std::string>& namelessValues = commandArguments.namelessValues();
+		const Strings& namelessValues = commandArguments.namelessValues();
 
 		if (namelessValues.size() == 1)
 		{

@@ -121,7 +121,7 @@ bool OceanUSBManager::enumerateDevices(JNIEnv* jniEnv, DeviceDescriptors& device
 		return false;
 	}
 
-	std::vector<std::string> deviceNames;
+	Strings deviceNames;
 	if (!AndroidUtilities::toVector(jniEnv, resultList, deviceNames))
 	{
 		return false;

@@ -335,12 +335,12 @@ std::string GLESText::availableDefaultFont(std::string* styleName) const
 	return std::string();
 }
 
-std::vector<std::string> GLESText::availableFamilyNames() const
+Strings GLESText::availableFamilyNames() const
 {
 	return CV::Fonts::FontManager::get().familyNames();
 }
 
-std::vector<std::string> GLESText::availableStyleNames(const std::string& familyName) const
+Strings GLESText::availableStyleNames(const std::string& familyName) const
 {
 	return CV::Fonts::FontManager::get().styleNames(familyName);
 }

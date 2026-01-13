@@ -1090,9 +1090,9 @@ const CV::PixelDirections& TestFrameFilterTemplate::directions()
 	return result;
 }
 
-const std::vector<std::string>& TestFrameFilterTemplate::directionStrings()
+const Strings& TestFrameFilterTemplate::directionStrings()
 {
-	static const std::vector<std::string> result =
+	static const Strings result =
 	{
 		"0 degree, North",
 		"45 degree, North west",

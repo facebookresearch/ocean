@@ -134,7 +134,7 @@ bool ApplicationView::addSymbols()
 
 	const std::string adjustedSymbolFilterText = symbolFilterCaseSensitive_ ? symbolFilterText_ : String::toLower(symbolFilterText_);
 
-	std::vector<std::string> symbolFilterTexts;
+	Strings symbolFilterTexts;
 
 	size_t tokenStart = 0;
 	size_t tokenLength = 0;
@@ -247,7 +247,7 @@ bool ApplicationView::addSymbols()
 
 		const std::string aliasString = symbol.readableAliasNames().empty() ? std::string() : (std::string("(") + String::toAString(symbol.readableAliasNames().size()) + std::string(" alias) "));
 
-		std::vector<std::string> texts = {propertyText[symbol.isRootSymbol() ? 0 : 1], String::toAString(symbol.size()), aliasString + String::toAString(symbol.readableName())};
+		Strings texts = {propertyText[symbol.isRootSymbol() ? 0 : 1], String::toAString(symbol.size()), aliasString + String::toAString(symbol.readableName())};
 		const TreeItemRef treeItem = createItem(std::move(texts), rootItemId(), TreeView::invalidTreeItemId, false);
 		registerTreeItem(treeItem->id(), *i);
 
@@ -261,7 +261,7 @@ bool ApplicationView::addSymbols()
 			{
 				const BinaryAnalyzer::Symbol& childSymbol = symbols[*iC];
 
-				std::vector<std::string> childTexts = {std::string(), std::string(), std::string("  ->  ") + String::toAString(childSymbol.readableName())};
+				Strings childTexts = {std::string(), std::string(), std::string("  ->  ") + String::toAString(childSymbol.readableName())};
 				const TreeItemRef childItem = createItem(std::move(childTexts), treeItem->id(), TreeView::invalidTreeItemId, false);
 				registerTreeItem(childItem->id(), *iC);
 			}

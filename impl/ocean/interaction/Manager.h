@@ -48,7 +48,7 @@ class OCEAN_INTERACTION_EXPORT Manager :
 		/**
 		 * Definition of a vector holding names.
 		 */
-		using Names = std::vector<std::string>;
+		using Names = Strings;
 
 	public:
 

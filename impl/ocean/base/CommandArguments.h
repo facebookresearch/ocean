@@ -310,7 +310,7 @@ class OCEAN_BASE_EXPORT CommandArguments
 		 * Returns all nameless values which have been parsed.
 		 * @return The nameless values, in order as they have been parsed, if any
 		 */
-		inline const std::vector<std::string>& namelessValues() const;
+		inline const Strings& namelessValues() const;
 
 		/**
 		 * Creates a summary of all possible command arguments.
@@ -400,7 +400,7 @@ class OCEAN_BASE_EXPORT CommandArguments
 		ValueMap valueMap_;
 
 		/// The vector of values without name.
-		std::vector<std::string> namelessValues_;
+		Strings namelessValues_;
 
 		/// Optional description for nameless parameters.
 		std::string descriptionNamelessParameters_;
@@ -573,7 +573,7 @@ inline bool CommandArguments::hasValue(const std::string& longName, std::string&
 	return true;
 }
 
-inline const std::vector<std::string>& CommandArguments::namelessValues() const
+inline const Strings& CommandArguments::namelessValues() const
 {
 	return namelessValues_;
 }

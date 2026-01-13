@@ -266,7 +266,7 @@ bool TestUtilities::testParseWifiConfig(const double testDuration)
 		const std::string ssid = Test::TestCV::TestDetector::TestQRCodes::Utilities::generateRandomString(randomGenerator, 1u, 30u);
 		const std::string escapedSsid = CV::Detector::QRCodes::Utilities::escapeSpecialCharacters(ssid);
 
-		const std::vector<std::string> encryptionTypes =
+		const Strings encryptionTypes =
 		{
 			"WEP",
 			"WPA",

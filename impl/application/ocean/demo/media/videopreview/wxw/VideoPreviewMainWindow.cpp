@@ -72,7 +72,7 @@ void MainWindow::onAbout(wxCommandEvent& /*event*/)
 	wxMessageBox(L"This is a wxWidgets Hello world sample", L"About Hello World", wxOK | wxICON_INFORMATION, this);
 }
 
-bool MainWindow::onFileDragAndDrop(const std::vector<std::string> &files)
+bool MainWindow::onFileDragAndDrop(const Strings &files)
 {
 	if (files.empty())
 	{

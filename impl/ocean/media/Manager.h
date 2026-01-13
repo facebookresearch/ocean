@@ -40,7 +40,7 @@ class OCEAN_MEDIA_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Definition of a vector holding library names.
 		 */
-		using Names = std::vector<std::string>;
+		using Names = Strings;
 
 	private:
 

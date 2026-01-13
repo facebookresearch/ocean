@@ -120,14 +120,14 @@ class HistogramColorAdjustmentMainWindow : public wxFrame
 		 * @param files Names of the files
 		 * @return True, if the files are accepted
 		 */
-		bool onFileDragAndDropFrame(const std::vector<std::string> &files);
+		bool onFileDragAndDropFrame(const Strings &files);
 
 		/**
 		 * File drag and drop event function.
 		 * @param files Names of the files
 		 * @return True, if the files are accepted
 		 */
-		bool onFileDragAndDropReference(const std::vector<std::string> &files);
+		bool onFileDragAndDropReference(const Strings &files);
 
 	private:
 

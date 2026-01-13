@@ -122,7 +122,7 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 
 	const std::vector<FrameType::PixelFormat> pixelFormats = {FrameType::FORMAT_BGR24, FrameType::FORMAT_BGRA32, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_Y8};
 
-	const std::vector<std::string> encoderTypes = {"bmp", "jpg", "png", "tif"};
+	const Strings encoderTypes = {"bmp", "jpg", "png", "tif"};
 
 	const Timestamp startTimestamp(true);
 

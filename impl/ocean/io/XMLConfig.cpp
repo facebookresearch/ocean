@@ -335,7 +335,7 @@ std::vector<double> XMLConfig::XMLValue::operator()(const std::vector<double>& v
 	return value;
 }
 
-std::vector<std::string> XMLConfig::XMLValue::operator()(const std::vector<std::string>& value) const
+Strings XMLConfig::XMLValue::operator()(const Strings& value) const
 {
 	ocean_assert(false && "Not supported!");
 	return value;
@@ -455,7 +455,7 @@ bool XMLConfig::XMLValue::operator=(const std::vector<double>& /*values*/)
 	return false;
 }
 
-bool XMLConfig::XMLValue::operator=(const std::vector<std::string>& /*values*/)
+bool XMLConfig::XMLValue::operator=(const Strings& /*values*/)
 {
 	ocean_assert(false && "Not supported!");
 	return false;

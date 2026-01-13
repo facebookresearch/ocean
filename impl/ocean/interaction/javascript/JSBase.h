@@ -774,7 +774,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 }
 
 template <>
-inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, const unsigned int index, std::vector<std::string>& value)
+inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, const unsigned int index, Strings& value)
 {
 	if (info.Length() >= int(index + 1u))
 	{

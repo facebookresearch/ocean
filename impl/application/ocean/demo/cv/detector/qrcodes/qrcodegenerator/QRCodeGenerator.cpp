@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 	}
 
 	std::string message;
-	const std::vector<std::string>& namelessValues = commandArguments.namelessValues();
+	const Strings& namelessValues = commandArguments.namelessValues();
 
 	if (!namelessValues.empty())
 	{

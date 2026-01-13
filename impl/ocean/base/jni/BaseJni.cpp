@@ -108,7 +108,7 @@ bool BaseJni::initialize(const std::string& messageOutputType)
 	}
 	else
 	{
-		const std::vector<std::string> tokens = Utilities::separateValues(messageOutputType);
+		const Strings tokens = Utilities::separateValues(messageOutputType);
 
 		for (const std::string& token : tokens)
 		{

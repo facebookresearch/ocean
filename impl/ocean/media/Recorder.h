@@ -77,7 +77,7 @@ class OCEAN_MEDIA_EXPORT Recorder
 		/**
 		 * Definition of a vector holding encoder names.
 		 */
-		using Encoders = std::vector<std::string>;
+		using Encoders = Strings;
 
 	public:
 

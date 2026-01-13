@@ -154,7 +154,7 @@ void PatchTracker::reset(Database* database, std::shared_ptr<UnifiedDescriptorMa
 	needToUpdateFramePyramidForDescriptors_ = true;
 }
 
-bool PatchTracker::trackRecording(Devices::DevicePlayer& devicePlayer, const std::vector<std::string>& worldTrackerNames, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor)
+bool PatchTracker::trackRecording(Devices::DevicePlayer& devicePlayer, const Strings& worldTrackerNames, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor)
 {
 	ocean_assert(devicePlayer.isValid());
 	if (!devicePlayer.isValid())

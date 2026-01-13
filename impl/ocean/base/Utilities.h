@@ -33,7 +33,7 @@ class OCEAN_BASE_EXPORT Utilities
 		 * @param trim State determining whether prefix and postfix blanks are removed for each value
 		 * @return Resulting separated values
 		 */
-		static std::vector<std::string> separateValues(const std::string& values, const char delimiter = ',', const bool removeQuotes = true, const bool trim = true);
+		static Strings separateValues(const std::string& values, const char delimiter = ',', const bool removeQuotes = true, const bool trim = true);
 
 		/**
 		 * Sorts two values so that the lowest value will finally be the first value.

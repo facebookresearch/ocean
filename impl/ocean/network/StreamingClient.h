@@ -50,7 +50,7 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		/**
 		 * Definition of a vector holding channels.
 		 */
-		using Channels = std::vector<std::string>;
+		using Channels = Strings;
 
 	public:
 

@@ -56,7 +56,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestLegacyQRCodeDetector2D : protect
 				 * Creates a new test data collection object.
 				 * @param imageFilenames The filenames of all local images which will be part of the test collection
 				 */
-				explicit FileDataCollection(std::vector<std::string>&& imageFilenames);
+				explicit FileDataCollection(Strings&& imageFilenames);
 
 				/**
 				 * Returns the test data object associated with a specified index.
@@ -73,7 +73,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestLegacyQRCodeDetector2D : protect
 			protected:
 
 				/// The filenames of all local images belonging to this test collection.
-				std::vector<std::string> filenames_;
+				Strings filenames_;
 		};
 
 	public:

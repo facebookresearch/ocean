@@ -267,7 +267,7 @@ void Detector2DWrapper::release()
 #endif
 }
 
-bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::vector<std::string>& messages, bool* lastFrameReached)
+bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, Strings& messages, bool* lastFrameReached)
 {
 	messages.clear();
 

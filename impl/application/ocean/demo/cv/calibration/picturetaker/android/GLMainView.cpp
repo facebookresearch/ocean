@@ -211,19 +211,19 @@ bool GLMainView::takePicture()
 	return true;
 }
 
-std::vector<std::string> GLMainView::availableResolutions()
+Strings GLMainView::availableResolutions()
 {
 	if (!liveVideo_)
 	{
 		Log::error() << "No camera selected";
 		ocean_assert(false && "This should never happen!");
 
-		return std::vector<std::string>();
+		return Strings();
 	}
 
 	const Media::LiveVideo::StreamConfigurations streamConfigurations = liveVideo_->supportedStreamConfigurations(Media::LiveVideo::ST_FRAME);
 
-	std::vector<std::string> result;
+	Strings result;
 
 	for (const Media::LiveVideo::StreamConfiguration& streamConfiguration : streamConfigurations)
 	{
@@ -238,11 +238,11 @@ std::vector<std::string> GLMainView::availableResolutions()
 	return result;
 }
 
-std::vector<std::string> GLMainView::availableCameras()
+Strings GLMainView::availableCameras()
 {
 	const Media::Library::Definitions definitions = Media::Manager::get().selectableMedia();
 
-	std::vector<std::string> result;
+	Strings result;
 	result.reserve(definitions.size());
 
 	for (const Media::Library::Definition& definition : definitions)
@@ -333,7 +333,7 @@ jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_Pictur
 
 jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_availableCameras(JNIEnv* env, jobject javaThis)
 {
-	const std::vector<std::string> cameras = GLMainView::availableCameras();
+	const Strings cameras = GLMainView::availableCameras();
 
 	return Platform::Android::Utilities::toJavaStringArray(env, cameras);
 }
@@ -347,7 +347,7 @@ jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_Pictur
 
 jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_availableResolutions(JNIEnv* env, jobject javaThis)
 {
-	const std::vector<std::string> resolutions = GLMainView::get<GLMainView>().availableResolutions();
+	const Strings resolutions = GLMainView::get<GLMainView>().availableResolutions();
 
 	return Platform::Android::Utilities::toJavaStringArray(env, resolutions);
 }

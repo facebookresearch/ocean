@@ -304,14 +304,14 @@ class OCEAN_RENDERING_EXPORT Text : virtual public Shape
 		 * @return The family names which are available
 		 * @see setFont(), availableStyleNames().
 		 */
-		virtual std::vector<std::string> availableFamilyNames() const;
+		virtual Strings availableFamilyNames() const;
 
 		/**
 		 * Returns the style names of all available fonts with specified family name.
 		 * @param familyName The family name of the fonts for which all available style names will be returned
 		 * @return The style names of all available fonts
 		 */
-		virtual std::vector<std::string> availableStyleNames(const std::string& familyName) const;
+		virtual Strings availableStyleNames(const std::string& familyName) const;
 
 		/**
 		 * Returns the type of this object.

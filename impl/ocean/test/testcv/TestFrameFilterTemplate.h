@@ -212,7 +212,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterTemplate
 		 * Returns all individual directions as readable string.
 		 * @return A vector holding all strings
 		 */
-		static const std::vector<std::string>& directionStrings();
+		static const Strings& directionStrings();
 };
 
 }

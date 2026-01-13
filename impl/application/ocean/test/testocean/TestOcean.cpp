@@ -182,7 +182,7 @@ using namespace Ocean;
 	unsigned int startedTests = 0u;
 	unsigned int succeededTests = 0u;
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(libraryList), ',', true, true));
+	Strings tests(Utilities::separateValues(String::toLower(libraryList), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
 	try

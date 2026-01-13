@@ -46,7 +46,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Permission
 	 * @param translate If true, translates short permission name to Android-internal full permission name, note: must be `false` for Oculus permissions, e.g., `com.oculus.permission.USE_SCENE`
 	 * @return True, if the request was invoked successfully, does not check whether the permission was granted
 	 */
-	static bool requestPermissions(JavaVM* javaVM, jobject activity, const std::vector<std::string>& permissions, const bool translate = true);
+	static bool requestPermissions(JavaVM* javaVM, jobject activity, const Strings& permissions, const bool translate = true);
 
 	/**
 	 * Determines Android's internal permission name for a readable permission.

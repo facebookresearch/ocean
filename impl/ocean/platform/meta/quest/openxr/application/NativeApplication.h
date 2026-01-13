@@ -113,7 +113,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		 * @param permissions The names of the Android permissions to request, must be valid
 		 * @see onPermissionGranted().
 		 */
-		inline void requestAndroidPermissions(std::vector<std::string>&& permissions);
+		inline void requestAndroidPermissions(Strings&& permissions);
 
 		/**
 		 * Returns the Android permissions which have been granted by the user.
@@ -366,7 +366,7 @@ inline std::string NativeApplication::deviceName() const
 	return Device::deviceName(deviceType());
 }
 
-inline void NativeApplication::requestAndroidPermissions(std::vector<std::string>&& permissions)
+inline void NativeApplication::requestAndroidPermissions(Strings&& permissions)
 {
 	const ScopedLock scopedLock(androidPermissionLock_);
 

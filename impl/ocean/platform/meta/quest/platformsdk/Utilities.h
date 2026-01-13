@@ -41,7 +41,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Utilities
 		 * @param userNames Optional resulting readable names of the users, one for each extracted user id
 		 * @return The resulting ids of the extracted users
 		 */
-		static Indices64 extractUsers(ovrUserArrayHandle userArrayHandle, std::vector<std::string>* userNames = nullptr);
+		static Indices64 extractUsers(ovrUserArrayHandle userArrayHandle, Strings* userNames = nullptr);
 
 		/**
 		 * Returns the error of a given message.

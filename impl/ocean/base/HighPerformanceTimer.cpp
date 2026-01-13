@@ -397,13 +397,13 @@ HighPerformanceBenchmark::MeasurementMap HighPerformanceBenchmark::measurementMa
 	return measurementMap;
 }
 
-std::vector<std::string> HighPerformanceBenchmark::report(const std::string& referenceCategory) const
+Strings HighPerformanceBenchmark::report(const std::string& referenceCategory) const
 {
 	const ScopedLock scopedLock(lock_);
 
 	if (measurementMap_.empty())
 	{
-		return std::vector<std::string>();
+		return Strings();
 	}
 
 	using SortedMap = std::multimap<double, std::string>;
@@ -441,15 +441,15 @@ std::vector<std::string> HighPerformanceBenchmark::report(const std::string& ref
 		sortedMap.insert(std::make_pair(sumSeconds, i->first));
 	}
 
-	std::vector<std::vector<std::string>> tokenMatrix;
+	std::vector<Strings> tokenMatrix;
 
 	if (referenceTotalSeconds > 0.0)
 	{
-		tokenMatrix.emplace_back(std::vector<std::string>{"Name", "Percent", "Best (ms)", "Average (ms)", "Worst (ms)", "P50 (ms)", "P90 (ms)", "P95 (ms)", "P99 (ms)", "Measurements", "Total (ms)"});
+		tokenMatrix.emplace_back(Strings{"Name", "Percent", "Best (ms)", "Average (ms)", "Worst (ms)", "P50 (ms)", "P90 (ms)", "P95 (ms)", "P99 (ms)", "Measurements", "Total (ms)"});
 	}
 	else
 	{
-		tokenMatrix.emplace_back(std::vector<std::string>{"Name", "Best (ms)", "Average (ms)", "Worst (ms)", "P50 (ms)", "P90 (ms)", "P95 (ms)", "P99 (ms)", "Measurements", "Total (ms)"});
+		tokenMatrix.emplace_back(Strings{"Name", "Best (ms)", "Average (ms)", "Worst (ms)", "P50 (ms)", "P90 (ms)", "P95 (ms)", "P99 (ms)", "Measurements", "Total (ms)"});
 	}
 
 	for (SortedMap::const_reverse_iterator i = sortedMap.crbegin(); i != sortedMap.crend(); ++i)
@@ -481,7 +481,7 @@ std::vector<std::string> HighPerformanceBenchmark::report(const std::string& ref
 
 		const size_t measurements = sortedMeasurementsSeconds.size();
 
-		std::vector<std::string> rowTokens;
+		Strings rowTokens;
 
 		if (referenceTotalSeconds > 0.0)
 		{
@@ -504,7 +504,7 @@ std::vector<std::string> HighPerformanceBenchmark::report(const std::string& ref
 
 	for (size_t rowIndex = 0; rowIndex < tokenMatrix.size(); ++rowIndex)
 	{
-		const std::vector<std::string>& rowTokens = tokenMatrix[rowIndex];
+		const Strings& rowTokens = tokenMatrix[rowIndex];
 		ocean_assert(rowTokens.size() == maximumColumnWidths.size());
 
 		for (size_t columnIndex = 0; columnIndex < rowTokens.size(); ++columnIndex)
@@ -514,11 +514,11 @@ std::vector<std::string> HighPerformanceBenchmark::report(const std::string& ref
 	}
 
 	// Create a column-aligned report.
-	std::vector<std::string> result;
+	Strings result;
 
 	for (size_t rowIndex = 0; rowIndex < tokenMatrix.size(); ++rowIndex)
 	{
-		const std::vector<std::string>& rowTokens = tokenMatrix[rowIndex];
+		const Strings& rowTokens = tokenMatrix[rowIndex];
 
 		std::string rowString;
 
@@ -766,7 +766,7 @@ bool HighPerformanceBenchmark::Category::greaterCpuTime(const Category& category
 	return category0.computeRecursiveSumSeconds() >= category1.computeRecursiveSumSeconds();
 }
 
-bool HighPerformanceBenchmark::reportWithHierarchies(std::vector<std::string>& report, const std::string& referenceCategory, const std::string& categoryNameDelimiter) const
+bool HighPerformanceBenchmark::reportWithHierarchies(Strings& report, const std::string& referenceCategory, const std::string& categoryNameDelimiter) const
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -808,7 +808,7 @@ bool HighPerformanceBenchmark::reportWithHierarchies(std::vector<std::string>& r
 	}
 
 	// Create a column-aligned report.
-	std::vector<std::string> result;
+	Strings result;
 
 	for (size_t rowIndex = 0; rowIndex < tokenMatrix.size(); ++rowIndex)
 	{
@@ -876,7 +876,7 @@ size_t HighPerformanceBenchmark::measurements(const std::string& category)
 
 HighPerformanceBenchmark::Categories HighPerformanceBenchmark::createCategoryHierarchy(const MeasurementMap& measurementMap, const std::string& categoryNameDelimiter)
 {
-	std::vector<std::string> categoryNames;
+	Strings categoryNames;
 	categoryNames.reserve(measurementMap.size());
 
 	for (MeasurementMap::const_iterator i = measurementMap.cbegin(); i != measurementMap.cend(); ++i)

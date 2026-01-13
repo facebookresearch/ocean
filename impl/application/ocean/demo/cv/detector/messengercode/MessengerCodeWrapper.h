@@ -72,7 +72,7 @@ class MessengerCodeWrapper
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True if a Messenger code has been found, otherwise false
 		 */
-		bool detectAndDecode(Frame& frame, double& time, std::vector<std::string>& messages, bool* lastFrameReached = nullptr);
+		bool detectAndDecode(Frame& frame, double& time, Strings& messages, bool* lastFrameReached = nullptr);
 
 		/**
 		 * Move operator.

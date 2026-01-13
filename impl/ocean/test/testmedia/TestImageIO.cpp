@@ -739,7 +739,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 
 	bool allSucceeded = true;
 
-	const std::vector<std::string> encoderTypes = {"bmp", "jpg", "heic", "png", "tif"};
+	const Strings encoderTypes = {"bmp", "jpg", "heic", "png", "tif"};
 
 	const Timestamp startTimestamp(true);
 
@@ -842,7 +842,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 	const std::set<std::string> supportedImageTypesIIO(Media::ImageIO::IIOLibrary::supportedImageTypes());
 	const std::set<std::string> supportedImageTypesOIL(Media::OpenImageLibraries::OILLibrary::supportedImageTypes());
 
-	std::vector<std::string> imageTypes;
+	Strings imageTypes;
 	std::set_intersection(supportedImageTypesIIO.begin(), supportedImageTypesIIO.end(), supportedImageTypesOIL.begin(), supportedImageTypesOIL.end(), std::back_inserter(imageTypes));
 	ocean_assert(!imageTypes.empty());
 
@@ -1688,7 +1688,7 @@ bool TestImageIO::testBufferImageRecorder(const FrameType& frameType, const std:
 
 #ifdef OCEAN_DEBUG
 	// we simply ensure that the one and only registered library is our ImageIO media library
-	const std::vector<std::string> libraryNames = Media::Manager::get().libraries();
+	const Strings libraryNames = Media::Manager::get().libraries();
 	ocean_assert(libraryNames.size() == 1 && libraryNames.front() == Media::ImageIO::nameImageIOLibrary());
 #endif
 

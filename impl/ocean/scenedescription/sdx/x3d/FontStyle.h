@@ -74,7 +74,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT FontStyle : virtual public X3DFontSt
 		 * @param fontStyleName The optional name of the font style, empty to use the default style
 		 * @return True, if succeeded
 		 */
-		static bool applyFontToText(Rendering::Text& text, const std::vector<std::string>& fontFamilyNames = std::vector<std::string>(), const std::string& fontStyleName = std::string());
+		static bool applyFontToText(Rendering::Text& text, const Strings& fontFamilyNames = Strings(), const std::string& fontStyleName = std::string());
 
 	protected:
 

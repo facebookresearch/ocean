@@ -67,7 +67,7 @@ class OCEAN_PLATFORM_OPENXR_EXPORT ActionSet final
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		using Paths = std::vector<std::string>;
+		using Paths = Strings;
 
 		/// An invalid action id.
 		static constexpr ActionId invalidActionId_ = ActionId(-1);

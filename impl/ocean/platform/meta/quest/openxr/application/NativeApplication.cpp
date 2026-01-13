@@ -541,7 +541,7 @@ void NativeApplication::handlePendingAndroidPermissions(const bool firstCheck)
 		return;
 	}
 
-	std::vector<std::string> notYetRequestedPermissions;
+	Strings notYetRequestedPermissions;
 
 	constexpr int permissionDelay = 5;
 

@@ -312,7 +312,7 @@ std::string LineDetectorHoughMainWindow::translateApplicationMode(const unsigned
 {
 	ocean_assert(mode <= DM_INVALID);
 
-	std::vector<std::string> strings;
+	Strings strings;
 
 	if (mode & DM_FRAME_24BIT)
 	{

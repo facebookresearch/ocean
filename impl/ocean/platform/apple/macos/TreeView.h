@@ -42,11 +42,6 @@ class TreeView
 	public:
 
 		/**
-		 * Definition of a vector holding strings.
-		 */
-		using Strings = std::vector<std::string>;
-
-		/**
 		 * Definition of a unique tree item id.
 		 */
 		using TreeItemId = uint64_t;
@@ -580,7 +575,7 @@ inline TreeView::TreeItemId TreeView::TreeItem::id() const
 	return id_;
 }
 
-inline const TreeView::Strings& TreeView::TreeItem::texts() const
+inline const Strings& TreeView::TreeItem::texts() const
 {
 	return texts_;
 }

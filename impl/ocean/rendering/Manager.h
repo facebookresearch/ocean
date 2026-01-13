@@ -37,7 +37,7 @@ class OCEAN_RENDERING_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Definition of a vector holding engine names.
 		 */
-		using EngineNames = std::vector<std::string>;
+		using EngineNames = Strings;
 
 	private:
 

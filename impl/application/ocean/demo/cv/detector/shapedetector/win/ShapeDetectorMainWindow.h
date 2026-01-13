@@ -286,7 +286,7 @@ class ShapeDetectorMainWindow :
 		 * @param name name of the main window
 		 * @param filenames The filenames of all images to be loaded
 		 */
-		ShapeDetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::string>& filenames);
+		ShapeDetectorMainWindow(HINSTANCE instance, const std::wstring& name, const Strings& filenames);
 
 		/**
 		 * Destructs the main window.

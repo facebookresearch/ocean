@@ -35,7 +35,7 @@ bool FileDropTarget::OnDropFiles(wxCoord /*x*/, wxCoord /*y*/, const wxArrayStri
 		return false;
 	}
 
-	std::vector<std::string> files;
+	Strings files;
 	files.reserve(filenames.size());
 
 	for (unsigned int n = 0; n < (unsigned int)filenames.size(); ++n)

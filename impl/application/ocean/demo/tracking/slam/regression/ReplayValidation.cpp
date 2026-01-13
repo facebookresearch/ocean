@@ -533,7 +533,7 @@ bool ReplayValidation::compareFramesStatistics(const Tracking::SLAM::TrackerMono
 	comparisonResult.hasMajorImprovement_ = false;
 	comparisonResult.improvementDescription_.clear();
 
-	std::vector<std::string> improvements;
+	Strings improvements;
 
 	if (comparisonResult.validPoseCountRelativeDiff_ > configuration.toleranceValidPoses_)
 	{

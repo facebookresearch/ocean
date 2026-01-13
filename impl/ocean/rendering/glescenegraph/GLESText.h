@@ -253,13 +253,13 @@ class OCEAN_RENDERING_GLES_EXPORT GLESText :
 		 * Returns all available family names.
 		 * @see Text::availableFamilyNames().
 		 */
-		std::vector<std::string> availableFamilyNames() const override;
+		Strings availableFamilyNames() const override;
 
 		/**
 		 * Returns the style names of all available fonts with specified family name.
 		 * @see Text::availableStyleNames().
 		 */
-		std::vector<std::string> availableStyleNames(const std::string& familyName) const override;
+		Strings availableStyleNames(const std::string& familyName) const override;
 
 		/**
 		 * Renders the triangles defined by the associated vertex set and the defined triangle faces.

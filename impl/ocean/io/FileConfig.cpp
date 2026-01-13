@@ -253,7 +253,7 @@ std::vector<double> FileConfig::FileValue::operator()(const std::vector<double>&
 	return value;
 }
 
-std::vector<std::string> FileConfig::FileValue::operator()(const std::vector<std::string>& value) const
+Strings FileConfig::FileValue::operator()(const Strings& value) const
 {
 	if (valueType_ == TYPE_MULTI_STRING)
 	{
@@ -384,7 +384,7 @@ bool FileConfig::FileValue::operator=(const std::vector<double>& values)
 	return true;
 }
 
-bool FileConfig::FileValue::operator=(const std::vector<std::string>& values)
+bool FileConfig::FileValue::operator=(const Strings& values)
 {
 	if (valueType_ == TYPE_GROUP || valueType_ == TYPE_INVALID)
 	{
@@ -562,15 +562,15 @@ std::vector<double> FileConfig::FileValue::numberValues() const
 	return result;
 }
 
-std::vector<std::string> FileConfig::FileValue::stringValues() const
+Strings FileConfig::FileValue::stringValues() const
 {
 	if (string_.empty())
 	{
-		return std::vector<std::string>();
+		return Strings();
 	}
 
 	std::string::size_type start = string_.find('\"');
-	std::vector<std::string> result;
+	Strings result;
 
 	while (start < string_.size())
 	{

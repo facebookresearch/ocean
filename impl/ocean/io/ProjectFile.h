@@ -27,7 +27,7 @@ class OCEAN_IO_EXPORT ProjectFile final : protected FileConfig
 		/**
 		 * Definition of a vector holding a filenames.
 		 */
-		using Filenames = std::vector<std::string>;
+		using Filenames = Strings;
 
 	public:
 

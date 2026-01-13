@@ -313,7 +313,7 @@ bool ExtractorParameters<TStringType>::loadFromCommandLine(const char** argument
 template <typename TStringType>
 bool ExtractorParameters<TStringType>::validParameterValues() const
 {
-	std::vector<std::string> errorMessages;
+	Strings errorMessages;
 
 	if (overlap <= Scalar(0) || overlap >= Scalar(1))
 	{

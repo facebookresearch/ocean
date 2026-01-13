@@ -720,7 +720,7 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 
 	bool allSucceeded = true;
 
-	const std::vector<std::string> encoderTypes =
+	const Strings encoderTypes =
 	{
 		"bmp",
 		"ocn"

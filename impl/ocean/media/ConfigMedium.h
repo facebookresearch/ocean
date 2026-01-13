@@ -41,7 +41,7 @@ class OCEAN_MEDIA_EXPORT ConfigMedium : virtual public Medium
 		/**
 		 * Definition of a vector holding configuration names.
 		 */
-		using ConfigNames = std::vector<std::string>;
+		using ConfigNames = Strings;
 
 	public:
 

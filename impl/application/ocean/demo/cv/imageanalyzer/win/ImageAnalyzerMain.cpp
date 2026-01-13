@@ -47,7 +47,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		return 0;
 	}
 
-	std::vector<std::string> inputFilenames;
+	Strings inputFilenames;
 
 	const Value inputValue = commandArguments.value("input", false, 0);
 

@@ -49,7 +49,7 @@ class OCEAN_BASE_EXPORT ApplicationInterface : public Singleton<ApplicationInter
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		using StringVector = std::vector<std::string>;
+		using StringVector = Strings;
 
 		/**
 		 * Definition of a content add or remove callback function.

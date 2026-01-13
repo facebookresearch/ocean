@@ -129,7 +129,7 @@
 	// we check whether the platform independent tracker has some new image to process
 
 	Frame resultingFrame;
-	std::vector<std::string> messages;
+	Strings messages;
 	const bool detectedMessengerCode = messengerCodeWrapper_.detectAndDecode(resultingFrame, resultingPerformance, messages) && resultingFrame.isValid();
 
 	// **NOTE** copying the resulting RGB frame and forwarding the frame to the renderer costs some performance

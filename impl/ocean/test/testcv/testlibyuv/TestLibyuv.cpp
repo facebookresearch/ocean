@@ -76,7 +76,7 @@ void testCVLibyuv(const double testDuration, const bool skipValidation, const st
 	// we aquire the worker pool to ensure that we have a worker created when we need one
 	WorkerPool::get().scopedWorker()();
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
+	Strings tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
 	if (testSet.empty() || testSet.find("frameconverterbgra32") != testSet.end())

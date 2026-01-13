@@ -35,7 +35,7 @@ class OCEAN_NETWORK_EXPORT HTTPSClient
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		using Strings = std::vector<std::string>;
+		using Strings = Strings;
 
 		/**
 		 * Callback for receiving progress information when performing a HTTP request.

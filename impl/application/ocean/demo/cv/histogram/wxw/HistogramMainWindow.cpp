@@ -183,7 +183,7 @@ void HistogramMainWindow::onIdle(wxIdleEvent& /*event*/)
 	// nothing to do here
 }
 
-bool HistogramMainWindow::onFileDragAndDrop(const std::vector<std::string> &files)
+bool HistogramMainWindow::onFileDragAndDrop(const Strings &files)
 {
 	if (files.empty())
 	{

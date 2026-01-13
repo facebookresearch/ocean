@@ -39,7 +39,7 @@ namespace TestDetector
 
 using namespace CV::Detector;
 
-TestMessengerCodeDetector::FileDataCollection::FileDataCollection(std::vector<std::string>&& filenames) :
+TestMessengerCodeDetector::FileDataCollection::FileDataCollection(Strings&& filenames) :
 	filenames_(std::move(filenames))
 {
 	ocean_assert(!filenames_.empty());
@@ -974,7 +974,7 @@ TestDataManager::ScopedSubscriptions TestMessengerCodeDetector_registerTestDataC
 	TestDataManager::ScopedSubscriptions scopedSubscriptions;
 
 	{
-		std::vector<std::string> filenames1Bullseye =
+		Strings filenames1Bullseye =
 		{
 			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00001.png",
 			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00002.png",
@@ -998,7 +998,7 @@ TestDataManager::ScopedSubscriptions TestMessengerCodeDetector_registerTestDataC
 	}
 
 	{
-		std::vector<std::string> filenames0Code =
+		Strings filenames0Code =
 		{
 			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00001.png",
 			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00002.png",
@@ -1053,7 +1053,7 @@ TestDataManager::ScopedSubscriptions TestMessengerCodeDetector_registerTestDataC
 	}
 
 	{
-		std::vector<std::string> filenames1Code =
+		Strings filenames1Code =
 		{
 			absolutePath + "messenger_codes_test_images/1_code/test_image_001.png",
 			absolutePath + "messenger_codes_test_images/1_code/test_image_002.png",

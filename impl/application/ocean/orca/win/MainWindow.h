@@ -44,7 +44,7 @@ class MainWindow : public CFrameWndEx
 		/**
 		 * Definition of a vector holding filenames.
 		 */
-		using Filenames = std::vector<std::string>;
+		using Filenames = Strings;
 
 	private:
 

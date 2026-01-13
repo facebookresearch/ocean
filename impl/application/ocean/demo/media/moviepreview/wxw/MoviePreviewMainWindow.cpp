@@ -91,7 +91,7 @@ void MoviePreviewMainWindow::onOpenMedia(wxCommandEvent& /*event*/)
 
 	if (openFileDialog.ShowModal() == wxID_OK)
 	{
-		onFileDragAndDrop(std::vector<std::string>(1, Platform::WxWidgets::Utilities::toAString(openFileDialog.GetPath())));
+		onFileDragAndDrop(Strings(1, Platform::WxWidgets::Utilities::toAString(openFileDialog.GetPath())));
 	}
 }
 
@@ -188,7 +188,7 @@ void MoviePreviewMainWindow::onIdle(wxIdleEvent& /*event*/)
 	}
 }
 
-bool MoviePreviewMainWindow::onFileDragAndDrop(const std::vector<std::string> &files)
+bool MoviePreviewMainWindow::onFileDragAndDrop(const Strings &files)
 {
 	if (files.empty())
 	{

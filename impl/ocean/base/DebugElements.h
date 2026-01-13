@@ -88,7 +88,7 @@ class OCEAN_BASE_EXPORT DebugElements
 		/**
 		 * Definition of a vector holding strings (a hierarchy).
 		 */
-		using Hierarchy = std::vector<std::string>;
+		using Hierarchy = Strings;
 
 		/**
 		 * Definition of a callback function for an updated debug element.

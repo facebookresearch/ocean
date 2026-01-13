@@ -273,7 +273,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT TrackedController
 		 * @param buttons The button states
 		 * @param translatedButtons The resulting translated readable strings of the individual buttons
 		 */
-		static void translateButtons(const ButtonType buttons, std::vector<std::string>& translatedButtons);
+		static void translateButtons(const ButtonType buttons, Strings& translatedButtons);
 
 	protected:
 

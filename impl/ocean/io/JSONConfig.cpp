@@ -239,7 +239,7 @@ std::vector<double> JSONConfig::JSONValue::operator()(const std::vector<double>&
 	return value;
 }
 
-std::vector<std::string> JSONConfig::JSONValue::operator()(const std::vector<std::string>& value) const
+Strings JSONConfig::JSONValue::operator()(const Strings& value) const
 {
 	if (valueType_ == TYPE_MULTI_STRING)
 	{
@@ -370,7 +370,7 @@ bool JSONConfig::JSONValue::operator=(const std::vector<double>& values)
 	return true;
 }
 
-bool JSONConfig::JSONValue::operator=(const std::vector<std::string>& values)
+bool JSONConfig::JSONValue::operator=(const Strings& values)
 {
 	if (valueType_ == TYPE_GROUP || valueType_ == TYPE_INVALID)
 	{
@@ -566,15 +566,15 @@ std::vector<double> JSONConfig::JSONValue::numberValues() const
 	return result;
 }
 
-std::vector<std::string> JSONConfig::JSONValue::stringValues() const
+Strings JSONConfig::JSONValue::stringValues() const
 {
 	if (valueString_.empty())
 	{
-		return std::vector<std::string>();
+		return Strings();
 	}
 
 	std::string::size_type start = valueString_.find('\"');
-	std::vector<std::string> result;
+	Strings result;
 
 	while (start < valueString_.size())
 	{

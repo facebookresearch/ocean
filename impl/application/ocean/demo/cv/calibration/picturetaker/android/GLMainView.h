@@ -81,7 +81,7 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		 * The camera must have been selected before.
 		 * @return The available image resolutions as strings, e.g., {"640x480", "1280x720", "1920x1080"}
 		 */
-		std::vector<std::string> availableResolutions();
+		Strings availableResolutions();
 
 		/**
 		 * Creates an instance of this object.
@@ -93,7 +93,7 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		 * Returns the names of all available cameras in the device.
 		 * @return The camera names
 		 */
-		static std::vector<std::string> availableCameras();
+		static Strings availableCameras();
 
 	private:
 

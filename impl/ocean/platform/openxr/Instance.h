@@ -137,14 +137,14 @@ class OCEAN_PLATFORM_OPENXR_EXPORT Instance final
 		 * @param apiLayers Optional resulting names of the API layers, nullptr if not of interest
 		 * @return True, if succeeded
 		 */
-		static bool determineApiLayers(std::vector<std::string>* apiLayers = nullptr);
+		static bool determineApiLayers(Strings* apiLayers = nullptr);
 
 		/**
 		 * Determines the properties of the available OpenXR extension.
 		 * @param extensionNames Optional resulting names of the extensions, nullptr if not of interest
 		 * @return True, if succeeded
 		 */
-		static XrExtensionPropertyGroups determineExtensionProperties(std::vector<std::string>* extensionNames = nullptr);
+		static XrExtensionPropertyGroups determineExtensionProperties(Strings* extensionNames = nullptr);
 
 		/**
 		 * Determines the names of existing OpenXR extensions which match the set of given necessary extensions.

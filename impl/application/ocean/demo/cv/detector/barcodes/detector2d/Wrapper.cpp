@@ -238,7 +238,7 @@ Wrapper::Wrapper(const std::vector<std::wstring>& separatedCommandArguments)
 	if (frameMedium_.isNull())
 	{
 		// If the user did not specify a medium, we try to get a live video (id 1 - often an external web cam, id 0 - often the built-in camera of a laptop)
-		const std::vector<std::string> liveVideoIds =
+		const Strings liveVideoIds =
 		{
 			"LiveVideoId:1",
 			"LiveVideoId:0"
@@ -303,7 +303,7 @@ void Wrapper::release()
 #endif
 }
 
-bool Wrapper::detectAndDecode(Frame& outputFrame, double& time, std::vector<std::string>& messages, bool* lastFrameReached)
+bool Wrapper::detectAndDecode(Frame& outputFrame, double& time, Strings& messages, bool* lastFrameReached)
 {
 	messages.clear();
 
@@ -408,7 +408,7 @@ bool Wrapper::detectAndDecode(Frame& outputFrame, double& time, std::vector<std:
 		CV::Canvas::line<3u>(resultFrame, observation.location(), CV::Canvas::yellow(resultFrame.pixelFormat()));
 	}
 
-	std::vector<std::string> localMessages;
+	Strings localMessages;
 
 	for (const CV::Detector::Barcodes::Barcode& barcode : barcodes)
 	{

@@ -97,7 +97,7 @@ bool testCVOpenCV(const double testDuration, const std::string& imageFilename, c
 	}
 	ocean_assert(!image.empty());
 
-	std::vector<std::string> tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
+	Strings tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
 	if (testSet.empty() || testSet.find("histogram") != testSet.end())

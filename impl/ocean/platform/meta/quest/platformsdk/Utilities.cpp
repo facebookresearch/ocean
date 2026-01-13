@@ -22,7 +22,7 @@ namespace Quest
 namespace PlatformSDK
 {
 
-Indices64 Utilities::extractUsers(ovrUserArrayHandle userArrayHandle, std::vector<std::string>* userNames)
+Indices64 Utilities::extractUsers(ovrUserArrayHandle userArrayHandle, Strings* userNames)
 {
 	ocean_assert(userArrayHandle != nullptr);
 

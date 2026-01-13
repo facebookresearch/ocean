@@ -273,7 +273,7 @@ void Multiplayer::onNotification(ovrMessage* message, const bool succeeded)
 			const ovrLaunchInvitePanelFlowResultHandle panelFlowResultHandle = ovr_Message_GetLaunchInvitePanelFlowResult(message);
 			const ovrUserArrayHandle userArrayHandle = ovr_LaunchInvitePanelFlowResult_GetInvitedUsers(panelFlowResultHandle);
 
-			std::vector<std::string> userNames;
+			Strings userNames;
 			const Indices64 userIds = Utilities::extractUsers(userArrayHandle, &userNames);
 
 			Log::info() << "Invitations sent:";
