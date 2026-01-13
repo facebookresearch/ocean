@@ -21,8 +21,6 @@
 
 #include "ocean/base/String.h"
 
-#include <string>
-
 #ifdef OCEAN_COMPILER_MSC
 	#pragma managed(pop)
 #endif
@@ -45,13 +43,53 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 	public:
 
 		/**
+		 * Definition of anchor positions for text rendering.
+		 */
+		enum AnchorPosition : uint32_t
+		{
+			/// Text is anchored at the top-left corner
+			AP_TOP_LEFT,
+			/// Text is anchored at the top-right corner
+			AP_TOP_RIGHT,
+			/// Text is anchored at the bottom-left corner
+			AP_BOTTOM_LEFT,
+			/// Text is anchored at the bottom-right corner
+			AP_BOTTOM_RIGHT,
+			/// Text is centered
+			AP_CENTER
+		};
+
+	public:
+
+		/**
 		 * Prints a text on the given device context.
-		 * @param dc Device context receiving the text
+		 * @param dc The device context on which the text will be drawn
 		 * @param x Horizontal output position
 		 * @param y Vertical output position
 		 * @param text Text to be printed
 		 */
 		static void textOutput(HDC dc, const int x, const int y, const std::string& text);
+
+		/**
+		 * Draws styled text on a device context with customizable font, anchor position, and colors.
+		 * The text can be positioned using anchor points relative to the window dimensions, with optional shadow for better visibility.
+		 * @param dc The device context on which the text will be drawn
+		 * @param text The text to be drawn
+		 * @param font The name of the font to use (e.g., "Arial")
+		 * @param fontSize The height of the font in pixels
+		 * @param bold True to use bold font weight; False for normal weight
+		 * @param anchorPosition The anchor position for the text
+		 * @param windowWidth The width of the window, used for anchor calculations
+		 * @param windowHeight The height of the window, used for anchor calculations
+		 * @param foregroundColor The color of the text (RGB value)
+		 * @param backgroundColor The background color of the text, or -1 for transparent background
+		 * @param shadowColor The color of the shadow, or -1 to disable shadow
+		 * @param shadowOffsetX The horizontal offset of the shadow in pixels, with range [0, infinity)
+		 * @param shadowOffsetY The vertical offset of the shadow in pixels, with range [0, infinity)
+		 * @param marginX The horizontal margin from the window edge in pixels, with range [0, infinity)
+		 * @param marginY The vertical margin from the window edge in pixels, with range [0, infinity)
+		 */
+		static void textOutput(HDC deviceContext, const std::wstring& text, const std::wstring& font, const unsigned int fontSize, const bool bold, const AnchorPosition anchorPosition, const unsigned int windowWidth, const unsigned int windowHeight, const int32_t foregroundColor, const int32_t backgroundColor = -1, const int32_t shadowColor = -1, const unsigned int shadowOffsetX = 2u, const unsigned int shadowOffsetY = 2u, const unsigned int marginX = 20u, const unsigned int marginY = 20u);
 
 		/**
 		 * Prints a text on the desktop.
@@ -357,8 +395,10 @@ inline ScopedDisableWindow::DisableWindowCounter::~DisableWindowCounter()
 {
 #ifdef OCEAN_DEBUG
 
-	for (CounterMap::const_iterator it = counterMap_.begin(); it != counterMap_.end(); ++it)
-		ocean_assert(it->second == 0u);
+	for (CounterMap::value_type& counterPair : counterMap_)
+	{
+		ocean_assert(counterPair.second == 0u);
+	}
 
 #endif
 }
