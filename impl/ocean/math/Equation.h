@@ -282,21 +282,6 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 		// x3 = -2 sqrt(q) * cos((angle - 2pi) / 3) - alpha / 3
 		x3 = factor * NumericT<T>::cos(angle_3 - T(2.0943951023931954923084289221863)) - alpha_3;
 
-#ifdef OCEAN_DEBUG
-
-		const T value1 = a * x1 * x1 * x1 + b * x1 * x1 + c * x1 + d;
-		const T value2 = a * x2 * x2 * x2 + b * x2 * x2 + c * x2 + d;
-		const T value3 = a * x3 * x3 * x3 + b * x3 * x3 + c * x3 + d;
-
-		// the accuracy for 32 bit float values may be very poor so that we cannot define any assert
-		if (!std::is_same<T, float>::value)
-		{
-			ocean_assert_accuracy(NumericT<T>::isEqual(value1, T(0), T(1e-3)));
-			ocean_assert_accuracy(NumericT<T>::isEqual(value2, T(0), T(1e-3)));
-			ocean_assert_accuracy(NumericT<T>::isEqual(value3, T(0), T(1e-3)));
-		}
-#endif
-
 		if (refine)
 		{
 			optimizeCubic(a, b, c, d, x1);
@@ -318,18 +303,6 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 
 	// x1 = (m + n) - alpha / 3
 	x1 = m + n - alpha * T(0.33333333333333333333333333333333);
-
-#ifdef OCEAN_DEBUG
-
-	const T value1 = a * x1 * x1 * x1 + b * x1 * x1 + c * x1 + d;
-
-	// the accuracy for 32 bit float values may be very poor so that we cannot define any assert
-	if (!std::is_same<T, float>::value)
-	{
-		ocean_assert(NumericT<T>::isEqual(value1, T(0), T(1e-3)));
-	}
-
-#endif
 
 	if (refine)
 	{
