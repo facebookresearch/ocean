@@ -40,7 +40,7 @@ IO::Files X3DUrlObject::resolveUrls(const std::string& filename, const MultiStri
 
 	for (const std::string& url : urls)
 	{
-		files.push_back(IO::File(url));
+		files.emplace_back(url);
 	}
 
 	IO::Files resolved = IO::FileResolver::get().resolve(files, IO::File(filename));
