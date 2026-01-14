@@ -191,15 +191,9 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 				const T expectedValue = x;
 				constexpr T expectedDerivative = 1;
 
-				if (autoDiff.value() != expectedValue)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expectedValue);
 
-				if (autoDiff.derivative() != expectedDerivative)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expectedDerivative);
 			}
 
 			{
@@ -213,15 +207,9 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 				const T expectedValue = x + c;
 				constexpr T expectedDerivative = 1;
 
-				if (autoDiff.value() != expectedValue)
-				{
-					scopedIteration.setInaccurate();
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expectedValue);
 
-				if (autoDiff.derivative() != expectedDerivative)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expectedDerivative);
 			}
 
 			{
@@ -235,15 +223,9 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 				const T expectedValue = c + x;
 				constexpr T expectedDerivative = 1;
 
-				if (autoDiff.value() != expectedValue)
-				{
-					scopedIteration.setInaccurate();
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expectedValue);
 
-				if (autoDiff.derivative() != expectedDerivative)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expectedDerivative);
 			}
 
 			{
@@ -257,15 +239,9 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 				const T expectedValue = x - c;
 				constexpr T expectedDerivative = 1;
 
-				if (autoDiff.value() != expectedValue)
-				{
-					scopedIteration.setInaccurate();
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expectedValue);
 
-				if (autoDiff.derivative() != expectedDerivative)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expectedDerivative);
 			}
 
 			{
@@ -279,15 +255,9 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 				const T expectedValue = c - x;
 				constexpr T expectedDerivative = -1;
 
-				if (autoDiff.value() != expectedValue)
-				{
-					scopedIteration.setInaccurate();
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expectedValue);
 
-				if (autoDiff.derivative() != expectedDerivative)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expectedDerivative);
 			}
 
 			{
