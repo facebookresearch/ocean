@@ -316,8 +316,8 @@ bool TestMediaSerializer::testSampleFrameWithCamera(const double testDuration)
 
 		if (RandomI::boolean(randomGenerator))
 		{
-			const VectorD3 translation = Random::vector3(randomGenerator, -10.0, 10.0);
-			const QuaternionD rotation = Random::quaternion(randomGenerator);
+			const VectorD3 translation = RandomD::vector3(randomGenerator, -10.0, 10.0);
+			const QuaternionD rotation = RandomD::quaternion(randomGenerator);
 
 			originalDevice_T_camera = HomogenousMatrixD4(translation, rotation);
 		}
