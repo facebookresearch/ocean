@@ -48,17 +48,30 @@ DeviceRef DeviceRefManager::device(const std::string& name) const
 	return DeviceRef();
 }
 
-DeviceRef DeviceRefManager::device(const Device::DeviceType type) const
+DeviceRef DeviceRefManager::device(const Device::DeviceType type, const bool exactMatch) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (DeviceMap::const_iterator i = deviceMap_.begin(); i != deviceMap_.end(); ++i)
+	for (const DeviceMap::value_type& devicePair : deviceMap_)
 	{
-		ocean_assert(i->second.first);
+		ocean_assert(devicePair.second.first);
 
-		if (i->second.second == false && i->second.first->type() >= type)
+		if (devicePair.second.second == false)
 		{
-			return i->second.first;
+			if (exactMatch)
+			{
+				if (devicePair.second.first->type() == type)
+				{
+					return devicePair.second.first;
+				}
+			}
+			else
+			{
+				if (devicePair.second.first->type() >= type)
+				{
+					return devicePair.second.first;
+				}
+			}
 		}
 	}
 

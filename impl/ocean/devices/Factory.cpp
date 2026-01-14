@@ -104,7 +104,7 @@ DeviceRef Factory::device(const Device::DeviceType type, const bool useExclusive
 
 	if (!useExclusive)
 	{
-		const DeviceRef deviceRef(DeviceRefManager::get().device(type));
+		const DeviceRef deviceRef(DeviceRefManager::get().device(type, true /*exactMatch*/));
 
 		if (deviceRef)
 		{

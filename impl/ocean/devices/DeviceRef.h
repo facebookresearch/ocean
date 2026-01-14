@@ -130,10 +130,11 @@ class OCEAN_DEVICES_EXPORT DeviceRefManager : public Singleton<DeviceRefManager>
 
 		/**
 		 * Returns a specified device by it's device type.
-		 * @param type Device type
+		 * @param type The type of the device to return
+		 * @param exactMatch True, to return a device with exact matching type; False, if the requested type is part of the device
 		 * @return Requested device
 		 */
-		DeviceRef device(const Device::DeviceType type) const;
+		DeviceRef device(const Device::DeviceType type, const bool exactMatch = false) const;
 
 		/**
 		 * Returns whether no device is registered currently.
