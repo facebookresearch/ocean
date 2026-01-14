@@ -7,37 +7,11 @@
 
 #include "ocean/devices/slam/SLAMTracker6DOF.h"
 
-#include "ocean/base/HighPerformanceTimer.h"
-#include "ocean/base/Median.h"
-#include "ocean/base/RandomGenerator.h"
-#include "ocean/base/String.h"
-#include "ocean/base/Subset.h"
-#include "ocean/base/WorkerPool.h"
+#include "ocean/devices/GravityTracker3DOF.h"
+#include "ocean/devices/Manager.h"
+#include "ocean/devices/OrientationTracker3DOF.h"
 
-#include "ocean/cv/FrameConverter.h"
-#include "ocean/cv/IntegralImage.h"
-
-#include "ocean/cv/advanced/AdvancedMotion.h"
-
-#include "ocean/cv/detector/FeatureDetector.h"
-
-#include "ocean/geometry/NonLinearOptimizationPose.h"
-#include "ocean/geometry/RANSAC.h"
-#include "ocean/geometry/StereoscopicGeometry.h"
-
-#include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/Random.h"
-#include "ocean/math/Rotation.h"
-
-#include "ocean/media/FrameMedium.h"
-#include "ocean/media/Manager.h"
-
-#include "ocean/tracking/VisualTracker.h"
-#include "ocean/tracking/Utilities.h"
-
-#ifdef OCEAN_DEBUG_ON_WINDOWS
-	#include "ocean/platform/win/Utilities.h"
-#endif
+#include "ocean/media/Utilities.h"
 
 namespace Ocean
 {
@@ -100,11 +74,39 @@ bool SLAMTracker6DOF::stop()
 	return true;
 }
 
-bool SLAMTracker6DOF::isObjectTracked(const ObjectId& objectId) const
+bool SLAMTracker6DOF::setParameter(const std::string& name, const Value& value)
 {
+	if (name != "preferredResolution" || !value.isString())
+	{
+		return false;
+	}
+
 	const ScopedLock scopedLock(deviceLock);
 
-	return world_T_previousCamera_.isValid() && objectId == uniqueObjectId_;
+	if (isStarted())
+	{
+		return false;
+	}
+
+	if (Media::Utilities::parseResolution(value.stringValue(), preferredCameraWidth_, preferredCameraHeight_))
+	{
+		return true;
+	}
+
+	Log::error() << "SLAMTracker6DOF: Failed to set preferred frame dimension";
+	return false;
+}
+
+bool SLAMTracker6DOF::isObjectTracked(const ObjectId& objectId) const
+{
+	if (isObjectTracked_)
+	{
+		const ScopedLock scopedLock(deviceLock);
+
+		return objectId == uniqueObjectId_;
+	}
+
+	return false;
 }
 
 void SLAMTracker6DOF::threadRun()
@@ -118,279 +120,170 @@ void SLAMTracker6DOF::threadRun()
 		const Media::FrameMediumRef frameMedium = frameMediums_.front();
 	temporaryScopedLock.release();
 
-	Log::debug() << deviceNameSLAMTracker6DOF() << " started...";
+	ocean_assert(frameMedium);
 
-	RandomGenerator randomGenerator;
-
-	while (shouldThreadStop() == false)
+	if (preferredCameraWidth_ != 0u && preferredCameraHeight_ != 0u)
 	{
-		const FrameRef frame = frameMedium->frame(&camera_);
-
-		if (frame.isNull() || !frame->isValid() || frame->timestamp() <= frameTimestamp_)
+		if (!frameMedium->setPreferredFrameDimension(preferredCameraWidth_, preferredCameraHeight_))
 		{
-			sleep(1u);
-			continue;
-		}
-
-		if (!camera_ || !camera_->isValid())
-		{
-			ocean_assert(false && "This should never happen!");
-			sleep(1u);
-			continue;
-		}
-
-		frameTimestamp_ = frame->timestamp();
-
-		const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
-
-		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
-		{
-			continue;
-		}
-
-#ifdef OCEAN_HARDWARE_REDUCED_PERFORMANCE
-		const unsigned int framePyramidLayers = previousFramePyramid_ ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 50u, 50u, 2u, 64u, 2u);
-		const unsigned int binsSize = 80u;
-#else
-		const unsigned int framePyramidLayers = previousFramePyramid_ ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 50u, 50u, 2u, 128u, 2u);
-		const unsigned int binsSize = 50u;
-#endif
-
-		if (framePyramidLayers == 0u)
-		{
-			ocean_assert(false && "This should never happen!");
-			return;
-		}
-
-		if (!currentFramePyramid_.replace8BitPerChannel11(yFrame, framePyramidLayers, true /*coypFirstLayer*/, scopedWorker()))
-		{
-			ocean_assert(false && "This should never happen!");
-			return;
-		}
-
-		if (objectPoints_.empty())
-		{
-			// we do not have valid 3D object points, so we have to determine their locations first
-
-			if (initializationFirstImagePoints_.empty())
-			{
-				// we do not have any stereo image points for the initialization
-
-				ocean_assert(initializationImagePointsDetermined_ == 0);
-
-				if (initializationTimestamp_.isInvalid())
-				{
-					initializationTimestamp_ = Timestamp(true) + 1.0;
-				}
-
-				if (frameTimestamp_ >= initializationTimestamp_)
-				{
-					// now the time is right for the first stereo image
-
-					Vectors2 imagePoints;
-					determineFeaturePoints(yFrame, Vectors2(), imagePoints, binsSize, scopedWorker());
-
-					if (imagePoints.size() >= 20)
-					{
-						initializationFirstImagePoints_ = std::move(imagePoints);
-						initializationImagePointsDetermined_ = initializationFirstImagePoints_.size();
-
-						initializationRecentImagePoints_ = initializationFirstImagePoints_;
-
-						Log::info() << "Started with " << initializationRecentImagePoints_.size() << " initial image points";
-					}
-				}
-			}
-			else
-			{
-				// we have image points initially determined in a frame which now must be tracked from frame to frame so that we finally can determine 3D object point locations for them
-
-				ocean_assert(initializationImagePointsDetermined_ != 0);
-				ocean_assert(initializationRecentImagePoints_.size() >= 5);
-				ocean_assert(initializationFirstImagePoints_.size() == initializationRecentImagePoints_.size());
-
-				Vectors2 newImagePoints;
-				Indices32 validIndices;
-				trackPoints<7u>(previousFramePyramid_, currentFramePyramid_, initializationRecentImagePoints_, newImagePoints, validIndices, scopedWorker());
-
-				if (validIndices.size() < 10)
-				{
-					initializationFirstImagePoints_.clear();
-					initializationImagePointsDetermined_ = 0;
-					initializationTimestamp_.toInvalid();
-				}
-				else
-				{
-					initializationFirstImagePoints_ = Subset::subset(initializationFirstImagePoints_, validIndices);
-					initializationRecentImagePoints_ = Subset::subset(newImagePoints, validIndices);
-
-					ocean_assert(initializationFirstImagePoints_.size() == initializationRecentImagePoints_.size());
-
-					Log::info() << "Now we have " << initializationFirstImagePoints_.size() << " image points";
-
-					// now we check whether we should start the determination of the initial pose
-
-					bool determineInitialPose = initializationFirstImagePoints_.size() < initializationImagePointsDetermined_ * 50 / 100;
-
-					if (!determineInitialPose)
-					{
-						Scalars positionOffsets(initializationFirstImagePoints_.size());
-
-						for (size_t n = 0; n < initializationFirstImagePoints_.size(); ++n)
-						{
-							positionOffsets[n] = initializationFirstImagePoints_[n].sqrDistance(initializationRecentImagePoints_[n]);
-						}
-
-						const Scalar medianOffset = Numeric::sqrt(Median::median(positionOffsets.data(), positionOffsets.size()));
-
-						Log::info() << "Median offset: " << medianOffset << " / " << Scalar(yFrame.width()) * Scalar(0.2);
-
-						determineInitialPose = medianOffset >= Scalar(yFrame.width()) * Scalar(0.2);
-					}
-
-					if (determineInitialPose)
-					{
-						Log::info() << "Initial pose determination";
-
-						HomogenousMatrix4 world_T_camera(false);
-						Vectors3 objectPoints;
-						validIndices.clear();
-
-						if (determineInitialObjectPoints(*camera_, initializationFirstImagePoints_, initializationRecentImagePoints_, world_T_camera, objectPoints, validIndices))
-						{
-							// we accept the initialization result only if we have enough valid object points, otherwise we result the initialization process
-
-							if (objectPoints.size() >= 10)
-							{
-								imagePoints_ = Subset::subset(initializationRecentImagePoints_, validIndices);
-								objectPoints_ = std::move(objectPoints);
-
-								world_T_previousCamera_ = world_T_camera;
-								postPose(world_T_previousCamera_, frameTimestamp_);
-							}
-
-							initializationFirstImagePoints_.clear();
-							initializationRecentImagePoints_.clear();
-							initializationImagePointsDetermined_ = 0;
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			// we have known 3D object point locations (for our previously determined image points) so that we now need to determine the camera pose for the current frame (by tracking the image points from the previous frame)
-
-			static HighPerformanceStatistic performance;
-			performance.start();
-
-			static HighPerformanceStatistic performancePointTracking;
-			performancePointTracking.start();
-
-			Vectors2 newFeaturePointCandidates;
-
-			if (imagePoints_.size() < 25)
-			{
-				// we try to detect new feature points in empty areas of the camera frame
-				determineFeaturePoints(yFrame, combineImagePointGroups(imagePoints_, observationGroups_, Vectors2()), newFeaturePointCandidates, binsSize, scopedWorker());
-			}
-
-			const Vectors2 combinedPreviousImagePoints = combineImagePointGroups(imagePoints_, observationGroups_, newFeaturePointCandidates);
-
-			Vectors2 combinedCurrentImagePoints;
-			Indices32 validIndices;
-			trackPoints<7u>(previousFramePyramid_, currentFramePyramid_, combinedPreviousImagePoints, combinedCurrentImagePoints, validIndices, scopedWorker());
-
-			performancePointTracking.stop();
-
-			const size_t numberLocatedPreviousImagePoints = imagePoints_.size();
-			const Indices32 validTrackingIndices(extractLocatedImagePointIndices(numberLocatedPreviousImagePoints, validIndices)); // indices which can be used for tracking
-
-			if (validTrackingIndices.size() < 5)
-			{
-				objectPoints_.clear();
-				imagePoints_.clear();
-				observationGroups_.clear();
-
-				world_T_previousCamera_.toNull();
-				initializationTimestamp_.toInvalid();
-			}
-			else
-			{
-				objectPoints_ = Subset::subset(objectPoints_, validTrackingIndices);
-				imagePoints_ = Subset::subset(combinedCurrentImagePoints, validTrackingIndices);
-
-				HomogenousMatrix4 world_T_camera(false);
-
-				if (Geometry::NonLinearOptimizationPose::optimizePose(*camera_, world_T_previousCamera_, ConstArrayAccessor<Vector3>(objectPoints_), ConstArrayAccessor<Vector2>(imagePoints_), world_T_camera, 20u, Geometry::Estimator::ET_HUBER))
-				{
-					// first we post the tracking result so that the connected components have this information as early as possible
-
-					world_T_previousCamera_ = world_T_camera;
-					postPose(world_T_previousCamera_, frameTimestamp_);
-
-					// now we extend our database for new feature points
-					extractUnlocatedImagePoints(combinedCurrentImagePoints, numberLocatedPreviousImagePoints, validIndices, world_T_camera, observationGroups_);
-
-					extendTrackingDatabase(*camera_, observationGroups_, objectPoints_, imagePoints_, 20u);
-
-#ifdef OCEAN_DEBUG_ON_WINDOWS
-					{
-						Frame rgbFrame;
-						CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker());
-
-						const uint8_t lineColor[3] = {0xAA, 0xAA, 0xAA};
-
-						const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
-						const HomogenousMatrix4 planeTransformation = HomogenousMatrix4(Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()));
-
-						Tracking::Utilities::paintPlaneIF(rgbFrame, poseIF, trackerCamera, planeTransformation, Scalar(1.0), 10u, trackerCamera.hasDistortionParameters(), lineColor, nullptr);
-
-						const uint8_t black[3] = {0x00, 0x00, 0x00};
-						const uint8_t white[3] = {0xFF, 0xFF, 0xFF};
-						const uint8_t red[3] = {0xFF, 0x00, 0x00};
-						const uint8_t blue[3] = {0x00, 0x00, 0xFF};
-
-						Tracking::Utilities::paintCorrespondences<7u, 3u>(rgbFrame, AnyCameraPinhole(trackerCamera), pose, trackerObjectPoints.data(), trackerImagePoints.data(), trackerObjectPoints.size(), Scalar(3 * 3), black, white, red, blue, true, true, true, scopedWorker());
-
-						Platform::Win::Utilities::desktopFrameOutput(0, 0, rgbFrame);
-					}
-#endif // OCEAN_DEBUG_ON_WINDOWS
-				}
-				else
-				{
-					objectPoints_.clear();
-					imagePoints_.clear();
-					observationGroups_.clear();
-
-					world_T_previousCamera_.toNull();
-					initializationTimestamp_.toInvalid();
-				}
-			}
-
-			performance.stop();
-
-			if (performancePointTracking.measurements() % 50u == 0u)
-			{
-				Log::info() << "Point Tracking: " << performancePointTracking.averageMseconds();
-			}
-
-			if (performance.measurements() % 50u == 0u)
-			{
-				Log::info() << "Tracker performance: " << performance.averageMseconds();
-			}
-		}
-
-		std::swap(currentFramePyramid_, previousFramePyramid_);
-
-		if (!world_T_previousCamera_.isValid())
-		{
-			postLostTrackerObjects({uniqueObjectId_}, frameTimestamp_);
+			Log::warning() << "SLAMTracker6DOF: Failed to set preferred frame dimension";
 		}
 	}
 
+	if (!frameMedium->start())
+	{
+		Log::error() << "SLAMTracker6DOF: Failed to start the frame medium";
+		return;
+	}
+
+	Log::debug() << deviceNameSLAMTracker6DOF() << " started...";
+
+	const Devices::GravityTracker3DOFRef gravityTracker = Devices::Manager::get().device(Devices::GravityTracker3DOF::deviceTypeGravityTracker3DOF());
+
+	if (gravityTracker && gravityTracker->start())
+	{
+		Log::info() << "SLAMTracker6DOF: Gravity tracker started";
+	}
+	else
+	{
+		Log::warning() << "SLAMTracker6DOF: No gravity tracker available";
+	}
+
+	const Devices::OrientationTracker3DOFRef orientationTracker = Devices::Manager::get().device(Devices::OrientationTracker3DOF::deviceTypeOrientationTracker3DOF());
+
+	if (orientationTracker && orientationTracker->start())
+	{
+		Log::info() << "SLAMTracker6DOF: Orientation tracker started";
+	}
+	else
+	{
+		Log::warning() << "SLAMTracker6DOF: No orientation tracker available";
+	}
+
+	const Quaternion device_Q_camera = Quaternion(frameMedium->device_T_camera().rotation());
+
+	ocean_assert(device_Q_camera.isValid());
+	const Quaternion camera_Q_device = device_Q_camera.inverted();
+
+	SharedAnyCamera camera;
+	Timestamp frameTimestamp(false);
+
+	HomogenousMatrix4 world_T_previousCamera(false);
+
+	while (shouldThreadStop() == false)
+	{
+		const FrameRef frame = frameMedium->frame(&camera);
+
+		if (frame.isNull() || !frame->isValid() || frame->timestamp() <= frameTimestamp)
+		{
+			Thread::sleep(1u);
+			continue;
+		}
+
+		if (!camera || !camera->isValid())
+		{
+			ocean_assert(false && "This should never happen!");
+			sleep(1u);
+			continue;
+		}
+
+		frameTimestamp = frame->timestamp();
+
+		Frame yFrame;
+		if (!CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+		{
+			ocean_assert(false && "This should never happen!");
+			continue;
+		}
+		
+		if (preferredCameraWidth_ != 0u && preferredCameraHeight_ != 0u)
+		{
+			if (yFrame.width() != preferredCameraWidth_ || yFrame.height() != preferredCameraHeight_)
+			{
+				while (yFrame.pixels() / 4u >= preferredCameraWidth_ * preferredCameraHeight_)
+				{
+					CV::FrameShrinker::downsampleByTwo11(yFrame);
+				}
+			}
+		}
+		
+		if (camera->width() != yFrame.width() || camera->height() != yFrame.height())
+		{
+			camera = camera->clone(yFrame.width(), yFrame.height());
+			
+			if (!camera)
+			{
+				Log::error() << "Failed to adjust the camera profile to the frame resolution";
+				continue;
+			}
+		}
+
+		Vector3 cameraGravity(false);
+		Quaternion anyWorld_Q_camera(false);
+
+		if (gravityTracker)
+		{
+			const Devices::GravityTracker3DOF::GravityTracker3DOFSampleRef sample = gravityTracker->sample(frameTimestamp, Devices::Measurement::IS_TIMESTAMP_INTERPOLATE);
+
+			if (sample && sample->timestamp() == frameTimestamp)
+			{
+				ocean_assert(sample->gravities().size() == 1);
+				ocean_assert(sample->referenceSystem() == Devices::Tracker::RS_OBJECT_IN_DEVICE);
+
+				if (sample->gravities().size() == 1 && sample->referenceSystem() == Devices::Tracker::RS_OBJECT_IN_DEVICE)
+				{
+					const Vector3 deviceGravity = sample->gravities().front();
+
+					cameraGravity = camera_Q_device * deviceGravity;
+				}
+			}
+		}
+
+		if (orientationTracker)
+		{
+			const Devices::OrientationTracker3DOF::OrientationTracker3DOFSampleRef sample = orientationTracker->sample(frameTimestamp, Devices::Measurement::IS_TIMESTAMP_INTERPOLATE);
+
+			if (sample && sample->timestamp() == frameTimestamp)
+			{
+				ocean_assert(sample->orientations().size() == 1);
+				ocean_assert(sample->referenceSystem() == Devices::Tracker::RS_DEVICE_IN_OBJECT);
+
+				if (sample->orientations().size() == 1 && sample->referenceSystem() == Devices::Tracker::RS_DEVICE_IN_OBJECT)
+				{
+					const Quaternion anyWorld_Q_device = sample->orientations().front();
+
+					anyWorld_Q_camera = anyWorld_Q_device * device_Q_camera;
+				}
+			}
+		}
+
+		HomogenousMatrix4 world_T_camera(false);
+
+		trackerMono_.handleFrame(*camera, std::move(yFrame), world_T_camera, cameraGravity, anyWorld_Q_camera);
+
+		if (!world_T_previousCamera.isValid() && world_T_camera.isValid())
+		{
+			isObjectTracked_ = true;
+
+			postFoundTrackerObjects({uniqueObjectId_}, frameTimestamp);
+		}
+		else if (world_T_previousCamera.isValid() && !world_T_camera.isValid())
+		{
+			postLostTrackerObjects({uniqueObjectId_}, frameTimestamp);
+
+			isObjectTracked_ = false;
+		}
+		
+		if (world_T_camera.isValid())
+		{
+			postPose(world_T_camera, frameTimestamp);
+		}
+
+		world_T_previousCamera = world_T_camera;
+	}
+
 	postLostTrackerObjects({uniqueObjectId_}, Timestamp(true));
+	isObjectTracked_ = false;
 
 	Log::info() << deviceNameSLAMTracker6DOF() << " stopped...";
 }
@@ -402,295 +295,6 @@ void SLAMTracker6DOF::postPose(const HomogenousMatrix4& world_T_camera, const Ti
 	const Tracker6DOFSample::Orientations orientations(1, world_T_camera.rotation());
 
 	postNewSample(SampleRef(new Tracker6DOFSample(timestamp, RS_DEVICE_IN_OBJECT, objectIds, orientations, positions)));
-}
-
-void SLAMTracker6DOF::determineFeaturePoints(const Frame& frame, const Vectors2& alreadyKnownFeaturePoints, Vectors2& newFeaturePoints, const unsigned int binSize, Worker* worker)
-{
-	ocean_assert(frame && frame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
-	ocean_assert(binSize != 0u);
-
-	const unsigned int horizontalBins = frame.width() / binSize;
-	const unsigned int verticalBins = frame.height() / binSize;
-
-	const Vectors2 newPointCandidates = CV::Detector::FeatureDetector::determineHarrisPoints(frame, CV::SubRegion(), horizontalBins, verticalBins, 10u, worker);
-
-	Geometry::SpatialDistribution::OccupancyArray occupancyArray(Geometry::SpatialDistribution::createOccupancyArray(alreadyKnownFeaturePoints.data(), alreadyKnownFeaturePoints.size(), Scalar(0), Scalar(0), Scalar(frame.width()), Scalar(frame.height()), horizontalBins, verticalBins));
-
-	ocean_assert(newFeaturePoints.empty());
-	newFeaturePoints.reserve(newPointCandidates.size());
-
-	for (const Vector2& newPointCandidate : newPointCandidates)
-	{
-		if (occupancyArray.addPoint(newPointCandidate))
-		{
-			newFeaturePoints.push_back(newPointCandidate);
-		}
-	}
-}
-
-template <unsigned int tSize>
-bool SLAMTracker6DOF::trackPoints(const CV::FramePyramid& previousFramePyramid, const CV::FramePyramid& currentFramePyramid, const Vectors2& previousImagePoints, Vectors2& currentImagePoints, Indices32& validIndices, Worker* worker)
-{
-	Vectors2 previousPointsCopy(previousImagePoints);
-
-#ifdef OCEAN_HARDWARE_REDUCED_PERFORMANCE
-	const Scalar maximalSqrError = Scalar(1.5 * 1.5);
-	const unsigned int subPixelIterations = 1u;
-#else
-	const Scalar maximalSqrError = Scalar(0.9 * 0.9);
-	const unsigned int subPixelIterations = 4u;
-#endif
-
-	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointsBidirectionalSubPixelMirroredBorder<tSize>(previousFramePyramid, currentFramePyramid, 2u, previousPointsCopy, currentImagePoints, maximalSqrError, worker, &validIndices, subPixelIterations))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool SLAMTracker6DOF::determineInitialObjectPoints(const AnyCamera& camera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& plane_T_camera, Vectors3& objectPoints, Indices32& validImagePoints)
-{
-	ocean_assert(firstImagePoints.size() == secondImagePoints.size());
-	ocean_assert(firstImagePoints.size() >= 5);
-
-	ocean_assert(objectPoints.empty() && validImagePoints.empty());
-
-	RandomGenerator randomGenerator;
-
-	HomogenousMatrix4 world_T_camera;
-	if (!Geometry::StereoscopicGeometry::cameraPose(camera, ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints))
-	{
-		return false;
-	}
-
-	if (world_T_camera.translation().isNull())
-	{
-		Log::info() << "We have a pure rotation so far, so we try it again later";
-		return false;
-	}
-
-	if (objectPoints.size() < 5)
-	{
-		return false;
-	}
-
-	// we determine the most prominent 3D plane from the determined 3D object point locations
-
-	Plane3 plane;
-	if (!Geometry::RANSAC::plane(ConstArrayAccessor<Vector3>(objectPoints), randomGenerator, plane))
-	{
-		return false;
-	}
-
-	// now we need to determine the reference coordinate system lying in/on the 3D plane
-
-	const Line3 rayPrincipalPoint(camera.ray(Vector2(Scalar(camera.width()), Scalar(camera.height())) * Scalar(0.5), world_T_camera));
-
-	Vector3 planePrincipalObjectPoint;
-	if (!plane.intersection(rayPrincipalPoint, planePrincipalObjectPoint) || !Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), planePrincipalObjectPoint))
-	{
-		return false;
-	}
-
-	const Line3 rayRightPoint(camera.ray(Vector2(Scalar(camera.width()), Scalar(camera.height()) * Scalar(0.5)), world_T_camera));
-
-	Vector3 planeRightObjectPoint;
-	if (!plane.intersection(rayRightPoint, planeRightObjectPoint) || !Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), planeRightObjectPoint))
-	{
-		return false;
-	}
-
-	Vector3 xAxis = planeRightObjectPoint - planePrincipalObjectPoint;
-	if (!xAxis.normalize())
-	{
-		return false;
-	}
-
-	Vector3 yAxis = plane.normal();
-	if (yAxis * (world_T_camera.translation() - planePrincipalObjectPoint) < 0)
-	{
-		yAxis = -yAxis;
-	}
-
-	const Vector3 zAxis = xAxis.cross(yAxis);
-	ocean_assert(Numeric::isEqual(zAxis.length(), 1));
-
-	const HomogenousMatrix4 worldTplane(xAxis, yAxis, zAxis, planePrincipalObjectPoint);
-	ocean_assert(worldTplane.rotationMatrix().isOrthonormal(Numeric::weakEps()));
-	const HomogenousMatrix4 planeTworld(worldTplane.inverted());
-
-	for (size_t n = 0; n < objectPoints.size(); ++n)
-	{
-		objectPoints[n] = planeTworld * objectPoints[n];
-	}
-
-	plane_T_camera = planeTworld * world_T_camera;
-
-	return true;
-}
-
-Vectors2 SLAMTracker6DOF::combineImagePointGroups(const Vectors2& locatedPreviousImagePoints, const ObservationGroups& unlocatedObservationGroups, const Vectors2& newObservations)
-{
-	Vectors2 result(locatedPreviousImagePoints);
-	result.reserve(result.size() + unlocatedObservationGroups.size() + newObservations.size());
-
-	for (const Observations& unlocatedObservations : unlocatedObservationGroups)
-	{
-		ocean_assert(!unlocatedObservations.empty());
-		result.push_back(unlocatedObservations.back().second);
-	}
-
-	result.insert(result.cend(), newObservations.cbegin(), newObservations.cend());
-
-	return result;
-}
-
-Indices32 SLAMTracker6DOF::extractLocatedImagePointIndices(const size_t numberLocatedPreviousImagePoints, const Indices32& validIndices)
-{
-	Indices32 result;
-	result.reserve(numberLocatedPreviousImagePoints);
-
-	for (const Index32& validIndex : validIndices)
-	{
-		if (validIndex >= (unsigned int)(numberLocatedPreviousImagePoints))
-		{
-			break;
-		}
-
-		result.push_back(validIndex);
-	}
-
-	return result;
-}
-
-Vectors2 SLAMTracker6DOF::extractLocatedImagePoints(const Vectors2& combinedImagePoints, const size_t numberLocatedPreviousImagePoints, const Indices32& validIndices)
-{
-	return Subset::subset(combinedImagePoints, extractLocatedImagePointIndices(numberLocatedPreviousImagePoints, validIndices));
-}
-
-void SLAMTracker6DOF::extractUnlocatedImagePoints(const Vectors2& combinedImagePoints, const size_t numberLocatedPreviousImagePoints, const Indices32& validIndices, const HomogenousMatrix4& world_T_camera, ObservationGroups& observationGroups)
-{
-	ocean_assert(world_T_camera.isValid());
-
-	// first we calculate the index of valid image points which will produce a new observation group
-	const unsigned int newObservationGroupIndex = (unsigned int)(observationGroups.size() + numberLocatedPreviousImagePoints);
-
-	ObservationGroups tempObservationGroups;
-	tempObservationGroups.reserve(observationGroups.size() * 50 / 100);
-
-	for (const Index32& validIndex : validIndices)
-	{
-		if (validIndex >= (unsigned int)(numberLocatedPreviousImagePoints))
-		{
-			// now all indices belong to our observation groups or even will produce a new observation group
-
-			const Vector2& imagePoint = combinedImagePoints[validIndex];
-
-			if (validIndex < newObservationGroupIndex)
-			{
-				ocean_assert(validIndex - numberLocatedPreviousImagePoints < observationGroups.size());
-
-				tempObservationGroups.emplace_back(std::move(observationGroups[validIndex - numberLocatedPreviousImagePoints]));
-				tempObservationGroups.back().emplace_back(world_T_camera, imagePoint);
-			}
-			else
-			{
-				tempObservationGroups.emplace_back(1, Observation(world_T_camera, imagePoint));
-			}
-		}
-	}
-
-	observationGroups = std::move(tempObservationGroups);
-}
-
-void SLAMTracker6DOF::extendTrackingDatabase(const AnyCamera& camera, ObservationGroups& observationGroups, Vectors3& objectPoints, Vectors2& imagePoints, const unsigned int minimalObservations)
-{
-	ObservationGroups tempObservationGroups;
-	tempObservationGroups.reserve(observationGroups.size());
-
-	HomogenousMatrices4 observationPoses;
-	Vectors2 observationImagePoints;
-	Indices32 usedIndices;
-
-	RandomGenerator localRandomGenerator;
-
-	for (size_t n = 0; n < observationGroups.size(); ++n)
-	{
-		if (observationGroups[n].size() >= minimalObservations)
-		{
-			const Observations& observations = observationGroups[n];
-
-			// we first check whether the object point has been seen from several different viewing angles
-
-			const Scalar angle = medianObservationAngle(camera, observations);
-
-			if (angle >= Numeric::deg2rad(3))
-			{
-				observationPoses.clear();
-				observationImagePoints.clear();
-				usedIndices.clear();
-
-				observationPoses.reserve(observations.size());
-				observationImagePoints.reserve(observations.size());
-
-				for (size_t i = 0; i < observations.size(); ++i)
-				{
-					observationPoses.push_back(observations[i].first);
-					observationImagePoints.push_back(observations[i].second);
-				}
-
-				Vector3 objectPoint;
-				if (Geometry::RANSAC::objectPoint(camera, ConstArrayAccessor<HomogenousMatrix4>(observationPoses), ConstArrayAccessor<Vector2>(observationImagePoints), localRandomGenerator, objectPoint, 20u, Scalar(3 * 3), 5u, true, Geometry::Estimator::ET_SQUARE, nullptr, &usedIndices) && usedIndices.size() == observationPoses.size())
-				{
-					// we have a new 3D object point
-
-					objectPoints.push_back(objectPoint);
-					imagePoints.push_back(observationImagePoints.back());
-				}
-				else
-				{
-					// we failed to determine a valid 3D object point location, so we will not use the observation group anymore
-				}
-			}
-			else
-			{
-				tempObservationGroups.emplace_back(std::move(observationGroups[n]));
-			}
-		}
-		else
-		{
-			tempObservationGroups.emplace_back(std::move(observationGroups[n]));
-		}
-	}
-
-	observationGroups = std::move(tempObservationGroups);
-}
-
-Scalar SLAMTracker6DOF::medianObservationAngle(const AnyCamera& camera, const Observations& observations)
-{
-	ocean_assert(camera.isValid());
-	ocean_assert(!observations.empty());
-
-	Lines3 rays(observations.size());
-	Vector3 meanDirection(0, 0, 0);
-
-	for (size_t n = 0; n < observations.size(); ++n)
-	{
-		rays[n] = camera.ray(observations[n].second, observations[n].first);
-		meanDirection += rays[n].direction();
-	}
-
-	meanDirection = meanDirection.normalizedOrZero();
-
-	Scalars angles(observations.size());
-
-	for (size_t n = 0; n < observations.size(); ++n)
-	{
-		angles[n] = meanDirection * rays[n].direction();
-	}
-
-	return Numeric::acos(Median::median(angles.data(), angles.size()));
 }
 
 }

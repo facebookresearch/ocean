@@ -6,7 +6,6 @@
  */
 
 #include "ocean/devices/slam/SLAMDevice.h"
-#include "ocean/devices/slam/SLAMFactory.h"
 
 namespace Ocean
 {
