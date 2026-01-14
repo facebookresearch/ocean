@@ -42,8 +42,9 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 		 * @param position The (center) position of the bullseye within the camera frame
 		 * @param radius The radius of the bullseye in pixels, with range (0, infinity)
 		 * @param grayThreshold Threshold that was used during the detection, range [1, 255]
+		 * @param pyramidLayer The pyramid layer at which this bullseye was detected, with range [0, infinity)
 		 */
-		Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold);
+		Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold, const unsigned int pyramidLayer = 0u);
 
 		/**
 		 * Returns whether this bullseye is valid.
@@ -68,6 +69,12 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 		 * @return The threshold value
 		 */
 		unsigned int grayThreshold() const;
+
+		/**
+		 * Returns the pyramid layer at which this bullseye was detected.
+		 * @return The pyramid layer index, with range [0, infinity)
+		 */
+		unsigned int pyramidLayer() const;
 
 		/**
 		 * Returns an invalid bullseye position.
@@ -97,6 +104,9 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 
 		/// The threshold that was used during the detection of this bullseye
 		unsigned int grayThreshold_ = invalidGrayThreshold();
+
+		/// The pyramid layer at which this bullseye was detected, with range [0, infinity).
+		unsigned int pyramidLayer_ = 0u;
 };
 
 /// Definition of a vector holding bullseyes.

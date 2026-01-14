@@ -21,10 +21,11 @@ namespace Detector
 namespace Bullseyes
 {
 
-Bullseye::Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold) :
+Bullseye::Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold, const unsigned int pyramidLayer) :
 	position_(position),
 	radius_(radius),
-	grayThreshold_(grayThreshold)
+	grayThreshold_(grayThreshold),
+	pyramidLayer_(pyramidLayer)
 {
 	// Nothing else to do.
 }
@@ -47,6 +48,11 @@ Scalar Bullseye::radius() const
 unsigned int Bullseye::grayThreshold() const
 {
 	return grayThreshold_;
+}
+
+unsigned int Bullseye::pyramidLayer() const
+{
+	return pyramidLayer_;
 }
 
 Vector2 Bullseye::invalidPosition()

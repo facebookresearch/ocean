@@ -153,18 +153,20 @@ class BullseyeDetectorMono
 		 * @param bullseyes The resulting bullseyes, will be added to the end of the vector
 		 * @param multiThreadLock Lock object in case this function is executed in multiple threads concurrently, otherwise nullptr
 		 * @param useAdaptiveRowSpacing True to use adaptive row spacing, false to scan every row
+		 * @param pyramidLayer The pyramid layer at which this detection is performed, with range [0, infinity)
 		 * @param firstRow The first row to be handled, with range [0, yFrame.height())
 		 * @param numberRows The number of rows to be handled, with range [1, yFrame.height() - firstRow]
 		 */
-		static void detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int pyramidLayer, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Detects bullseyes in a row of a grayscale image.
 		 * @param yFrame The 8-bit grayscale frame in which the bullseyes will be detected, must be valid
 		 * @param y The index of the row in which the bullseyes will be detected, with range [0, yFrame.height())
 		 * @param bullseyes The resulting detected bullseyes, will be added to the end of the vector
+		 * @param pyramidLayer The pyramid layer at which this detection is performed, with range [0, infinity)
 		 */
-		static void detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes);
+		static void detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes, const unsigned int pyramidLayer = 0u);
 
 		/**
 		 * Finds either the next black or the next white pixel towards negative y direction (upwards in an image).

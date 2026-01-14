@@ -97,8 +97,8 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 		return false;
 	}
 
-	Bullseyes pyramidBullseyes;
-	pyramidBullseyes.reserve(16);
+	Bullseyes localBullseyes;
+	localBullseyes.reserve(16);
 
 	for (unsigned int layer = 0u; layer < yFramePyramid.layers(); ++layer)
 	{
@@ -109,40 +109,36 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 			continue;
 		}
 
-		Bullseyes layerBullseyes;
-		layerBullseyes.reserve(4);
+		Bullseyes newBullseyes;
+		newBullseyes.reserve(4);
 
 		if (worker && yFrameLayer.height() >= 600u)
 		{
 			Lock multiThreadLock;
-			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, &yFrameLayer,  &layerBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), 0u, 0u), 10u, yFrameLayer.height() - 20u);
+			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, &yFrameLayer, &newBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), layer, 0u, 0u), 10u, yFrameLayer.height() - 20u);
 		}
 		else
 		{
-			detectBullseyesSubset(&yFrameLayer, &layerBullseyes, nullptr, parameters.useAdaptiveRowSpacing(), 10u, yFrameLayer.height() - 20u);
+			detectBullseyesSubset(&yFrameLayer, &newBullseyes, nullptr, parameters.useAdaptiveRowSpacing(), layer, 10u, yFrameLayer.height() - 20u);
 		}
 
-		for (const Bullseye& layerBullseye : layerBullseyes)
+		for (const Bullseye& newBullseye : newBullseyes)
 		{
-			// Upscale the bullseye from the current layer to match the finest pyramid layer
-			const Scalar scale = Scalar(1u << layer);
-			Bullseye newBullseye = Bullseye(layerBullseye.position() * scale, layerBullseye.radius() * scale, layerBullseye.grayThreshold());
-
+			// Bullseyes are already upscaled to original image coordinates in detectBullseyesInRow()
 			ocean_assert(newBullseye.isValid());
 			if (!newBullseye.isValid())
 			{
 				continue;
 			}
 
-			// Add new bullseye if no other bullseye is too close
+			// Non-maximum suppression (kind of): add new bullseye if no other bullseye is too close
 			bool addNewBullseye = true;
 
-			const Scalar newBullseyeSqrRadius = newBullseye.radius() * newBullseye.radius();
-			for (const Bullseye& pyramidBullseye : pyramidBullseyes)
+			for (const Bullseye& bullseye : localBullseyes)
 			{
-				const Scalar sqrDistance = pyramidBullseye.position().sqrDistance(newBullseye.position());
+				const Scalar sqrDistance = bullseye.position().sqrDistance(newBullseye.position());
 
-				if (sqrDistance < newBullseyeSqrRadius || sqrDistance < (pyramidBullseye.radius() * pyramidBullseye.radius()))
+				if (sqrDistance < (newBullseye.radius() * newBullseye.radius()) || sqrDistance < (bullseye.radius() * bullseye.radius()))
 				{
 					addNewBullseye = false;
 					break;
@@ -151,17 +147,17 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 
 			if (addNewBullseye)
 			{
-				pyramidBullseyes.emplace_back(std::move(newBullseye));
+				localBullseyes.emplace_back(newBullseye);
 			}
 		}
 	}
 
-	bullseyes = std::move(pyramidBullseyes);
+	bullseyes = std::move(localBullseyes);
 
 	return true;
 }
 
-void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows)
+void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int pyramidLayer, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(yFrame != nullptr && yFrame->isValid() && yFrame->pixelFormat() == FrameType::FORMAT_Y8);
 
@@ -179,14 +175,14 @@ void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes*
 	//        < 600 : 3
 	//        < 750 : 4
 	//        < 900 : 5
-	//        ...
-	const unsigned int rowSpacing = useAdaptiveRowSpacing ? std::max(1u, yFrame->height() / 150u) : 1u;
+	//        >= 900 : 6
+	const unsigned int rowSpacing = useAdaptiveRowSpacing ? std::min(6u, std::max(1u, yFrame->height() / 150u)) : 1u;
 	ocean_assert(rowSpacing >= 1u);
 
 	Bullseyes localBullseyes;
 	for (unsigned int y = firstRow; y < firstRow + numberRows; y += rowSpacing)
 	{
-		detectBullseyesInRow(*yFrame, y, localBullseyes);
+		detectBullseyesInRow(*yFrame, y, localBullseyes, pyramidLayer);
 	}
 
 	const OptionalScopedLock scopedLock(multiThreadLock);
@@ -194,12 +190,15 @@ void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes*
 	bullseyes->insert(bullseyes->end(), localBullseyes.cbegin(), localBullseyes.cend());
 }
 
-void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes)
+void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes, const unsigned int pyramidLayer)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(y < yFrame.height());
 	ocean_assert(y >= 10u && y < yFrame.height() - 10u);
 	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);
+
+	// Scale factor for this pyramid layer: 2^pyramidLayer
+	const Scalar scale = Scalar(1u << pyramidLayer);
 
 	const unsigned int height = yFrame.height();
 	const unsigned int width = yFrame.width();
@@ -408,7 +407,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 		{
 			// we have a valid combination of segments
 
-			BullseyesDebugElements::get().drawBullseyeCandidateInRow(y, segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size);
+			BullseyesDebugElements::get().drawBullseyeCandidateInRow(y, segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size, scale);
 
 			const unsigned int xCenter = (segment_3_start_black + segment_4_start_white + 1u) / 2u;
 
@@ -442,7 +441,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 							ocean_assert(location.x() >= Scalar(radius) && location.y() >= Scalar(radius));
 							ocean_assert(location.x() < Scalar(width) - Scalar(radius) && location.y() < Scalar(height) - Scalar(radius));
 
-							bullseyes.emplace_back(location, radius, grayThreshold);
+							bullseyes.emplace_back(location * scale, Scalar(radius) * scale, grayThreshold, pyramidLayer);
 						}
 					}
 				}
