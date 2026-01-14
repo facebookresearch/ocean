@@ -68,6 +68,15 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Utilities
 		static void drawBullseye(Frame& rgbFrame, const Bullseye& bullseye, const uint8_t* color = nullptr);
 
 		/**
+		 * Draws the outline of a bullseye into a given frame.
+		 * The function draws a center point and a circle outline at the bullseye's position and radius.
+		 * @param rgbFrame The frame in which the bullseye outline will be painted, must be valid and have a pixel format RGB24 (or compatible)
+		 * @param bullseye The bullseye whose outline will be painted, must be valid
+		 * @param color Optional color to be used, one value for each frame channel, nullptr to use the default color (green)
+		 */
+		static void drawBullseyeOutline(Frame& rgbFrame, const Bullseye& bullseye, const uint8_t* color = nullptr);
+
+		/**
 		 * Draws the locations of multiple bullseyes into a given frame.
 		 * @param rgbFrame The frame in which the bullseyes will be painted, must be valid and have a pixel format RGB24 (or compatible)
 		 * @param bullseyes The bullseyes to be painted, must be valid

@@ -96,6 +96,38 @@ void Utilities::drawBullseye(Frame& rgbFrame, const Bullseye& bullseye, const ui
 	CV::Canvas::line<3u>(rgbFrame, center.x(), center.y() - radius, center.x(), center.y() + radius, color);
 }
 
+void Utilities::drawBullseyeOutline(Frame& rgbFrame, const Bullseye& bullseye, const uint8_t* color)
+{
+	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
+	ocean_assert(bullseye.isValid());
+
+	color = color != nullptr ? color : CV::Canvas::green(rgbFrame.pixelFormat());
+
+	const Vector2& center = bullseye.position();
+	const Scalar radius = bullseye.radius();
+
+	// Draw center point
+	CV::Canvas::point<5u>(rgbFrame, center, color);
+
+	// Draw circle outline using line segments
+	// Use enough segments for a smooth appearance (approximately one segment per 5 degrees = 72 segments)
+	constexpr unsigned int numSegments = 72u;
+	constexpr Scalar angleStep = Numeric::pi2() / Scalar(numSegments);
+
+	for (unsigned int i = 0u; i < numSegments; ++i)
+	{
+		const Scalar angle0 = Scalar(i) * angleStep;
+		const Scalar angle1 = Scalar(i + 1u) * angleStep;
+
+		const Scalar x0 = center.x() + radius * Numeric::cos(angle0);
+		const Scalar y0 = center.y() + radius * Numeric::sin(angle0);
+		const Scalar x1 = center.x() + radius * Numeric::cos(angle1);
+		const Scalar y1 = center.y() + radius * Numeric::sin(angle1);
+
+		CV::Canvas::line<1u>(rgbFrame, x0, y0, x1, y1, color);
+	}
+}
+
 void Utilities::drawBullseyes(Frame& rgbFrame, const Bullseye* bullseyes, const size_t numberBullseyes, const uint8_t* color)
 {
 	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
