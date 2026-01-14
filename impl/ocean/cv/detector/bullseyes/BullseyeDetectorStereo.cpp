@@ -8,6 +8,7 @@
 #include "ocean/cv/detector/bullseyes/BullseyeDetectorStereo.h"
 
 #include "ocean/cv/detector/bullseyes/AssignmentSolver.h"
+#include "ocean/cv/detector/bullseyes/BullseyesDebugElements.h"
 
 namespace Ocean
 {
@@ -109,6 +110,8 @@ bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, co
 	const size_t lowerResolutionCameraIndex = (cameras[0]->width() * cameras[0]->height() <= cameras[1]->width() * cameras[1]->height()) ? 0 : 1;
 	for (const size_t cameraIndex : {lowerResolutionCameraIndex, 1 - lowerResolutionCameraIndex})
 	{
+		const BullseyesDebugElements::ScopedHierarchy scopedHierarchy(cameraIndex == 0 ? BullseyesDebugElements::hierarchyNameLeftFrame() : BullseyesDebugElements::hierarchyNameRightFrame());
+
 		if (!BullseyeDetectorMono::detectBullseyes(yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
 		{
 			return false;
