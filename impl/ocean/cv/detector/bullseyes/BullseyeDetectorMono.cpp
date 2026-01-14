@@ -433,6 +433,8 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 
 					if (checkBullseyeInNeighborhood(yFrame, xCenter, y, grayThreshold, whiteRingRadius, blackRingRadius, whiteBorderRadius))
 					{
+						BullseyesDebugElements::get().drawCheckBullseyeInNeighborhood(y, xCenter, scale, diameter);
+
 						Vector2 location;
 						if (determineAccurateBullseyeLocation(yFrame, xCenter, y, grayThreshold, location))
 						{
