@@ -52,7 +52,10 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 			EI_INVALID = 0u,
 
 			/// BullseyeDetectorMono: Image visualizing valid segment sequences detected in rows.
-			EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE
+			EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE,
+
+			/// BullseyeDetectorMono: Image visualizing bullseye candidates that passed neighborhood verification.
+			EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD
 		};
 
 		/**
@@ -135,6 +138,18 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 		 * @sa setCameraFrames()
 		 */
 		void drawBullseyeCandidateInRow(const unsigned int yRow, const unsigned int segmentStart, const unsigned int segment1Size, const unsigned int segment2Size, const unsigned int segment3Size, const unsigned int segment4Size, const unsigned int segment5Size, const Scalar scale = Scalar(1));
+
+		/**
+		 * Draws a bullseye candidate that passed the neighborhood verification check.
+		 * The function visualizes the center point and a circle with the given diameter.
+		 * Uses the stored camera frame based on the current hierarchy (left/right).
+		 * @param yCenter The y-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.height())
+		 * @param xCenter The x-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.width())
+		 * @param scale Scale factor for coordinates, e.g., 2^i for pyramid layer i, with range [1, infinity)
+		 * @param diameter The diameter of the bullseye in pixels (in pyramid layer coordinates), with range [1, infinity)
+		 * @sa setCameraFrames()
+		 */
+		void drawCheckBullseyeInNeighborhood(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const unsigned int diameter);
 
 	protected:
 

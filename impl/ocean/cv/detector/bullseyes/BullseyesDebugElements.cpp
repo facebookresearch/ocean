@@ -7,6 +7,9 @@
 
 #include "ocean/cv/detector/bullseyes/BullseyesDebugElements.h"
 
+#include "ocean/cv/detector/bullseyes/Bullseye.h"
+#include "ocean/cv/detector/bullseyes/Utilities.h"
+
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
 
@@ -25,7 +28,7 @@ namespace Bullseyes
 void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame& rightFrame)
 {
 	// Only store frames if any element is active
-	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE))
+	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE) && !isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD))
 	{
 		return;
 	}
@@ -93,6 +96,50 @@ void BullseyesDebugElements::drawBullseyeCandidateInRow(const unsigned int yRow,
 	CV::Canvas::point<5u>(rgbFrame, Vector2(Scalar(centerX) + Scalar(0.5), Scalar(scaledRow) + Scalar(0.5)), color);
 
 	updateElement(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE, std::move(rgbFrame));
+}
+
+void BullseyesDebugElements::drawCheckBullseyeInNeighborhood(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const unsigned int diameter)
+{
+	if (!isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD))
+	{
+		return;
+	}
+
+	// Retrieve existing frame for current hierarchy if it already exists
+	Frame rgbFrame = elementForCurrentHierarchy(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD);
+
+	if (!rgbFrame.isValid())
+	{
+		// Determine which camera frame to use based on current hierarchy
+		const bool isLeft = !hierarchy_.empty() && hierarchy_.back() == hierarchyNameLeftFrame();
+
+		const Frame& cameraFrame = isLeft ? leftCameraFrame_ : rightCameraFrame_;
+
+		if (!cameraFrame.isValid())
+		{
+			ocean_assert(false && "Camera frame not set - call setCameraFrames before detection!");
+			return;
+		}
+
+		if (!CV::FrameConverter::Comfort::convert(cameraFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+	}
+
+	// Scale coordinates from pyramid layer space to original frame space
+	const Scalar scaledX = Scalar(xCenter) * scale;
+	const Scalar scaledY = Scalar(yCenter) * scale;
+	const Scalar scaledRadius = Scalar(diameter) * scale * Scalar(0.5);
+
+	// Create a temporary bullseye for drawing
+	const Bullseye bullseye(Vector2(scaledX, scaledY), scaledRadius, 128u);
+
+	// Draw the bullseye outline (center point + circle)
+	Utilities::drawBullseyeOutline(rgbFrame, bullseye);
+
+	updateElement(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD, std::move(rgbFrame));
 }
 
 }
