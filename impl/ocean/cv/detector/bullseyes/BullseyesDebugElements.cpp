@@ -22,61 +22,75 @@ namespace Detector
 namespace Bullseyes
 {
 
-void BullseyesDebugElements::drawBullseyeCandidateInRow(const Frame& yFrame, const unsigned int yRow, const unsigned int segmentStart, const unsigned int segment1Size, const unsigned int segment2Size, const unsigned int segment3Size, const unsigned int segment4Size, const unsigned int segment5Size)
+void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame& rightFrame)
+{
+	// Only store frames if any element is active
+	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE))
+	{
+		return;
+	}
+
+	ocean_assert(leftFrame.isValid() && leftFrame.pixelFormat() == FrameType::FORMAT_Y8);
+	ocean_assert(rightFrame.isValid() && rightFrame.pixelFormat() == FrameType::FORMAT_Y8);
+
+	leftCameraFrame_ = Frame(leftFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+	rightCameraFrame_ = Frame(rightFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+}
+
+Frame BullseyesDebugElements::getCameraFrame(const bool left) const
+{
+	return left ? leftCameraFrame_ : rightCameraFrame_;
+}
+
+void BullseyesDebugElements::drawBullseyeCandidateInRow(const unsigned int yRow, const unsigned int segmentStart, const unsigned int segment1Size, const unsigned int segment2Size, const unsigned int segment3Size, const unsigned int segment4Size, const unsigned int segment5Size, const Scalar scale)
 {
 	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE))
 	{
 		return;
 	}
 
-	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
-	ocean_assert(yRow < yFrame.height());
-
-	// Retrieve existing frame if it already exists, otherwise create new RGB image from the Y frame.
-	Frame rgbFrame = element(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE);
+	// Retrieve existing frame for current hierarchy if it already exists
+	Frame rgbFrame = elementForCurrentHierarchy(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE);
 
 	if (!rgbFrame.isValid())
 	{
-		if (!CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		// Determine which camera frame to use based on current hierarchy
+		const bool isLeft = !hierarchy_.empty() && hierarchy_.back() == hierarchyNameLeftFrame();
+
+		const Frame& cameraFrame = isLeft ? leftCameraFrame_ : rightCameraFrame_;
+
+		if (!cameraFrame.isValid())
+		{
+			ocean_assert(false && "Camera frame not set - call setCameraFrames before detection!");
+			return;
+		}
+
+		if (!CV::FrameConverter::Comfort::convert(cameraFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 		{
 			ocean_assert(false && "This should never happen!");
 			return;
 		}
 	}
 
-	const uint8_t* foregroundColor = CV::Canvas::green(rgbFrame.pixelFormat());
-	const uint8_t* backgroundColor = CV::Canvas::red(rgbFrame.pixelFormat());
+	// Scale coordinates from pyramid layer space to original frame space
+	const unsigned int scaledRow = (unsigned int)(Scalar(yRow) * scale + Scalar(0.5));
+	const unsigned int scaledSegmentStart = (unsigned int)(Scalar(segmentStart) * scale + Scalar(0.5));
+	const unsigned int scaledSegment1Size = (unsigned int)(Scalar(segment1Size) * scale + Scalar(0.5));
+	const unsigned int scaledSegment2Size = (unsigned int)(Scalar(segment2Size) * scale + Scalar(0.5));
+	const unsigned int scaledSegment3Size = (unsigned int)(Scalar(segment3Size) * scale + Scalar(0.5));
+	const unsigned int scaledSegment4Size = (unsigned int)(Scalar(segment4Size) * scale + Scalar(0.5));
+	const unsigned int scaledSegment5Size = (unsigned int)(Scalar(segment5Size) * scale + Scalar(0.5));
 
-	const std::array<unsigned int, 5> segmentSizes = {segment1Size, segment2Size, segment3Size, segment4Size, segment5Size};
-	uint8_t* pixelData = rgbFrame.pixel<uint8_t>(segmentStart, yRow);
+	const unsigned int centerX = scaledSegmentStart + ((scaledSegment1Size + scaledSegment2Size + scaledSegment3Size + scaledSegment4Size + scaledSegment5Size + 1u) / 2u);
 
-	unsigned int totalSize = 0u;
-	for (size_t segmentIndex = 0; segmentIndex < segmentSizes.size(); ++segmentIndex)
-	{
-		totalSize += segmentSizes[segmentIndex];
-	}
-
-	// Make sure we don't write outside the frame bounds
-	if (segmentStart + totalSize > rgbFrame.width())
+	// Ensure we don't draw outside frame bounds
+	if (scaledRow >= rgbFrame.height() || centerX >= rgbFrame.width())
 	{
 		return;
 	}
 
-	for (size_t segmentIndex = 0; segmentIndex < segmentSizes.size(); ++segmentIndex)
-	{
-		// Black segments (0, 2, 4) use foreground color (green), white segments (1, 3) use background color (red)
-		const uint8_t* color = (segmentIndex % 2 == 0) ? foregroundColor : backgroundColor;
-		const unsigned int segmentSize = segmentSizes[segmentIndex];
-
-		for (unsigned int i = 0u; i < segmentSize; ++i)
-		{
-			pixelData[0] = color[0];
-			pixelData[1] = color[1];
-			pixelData[2] = color[2];
-
-			pixelData += 3;
-		}
-	}
+	const uint8_t* color = CV::Canvas::red(rgbFrame.pixelFormat());
+	CV::Canvas::point<5u>(rgbFrame, Vector2(Scalar(centerX) + Scalar(0.5), Scalar(scaledRow) + Scalar(0.5)), color);
 
 	updateElement(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE, std::move(rgbFrame));
 }

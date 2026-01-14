@@ -408,7 +408,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 		{
 			// we have a valid combination of segments
 
-			BullseyesDebugElements::get().drawBullseyeCandidateInRow(yFrame, y, segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size);
+			BullseyesDebugElements::get().drawBullseyeCandidateInRow(y, segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size);
 
 			const unsigned int xCenter = (segment_3_start_black + segment_4_start_white + 1u) / 2u;
 
