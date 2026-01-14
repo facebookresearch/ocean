@@ -10,6 +10,8 @@
 #include "ocean/cv/detector/bullseyes/AssignmentSolver.h"
 #include "ocean/cv/detector/bullseyes/BullseyesDebugElements.h"
 
+#include "ocean/cv/FrameInterpolatorBilinear.h"
+
 namespace Ocean
 {
 
@@ -21,6 +23,16 @@ namespace Detector
 
 namespace Bullseyes
 {
+
+unsigned int BullseyeDetectorStereo::Parameters::maxFrameWidth() const noexcept
+{
+	return maxFrameWidth_;
+}
+
+void BullseyeDetectorStereo::Parameters::setMaxFrameWidth(unsigned int maxFrameWidth) noexcept
+{
+	maxFrameWidth_ = maxFrameWidth;
+}
 
 BullseyeDetectorStereo::Parameters BullseyeDetectorStereo::Parameters::defaultParameters()
 {
@@ -103,16 +115,26 @@ bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, co
 	bullseyePairs.clear();
 	bullseyeCenters.clear();
 
+	// Downscale frames and cameras if they exceed the maximum frame width.
+	SharedAnyCameras downscaledCameras;
+	Frames downscaledYFrames;
+	std::array<Scalar, 2> scaleFactors;
+
+	if (!downscaleFramesAndCameras(cameras, yFrames, parameters.maxFrameWidth(), downscaledCameras, downscaledYFrames, scaleFactors, worker))
+	{
+		return false;
+	}
+
 	// Monocular detection of bullseyes
 	// If the cameras have different resolutions, start the monocular detection on the camera with lower resolution.
 	BullseyeGroup bullseyeGroup;
 
-	const size_t lowerResolutionCameraIndex = (cameras[0]->width() * cameras[0]->height() <= cameras[1]->width() * cameras[1]->height()) ? 0 : 1;
+	const size_t lowerResolutionCameraIndex = (downscaledCameras[0]->width() * downscaledCameras[0]->height() <= downscaledCameras[1]->width() * downscaledCameras[1]->height()) ? 0 : 1;
 	for (const size_t cameraIndex : {lowerResolutionCameraIndex, 1 - lowerResolutionCameraIndex})
 	{
 		const BullseyesDebugElements::ScopedHierarchy scopedHierarchy(cameraIndex == 0 ? BullseyesDebugElements::hierarchyNameLeftFrame() : BullseyesDebugElements::hierarchyNameRightFrame());
 
-		if (!BullseyeDetectorMono::detectBullseyes(yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
+		if (!BullseyeDetectorMono::detectBullseyes(downscaledYFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
 		{
 			return false;
 		}
@@ -127,14 +149,30 @@ bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, co
 	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameras[0];
 	const HomogenousMatrix4 world_T_cameraB = world_T_device * device_T_cameras[1];
 
-	const CandidateMap candidateMap = extractBullseyeCandidates(*cameras[0], *cameras[1], world_T_cameraA, world_T_cameraB, bullseyeGroup[0], bullseyeGroup[1]);
+	const CandidateMap candidateMap = extractBullseyeCandidates(*downscaledCameras[0], *downscaledCameras[1], world_T_cameraA, world_T_cameraB, bullseyeGroup[0], bullseyeGroup[1]);
 
-	if (!extractBullseyes(*cameras[0], *cameras[1], bullseyeGroup[0], bullseyeGroup[1], candidateMap, bullseyePairs, bullseyeCenters))
+	if (!extractBullseyes(*downscaledCameras[0], *downscaledCameras[1], bullseyeGroup[0], bullseyeGroup[1], candidateMap, bullseyePairs, bullseyeCenters))
 	{
 		return false;
 	}
 
 	ocean_assert(bullseyePairs.size() == bullseyeCenters.size());
+
+	// Scale bullseye positions and radii back to original frame coordinates
+	for (BullseyePair& bullseyePair : bullseyePairs)
+	{
+		if (scaleFactors[0] != Scalar(1))
+		{
+			const Scalar inverseScaleFactor = Scalar(1) / scaleFactors[0];
+			bullseyePair.first = Bullseye(bullseyePair.first.position() * inverseScaleFactor, bullseyePair.first.radius() * inverseScaleFactor, bullseyePair.first.grayThreshold());
+		}
+
+		if (scaleFactors[1] != Scalar(1))
+		{
+			const Scalar inverseScaleFactor = Scalar(1) / scaleFactors[1];
+			bullseyePair.second = Bullseye(bullseyePair.second.position() * inverseScaleFactor, bullseyePair.second.radius() * inverseScaleFactor, bullseyePair.second.grayThreshold());
+		}
+	}
 
 	return true;
 }
@@ -322,6 +360,47 @@ bool BullseyeDetectorStereo::triangulateBullseye(const AnyCamera& cameraA, const
 	}
 
 	return false;
+}
+
+bool BullseyeDetectorStereo::downscaleFramesAndCameras(const SharedAnyCameras& cameras, const Frames& yFrames, const unsigned int maxFrameWidth, SharedAnyCameras& downscaledCameras, Frames& downscaledYFrames, std::array<Scalar, 2>& scaleFactors, Worker* worker)
+{
+	ocean_assert(cameras.size() == 2 && yFrames.size() == 2);
+
+	downscaledYFrames.clear();
+	downscaledYFrames.reserve(2);
+
+	downscaledCameras.clear();
+	downscaledCameras.reserve(2);
+
+	scaleFactors = {Scalar(1), Scalar(1)};
+
+	for (size_t i = 0; i < 2; ++i)
+	{
+		if (yFrames[i].width() > maxFrameWidth)
+		{
+			const Scalar scaleFactor = Scalar(maxFrameWidth) / Scalar(yFrames[i].width());
+			scaleFactors[i] = scaleFactor;
+
+			const unsigned int newWidth = maxFrameWidth;
+			const unsigned int newHeight = (unsigned int)(Scalar(yFrames[i].height()) * scaleFactor + Scalar(0.5));
+
+			Frame downscaledFrame(FrameType(yFrames[i], newWidth, newHeight));
+			if (!FrameInterpolatorBilinear::Comfort::resize(yFrames[i], downscaledFrame, worker))
+			{
+				return false;
+			}
+
+			downscaledYFrames.emplace_back(std::move(downscaledFrame));
+			downscaledCameras.emplace_back(cameras[i]->clone(newWidth, newHeight));
+		}
+		else
+		{
+			downscaledYFrames.emplace_back(yFrames[i], Frame::ACM_USE_KEEP_LAYOUT);
+			downscaledCameras.emplace_back(cameras[i]);
+		}
+	}
+
+	return true;
 }
 
 } // namespace Bullseyes

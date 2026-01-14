@@ -21,6 +21,8 @@
 #include "ocean/math/Matrix.h"
 #include "ocean/math/Vector3.h"
 
+#include <array>
+
 namespace Ocean
 {
 
@@ -70,10 +72,29 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorStereo
 				Parameters() = default;
 
 				/**
+				 * Returns the maximum frame width before downscaling is applied.
+				 * Input frames wider than this value will be downscaled for efficiency.
+				 * @return The maximum frame width in pixels, with range [1, infinity)
+				 */
+				unsigned int maxFrameWidth() const noexcept;
+
+				/**
+				 * Sets the maximum frame width before downscaling is applied.
+				 * Input frames wider than this value will be downscaled for efficiency.
+				 * @param maxFrameWidth The maximum frame width in pixels, with range [1, infinity)
+				 */
+				void setMaxFrameWidth(unsigned int maxFrameWidth) noexcept;
+
+				/**
 				 * Returns the default parameters for the stereo detector.
 				 * @return The default parameters
 				 */
 				static Parameters defaultParameters();
+
+			protected:
+
+				/// The maximum frame width before downscaling is applied, with range [1, infinity)
+				unsigned int maxFrameWidth_ = 720u;
 		};
 
 	protected:
@@ -241,6 +262,20 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorStereo
 		 * @return True if triangulation succeeded and the 3D point is in front of both cameras, otherwise false
 		 */
 		static bool triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB);
+
+		/**
+		 * Downscales frames and cameras if they exceed the maximum frame width.
+		 * For frames that don't exceed the threshold, the original frame and camera are used (no copy is made).
+		 * @param cameras The input camera profiles, must contain exactly 2 valid cameras
+		 * @param yFrames The input frames, must contain exactly 2 valid 8-bit grayscale frames
+		 * @param maxFrameWidth The maximum allowed frame width before downscaling is applied, with range [1, infinity)
+		 * @param downscaledCameras The resulting cameras (downscaled or original), will contain exactly 2 cameras
+		 * @param downscaledYFrames The resulting frames (downscaled or referencing original), will contain exactly 2 frames
+		 * @param scaleFactors The scale factors applied to each frame (1.0 if no downscaling), will contain exactly 2 values
+		 * @param worker Optional worker to distribute the computation
+		 * @return True if successful, false on error
+		 */
+		static bool downscaleFramesAndCameras(const SharedAnyCameras& cameras, const Frames& yFrames, unsigned int maxFrameWidth, SharedAnyCameras& downscaledCameras, Frames& downscaledYFrames, std::array<Scalar, 2>& scaleFactors, Worker* worker);
 };
 
 constexpr Scalar BullseyeDetectorStereo::invalidMatchingCost()
