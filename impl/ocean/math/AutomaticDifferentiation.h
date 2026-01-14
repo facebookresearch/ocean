@@ -358,10 +358,9 @@ class AutomaticDifferentiationT
 template <typename T, typename TNumeric>
 inline AutomaticDifferentiationT<T, TNumeric>::AutomaticDifferentiationT(const T& value) :
 	value_(value),
-	derivative_(value == T(0) ? T(0) : T(1))
+	derivative_(T(1))
 {
-	// x' = 1, if x != 0
-	// x' = 1, if x == 0
+	// x' = 1
 }
 
 template <typename T, typename TNumeric>
