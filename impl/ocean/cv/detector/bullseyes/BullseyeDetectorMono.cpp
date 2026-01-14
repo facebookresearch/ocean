@@ -57,6 +57,16 @@ void BullseyeDetectorMono::Parameters::setUseAdaptiveRowSpacing(bool useAdaptive
 	useAdaptiveRowSpacing_ = useAdaptiveRowSpacing;
 }
 
+unsigned int BullseyeDetectorMono::Parameters::minimumDiameter() const noexcept
+{
+	return minimumDiameter_;
+}
+
+void BullseyeDetectorMono::Parameters::setMinimumDiameter(unsigned int minimumDiameter) noexcept
+{
+	minimumDiameter_ = minimumDiameter;
+}
+
 BullseyeDetectorMono::Parameters BullseyeDetectorMono::Parameters::defaultParameters() noexcept
 {
 	return Parameters();
@@ -127,6 +137,12 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 			// Bullseyes are already upscaled to original image coordinates in detectBullseyesInRow()
 			ocean_assert(newBullseye.isValid());
 			if (!newBullseye.isValid())
+			{
+				continue;
+			}
+
+			// Filter out bullseyes smaller than the minimum diameter
+			if (newBullseye.radius() * Scalar(2) < Scalar(parameters.minimumDiameter()))
 			{
 				continue;
 			}

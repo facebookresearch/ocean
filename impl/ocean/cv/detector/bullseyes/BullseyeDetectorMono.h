@@ -61,6 +61,12 @@ class BullseyeDetectorMono
 		 *   - When enabled: Rows are skipped based on image height (height/150)
 		 *   - When disabled: Every row is scanned (slower but more accurate)
 		 *   - Recommended: true for real-time applications, false for offline/accuracy-critical applications
+		 *
+		 * minimumDiameter:
+		 *   Minimum diameter in pixels for a valid bullseye detection.
+		 *   - Default: 15 pixels
+		 *   - Bullseyes smaller than this threshold are rejected
+		 *   - Helps filter out noise and false positives from tiny patterns
 		 */
 		class Parameters
 		{
@@ -116,6 +122,19 @@ class BullseyeDetectorMono
 				void setUseAdaptiveRowSpacing(bool useAdaptiveRowSpacing) noexcept;
 
 				/**
+				 * Returns the minimum diameter for a valid bullseye detection.
+				 * @return The minimum diameter in pixels, with range [1, infinity)
+				 */
+				unsigned int minimumDiameter() const noexcept;
+
+				/**
+				 * Sets the minimum diameter for a valid bullseye detection.
+				 * Bullseyes with a diameter smaller than this value will be rejected.
+				 * @param minimumDiameter The minimum diameter in pixels, with range [1, infinity)
+				 */
+				void setMinimumDiameter(unsigned int minimumDiameter) noexcept;
+
+				/**
 				 * Returns the default parameters for the detector.
 				 * @return The default parameters
 				 */
@@ -131,6 +150,9 @@ class BullseyeDetectorMono
 
 				/// Determines whether adaptive row spacing is used (true) or every row is scanned (false) during bullseye detection
 				bool useAdaptiveRowSpacing_ = true;
+
+				/// The minimum diameter in pixels for a valid bullseye detection, with range [1, infinity)
+				unsigned int minimumDiameter_ = 15u;
 		};
 
 	public:
