@@ -125,7 +125,7 @@ bool TestBasemap::testTileFromPBFData()
 								{
 									++numberBuildingsWithCorrectHeight;
 								}
-								else if (building.height() == 3.42) // the default size in case the building height is provided but without "correct" height
+								else if (Numeric::isEqual(building.height(), Scalar(3.42))) // the default size in case the building height is provided but without "correct" height
 								{
 									++numberBuildingsWithDefaultHeight;
 								}
