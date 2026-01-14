@@ -42,7 +42,7 @@ Scalar PerspectiveView::idealFovX(bool* validCamera) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (validCamera)
+	if (validCamera != nullptr)
 	{
 		*validCamera = false;
 	}
@@ -81,7 +81,7 @@ Scalar PerspectiveView::idealFovX(bool* validCamera) const
 
 		ocean_assert(vector.z() > 0);
 		vector /= vector.z();
-		ocean_assert(vector.z() == 1);
+		ocean_assert(Numeric::isEqual(vector.z(), 1));
 
 		const Vector3 rotatedVector = background->orientation() * vector;
 
@@ -111,7 +111,7 @@ Scalar PerspectiveView::idealFovX(bool* validCamera) const
 
 	bestFovX = std::max(Numeric::deg2rad(1), bestFovX - Numeric::deg2rad(1));
 
-	if (validCamera)
+	if (validCamera != nullptr)
 	{
 		*validCamera = true;
 	}
