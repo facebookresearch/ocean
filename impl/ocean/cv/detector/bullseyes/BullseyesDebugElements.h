@@ -55,7 +55,10 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 			EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE,
 
 			/// BullseyeDetectorMono: Image visualizing bullseye candidates that passed neighborhood verification.
-			EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD
+			EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD,
+
+			/// BullseyeDetectorMono: Image visualizing pixel validation during neighborhood checks.
+			EI_PIXEL_VALIDATION
 		};
 
 		/**
@@ -150,6 +153,17 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 		 * @sa setCameraFrames()
 		 */
 		void drawCheckBullseyeInNeighborhood(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const unsigned int diameter);
+
+		/**
+		 * Draws a pixel validation point during neighborhood verification.
+		 * The function visualizes individual pixel checks with color indicating validity.
+		 * Uses the stored camera frame based on the current hierarchy (left/right).
+		 * @param y The y-coordinate of the pixel (in pyramid layer coordinates), with range [0, frame.height())
+		 * @param x The x-coordinate of the pixel (in pyramid layer coordinates), with range [0, frame.width())
+		 * @param isInvalid True if the pixel failed validation (draws red), false if valid (draws green)
+		 * @sa setCameraFrames()
+		 */
+		void drawPixelValidation(const unsigned int y, const unsigned int x, const bool isInvalid);
 
 	protected:
 

@@ -28,7 +28,7 @@ namespace Bullseyes
 void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame& rightFrame)
 {
 	// Only store frames if any element is active
-	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE) && !isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD))
+	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE) && !isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD) && !isElementActive(EI_PIXEL_VALIDATION))
 	{
 		return;
 	}
@@ -38,6 +38,41 @@ void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame
 
 	leftCameraFrame_ = Frame(leftFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 	rightCameraFrame_ = Frame(rightFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+
+	// Convert frames to RGB and initialize debug elements for each active element ID
+	const std::array<std::pair<const Frame*, std::string>, 2> frameHierarchies =
+	{{
+		{&leftCameraFrame_, hierarchyNameLeftFrame()},
+		{&rightCameraFrame_, hierarchyNameRightFrame()}
+	}};
+
+	for (const auto& [cameraFrame, hierarchyName] : frameHierarchies)
+	{
+		Frame rgbFrame;
+		if (!CV::FrameConverter::Comfort::convert(*cameraFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		{
+			ocean_assert(false && "Failed to convert camera frame to RGB!");
+			continue;
+		}
+
+		if (isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE))
+		{
+			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			updateElement(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE, std::move(rgbFrameCopy), {hierarchyName});
+		}
+
+		if (isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD))
+		{
+			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			updateElement(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD, std::move(rgbFrameCopy), {hierarchyName});
+		}
+
+		if (isElementActive(EI_PIXEL_VALIDATION))
+		{
+			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			updateElement(EI_PIXEL_VALIDATION, std::move(rgbFrameCopy), {hierarchyName});
+		}
+	}
 }
 
 Frame BullseyesDebugElements::getCameraFrame(const bool left) const
@@ -137,9 +172,52 @@ void BullseyesDebugElements::drawCheckBullseyeInNeighborhood(const unsigned int 
 	const Bullseye bullseye(Vector2(scaledX, scaledY), scaledRadius, 128u);
 
 	// Draw the bullseye outline (center point + circle)
-	Utilities::drawBullseyeOutline(rgbFrame, bullseye);
+	Utilities::drawBullseyeOutline(rgbFrame, bullseye, CV::Canvas::red(rgbFrame.pixelFormat()));
 
 	updateElement(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD, std::move(rgbFrame));
+}
+
+void BullseyesDebugElements::drawPixelValidation(const unsigned int y, const unsigned int x, const bool isInvalid)
+{
+	if (!isElementActive(EI_PIXEL_VALIDATION))
+	{
+		return;
+	}
+
+	// Retrieve existing frame for current hierarchy if it already exists
+	Frame rgbFrame = elementForCurrentHierarchy(EI_PIXEL_VALIDATION);
+
+	if (!rgbFrame.isValid())
+	{
+		// Determine which camera frame to use based on current hierarchy
+		const bool isLeft = !hierarchy_.empty() && hierarchy_.back() == hierarchyNameLeftFrame();
+
+		const Frame& cameraFrame = isLeft ? leftCameraFrame_ : rightCameraFrame_;
+
+		if (!cameraFrame.isValid())
+		{
+			ocean_assert(false && "Camera frame not set - call setCameraFrames before detection!");
+			return;
+		}
+
+		if (!CV::FrameConverter::Comfort::convert(cameraFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+	}
+
+	// Ensure we don't draw outside frame bounds
+	if (y >= rgbFrame.height() || x >= rgbFrame.width())
+	{
+		return;
+	}
+
+	// Draw point in green if valid, red if invalid
+	const uint8_t* color = isInvalid ? CV::Canvas::red(rgbFrame.pixelFormat()) : CV::Canvas::green(rgbFrame.pixelFormat());
+	CV::Canvas::point<1u>(rgbFrame, Vector2(Scalar(x) + Scalar(0.5), Scalar(y) + Scalar(0.5)), color);
+
+	updateElement(EI_PIXEL_VALIDATION, std::move(rgbFrame));
 }
 
 }
