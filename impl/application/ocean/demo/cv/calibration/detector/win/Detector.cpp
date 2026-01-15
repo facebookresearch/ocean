@@ -25,9 +25,11 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 {
 	Messenger::get().setOutputType(Messenger::OUTPUT_DEBUG_WINDOW);
 
+#ifdef OCEAN_RUNTIME_STATIC
 	Media::DirectShow::registerDirectShowLibrary();
 	Media::MediaFoundation::registerMediaFoundationLibrary();
 	Media::WIC::registerWICLibrary();
+#endif // OCEAN_RUNTIME_STATIC
 
 	const Platform::Utilities::Commands commands(Platform::Utilities::parseCommandLine(lpCmdLine));
 
@@ -48,9 +50,11 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		ocean_assert(false && "Unhandled exception");
 	}
 
+#ifdef OCEAN_RUNTIME_STATIC
 	Media::WIC::unregisterWICLibrary();
 	Media::MediaFoundation::unregisterMediaFoundationLibrary();
 	Media::DirectShow::unregisterDirectShowLibrary();
+#endif // OCEAN_RUNTIME_STATIC
 
 	return 0;
 }

@@ -28,7 +28,7 @@ namespace Calibration
  * Internally, the size is stored in millimeter but can be converted to and from any other unit.
  * @ingroup cvcalibration
  */
-class MetricSize
+class OCEAN_CV_CALIBRATION_EXPORT MetricSize
 {
 	public:
 

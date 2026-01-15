@@ -12,6 +12,7 @@
 #include "ocean/base/Build.h"
 #include "ocean/base/CommandArguments.h"
 #include "ocean/base/Messenger.h"
+#include "ocean/base/PluginManager.h"
 
 #include "ocean/media/Utilities.h"
 
