@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_scenedescriptionsdlobj_common_imported)' != 'True'" Project="scenedescriptionsdlobj_common.props"/>
+    <Import Condition="'$(ocean_scenedescriptionsdlobj_reference_imported)' != 'True'" Project="scenedescriptionsdlobj_reference.props"/>
     <Import Condition="'$(ocean_plugin_build_imported)' != 'True'" Project="..\..\..\ocean_plugin_build.props"/>
   </ImportGroup>
 

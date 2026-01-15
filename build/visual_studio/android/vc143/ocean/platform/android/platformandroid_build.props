@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_platformandroid_common_imported)' != 'True'" Project="platformandroid_common.props"/>
+    <Import Condition="'$(ocean_platformandroid_reference_imported)' != 'True'" Project="platformandroid_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\ocean_library_build.props"/>
   </ImportGroup>
 

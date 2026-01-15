@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_renderingglescenegraph_common_imported)' != 'True'" Project="renderingglescenegraph_common.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraph_reference_imported)' != 'True'" Project="renderingglescenegraph_reference.props"/>
     <Import Condition="'$(ocean_plugin_build_imported)' != 'True'" Project="..\..\ocean_plugin_build.props"/>
   </ImportGroup>
 

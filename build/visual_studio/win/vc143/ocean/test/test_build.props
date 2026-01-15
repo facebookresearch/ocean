@@ -11,6 +11,7 @@
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="../../ocean_common.props"/>
     <Import Condition="'$(ocean_test_common_imported)' != 'True'" Project="test_common.props"/>
+    <Import Condition="'$(ocean_test_reference_imported)' != 'True'" Project="test_reference.props"/>
   </ImportGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">

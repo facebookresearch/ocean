@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_cvcalibration_common_imported)' != 'True'" Project="cvcalibration_common.props"/>
+    <Import Condition="'$(ocean_cvcalibration_reference_imported)' != 'True'" Project="cvcalibration_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\ocean_library_build.props"/>
   </ImportGroup>
 

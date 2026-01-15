@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_trackingrmv_common_imported)' != 'True'" Project="trackingrmv_common.props"/>
+    <Import Condition="'$(ocean_trackingrmv_reference_imported)' != 'True'" Project="trackingrmv_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\ocean_library_build.props"/>
   </ImportGroup>
 

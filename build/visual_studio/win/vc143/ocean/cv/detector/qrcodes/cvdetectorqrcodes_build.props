@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_cvdetectorqrcodes_common_imported)' != 'True'" Project="cvdetectorqrcodes_common.props"/>
+    <Import Condition="'$(ocean_cvdetectorqrcodes_reference_imported)' != 'True'" Project="cvdetectorqrcodes_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\..\ocean_library_build.props"/>
   </ImportGroup>
 

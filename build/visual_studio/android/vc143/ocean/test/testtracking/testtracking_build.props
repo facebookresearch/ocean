@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_testtracking_common_imported)' != 'True'" Project="testtracking_common.props"/>
+    <Import Condition="'$(ocean_testtracking_reference_imported)' != 'True'" Project="testtracking_reference.props"/>
     <Import Condition="'$(ocean_test_build_imported)' != 'True'" Project="..\test_build.props"/>
   </ImportGroup>
 

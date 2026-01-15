@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_platformmetaquestopenxrapplication_common_imported)' != 'True'" Project="platformmetaquestopenxrapplication_common.props"/>
+    <Import Condition="'$(ocean_platformmetaquestopenxrapplication_reference_imported)' != 'True'" Project="platformmetaquestopenxrapplication_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\..\..\..\ocean_library_build.props"/>
   </ImportGroup>
 

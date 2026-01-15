@@ -11,6 +11,7 @@
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_applicationdemobase_build_imported)' != 'True'" Project="..\..\..\application_demo_base_build.props" />
     <Import Condition="'$(ocean_applicationdemobaseconsolenative_common_imported)' != 'True'" Project="consolenative_common.props"/>
+    <Import Condition="'$(ocean_consolenative_reference_imported)' != 'True'" Project="consolenative_reference.props"/>
   </ImportGroup>
 
   <PropertyGroup>

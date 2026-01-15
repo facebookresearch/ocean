@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_platform_common_imported)' != 'True'" Project="platform_common.props"/>
+    <Import Condition="'$(ocean_platform_reference_imported)' != 'True'" Project="platform_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\ocean_library_build.props"/>
   </ImportGroup>
 

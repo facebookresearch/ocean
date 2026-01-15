@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_mediaspecial_common_imported)' != 'True'" Project="mediaspecial_common.props"/>
+    <Import Condition="'$(ocean_mediaspecial_reference_imported)' != 'True'" Project="mediaspecial_reference.props"/>
     <Import Condition="'$(ocean_plugin_build_imported)' != 'True'" Project="..\..\ocean_plugin_build.props"/>
   </ImportGroup>
 
