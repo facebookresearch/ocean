@@ -28,7 +28,7 @@ namespace Serialization
  * When stopping, all queued samples are written before the serializer terminates, ensuring no data is lost.
  * @ingroup ioserialization
  */
-class OutputDataSerializer : public DataSerializer
+class OCEAN_IO_SERIALIZATION_EXPORT OutputDataSerializer : public DataSerializer
 {
 	protected:
 
@@ -156,7 +156,7 @@ class OutputDataSerializer : public DataSerializer
  * Use setFilename() to configure the output file path before calling start().
  * @ingroup ioserialization
  */
-class FileOutputDataSerializer : public OutputDataSerializer
+class OCEAN_IO_SERIALIZATION_EXPORT FileOutputDataSerializer : public OutputDataSerializer
 {
 	protected:
 

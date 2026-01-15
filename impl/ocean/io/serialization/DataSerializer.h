@@ -132,7 +132,7 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 		 * A channel extends ChannelConfiguration by adding a unique channel id that is assigned at runtime during serialization.<br>
 		 * The channel id is used to efficiently identify and route data samples within the serialization stream.
 		 */
-		class Channel : public ChannelConfiguration
+		class OCEAN_IO_SERIALIZATION_EXPORT Channel : public ChannelConfiguration
 		{
 			public:
 

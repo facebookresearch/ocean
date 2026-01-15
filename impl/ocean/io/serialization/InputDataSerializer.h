@@ -31,7 +31,7 @@ namespace Serialization
  * The class uses a background thread to continuously read and buffer samples, ensuring smooth playback without blocking.
  * @ingroup ioserialization
  */
-class InputDataSerializer : public DataSerializer
+class OCEAN_IO_SERIALIZATION_EXPORT InputDataSerializer : public DataSerializer
 {
 	public:
 
@@ -274,7 +274,7 @@ class InputDataSerializer : public DataSerializer
  * Use setFilename() to configure the input file path before calling initialize() and start().
  * @ingroup ioserialization
  */
-class FileInputDataSerializer : public InputDataSerializer
+class OCEAN_IO_SERIALIZATION_EXPORT FileInputDataSerializer : public InputDataSerializer
 {
 	protected:
 

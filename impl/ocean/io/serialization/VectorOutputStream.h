@@ -37,7 +37,7 @@ class OCEAN_IO_SERIALIZATION_EXPORT VectorOutputStream : public std::ostream
 		 * The class extends std::streambuf to provide a memory-backed buffer that grows dynamically as data is written.<br>
 		 * It supports standard streambuf operations including overflow handling, batch writes via xsputn, and seeking within the buffer.
 		 */
-		class VectorStreamBuffer : public std::streambuf
+		class OCEAN_IO_SERIALIZATION_EXPORT VectorStreamBuffer : public std::streambuf
 		{
 			public:
 

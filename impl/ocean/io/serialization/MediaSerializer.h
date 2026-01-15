@@ -48,7 +48,7 @@ class OCEAN_IO_SERIALIZATION_EXPORT MediaSerializer
 		 *    In this case, the user is responsible for decoding the data.<br>
 		 *    The buffer() function provides direct access to the encoded data for custom decoding.
 		 */
-		class DataSampleFrame : public DataSample
+		class OCEAN_IO_SERIALIZATION_EXPORT DataSampleFrame : public DataSample
 		{
 			public:
 
