@@ -9,7 +9,6 @@
 #define OCEAN_CV_DETECTOR_BULLSEYES_UTILITIES_H
 
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
-
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
 
 #include "ocean/base/Frame.h"

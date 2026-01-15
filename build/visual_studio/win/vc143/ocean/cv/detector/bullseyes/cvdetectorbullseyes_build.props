@@ -24,7 +24,7 @@
 
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
     <ClCompile>
-      <PreprocessorDefinitions>USE_OCEAN_CV_DETECTOR_BARCODES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_OCEAN_CV_DETECTOR_BULLSEYES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

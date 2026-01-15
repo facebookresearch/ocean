@@ -9,7 +9,6 @@
 #define OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORMONO_H
 
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
-
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
 #include "ocean/cv/detector/bullseyes/TransitionHistory.h"
 
@@ -33,7 +32,7 @@ namespace Bullseyes
  * Implementation of a monocular detector for the bullseye pattern.
  * @ingroup cvdetectorbullseyes
  */
-class BullseyeDetectorMono
+class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 {
 	public:
 
@@ -68,7 +67,7 @@ class BullseyeDetectorMono
 		 *   - Bullseyes smaller than this threshold are rejected
 		 *   - Helps filter out noise and false positives from tiny patterns
 		 */
-		class Parameters
+		class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Parameters
 		{
 			public:
 

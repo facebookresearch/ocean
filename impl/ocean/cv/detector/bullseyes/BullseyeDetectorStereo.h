@@ -9,7 +9,6 @@
 #define OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORSTEREO_H
 
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
-
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
 #include "ocean/cv/detector/bullseyes/BullseyeDetectorMono.h"
 
@@ -62,7 +61,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorStereo
 		 * This class holds the most important parameters for the stereo detector.
 		 * Currently, this class inherits all parameters from the monocular detector.
 		 */
-		class Parameters : public BullseyeDetectorMono::Parameters
+		class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Parameters : public BullseyeDetectorMono::Parameters
 		{
 			public:
 
