@@ -133,7 +133,7 @@ class FREAKDescriptor
 		 *
 		 * Functor that can be used to obtain the 2x3 Jacobian of the camera projection matrix wrt. to a 2D point and the corresponding unprojection ray of a pinhole camera.
 		 */
-		class PinholeCameraDerivativeFunctor : public CameraDerivativeFunctor
+		class OCEAN_CV_DETECTOR_EXPORT PinholeCameraDerivativeFunctor : public CameraDerivativeFunctor
 		{
 			public:
 
@@ -171,7 +171,7 @@ class FREAKDescriptor
 		/**
 		 * Functor that can be used to obtain the 2x3 Jacobian of the camera projection matrix wrt. to a 2D point and the corresponding unprojection ray of a camera
 		 */
-		class AnyCameraDerivativeFunctor : public CameraDerivativeFunctor
+		class OCEAN_CV_DETECTOR_EXPORT AnyCameraDerivativeFunctor : public CameraDerivativeFunctor
 		{
 			public:
 
