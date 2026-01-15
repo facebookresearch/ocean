@@ -11,7 +11,19 @@ echo.
 echo.
 echo.
 
-set PATH=%PATH%;C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin
+REM Dynamically locate Visual Studio 2022+ installation using vswhere.exe
+REM -version "[17.0,)" requires VS 2022 (v17.x) or higher
+for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.0,)" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) do set VSINSTALLPATH=%%i
+
+if not defined VSINSTALLPATH (
+    echo ERROR: Could not find Visual Studio 2022 or higher. Please ensure Visual Studio 2022+ is installed.
+    exit /b 1
+)
+
+set PATH=%PATH%;%VSINSTALLPATH%\MSBuild\Current\Bin
+
+echo Using Visual Studio from: %VSINSTALLPATH%
+echo.
 
 echo 1 / 12 Build Shared Debug x86...
 echo.

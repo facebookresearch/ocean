@@ -19,7 +19,7 @@
       <!-- C4062: enumerator 'identifier' in switch of enum 'enumeration' is not handled -->
       <!-- C4265: 'class': class has virtual functions, but destructor is not virtual -->
       <!-- C5266: 'const' qualifier on return type has no effect -->
-      <AdditionalOptions>/permissive- /w15038 /w44062 /w34265 /w45266 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/permissive- /Zc:__cplusplus /w15038 /w44062 /w34265 /w45266 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -42,7 +42,7 @@
 
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Shared Profile'">
     <ClCompile>
-      <AdditionalOptions>/permissive- /w15038 /w44062 /w34265 /w45266 /Zo %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/permissive- /Zc:__cplusplus /w15038 /w44062 /w34265 /w45266 /Zo %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
 
