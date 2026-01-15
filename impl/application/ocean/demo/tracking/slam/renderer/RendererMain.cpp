@@ -493,6 +493,7 @@ bool loadScene(const Rendering::EngineRef& engine, const Rendering::FramebufferR
 
 ScopedPlugins::ScopedPlugins()
 {
+#ifdef OCEAN_RUNTIME_STATIC
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::MediaFoundation::registerMediaFoundationLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::registerAVFLibrary());
@@ -506,10 +507,12 @@ ScopedPlugins::ScopedPlugins()
 	SceneDescription::SDL::OBJ::registerOBJLibrary();
 	SceneDescription::SDL::Assimp::registerAssimpLibrary();
 	SceneDescription::SDX::X3D::registerX3DLibrary();
+#endif // OCEAN_RUNTIME_STATIC
 }
 
 ScopedPlugins::~ScopedPlugins()
 {
+#ifdef OCEAN_RUNTIME_STATIC
 	SceneDescription::SDX::X3D::unregisterX3DLibrary();
 	SceneDescription::SDL::Assimp::unregisterAssimpLibrary();
 	SceneDescription::SDL::OBJ::unregisterOBJLibrary();
@@ -522,6 +525,7 @@ ScopedPlugins::~ScopedPlugins()
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::unregisterAVFLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::MediaFoundation::unregisterMediaFoundationLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::unregisterWICLibrary());
+#endif // OCEAN_RUNTIME_STATIC
 }
 
 Vector3 SensorAccessor::cameraGravity(const Quaternion& device_Q_camera, const Timestamp& timestamp)

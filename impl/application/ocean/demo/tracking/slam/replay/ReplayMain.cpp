@@ -362,22 +362,26 @@ using namespace Ocean::Tracking::SLAM;
 
 ScopedPlugin::ScopedPlugin()
 {
+#ifdef OCEAN_RUNTIME_STATIC
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::MediaFoundation::registerMediaFoundationLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::registerAVFLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::ImageIO::registerImageIOLibrary());
 
 	Devices::Serialization::registerSerializationLibrary();
+#endif // OCEAN_RUNTIME_STATIC
 }
 
 ScopedPlugin::~ScopedPlugin()
 {
+#ifdef OCEAN_RUNTIME_STATIC
 	Devices::Serialization::unregisterSerializationLibrary();
 
 	OCEAN_APPLY_IF_APPLE(Media::ImageIO::unregisterImageIOLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::unregisterAVFLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::MediaFoundation::unregisterMediaFoundationLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::unregisterWICLibrary());
+#endif // OCEAN_RUNTIME_STATIC
 }
 
 Vector3 SensorAccessor::cameraGravity(const Quaternion& device_Q_camera, const Timestamp& timestamp)

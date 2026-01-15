@@ -301,7 +301,7 @@ class OCEAN_TRACKING_SLAM_EXPORT TrackerMono :
 		 * This class holds debug data for visualization and analysis purposes.
 		 * The class maintains 2D point tracks across frames and their associated 3D object points.
 		 */
-		class DebugData
+		class OCEAN_TRACKING_SLAM_EXPORT DebugData
 		{
 			public:
 

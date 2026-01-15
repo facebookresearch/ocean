@@ -164,20 +164,22 @@ SLAMTrackerWrapper::SLAMTrackerWrapper(SLAMTrackerWrapper&& slamTrackerWrapper) 
 
 SLAMTrackerWrapper::SLAMTrackerWrapper(const std::vector<std::wstring>& arguments)
 {
-#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
-	Media::DirectShow::registerDirectShowLibrary();
-	Media::MediaFoundation::registerMediaFoundationLibrary();
-	Media::WIC::registerWICLibrary();
-#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
-	Media::AVFoundation::registerAVFLibrary();
-	Media::ImageIO::registerImageIOLibrary();
-	#if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS)
-		Devices::IOS::registerIOSLibrary();
+#ifdef OCEAN_RUNTIME_STATIC
+	#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+		Media::DirectShow::registerDirectShowLibrary();
+		Media::MediaFoundation::registerMediaFoundationLibrary();
+		Media::WIC::registerWICLibrary();
+	#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
+		Media::AVFoundation::registerAVFLibrary();
+		Media::ImageIO::registerImageIOLibrary();
+		#if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS)
+			Devices::IOS::registerIOSLibrary();
+		#endif
+	#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
+		Media::Android::registerAndroidLibrary();
+		Devices::Android::registerAndroidLibrary();
 	#endif
-#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
-	Media::Android::registerAndroidLibrary();
-	Devices::Android::registerAndroidLibrary();
-#endif
+#endif // OCEAN_RUNTIME_STATIC
 
 	CommandArguments commandArguments;
 	commandArguments.registerParameter("input", "i", "The input to be used");
@@ -284,16 +286,18 @@ void SLAMTrackerWrapper::release()
 {
 	frameMedium_.release();
 
-#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
-	Media::DirectShow::unregisterDirectShowLibrary();
-	Media::MediaFoundation::unregisterMediaFoundationLibrary();
-	Media::WIC::unregisterWICLibrary();
-#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
-	Media::AVFoundation::unregisterAVFLibrary();
-	Media::ImageIO::unregisterImageIOLibrary();
-#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
-	Media::Android::unregisterAndroidLibrary();
-#endif
+#ifdef OCEAN_RUNTIME_STATIC
+	#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+		Media::DirectShow::unregisterDirectShowLibrary();
+		Media::MediaFoundation::unregisterMediaFoundationLibrary();
+		Media::WIC::unregisterWICLibrary();
+	#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
+		Media::AVFoundation::unregisterAVFLibrary();
+		Media::ImageIO::unregisterImageIOLibrary();
+	#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
+		Media::Android::unregisterAndroidLibrary();
+	#endif
+#endif // OCEAN_RUNTIME_STATIC
 }
 
 bool SLAMTrackerWrapper::trackNewFrame(Frame& outputFrame, bool* lastFrameReached)

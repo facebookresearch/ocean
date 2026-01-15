@@ -345,16 +345,20 @@ class ScopedPlugin
 
 inline ScopedPlugin::ScopedPlugin()
 {
+#ifdef OCEAN_RUNTIME_STATIC
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::MediaFoundation::registerMediaFoundationLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::registerAVFLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::ImageIO::registerImageIOLibrary());
+#endif // OCEAN_RUNTIME_STATIC
 }
 
 inline ScopedPlugin::~ScopedPlugin()
 {
+#ifdef OCEAN_RUNTIME_STATIC
 	OCEAN_APPLY_IF_APPLE(Media::ImageIO::unregisterImageIOLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::unregisterAVFLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::MediaFoundation::unregisterMediaFoundationLibrary());
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::unregisterWICLibrary());
+#endif // OCEAN_RUNTIME_STATIC
 }
