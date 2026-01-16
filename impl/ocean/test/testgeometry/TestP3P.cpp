@@ -547,7 +547,7 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 		};
 
 		// now we create random 3D ray with unit length
-		// each ray must point towards the negative z space
+		// each ray must point towards the negative z space (z < -eps to avoid division by ~zero in P3P algorithm)
 
 		VectorT3<T> rays[3];
 
@@ -556,13 +556,13 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 			do
 			{
 				rays[n] = randomVector<T>(randomGenerator).normalizedOrZero();
-			}
-			while (rays[n].isNull());
 
-			if (rays[n].z() >= Scalar(0))
-			{
-				rays[n].z() = -rays[n].z();
+				if (!rays[n].isNull() && rays[n].z() >= T(0))
+				{
+					rays[n].z() = -rays[n].z();
+				}
 			}
+			while (rays[n].isNull() || rays[n].z() >= -NumericT<T>::eps());
 		}
 
 		// we do not evaluate the resulting poses, we just want to ensure that the function does not crash
