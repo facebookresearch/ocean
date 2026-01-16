@@ -13,6 +13,12 @@ namespace Ocean
 {
 
 template <typename T>
+BoxT3<T>::BoxT3()
+{
+	// nothing to do here
+}
+
+template <typename T>
 BoxT3<T>::BoxT3(const VectorT3<T>& lower, const VectorT3<T>& higher) :
 	lower_(lower),
 	higher_(higher)

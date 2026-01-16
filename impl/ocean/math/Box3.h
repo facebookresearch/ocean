@@ -70,7 +70,7 @@ class BoxT3
 		/**
 		 * Creates an invalid bounding box.
 		 */
-		BoxT3() = default;
+		BoxT3();
 
 		/**
 		 * Creates a new bounding box by two given corners.
