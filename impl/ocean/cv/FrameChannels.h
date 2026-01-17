@@ -1300,6 +1300,38 @@ class OCEAN_CV_EXPORT FrameChannels : public FrameConverter
 		static OCEAN_FORCE_INLINE void convert3ChannelsTo4Channels16Pixels8BitPerChannel6BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& factorChannel00_64_s_16x8, const __m128i& factorChannel10_64_s_16x8, const __m128i& factorChannel20_64_s_16x8, const __m128i& factorChannel01_64_s_16x8, const __m128i& factorChannel11_64_s_16x8, const __m128i& factorChannel21_64_s_16x8, const __m128i& factorChannel02_64_s_16x8, const __m128i& factorChannel12_64_s_16x8, const __m128i& factorChannel22_64_s_16x8, const __m128i& biasChannel0_s_16x8, const __m128i& biasChannel1_s_16x8, const __m128i& biasChannel2_s_16x8, const __m128i& channelValue3_u_8x16);
 
 		/**
+		 * Converts 16 pixels with 4 channels per pixel to 16 pixels with three channel per pixel by a linear combination of the four channels plus a bias (translation) parameter.
+		 * Thus, this function can be used to e.g., convert YUVA32 to RGB24.
+		 * The linear combination is defined by four integer multiplication factor for each source channel with 128 as denominator. plus one bias (translation) parameter for each target channel (with 1 as denominator).<br>
+		 * Beware: As this function applies integer multiplication factors (with 7 bits precision) the conversion result has an accuracy of +/- 2 color intensities.<br>
+		 * The transformation is based on the following pattern:
+		 * <pre>
+		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + f03 * s3 + b0
+		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + f13 * s3 + b1
+		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + f23 * s3 + b2
+		 * </pre>
+		 * With t target, s source, f factor, and b bias.
+		 * @param source The pointer to the 16 source pixels (with 4 channels = 64 bytes) to convert, must be valid
+		 * @param target The pointer to the 16 target pixels (with 3 channels = 48 bytes) receiving the converted pixel data, must be valid
+		 * @param factorChannel00_128_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel10_128_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel20_128_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel01_128_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel11_128_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel21_128_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel02_128_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel12_128_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel22_128_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel03_128_s_16x8 The multiplication factor (8 identical factors) for the fourth source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel13_128_s_16x8 The multiplication factor (8 identical factors) for the fourth source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel23_128_s_16x8 The multiplication factor (8 identical factors) for the fourth source channel and for the third target channel, with range [-127, 127]
+		 * @param biasChannel0_s_16x8 The bias (translation) value for the first target channel, with range [-127, 127]
+		 * @param biasChannel1_s_16x8 The bias (translation) value for the second target channel, with range [-127, 127]
+		 * @param biasChannel2_s_16x8 The bias (translation) value for the third target channel, with range [-127, 127]
+		 */
+		static OCEAN_FORCE_INLINE void convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& factorChannel00_128_s_16x8, const __m128i& factorChannel10_128_s_16x8, const __m128i& factorChannel20_128_s_16x8, const __m128i& factorChannel01_128_s_16x8, const __m128i& factorChannel11_128_s_16x8, const __m128i& factorChannel21_128_s_16x8, const __m128i& factorChannel02_128_s_16x8, const __m128i& factorChannel12_128_s_16x8, const __m128i& factorChannel22_128_s_16x8, const __m128i& factorChannel03_128_s_16x8, const __m128i& factorChannel13_128_s_16x8, const __m128i& factorChannel23_128_s_16x8, const __m128i& biasChannel0_s_16x8, const __m128i& biasChannel1_s_16x8, const __m128i& biasChannel2_s_16x8);
+
+		/**
 		 * Converts 16 pixels with 4 channels per pixel to 16 pixels with one channel per pixel by a linear combination of the four channels.
 		 * This function can be used to e.g., convert RGBA32 to Y8, or ARGB32 to Y8, or RGB32 to Y8.
 		 * The linear combination is defined by one integer multiplication factor for each channel with 128 as denominator.<br>
@@ -1585,6 +1617,38 @@ class OCEAN_CV_EXPORT FrameChannels : public FrameConverter
 		 * @param factorChannel13_128_u_8x8 The multiplication factor (8 identical factors) for the second target and fourth source channel, with range [0, 127 - factorChannel10 - factorChannel11 - factorChannel12]
 		 */
 		static OCEAN_FORCE_INLINE void convert4ChannelsTo2Channels8Pixels8BitPerChannel7BitPrecisionNEON(const uint8_t* const source, uint8_t* const target, const uint8x8_t& factorChannel00_128_u_8x8, const uint8x8_t& factorChannel10_128_u_8x8, const uint8x8_t& factorChannel01_128_u_8x8, const uint8x8_t& factorChannel11_128_u_8x8, const uint8x8_t& factorChannel02_128_u_8x8, const uint8x8_t& factorChannel12_128_u_8x8, const uint8x8_t& factorChannel03_128_u_8x8, const uint8x8_t& factorChannel13_128_u_8x8);
+
+		/**
+		 * Converts 16 pixels with 4 channels per pixel to 16 pixels with three channels per pixel by a linear combination of the four channels plus a bias (translation) parameter.
+		 * Thus, this function can be used to e.g., convert YUVA32 to RGB24.
+		 * The linear combination is defined by four integer multiplication factor for each source channel with 128 as denominator. plus one bias (translation) parameter for each target channel (also with 128 as denominator).<br>
+		 * Beware: As this function applies integer multiplication factors (with 7 bits precision) the conversion result has an accuracy of +/- 2 color intensities.<br>
+		 * The transformation is based on the following pattern:
+		 * <pre>
+		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + f03 * s3 + b0
+		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + f13 * s3 + b1
+		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + f23 * s3 + b2
+		 * </pre>
+		 * With t target, s source, f factor, and b bias.
+		 * @param source The pointer to the 16 source pixels (with 4 channels = 64 bytes) to convert, must be valid
+		 * @param target The pointer to the 16 target pixels (with 3 channels = 48 bytes) receiving the converted pixel data, must be valid
+		 * @param factorChannel00_128_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel10_128_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel20_128_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel01_128_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel11_128_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel21_128_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel02_128_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel12_128_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel22_128_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel03_128_s_16x8 The multiplication factor (8 identical factors) for the fourth source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel13_128_s_16x8 The multiplication factor (8 identical factors) for the fourth source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel23_128_s_16x8 The multiplication factor (8 identical factors) for the fourth source channel and for the third target channel, with range [-127, 127]
+		 * @param biasChannel0_128_s_16x8 The bias (translation) value for the first target channel, multiplied by 128, with range [-128 * 128, 128 * 128]
+		 * @param biasChannel1_128_s_16x8 The bias (translation) value for the second target channel, multiplied by 128, with range [-128 * 128, 128 * 128]
+		 * @param biasChannel2_128_s_16x8 The bias (translation) value for the third target channel, multiplied by 128, with range [-128 * 128, 128 * 128]
+		 */
+		static OCEAN_FORCE_INLINE void convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionNEON(const uint8_t* const source, uint8_t* const target, const int16x8_t& factorChannel00_128_s_16x8, const int16x8_t& factorChannel10_128_s_16x8, const int16x8_t& factorChannel20_128_s_16x8, const int16x8_t& factorChannel01_128_s_16x8, const int16x8_t& factorChannel11_128_s_16x8, const int16x8_t& factorChannel21_128_s_16x8, const int16x8_t& factorChannel02_128_s_16x8, const int16x8_t& factorChannel12_128_s_16x8, const int16x8_t& factorChannel22_128_s_16x8, const int16x8_t& factorChannel03_128_s_16x8, const int16x8_t& factorChannel13_128_s_16x8, const int16x8_t& factorChannel23_128_s_16x8, const int16x8_t& biasChannel0_128_s_16x8, const int16x8_t& biasChannel1_128_s_16x8, const int16x8_t& biasChannel2_128_s_16x8);
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -5696,6 +5760,164 @@ OCEAN_FORCE_INLINE void FrameChannels::convert3ChannelsTo4Channels16Pixels8BitPe
 	_mm_storeu_si128((__m128i*)target + 3, resultD_u_8x16);
 }
 
+OCEAN_FORCE_INLINE void FrameChannels::convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& factorChannel00_128_s_16x8, const __m128i& factorChannel10_128_s_16x8, const __m128i& factorChannel20_128_s_16x8, const __m128i& factorChannel01_128_s_16x8, const __m128i& factorChannel11_128_s_16x8, const __m128i& factorChannel21_128_s_16x8, const __m128i& factorChannel02_128_s_16x8, const __m128i& factorChannel12_128_s_16x8, const __m128i& factorChannel22_128_s_16x8, const __m128i& factorChannel03_128_s_16x8, const __m128i& factorChannel13_128_s_16x8, const __m128i& factorChannel23_128_s_16x8, const __m128i& biasChannel0_s_16x8, const __m128i& biasChannel1_s_16x8, const __m128i& biasChannel2_s_16x8)
+{
+	ocean_assert(source != nullptr && target != nullptr);
+
+	// the documentation of this function designed for YUVA32 to RGB24 conversion
+
+	// we expect the following input pattern (for here YUVA32):
+	// FEDC BA98 7654 3210
+	// AYUV AYUV AYUV AYUV
+
+	const __m128i pixelsA_u_8x16 = _mm_loadu_si128((const __m128i*)source + 0);
+	const __m128i pixelsB_u_8x16 = _mm_loadu_si128((const __m128i*)source + 1);
+	const __m128i pixelsC_u_8x16 = _mm_loadu_si128((const __m128i*)source + 2);
+	const __m128i pixelsD_u_8x16 = _mm_loadu_si128((const __m128i*)source + 3);
+
+	// deinterleave the 4 channels to get separated channels
+	// deinterleaving 4 channels from 64 bytes to 4x16 bytes
+	// The high 64 bits of the shuffle mask use 0xFF to produce zeros,
+	// so only the low 4 16-bit positions contain valid data
+	const __m128i shuffle0 = SSE::set128i(0xFFFFFFFFFFFFFFFFull, 0xFF0cFF08FF04FF00ull);
+	const __m128i shuffle1 = SSE::set128i(0xFFFFFFFFFFFFFFFFull, 0xFF0dFF09FF05FF01ull);
+	const __m128i shuffle2 = SSE::set128i(0xFFFFFFFFFFFFFFFFull, 0xFF0eFF0aFF06FF02ull);
+	const __m128i shuffle3 = SSE::set128i(0xFFFFFFFFFFFFFFFFull, 0xFF0fFF0bFF07FF03ull);
+
+	// extract channel 0 values: 0x 0x 0x 0x 0x 0x 0x 0x
+	const __m128i channel0A_u_16x8 = _mm_shuffle_epi8(pixelsA_u_8x16, shuffle0);
+	const __m128i channel0B_u_16x8 = _mm_shuffle_epi8(pixelsB_u_8x16, shuffle0);
+	const __m128i channel0C_u_16x8 = _mm_shuffle_epi8(pixelsC_u_8x16, shuffle0);
+	const __m128i channel0D_u_16x8 = _mm_shuffle_epi8(pixelsD_u_8x16, shuffle0);
+
+	// extract channel 1 values
+	const __m128i channel1A_u_16x8 = _mm_shuffle_epi8(pixelsA_u_8x16, shuffle1);
+	const __m128i channel1B_u_16x8 = _mm_shuffle_epi8(pixelsB_u_8x16, shuffle1);
+	const __m128i channel1C_u_16x8 = _mm_shuffle_epi8(pixelsC_u_8x16, shuffle1);
+	const __m128i channel1D_u_16x8 = _mm_shuffle_epi8(pixelsD_u_8x16, shuffle1);
+
+	// extract channel 2 values
+	const __m128i channel2A_u_16x8 = _mm_shuffle_epi8(pixelsA_u_8x16, shuffle2);
+	const __m128i channel2B_u_16x8 = _mm_shuffle_epi8(pixelsB_u_8x16, shuffle2);
+	const __m128i channel2C_u_16x8 = _mm_shuffle_epi8(pixelsC_u_8x16, shuffle2);
+	const __m128i channel2D_u_16x8 = _mm_shuffle_epi8(pixelsD_u_8x16, shuffle2);
+
+	// extract channel 3 values
+	const __m128i channel3A_u_16x8 = _mm_shuffle_epi8(pixelsA_u_8x16, shuffle3);
+	const __m128i channel3B_u_16x8 = _mm_shuffle_epi8(pixelsB_u_8x16, shuffle3);
+	const __m128i channel3C_u_16x8 = _mm_shuffle_epi8(pixelsC_u_8x16, shuffle3);
+	const __m128i channel3D_u_16x8 = _mm_shuffle_epi8(pixelsD_u_8x16, shuffle3);
+
+	// combine to 8 values each: 0c 0c 0c 0c 0a 0a 0a 0a
+	const __m128i channel0_low_u_16x8 = _mm_or_si128(channel0A_u_16x8, _mm_slli_si128(channel0B_u_16x8, 8));
+	const __m128i channel0_high_u_16x8 = _mm_or_si128(channel0C_u_16x8, _mm_slli_si128(channel0D_u_16x8, 8));
+
+	const __m128i channel1_low_u_16x8 = _mm_or_si128(channel1A_u_16x8, _mm_slli_si128(channel1B_u_16x8, 8));
+	const __m128i channel1_high_u_16x8 = _mm_or_si128(channel1C_u_16x8, _mm_slli_si128(channel1D_u_16x8, 8));
+
+	const __m128i channel2_low_u_16x8 = _mm_or_si128(channel2A_u_16x8, _mm_slli_si128(channel2B_u_16x8, 8));
+	const __m128i channel2_high_u_16x8 = _mm_or_si128(channel2C_u_16x8, _mm_slli_si128(channel2D_u_16x8, 8));
+
+	const __m128i channel3_low_u_16x8 = _mm_or_si128(channel3A_u_16x8, _mm_slli_si128(channel3B_u_16x8, 8));
+	const __m128i channel3_high_u_16x8 = _mm_or_si128(channel3C_u_16x8, _mm_slli_si128(channel3D_u_16x8, 8));
+
+	// We need to use 32-bit intermediate results to avoid overflow in the 4-channel case
+	// when factors have opposing signs, the sum of 4 products can exceed INT16_MAX
+
+	// Process result channel 0 with 32-bit intermediates
+	__m128i result0_low_A_s_32x4;
+	__m128i result0_low_B_s_32x4;
+	SSE::multiplyInt8x16ToInt32x8(channel0_low_u_16x8, factorChannel00_128_s_16x8, result0_low_A_s_32x4, result0_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel1_low_u_16x8, factorChannel01_128_s_16x8, result0_low_A_s_32x4, result0_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel2_low_u_16x8, factorChannel02_128_s_16x8, result0_low_A_s_32x4, result0_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel3_low_u_16x8, factorChannel03_128_s_16x8, result0_low_A_s_32x4, result0_low_B_s_32x4);
+
+	__m128i result0_high_A_s_32x4;
+	__m128i result0_high_B_s_32x4;
+	SSE::multiplyInt8x16ToInt32x8(channel0_high_u_16x8, factorChannel00_128_s_16x8, result0_high_A_s_32x4, result0_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel1_high_u_16x8, factorChannel01_128_s_16x8, result0_high_A_s_32x4, result0_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel2_high_u_16x8, factorChannel02_128_s_16x8, result0_high_A_s_32x4, result0_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel3_high_u_16x8, factorChannel03_128_s_16x8, result0_high_A_s_32x4, result0_high_B_s_32x4);
+
+	// Process result channel 1 with 32-bit intermediates
+	__m128i result1_low_A_s_32x4;
+	__m128i result1_low_B_s_32x4;
+	SSE::multiplyInt8x16ToInt32x8(channel0_low_u_16x8, factorChannel10_128_s_16x8, result1_low_A_s_32x4, result1_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel1_low_u_16x8, factorChannel11_128_s_16x8, result1_low_A_s_32x4, result1_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel2_low_u_16x8, factorChannel12_128_s_16x8, result1_low_A_s_32x4, result1_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel3_low_u_16x8, factorChannel13_128_s_16x8, result1_low_A_s_32x4, result1_low_B_s_32x4);
+
+	__m128i result1_high_A_s_32x4;
+	__m128i result1_high_B_s_32x4;
+	SSE::multiplyInt8x16ToInt32x8(channel0_high_u_16x8, factorChannel10_128_s_16x8, result1_high_A_s_32x4, result1_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel1_high_u_16x8, factorChannel11_128_s_16x8, result1_high_A_s_32x4, result1_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel2_high_u_16x8, factorChannel12_128_s_16x8, result1_high_A_s_32x4, result1_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel3_high_u_16x8, factorChannel13_128_s_16x8, result1_high_A_s_32x4, result1_high_B_s_32x4);
+
+	// Process result channel 2 with 32-bit intermediates
+	__m128i result2_low_A_s_32x4;
+	__m128i result2_low_B_s_32x4;
+	SSE::multiplyInt8x16ToInt32x8(channel0_low_u_16x8, factorChannel20_128_s_16x8, result2_low_A_s_32x4, result2_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel1_low_u_16x8, factorChannel21_128_s_16x8, result2_low_A_s_32x4, result2_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel2_low_u_16x8, factorChannel22_128_s_16x8, result2_low_A_s_32x4, result2_low_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel3_low_u_16x8, factorChannel23_128_s_16x8, result2_low_A_s_32x4, result2_low_B_s_32x4);
+
+	__m128i result2_high_A_s_32x4;
+	__m128i result2_high_B_s_32x4;
+	SSE::multiplyInt8x16ToInt32x8(channel0_high_u_16x8, factorChannel20_128_s_16x8, result2_high_A_s_32x4, result2_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel1_high_u_16x8, factorChannel21_128_s_16x8, result2_high_A_s_32x4, result2_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel2_high_u_16x8, factorChannel22_128_s_16x8, result2_high_A_s_32x4, result2_high_B_s_32x4);
+	SSE::multiplyInt8x16ToInt32x8AndAccumulate(channel3_high_u_16x8, factorChannel23_128_s_16x8, result2_high_A_s_32x4, result2_high_B_s_32x4);
+
+	// Convert bias from 16-bit to 32-bit
+	const __m128i biasChannel0_s_32x4 = _mm_cvtepi16_epi32(biasChannel0_s_16x8);
+	const __m128i biasChannel1_s_32x4 = _mm_cvtepi16_epi32(biasChannel1_s_16x8);
+	const __m128i biasChannel2_s_32x4 = _mm_cvtepi16_epi32(biasChannel2_s_16x8);
+
+	// Normalize by 128 (divide) and then add bias
+	result0_low_A_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result0_low_A_s_32x4, 7), biasChannel0_s_32x4);
+	result0_low_B_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result0_low_B_s_32x4, 7), biasChannel0_s_32x4);
+	result0_high_A_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result0_high_A_s_32x4, 7), biasChannel0_s_32x4);
+	result0_high_B_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result0_high_B_s_32x4, 7), biasChannel0_s_32x4);
+
+	result1_low_A_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result1_low_A_s_32x4, 7), biasChannel1_s_32x4);
+	result1_low_B_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result1_low_B_s_32x4, 7), biasChannel1_s_32x4);
+	result1_high_A_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result1_high_A_s_32x4, 7), biasChannel1_s_32x4);
+	result1_high_B_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result1_high_B_s_32x4, 7), biasChannel1_s_32x4);
+
+	result2_low_A_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result2_low_A_s_32x4, 7), biasChannel2_s_32x4);
+	result2_low_B_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result2_low_B_s_32x4, 7), biasChannel2_s_32x4);
+	result2_high_A_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result2_high_A_s_32x4, 7), biasChannel2_s_32x4);
+	result2_high_B_s_32x4 = _mm_add_epi32(SSE::divideByRightShiftSigned32Bit(result2_high_B_s_32x4, 7), biasChannel2_s_32x4);
+
+	// Pack 32-bit results to 16-bit using signed saturation
+	// _mm_packs_epi32 takes two __m128i with 4 int32 each and produces one __m128i with 8 int16
+	// Order: A[0], A[1], A[2], A[3], B[0], B[1], B[2], B[3]
+	const __m128i result0_low_s_16x8 = _mm_packs_epi32(result0_low_A_s_32x4, result0_low_B_s_32x4);
+	const __m128i result0_high_s_16x8 = _mm_packs_epi32(result0_high_A_s_32x4, result0_high_B_s_32x4);
+
+	const __m128i result1_low_s_16x8 = _mm_packs_epi32(result1_low_A_s_32x4, result1_low_B_s_32x4);
+	const __m128i result1_high_s_16x8 = _mm_packs_epi32(result1_high_A_s_32x4, result1_high_B_s_32x4);
+
+	const __m128i result2_low_s_16x8 = _mm_packs_epi32(result2_low_A_s_32x4, result2_low_B_s_32x4);
+	const __m128i result2_high_s_16x8 = _mm_packs_epi32(result2_high_A_s_32x4, result2_high_B_s_32x4);
+
+	// we combine 16 int16_t values to 16 uint8_t values (saturated to [0, 255])
+	const __m128i result0_u_8x16 = _mm_packus_epi16(result0_low_s_16x8, result0_high_s_16x8);
+	const __m128i result1_u_8x16 = _mm_packus_epi16(result1_low_s_16x8, result1_high_s_16x8);
+	const __m128i result2_u_8x16 = _mm_packus_epi16(result2_low_s_16x8, result2_high_s_16x8);
+
+	__m128i resultA_u_8x16;
+	__m128i resultB_u_8x16;
+	__m128i resultC_u_8x16;
+	SSE::interleave3Channel8Bit48Elements(result0_u_8x16, result1_u_8x16, result2_u_8x16, resultA_u_8x16, resultB_u_8x16, resultC_u_8x16);
+
+	// and we can store the result
+	_mm_storeu_si128((__m128i*)target + 0, resultA_u_8x16);
+	_mm_storeu_si128((__m128i*)target + 1, resultB_u_8x16);
+	_mm_storeu_si128((__m128i*)target + 2, resultC_u_8x16);
+}
+
 OCEAN_FORCE_INLINE void FrameChannels::convert4ChannelsTo1Channel16Pixels8BitPerChannel7BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& multiplicationFactors0123_128_s_32x4)
 {
 	ocean_assert(source != nullptr && target != nullptr);
@@ -6588,6 +6810,173 @@ OCEAN_FORCE_INLINE void FrameChannels::convert4ChannelsTo2Channels8Pixels8BitPer
 
 	// and we can store the result
 	vst2_u8(target, results_u_8x8x2);
+}
+
+OCEAN_FORCE_INLINE void FrameChannels::convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionNEON(const uint8_t* const source, uint8_t* const target, const int16x8_t& factorChannel00_128_s_16x8, const int16x8_t& factorChannel10_128_s_16x8, const int16x8_t& factorChannel20_128_s_16x8, const int16x8_t& factorChannel01_128_s_16x8, const int16x8_t& factorChannel11_128_s_16x8, const int16x8_t& factorChannel21_128_s_16x8, const int16x8_t& factorChannel02_128_s_16x8, const int16x8_t& factorChannel12_128_s_16x8, const int16x8_t& factorChannel22_128_s_16x8, const int16x8_t& factorChannel03_128_s_16x8, const int16x8_t& factorChannel13_128_s_16x8, const int16x8_t& factorChannel23_128_s_16x8, const int16x8_t& biasChannel0_128_s_16x8, const int16x8_t& biasChannel1_128_s_16x8, const int16x8_t& biasChannel2_128_s_16x8)
+{
+	ocean_assert(source != nullptr && target != nullptr);
+
+	// the documentation of this function designed for YUVA32 to RGB24 conversion
+
+	// approximation:
+	// R = f00 * s0 + f01 * s1 + f02 * s2 + f03 * s3 + b0
+	// G = f10 * s0 + f11 * s1 + f12 * s2 + f13 * s3 + b1
+	// B = f20 * s0 + f21 * s1 + f22 * s2 + f23 * s3 + b2
+
+	// we load 16 pixels (= 4 * 16 values) and directly deinterleave the 4 channels so that we receive the following patterns:
+	// source_u_8x16x4.val[0]: s0 s0 s0 s0 s0 s0 s0 s0 s0 s0 s0 s0 s0 s0 s0 s0
+	// source_u_8x16x4.val[1]: s1 s1 s1 s1 s1 s1 s1 s1 s1 s1 s1 s1 s1 s1 s1 s1
+	// source_u_8x16x4.val[2]: s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2
+	// source_u_8x16x4.val[3]: s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3
+
+	const uint8x16x4_t source_u_8x16x4 = vld4q_u8(source);
+
+	// widen 8 bit unsigned to 16 bit signed
+
+	const int16x8_t source0_low_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_low_u8(source_u_8x16x4.val[0])));
+	const int16x8_t source1_low_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_low_u8(source_u_8x16x4.val[1])));
+	const int16x8_t source2_low_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_low_u8(source_u_8x16x4.val[2])));
+	const int16x8_t source3_low_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_low_u8(source_u_8x16x4.val[3])));
+
+	const int16x8_t source0_high_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_high_u8(source_u_8x16x4.val[0])));
+	const int16x8_t source1_high_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_high_u8(source_u_8x16x4.val[1])));
+	const int16x8_t source2_high_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_high_u8(source_u_8x16x4.val[2])));
+	const int16x8_t source3_high_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vget_high_u8(source_u_8x16x4.val[3])));
+
+	// We need to use 32-bit intermediate results to avoid overflow in the 4-channel case
+	// Split the 16x8 source vectors into 4 sets of 4 elements for 32-bit multiplication
+
+	const int16x4_t factorChannel00_128_s_16x4 = vget_low_s16(factorChannel00_128_s_16x8);
+	const int16x4_t factorChannel10_128_s_16x4 = vget_low_s16(factorChannel10_128_s_16x8);
+	const int16x4_t factorChannel20_128_s_16x4 = vget_low_s16(factorChannel20_128_s_16x8);
+
+	const int16x4_t factorChannel01_128_s_16x4 = vget_low_s16(factorChannel01_128_s_16x8);
+	const int16x4_t factorChannel11_128_s_16x4 = vget_low_s16(factorChannel11_128_s_16x8);
+	const int16x4_t factorChannel21_128_s_16x4 = vget_low_s16(factorChannel21_128_s_16x8);
+
+	const int16x4_t factorChannel02_128_s_16x4 = vget_low_s16(factorChannel02_128_s_16x8);
+	const int16x4_t factorChannel12_128_s_16x4 = vget_low_s16(factorChannel12_128_s_16x8);
+	const int16x4_t factorChannel22_128_s_16x4 = vget_low_s16(factorChannel22_128_s_16x8);
+
+	const int16x4_t factorChannel03_128_s_16x4 = vget_low_s16(factorChannel03_128_s_16x8);
+	const int16x4_t factorChannel13_128_s_16x4 = vget_low_s16(factorChannel13_128_s_16x8);
+	const int16x4_t factorChannel23_128_s_16x4 = vget_low_s16(factorChannel23_128_s_16x8);
+
+	// Process 8 pixels in low part with widening 32-bit multiply-accumulate
+
+	const int16x4_t source0_low_low_s_16x4 = vget_low_s16(source0_low_s_16x8);
+	const int16x4_t source0_low_high_s_16x4 = vget_high_s16(source0_low_s_16x8);
+	const int16x4_t source1_low_low_s_16x4 = vget_low_s16(source1_low_s_16x8);
+	const int16x4_t source1_low_high_s_16x4 = vget_high_s16(source1_low_s_16x8);
+	const int16x4_t source2_low_low_s_16x4 = vget_low_s16(source2_low_s_16x8);
+	const int16x4_t source2_low_high_s_16x4 = vget_high_s16(source2_low_s_16x8);
+	const int16x4_t source3_low_low_s_16x4 = vget_low_s16(source3_low_s_16x8);
+	const int16x4_t source3_low_high_s_16x4 = vget_high_s16(source3_low_s_16x8);
+
+	int32x4_t intermediateResults0_low_low_s_32x4 = vmull_s16(source0_low_low_s_16x4, factorChannel00_128_s_16x4);
+	int32x4_t intermediateResults0_low_high_s_32x4 = vmull_s16(source0_low_high_s_16x4, factorChannel00_128_s_16x4);
+	int32x4_t intermediateResults1_low_low_s_32x4 = vmull_s16(source0_low_low_s_16x4, factorChannel10_128_s_16x4);
+	int32x4_t intermediateResults1_low_high_s_32x4 = vmull_s16(source0_low_high_s_16x4, factorChannel10_128_s_16x4);
+	int32x4_t intermediateResults2_low_low_s_32x4 = vmull_s16(source0_low_low_s_16x4, factorChannel20_128_s_16x4);
+	int32x4_t intermediateResults2_low_high_s_32x4 = vmull_s16(source0_low_high_s_16x4, factorChannel20_128_s_16x4);
+
+	intermediateResults0_low_low_s_32x4 = vmlal_s16(intermediateResults0_low_low_s_32x4, source1_low_low_s_16x4, factorChannel01_128_s_16x4);
+	intermediateResults0_low_high_s_32x4 = vmlal_s16(intermediateResults0_low_high_s_32x4, source1_low_high_s_16x4, factorChannel01_128_s_16x4);
+	intermediateResults1_low_low_s_32x4 = vmlal_s16(intermediateResults1_low_low_s_32x4, source1_low_low_s_16x4, factorChannel11_128_s_16x4);
+	intermediateResults1_low_high_s_32x4 = vmlal_s16(intermediateResults1_low_high_s_32x4, source1_low_high_s_16x4, factorChannel11_128_s_16x4);
+	intermediateResults2_low_low_s_32x4 = vmlal_s16(intermediateResults2_low_low_s_32x4, source1_low_low_s_16x4, factorChannel21_128_s_16x4);
+	intermediateResults2_low_high_s_32x4 = vmlal_s16(intermediateResults2_low_high_s_32x4, source1_low_high_s_16x4, factorChannel21_128_s_16x4);
+
+	intermediateResults0_low_low_s_32x4 = vmlal_s16(intermediateResults0_low_low_s_32x4, source2_low_low_s_16x4, factorChannel02_128_s_16x4);
+	intermediateResults0_low_high_s_32x4 = vmlal_s16(intermediateResults0_low_high_s_32x4, source2_low_high_s_16x4, factorChannel02_128_s_16x4);
+	intermediateResults1_low_low_s_32x4 = vmlal_s16(intermediateResults1_low_low_s_32x4, source2_low_low_s_16x4, factorChannel12_128_s_16x4);
+	intermediateResults1_low_high_s_32x4 = vmlal_s16(intermediateResults1_low_high_s_32x4, source2_low_high_s_16x4, factorChannel12_128_s_16x4);
+	intermediateResults2_low_low_s_32x4 = vmlal_s16(intermediateResults2_low_low_s_32x4, source2_low_low_s_16x4, factorChannel22_128_s_16x4);
+	intermediateResults2_low_high_s_32x4 = vmlal_s16(intermediateResults2_low_high_s_32x4, source2_low_high_s_16x4, factorChannel22_128_s_16x4);
+
+	intermediateResults0_low_low_s_32x4 = vmlal_s16(intermediateResults0_low_low_s_32x4, source3_low_low_s_16x4, factorChannel03_128_s_16x4);
+	intermediateResults0_low_high_s_32x4 = vmlal_s16(intermediateResults0_low_high_s_32x4, source3_low_high_s_16x4, factorChannel03_128_s_16x4);
+	intermediateResults1_low_low_s_32x4 = vmlal_s16(intermediateResults1_low_low_s_32x4, source3_low_low_s_16x4, factorChannel13_128_s_16x4);
+	intermediateResults1_low_high_s_32x4 = vmlal_s16(intermediateResults1_low_high_s_32x4, source3_low_high_s_16x4, factorChannel13_128_s_16x4);
+	intermediateResults2_low_low_s_32x4 = vmlal_s16(intermediateResults2_low_low_s_32x4, source3_low_low_s_16x4, factorChannel23_128_s_16x4);
+	intermediateResults2_low_high_s_32x4 = vmlal_s16(intermediateResults2_low_high_s_32x4, source3_low_high_s_16x4, factorChannel23_128_s_16x4);
+
+	// Process 8 pixels in high part
+
+	const int16x4_t source0_high_low_s_16x4 = vget_low_s16(source0_high_s_16x8);
+	const int16x4_t source0_high_high_s_16x4 = vget_high_s16(source0_high_s_16x8);
+	const int16x4_t source1_high_low_s_16x4 = vget_low_s16(source1_high_s_16x8);
+	const int16x4_t source1_high_high_s_16x4 = vget_high_s16(source1_high_s_16x8);
+	const int16x4_t source2_high_low_s_16x4 = vget_low_s16(source2_high_s_16x8);
+	const int16x4_t source2_high_high_s_16x4 = vget_high_s16(source2_high_s_16x8);
+	const int16x4_t source3_high_low_s_16x4 = vget_low_s16(source3_high_s_16x8);
+	const int16x4_t source3_high_high_s_16x4 = vget_high_s16(source3_high_s_16x8);
+
+	int32x4_t intermediateResults0_high_low_s_32x4 = vmull_s16(source0_high_low_s_16x4, factorChannel00_128_s_16x4);
+	int32x4_t intermediateResults0_high_high_s_32x4 = vmull_s16(source0_high_high_s_16x4, factorChannel00_128_s_16x4);
+	int32x4_t intermediateResults1_high_low_s_32x4 = vmull_s16(source0_high_low_s_16x4, factorChannel10_128_s_16x4);
+	int32x4_t intermediateResults1_high_high_s_32x4 = vmull_s16(source0_high_high_s_16x4, factorChannel10_128_s_16x4);
+	int32x4_t intermediateResults2_high_low_s_32x4 = vmull_s16(source0_high_low_s_16x4, factorChannel20_128_s_16x4);
+	int32x4_t intermediateResults2_high_high_s_32x4 = vmull_s16(source0_high_high_s_16x4, factorChannel20_128_s_16x4);
+
+	intermediateResults0_high_low_s_32x4 = vmlal_s16(intermediateResults0_high_low_s_32x4, source1_high_low_s_16x4, factorChannel01_128_s_16x4);
+	intermediateResults0_high_high_s_32x4 = vmlal_s16(intermediateResults0_high_high_s_32x4, source1_high_high_s_16x4, factorChannel01_128_s_16x4);
+	intermediateResults1_high_low_s_32x4 = vmlal_s16(intermediateResults1_high_low_s_32x4, source1_high_low_s_16x4, factorChannel11_128_s_16x4);
+	intermediateResults1_high_high_s_32x4 = vmlal_s16(intermediateResults1_high_high_s_32x4, source1_high_high_s_16x4, factorChannel11_128_s_16x4);
+	intermediateResults2_high_low_s_32x4 = vmlal_s16(intermediateResults2_high_low_s_32x4, source1_high_low_s_16x4, factorChannel21_128_s_16x4);
+	intermediateResults2_high_high_s_32x4 = vmlal_s16(intermediateResults2_high_high_s_32x4, source1_high_high_s_16x4, factorChannel21_128_s_16x4);
+
+	intermediateResults0_high_low_s_32x4 = vmlal_s16(intermediateResults0_high_low_s_32x4, source2_high_low_s_16x4, factorChannel02_128_s_16x4);
+	intermediateResults0_high_high_s_32x4 = vmlal_s16(intermediateResults0_high_high_s_32x4, source2_high_high_s_16x4, factorChannel02_128_s_16x4);
+	intermediateResults1_high_low_s_32x4 = vmlal_s16(intermediateResults1_high_low_s_32x4, source2_high_low_s_16x4, factorChannel12_128_s_16x4);
+	intermediateResults1_high_high_s_32x4 = vmlal_s16(intermediateResults1_high_high_s_32x4, source2_high_high_s_16x4, factorChannel12_128_s_16x4);
+	intermediateResults2_high_low_s_32x4 = vmlal_s16(intermediateResults2_high_low_s_32x4, source2_high_low_s_16x4, factorChannel22_128_s_16x4);
+	intermediateResults2_high_high_s_32x4 = vmlal_s16(intermediateResults2_high_high_s_32x4, source2_high_high_s_16x4, factorChannel22_128_s_16x4);
+
+	intermediateResults0_high_low_s_32x4 = vmlal_s16(intermediateResults0_high_low_s_32x4, source3_high_low_s_16x4, factorChannel03_128_s_16x4);
+	intermediateResults0_high_high_s_32x4 = vmlal_s16(intermediateResults0_high_high_s_32x4, source3_high_high_s_16x4, factorChannel03_128_s_16x4);
+	intermediateResults1_high_low_s_32x4 = vmlal_s16(intermediateResults1_high_low_s_32x4, source3_high_low_s_16x4, factorChannel13_128_s_16x4);
+	intermediateResults1_high_high_s_32x4 = vmlal_s16(intermediateResults1_high_high_s_32x4, source3_high_high_s_16x4, factorChannel13_128_s_16x4);
+	intermediateResults2_high_low_s_32x4 = vmlal_s16(intermediateResults2_high_low_s_32x4, source3_high_low_s_16x4, factorChannel23_128_s_16x4);
+	intermediateResults2_high_high_s_32x4 = vmlal_s16(intermediateResults2_high_high_s_32x4, source3_high_high_s_16x4, factorChannel23_128_s_16x4);
+
+	// Convert bias from 16-bit to 32-bit for addition
+	const int32x4_t biasChannel0_128_s_32x4 = vmovl_s16(vget_low_s16(biasChannel0_128_s_16x8));
+	const int32x4_t biasChannel1_128_s_32x4 = vmovl_s16(vget_low_s16(biasChannel1_128_s_16x8));
+	const int32x4_t biasChannel2_128_s_32x4 = vmovl_s16(vget_low_s16(biasChannel2_128_s_16x8));
+
+	// Add bias (bias is pre-scaled by 128 in the calling code)
+	intermediateResults0_low_low_s_32x4 = vaddq_s32(intermediateResults0_low_low_s_32x4, biasChannel0_128_s_32x4);
+	intermediateResults0_low_high_s_32x4 = vaddq_s32(intermediateResults0_low_high_s_32x4, biasChannel0_128_s_32x4);
+	intermediateResults1_low_low_s_32x4 = vaddq_s32(intermediateResults1_low_low_s_32x4, biasChannel1_128_s_32x4);
+	intermediateResults1_low_high_s_32x4 = vaddq_s32(intermediateResults1_low_high_s_32x4, biasChannel1_128_s_32x4);
+	intermediateResults2_low_low_s_32x4 = vaddq_s32(intermediateResults2_low_low_s_32x4, biasChannel2_128_s_32x4);
+	intermediateResults2_low_high_s_32x4 = vaddq_s32(intermediateResults2_low_high_s_32x4, biasChannel2_128_s_32x4);
+
+	intermediateResults0_high_low_s_32x4 = vaddq_s32(intermediateResults0_high_low_s_32x4, biasChannel0_128_s_32x4);
+	intermediateResults0_high_high_s_32x4 = vaddq_s32(intermediateResults0_high_high_s_32x4, biasChannel0_128_s_32x4);
+	intermediateResults1_high_low_s_32x4 = vaddq_s32(intermediateResults1_high_low_s_32x4, biasChannel1_128_s_32x4);
+	intermediateResults1_high_high_s_32x4 = vaddq_s32(intermediateResults1_high_high_s_32x4, biasChannel1_128_s_32x4);
+	intermediateResults2_high_low_s_32x4 = vaddq_s32(intermediateResults2_high_low_s_32x4, biasChannel2_128_s_32x4);
+	intermediateResults2_high_high_s_32x4 = vaddq_s32(intermediateResults2_high_high_s_32x4, biasChannel2_128_s_32x4);
+
+	// Shift and narrow from 32-bit to 16-bit, then from 16-bit to 8-bit
+	uint8x16x3_t results_u_8x16x3;
+
+	// vqrshrun_n_s32: rounding shift right by 7 and narrow signed 32-bit to unsigned 16-bit with saturation
+	// vqmovn_u16: narrow unsigned 16-bit to unsigned 8-bit with saturation
+	results_u_8x16x3.val[0] = vcombine_u8(
+		vqmovn_u16(vcombine_u16(vqrshrun_n_s32(intermediateResults0_low_low_s_32x4, 7), vqrshrun_n_s32(intermediateResults0_low_high_s_32x4, 7))),
+		vqmovn_u16(vcombine_u16(vqrshrun_n_s32(intermediateResults0_high_low_s_32x4, 7), vqrshrun_n_s32(intermediateResults0_high_high_s_32x4, 7))));
+	results_u_8x16x3.val[1] = vcombine_u8(
+		vqmovn_u16(vcombine_u16(vqrshrun_n_s32(intermediateResults1_low_low_s_32x4, 7), vqrshrun_n_s32(intermediateResults1_low_high_s_32x4, 7))),
+		vqmovn_u16(vcombine_u16(vqrshrun_n_s32(intermediateResults1_high_low_s_32x4, 7), vqrshrun_n_s32(intermediateResults1_high_high_s_32x4, 7))));
+	results_u_8x16x3.val[2] = vcombine_u8(
+		vqmovn_u16(vcombine_u16(vqrshrun_n_s32(intermediateResults2_low_low_s_32x4, 7), vqrshrun_n_s32(intermediateResults2_low_high_s_32x4, 7))),
+		vqmovn_u16(vcombine_u16(vqrshrun_n_s32(intermediateResults2_high_low_s_32x4, 7), vqrshrun_n_s32(intermediateResults2_high_high_s_32x4, 7))));
+
+	// and we can store the result
+	vst3q_u8(target, results_u_8x16x3);
 }
 
 #endif // OCEAN_HARDWARE_NEON_VERSION

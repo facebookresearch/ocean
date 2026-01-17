@@ -1368,11 +1368,111 @@ void FrameChannels::convertRow4ChannelsTo3Channels8BitPerChannel7BitPrecision(co
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 
-	// **TODO** add SSE implementation
+	constexpr size_t blockSize = 16;
+	const size_t blocks = size / blockSize;
+
+	if (blocks >= 1)
+	{
+		const __m128i factorChannel00_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel00_128));
+		const __m128i factorChannel10_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel10_128));
+		const __m128i factorChannel20_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel20_128));
+
+		const __m128i factorChannel01_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel01_128));
+		const __m128i factorChannel11_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel11_128));
+		const __m128i factorChannel21_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel21_128));
+
+		const __m128i factorChannel02_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel02_128));
+		const __m128i factorChannel12_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel12_128));
+		const __m128i factorChannel22_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel22_128));
+
+		const __m128i factorChannel03_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel03_128));
+		const __m128i factorChannel13_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel13_128));
+		const __m128i factorChannel23_128_s_16x8 = _mm_set1_epi16(int16_t(factorChannel23_128));
+
+		const __m128i biasChannel0_s_16x8 = _mm_set1_epi16(int16_t(bias0));
+		const __m128i biasChannel1_s_16x8 = _mm_set1_epi16(int16_t(bias1));
+		const __m128i biasChannel2_s_16x8 = _mm_set1_epi16(int16_t(bias2));
+
+		for (size_t n = 0; n < blocks; ++n)
+		{
+			convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionSSE(source, target, factorChannel00_128_s_16x8, factorChannel10_128_s_16x8, factorChannel20_128_s_16x8, factorChannel01_128_s_16x8, factorChannel11_128_s_16x8, factorChannel21_128_s_16x8, factorChannel02_128_s_16x8, factorChannel12_128_s_16x8, factorChannel22_128_s_16x8, factorChannel03_128_s_16x8, factorChannel13_128_s_16x8, factorChannel23_128_s_16x8, biasChannel0_s_16x8, biasChannel1_s_16x8, biasChannel2_s_16x8);
+
+			source += blockSize * size_t(4);
+			target += blockSize * size_t(3);
+		}
+
+		const size_t remainingPixels = size % blockSize;
+
+		if (remainingPixels)
+		{
+			// we need to apply another iteration with (back shifted) pointers
+
+			ocean_assert(remainingPixels < blockSize);
+
+			const size_t offset = blockSize - remainingPixels;
+
+			source -= offset * size_t(4);
+			target -= offset * size_t(3);
+
+			convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionSSE(source, target, factorChannel00_128_s_16x8, factorChannel10_128_s_16x8, factorChannel20_128_s_16x8, factorChannel01_128_s_16x8, factorChannel11_128_s_16x8, factorChannel21_128_s_16x8, factorChannel02_128_s_16x8, factorChannel12_128_s_16x8, factorChannel22_128_s_16x8, factorChannel03_128_s_16x8, factorChannel13_128_s_16x8, factorChannel23_128_s_16x8, biasChannel0_s_16x8, biasChannel1_s_16x8, biasChannel2_s_16x8);
+		}
+
+		return;
+	}
 
 #elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
-	// **TODO** add NEON implementation
+	constexpr size_t blockSize = 16;
+	const size_t blocks = size / blockSize;
+
+	if (blocks >= 1)
+	{
+		const int16x8_t factorChannel00_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel00_128));
+		const int16x8_t factorChannel10_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel10_128));
+		const int16x8_t factorChannel20_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel20_128));
+
+		const int16x8_t factorChannel01_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel01_128));
+		const int16x8_t factorChannel11_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel11_128));
+		const int16x8_t factorChannel21_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel21_128));
+
+		const int16x8_t factorChannel02_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel02_128));
+		const int16x8_t factorChannel12_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel12_128));
+		const int16x8_t factorChannel22_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel22_128));
+
+		const int16x8_t factorChannel03_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel03_128));
+		const int16x8_t factorChannel13_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel13_128));
+		const int16x8_t factorChannel23_128_s_16x8 = vdupq_n_s16(int16_t(factorChannel23_128));
+
+		const int16x8_t biasChannel0_128_s_16x8 = vdupq_n_s16(int16_t(bias0 * 128));
+		const int16x8_t biasChannel1_128_s_16x8 = vdupq_n_s16(int16_t(bias1 * 128));
+		const int16x8_t biasChannel2_128_s_16x8 = vdupq_n_s16(int16_t(bias2 * 128));
+
+		for (size_t n = 0; n < blocks; ++n)
+		{
+			convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionNEON(source, target, factorChannel00_128_s_16x8, factorChannel10_128_s_16x8, factorChannel20_128_s_16x8, factorChannel01_128_s_16x8, factorChannel11_128_s_16x8, factorChannel21_128_s_16x8, factorChannel02_128_s_16x8, factorChannel12_128_s_16x8, factorChannel22_128_s_16x8, factorChannel03_128_s_16x8, factorChannel13_128_s_16x8, factorChannel23_128_s_16x8, biasChannel0_128_s_16x8, biasChannel1_128_s_16x8, biasChannel2_128_s_16x8);
+
+			source += blockSize * size_t(4);
+			target += blockSize * size_t(3);
+		}
+
+		const size_t remainingPixels = size % blockSize;
+
+		if (remainingPixels)
+		{
+			// we need to apply another iteration with (back shifted) pointers
+
+			ocean_assert(remainingPixels < blockSize);
+
+			const size_t offset = blockSize - remainingPixels;
+
+			source -= offset * size_t(4);
+			target -= offset * size_t(3);
+
+			convert4ChannelsTo3Channels16Pixels8BitPerChannel7BitPrecisionNEON(source, target, factorChannel00_128_s_16x8, factorChannel10_128_s_16x8, factorChannel20_128_s_16x8, factorChannel01_128_s_16x8, factorChannel11_128_s_16x8, factorChannel21_128_s_16x8, factorChannel02_128_s_16x8, factorChannel12_128_s_16x8, factorChannel22_128_s_16x8, factorChannel03_128_s_16x8, factorChannel13_128_s_16x8, factorChannel23_128_s_16x8, biasChannel0_128_s_16x8, biasChannel1_128_s_16x8, biasChannel2_128_s_16x8);
+		}
+
+		return;
+	}
 
 #endif
 
