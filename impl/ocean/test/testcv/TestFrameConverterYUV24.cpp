@@ -40,11 +40,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToBGR24(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToBGRA32Precision6Bit"))
 	{
@@ -55,11 +55,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToBGRA32Precision6Bit(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToRGB24"))
 	{
@@ -70,11 +70,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToRGB24(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToRGB24Precision6Bit"))
 	{
@@ -85,11 +85,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToRGB24Precision6Bit(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToY8"))
 	{
@@ -100,11 +100,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToY8(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToYUV24"))
 	{
@@ -115,11 +115,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToYUV24(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToYVU24"))
 	{
@@ -130,11 +130,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 			Log::info() << " ";
 			testResult = testYUV24ToYVU24(width, height, flag, testDuration, worker);
 		}
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("YUV24ToY_U_V12"))
 	{
