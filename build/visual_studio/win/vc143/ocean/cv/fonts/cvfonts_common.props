@@ -15,31 +15,31 @@
   </ImportGroup>
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\VER-2-13-2\include\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64' Or '$(Configuration)|$(Platform)'=='Shared Debug|x64'">
     <Link>
-      <AdditionalDependencies>freetype.lib;libpng.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetyped.lib;libpng16d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\VER-2-13-2\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\ed217e3e601d8e462f7fd1e04bed43ac42212429\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
     <Link>
-      <AdditionalDependencies>freetype.lib;libpng.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetyped.lib;libpng16d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\VER-2-13-2\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\ed217e3e601d8e462f7fd1e04bed43ac42212429\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
     <Link>
-	    <AdditionalDependencies>freetype.lib;libpng.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	    <AdditionalDependencies>freetype.lib;libpng16.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\VER-2-13-2\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\ed217e3e601d8e462f7fd1e04bed43ac42212429\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
     <Link>
-	    <AdditionalDependencies>freetype.lib;libpng.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	    <AdditionalDependencies>freetype.lib;libpng16.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\VER-2-13-2\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\ed217e3e601d8e462f7fd1e04bed43ac42212429\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

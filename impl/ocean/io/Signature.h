@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#ifdef OCEAN_IO_SIGNATURE_ENABLED
+
 #ifndef META_OCEAN_IO_SIGNATURE_H
 #define META_OCEAN_IO_SIGNATURE_H
 
@@ -142,3 +144,5 @@ inline bool Signature::evaluateCodeSignature(const std::wstring& filePath, bool&
 }
 
 #endif // META_OCEAN_IO_SIGNATURE_H
+
+#endif // OCEAN_IO_SIGNATURE_ENABLED

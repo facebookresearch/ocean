@@ -19,57 +19,76 @@
       <PreprocessorDefinitions>WXUSINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
-	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\include;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_static_debug\vc_x64_lib\mswud;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_static_debug\vc_x64_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_shared_debug\vc_x64_dll\mswud;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_shared_debug\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_static_debug\vc_lib\mswud;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_static_debug\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_shared_debug\vc_dll\mswud;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_shared_debug\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_static\vc_x64_lib\mswu;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	    <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_static\vc_x64_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_shared\vc_x64_dll\mswu;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	    <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x64_vc143_shared\vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_static\vc_lib\mswu;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	    <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_static\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_shared\vc_dll\mswu;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	    <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\v3.3.1\lib\win_x86_vc143_shared\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>
