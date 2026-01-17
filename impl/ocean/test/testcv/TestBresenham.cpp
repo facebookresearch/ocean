@@ -40,6 +40,8 @@ bool TestBresenham::test(const double testDuration, const TestSelector& selector
 		testResult = testIntegerBorderIntersection(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("floatborderintersection"))
@@ -47,11 +49,22 @@ bool TestBresenham::test(const double testDuration, const TestSelector& selector
 		testResult = testFloatBorderIntersection(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("numberlinepixels"))
 	{
 		testResult = testNumberLinePixels(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("circlepixels"))
+	{
+		testResult = testCirclePixels(testDuration);
 
 		Log::info() << " ";
 	}
@@ -76,6 +89,11 @@ TEST(TestBresenham, FloatBorderIntersection)
 TEST(TestBresenham, NumberLinePixels)
 {
 	EXPECT_TRUE(TestBresenham::testNumberLinePixels(GTEST_TEST_DURATION));
+}
+
+TEST(TestBresenham, CirclePixels)
+{
+	EXPECT_TRUE(TestBresenham::testCirclePixels(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -504,6 +522,119 @@ bool TestBresenham::testNumberLinePixels(const double testDuration)
 
 			OCEAN_EXPECT_GREATER_EQUAL(validation, pixels, minPixels);
 			OCEAN_EXPECT_LESS_EQUAL(validation, pixels, maxPixels);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestBresenham::testCirclePixels(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Circle pixels test:";
+
+	using PixelPositionSetI = std::unordered_set<CV::PixelPositionI, CV::PixelPositionI>;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < 100u; ++n)
+		{
+			const int centerX = RandomI::random(randomGenerator, -500, 500);
+			const int centerY = RandomI::random(randomGenerator, -500, 500);
+			const unsigned int radius = RandomI::random(randomGenerator, 0u, 500u);
+
+			CV::PixelPositionsI pixels;
+			CV::Bresenham::circlePixels(centerX, centerY, radius, pixels);
+
+			const size_t expectedCount = CV::Bresenham::numberCirclePixels(radius);
+
+			OCEAN_EXPECT_EQUAL(validation, pixels.size(), expectedCount);
+
+			PixelPositionSetI pixelSet;
+			for (const CV::PixelPositionI& pixel : pixels)
+			{
+				const bool inserted = pixelSet.emplace(pixel.x(), pixel.y()).second;
+				OCEAN_EXPECT_TRUE(validation, inserted);
+			}
+
+			// verify all pixels are at approximately the correct distance from center
+			for (const CV::PixelPositionI& pixel : pixels)
+			{
+				const Scalar dx = Scalar(pixel.x() - centerX);
+				const Scalar dy = Scalar(pixel.y() - centerY);
+				const Scalar distance = Numeric::sqrt(dx * dx + dy * dy);
+
+				OCEAN_EXPECT_LESS_EQUAL(validation, Numeric::abs(distance - Scalar(radius)), Scalar(1));
+			}
+
+			// verify 8-way symmetry for circles centered at origin
+			if (centerX == 0 && centerY == 0 && radius > 0u)
+			{
+				for (const CV::PixelPositionI& pixel : pixels)
+				{
+					const int x = pixel.x();
+					const int y = pixel.y();
+
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(x, y)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-x, y)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(x, -y)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-x, -y)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(y, x)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-y, x)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(y, -x)) > 0);
+					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-y, -x)) > 0);
+				}
+			}
+
+			// verify pixel count approximates circumference
+			if (radius >= 10u)
+			{
+				const Scalar circumference = Scalar(2) * Numeric::pi() * Scalar(radius);
+				const Scalar ratio = Scalar(pixels.size()) / circumference;
+
+				// discrete circle pixel count should be reasonably close to circumference
+				OCEAN_EXPECT_GREATER_EQUAL(validation, ratio, Scalar(0.85));
+				OCEAN_EXPECT_LESS_EQUAL(validation, ratio, Scalar(1.5));
+			}
+
+			// verify connectivity: each pixel has at least one 8-neighbor in the set
+			if (radius > 0u)
+			{
+				for (const CV::PixelPositionI& pixel : pixels)
+				{
+					const int x = pixel.x();
+					const int y = pixel.y();
+
+					bool hasNeighbor = false;
+
+					for (int dy = -1; dy <= 1 && !hasNeighbor; ++dy)
+					{
+						for (int dx = -1; dx <= 1 && !hasNeighbor; ++dx)
+						{
+							if (dx == 0 && dy == 0)
+							{
+								continue;
+							}
+
+							if (pixelSet.count(CV::PixelPositionI(x + dx, y + dy)) > 0)
+							{
+								hasNeighbor = true;
+							}
+						}
+					}
+
+					OCEAN_EXPECT_TRUE(validation, hasNeighbor);
+				}
+			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

@@ -57,6 +57,13 @@ class OCEAN_TEST_CV_EXPORT TestBresenham
 		 * @return True, if succeeded
 		 */
 		static bool testNumberLinePixels(const double testDuration);
+
+		/**
+		 * Tests the circle pixel functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCirclePixels(const double testDuration);
 };
 
 }

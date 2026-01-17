@@ -138,6 +138,23 @@ class OCEAN_CV_EXPORT Bresenham
 		 */
 		static void intermediatePixels(const PixelPosition& position0, const PixelPosition& position1, PixelPositions& pixels);
 
+		/**
+		 * Determines the pixels on the circumference of a circle using the midpoint circle algorithm.
+		 * The pixels are computed using 8-way symmetry and are returned in no particular order.
+		 * @param centerX Horizontal center position of the circle, with range (-infinity, infinity)
+		 * @param centerY Vertical center position of the circle, with range (-infinity, infinity)
+		 * @param radius Radius of the circle in pixels, with range [0, infinity)
+		 * @param pixels The resulting circle pixels, will be appended to existing content
+		 */
+		static void circlePixels(const int centerX, const int centerY, const unsigned int radius, PixelPositionsI& pixels);
+
+		/**
+		 * Determines the number of pixels on the circumference of a circle.
+		 * @param radius Radius of the circle in pixels, with range [0, infinity)
+		 * @return Number of circle pixels, with range [1, infinity)
+		 */
+		static size_t numberCirclePixels(const unsigned int radius);
+
 	protected:
 
 		/// Orientation parameter.

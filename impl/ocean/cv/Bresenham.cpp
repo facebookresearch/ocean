@@ -318,6 +318,7 @@ bool Bresenham::borderIntersection(const Line2& line, const int leftBorder, cons
 		// topBorder == py + t * dy
 		// t = (topBorder - py) / dy
 
+		ocean_assert(Numeric::isNotEqualEps(direction.y()));
 		const Scalar invY = Scalar(1) / direction.y();
 
 		t = (Scalar(topBorder) - point.y()) * invY;
@@ -375,6 +376,7 @@ bool Bresenham::borderIntersection(const Line2& line, const int leftBorder, cons
 		// topBorder == py + t * dy
 		// t = (topBorder - py) / dy
 
+		ocean_assert(Numeric::isNotEqualEps(direction.y()));
 		const Scalar invY = Scalar(1) / direction.y();
 
 		t = (Scalar(topBorder) - point.y()) * invY;
@@ -531,6 +533,7 @@ bool Bresenham::borderIntersection(const Line2& line, const Scalar leftBorder, c
 		// topBorder == py + t * dy
 		// t = (topBorder - py) / dy
 
+		ocean_assert(Numeric::isNotEqualEps(direction.y()));
 		const Scalar invY = Scalar(1) / direction.y();
 
 		t = (Scalar(topBorder) - point.y()) * invY;
@@ -586,6 +589,7 @@ bool Bresenham::borderIntersection(const Line2& line, const Scalar leftBorder, c
 			return point.y() >= topBorder && point.y() <= bottomBorder;
 		}
 
+		ocean_assert(Numeric::isNotEqualEps(direction.y()));
 		const Scalar invY = Scalar(1) / direction.y();
 
 		t = (Scalar(topBorder) - point.y()) * invY;
@@ -734,6 +738,129 @@ void Bresenham::intermediatePixels(const PixelPosition& position0, const PixelPo
 		pixels.emplace_back(x, y);
 		bresenham.findNext(x, y);
 	}
+}
+
+void Bresenham::circlePixels(const int centerX, const int centerY, const unsigned int radius, PixelPositionsI& pixels)
+{
+	if (radius == 0u)
+	{
+		pixels.emplace_back(centerX, centerY);
+		return;
+	}
+
+	/*
+	 * Midpoint circle algorithm using 8-way symmetry:
+	 *
+	 *                   90 deg
+	 *                     |
+	 *             2       |       1
+	 *          (-x,+y)   (+y)   (+x,+y)
+	 *                 .   |   .
+	 *              .      |      .
+	 *           .    \    |    /    .
+	 *          .      \   |   /      .
+	 * 180 deg ----(-x)----+----(+x)---- 0 deg
+	 *          .      /   |   \      .
+	 *           .    /    |    \    .
+	 *              .      |      .
+	 *                 .   |   .
+	 *          (-x,-y)   (-y)   (+x,-y)
+	 *             3       |       4
+	 *                     |
+	 *                  270 deg
+	 *
+	 * We iterate x from 0 to radius/sqrt(2) in octant 1, computing (x, y) pairs, and mirror to all 8 octants.
+	 * Cardinal points (0 deg, 90 deg, 180 deg, 270 deg) are added first.
+	 */
+
+	pixels.reserve(pixels.size() + numberCirclePixels(radius));
+
+	int x = 0;
+	int y = int(radius);
+	int control = 1 - int(radius);
+
+	// the four cardinal points
+	pixels.emplace_back(centerX + y, centerY);
+	pixels.emplace_back(centerX - y, centerY);
+	pixels.emplace_back(centerX, centerY + y);
+	pixels.emplace_back(centerX, centerY - y);
+
+	while (x < y)
+	{
+		++x;
+
+		if (control < 0)
+		{
+			control += 2 * x + 1;
+		}
+		else
+		{
+			--y;
+			control += 2 * (x - y) + 1;
+		}
+
+		if (x < y)
+		{
+			// pixels in all 8 octants
+			pixels.emplace_back(centerX + x, centerY + y);
+			pixels.emplace_back(centerX - x, centerY + y);
+			pixels.emplace_back(centerX + x, centerY - y);
+			pixels.emplace_back(centerX - x, centerY - y);
+			pixels.emplace_back(centerX + y, centerY + x);
+			pixels.emplace_back(centerX - y, centerY + x);
+			pixels.emplace_back(centerX + y, centerY - x);
+			pixels.emplace_back(centerX - y, centerY - x);
+		}
+		else if (x == y)
+		{
+			// pixels on the 45-degree diagonals (4 points only to avoid duplicates)
+			pixels.emplace_back(centerX + x, centerY + y);
+			pixels.emplace_back(centerX - x, centerY + y);
+			pixels.emplace_back(centerX + x, centerY - y);
+			pixels.emplace_back(centerX - x, centerY - y);
+		}
+	}
+}
+
+size_t Bresenham::numberCirclePixels(const unsigned int radius)
+{
+	if (radius == 0u)
+	{
+		return 1u;
+	}
+
+	int x = 0;
+	int y = int(radius);
+	int control = 1 - int(radius);
+
+	// start with 4 cardinal points
+	size_t count = 4;
+
+	while (x < y)
+	{
+		++x;
+
+		if (control < 0)
+		{
+			control += 2 * x + 1;
+		}
+		else
+		{
+			--y;
+			control += 2 * (x - y) + 1;
+		}
+
+		if (x < y)
+		{
+			count += 8; // 8 symmetric points
+		}
+		else if (x == y)
+		{
+			count += 4; // 4 diagonal points
+		}
+	}
+
+	return count;
 }
 
 }
