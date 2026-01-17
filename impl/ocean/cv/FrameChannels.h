@@ -1269,6 +1269,37 @@ class OCEAN_CV_EXPORT FrameChannels : public FrameConverter
 		static OCEAN_FORCE_INLINE void convert3ChannelsTo3Channels16Pixels8BitPerChannel6BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& factorChannel00_64_s_16x8, const __m128i& factorChannel10_64_s_16x8, const __m128i& factorChannel20_64_s_16x8, const __m128i& factorChannel01_64_s_16x8, const __m128i& factorChannel11_64_s_16x8, const __m128i& factorChannel21_64_s_16x8, const __m128i& factorChannel02_64_s_16x8, const __m128i& factorChannel12_64_s_16x8, const __m128i& factorChannel22_64_s_16x8, const __m128i& biasChannel0_s_16x8, const __m128i& biasChannel1_s_16x8, const __m128i& biasChannel2_s_16x8);
 
 		/**
+		 * Converts 16 pixels with 3 channels per pixel to 16 pixels with four channel per pixel by a linear combination of the three channels plus an in advance bias (translation) parameter.
+		 * Thus, this function can be used to e.g., convert YUV24 to RGBA32.
+		 * The linear combination is defined by three integer multiplication factor for each source channel with 64 as denominator. plus one bias (translation) parameter for each source channel (with 1 as denominator).<br>
+		 * Beware: As this function applies integer multiplication factors (with 6 bits precision) the conversion result has an accuracy of +/- 4 color intensities.<br>
+		 * The transformation is based on the following pattern:
+		 * <pre>
+		 * t0 = clamp(0, f00 * (s0 - b0) + f01 * (s1 - b1) + f02 * (s2 - b2), 255)
+		 * t1 = clamp(0, f10 * (s0 - b0) + f11 * (s1 - b1) + f12 * (s2 - b2), 255)
+		 * t2 = clamp(0, f20 * (s0 - b0) + f21 * (s1 - b1) + f22 * (s2 - b2), 255)
+		 * t3 = valueChannel3
+		 * </pre>
+		 * With t target, s source, f factor, and b bias/translation.
+		 * @param source The pointer to the 16 source pixels (with 3 channels = 48 bytes) to convert, must be valid
+		 * @param target The pointer to the 16 target pixels (with 4 channels = 64 bytes) receiving the converted pixel data, must be valid
+		 * @param factorChannel00_64_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel10_64_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel20_64_s_16x8 The multiplication factor (8 identical factors) for the first source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel01_64_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel11_64_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel21_64_s_16x8 The multiplication factor (8 identical factors) for the second source channel and for the third target channel, with range [-127, 127]
+		 * @param factorChannel02_64_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the first target channel, with range [-127, 127]
+		 * @param factorChannel12_64_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the second target channel, with range [-127, 127]
+		 * @param factorChannel22_64_s_16x8 The multiplication factor (8 identical factors) for the third source channel and for the third target channel, with range [-127, 127]
+		 * @param biasChannel0_s_16x8 The bias (translation) value for the first source channel, with range [0, 128]
+		 * @param biasChannel1_s_16x8 The bias (translation) value for the second source channel, with range [0, 128]
+		 * @param biasChannel2_s_16x8 The bias (translation) value for the third source channel, with range [0, 128]
+		 * @param channelValue3_u_8x16 The constant value for the fourth target channel, with range [0, 255]
+		 */
+		static OCEAN_FORCE_INLINE void convert3ChannelsTo4Channels16Pixels8BitPerChannel6BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& factorChannel00_64_s_16x8, const __m128i& factorChannel10_64_s_16x8, const __m128i& factorChannel20_64_s_16x8, const __m128i& factorChannel01_64_s_16x8, const __m128i& factorChannel11_64_s_16x8, const __m128i& factorChannel21_64_s_16x8, const __m128i& factorChannel02_64_s_16x8, const __m128i& factorChannel12_64_s_16x8, const __m128i& factorChannel22_64_s_16x8, const __m128i& biasChannel0_s_16x8, const __m128i& biasChannel1_s_16x8, const __m128i& biasChannel2_s_16x8, const __m128i& channelValue3_u_8x16);
+
+		/**
 		 * Converts 16 pixels with 4 channels per pixel to 16 pixels with one channel per pixel by a linear combination of the four channels.
 		 * This function can be used to e.g., convert RGBA32 to Y8, or ARGB32 to Y8, or RGB32 to Y8.
 		 * The linear combination is defined by one integer multiplication factor for each channel with 128 as denominator.<br>
@@ -5583,6 +5614,86 @@ OCEAN_FORCE_INLINE void FrameChannels::convert3ChannelsTo3Channels16Pixels8BitPe
 	_mm_storeu_si128((__m128i*)target + 0, resultA_u_8x16);
 	_mm_storeu_si128((__m128i*)target + 1, resultB_u_8x16);
 	_mm_storeu_si128((__m128i*)target + 2, resultC_u_8x16);
+}
+
+OCEAN_FORCE_INLINE void FrameChannels::convert3ChannelsTo4Channels16Pixels8BitPerChannel6BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& factorChannel00_64_s_16x8, const __m128i& factorChannel10_64_s_16x8, const __m128i& factorChannel20_64_s_16x8, const __m128i& factorChannel01_64_s_16x8, const __m128i& factorChannel11_64_s_16x8, const __m128i& factorChannel21_64_s_16x8, const __m128i& factorChannel02_64_s_16x8, const __m128i& factorChannel12_64_s_16x8, const __m128i& factorChannel22_64_s_16x8, const __m128i& biasChannel0_s_16x8, const __m128i& biasChannel1_s_16x8, const __m128i& biasChannel2_s_16x8, const __m128i& channelValue3_u_8x16)
+{
+	ocean_assert(source != nullptr && target != nullptr);
+
+	// the documentation of this function designed for YUV24 to RGBA32 conversion
+
+	// precise color space conversion:
+	// | R |   |  1    0.0          1.370705   -175.45024  |   | Y |
+	// | G | = |  1   -0.3376335   -0.698001    132.561152 | * | U |
+	// | B |   |  1    1.732446     0.0        -221.753088 |   | V |
+	//                                                         | 1 |
+
+	// approximation:
+	// R = 64 * Y +   0 * (U - 128) + 88 * (V - 128)
+	// G = 64 * Y -  22 * (U - 128) - 45 * (V - 128)
+	// B = 64 * Y + 111 * (U - 128) +  0 * (V - 128)
+
+	const __m128i sourceA_u_8x16 = _mm_loadu_si128((const __m128i*)source + 0);
+	const __m128i sourceB_u_8x16 = _mm_loadu_si128((const __m128i*)source + 1);
+	const __m128i sourceC_u_8x16 = _mm_loadu_si128((const __m128i*)source + 2);
+
+	__m128i channel0_u_8x16;
+	__m128i channel1_u_8x16;
+	__m128i channel2_u_8x16;
+	SSE::deInterleave3Channel8Bit48Elements(sourceA_u_8x16, sourceB_u_8x16, sourceC_u_8x16, channel0_u_8x16, channel1_u_8x16, channel2_u_8x16);
+
+	// subtract the bias values and convert to signed 16 bit
+
+	const __m128i channel0_low_s_16x8 = _mm_sub_epi16(_mm_unpacklo_epi8(channel0_u_8x16, _mm_setzero_si128()), biasChannel0_s_16x8);
+	const __m128i channel1_low_s_16x8 = _mm_sub_epi16(_mm_unpacklo_epi8(channel1_u_8x16, _mm_setzero_si128()), biasChannel1_s_16x8);
+	const __m128i channel2_low_s_16x8 = _mm_sub_epi16(_mm_unpacklo_epi8(channel2_u_8x16, _mm_setzero_si128()), biasChannel2_s_16x8);
+
+	const __m128i channel0_high_s_16x8 = _mm_sub_epi16(_mm_unpackhi_epi8(channel0_u_8x16, _mm_setzero_si128()), biasChannel0_s_16x8);
+	const __m128i channel1_high_s_16x8 = _mm_sub_epi16(_mm_unpackhi_epi8(channel1_u_8x16, _mm_setzero_si128()), biasChannel1_s_16x8);
+	const __m128i channel2_high_s_16x8 = _mm_sub_epi16(_mm_unpackhi_epi8(channel2_u_8x16, _mm_setzero_si128()), biasChannel2_s_16x8);
+
+	// we multiply each channel with the corresponding multiplication factors
+
+	__m128i result0_low_s_16x8 = _mm_add_epi16(_mm_add_epi16(_mm_mullo_epi16(channel0_low_s_16x8, factorChannel00_64_s_16x8), _mm_mullo_epi16(channel1_low_s_16x8, factorChannel01_64_s_16x8)), _mm_mullo_epi16(channel2_low_s_16x8, factorChannel02_64_s_16x8));
+	__m128i result1_low_s_16x8 = _mm_add_epi16(_mm_add_epi16(_mm_mullo_epi16(channel0_low_s_16x8, factorChannel10_64_s_16x8), _mm_mullo_epi16(channel1_low_s_16x8, factorChannel11_64_s_16x8)), _mm_mullo_epi16(channel2_low_s_16x8, factorChannel12_64_s_16x8));
+	__m128i result2_low_s_16x8 = _mm_add_epi16(_mm_add_epi16(_mm_mullo_epi16(channel0_low_s_16x8, factorChannel20_64_s_16x8), _mm_mullo_epi16(channel1_low_s_16x8, factorChannel21_64_s_16x8)), _mm_mullo_epi16(channel2_low_s_16x8, factorChannel22_64_s_16x8));
+
+	__m128i result0_high_s_16x8 = _mm_add_epi16(_mm_add_epi16(_mm_mullo_epi16(channel0_high_s_16x8, factorChannel00_64_s_16x8), _mm_mullo_epi16(channel1_high_s_16x8, factorChannel01_64_s_16x8)), _mm_mullo_epi16(channel2_high_s_16x8, factorChannel02_64_s_16x8));
+	__m128i result1_high_s_16x8 = _mm_add_epi16(_mm_add_epi16(_mm_mullo_epi16(channel0_high_s_16x8, factorChannel10_64_s_16x8), _mm_mullo_epi16(channel1_high_s_16x8, factorChannel11_64_s_16x8)), _mm_mullo_epi16(channel2_high_s_16x8, factorChannel12_64_s_16x8));
+	__m128i result2_high_s_16x8 = _mm_add_epi16(_mm_add_epi16(_mm_mullo_epi16(channel0_high_s_16x8, factorChannel20_64_s_16x8), _mm_mullo_epi16(channel1_high_s_16x8, factorChannel21_64_s_16x8)), _mm_mullo_epi16(channel2_high_s_16x8, factorChannel22_64_s_16x8));
+
+	// we normalize the result by 64
+
+	result0_low_s_16x8 = SSE::divideByRightShiftSigned16Bit(result0_low_s_16x8, 6);
+	result1_low_s_16x8 = SSE::divideByRightShiftSigned16Bit(result1_low_s_16x8, 6);
+	result2_low_s_16x8 = SSE::divideByRightShiftSigned16Bit(result2_low_s_16x8, 6);
+
+	result0_high_s_16x8 = SSE::divideByRightShiftSigned16Bit(result0_high_s_16x8, 6);
+	result1_high_s_16x8 = SSE::divideByRightShiftSigned16Bit(result1_high_s_16x8, 6);
+	result2_high_s_16x8 = SSE::divideByRightShiftSigned16Bit(result2_high_s_16x8, 6);
+
+	// we combine 16 int16_t values to 16 uint8_t values (saturated to [0, 255])
+	const __m128i result0_u_8x16 = _mm_packus_epi16(result0_low_s_16x8, result0_high_s_16x8);
+	const __m128i result1_u_8x16 = _mm_packus_epi16(result1_low_s_16x8, result1_high_s_16x8);
+	const __m128i result2_u_8x16 = _mm_packus_epi16(result2_low_s_16x8, result2_high_s_16x8);
+
+	// interleave 4 channels with constant alpha
+
+	const __m128i result01_low_u_8x16 = _mm_unpacklo_epi8(result0_u_8x16, result1_u_8x16);
+	const __m128i result01_high_u_8x16 = _mm_unpackhi_epi8(result0_u_8x16, result1_u_8x16);
+	const __m128i result23_low_u_8x16 = _mm_unpacklo_epi8(result2_u_8x16, channelValue3_u_8x16);
+	const __m128i result23_high_u_8x16 = _mm_unpackhi_epi8(result2_u_8x16, channelValue3_u_8x16);
+
+	const __m128i resultA_u_8x16 = _mm_unpacklo_epi16(result01_low_u_8x16, result23_low_u_8x16);
+	const __m128i resultB_u_8x16 = _mm_unpackhi_epi16(result01_low_u_8x16, result23_low_u_8x16);
+	const __m128i resultC_u_8x16 = _mm_unpacklo_epi16(result01_high_u_8x16, result23_high_u_8x16);
+	const __m128i resultD_u_8x16 = _mm_unpackhi_epi16(result01_high_u_8x16, result23_high_u_8x16);
+
+	// and we can store the result
+	_mm_storeu_si128((__m128i*)target + 0, resultA_u_8x16);
+	_mm_storeu_si128((__m128i*)target + 1, resultB_u_8x16);
+	_mm_storeu_si128((__m128i*)target + 2, resultC_u_8x16);
+	_mm_storeu_si128((__m128i*)target + 3, resultD_u_8x16);
 }
 
 OCEAN_FORCE_INLINE void FrameChannels::convert4ChannelsTo1Channel16Pixels8BitPerChannel7BitPrecisionSSE(const uint8_t* const source, uint8_t* const target, const __m128i& multiplicationFactors0123_128_s_32x4)

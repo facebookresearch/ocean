@@ -1120,7 +1120,55 @@ void FrameChannels::convertRow3ChannelsTo4Channels8BitPerChannel6BitPrecision(co
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 
-	// **TODO** add SSE-based implementation
+	constexpr size_t blockSize = 16;
+	const size_t blocks = size / blockSize;
+
+	if (blocks >= 1)
+	{
+		const __m128i factorChannel00_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel00_64));
+		const __m128i factorChannel10_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel10_64));
+		const __m128i factorChannel20_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel20_64));
+
+		const __m128i factorChannel01_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel01_64));
+		const __m128i factorChannel11_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel11_64));
+		const __m128i factorChannel21_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel21_64));
+
+		const __m128i factorChannel02_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel02_64));
+		const __m128i factorChannel12_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel12_64));
+		const __m128i factorChannel22_64_s_16x8 = _mm_set1_epi16(int16_t(factorChannel22_64));
+
+		const __m128i biasChannel0_s_16x8 = _mm_set1_epi16(int16_t(bias0));
+		const __m128i biasChannel1_s_16x8 = _mm_set1_epi16(int16_t(bias1));
+		const __m128i biasChannel2_s_16x8 = _mm_set1_epi16(int16_t(bias2));
+
+		const __m128i channelValue3_u_8x16 = _mm_set1_epi8(int8_t(valueChannel3));
+
+		for (size_t n = 0; n < blocks; ++n)
+		{
+			convert3ChannelsTo4Channels16Pixels8BitPerChannel6BitPrecisionSSE(source, target, factorChannel00_64_s_16x8, factorChannel10_64_s_16x8, factorChannel20_64_s_16x8, factorChannel01_64_s_16x8, factorChannel11_64_s_16x8, factorChannel21_64_s_16x8, factorChannel02_64_s_16x8, factorChannel12_64_s_16x8, factorChannel22_64_s_16x8, biasChannel0_s_16x8, biasChannel1_s_16x8, biasChannel2_s_16x8, channelValue3_u_8x16);
+
+			source += blockSize * size_t(3);
+			target += blockSize * size_t(4);
+		}
+
+		const size_t remainingPixels = size % blockSize;
+
+		if (remainingPixels)
+		{
+			// we need to apply another iteration with (back shifted) pointers
+
+			ocean_assert(remainingPixels < blockSize);
+
+			const size_t offset = blockSize - remainingPixels;
+
+			source -= offset * size_t(3);
+			target -= offset * size_t(4);
+
+			convert3ChannelsTo4Channels16Pixels8BitPerChannel6BitPrecisionSSE(source, target, factorChannel00_64_s_16x8, factorChannel10_64_s_16x8, factorChannel20_64_s_16x8, factorChannel01_64_s_16x8, factorChannel11_64_s_16x8, factorChannel21_64_s_16x8, factorChannel02_64_s_16x8, factorChannel12_64_s_16x8, factorChannel22_64_s_16x8, biasChannel0_s_16x8, biasChannel1_s_16x8, biasChannel2_s_16x8, channelValue3_u_8x16);
+		}
+
+		return;
+	}
 
 #elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
