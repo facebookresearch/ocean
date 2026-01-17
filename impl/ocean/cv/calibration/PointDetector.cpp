@@ -754,7 +754,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& point
 
 			if (suppressNonMaximum)
 			{
-				strengthPositions = nonMaximumSuppression.suppressNonMaximum<unsigned int, uint32_t, false>(0u, yFrame.width(), 0u, yFrame.height(), worker);
+				nonMaximumSuppression.suppressNonMaximum<unsigned int, uint32_t, false>(0u, yFrame.width(), 0u, yFrame.height(), strengthPositions, worker);
 			}
 			else
 			{

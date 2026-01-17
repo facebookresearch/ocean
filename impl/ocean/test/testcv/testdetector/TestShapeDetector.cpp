@@ -72,7 +72,9 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -114,7 +116,9 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -663,7 +667,9 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -710,7 +716,9 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -1066,7 +1074,9 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -1113,7 +1123,9 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -1201,7 +1213,9 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
@@ -1248,7 +1262,9 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, nullptr, nullptr);
+		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+
+		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
 		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());

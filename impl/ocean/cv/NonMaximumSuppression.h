@@ -237,15 +237,16 @@ class NonMaximumSuppression
 		 * @param numberColumns Number of columns to be handled
 		 * @param firstRow First row to be handled, with range [yOffset() + 1, height() - 1)
 		 * @param numberRows Number of rows to be handled
+		 * @param strengthPositions The resulting non maximum suppressed positions including the strength parameters, will be appended
 		 * @param worker Optional worker object to distribute the computation
 		 * @param positionCallback Optional callback function allowing to determine the precise position of the individual maximum value positions
-		 * @return Resulting non maximum suppressed positions including the strength parameters
+		 * @return True, if succeeded
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
 		 * @tparam tStrictMaximum True, to search for a strict maximum (larger than all eight neighbors); False, to allow equal values in the upper left neighborhood
 		 */
 		template <typename TCoordinate, typename TStrength, bool tStrictMaximum = true>
-		StrengthPositions<TCoordinate, TStrength> suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, Worker* worker = nullptr, const PositionCallback<TCoordinate, TStrength>* positionCallback = nullptr) const;
+		bool suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker = nullptr, const PositionCallback<TCoordinate, TStrength>* positionCallback = nullptr) const;
 
 		/**
 		 * Returns all gathered candidates of this object.
@@ -517,25 +518,34 @@ inline void NonMaximumSuppression<T>::removeCandidatesRightFrom(const unsigned i
 
 template <typename T>
 template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
-typename NonMaximumSuppression<T>::template StrengthPositions<TCoordinate, TStrength> NonMaximumSuppression<T>::suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, Worker* worker, const PositionCallback<TCoordinate, TStrength>* positionCallback) const
+bool NonMaximumSuppression<T>::suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker, const PositionCallback<TCoordinate, TStrength>* positionCallback) const
 {
 	ocean_assert(firstColumn + numberColumns <= width_);
-	ocean_assert(firstRow >= (unsigned int)rows_.firstIndex() && firstRow + numberRows <= (unsigned int)rows_.endIndex());
+	ocean_assert(firstRow >= (unsigned int)(rows_.firstIndex()) && firstRow + numberRows <= (unsigned int)(rows_.endIndex()));
 
-	StrengthPositions<TCoordinate, TStrength> result;
-	result.reserve(100);
+	if (firstColumn + numberColumns > width_)
+	{
+		return false;
+	}
 
-	if (worker)
+	if (firstRow >= (unsigned int)(rows_.endIndex()) || firstRow + numberRows <= (unsigned int)(rows_.firstIndex()))
+	{
+		return false;
+	}
+
+	strengthPositions.reserve(strengthPositions.size() + 128);
+
+	if (worker != nullptr)
 	{
 		Lock lock;
-		worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppression<T>::suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>, &result, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
+		worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppression<T>::suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
 	}
 	else
 	{
-		suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>(&result, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
+		suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
 	}
 
-	return result;
+	return true;
 }
 
 template <typename T>

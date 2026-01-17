@@ -217,11 +217,17 @@ bool TestNonMaximumSuppression::testSuppressionInFrame(const unsigned int width,
 			performanceDetermination.start();
 				if (strictMaximum)
 				{
-					locations = nonMaximumSuppression.suppressNonMaximum<int, uint8_t, true>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, useWorker, nullptr);
+					if (!nonMaximumSuppression.suppressNonMaximum<int, uint8_t, true>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, locations, useWorker, nullptr))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
 				}
 				else
 				{
-					locations = nonMaximumSuppression.suppressNonMaximum<int, uint8_t, false>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, useWorker, nullptr);
+					if (!nonMaximumSuppression.suppressNonMaximum<int, uint8_t, false>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, locations, useWorker, nullptr))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
 				}
 			performanceDetermination.stop();
 

@@ -210,22 +210,32 @@ bool HarrisCornerDetector::detectCorners(const uint8_t* yFrame, const unsigned i
 		PreciseCornerPosition precisePositionObject(yFrame, width, height, yFramePaddingElements);
 
 		const NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t> callbackFunction(NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t>::create(precisePositionObject, &PreciseCornerPosition::precisePosition));
-		const NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t, false /*tStrictMaximum*/>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, &callbackFunction));
+		NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t> strengthPositions;
+
+		if (!nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t, false /*tStrictMaximum*/>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, strengthPositions, useWorker, &callbackFunction))
+		{
+			return false;
+		}
 
 		corners.reserve(strengthPositions.size());
-		for (NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
+		for (const NonMaximumSuppressionVote::StrengthPosition<Scalar, int32_t>& strengthPosition : strengthPositions)
 		{
-			corners.emplace_back(*i, distortionState, Scalar(i->strength()));
+			corners.emplace_back(strengthPosition, distortionState, Scalar(strengthPosition.strength()));
 		}
 	}
 	else
 	{
-		const NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<unsigned int, int32_t, false /*tStrictMaximum*/>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, nullptr));
+		NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t> strengthPositions;
+
+		if (!nonMaximumSuppression.suppressNonMaximum<unsigned int, int32_t, false /*tStrictMaximum*/>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, strengthPositions, useWorker, nullptr))
+		{
+			return false;
+		}
 
 		corners.reserve(strengthPositions.size());
-		for (NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
+		for (const NonMaximumSuppressionVote::StrengthPosition<unsigned int, int32_t>& strengthPosition : strengthPositions)
 		{
-			corners.emplace_back(Vector2(Scalar(i->x()), Scalar(i->y())), distortionState, Scalar(i->strength()));
+			corners.emplace_back(Vector2(Scalar(strengthPosition.x()), Scalar(strengthPosition.y())), distortionState, Scalar(strengthPosition.strength()));
 		}
 	}
 

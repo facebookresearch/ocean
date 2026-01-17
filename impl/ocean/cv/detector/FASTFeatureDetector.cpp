@@ -75,7 +75,12 @@ void FASTFeatureDetector::detectFeatures(const uint8_t* yFrame, const unsigned i
 		detectFeatureCandidatesSubset(yFrame, width, height, threshold, &nonMaximumSuppression, subRegionLeft, subRegionWidth, framePaddingElements, subRegionTop, subRegionHeight);
 	}
 
-	const NonMaximumSuppressionVote::StrengthPositions<uint32_t, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<uint32_t, int32_t>(subRegionLeft + 4u, subRegionWidth - 8u, subRegionTop + 4u, subRegionHeight - 8u, worker));
+	NonMaximumSuppressionVote::StrengthPositions<uint32_t, int32_t> strengthPositions;
+	if (!nonMaximumSuppression.suppressNonMaximum<uint32_t, int32_t>(subRegionLeft + 4u, subRegionWidth - 8u, subRegionTop + 4u, subRegionHeight - 8u, strengthPositions, worker))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
 
 	features.reserve(strengthPositions.size());
 	features.clear();
