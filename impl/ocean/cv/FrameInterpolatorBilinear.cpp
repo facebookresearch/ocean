@@ -1647,6 +1647,217 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 }
 
 template <>
+inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<2u>(const uint8_t* extendedSourceRow, uint8_t* targetRow, const unsigned int targetWidth, const unsigned int channels, const unsigned int* interpolationLocations, const uint8_t* interpolationFactors)
+{
+	ocean_assert(extendedSourceRow != nullptr);
+	ocean_assert(targetRow != nullptr);
+	ocean_assert(targetWidth >= 8u);
+	ocean_assert(interpolationLocations != nullptr);
+	ocean_assert(interpolationFactors != nullptr);
+
+	ocean_assert(channels == 2u);
+
+	const uint8x8_t mask_left_8x8 = {0, 0, 2, 2, 4, 4, 6, 6};
+	const uint8x8_t mask_right_8x8 = {1, 1, 3, 3, 5, 5, 7, 7};
+
+	for (unsigned int x = 0; x < targetWidth; x += 8u)
+	{
+		if (x + 8u > targetWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= 8u && targetWidth > 8u);
+			const unsigned int newX = targetWidth - 8u;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			targetRow -= offset * 2u;
+			interpolationLocations -= offset;
+			interpolationFactors -= offset * 2u;
+
+			x = newX;
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + 8u < targetWidth));
+		}
+
+		// we load the pre-computed interpolation vectors for left and right pixels (accuracy 7 bits)
+		const uint8x16_t factors_u_8x16 = vld1q_u8(interpolationFactors);
+		uint8x8_t factors_u_8x8 = vget_low_u8(factors_u_8x16);
+
+
+		// we handle the first 4 pixels
+
+		const uint8x8_t pixel_0_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[0]); // left, right
+		const uint8x8_t pixel_1_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[1]); // left, right
+		const uint8x8_t pixel_2_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[2]); // left, right
+		const uint8x8_t pixel_3_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[3]); // left, right
+
+		const uint16x4x2_t pixel_01_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_0_8x8), vreinterpret_u16_u8(pixel_1_8x8)); // [left, left], [right, right]
+		const uint16x4x2_t pixel_23_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_2_8x8), vreinterpret_u16_u8(pixel_3_8x8)); // [left, left], [right, right]
+
+		const uint32x2x2_t left_32x2x2 = vzip_u32(vreinterpret_u32_u16(pixel_01_16x4x2.val[0]), vreinterpret_u32_u16(pixel_23_16x4x2.val[0]));
+		const uint32x2x2_t right_32x2x2 = vzip_u32(vreinterpret_u32_u16(pixel_01_16x4x2.val[1]), vreinterpret_u32_u16(pixel_23_16x4x2.val[1]));
+
+		const uint8x8_t leftPixels_03_u_8x8 = vreinterpret_u8_u32(left_32x2x2.val[0]);
+		const uint8x8_t rightPixels_03_u_8x8 = vreinterpret_u8_u32(right_32x2x2.val[0]);
+
+		const uint8x8_t factors_03_left_u_8x8 = vtbl1_u8(factors_u_8x8, mask_left_8x8);
+		const uint8x8_t factors_03_right_u_8x8 = vtbl1_u8(factors_u_8x8, mask_right_8x8);
+
+		uint16x8_t multiplication_03_u_16x8 = vmull_u8(leftPixels_03_u_8x8, factors_03_left_u_8x8);
+		multiplication_03_u_16x8 = vmlal_u8(multiplication_03_u_16x8, rightPixels_03_u_8x8, factors_03_right_u_8x8);
+
+		// we normalize the interpolation results by 128 (rounded right shift with 7 bits)
+		vst1_u8(targetRow, vrshrn_n_u16(multiplication_03_u_16x8, 7));
+		targetRow += 8;
+
+
+
+		// we handle the second 4 pixels
+
+		factors_u_8x8 = vget_high_u8(factors_u_8x16);
+
+		const uint8x8_t pixel_4_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[4]); // left, right
+		const uint8x8_t pixel_5_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[5]); // left, right
+		const uint8x8_t pixel_6_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[6]); // left, right
+		const uint8x8_t pixel_7_8x8 = vld1_u8(extendedSourceRow + interpolationLocations[7]); // left, right
+
+		const uint16x4x2_t pixel_45_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_4_8x8), vreinterpret_u16_u8(pixel_5_8x8)); // [left, left], [right, right]
+		const uint16x4x2_t pixel_67_16x4x2 = vtrn_u16(vreinterpret_u16_u8(pixel_6_8x8), vreinterpret_u16_u8(pixel_7_8x8)); // [left, left], [right, right]
+
+		const uint32x2x2_t left_47_32x2x2 = vzip_u32(vreinterpret_u32_u16(pixel_45_16x4x2.val[0]), vreinterpret_u32_u16(pixel_67_16x4x2.val[0]));
+		const uint32x2x2_t right_47_32x2x2 = vzip_u32(vreinterpret_u32_u16(pixel_45_16x4x2.val[1]), vreinterpret_u32_u16(pixel_67_16x4x2.val[1]));
+
+		const uint8x8_t leftPixels_47_u_8x8 = vreinterpret_u8_u32(left_47_32x2x2.val[0]);
+		const uint8x8_t rightPixels_47_u_8x8 = vreinterpret_u8_u32(right_47_32x2x2.val[0]);
+
+		const uint8x8_t factors_47_left_u_8x8 = vtbl1_u8(factors_u_8x8, mask_left_8x8);
+		const uint8x8_t factors_47_right_u_8x8 = vtbl1_u8(factors_u_8x8, mask_right_8x8);
+
+		uint16x8_t multiplication_47_u_16x8 = vmull_u8(leftPixels_47_u_8x8, factors_47_left_u_8x8);
+		multiplication_47_u_16x8 = vmlal_u8(multiplication_47_u_16x8, rightPixels_47_u_8x8, factors_47_right_u_8x8);
+
+		vst1_u8(targetRow, vrshrn_n_u16(multiplication_47_u_16x8, 7));
+		targetRow += 8;
+
+
+		interpolationLocations += 8;
+		interpolationFactors += 16;
+	}
+}
+
+template <>
+inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<3u>(const uint8_t* extendedSourceRow, uint8_t* targetRow, const unsigned int targetWidth, const unsigned int channels, const unsigned int* interpolationLocations, const uint8_t* interpolationFactors)
+{
+	ocean_assert(extendedSourceRow != nullptr);
+	ocean_assert(targetRow != nullptr);
+	ocean_assert(targetWidth >= 8u);
+	ocean_assert(interpolationLocations != nullptr);
+	ocean_assert(interpolationFactors != nullptr);
+
+	ocean_assert(channels == 3u);
+
+	for (unsigned int x = 0; x < targetWidth; x += 8u)
+	{
+		if (x + 8u > targetWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= 8u && targetWidth > 8u);
+			const unsigned int newX = targetWidth - 8u;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			targetRow -= offset * 3u;
+			interpolationLocations -= offset;
+			interpolationFactors -= offset * 2u;
+
+			x = newX;
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + 8u < targetWidth));
+		}
+
+		// we load the left and the right pixels into an intermediate buffer
+		uint8_t leftPixels[24];
+		uint8_t rightPixels[24];
+
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			const uint8_t* const source = extendedSourceRow + interpolationLocations[n];
+			leftPixels[n * 3u + 0u] = source[0];
+			leftPixels[n * 3u + 1u] = source[1];
+			leftPixels[n * 3u + 2u] = source[2];
+			rightPixels[n * 3u + 0u] = source[3];
+			rightPixels[n * 3u + 1u] = source[4];
+			rightPixels[n * 3u + 2u] = source[5];
+		}
+
+		// we load the pre-computed interpolation vectors for left and right pixels (accuracy 7 bits)
+		const uint8x16_t factors_u_8x16 = vld1q_u8(interpolationFactors);
+
+		// we expand the factors to 3 channels per pixel
+		uint8_t factorsArray[16];
+		vst1q_u8(factorsArray, factors_u_8x16);
+
+		uint8_t leftFactors[24];
+		uint8_t rightFactors[24];
+
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			const uint8_t fL = factorsArray[n * 2u];
+			const uint8_t fR = factorsArray[n * 2u + 1u];
+			leftFactors[n * 3u + 0u] = fL;
+			leftFactors[n * 3u + 1u] = fL;
+			leftFactors[n * 3u + 2u] = fL;
+			rightFactors[n * 3u + 0u] = fR;
+			rightFactors[n * 3u + 1u] = fR;
+			rightFactors[n * 3u + 2u] = fR;
+		}
+
+		// we multiply each pixel with each factor and accumulate the results
+		const uint8x8_t left_0_u_8x8 = vld1_u8(leftPixels);
+		const uint8x8_t right_0_u_8x8 = vld1_u8(rightPixels);
+		const uint8x8_t factors_0_left_u_8x8 = vld1_u8(leftFactors);
+		const uint8x8_t factors_0_right_u_8x8 = vld1_u8(rightFactors);
+
+		uint16x8_t result_0_u_16x8 = vmull_u8(left_0_u_8x8, factors_0_left_u_8x8);
+		result_0_u_16x8 = vmlal_u8(result_0_u_16x8, right_0_u_8x8, factors_0_right_u_8x8);
+
+		const uint8x8_t left_1_u_8x8 = vld1_u8(leftPixels + 8);
+		const uint8x8_t right_1_u_8x8 = vld1_u8(rightPixels + 8);
+		const uint8x8_t factors_1_left_u_8x8 = vld1_u8(leftFactors + 8);
+		const uint8x8_t factors_1_right_u_8x8 = vld1_u8(rightFactors + 8);
+
+		uint16x8_t result_1_u_16x8 = vmull_u8(left_1_u_8x8, factors_1_left_u_8x8);
+		result_1_u_16x8 = vmlal_u8(result_1_u_16x8, right_1_u_8x8, factors_1_right_u_8x8);
+
+		const uint8x8_t left_2_u_8x8 = vld1_u8(leftPixels + 16);
+		const uint8x8_t right_2_u_8x8 = vld1_u8(rightPixels + 16);
+		const uint8x8_t factors_2_left_u_8x8 = vld1_u8(leftFactors + 16);
+		const uint8x8_t factors_2_right_u_8x8 = vld1_u8(rightFactors + 16);
+
+		uint16x8_t result_2_u_16x8 = vmull_u8(left_2_u_8x8, factors_2_left_u_8x8);
+		result_2_u_16x8 = vmlal_u8(result_2_u_16x8, right_2_u_8x8, factors_2_right_u_8x8);
+
+		// we normalize the interpolation results by 128 (rounded right shift with 7 bits) and write back the results
+		vst1_u8(targetRow, vrshrn_n_u16(result_0_u_16x8, 7));
+		vst1_u8(targetRow + 8, vrshrn_n_u16(result_1_u_16x8, 7));
+		vst1_u8(targetRow + 16, vrshrn_n_u16(result_2_u_16x8, 7));
+		targetRow += 24;
+
+
+		interpolationLocations += 8;
+		interpolationFactors += 16;
+	}
+}
+
+template <>
 inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<4u>(const uint8_t* extendedSourceRow, uint8_t* targetRow, const unsigned int targetWidth, const unsigned int channels, const unsigned int* interpolationLocations, const uint8_t* interpolationFactors)
 {
 	ocean_assert(extendedSourceRow != nullptr);
@@ -1793,8 +2004,13 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 				rowInterpolationHorizontalFunction = interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<1u>;
 				break;
 
-			// case 2u: // **TODO** will be added soon
-			// case 3u:
+			case 2u:
+				rowInterpolationHorizontalFunction = interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<2u>;
+				break;
+
+			case 3u:
+				rowInterpolationHorizontalFunction = interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<3u>;
+				break;
 
 			case 4u:
 				rowInterpolationHorizontalFunction = interpolateRowHorizontal8BitPerChannel7BitPrecisionNEON<4u>;
