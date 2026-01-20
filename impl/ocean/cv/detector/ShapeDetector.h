@@ -415,12 +415,12 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @param xShapes The resulting detected X-shapes
 				 * @param sign The sign of the shape to be detected, -1 for shapes with dark edges and bright environment, 1 for shapes with bright edges and dark environment
 				 * @param minimalThreshold The minimal threshold for a detected shape, with range (0, infinity)
-				 * @param shapeWidth **TODO** document once finalized
-				 * @param shapeHeight **TODO** document once finalized
-				 * @param stepSize **TODO** document once finalized
-				 * @param topBand **TODO** document once finalized
-				 * @param bottomBand **TODO** document once finalized
-				 * @param minimalDelta **TODO** document once finalized
+				 * @param shapeWidth The width of the T-shape pattern in pixel, must be odd, with range [bottomBand + stepSize + 1, infinity)
+				 * @param shapeHeight The height of the T-shape pattern in pixel, with range [bottomBand + stepSize + 1, infinity)
+				 * @param stepSize The step size (width of the vertical stem) of the T-shape pattern in pixel, must be odd, with range [1, infinity)
+				 * @param topBand The height of the top horizontal band of the T-shape pattern in pixel, with range [1, infinity)
+				 * @param bottomBand The height of the bottom horizontal band of the T-shape pattern in pixel, with range [1, shapeWidth - stepSize) and [1, shapeHeight - stepSize)
+				 * @param minimalDelta The minimal gradient delta required for valid edge detection, with range [0, infinity)
 				 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 				 */
 				static void detectShapes(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, LShapes& lShapes, TShapes& tShapes, XShapes& xShapes, const int sign, const double minimalThreshold = 5.0, const unsigned int shapeWidth = 15u, const unsigned int shapeHeight = 15u, const unsigned int stepSize = 3u, const unsigned int topBand = 4u, const unsigned int bottomBand = 4u, const unsigned int minimalDelta = 5u, const unsigned int framePaddingElements = 0u);
@@ -436,12 +436,12 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @param x The horizontal location at which the detector response will be determined, with range [0, imageWidth)
 				 * @param y The vertical location at which the detector response will be determined, with range [0, imageHeight)
 				 * @param sign The sign of the shape to be detected, -1 for shapes with dark edges and bright environment, 1 for shapes with bright edges and dark environment
-				 * @param shapeWidth **TODO** document once finalized
-				 * @param shapeHeight **TODO** document once finalized
-				 * @param stepSize **TODO** document once finalized
-				 * @param topBand **TODO** document once finalized
-				 * @param bottomBand **TODO** document once finalized
-				 * @param minimalDelta **TODO** document once finalized
+				 * @param shapeWidth The width of the T-shape pattern in pixel, must be odd, with range [bottomBand + stepSize + 1, infinity)
+				 * @param shapeHeight The height of the T-shape pattern in pixel, with range [bottomBand + stepSize + 1, infinity)
+				 * @param stepSize The step size (width of the vertical stem) of the T-shape pattern in pixel, must be odd, with range [1, infinity)
+				 * @param topBand The height of the top horizontal band of the T-shape pattern in pixel, with range [1, infinity)
+				 * @param bottomBand The height of the bottom horizontal band of the T-shape pattern in pixel, with range [1, shapeWidth - stepSize) and [1, shapeHeight - stepSize)
+				 * @param minimalDelta The minimal gradient delta required for valid edge detection, with range [0, infinity)
 				 * @param horizontalSignedGradientPaddingElements The number of padding elements at the end of each row of the lined integral image for horizontal signed gradients, in elements, with range [0, infinity)
 				 * @param horizontalAbsoluteGradientPaddingElements The number of padding elements at the end of each row of the lined integral image for horizontal absolute gradients, in elements, with range [0, infinity)
 				 * @param verticalSignedGradientPaddingElements The number of padding elements at the end of each row of the lined integral image for vertical signed gradients, in elements, with range [0, infinity)
@@ -467,11 +467,11 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @param tShapes The resulting detected T-shapes
 				 * @param xShapes The resulting detected X-shapes
 				 * @param minimalThreshold The minimal threshold for a detected shape, with range (0, infinity)
-				 * @param shapeWidth **TODO** document once finalized
-				 * @param shapeHeight **TODO** document once finalized
-				 * @param stepSize **TODO** document once finalized
-				 * @param topBand **TODO** document once finalized
-				 * @param bottomBand **TODO** document once finalized
+				 * @param shapeWidth The width of the T-shape pattern in pixel, must be odd, with range [bottomBand + stepSize + 1, infinity)
+				 * @param shapeHeight The height of the T-shape pattern in pixel, with range [bottomBand + stepSize + 1, infinity)
+				 * @param stepSize The step size (width of the vertical stem) of the T-shape pattern in pixel, must be odd, with range [1, infinity)
+				 * @param topBand The height of the top horizontal band of the T-shape pattern in pixel, with range [1, infinity)
+				 * @param bottomBand The height of the bottom horizontal band of the T-shape pattern in pixel, with range [1, shapeWidth - stepSize) and [1, shapeHeight - stepSize)
 				 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 				 */
 				static void detectShapes(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, LShapes& lShapes, TShapes& tShapes, XShapes& xShapes, const float minimalThreshold = 5.421f, const unsigned int shapeWidth = 15u, const unsigned int shapeHeight = 15u, const unsigned int stepSize = 3u, const unsigned int topBand = 4u, const unsigned int bottomBand = 4u, const unsigned int framePaddingElements = 0u);
@@ -484,11 +484,11 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @param height The height of the actual image which has been used to determine the integral images, in pixel, with range [1, infinity)
 				 * @param x The horizontal location at which the detector response will be determined, with range [0, imageWidth)
 				 * @param y The vertical location at which the detector response will be determined, with range [0, imageHeight)
-				 * @param shapeWidth **TODO** document once finalized
-				 * @param shapeHeight **TODO** document once finalized
-				 * @param stepSize **TODO** document once finalized
-				 * @param topBand **TODO** document once finalized
-				 * @param bottomBand **TODO** document once finalized
+				 * @param shapeWidth The width of the T-shape pattern in pixel, must be odd, with range [bottomBand + stepSize + 1, infinity)
+				 * @param shapeHeight The height of the T-shape pattern in pixel, with range [bottomBand + stepSize + 1, infinity)
+				 * @param stepSize The step size (width of the vertical stem) of the T-shape pattern in pixel, must be odd, with range [1, infinity)
+				 * @param topBand The height of the top horizontal band of the T-shape pattern in pixel, with range [1, infinity)
+				 * @param bottomBand The height of the bottom horizontal band of the T-shape pattern in pixel, with range [1, shapeWidth - stepSize) and [1, shapeHeight - stepSize)
 				 * @param linedIntegralPaddingElements The number of padding elements at the end of each row of the lined integral image, in elements, with range [0, infinity)
 				 * @param linedIntegralSquaredPaddingElements The number of padding elements at the end of each row of the lined integral image for squared pixel intensities, in elements, with range [0, infinity)
 				 * @return The response of the T-shape detector, with range [0, infinity)

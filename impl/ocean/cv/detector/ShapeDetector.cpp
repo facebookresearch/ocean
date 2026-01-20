@@ -4772,8 +4772,7 @@ ShapeDetector::Rectangles ShapeDetector::guessShapedRectanglesFromUpperCorners(c
 				Vector2 bottomLeftCorner = topLeft.position() + verticalEdge;
 				Vector2 bottomRightCorner = topRight.position() + verticalEdge;
 
-				// TODO - Check this condition
-				if (bottomLeftCorner[1] < Scalar(imageHeight) || bottomRightCorner[1] < Scalar(imageHeight))
+				if (bottomLeftCorner[1] < Scalar(imageHeight) && bottomRightCorner[1] < Scalar(imageHeight))
 				{
 					rectangles.emplace_back<Rectangle>({ lShapes[indexTopLeft].position(), bottomLeftCorner, bottomRightCorner, lShapes[indexTopRight].position() });
 				}
@@ -4783,9 +4782,7 @@ ShapeDetector::Rectangles ShapeDetector::guessShapedRectanglesFromUpperCorners(c
 				bottomLeftCorner = topLeft.position() + topLeft.edgeRight().normalized() * verticalEdgeNorm;
 				bottomRightCorner = topRight.position() + topRight.edgeLeft().normalized() * verticalEdgeNorm;
 
-				// TODO - Check this condition
-				// TODO - Check if these corners are very close the ones used above and, if so, do not add this candidate (it would be redundant).
-				if (bottomLeftCorner[1] < Scalar(imageHeight) || bottomRightCorner[1] < Scalar(imageHeight))
+				if (bottomLeftCorner[1] < Scalar(imageHeight) && bottomRightCorner[1] < Scalar(imageHeight))
 				{
 					rectangles.emplace_back<Rectangle>({ lShapes[indexTopLeft].position(), bottomLeftCorner, bottomRightCorner, lShapes[indexTopRight].position() });
 				}
