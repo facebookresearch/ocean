@@ -11,4 +11,10 @@
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\ocean_common.props"/>
   </ImportGroup>
+
+  <!-- Debugger environment for Shared builds to find DLLs -->
+  <PropertyGroup Condition="$(Configuration.StartsWith('Shared'))">
+    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\lib\$(OceanConfigFolder);%PATH%</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>
