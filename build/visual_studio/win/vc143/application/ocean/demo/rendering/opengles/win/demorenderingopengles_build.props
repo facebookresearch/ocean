@@ -35,28 +35,8 @@
       <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
-    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\win_x64_vc143_shared_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared\;%PATH%</LocalDebuggerEnvironment>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
-    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\win_x86_vc143_shared_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared\;%PATH%</LocalDebuggerEnvironment>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'">
-    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\win_x64_vc143_shared_profile;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared\;%PATH%</LocalDebuggerEnvironment>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'">
-    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\win_x86_vc143_shared_profile;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared\;%PATH%</LocalDebuggerEnvironment>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'">
-    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\win_x64_vc143_shared;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared\;%PATH%</LocalDebuggerEnvironment>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'">
-    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\win_x86_vc143_shared;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_x64_shared\;%PATH%</LocalDebuggerEnvironment>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <LocalDebuggerEnvironment>PATH=$(OCEAN_DEVELOPMENT_PATH)\bin\dll\$(OceanConfigFolder);$(OCEAN_DEVELOPMENT_PATH)\3rdparty\opengles\lib\win_$(OceanPlatformSuffix)_shared\;%PATH%</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
