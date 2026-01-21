@@ -123,31 +123,67 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 				inline float normalizedStrength(const unsigned int strength) const;
 
 				/**
-				 * **TODO**
+				 * Determines the strength of a dark point candidate.
+				 * A dark point has a dark center pixel surrounded by brighter pixels.
+				 * @param centerPixelValue The color intensity of the center pixel, with range [0, 255]
+				 * @param firstSurroundingPixel Pointer to the first surrounding pixel (top-left of the pattern), must be valid
+				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid dark point
+				 * @tparam tMaxCenterColorFixed The maximal color intensity of the center pixel to be considered as a dark point, with range [0, 255]
+				 * @tparam tMinSurroundingColorFixed The minimal color intensity of the surrounding pixels, with range [0, tMaxCenterColorFixed)
 				 */
 				template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
 				inline uint32_t determineDarkPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
 
 				/**
-				 * **TODO**
+				 * Determines the strength of a dark point candidate.
+				 * A dark point has a dark center pixel surrounded by brighter pixels.
+				 * @param yPoint Pointer to the center pixel in the frame, must be valid
+				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid dark point
+				 * @tparam tMaxCenterColorFixed The maximal color intensity of the center pixel to be considered as a dark point, with range [0, 255]
+				 * @tparam tMinSurroundingColorFixed The minimal color intensity of the surrounding pixels, with range [0, tMaxCenterColorFixed)
 				 */
 				template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
 				inline uint32_t determineDarkPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
 
 				/**
-				 * **TODO**
+				 * Determines the strength of a bright point candidate.
+				 * A bright point has a bright center pixel surrounded by darker pixels.
+				 * @param centerPixelValue The color intensity of the center pixel, with range [0, 255]
+				 * @param firstSurroundingPixel Pointer to the first surrounding pixel (top-left of the pattern), must be valid
+				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid bright point
+				 * @tparam tMinCenterColorFixed The minimal color intensity of the center pixel to be considered as a bright point, with range [0, 255]
+				 * @tparam tMaxSurroundingColorFixed The maximal color intensity of the surrounding pixels, with range (tMinCenterColorFixed, 255]
 				 */
 				template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
 				inline uint32_t determineBrightPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
 
 				/**
-				 * **TODO**
+				 * Determines the strength of a bright point candidate.
+				 * A bright point has a bright center pixel surrounded by darker pixels.
+				 * @param yPoint Pointer to the center pixel in the frame, must be valid
+				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid bright point
+				 * @tparam tMinCenterColorFixed The minimal color intensity of the center pixel to be considered as a bright point, with range [0, 255]
+				 * @tparam tMaxSurroundingColorFixed The maximal color intensity of the surrounding pixels, with range (tMinCenterColorFixed, 255]
 				 */
 				template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
 				inline uint32_t determineBrightPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
 
 				/**
-				 * **TODO**
+				 * Determines the strength of a point at a sub-pixel position using bilinear interpolation.
+				 * The strength is signed: positive for dark points (dark center, bright surrounding), negative for bright points.
+				 * @param yFrame The frame in which the point strength will be determined, with pixel format FORMAT_Y8, must be valid
+				 * @param observation The sub-pixel position of the point in the frame
+				 * @param strength The resulting signed strength of the point (positive for dark points, negative for bright points)
+				 * @param strict True, if all surrounding pixels have the same sign relationship to the center pixel; False otherwise
+				 * @return True, if the strength could be determined successfully
 				 */
 				bool determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const;
 
@@ -308,19 +344,55 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		static bool detectPoints(const Frame& yFrame, const PointPatterns& pointPatterns, const unsigned int minDifference, const unsigned int maxVariance, Points& points, const bool suppressNonMaximum, const unsigned int detectionScaleSteps = 2u, Worker* worker = nullptr);
 
 		/**
-		 * **TODO**
+		 * Detects point candidates in a frame and adds them to a non-maximum suppression object.
+		 * @param yFrame Pointer to the frame data, with pixel format FORMAT_Y8, must be valid
+		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param mask Optional pointer to a mask frame where non-zero values indicate pixels to process, nullptr to process all pixels
+		 * @param pointPattern The point pattern to be used for detection, must be valid
+		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+		 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added
+		 * @param worker Optional worker object to distribute the computation
+		 * @tparam tDarkPoint True, to detect dark points (dark center, bright surrounding); False, to detect bright points
 		 */
 		template <bool tDarkPoint>
 		static void detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppression<uint32_t>& nonMaximumSuppression, Worker* worker = nullptr);
 
 		/**
-		 * **TODO**
+		 * Detects point candidates in a subset of rows (worker function for parallel execution).
+		 * @param yFrame Pointer to the frame data, with pixel format FORMAT_Y8, must be valid
+		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param mask Optional pointer to a mask frame where non-zero values indicate pixels to process, nullptr if tUseMask is false
+		 * @param pointPatterns Pointer to the point pattern to be used for detection, must be valid
+		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+		 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+		 * @param nonMaximumSuppression Pointer to the non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param firstColumn The first column to be processed, with range [0, width - 1]
+		 * @param numberColumns The number of columns to be processed, with range [1, width - firstColumn]
+		 * @param firstRow The first row to be processed, with range [0, height - 1]
+		 * @param numberRows The number of rows to be processed, with range [1, height - firstRow]
+		 * @tparam tDarkPoint True, to detect dark points (dark center, bright surrounding); False, to detect bright points
+		 * @tparam tUseMask True, if a mask is used; False, if no mask is used
 		 */
 		template <bool tDarkPoint, bool tUseMask>
 		static void detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPatterns, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppression<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
-		 * **TODO**
+		 * Determines the best matching radius for a detected point by testing smaller point patterns.
+		 * @param yFrame Pointer to the frame data, with pixel format FORMAT_Y8, must be valid
+		 * @param width The width of the frame, in pixels, with range [1, infinity)
+		 * @param height The height of the frame, in pixels, with range [1, infinity)
+		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param pixelPosition The pixel position of the detected point, must be inside the frame
+		 * @param currentRadius The current radius of the detected point, with range [1, infinity)
+		 * @param pointPatterns Pointer to an array of point patterns with increasing radii, must be valid
+		 * @param numberPointPatterns The number of point patterns in the array, with range [2, infinity)
+		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
+		 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
+		 * @param radius The resulting best matching radius for the point
+		 * @param strength The resulting strength of the point at the best matching radius
+		 * @return True, if a smaller radius was found; False, if the current radius is the best match
+		 * @tparam tDarkPoint True, to test for dark points (dark center, bright surrounding); False, to test for bright points
 		 */
 		template <bool tDarkPoint>
 		static bool determinePointRadius(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const CV::PixelPosition& pixelPosition, const unsigned int currentRadius, const PointPattern* pointPatterns, const size_t numberPointPatterns, const uint8_t minDifference, const unsigned int maxVariance, unsigned int& radius, unsigned int& strength);
