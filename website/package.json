@@ -23,6 +23,7 @@
     "@types/react": "^18.3.3",
     "clsx": "^2.1.1",
     "docusaurus-plugin-internaldocs-fb": "^1.18.2",
+    "docusaurus-plugin-remote-content": "^4.0.0",
     "dompurify": "^3.2.4",
     "estree-util-value-to-estree": "^3.3.3",
     "mermaid": "^11.10.0",
