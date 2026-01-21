@@ -375,6 +375,15 @@ bool Utilities::deserializeFramesStatisticsFromJSON(const std::string& filename,
 		return false;
 	}
 
+	int version = 0;
+
+	const double* versionValue = root.numberFromObject("version");
+
+	if (versionValue != nullptr)
+	{
+		version = NumericD::round32(*versionValue);
+	}
+
 	const IO::JSONParser::JSONValue::Array* framesArray = root.arrayFromObject("framesStatistics");
 
 	if (framesArray == nullptr)

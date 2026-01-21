@@ -2875,6 +2875,8 @@ void TrackerMono::matchLocalizedObjectPointsToCorners(const AnyCamera& camera, c
 
 	WriteLock writeLock(mutex_, "TrackerMono::matchLocalizedObjectPointsToCorners()");
 
+	size_t counter = 0;
+
 		for (const MatchedObjectPointIdToImagePointMap::value_type& matchedPair : matchedObjectPointIdToImagePointMap)
 		{
 			const Index32& objectPointId = matchedPair.first;
@@ -2893,6 +2895,8 @@ void TrackerMono::matchLocalizedObjectPointsToCorners(const AnyCamera& camera, c
 
 			ocean_assert(localizedObjectPoint.lastObservationFrameIndex() != currentFrameIndex);
 			localizedObjectPoint.addObservation(currentFrameIndex, imagePoint);
+
+			++counter;
 
 			occupancyArray_.addPoint(imagePoint);
 		}
