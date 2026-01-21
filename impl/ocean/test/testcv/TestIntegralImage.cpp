@@ -11,12 +11,12 @@
 #include "ocean/base/RandomI.h"
 
 #include "ocean/cv/CVUtilities.h"
-#include "ocean/cv/FrameConverter.h"
-#include "ocean/cv/FrameVariance.h"
 #include "ocean/cv/IntegralImage.h"
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -639,28 +639,28 @@ bool TestIntegralImage::testIntegralImage(const unsigned int width, const unsign
 	Log::info() << "Testing integral image " << width << "x" << height << " without border:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testIntegralImage<uint8_t, uint32_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<uint8_t, uint32_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testIntegralImage<uint8_t, uint32_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<uint8_t, uint32_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testIntegralImage<uint8_t, uint32_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<uint8_t, uint32_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testIntegralImage<uint8_t, uint32_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<uint8_t, uint32_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testIntegralImage<int16_t, int64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<int16_t, int64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testIntegralImage<int16_t, int64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<int16_t, int64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testIntegralImage<int16_t, int64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<int16_t, int64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testIntegralImage<int16_t, int64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testIntegralImage<int16_t, int64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -671,12 +671,11 @@ bool TestIntegralImage::testIntegralImage(const unsigned int width, const unsign
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -701,30 +700,20 @@ bool TestIntegralImage::testIntegralImage(const unsigned int width, const unsign
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			if (!validateIntegralImage<T, TIntegral>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), integralFrame.paddingElements(), 20u))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateIntegralImage<T, TIntegral>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), integralFrame.paddingElements(), 20u));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const unsigned int height, const double testDuration)
@@ -734,28 +723,28 @@ bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const u
 	Log::info() << "Testing lined integral image " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testLinedIntegralImage<uint8_t, uint32_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<uint8_t, uint32_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImage<uint8_t, uint32_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<uint8_t, uint32_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImage<uint8_t, uint32_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<uint8_t, uint32_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImage<uint8_t, uint32_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<uint8_t, uint32_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testLinedIntegralImage<int16_t, int64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<int16_t, int64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImage<int16_t, int64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<int16_t, int64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImage<int16_t, int64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<int16_t, int64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImage<int16_t, int64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImage<int16_t, int64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
@@ -765,9 +754,8 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 	Log::info() << "Testing lined integral image comfort function:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -786,14 +774,11 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint32_t>(channels)))
 			{
 				constexpr unsigned int border = 0u;
-				if (!validateBorderedIntegralImage<uint8_t, uint32_t>(frame.constdata<uint8_t>(), integralFrame.constdata<uint32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateBorderedIntegralImage<uint8_t, uint32_t>(frame.constdata<uint8_t>(), integralFrame.constdata<uint32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()));
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -810,14 +795,11 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<int32_t>(channels)))
 			{
 				constexpr unsigned int border = 0u;
-				if (!validateBorderedIntegralImage<int8_t, int32_t>(frame.constdata<int8_t>(), integralFrame.constdata<int32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateBorderedIntegralImage<int8_t, int32_t>(frame.constdata<int8_t>(), integralFrame.constdata<int32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()));
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -834,29 +816,19 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<double>(channels)))
 			{
 				constexpr unsigned int border = 0u;
-				if (!validateBorderedIntegralImage<double, double>(frame.constdata<double>(), integralFrame.constdata<double>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateBorderedIntegralImage<double, double>(frame.constdata<double>(), integralFrame.constdata<double>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()));
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -867,12 +839,11 @@ bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const u
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -897,31 +868,21 @@ bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const u
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			constexpr unsigned int border = 0u;
-			if (!validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, const unsigned int height, const double testDuration)
@@ -931,28 +892,28 @@ bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, 
 	Log::info() << "Testing lined squared integral image " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testLinedIntegralImageSquared<uint8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<uint8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageSquared<uint8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<uint8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageSquared<uint8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<uint8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageSquared<uint8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<uint8_t, uint64_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testLinedIntegralImageSquared<int16_t, int64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<int16_t, int64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageSquared<int16_t, int64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<int16_t, int64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageSquared<int16_t, int64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<int16_t, int64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageSquared<int16_t, int64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageSquared<int16_t, int64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -963,12 +924,11 @@ bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, 
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -993,31 +953,21 @@ bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			constexpr unsigned int border = 0u;
-			if (!validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1027,41 +977,41 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned in
 	Log::info() << "Testing joined lined integral and squared integral image " << width << "x" << height << " image, and (300x200):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
 	// for uint32_t, we need to apply an image resolution <= 2^16
 
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 1u>(300u, 200u, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 1u>(300u, 200u, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 2u>(300u, 200u, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 2u>(300u, 200u, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 3u>(300u, 200u, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 3u>(300u, 200u, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 4u>(300u, 200u, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint32_t, 4u>(300u, 200u, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<uint8_t, uint64_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<double, double, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<double, double, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<double, double, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<double, double, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<double, double, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<double, double, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredJoined<double, double, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredJoined<double, double, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegralAndSquared, unsigned int tChannels>
@@ -1072,12 +1022,11 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned in
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegralAndSquared, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1102,31 +1051,21 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned in
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralAndSquaredFrame, copyIntegralAndSquaredFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			constexpr unsigned int border = 0u;
-			if (!validateBorderedIntegralImageAndSquaredJoined<T, TIntegralAndSquared, tChannels>(sourceFrame.constdata<T>(), integralAndSquaredFrame.constdata<TIntegralAndSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralAndSquaredFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImageAndSquaredJoined<T, TIntegralAndSquared, tChannels>(sourceFrame.constdata<T>(), integralAndSquaredFrame.constdata<TIntegralAndSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralAndSquaredFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1136,39 +1075,39 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned 
 	Log::info() << "Testing separate lined integral and squared integral image " << width << "x" << height << " image, and (300x200):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint32_t, uint64_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<double, double, double, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<double, double, double, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<double, double, double, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testLinedIntegralImageAndSquaredSeparate<double, double, double, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testLinedIntegralImageAndSquaredSeparate<uint8_t, uint64_t, uint64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	testResult = testLinedIntegralImageAndSquaredSeparate<double, double, double, 1u>(width, height, testDuration);
+	Log::info() << " ";
+	testResult = testLinedIntegralImageAndSquaredSeparate<double, double, double, 2u>(width, height, testDuration);
+	Log::info() << " ";
+	testResult = testLinedIntegralImageAndSquaredSeparate<double, double, double, 3u>(width, height, testDuration);
+	Log::info() << " ";
+	testResult = testLinedIntegralImageAndSquaredSeparate<double, double, double, 4u>(width, height, testDuration);
+
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, typename TIntegralSquared, unsigned int tChannels>
@@ -1179,13 +1118,12 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned 
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 	const FrameType::PixelFormat integralSquaredPixelFormat = FrameType::genericPixelFormat<TIntegralSquared, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1212,38 +1150,28 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralSquaredFrame, copyIntegralSquaredFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			constexpr unsigned int border = 0u;
-			if (!validateBorderedIntegralImageAndSquaredSeparate<T, TIntegral, TIntegralSquared, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), integralSquaredFrame.constdata<TIntegralSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements(), integralSquaredFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImageAndSquaredSeparate<T, TIntegral, TIntegralSquared, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), integralSquaredFrame.constdata<TIntegralSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements(), integralSquaredFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1253,28 +1181,28 @@ bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, cons
 	Log::info() << "Testing bordered integral image " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testBorderedIntegralImage<uint8_t, uint32_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<uint8_t, uint32_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImage<uint8_t, uint32_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<uint8_t, uint32_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImage<uint8_t, uint32_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<uint8_t, uint32_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImage<uint8_t, uint32_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<uint8_t, uint32_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBorderedIntegralImage<int16_t, int64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<int16_t, int64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImage<int16_t, int64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<int16_t, int64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImage<int16_t, int64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<int16_t, int64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImage<int16_t, int64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImage<int16_t, int64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDuration)
@@ -1284,9 +1212,8 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 	Log::info() << "Testing bordered integral image comfort function:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1306,14 +1233,11 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint32_t>(channels)))
 			{
-				if (!validateBorderedIntegralImage<uint8_t, uint32_t>(frame.constdata<uint8_t>(), integralFrame.constdata<uint32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateBorderedIntegralImage<uint8_t, uint32_t>(frame.constdata<uint8_t>(), integralFrame.constdata<uint32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()));
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -1331,14 +1255,11 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<int32_t>(channels)))
 			{
-				if (!validateBorderedIntegralImage<int8_t, int32_t>(frame.constdata<int8_t>(), integralFrame.constdata<int32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateBorderedIntegralImage<int8_t, int32_t>(frame.constdata<int8_t>(), integralFrame.constdata<int32_t>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()));
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -1356,29 +1277,19 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<double>(channels)))
 			{
-				if (!validateBorderedIntegralImage<double, double>(frame.constdata<double>(), integralFrame.constdata<double>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateBorderedIntegralImage<double, double>(frame.constdata<double>(), integralFrame.constdata<double>(), frame.width(), frame.height(), channels, border, frame.paddingElements(), integralFrame.paddingElements()));
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -1389,12 +1300,11 @@ bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, cons
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1420,30 +1330,20 @@ bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, cons
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			if (!validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1453,28 +1353,28 @@ bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int widt
 	Log::info() << "Testing bordered squared integral image " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testBorderedIntegralImageSquared<uint8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<uint8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquared<uint8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<uint8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquared<uint8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<uint8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquared<uint8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<uint8_t, uint64_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBorderedIntegralImageSquared<int8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<int8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquared<int8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<int8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquared<int8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<int8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquared<int8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquared<int8_t, uint64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -1485,12 +1385,11 @@ bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int widt
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1516,30 +1415,20 @@ bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int widt
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			if (!validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1549,28 +1438,28 @@ bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width
 	Log::info() << "Testing bordered mirrored integral image " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testBorderedIntegralImageMirror<uint8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<uint8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageMirror<uint8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<uint8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageMirror<uint8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<uint8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageMirror<uint8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<uint8_t, uint64_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBorderedIntegralImageMirror<int8_t, int64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<int8_t, int64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageMirror<int8_t, int64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<int8_t, int64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageMirror<int8_t, int64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<int8_t, int64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageMirror<int8_t, int64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageMirror<int8_t, int64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -1581,12 +1470,11 @@ bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1612,30 +1500,20 @@ bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			if (!validateBorderedIntegralImageMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImageMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1645,28 +1523,28 @@ bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned in
 	Log::info() << "Testing bordered squared mirrored integral image " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<uint8_t, uint64_t, 4u>(width, height, testDuration);
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 1u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 1u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 2u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 2u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 3u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 3u>(width, height, testDuration);
 	Log::info() << " ";
-	allSucceeded = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 4u>(width, height, testDuration) && allSucceeded;
+	testResult = testBorderedIntegralImageSquaredMirror<int8_t, uint64_t, 4u>(width, height, testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, unsigned int tChannels>
@@ -1677,12 +1555,11 @@ bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned in
 
 	Log::info() << "... for " << tChannels << " channels with '" << TypeNamer::name<T>() << "' elements:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1708,30 +1585,20 @@ bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned in
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
 			{
 				ocean_assert(false && "Invalid padding elements!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			if (!validateBorderedIntegralImageSquaredMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBorderedIntegralImageSquaredMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements())));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: [" << performance.bestMseconds() << ", " << performance.averageMseconds() << ", " << performance.worstMseconds() << "] ms";
+	Log::info() << "Performance: " << performance;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testVarianceCalculation(const double testDuration)
@@ -1741,28 +1608,28 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 	Log::info() << "Testing calculation of variance:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testVarianceCalculation<uint8_t, uint32_t, uint64_t, float>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculation<uint8_t, uint32_t, uint64_t, float>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculation<int8_t, int32_t, uint64_t, float>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculation<int8_t, int32_t, uint64_t, float>(testDuration);
 	Log::info() << " ";
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testVarianceCalculation<uint8_t, uint32_t, uint64_t, double>(testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testVarianceCalculation<int8_t, int32_t, uint64_t, double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testVarianceCalculation<float, float, float, float>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculation<uint8_t, uint32_t, uint64_t, double>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculation<double, double, double, double>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculation<int8_t, int32_t, uint64_t, double>(testDuration);
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	testResult = testVarianceCalculation<float, float, float, float>(testDuration);
+	Log::info() << " ";
+	testResult = testVarianceCalculation<double, double, double, double>(testDuration);
+
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, typename TIntegralSquared, typename TVariance>
@@ -1772,10 +1639,10 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 
 	Log::info() << "for data types " <<  TypeNamer::name<T>() << ", " << TypeNamer::name<TIntegral>() << ", " << TypeNamer::name<TIntegralSquared>() << ", " << TypeNamer::name<TVariance>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	constexpr double threshold = std::is_same<T, float>::value ? 0.95 : 0.985;
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 1u, 1080u);
@@ -1791,6 +1658,8 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const unsigned int windowLeft = RandomI::random(randomGenerator, 0u, frameWidth - 1u);
 		const unsigned int windowTop = RandomI::random(randomGenerator, 0u, frameHeight - 1u);
 		const unsigned int windowWidth = RandomI::random(randomGenerator, 1u, frameWidth - windowLeft);
@@ -1828,24 +1697,16 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 
 		const double deviation = NumericD::sqrt(double(variance));
 
-		if (NumericD::isEqual(deviation, testDeviation, testDeviation * 0.01))
+		if (!NumericD::isEqual(deviation, testDeviation, testDeviation * 0.01))
 		{
-			++succeeded;
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(succeeded) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
-
-	constexpr double threshold = std::is_same<T, float>::value ? 0.95 : 0.985;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDuration)
@@ -1855,21 +1716,21 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 	Log::info() << "Testing calculation of variance for two regions:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	TestResult testResult;
 
-	allSucceeded = testVarianceCalculationTwoRegions<uint8_t, uint32_t, uint64_t, float>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculationTwoRegions<uint8_t, uint32_t, uint64_t, float>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculationTwoRegions<int8_t, int32_t, uint64_t, float>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculationTwoRegions<int8_t, int32_t, uint64_t, float>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculationTwoRegions<uint8_t, uint32_t, uint64_t, double>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculationTwoRegions<uint8_t, uint32_t, uint64_t, double>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculationTwoRegions<int8_t, int32_t, uint64_t, double>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculationTwoRegions<int8_t, int32_t, uint64_t, double>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculationTwoRegions<float, float, float, float>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculationTwoRegions<float, float, float, float>(testDuration);
 	Log::info() << " ";
-	allSucceeded = testVarianceCalculationTwoRegions<double, double, double, double>(testDuration) && allSucceeded;
+	testResult = testVarianceCalculationTwoRegions<double, double, double, double>(testDuration);
 
-	return allSucceeded;
+	return testResult.succeeded();
 }
 
 template <typename T, typename TIntegral, typename TIntegralSquared, typename TVariance>
@@ -1879,10 +1740,9 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 
 	Log::info() << "for data types " <<  TypeNamer::name<T>() << ", " << TypeNamer::name<TIntegral>() << ", " << TypeNamer::name<TIntegralSquared>() << ", " << TypeNamer::name<TVariance>() << ":";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
-
 	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.985, randomGenerator);
 
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 1u, 1080u);
@@ -1898,6 +1758,8 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const unsigned int windowALeft = RandomI::random(randomGenerator, 0u, frameWidth - 1u);
 		const unsigned int windowATop = RandomI::random(randomGenerator, 0u, frameHeight - 1u);
 		const unsigned int windowAWidth = RandomI::random(randomGenerator, 1u, frameWidth - windowALeft);
@@ -1960,22 +1822,16 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 
 		const double deviation = NumericD::sqrt(double(variance));
 
-		if (NumericD::isEqual(deviation, testDeviation, testDeviation * 0.01))
+		if (!NumericD::isEqual(deviation, testDeviation, testDeviation * 0.01))
 		{
-			++succeeded;
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(succeeded) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
-
-	return percent >= 0.985;
+	return validation.succeeded();
 }
 
 template <typename T, typename TIntegral>
