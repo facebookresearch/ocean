@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Orca</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationorca_build_imported>True</ocean_applicationorca_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_application_orca_reference_imported)' != 'True'" Project="application_orca_reference.props"/>
+    <Import Condition="'$(ocean_application_build_imported)' != 'True'" Project="..\..\application_build.props"/>
+    <Import Condition="'$(ocean_application_window_build_imported)' != 'True'" Project="..\..\application_window_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_mediadirectshow_use_imported)' != 'True'" Project="..\..\..\..\ocean\media\directshow\mediadirectshow_use.props" />
+    <Import Condition="'$(ocean_mediafoundation_use_imported)' != 'True'" Project="..\..\..\..\ocean\media\mediafoundation\mediamediafoundation_use.props" />
+    <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\ocean\media\wic\mediawic_use.props" />
+    <Import Condition="'$(ocean_renderingglescenegraph_use_imported)' != 'True'" Project="..\..\..\..\ocean\rendering\glescenegraph\renderingglescenegraph_use.props" />
+    <Import Condition="'$(ocean_renderingglobalillumination_use_imported)' != 'True'" Project="..\..\..\..\ocean\rendering\globalillumination\renderingglobalillumination_use.props" />
+    <Import Condition="'$(ocean_scenedescriptionsdlassimp_use_imported)' != 'True'" Project="..\..\..\..\ocean\scenedescription\sdl\assimp\scenedescriptionsdlassimp_use.props" />
+    <Import Condition="'$(ocean_scenedescriptionsdlobj_use_imported)' != 'True'" Project="..\..\..\..\ocean\scenedescription\sdl\obj\scenedescriptionsdlobj_use.props" />
+    <Import Condition="'$(ocean_scenedescriptionsdxx3d_use_imported)' != 'True'" Project="..\..\..\..\ocean\scenedescription\sdx\x3d\scenedescriptionsdxx3d_use.props" />
+    <Import Condition="'$(ocean_interactionjavascript_use_imported)' != 'True'" Project="..\..\..\..\ocean\interaction\javascript\interactionjavascript_use.props" />
+  </ImportGroup>
+
+  <ItemDefinitionGroup>
+	  <ResourceCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\orca\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\application\ocean\orca\win\$(OceanConfigFolder)\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\$(ProjectName)\win\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Demo Tracking SLAM Renderer</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemotrackingslamrenderer_build_imported>True</ocean_applicationdemotrackingslamrenderer_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_demotrackingslamrenderer_reference_imported)' != 'True'" Project="demotrackingslamrenderer_reference.props"/>
+    <Import Condition="'$(ocean_applicationdemotracking_build_imported)' != 'True'" Project="..\..\..\application_demo_tracking_build.props"/>
+    <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\..\..\application_console_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\cv_use.props" />
+    <Import Condition="'$(ocean_devices_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\devices\devices_use.props" />
+    <Import Condition="'$(ocean_devicesserialization_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\devices\serialization\devicesserialization_use.props" />
+    <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\media_use.props" />
+    <Import Condition="'$(ocean_mediamediafoundation_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\mediafoundation\mediamediafoundation_use.props" />
+    <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\wic\mediawic_use.props" />
+    <Import Condition="'$(ocean_platformwin_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\platform\win\platformwin_use.props" />
+	<Import Condition="'$(ocean_rendering_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\rendering\rendering_use.props" />
+	<Import Condition="'$(ocean_renderingglescenegraph_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\rendering\glescenegraph\renderingglescenegraph_use.props" />
+	<Import Condition="'$(ocean_scenedescription_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\scenedescription\scenedescription_use.props" />
+	<Import Condition="'$(ocean_scenedescriptionsdlassmip_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\scenedescription\sdl\assimp\scenedescriptionsdlassimp_use.props" />
+	<Import Condition="'$(ocean_scenedescriptionsdlobj_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\scenedescription\sdl\obj\scenedescriptionsdlobj_use.props" />
+	<Import Condition="'$(ocean_scenedescriptionsdxx3d_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\scenedescription\sdx\x3d\scenedescriptionsdxx3d_use.props" />
+    <Import Condition="'$(ocean_trackingslam_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\tracking\slam\trackingslam_use.props" />
+  </ImportGroup>
+</Project>

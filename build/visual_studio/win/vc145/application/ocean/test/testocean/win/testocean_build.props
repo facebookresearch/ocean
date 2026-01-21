@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Test Ocean</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationtestocean_build_imported>True</ocean_applicationtestocean_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_testocean_reference_imported)' != 'True'" Project="testocean_reference.props"/>
+    <Import Condition="'$(ocean_applicationtest_build_imported)' != 'True'" Project="..\..\application_test_build.props" />
+    <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\application_console_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\media\wic\mediawic_use.props" />
+    <Import Condition="'$(ocean_testbase_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testbase\testbase_use.props" />
+    <Import Condition="'$(ocean_testcv_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testcv\testcv_use.props" />
+    <Import Condition="'$(ocean_testcvadvanced_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testcv\testadvanced\testcvadvanced_use.props" />
+    <Import Condition="'$(ocean_testcvdetector_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testcv\testdetector\testcvdetector_use.props" />
+    <Import Condition="'$(ocean_testcvsegmentation_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testcv\testsegmentation\testcvsegmentation_use.props" />
+    <Import Condition="'$(ocean_testgeometry_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testgeometry\testgeometry_use.props" />
+    <Import Condition="'$(ocean_testmath_use_imported)' != 'True'" Project="..\..\..\..\..\ocean\test\testmath\testmath_use.props" />
+  </ImportGroup>
+
+  <PropertyGroup>
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\application\ocean\test\win\$(OceanConfigFolder)\</OutDir>
+  </PropertyGroup>
+</Project>

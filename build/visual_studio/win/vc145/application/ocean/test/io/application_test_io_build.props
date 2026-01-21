@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Test IO</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationtestio_build_imported>True</ocean_applicationtestio_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationtest_build_imported)' != 'True'" Project="..\application_test_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup>
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\application\ocean\test\io\win\$(OceanConfigFolder)\</OutDir>
+  </PropertyGroup>
+</Project>

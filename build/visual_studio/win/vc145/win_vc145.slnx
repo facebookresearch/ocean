@@ -1,0 +1,352 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Shared Debug" />
+    <BuildType Name="Shared Profile" />
+    <BuildType Name="Shared Release" />
+    <BuildType Name="Static Debug" />
+    <BuildType Name="Static Profile" />
+    <BuildType Name="Static Release" />
+    <Platform Name="Win32" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/application/" />
+  <Folder Name="/application/ocean/">
+    <Project Path="application/ocean/orca/win/orca.vcxproj" Id="1b4b2c55-ad29-41ed-874c-570b623600db" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/" />
+  <Folder Name="/application/ocean/demo/base/">
+    <Project Path="application/ocean/demo/base/console/win/demobaseconsole.vcxproj" Id="be4c024f-d144-4132-b616-48df2d779898" />
+    <Project Path="application/ocean/demo/base/sharedmemory/client/win/demobasesharedmemoryclient.vcxproj" Id="5730c85c-7a8f-4b42-926b-d11e61701555" />
+    <Project Path="application/ocean/demo/base/sharedmemory/server/win/demobasesharedmemoryserver.vcxproj" Id="6d55b0e9-3eb1-459f-a5b7-5b1b538372b0" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/">
+    <Project Path="application/ocean/demo/cv/adaptivethreshold/win/democvadaptivethreshold.vcxproj" Id="05a1c1e3-c3e0-4ce7-83e0-b9713e6322cd" />
+    <Project Path="application/ocean/demo/cv/canvasfontcreator/win/democvcanvasfontcreator.vcxproj" Id="c2cb68d4-901e-4841-9b99-29d60f0d5b22" />
+    <Project Path="application/ocean/demo/cv/framebinarizationotsu/win/democvbinarizationotsu.vcxproj" Id="b78e33a1-e675-4524-ae7f-5aa33188ca83" />
+    <Project Path="application/ocean/demo/cv/frameconverteryuv/win/democvframeconverteryuv.vcxproj" Id="4c8afeef-ac25-4b68-b20d-6a638ef025a5" />
+    <Project Path="application/ocean/demo/cv/framefiltergaussian/win/democvframefiltergaussian.vcxproj" Id="8e851420-4e15-4416-bba6-a3e5b3a3b15c" />
+    <Project Path="application/ocean/demo/cv/framefiltermedian/win/democvframefiltermedian.vcxproj" Id="32016263-5b5f-4979-b1b8-1dea9935060c" />
+    <Project Path="application/ocean/demo/cv/framefilterpatch/win/democvframefilterpatch.vcxproj" Id="02bfa812-da53-4331-92ff-15b7210e90f3" />
+    <Project Path="application/ocean/demo/cv/framefilterscharr/win/democvframefilterscharr.vcxproj" Id="5b7c5c83-117c-4731-b324-2b04f1d2328e" />
+    <Project Path="application/ocean/demo/cv/framefiltersobel/win/democvframefiltersobel.vcxproj" Id="ef072f44-d294-4be7-8186-70d3281d3554" />
+    <Project Path="application/ocean/demo/cv/frameinterpolatorbilinear/win/democvframeinterpolatorbilinear.vcxproj" Id="e526e2be-b04a-42a1-a0de-21f669d6976b" />
+    <Project Path="application/ocean/demo/cv/frameinterpolatortrilinear/win/democvframeinterpolatortrilinear.vcxproj" Id="077b99de-62cd-4a8b-bb88-bdf157d90656" />
+    <Project Path="application/ocean/demo/cv/histogram/wxw/democvhistogram.vcxproj" Id="43a4b6c5-0338-497e-8249-822969b8d1e8" />
+    <Project Path="application/ocean/demo/cv/histogramcoloradjustment/wxw/democvhistogramcoloradjustment.vcxproj" Id="8f907c75-ad60-4433-bd10-c548314e107a" />
+    <Project Path="application/ocean/demo/cv/imageanalyzer/win/democvimageanalyzer.vcxproj" Id="eb01aeef-0ba0-45f6-93c8-128e9fdf6235" />
+    <Project Path="application/ocean/demo/cv/liveundistort/win/democvliveundistort.vcxproj" Id="96c38d5a-a860-447f-b466-7b3c1f1e35bb" />
+    <Project Path="application/ocean/demo/cv/shrinker/win/democvshrinker.vcxproj" Id="e4c37cfb-0fd5-40f3-a2b5-af0038eb51cf" />
+    <Project Path="application/ocean/demo/cv/variance/win/democvvariance.vcxproj" Id="538a719e-7b75-471b-8f42-af89d1e83cbf" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/advanced/">
+    <Project Path="application/ocean/demo/cv/advanced/frameinterpolator/win/democvadvancedframeinterpolator.vcxproj" Id="4857b60f-fc31-40b4-9a4a-1a0c50005678" />
+    <Project Path="application/ocean/demo/cv/advanced/poissonblending/wxw/democvadvancedpoissonblending.vcxproj" Id="4dd2c065-3f05-4b3e-9a96-d3274f5e3f51" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/calibration/">
+    <Project Path="application/ocean/demo/cv/calibration/creator/win/creator.vcxproj" Id="7db46310-9fed-437c-84dd-4b7a734d89fe" />
+    <Project Path="application/ocean/demo/cv/calibration/detector/win/detector.vcxproj" Id="0092645e-9963-4075-9adc-5a5eadf220bc" />
+    <Project Path="application/ocean/demo/cv/calibration/offline/win/democvcalibrationoffline.vcxproj" Id="469c7396-c879-4cde-b16f-08e308e450f2" />
+    <Project Path="application/ocean/demo/cv/calibration/picturetaker/win/democvcalibrationpicturetaker.vcxproj" Id="f5a8e4c2-2d7f-4b1a-9c3e-8d6f5a4b2e1c" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/detector/">
+    <Project Path="application/ocean/demo/cv/detector/calibrationpattern/win/democvdetectorcalibrationpattern.vcxproj" Id="5b97cb42-11b2-45bf-a2ce-ea0f0bf35cfe" />
+    <Project Path="application/ocean/demo/cv/detector/fastcorner/win/democvdetectorfastcorner.vcxproj" Id="2ef41062-aa6f-4db8-9e44-f29bdbbdb81e" />
+    <Project Path="application/ocean/demo/cv/detector/fastcornerpyramid/win/democvdetectorfastcornerpyramid.vcxproj" Id="7b745de0-8c48-46ea-a0f9-37638508bdf7" />
+    <Project Path="application/ocean/demo/cv/detector/harriscorner/win/democvdetectorharriscorner.vcxproj" Id="b6f2474a-941a-497e-b21e-08c4459e789e" />
+    <Project Path="application/ocean/demo/cv/detector/harriscornerpyramid/win/democvdetectorharriscornerpyramid.vcxproj" Id="a2fa11c4-b1f3-4b91-a35f-7fbc9cd692d2" />
+    <Project Path="application/ocean/demo/cv/detector/harriscornervotes/win/democvdetectorharriscornervotes.vcxproj" Id="96266be5-7d42-40e3-b78c-114ad41166c5" />
+    <Project Path="application/ocean/demo/cv/detector/linedetector/win/democvdetectorlinedetector.vcxproj" Id="bd267aaf-300f-4134-a515-aa52eee96003" />
+    <Project Path="application/ocean/demo/cv/detector/linedetectorhough/win/democvdetectorlinedetectorhough.vcxproj" Id="b52c606b-91ac-4524-9534-42dcfdd14da0" />
+    <Project Path="application/ocean/demo/cv/detector/messengercode/win/democvdetectormessengercode.vcxproj" Id="0f24ecb3-360a-4224-b840-95d112d8e0da" />
+    <Project Path="application/ocean/demo/cv/detector/orbmatching/win/democvdetectororbmatching.vcxproj" Id="b37e0a63-e4c2-4daa-aabb-d2bdbacd4223" />
+    <Project Path="application/ocean/demo/cv/detector/shapedetector/win/democvdetectorshapedetector.vcxproj" Id="c385cd9a-4ad3-4e3e-939c-d17651ff593c" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/detector/barcodes/">
+    <Project Path="application/ocean/demo/cv/detector/barcodes/detector2d/win/democvdetectorbarcodesdetector2d.vcxproj" Id="71125f04-9131-4ae3-97e3-10e98d1b1eaf" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/detector/qrcodes/">
+    <Project Path="application/ocean/demo/cv/detector/qrcodes/detector2d/win/democvdetectorqrcodesdetector2d.vcxproj" Id="58b33040-45e6-4590-9235-5b98a1718816" />
+    <Project Path="application/ocean/demo/cv/detector/qrcodes/detector3d/win/democvdetectorqrcodesdetector3d.vcxproj" Id="962365f2-d67b-465e-8299-634e6f92beef">
+      <BuildType Solution="Shared Debug|*" Project="Static Debug" />
+      <BuildType Solution="Shared Profile|*" Project="Static Profile" />
+      <BuildType Solution="Shared Release|*" Project="Static Release" />
+      <Platform Project="x64" />
+      <Build Solution="*|Win32" Project="false" />
+      <Build Solution="Shared Debug|x64" Project="false" />
+      <Build Solution="Shared Release|x64" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/segmentation/">
+    <Project Path="application/ocean/demo/cv/segmentation/clustering/win/democvsegmentationclustering.vcxproj" Id="1463f810-7964-4820-9619-24b038f82ea9" />
+    <Project Path="application/ocean/demo/cv/segmentation/contourfinder/win/democvsegmentationcontourfinder.vcxproj" Id="44f9c160-a08b-45ae-ba3b-c929cb01b3cf" />
+    <Project Path="application/ocean/demo/cv/segmentation/contourtracker/win/democvsegmentationcontourtracker.vcxproj" Id="cf3e51f9-c90d-48b3-a2d2-a0d4e3216a0b" />
+    <Project Path="application/ocean/demo/cv/segmentation/mask2contour/win/democvsegmentationmask2contour.vcxproj" Id="61642758-445e-4935-94c0-efb99217b00a" />
+    <Project Path="application/ocean/demo/cv/segmentation/maskblur/win/democvsegmentationmaskblur.vcxproj" Id="817ccf9f-8c9a-408a-80cd-e5d6e8673b1d" />
+    <Project Path="application/ocean/demo/cv/segmentation/masktracker/win/democvsegmentationmasktracker.vcxproj" Id="763bc9e2-9f85-41e9-950a-1b3036971db1" />
+    <Project Path="application/ocean/demo/cv/segmentation/seedsegmentation/win/democvsegmentationseedsegmentation.vcxproj" Id="bfa36654-2fb1-4f32-b46d-18b80ea22d89" />
+    <Project Path="application/ocean/demo/cv/segmentation/triangulation/win/democvsegmentationtriangulation.vcxproj" Id="db517ad9-ce4d-4b00-9688-511c1a15d29a" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/cv/synthesis/">
+    <Project Path="application/ocean/demo/cv/synthesis/advancedframeconverter/win/democvsynthesisadvancedframeconverter.vcxproj" Id="a7e34a9f-1ffe-4194-96fd-e1ced5436edc" />
+    <Project Path="application/ocean/demo/cv/synthesis/imageinpainting/win/democvsynthesisimageinpainting.vcxproj" Id="2aa8b65b-7536-4b75-9b0a-9f9e33d3098e" />
+    <Project Path="application/ocean/demo/cv/synthesis/pointmotion/win/democvsynthesispointmotion.vcxproj" Id="0c91020c-8493-4f5c-82cb-5920730f31f0" />
+    <Project Path="application/ocean/demo/cv/synthesis/videoinpainting/win/democvsynthesisvideoinpainting.vcxproj" Id="5dacb9f4-f862-4e41-a97f-f44bec02b51f" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/geometry/">
+    <Project Path="application/ocean/demo/geometry/cameracalibration/win/demogeometrycameracalibration.vcxproj" Id="850f5a77-8674-46ba-b8fb-162767f58cfc" />
+    <Project Path="application/ocean/demo/geometry/vanishingprojection/win/demogeometryvanishingprojection.vcxproj" Id="96f2fca5-a68b-4d0a-8914-74e51e2d43f1" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/io/">
+    <Project Path="application/ocean/demo/io/cameracalibrationmanager/win/demoiocameracalibrationmanager.vcxproj" Id="8f12f553-62dc-4ba7-8db4-335dba9a3719" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/io/serialization/">
+    <Project Path="application/ocean/demo/io/serialization/inspector/win/demoioserializationinspector.vcxproj" Id="a7e8f5c3-9d2b-4f1a-8e6c-3b9a5d7c1e4f" />
+    <Project Path="application/ocean/demo/io/serialization/preview/win/demoioserializationpreview.vcxproj" Id="a3b8f7c2-9d4e-5a1b-8c6d-2e7f9a0b3c4d" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/math/">
+    <Project Path="application/ocean/demo/math/cameradistortion/win/demomathcameradistortion.vcxproj" Id="032151e8-d104-4d86-a0a7-f0e7df8f6db4" />
+    <Project Path="application/ocean/demo/math/cameraundistortion/win/demomathcameraundistortion.vcxproj" Id="a8462eec-5763-4c6f-9719-b308b90982d8" />
+    <Project Path="application/ocean/demo/math/discretecosinetransform/win/demomathdiscretecosinetransform.vcxproj" Id="372d6391-4e2c-4610-bf86-9fd96575f954" />
+    <Project Path="application/ocean/demo/math/lookup/win/demomathlookup.vcxproj" Id="42acbe8b-9266-4839-ac86-249ca96b629c" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/media/">
+    <Project Path="application/ocean/demo/media/imageconverter/win/demomediaimageconverter.vcxproj" Id="5a34ef07-c9a2-4bf0-ac4c-0e5d8bdcbbfd" />
+    <Project Path="application/ocean/demo/media/imageextractor/win/demomediaimageextractor.vcxproj" Id="fd7b28da-caea-460a-8869-8bdf3a75d567" />
+    <Project Path="application/ocean/demo/media/imagerecorder/win/demomediaimagerecorder.vcxproj" Id="46b328f1-710b-45c7-96fe-0f4a96f7b1ed" />
+    <Project Path="application/ocean/demo/media/imagesequencerecorder/win/demomediaimagesequencerecorder.vcxproj" Id="5b45dd11-9488-4089-8448-796bd53dff6f" />
+    <Project Path="application/ocean/demo/media/mediafoundation/win/demomediamediafoundation.vcxproj" Id="416f8eb2-551a-4ddd-a25a-7e67e9d4ce1d" />
+    <Project Path="application/ocean/demo/media/moviepreview/wxw/demomediamoviepreview.vcxproj" Id="88d8a6dd-a7a4-4f2c-ada3-f5a27f5108c4" />
+    <Project Path="application/ocean/demo/media/movierecorder/win/demomediamovierecorder.vcxproj" Id="65447c4a-994e-4a65-8af6-cf2293a8dddb" />
+    <Project Path="application/ocean/demo/media/videopreview/win/demomediavideopreview.vcxproj" Id="21c4af8b-68f2-4257-84c4-2975ae52549a" />
+    <Project Path="application/ocean/demo/media/videopreview/wxw/demomediavideopreviewwxw.vcxproj" Id="8eb32a30-b6b4-4d50-8c95-b787bc79f291" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/misc/">
+    <Project Path="application/ocean/demo/misc/maintenanceviewer/win/demomiscmaintenanceviewer.vcxproj" Id="9119dab5-f147-45a7-a275-a689ed4a19a3" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/network/">
+    <Project Path="application/ocean/demo/network/maintenancereceiver/win/demonetworkmaintenancereceiver.vcxproj" Id="ada4c605-52ff-4845-a2f2-46812dde9a2f" />
+    <Project Path="application/ocean/demo/network/streamingclient/win/demonetworkstreamingclient.vcxproj" Id="9c215d0b-e30b-4c96-8ffd-bd3512462e3d" />
+    <Project Path="application/ocean/demo/network/streamingserver/win/demonetworkstreamingserver.vcxproj" Id="467531c9-813d-443f-8046-29bc658c9928" />
+    <Project Path="application/ocean/demo/network/tcpclient/win/demonetworktcpclient.vcxproj" Id="b1ab021a-ed76-47ef-9cd1-2cbe94ec7ede" />
+    <Project Path="application/ocean/demo/network/tcpserver/win/demonetworktcpserver.vcxproj" Id="ea7dcdfe-0d37-46c5-9967-532733277801" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/platform/">
+    <Project Path="application/ocean/demo/platform/windows/win/demoplatformwindows.vcxproj" Id="26505f44-cf99-4bf3-bf1f-bee19a26f861" />
+    <Project Path="application/ocean/demo/platform/wxwidgets/wxw/demoplatformwxwidgets.vcxproj" Id="b2225f76-3aa7-4eca-ae4e-e12a649f7e0b" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/rendering/">
+    <Project Path="application/ocean/demo/rendering/opengl/win/demorenderingopenglwin.vcxproj" Id="6ab8360f-ce7a-4c32-9160-7e0286c671b9" />
+    <Project Path="application/ocean/demo/rendering/opengl/wxw/demorenderingopenglwxw.vcxproj" Id="0962061e-2a24-4fa9-971c-faf035c61da1" />
+    <Project Path="application/ocean/demo/rendering/opengles/win/demorenderingopengles.vcxproj" Id="9978a529-cc35-45e3-bbae-0f19597cc92d" />
+    <Project Path="application/ocean/demo/rendering/openglstereo/win/demorenderingopenglstereo.vcxproj" Id="6a91fc3c-f930-4bc0-aae6-87d0a6fc2cf9" />
+    <Project Path="application/ocean/demo/rendering/renderer/win/demorenderingrendererwin.vcxproj" Id="c0fe5d4a-d982-4342-bd66-48ab11eb87d2" />
+    <Project Path="application/ocean/demo/rendering/renderer/wxw/demorenderingrendererwxw.vcxproj" Id="2fe7a996-2203-4f30-b753-7407996cf61f" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/tracking/">
+    <Project Path="application/ocean/demo/tracking/featuretracker/win/demotrackingfeaturetracker.vcxproj" Id="f7c79090-83db-49f9-b743-825891c1b11a" />
+    <Project Path="application/ocean/demo/tracking/homographyimagealigner/win/demotrackinghomographyimagealigner.vcxproj" Id="e06ae8d2-2a28-4335-8cd3-7c3bcaca9424" />
+    <Project Path="application/ocean/demo/tracking/homographytracker/win/demotrackinghomographytracker.vcxproj" Id="b9c8fbb3-35ac-42f8-b078-303b51553671" />
+    <Project Path="application/ocean/demo/tracking/oculustagtracker/win/demotrackingoculustagtracker.vcxproj" Id="1a41a430-5ad0-4ecf-970a-852b5eac3b3a" />
+    <Project Path="application/ocean/demo/tracking/pointtracker/win/demotrackingpointtracker.vcxproj" Id="590ec932-20f3-47f7-a713-a4813a35fe42" />
+    <Project Path="application/ocean/demo/tracking/rmvtracker/win/demotrackingrmvtracker.vcxproj" Id="8d3a2f4f-95e9-4416-9135-37d7447ffbd9" />
+    <Project Path="application/ocean/demo/tracking/similaritytracker/win/demotrackingsimilaritytracker.vcxproj" Id="abf23622-e8a1-4433-9bec-f73d42d9bc94" />
+    <Project Path="application/ocean/demo/tracking/sphericalenviornment/win/demotrackingsphericalenvironment.vcxproj" Id="6f777b90-2b6e-4788-8950-f885045ad0f7" />
+    <Project Path="application/ocean/demo/tracking/stereomatcher/win/demotrackingstereomatcher.vcxproj" Id="e28f43d6-49e4-4364-a5b6-9d9d18cc8ced" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/tracking/mapbuilding/">
+    <Project Path="application/ocean/demo/tracking/mapbuilding/multiviewmapcreator/win/demotrackingmultiviewmapcreator.vcxproj" Id="413c538a-95f9-43e3-bc22-615d3e1555bb">
+      <BuildType Solution="Shared Debug|*" Project="Static Debug" />
+      <BuildType Solution="Shared Profile|Win32" Project="Static Profile" />
+      <BuildType Solution="Shared Profile|x64" Project="Static Release" />
+      <BuildType Solution="Shared Release|*" Project="Static Release" />
+      <Platform Project="x64" />
+      <Build Solution="*|Win32" Project="false" />
+      <Build Solution="Shared Debug|x64" Project="false" />
+      <Build Solution="Shared Profile|x64" Project="false" />
+      <Build Solution="Shared Release|x64" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/application/ocean/demo/tracking/maptexturing/">
+    <Project Path="application/ocean/demo/tracking/maptexturing/texturegenerator/win/demotrackingtexturegenerator.vcxproj" Id="40e1a810-61f0-4ec7-a509-d9cfe5dc03e4">
+      <BuildType Solution="Shared Debug|*" Project="Static Debug" />
+      <BuildType Solution="Shared Profile|*" Project="Static Profile" />
+      <BuildType Solution="Shared Release|*" Project="Static Release" />
+      <Platform Project="x64" />
+      <Build Solution="*|Win32" Project="false" />
+      <Build Solution="Shared Debug|x64" Project="false" />
+      <Build Solution="Shared Profile|x64" Project="false" />
+      <Build Solution="Shared Release|x64" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/application/ocean/demo/tracking/offline/">
+    <Project Path="application/ocean/demo/tracking/offline/structurefrommotion/win/demotrackingofflinestructurefrommotion.vcxproj" Id="a5681bbf-ed04-45da-84de-a306845a0e57" />
+  </Folder>
+  <Folder Name="/application/ocean/demo/tracking/slam/">
+    <Project Path="application/ocean/demo/tracking/slam/regression/win/demotrackingslamregression.vcxproj" Id="a3b7e8d4-6f12-4c89-9d58-e2b4a7c9f3e1" />
+    <Project Path="application/ocean/demo/tracking/slam/renderer/win/demotrackingslamrenderer.vcxproj" Id="08bcc07f-b024-4d11-98fc-4f95e5b10a87" />
+    <Project Path="application/ocean/demo/tracking/slam/replay/win/demotrackingslamreplay.vcxproj" Id="0f35977f-42d2-4272-9c73-a8da84ad2559" />
+    <Project Path="application/ocean/demo/tracking/slam/slamtracker/win/demotrackingslamtracker.vcxproj" Id="78a91bc7-b611-4354-ba83-b38d25354db3" />
+    <Project Path="application/ocean/demo/tracking/slam/videoprocessor/win/demotrackingslamvideoprocessor.vcxproj" Id="f7f40277-e2a4-49f8-8dbd-f3b33840477d" />
+  </Folder>
+  <Folder Name="/application/ocean/test/">
+    <Project Path="application/ocean/test/testocean/win/testocean.vcxproj" Id="7cc2f74f-e7dd-466d-994a-e92bb8134261" />
+  </Folder>
+  <Folder Name="/application/ocean/test/base/">
+    <Project Path="application/ocean/test/base/testbase/win/testbase.vcxproj" Id="f5a19df7-54c6-456a-bbce-3042739066d7" />
+  </Folder>
+  <Folder Name="/application/ocean/test/cv/">
+    <Project Path="application/ocean/test/cv/detector/fastcomparison/win/testcvdetectorfastcomparison.vcxproj" Id="1ec7e81f-2f39-453c-b256-4e49214d391e" />
+    <Project Path="application/ocean/test/cv/detector/orbpatterngenerator/win/testcvdetectororbpatterngenerator.vcxproj" Id="c572282d-e6d3-483a-b553-9f1bb7b81a62" />
+    <Project Path="application/ocean/test/cv/testcv/testadvanced/win/testcvadvanced.vcxproj" Id="2c31a871-404e-4a20-93cb-c8a981756529" />
+    <Project Path="application/ocean/test/cv/testcv/testdetector/testqrcodes/win/testcvdetectorqrcodes.vcxproj" Id="53f9d925-d145-42a2-8a15-2dd81b8872a0" />
+    <Project Path="application/ocean/test/cv/testcv/testdetector/win/testcvdetector.vcxproj" Id="69fc2da8-630b-4d1c-ab9e-2889ca446d6c" />
+    <Project Path="application/ocean/test/cv/testcv/testsegmentation/win/testcvsegmentation.vcxproj" Id="40e1907e-1059-44b1-a20d-18d9c0aab6d4" />
+    <Project Path="application/ocean/test/cv/testcv/testsynthesis/win/testcvsynthesis.vcxproj" Id="2606f5ce-044e-4e5b-9097-41d128efe6bf" />
+    <Project Path="application/ocean/test/cv/testcv/win/testcv.vcxproj" Id="e878a856-57fc-40cf-af59-878c258b387e" />
+  </Folder>
+  <Folder Name="/application/ocean/test/devices/">
+    <Project Path="application/ocean/test/devices/testdevices/win/testdevices.vcxproj" Id="9dbbcc49-5ca5-4d66-9dfa-26a26016d526" />
+  </Folder>
+  <Folder Name="/application/ocean/test/geometry/">
+    <Project Path="application/ocean/test/geometry/testgeometry/win/testgeometry.vcxproj" Id="e6f222f1-8b97-4096-bf50-b5bda382e17c" />
+  </Folder>
+  <Folder Name="/application/ocean/test/interaction/">
+    <Project Path="application/ocean/test/interaction/javascript/win/testinteractionjavascript.vcxproj" Id="df4dbfd0-b498-4f9a-b7a5-447de7eb8f58" />
+  </Folder>
+  <Folder Name="/application/ocean/test/io/">
+    <Project Path="application/ocean/test/io/testio/testserialization/win/testioserialization.vcxproj" Id="7f8b4d1e-3a9c-4e5f-b2d6-8c1a5e3f7b9d" />
+    <Project Path="application/ocean/test/io/testio/win/testio.vcxproj" Id="9b9100cd-9c49-4b72-a296-3d9d1158bb10" />
+  </Folder>
+  <Folder Name="/application/ocean/test/math/">
+    <Project Path="application/ocean/test/math/testmath/win/testmath.vcxproj" Id="0540057e-2a94-4e71-9517-b11f0c9b6db3" />
+  </Folder>
+  <Folder Name="/application/ocean/test/media/">
+    <Project Path="application/ocean/test/media/testmedia/win/testmedia.vcxproj" Id="9b7413eb-99fb-4e8f-aa20-eae8b73386ce" />
+  </Folder>
+  <Folder Name="/application/ocean/test/network/">
+    <Project Path="application/ocean/test/network/testnetwork/win/testnetwork.vcxproj" Id="217d65fd-3128-46b9-95b5-1057952d4eb3" />
+  </Folder>
+  <Folder Name="/application/ocean/test/rendering/">
+    <Project Path="application/ocean/test/rendering/testrendering/win/testrendering.vcxproj" Id="bfad9cfb-d8dd-464d-8c46-26a09ea38718" />
+  </Folder>
+  <Folder Name="/application/ocean/test/tracking/">
+    <Project Path="application/ocean/test/tracking/testtracking/testoculustags/win/testtrackingoculustags.vcxproj" Id="375219e3-c56f-4231-837b-23aab686cf45" />
+    <Project Path="application/ocean/test/tracking/testtracking/win/testtracking.vcxproj" Id="8ae20928-d4e2-4aba-aaa8-47c27c88b42c" />
+  </Folder>
+  <Folder Name="/ocean/">
+    <Project Path="ocean/base/base.vcxproj" Id="7ef9186b-5f2c-47b0-8077-5d60af030b68" />
+    <Project Path="ocean/cv/advanced/cvadvanced.vcxproj" Id="f947fe17-8428-4ff0-b3b9-cfa404e107b2" />
+    <Project Path="ocean/cv/calibration/cvcalibration.vcxproj" Id="9b549dcc-743a-4019-b2d7-e9ffc53fd2bf" />
+    <Project Path="ocean/cv/cv.vcxproj" Id="62b07b61-578f-4e96-ab3b-d725d99ba918" />
+    <Project Path="ocean/cv/depth/cvdepth.vcxproj" Id="47116fe7-0473-4f2a-bf5b-5901fe2ac8d3" />
+    <Project Path="ocean/cv/detector/barcodes/cvdetectorbarcodes.vcxproj" Id="2c04d82c-9e9d-4611-a967-db4215d0ada9" />
+    <Project Path="ocean/cv/detector/bullseyes/cvdetectorbullseyes.vcxproj" Id="6f51d017-c56a-4f42-b53c-7d8b334edf8f" />
+    <Project Path="ocean/cv/detector/cvdetector.vcxproj" Id="33ce8f7a-e671-4580-acba-ad70e4fda794" />
+    <Project Path="ocean/cv/detector/qrcodes/cvdetectorqrcodes.vcxproj" Id="74a8320e-a29c-4eb2-9b5d-f7dd725d9611" />
+    <Project Path="ocean/cv/fonts/cvfonts.vcxproj" Id="9b018301-359f-4cc4-ba09-21fca66c7dea" />
+    <Project Path="ocean/cv/segmentation/cvsegmentation.vcxproj" Id="96d49a55-7124-40f6-96df-8c7cc8b0d696" />
+    <Project Path="ocean/cv/synthesis/cvsynthesis.vcxproj" Id="fee88255-3228-41fd-b806-48312fc618e0" />
+    <Project Path="ocean/devices/devices.vcxproj" Id="e1c79179-f998-45bf-b7d8-ed8d5e4e29e6" />
+    <Project Path="ocean/devices/mapbuilding/devicesmapbuilding.vcxproj" Id="4e6e1075-0c1f-4791-9c5d-f66d04725ab0">
+      <BuildType Solution="Shared Debug|*" Project="Static Debug" />
+      <BuildType Solution="Shared Profile|*" Project="Static Profile" />
+      <BuildType Solution="Shared Release|*" Project="Static Release" />
+      <Platform Solution="Shared Debug|Win32" Project="x64" />
+      <Platform Solution="Shared Profile|Win32" Project="x64" />
+      <Platform Solution="Shared Release|Win32" Project="x64" />
+      <Build Solution="Shared Debug|*" Project="false" />
+      <Build Solution="Shared Profile|*" Project="false" />
+      <Build Solution="Shared Release|*" Project="false" />
+    </Project>
+    <Project Path="ocean/devices/pattern/devicespattern.vcxproj" Id="aa24bc17-88e7-4dac-91d7-4fc88bbdd559" />
+    <Project Path="ocean/devices/rmv/devicesrmv.vcxproj" Id="8e54f1cb-8fd3-48b7-a574-a77b185ca16a" />
+    <Project Path="ocean/devices/serialization/devicesserialization.vcxproj" Id="ba5024e4-8d9a-4f61-b98d-2f333170dd0a" />
+    <Project Path="ocean/devices/slam/devicesslam.vcxproj" Id="b786feb2-5bae-400d-99b8-44be94da21d0" />
+    <Project Path="ocean/geometry/geometry.vcxproj" Id="4aca5022-ea21-4578-835a-9f96d3123a12" />
+    <Project Path="ocean/interaction/experiences/interactionexperiences.vcxproj" Id="7b1484db-bddf-4d6b-9e8b-650ad4aa8a88">
+      <BuildType Solution="Shared Profile|*" Project="Shared Release" />
+      <BuildType Solution="Static Profile|*" Project="Static Release" />
+    </Project>
+    <Project Path="ocean/interaction/interaction.vcxproj" Id="d2f93ca9-fe4b-4912-86c0-5a3155c523c8" />
+    <Project Path="ocean/interaction/javascript/interactionjavascript.vcxproj" Id="c26c6def-7c17-499a-9e0a-d91e710f0673" />
+    <Project Path="ocean/io/image/ioimage.vcxproj" Id="64ac6979-b5a6-4921-a61c-c4f688c48140" />
+    <Project Path="ocean/io/io.vcxproj" Id="e1c7e10f-0ffe-470f-b85c-fbe427fc5371" />
+    <Project Path="ocean/io/serialization/ioserialization.vcxproj" Id="ca10cc95-ddb8-406a-aa0f-ae5e9315ea50" />
+    <Project Path="ocean/math/math.vcxproj" Id="fea50a96-f160-4c9d-8313-7479649d0b2d" />
+    <Project Path="ocean/media/directshow/mediadirectshow.vcxproj" Id="9b73edf7-0dc6-4217-9384-cd5186d161b8" />
+    <Project Path="ocean/media/media.vcxproj" Id="29cd7fa7-e204-44d4-8ad4-f61dd7a89984" />
+    <Project Path="ocean/media/mediafoundation/mediamediafoundation.vcxproj" Id="d8b35dd0-9c35-4bf0-9940-afe2e1e213d6" />
+    <Project Path="ocean/media/openimagelibraries/mediaopenimagelibraries.vcxproj" Id="087bd7e5-e90f-4444-8c7c-85c4ed1b6453" />
+    <Project Path="ocean/media/special/mediaspecial.vcxproj" Id="282abd5a-4dbf-4c0c-b776-8b24626660f3" />
+    <Project Path="ocean/media/usb/mediausb.vcxproj" Id="14bef0a5-c737-4527-9e8b-445291c5747d" />
+    <Project Path="ocean/media/wic/mediawic.vcxproj" Id="29326726-1ff7-40d3-b2f2-c2717ac43465" />
+    <Project Path="ocean/network/network.vcxproj" Id="763c4baa-b761-4120-9221-838c3f351789" />
+    <Project Path="ocean/platform/gl/platformgl.vcxproj" Id="3cbf5a09-14ae-4264-af18-d827e66f516f" />
+    <Project Path="ocean/platform/gl/win/platformglwin.vcxproj" Id="3db4079d-f7a6-4b99-a2f3-acf10500b41b" />
+    <Project Path="ocean/platform/gl/wxwidgets/platformglwxwidgets.vcxproj" Id="1074b280-0494-474b-8c93-f274e580531e" />
+    <Project Path="ocean/platform/platform.vcxproj" Id="eb7ed2e2-edaa-4940-a5b0-8ed317de9b77" />
+    <Project Path="ocean/platform/win/platformwin.vcxproj" Id="1e355c9e-f8e4-496a-8ef8-ef20e2945e76" />
+    <Project Path="ocean/platform/wxwidgets/platformwxwidgets.vcxproj" Id="c7b645fb-94d6-4e1b-9a65-ed278f5bb029" />
+    <Project Path="ocean/rendering/glescenegraph/renderingglescenegraph.vcxproj" Id="a965080b-b004-4442-af02-4a1faac2e066" />
+    <Project Path="ocean/rendering/globalillumination/renderingglobalillumination.vcxproj" Id="c998b23e-9607-4f31-84c4-779b11d3b43b" />
+    <Project Path="ocean/rendering/rendering.vcxproj" Id="f9b20d15-ebac-41dc-a373-bfd33591bee9" />
+    <Project Path="ocean/scenedescription/scenedescription.vcxproj" Id="92284082-1289-4f24-91d4-492c86fda9f5" />
+    <Project Path="ocean/scenedescription/sdl/assimp/scenedescriptionsdlassimp.vcxproj" Id="3ab53692-13a5-4d02-a6e7-7f4d84ba6a35" />
+    <Project Path="ocean/scenedescription/sdl/obj/scenedescriptionsdlobj.vcxproj" Id="251868ad-8f88-4f09-a338-d7d2b52fc6ff" />
+    <Project Path="ocean/scenedescription/sdx/x3d/scenedescriptionsdxx3d.vcxproj" Id="a9a3f084-e0eb-443e-9f1d-ff918f52fb87" />
+    <Project Path="ocean/system/system.vcxproj" Id="fe2fc596-5431-43a2-b02d-c5bc14bbdb4c" />
+    <Project Path="ocean/system/usb/systemusb.vcxproj" Id="44e6df7d-609f-4dcd-9307-b26ec23193ab" />
+    <Project Path="ocean/system/usb/video/systemusbvideo.vcxproj" Id="3739521c-ae4a-4ba5-8f51-488fc8446dd6" />
+    <Project Path="ocean/tracking/mapbuilding/trackingmapbuilding.vcxproj" Id="dd5baa87-91c3-4426-a2e1-83301b41de68">
+      <BuildType Solution="Shared Debug|*" Project="Static Debug" />
+      <BuildType Solution="Shared Profile|*" Project="Static Profile" />
+      <BuildType Solution="Shared Release|*" Project="Static Release" />
+      <Platform Solution="Shared Debug|Win32" Project="x64" />
+      <Platform Solution="Shared Profile|Win32" Project="x64" />
+      <Platform Solution="Shared Release|Win32" Project="x64" />
+      <Build Solution="Shared Debug|*" Project="false" />
+      <Build Solution="Shared Profile|*" Project="false" />
+      <Build Solution="Shared Release|*" Project="false" />
+    </Project>
+    <Project Path="ocean/tracking/maptexturing/trackingmaptexturing.vcxproj" Id="c2247af4-d67f-4327-9b22-23d6551dc455">
+      <BuildType Solution="Shared Debug|*" Project="Static Debug" />
+      <BuildType Solution="Shared Profile|*" Project="Static Profile" />
+      <BuildType Solution="Shared Release|*" Project="Static Release" />
+      <Platform Solution="Shared Debug|Win32" Project="x64" />
+      <Platform Solution="Shared Profile|Win32" Project="x64" />
+      <Platform Solution="Shared Release|Win32" Project="x64" />
+      <Build Solution="Shared Debug|*" Project="false" />
+      <Build Solution="Shared Profile|*" Project="false" />
+      <Build Solution="Shared Release|*" Project="false" />
+    </Project>
+    <Project Path="ocean/tracking/oculustags/trackingoculustags.vcxproj" Id="6cac3141-dae3-4497-ab88-644665bb384d" />
+    <Project Path="ocean/tracking/offline/trackingoffline.vcxproj" Id="bcbd11fd-fd2d-483d-9dbf-c2c642dd599d" />
+    <Project Path="ocean/tracking/orb/trackingorb.vcxproj" Id="04a59be1-0dec-4f04-a63f-466d9537a5b3" />
+    <Project Path="ocean/tracking/pattern/trackingpattern.vcxproj" Id="0bac5c58-49fd-498c-aeb6-bd411fd3cff1" />
+    <Project Path="ocean/tracking/point/trackingpoint.vcxproj" Id="bf22c6cf-f370-4909-860a-def5d0929e0b" />
+    <Project Path="ocean/tracking/qrcodes/trackingqrcodes.vcxproj" Id="1d6cb9f8-d8d2-4769-9fa0-eb8c8e087ba4" />
+    <Project Path="ocean/tracking/rmv/trackingrmv.vcxproj" Id="984db3c8-c25e-4099-878f-45949b1f943f" />
+    <Project Path="ocean/tracking/slam/trackingslam.vcxproj" Id="afaad5b3-3687-40ed-a174-fe6b4b85b7c9" />
+    <Project Path="ocean/tracking/tracking.vcxproj" Id="89fc13f2-2b3f-4d70-81bb-a1f29c80476c" />
+  </Folder>
+  <Folder Name="/ocean/test/">
+    <Project Path="ocean/test/test.vcxproj" Id="76633f53-cd8d-47ec-b1ba-32c82c740aa8" />
+    <Project Path="ocean/test/testbase/testbase.vcxproj" Id="76ead0d9-a6e8-478c-acec-1f3ea77c2f89" />
+    <Project Path="ocean/test/testcv/testadvanced/testcvadvanced.vcxproj" Id="95d2eabb-1475-4bd5-af2c-af080bd87076" />
+    <Project Path="ocean/test/testcv/testcv.vcxproj" Id="24453264-0ada-48c9-945e-a4c486d85663" />
+    <Project Path="ocean/test/testcv/testdetector/testcvdetector.vcxproj" Id="b4d7cb90-7195-4284-b16e-8d5b3737dbad" />
+    <Project Path="ocean/test/testcv/testdetector/testqrcodes/testcvdetectorqrcodes.vcxproj" Id="193389f8-6ebc-4740-b27d-11a291225219" />
+    <Project Path="ocean/test/testcv/testsegmentation/testcvsegmentation.vcxproj" Id="ec1f209a-231b-41d1-b476-a3a562c19ef9" />
+    <Project Path="ocean/test/testcv/testsynthesis/testcvsynthesis.vcxproj" Id="c7e22f98-7f94-40ee-96ca-3fd06b21daee" />
+    <Project Path="ocean/test/testdevices/testdevices.vcxproj" Id="196c6e0c-d918-4ea3-9fe8-8dd57203eef5" />
+    <Project Path="ocean/test/testgeometry/testgeometry.vcxproj" Id="af5c4c7a-5971-490a-a61c-a7111f5b03e0" />
+    <Project Path="ocean/test/testio/testio.vcxproj" Id="bdb1850f-dd21-4fa6-b936-54cb2345ee5a" />
+    <Project Path="ocean/test/testio/testserialization/testioserialization.vcxproj" Id="8e3f2a5d-7b9c-4d6e-a8f1-5c4b3e9d2f1a" />
+    <Project Path="ocean/test/testmath/testmath.vcxproj" Id="cea4edb7-efb5-4cb0-ab46-18ba72f2d088" />
+    <Project Path="ocean/test/testmedia/testmedia.vcxproj" Id="2cb11daf-6ea1-4476-96b0-61728be80d60" />
+    <Project Path="ocean/test/testnetwork/testnetwork.vcxproj" Id="5be5f5aa-cc07-42de-9155-847523b585e0" />
+    <Project Path="ocean/test/testrendering/testrendering.vcxproj" Id="75051bcb-637e-4eb3-bf61-8644ae8dd6e9" />
+    <Project Path="ocean/test/testtracking/testoculustags/testtrackingoculustags.vcxproj" Id="59a47892-9d7c-46d4-9c8a-67aa37b2f304" />
+    <Project Path="ocean/test/testtracking/testtracking.vcxproj" Id="8b13bbed-604f-44ea-91cc-a64bbc5f802d" />
+  </Folder>
+</Solution>
