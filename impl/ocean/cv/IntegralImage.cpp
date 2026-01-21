@@ -7,6 +7,7 @@
 
 #include "ocean/cv/IntegralImage.h"
 #include "ocean/cv/NEON.h"
+#include "ocean/cv/SSE.h"
 
 namespace Ocean
 {
@@ -151,6 +152,135 @@ Frame IntegralImage::Comfort::createBorderedImage(const Frame& frame, const unsi
 
 	return linedIntegralFrame;
 }
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+void IntegralImage::createLinedImage1Channel8BitSSE(const uint8_t* source, uint32_t* integral, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int integralPaddingElements)
+{
+	ocean_assert(source != nullptr);
+	ocean_assert(integral != nullptr);
+	ocean_assert(width >= 8u && height != 0u);
+	ocean_assert(width * height <= 16777216u);
+
+	/*
+	 * This is the resulting lined integral image:
+	 *  ------------
+	 * |000000000000|
+	 * |0|----------|
+	 * |0|          |
+	 * |0| Integral |
+	 * |0|          |
+	 * |------------
+	 *
+	 * SSE-based implementation with scalar running sum optimization:
+	 *
+	 * For each block of 4 pixels we compute:
+	 *
+	 *   previous row:    T0 T1 T2 T3
+	 *   source row:      C0 C1 C2 C3
+	 *   running sum:     R
+	 *
+	 *   X0 = T0 + R + C0
+	 *   X1 = T1 + R + C0 + C1
+	 *   X2 = T2 + R + C0 + C1 + C2
+	 *   X3 = T3 + R + C0 + C1 + C2 + C3
+	 *
+	 * Which can be written as:
+	 *
+	 *   [X0 X1 X2 X3] = [T0 T1 T2 T3] + [R R R R] + prefixSum([C0 C1 C2 C3])
+	 *
+	 * Where prefixSum is computed via parallel prefix pattern:
+	 *   step 1: [C0, C1, C2, C3] + [0, C0, C1, C2] = [C0, C0+C1, C1+C2, C2+C3]
+	 *   step 2: [C0, C0+C1, C1+C2, C2+C3] + [0, 0, C0, C0+C1] = [C0, C0+C1, C0+C1+C2, C0+C1+C2+C3]
+	 */
+
+	constexpr unsigned int blockSize = 8u;
+
+	const __m128i constant_zero_u_128i = _mm_setzero_si128();
+
+	// entire top line will be set to zero
+	memset(integral, 0x00, sizeof(uint32_t) * (width + 1u));
+
+	uint32_t* integralLastRow = integral;
+
+	integral += width + 1u + integralPaddingElements;
+
+	for (unsigned int y = 0u; y < height; ++y)
+	{
+		*integral++ = 0u;
+		integralLastRow++;
+
+		// keep running sum as scalar - avoids memory round-trip
+		uint32_t rowSum = 0u;
+
+		unsigned int x = 0u;
+
+		// main loop: process blockSize pixels at a time
+		while (x + blockSize <= width)
+		{
+			// load 8 bytes and zero-extend to 16-bit values
+			const __m128i source_8x8 = _mm_loadl_epi64((const __m128i*)(source));
+			const __m128i source_16x8 = _mm_cvtepu8_epi16(source_8x8);
+
+			// load previous row values (8 x 32-bit)
+			const __m128i lastRow_a_32x4 = _mm_loadu_si128((const __m128i*)(integralLastRow + 0));
+			const __m128i lastRow_b_32x4 = _mm_loadu_si128((const __m128i*)(integralLastRow + 4));
+
+			// widen source to 32-bit (first 4 elements)
+			__m128i source_a_32x4 = _mm_cvtepu16_epi32(source_16x8);
+			// widen source to 32-bit (second 4 elements)
+			__m128i source_b_32x4 = _mm_cvtepu16_epi32(_mm_srli_si128(source_16x8, 8));
+
+			// compute prefix sums for first 4 elements (parallel prefix pattern)
+			// step 1: [C0, C1, C2, C3] + [0, C0, C1, C2]
+			__m128i prefix_a_32x4 = _mm_add_epi32(source_a_32x4, _mm_alignr_epi8(source_a_32x4, constant_zero_u_128i, 12));
+			// step 2: + [0, 0, C0, C0+C1]
+			prefix_a_32x4 = _mm_add_epi32(prefix_a_32x4, _mm_alignr_epi8(prefix_a_32x4, constant_zero_u_128i, 8));
+
+			// broadcast rowSum and add previous row
+			__m128i rowSum_32x4 = _mm_set1_epi32(int(rowSum));
+			__m128i result_a_32x4 = _mm_add_epi32(prefix_a_32x4, _mm_add_epi32(lastRow_a_32x4, rowSum_32x4));
+
+			// update rowSum with sum of first 4 pixels (extract element 3)
+			rowSum += static_cast<uint32_t>(_mm_extract_epi32(prefix_a_32x4, 3));
+
+			// compute prefix sums for second 4 elements
+			__m128i prefix_b_32x4 = _mm_add_epi32(source_b_32x4, _mm_alignr_epi8(source_b_32x4, constant_zero_u_128i, 12));
+			prefix_b_32x4 = _mm_add_epi32(prefix_b_32x4, _mm_alignr_epi8(prefix_b_32x4, constant_zero_u_128i, 8));
+
+			// broadcast updated rowSum and add previous row
+			rowSum_32x4 = _mm_set1_epi32(int(rowSum));
+			__m128i result_b_32x4 = _mm_add_epi32(prefix_b_32x4, _mm_add_epi32(lastRow_b_32x4, rowSum_32x4));
+
+			// update rowSum with sum of second 4 pixels
+			rowSum += static_cast<uint32_t>(_mm_extract_epi32(prefix_b_32x4, 3));
+
+			// store results
+			_mm_storeu_si128((__m128i*)(integral + 0), result_a_32x4);
+			_mm_storeu_si128((__m128i*)(integral + 4), result_b_32x4);
+
+			source += blockSize;
+			integral += blockSize;
+			integralLastRow += blockSize;
+			x += blockSize;
+		}
+
+		// process remaining 0-7 pixels with scalar code
+
+		while (x < width)
+		{
+			rowSum += *source++;
+			*integral++ = *integralLastRow++ + rowSum;
+			++x;
+		}
+
+		source += sourcePaddingElements;
+		integral += integralPaddingElements;
+		integralLastRow += integralPaddingElements;
+	}
+}
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 

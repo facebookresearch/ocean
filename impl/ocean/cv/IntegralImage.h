@@ -601,6 +601,22 @@ class OCEAN_CV_EXPORT IntegralImage
 
 	private:
 
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+		/**
+		 * Creates an integral image from 8 bit images with 1 channel and adds an extra line with zeros to the left and top image border and applies SSE instructions.
+		 * @param source The image for which the integral image will be determined, with size width x height, must be valid
+		 * @param integral The resulting integral image, with size (width + 1)x(height + 1), must be valid
+		 * @param width The width of the given image in pixel, with range [8, 4096^2]
+		 * @param height The height of the given image in pixel, with range [1, 4096^2 / width]
+		 * @param sourcePaddingElements The number of padding elements at the end of each row of the source frame, in elements, with range [0, infinity)
+		 * @param integralPaddingElements The number of padding elements at the end of each row of the integral frame, in elements, with range [0, infinity)
+		 * @see createLinedImage8BitPerChannel<tChannels>().
+		 */
+		static void createLinedImage1Channel8BitSSE(const uint8_t* source, uint32_t* integral, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int integralPaddingElements);
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
+
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
 #if defined(__aarch64__)
@@ -714,6 +730,16 @@ void IntegralImage::createLinedImage(const T* source, TIntegral* integral, const
 	ocean_assert(width >= 1u && height >= 1u);
 
 	ocean_assert((std::is_floating_point<T>::value) || (double(NumericT<T>::maxValue()) * double(width * height) <= double(NumericT<TIntegral>::maxValue())));
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+	if (std::is_same<T, uint8_t>::value && std::is_same<TIntegral, uint32_t>::value && tChannels == 1u && width >= 8u)
+	{
+		createLinedImage1Channel8BitSSE((const uint8_t*)source, (uint32_t*)integral, width, height, sourcePaddingElements, integralPaddingElements);
+		return;
+	}
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10 && defined(__aarch64__)
 
