@@ -149,11 +149,6 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 				/**
 				 * **TODO**
 				 */
-				bool determinePointStrength(const Frame& yFrame, const CV::PixelPosition& observation, int32_t& strength, bool& strict) const;
-
-				/**
-				 * **TODO**
-				 */
 				bool determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const;
 
 				/**
@@ -674,7 +669,7 @@ inline const Points& PointDetector::points() const
 	return points_;
 }
 
-const Geometry::SpatialDistribution::DistributionArray& PointDetector::pointsDistributionArray() const
+inline const Geometry::SpatialDistribution::DistributionArray& PointDetector::pointsDistributionArray() const
 {
 	return pointsDistributionArray_;
 }

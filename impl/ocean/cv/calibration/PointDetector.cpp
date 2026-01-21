@@ -54,60 +54,6 @@ PointDetector::PointPattern::PointPattern(const unsigned int radius, const unsig
 	}
 }
 
-bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, const CV::PixelPosition& observation, int32_t& strength, bool& strict) const
-{
-	ocean_assert(isValid());
-
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
-
-	ocean_assert(frameStrideElements_ == yFrame.strideElements());
-	if (frameStrideElements_ != yFrame.strideElements())
-	{
-		return false;
-	}
-
-	const uint8_t* const yFrameData = yFrame.constdata<uint8_t>();
-	const unsigned int yFrameStrideElements = yFrame.strideElements();
-
-	const uint8_t centerPixel = yFrameData[observation.y() * yFrameStrideElements + observation.x()];
-
-	int32_t sumSqrDifference = 0;
-	strict = true;
-
-	for (const CV::PixelPositionI& offset : offsets_)
-	{
-		const uint8_t surroundingPixel = yFrameData[offset.y() * yFrameStrideElements + offset.x()];
-
-		const int32_t difference = int32_t(surroundingPixel) - int32_t(centerPixel);
-
-		if (difference >= 0)
-		{
-			sumSqrDifference += difference * difference;
-		}
-		else
-		{
-			sumSqrDifference -= difference * difference;
-		}
-
-		if (strict)
-		{
-			// let's check whether the sign of the difference has changed
-
-			if (sumSqrDifference != 0 && difference != 0)
-			{
-				if ((difference > 0 && sumSqrDifference < 0) || (difference < 0 && sumSqrDifference > 0))
-				{
-					strict = false;
-				}
-			}
-		}
-	}
-
-	strength = sumSqrDifference;
-
-	return true;
-}
-
 bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const
 {
 	ocean_assert(isValid());
