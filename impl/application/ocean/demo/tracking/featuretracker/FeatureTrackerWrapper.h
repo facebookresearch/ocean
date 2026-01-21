@@ -109,7 +109,7 @@ class FeatureTrackerWrapper
 		Tracking::VisualTrackerRef visualTracker_;
 
 		/// The camera profile defining the project and the camera distortion.
-		SharedAnyCamera anyCamera_;
+		SharedAnyCamera camera_;
 
 		/// The timestamp of the last frame that has been handled.
 		Timestamp lastHandledFrameTimestamp_;
@@ -144,7 +144,7 @@ inline FeatureTrackerWrapper& FeatureTrackerWrapper::operator=(FeatureTrackerWra
 		objectDimension_ = std::move(featureTrackerWrapper.objectDimension_);
 
 		visualTracker_ = std::move(featureTrackerWrapper.visualTracker_);
-		anyCamera_ = std::move(featureTrackerWrapper.anyCamera_);
+		camera_ = std::move(featureTrackerWrapper.camera_);
 
 		lastHandledFrameTimestamp_ = featureTrackerWrapper.lastHandledFrameTimestamp_;
 		performance_ = featureTrackerWrapper.performance_;

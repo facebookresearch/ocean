@@ -14,7 +14,7 @@
 
 #include "ocean/devices/Manager.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
+#include "ocean/io/CameraCalibrationManager.h"
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
@@ -165,14 +165,14 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 	if (cameraCalibrationFile.isNull())
 	{
-		const IO::File relativeFile("res/application/ocean/demo/tracking/featuretracker/cameracalibration.occ");
+		const IO::File relativeFile("res/ocean/cv/calibration/camera_calibration.json");
 
 		cameraCalibrationFile = IO::Directory(frameworkPath) + relativeFile;
 	}
 
 	if (cameraCalibrationFile.exists())
 	{
-		IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(cameraCalibrationFile());
+		IO::CameraCalibrationManager::get().registerCalibrations(cameraCalibrationFile());
 	}
 
 	if (inputMedium_.isNull())
@@ -389,46 +389,20 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		return false;
 	}
 
-	FrameRef frameRef = inputMedium_->frame(&anyCamera_);
-
-	if (anyCamera_ == nullptr || !anyCamera_->isValid())
-	{
-		// we still need to request the correct camera profile for our input medium
-		// therefore, we need to know the dimensions of the input medium (the delivered frames respectively)
-
-		if (frameRef.isNull())
-		{
-			frameRef = inputMedium_->frame();
-		}
-
-		if (frameRef.isNull())
-		{
-			// if we cannot extract the first frame within 5 seconds since we started the medium, something must be wrong
-
-			if (inputMedium_->startTimestamp() + 5.0 < Timestamp(true))
-			{
-				Platform::Utilities::showMessageBox("Error", "Could not extract a valid frame from the input source!\nDefine a different source as input.");
-
-				// we release the medium to ensure that we stop immediately the next time this function is called
-				inputMedium_.release();
-			}
-
-			return false;
-		}
-
-		// the camera calibration manager will either provided the calibrated profile (if existing) or will provide a default profile
-
-		anyCamera_ = std::make_shared<AnyCameraPinhole>(IO::LegacyCameraCalibrationManager::get().camera(inputMedium_->url(), frameRef->width(), frameRef->height(), nullptr, Numeric::deg2rad(60)));
-	}
-
-	ocean_assert(anyCamera_ && anyCamera_->isValid());
-
-	// currently, only pinhole cameras are supported by the trackers, so abort if a different type of camera is used.
+	FrameRef frameRef = inputMedium_->frame(&camera_);
 
 	if (frameRef.isNull())
 	{
 		return false;
 	}
+
+	if (!camera_)
+	{
+		Log::warning() << "The camera profile of the input medium is invalid, using a default profile instead, tracking quality my suffer";
+		camera_ = std::make_shared<AnyCameraPinhole>(PinholeCamera(frameRef->width(), frameRef->height(), Numeric::deg2rad(60)));
+	}
+
+	ocean_assert(camera_ && camera_->isValid());
 
 	// we only handle a frame once
 
@@ -468,11 +442,11 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 	performance_.start();
 
-	const Frames frames = { frame };
-	const SharedAnyCameras anyCameras = { anyCamera_ };
+	const Frames frames = {frame};
+	const SharedAnyCameras cameras = {camera_};
 
 	Tracking::VisualTracker::TransformationSamples resultingTransformationSamples;
-	if (visualTracker_->determinePoses(frames, anyCameras, resultingTransformationSamples, world_Q_camera, WorkerPool::get().scopedWorker()()) && !resultingTransformationSamples.empty())
+	if (visualTracker_->determinePoses(frames, cameras, resultingTransformationSamples, world_Q_camera, WorkerPool::get().scopedWorker()()) && !resultingTransformationSamples.empty())
 	{
 		performance_.stop();
 
@@ -486,8 +460,8 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		const uint8_t* const black = CV::Canvas::black(rgbFrame.pixelFormat());
 		const uint8_t* const white = CV::Canvas::white(rgbFrame.pixelFormat());
 
-		Tracking::Utilities::paintBoundingBoxIF(rgbFrame, resultingPoseIF, *anyCamera_, objectDimension_, white, black);
-		Tracking::Utilities::paintCoordinateSystemIF(rgbFrame, resultingPoseIF, *anyCamera_, HomogenousMatrix4(true), objectDimension_.diagonal() * Scalar(0.1));
+		Tracking::Utilities::paintBoundingBoxIF(rgbFrame, resultingPoseIF, *camera_, objectDimension_, white, black);
+		Tracking::Utilities::paintCoordinateSystemIF(rgbFrame, resultingPoseIF, *camera_, HomogenousMatrix4(true), objectDimension_.diagonal() * Scalar(0.1));
 	}
 	else
 	{
