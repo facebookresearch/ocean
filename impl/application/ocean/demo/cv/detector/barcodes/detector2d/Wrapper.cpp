@@ -19,7 +19,6 @@
 #include "ocean/cv/detector/barcodes/Barcode.h"
 #include "ocean/cv/detector/barcodes/BarcodeDetector2D.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/File.h"
 #include "ocean/io/Directory.h"
 
@@ -329,34 +328,26 @@ bool Wrapper::detectAndDecode(Frame& outputFrame, double& time, Strings& message
 	SharedAnyCamera anyCamera;
 	FrameRef frameRef = frameMedium_->frame(&anyCamera);
 
+	if (frameRef.isNull())
+	{
+		// if we cannot extract the first frame within 5 seconds since we started the medium, something must be wrong
+
+		if (frameMedium_->startTimestamp().hasTimePassed(5.0))
+		{
+			Platform::Utilities::showMessageBox("Error", "Could not extract a valid frame from the input source!\nDefine a different source as input.");
+
+			// we release the medium to ensure that we stop immediately the next time this function is called
+			frameMedium_.release();
+		}
+
+		return false;
+	}
+
 	if (anyCamera == nullptr || !anyCamera->isValid())
 	{
-		// we still need to request the correct camera profile for our input medium
-		// therefore, we need to know the dimensions of the input medium (the delivered frames respectively)
+		Log::warning() << "Using a default camera profile with 60 degree horizontal field of view";
 
-		if (frameRef.isNull())
-		{
-			frameRef = frameMedium_->frame();
-		}
-
-		if (frameRef.isNull())
-		{
-			// if we cannot extract the first frame within 5 seconds since we started the medium, something must be wrong
-
-			if (frameMedium_->startTimestamp() + 5.0 < Timestamp(true))
-			{
-				Platform::Utilities::showMessageBox("Error", "Could not extract a valid frame from the input source!\nDefine a different source as input.");
-
-				// we release the medium to ensure that we stop immediately the next time this function is called
-				frameMedium_.release();
-			}
-
-			return false;
-		}
-
-		// the camera calibration manager will either provided the calibrated profile (if existing) or will provide a default profile
-
-		anyCamera = std::make_shared<AnyCameraPinhole>(IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), frameRef->width(), frameRef->height(), nullptr, Numeric::deg2rad(60)));
+		anyCamera = std::make_shared<AnyCameraPinhole>(PinholeCamera(frameRef->width(), frameRef->height(), Numeric::deg2rad(60)));
 	}
 
 	//ocean_assert(anyCamera && anyCamera->isValid());
