@@ -8,6 +8,35 @@
     <ocean_common_imported>True</ocean_common_imported>
   </PropertyGroup>
 
+  <!-- Compiler version identifier (e.g., vc143, vc145) -->
+  <PropertyGroup>
+    <OceanCompilerVersion>vc143</OceanCompilerVersion>
+  </PropertyGroup>
+
+  <!-- Platform suffix: x64 or x86 -->
+  <PropertyGroup>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='Win32'">x86</OceanPlatformSuffix>
+  </PropertyGroup>
+
+  <!-- Build type: static or shared -->
+  <PropertyGroup>
+    <OceanBuildType Condition="$(Configuration.StartsWith('Static'))">static</OceanBuildType>
+    <OceanBuildType Condition="$(Configuration.StartsWith('Shared'))">shared</OceanBuildType>
+  </PropertyGroup>
+
+  <!-- Configuration suffix: _debug, _profile, or empty for release -->
+  <PropertyGroup>
+    <OceanConfigSuffix Condition="$(Configuration.EndsWith('Debug'))">_debug</OceanConfigSuffix>
+    <OceanConfigSuffix Condition="$(Configuration.EndsWith('Profile'))">_profile</OceanConfigSuffix>
+    <OceanConfigSuffix Condition="$(Configuration.EndsWith('Release'))"></OceanConfigSuffix>
+  </PropertyGroup>
+
+  <!-- Combined configuration folder name (e.g., win_x64_vc143_static_debug) -->
+  <PropertyGroup>
+    <OceanConfigFolder>win_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_$(OceanBuildType)$(OceanConfigSuffix)</OceanConfigFolder>
+  </PropertyGroup>
+
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl</AdditionalIncludeDirectories>
@@ -67,64 +96,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
 
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+  <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'">
-    <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 
