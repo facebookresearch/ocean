@@ -166,7 +166,7 @@ void IntegralImage::createLinedImage1Channel8BitNEON(const uint8_t* source, uint
 	ocean_assert(width * height <= 16777216u);
 
 	/*
-	 * This is the resulting lined integral image.
+	 * This is the resulting lined integral image:
 	 *  ------------
 	 * |000000000000|
 	 * |0|----------|
@@ -175,26 +175,29 @@ void IntegralImage::createLinedImage1Channel8BitNEON(const uint8_t* source, uint
 	 * |0|          |
 	 * |------------
 	 *
+	 * NEON-based implementation with scalar running sum optimization:
 	 *
-	 * NEON-based implementation:
+	 * For each block of 4 pixels we compute:
 	 *
-	 * top row:       T0 T1 T2 T3
-	 * current row: L C0 C1 C2 C3
+	 *   previous row:    T0 T1 T2 T3
+	 *   source row:      C0 C1 C2 C3
+	 *   running sum:     R
 	 *
-	 *                X0 = T0 + C0 + L
-	 *                X1 = T1 + C1 + C0 + L
-	 *                X2 = T2 + C2 + C1 + C0 + L
-	 *                X3 = T3 + C3 + C2 + C1 + C0 + L
-     *
-     *                [T0 T1 T2 T3]
-	 *                [C0 C1 C2 C3]
-	 *                [   C0 C1 C2]
-     *                [      C0 C1]
-     *                [         C0]
-     *              + [L  L  L  L ]
-     *                      =
-     *                [X0 X1 X2 X3]
+	 *   X0 = T0 + R + C0
+	 *   X1 = T1 + R + C0 + C1
+	 *   X2 = T2 + R + C0 + C1 + C2
+	 *   X3 = T3 + R + C0 + C1 + C2 + C3
+	 *
+	 * Which can be written as:
+	 *
+	 *   [X0 X1 X2 X3] = [T0 T1 T2 T3] + [R R R R] + prefixSum([C0 C1 C2 C3])
+	 *
+	 * Where prefixSum is computed via parallel prefix pattern:
+	 *   step 1: [C0, C1, C2, C3] + [0, C0, C1, C2] = [C0, C0+C1, C1+C2, C2+C3]
+	 *   step 2: [C0, C0+C1, C1+C2, C2+C3] + [0, 0, C0, C0+C1] = [C0, C0+C1, C0+C1+C2, C0+C1+C2+C3]
 	 */
+
+	constexpr unsigned int blockSize = 8u;
 
 	const uint32x4_t constant_zero_u_32x4 = vdupq_n_u32(0u);
 
@@ -210,74 +213,60 @@ void IntegralImage::createLinedImage1Channel8BitNEON(const uint8_t* source, uint
 		*integral++ = 0u;
 		integralLastRow++;
 
-		for (unsigned int x = 0u; x < width; x += 8u)
+		// keep running sum as scalar - avoids memory round-trip
+		uint32_t rowSum = 0u;
+
+		unsigned int x = 0u;
+
+		// main loop: process blockSize pixels at a time
+		while (x + blockSize <= width)
 		{
-			if (x + 8u > width)
-			{
-				// the last iteration will not fit into the integral frame,
-				// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
-
-				ocean_assert(x >= 8u && width > 8u);
-				const unsigned int newX = width - 8u;
-
-				ocean_assert(x > newX);
-				const unsigned int offset = x - newX;
-				ocean_assert(offset < 8u);
-
-				source -= offset;
-				integral -= offset;
-				integralLastRow -= offset;
-
-				// the for loop will stop after this iteration
-				ocean_assert(!(x + 8u < width));
-			}
-
 			const uint16x8_t source_16x8 = vmovl_u8(vld1_u8(source));
 
-			// [T0 T1 T2 T3]
 			const uint32x4_t lastRow_a_32x4 = vld1q_u32(integralLastRow + 0);
-			// [T4 T5 T6 T7]
 			const uint32x4_t lastRow_b_32x4 = vld1q_u32(integralLastRow + 4);
 
-			// [ L  L  L  L]
-			const uint32x4_t leftValue_a_32x4 = vdupq_n_u32(*(integral - 1) - *(integralLastRow - 1));
+			// widen source to 32-bit
+			uint32x4_t source_a_32x4 = vmovl_u16(vget_low_u16(source_16x8));
+			uint32x4_t source_b_32x4 = vmovl_u16(vget_high_u16(source_16x8));
 
-			// [C0 C1 C2 C3]
-			const uint32x4_t source_a_0_32x4 = vmovl_u16(vget_low_u16(source_16x8));
-			// [C4 C5 C6 C7]
-			const uint32x4_t source_b_0_32x4 = vmovl_u16(vget_high_u16(source_16x8));
+			// compute prefix sums for first 4 elements (parallel prefix pattern)
+			uint32x4_t prefix_a_32x4 = vaddq_u32(source_a_32x4, vextq_u32(constant_zero_u_32x4, source_a_32x4, 3));
+			prefix_a_32x4 = vaddq_u32(prefix_a_32x4, vextq_u32(constant_zero_u_32x4, prefix_a_32x4, 2));
 
-			const uint32x4_t source_a_1_32x4 = vextq_u32(constant_zero_u_32x4, source_a_0_32x4, 3); // [ 0 C0 C1 C2]
-			const uint32x4_t source_a_2_32x4 = vextq_u32(constant_zero_u_32x4, source_a_0_32x4, 2); // [ 0  0 C0 C1]
-			const uint32x4_t source_a_3_32x4 = vextq_u32(constant_zero_u_32x4, source_a_0_32x4, 1); // [ 0  0  0 C0]
+			// add previous row and rowSum
+			uint32x4_t result_a_32x4 = vaddq_u32(prefix_a_32x4, vaddq_u32(lastRow_a_32x4, vdupq_n_u32(rowSum)));
 
-			const uint32x4_t source_b_1_32x4 = vextq_u32(constant_zero_u_32x4, source_b_0_32x4, 3); // [ 0 C4 C5 C6]
-			const uint32x4_t source_b_2_32x4 = vextq_u32(constant_zero_u_32x4, source_b_0_32x4, 2); // [ 0  0 C4 C5]
-			const uint32x4_t source_b_3_32x4 = vextq_u32(constant_zero_u_32x4, source_b_0_32x4, 1); // [ 0  0  0 C4]
+			// update rowSum with sum of first 4 pixels
+			rowSum += vgetq_lane_u32(prefix_a_32x4, 3);
 
-			const uint32x4_t sum_a_0_32x_4 = vaddq_u32(source_a_0_32x4, source_a_1_32x4);
-			const uint32x4_t sum_a_1_32x_4 = vaddq_u32(source_a_2_32x4, source_a_3_32x4);
-			const uint32x4_t sum_a_2_32x_4 = vaddq_u32(sum_a_0_32x_4, sum_a_1_32x_4);
-			const uint32x4_t sum_a_3_32x_4 = vaddq_u32(lastRow_a_32x4, leftValue_a_32x4);
-			const uint32x4_t sum_a_4_32x_4 = vaddq_u32(sum_a_2_32x_4, sum_a_3_32x_4);
+			// compute prefix sums for second 4 elements
+			uint32x4_t prefix_b_32x4 = vaddq_u32(source_b_32x4, vextq_u32(constant_zero_u_32x4, source_b_32x4, 3));
+			prefix_b_32x4 = vaddq_u32(prefix_b_32x4, vextq_u32(constant_zero_u_32x4, prefix_b_32x4, 2));
 
-			// L + C0 + C1 + C2 + C3
-			const uint32x2_t c01_c23_32x2 = vpmax_u32(vget_high_u32(sum_a_2_32x_4), vget_high_u32(sum_a_2_32x_4));
-			const uint32x4_t leftValue_b_32x4 = vaddq_u32(leftValue_a_32x4, vcombine_u32(c01_c23_32x2, c01_c23_32x2));
+			// add previous row and rowSum
+			uint32x4_t result_b_32x4 = vaddq_u32(prefix_b_32x4, vaddq_u32(lastRow_b_32x4, vdupq_n_u32(rowSum)));
 
-			//const uint32x4_t leftValue_b_32x4 = vaddq_u32(leftValue_a_32x4, vmovq_n_u32(vgetq_lane_u32(sum_a_2_32x_4, 3)));
-			const uint32x4_t sum_b_0_32x_4 = vaddq_u32(source_b_0_32x4, source_b_1_32x4);
-			const uint32x4_t sum_b_1_32x_4 = vaddq_u32(source_b_2_32x4, source_b_3_32x4);
-			const uint32x4_t sum_b_2_32x_4 = vaddq_u32(sum_b_0_32x_4, sum_b_1_32x_4);
-			const uint32x4_t sum_b_3_32x_4 = vaddq_u32(lastRow_b_32x4, leftValue_b_32x4);
-			const uint32x4_t sum_b_4_32x_4 = vaddq_u32(sum_b_2_32x_4, sum_b_3_32x_4);
+			// update rowSum with sum of second 4 pixels
+			rowSum += vgetq_lane_u32(prefix_b_32x4, 3);
 
-			vst1q_u32(integral + 0, sum_a_4_32x_4);
-			vst1q_u32(integral + 4, sum_b_4_32x_4);
+			// store results
+			vst1q_u32(integral + 0, result_a_32x4);
+			vst1q_u32(integral + 4, result_b_32x4);
 
-			source += 8;
-			integral += 8;
-			integralLastRow += 8;
+			source += blockSize;
+			integral += blockSize;
+			integralLastRow += blockSize;
+			x += blockSize;
+		}
+
+		// process remaining 0-7 pixels with scalar code
+
+		while (x < width)
+		{
+			rowSum += *source++;
+			*integral++ = *integralLastRow++ + rowSum;
+			++x;
 		}
 
 		source += sourcePaddingElements;
