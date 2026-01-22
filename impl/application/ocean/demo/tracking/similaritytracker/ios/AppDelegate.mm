@@ -132,11 +132,11 @@
 	textLabelTextureness_.shadowColor = [UIColor whiteColor];
 	[viewController_.view addSubview:textLabelTextureness_];
 
-	std::vector<std::wstring> commandLines;
-	commandLines.push_back(L"LiveVideoId:0"); // video source
-	commandLines.push_back(L"1280x720"); // video resolution
+	std::vector<std::wstring> commandArguments;
+	commandArguments.push_back(L"--input=LiveVideoId:0"); // video source
+	commandArguments.push_back(L"--resolution=1280x720"); // video resolution
 
-	similarityTrackerWrapper_ = SimilarityTrackerWrapper(commandLines);
+	similarityTrackerWrapper_ = SimilarityTrackerWrapper(commandArguments);
 
 	// now we create a PixelImage that simply wrapps a Frame object
 	// as the OpenGLES renderer uses Media objects for textures only

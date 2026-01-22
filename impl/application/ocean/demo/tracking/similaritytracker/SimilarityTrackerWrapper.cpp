@@ -8,6 +8,7 @@
 #include "application/ocean/demo/tracking/similaritytracker/SimilarityTrackerWrapper.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/WorkerPool.h"
@@ -18,7 +19,9 @@
 
 #include "ocean/geometry/Homography.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
+#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/Directory.h"
+#include "ocean/io/File.h"
 
 #include "ocean/media/FiniteMedium.h"
 #include "ocean/media/ImageSequence.h"
@@ -60,7 +63,7 @@ SimilarityTrackerWrapper::SimilarityTrackerWrapper(SimilarityTrackerWrapper&& si
 	*this = std::move(similarityTrackerWrapper);
 }
 
-SimilarityTrackerWrapper::SimilarityTrackerWrapper(const std::vector<std::wstring>& commandArguments) :
+SimilarityTrackerWrapper::SimilarityTrackerWrapper(const std::vector<std::wstring>& separatedCommandArguments) :
 	trackingPixelFormat_(FrameType::FORMAT_Y8),
 	world_Q_previousCamera_(false)
 {
@@ -68,6 +71,21 @@ SimilarityTrackerWrapper::SimilarityTrackerWrapper(const std::vector<std::wstrin
 	// disable multi-core computation by forcing one CPU core
 	Processor::get().forceCores(1);
 #endif
+
+	CommandArguments commandArguments("Demo application for similarity tracker");
+	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as input parameter");
+	commandArguments.registerParameter("help", "h", "Showing this help output.");
+	commandArguments.registerParameter("input", "i", "Input to be used for tracking, e.g., a live video");
+	commandArguments.registerParameter("resolution", "r", "Optional: the resolution of the input, e.g., \"1280x720\"");
+	commandArguments.registerParameter("calibration", "c", "Optional: the filename of the camera calibration file containing the calibration for the input source (*.occ)");
+
+	commandArguments.parse(separatedCommandArguments);
+
+	if (commandArguments.hasValue("help"))
+	{
+		Log::info() << commandArguments.makeSummary();
+		exit(0);
+	}
 
 	// first, we register or load the media plugin(s)
 	// if we have a shared runtime we simply load all media plugins available in a specific directory
@@ -99,15 +117,42 @@ SimilarityTrackerWrapper::SimilarityTrackerWrapper(const std::vector<std::wstrin
 #endif
 
 
+	// we check whether an explicit camera calibration file has been provided
+
+	IO::File cameraCalibrationFile;
+
+	Value calibrationValue;
+	if (commandArguments.hasValue("calibration", &calibrationValue, false, 0u) && calibrationValue.isString())
+	{
+		const IO::File file(calibrationValue.stringValue());
+
+		if (file.exists())
+		{
+			cameraCalibrationFile = file;
+		}
+	}
+
+	if (cameraCalibrationFile.isNull())
+	{
+		const IO::File relativeFile("res/ocean/cv/calibration/camera_calibration.json");
+
+		cameraCalibrationFile = IO::Directory(frameworkPath) + relativeFile;
+	}
+
+	if (cameraCalibrationFile.exists())
+	{
+		IO::CameraCalibrationManager::get().registerCalibrations(cameraCalibrationFile());
+	}
+
+
 	// first, we get access to the frame medium that is intended to be used for the tracking
 
-	if (commandArguments.size() > 0 && !commandArguments[0].empty())
+	std::string input;
+	if (commandArguments.hasValue("input", input, false, 0u) && !input.empty())
 	{
-		const std::string argument = String::toAString(commandArguments[0]);
-
 		// first we try to get an image sequence
 
-		frameMedium_ = Media::Manager::get().newMedium(argument, Media::Medium::IMAGE_SEQUENCE);
+		frameMedium_ = Media::Manager::get().newMedium(input, Media::Medium::IMAGE_SEQUENCE);
 
 		const Media::ImageSequenceRef imageSequence(frameMedium_);
 
@@ -123,7 +168,7 @@ SimilarityTrackerWrapper::SimilarityTrackerWrapper(const std::vector<std::wstrin
 			// provided command argument seems to be something else but an image sequence
 			// so now we try to get any possible medium
 
-			frameMedium_ = Media::Manager::get().newMedium(argument);
+			frameMedium_ = Media::Manager::get().newMedium(input);
 		}
 	}
 
@@ -150,18 +195,24 @@ SimilarityTrackerWrapper::SimilarityTrackerWrapper(const std::vector<std::wstrin
 
 	// second, we check whether a desired frame dimension is specified for the input frame medium
 
-	if (commandArguments.size() > 1 && !commandArguments[1].empty())
+	Value resolutionValue;
+	if (commandArguments.hasValue("resolution", &resolutionValue, false, 0u) && resolutionValue.isString())
 	{
-		const std::string dimension = String::toAString(commandArguments[1]);
+		unsigned int preferredWidth = 0u;
+		unsigned int preferredHeight = 0u;
 
-		if (dimension == "320x240")
-			frameMedium_->setPreferredFrameDimension(320u, 240u);
-		else if (dimension == "640x480")
-			frameMedium_->setPreferredFrameDimension(640u, 480u);
-		else if (dimension == "1280x720")
-			frameMedium_->setPreferredFrameDimension(1280u, 720u);
-		else if (dimension == "1920x1080")
-			frameMedium_->setPreferredFrameDimension(1920u, 1080u);
+		if (Media::Utilities::parseResolution(resolutionValue.stringValue(), preferredWidth, preferredHeight))
+		{
+			frameMedium_->setPreferredFrameDimension(preferredWidth, preferredHeight);
+		}
+		else
+		{
+			Log::warning() << "Failed to parse resolution '" << resolutionValue.stringValue() << "'";
+		}
+	}
+	else
+	{
+		frameMedium_->setPreferredFrameDimension(1280u, 720u);
 	}
 
 	if (Media::FiniteMediumRef finiteMedium = frameMedium_)
@@ -239,10 +290,16 @@ bool SimilarityTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 
 	// we request the most recent frame from our input medium
 
-	const FrameRef currentFrameRef = frameMedium_->frame();
+	const FrameRef currentFrameRef = frameMedium_->frame(&camera_);
 
 	if (currentFrameRef.isNull())
 	{
+		return false;
+	}
+
+	if (!camera_)
+	{
+		Log::error() << "The camera of the input medium is invalid";
 		return false;
 	}
 
@@ -254,11 +311,6 @@ bool SimilarityTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 	}
 
 	const Frame& currentFrame = *currentFrameRef;
-
-	if (camera_.width() != currentFrame.width() || camera_.height() != currentFrame.height())
-	{
-		camera_ = IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), currentFrame.width(), currentFrame.height());
-	}
 
 	frameTimestamp_ = currentFrame.timestamp();
 
@@ -332,7 +384,7 @@ bool SimilarityTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 			{
 				const Quaternion previousCamera_Q_camera(world_Q_previousCamera_.inverted() * world_Q_camera);
 
-				const SquareMatrix3 homography = Geometry::Homography::homographyMatrix(previousCamera_Q_camera, camera_, camera_);
+				const SquareMatrix3 homography = Geometry::Homography::homographyMatrix(previousCamera_Q_camera, *camera_, *camera_);
 
 				const Vector2 predictedCenter = homography * boundingBox.center();
 				predictedTranslation = predictedCenter - boundingBox.center();

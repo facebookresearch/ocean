@@ -32,12 +32,12 @@ GLMainView::~GLMainView()
 
 void GLMainView::initializeSimilarityTracker(const std::string& inputMedium, const std::string& resolution)
 {
-	std::vector<std::wstring> commandLines;
+	std::vector<std::wstring> commandArguments;
 
-	commandLines.push_back(String::toWString(inputMedium));
-	commandLines.push_back(String::toWString(resolution));
+	commandArguments.push_back(L"--input=" + String::toWString(inputMedium));
+	commandArguments.push_back(L"--resolution=" + String::toWString(resolution));
 
-	similarityTracker_ = SimilarityTrackerWrapper(commandLines);
+	similarityTracker_ = SimilarityTrackerWrapper(commandArguments);
 
 	if (similarityTracker_.frameMedium())
 	{

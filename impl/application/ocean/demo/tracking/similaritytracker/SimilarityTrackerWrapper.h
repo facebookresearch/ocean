@@ -134,7 +134,7 @@ class SimilarityTrackerWrapper
 		Quaternion world_Q_previousCamera_ = Quaternion(false);
 
 		/// The camera profile of the medium.
-		PinholeCamera camera_;
+		SharedAnyCamera camera_;
 };
 
 inline const Media::FrameMediumRef SimilarityTrackerWrapper::frameMedium() const
