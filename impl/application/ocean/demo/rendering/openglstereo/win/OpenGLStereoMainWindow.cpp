@@ -50,7 +50,7 @@ bool OpenGLStereoMainWindow::initialize(const HICON icon, const std::string& win
 		return false;
 	}
 
-	PIXELFORMATDESCRIPTOR pixelformatDescriptor =
+	PIXELFORMATDESCRIPTOR pixelFormatDescriptor =
 	{
 		sizeof(PIXELFORMATDESCRIPTOR),
 		1,
@@ -69,15 +69,15 @@ bool OpenGLStereoMainWindow::initialize(const HICON icon, const std::string& win
 		0, 0, 0
 	};
 
-	const GLuint pixelformat = ChoosePixelFormat(dc(), &pixelformatDescriptor);
+	const GLuint pixelFormat = ChoosePixelFormat(dc(), &pixelFormatDescriptor);
 
-	if (pixelformat == 0)
+	if (pixelFormat == 0)
 	{
 		ocean_assert(false && "Invalid pixel format.");
 		return false;
 	}
 
-	if (SetPixelFormat(dc(), pixelformat, &pixelformatDescriptor) == FALSE)
+	if (SetPixelFormat(dc(), pixelFormat, &pixelFormatDescriptor) == FALSE)
 	{
 		ocean_assert(false && "Could not select pixel format");
 		return false;
@@ -119,6 +119,7 @@ bool OpenGLStereoMainWindow::initialize(const HICON icon, const std::string& win
 	{
 		leftFrameMedium->start();
 	}
+
 	if (rightFrameMedium)
 	{
 		rightFrameMedium->start();
@@ -310,7 +311,7 @@ void OpenGLStereoMainWindow::onToggleFullscreen()
 		SetWindowLongPtrA(handle(), GWL_STYLE, mainWindowNonFullScreenStyle_);
 		mainWindowNonFullScreenStyle_ = 0;
 
-		SetWindowPos(handle(), HWND_NOTOPMOST, mainWindowLastLeft_, mainMindowLastTop_, mainWindowLastWidth_, mainWindowLastHeight_, 0);
+		SetWindowPos(handle(), HWND_NOTOPMOST, mainWindowLastLeft_, mainWindowLastTop_, mainWindowLastWidth_, mainWindowLastHeight_, 0);
 		isFullscreen_ = false;
 	}
 	else
@@ -327,7 +328,7 @@ void OpenGLStereoMainWindow::onToggleFullscreen()
 		GetWindowRect(handle(), &rect);
 
 		mainWindowLastLeft_ = rect.left;
-		mainMindowLastTop_ = rect.top;
+		mainWindowLastTop_ = rect.top;
 		mainWindowLastWidth_ = rect.right - rect.left;
 		mainWindowLastHeight_ = rect.bottom - rect.top;
 

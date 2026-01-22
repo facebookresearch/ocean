@@ -21,11 +21,15 @@ Background::~Background()
 
 void Background::update()
 {
-	const FrameType updateFrameType = texture_.update();
+	SharedAnyCamera camera;
+
+	const FrameType updateFrameType = texture_.update(&camera);
 	bool newFrameType = frameType_ != updateFrameType;
 
 	if (updateFrameType.width() == 0 || updateFrameType.height() == 0)
+	{
 		return;
+	}
 
 	if (displayList_ == 0)
 	{
@@ -36,9 +40,13 @@ void Background::update()
 
 	if (newFrameType)
 	{
-		frameType_ = updateFrameType;
+		if (!camera)
+		{
+			Log::warning() << "Invalid camera model";
+			return;
+		}
 
-		PinholeCamera camera = IO::LegacyCameraCalibrationManager::get().camera(mediumUrl_, frameType_.width(), frameType_.height());
+		frameType_ = updateFrameType;
 
 		const Scalar backgroundFarClippingPlane = 100;
 		const unsigned int backgroundNumberHorizontalStrips = 100;
@@ -47,10 +55,20 @@ void Background::update()
 		// distance is 95% of the far distance
 		const Scalar distance = backgroundFarClippingPlane * Scalar(0.95);
 
-		const Scalar left = -tan(camera.fovXLeft()) * distance;
-		const Scalar right = tan(camera.fovXRight()) * distance;
-		const Scalar top = tan(camera.fovYTop()) * distance;
-		const Scalar bottom = -tan(camera.fovYBottom()) * distance;
+		const Scalar width_2 = Scalar(camera->width()) * Scalar(0.5);
+		const Scalar height_2 = Scalar(camera->height()) * Scalar(0.5);
+
+		const Vector3 vectorLeft = camera->vector(Vector2(0, height_2));
+		const Vector3 vectorRight = camera->vector(Vector2(camera->width(), height_2));
+		const Vector3 vectorTop = camera->vector(Vector2(width_2, 0));
+		const Vector3 vectorBottom = camera->vector(Vector2(width_2, camera->height()));
+
+		const Vector3 vectorCenter = camera->vector(camera->principalPoint());
+
+		const Scalar left = -tan(vectorCenter.angle(vectorLeft)) * distance;
+		const Scalar right = tan(vectorCenter.angle(vectorRight)) * distance;
+		const Scalar top = tan(vectorCenter.angle(vectorTop)) * distance;
+		const Scalar bottom = -tan(vectorCenter.angle(vectorBottom)) * distance;
 
 		const Scalar horizontalStep = (right - left) / backgroundNumberHorizontalStrips;
 		const Scalar verticalStep = (top - bottom) / backgroundNumberVerticalStrips;

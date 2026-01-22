@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_TEXTURE_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_TEXTURE_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_TEXTURE_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_TEXTURE_H
+
+#include "application/ocean/demo/rendering/openglstereo/win/OpenGLStereo.h"
 
 #include "ocean/base/Frame.h"
 
@@ -16,7 +18,7 @@
 #include <gl\gl.h>
 
 /**
- * This class implements an opengl texture.
+ * This class implements an OpenGL texture.
  * @ingroup applicationdemorenderingopenglstereowin
  */
 class Texture
@@ -35,9 +37,10 @@ class Texture
 
 		/**
 		 * Updates this texture.
+		 * @param camera Optional resulting camera profile associated with the recent frame; nullptr, if not of interest
 		 * @return Frame type of the used frame
 		 */
-		Ocean::FrameType update();
+		FrameType update(SharedAnyCamera* camera = nullptr);
 
 		/**
 		 * Bind this texture.
@@ -56,14 +59,15 @@ class Texture
 
 		/**
 		 * Returns the medium.
+		 * @return The texture's frame medium
 		 */
-		Ocean::Media::FrameMediumRef medium();
+		Media::FrameMediumRef medium();
 
 		/**
 		 * Sets a new frame medium for this texture.
 		 * @param medium Frame medium to set
 		 */
-		void setMedium(const Ocean::Media::FrameMediumRef& medium);
+		void setMedium(const Media::FrameMediumRef& medium);
 
 	protected:
 
@@ -74,13 +78,13 @@ class Texture
 		GLuint texturePixelFormat_ = 0u;
 
 		/// Frame timestamp.
-		Ocean::Timestamp frameTimestamp_;
+		Timestamp frameTimestamp_;
 
 		/// Frame type.
-		Ocean::FrameType frameType_;
+		FrameType frameType_;
 
 		/// Frame medium holding the image data.
-		Ocean::Media::FrameMediumRef frameMedium_;
+		Media::FrameMediumRef frameMedium_;
 };
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_TEXTURE_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_TEXTURE_H

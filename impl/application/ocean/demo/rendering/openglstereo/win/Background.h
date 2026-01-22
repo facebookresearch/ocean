@@ -5,14 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_BACKGROUND_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_BACKGROUND_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_BACKGROUND_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_BACKGROUND_H
 
+#include "application/ocean/demo/rendering/openglstereo/win/OpenGLStereo.h"
 #include "application/ocean/demo/rendering/openglstereo/win/Texture.h"
 
 #include "ocean/base/Frame.h"
-
-#include "ocean/math/PinholeCamera.h"
 
 #include <gl\gl.h>
 
@@ -53,7 +52,7 @@ class Background
 		 * Sets a new frame medium for this texture.
 		 * @param medium Frame medium to set
 		 */
-		void setMedium(const Ocean::Media::FrameMediumRef& medium);
+		void setMedium(const Media::FrameMediumRef& medium);
 
 		/**
 		 * Configures the frame medium if possible.
@@ -70,13 +69,13 @@ class Background
 		Texture texture_;
 
 		/// Frame type.
-		Ocean::FrameType frameType_;
+		FrameType frameType_;
 
 		/// Frame camera.
-		Ocean::PinholeCamera frameCamera_;
+		SharedAnyCamera frameCamera_;
 
 		/// Medium url.
 		std::string mediumUrl_;
 };
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_BACKGROUND_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_WIN_BACKGROUND_H

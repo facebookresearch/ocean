@@ -9,8 +9,11 @@
 #include "application/ocean/demo/rendering/openglstereo/win/OpenGLStereoMainWindow.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/String.h"
+
+#include "ocean/io/CameraCalibrationManager.h"
 
 #include "ocean/media/Manager.h"
 
@@ -22,7 +25,7 @@
 
 using namespace Ocean;
 
-int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpCmdLine*/, int /*nCmdShow*/)
+int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpCmdLine, int /*nCmdShow*/)
 {
 	const std::string frameworkPath(Platform::Win::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
 
@@ -32,6 +35,36 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 	PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString());
 	PluginManager::get().loadPlugins(PluginManager::TYPE_MEDIA);
 #endif
+
+	CommandArguments commandArguments;
+	commandArguments.registerParameter("cameracalibration", "cc", "The camera calibration file to be used");
+	commandArguments.registerParameter("help", "h", "Show this help output");
+
+	if (!commandArguments.parse(lpCmdLine))
+	{
+		Log::warning() << "Failure when parsing the command arguments";
+	}
+
+	if (commandArguments.hasValue("help"))
+	{
+		Log::info() << commandArguments.makeSummary();
+		return 0;
+	}
+
+	std::string cameraCalibrationFile = commandArguments.value<std::string>("cameracalibration", std::string(), true, 0u);
+
+	if (cameraCalibrationFile.empty())
+	{
+		cameraCalibrationFile = "res/ocean/cv/calibration/camera_calibration.json";
+	}
+
+	if (IO::File(cameraCalibrationFile).exists())
+	{
+		if (IO::CameraCalibrationManager::get().registerCalibrations(cameraCalibrationFile))
+		{
+			Log::debug() << "Using camera calibration file: " << cameraCalibrationFile;
+		}
+	}
 
 	try
 	{

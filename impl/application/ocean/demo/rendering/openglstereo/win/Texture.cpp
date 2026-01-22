@@ -15,7 +15,7 @@ Texture::~Texture()
 	release();
 }
 
-FrameType Texture::update()
+FrameType Texture::update(SharedAnyCamera* camera)
 {
 	if (frameMedium_.isNull())
 	{
@@ -30,7 +30,7 @@ FrameType Texture::update()
 		return FrameType();
 	}
 
-	const FrameRef frame = frameMedium_->frame();
+	const FrameRef frame = frameMedium_->frame(camera);
 	if (frame.isNull())
 	{
 		return FrameType();

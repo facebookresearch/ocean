@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_STEREO_WIN_OPENGL_STEREO_MAINWINDOW_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_STEREO_WIN_OPENGL_STEREO_MAINWINDOW_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_STEREO_WIN_OPENGL_STEREO_MAINWINDOW_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_STEREO_WIN_OPENGL_STEREO_MAINWINDOW_H
 
+#include "application/ocean/demo/rendering/openglstereo/win/OpenGLStereo.h"
 #include "application/ocean/demo/rendering/openglstereo/win/Background.h"
 
 #include "ocean/platform/win/ApplicationWindow.h"
@@ -137,7 +138,7 @@ class OpenGLStereoMainWindow : public Platform::Win::ApplicationWindow
 		int mainWindowLastLeft_ = 0;
 
 		/// Top window position before full-screen mode.
-		int mainMindowLastTop_ = 0;
+		int mainWindowLastTop_ = 0;
 
 		/// Window width before full-screen mode.
 		int mainWindowLastWidth_ = 0;
@@ -146,4 +147,4 @@ class OpenGLStereoMainWindow : public Platform::Win::ApplicationWindow
 		int mainWindowLastHeight_ = 0;
 };
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_STEREO_WIN_OPENGL_STEREO_MAINWINDOW_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_RENDERING_OPENGL_STEREO_WIN_OPENGL_STEREO_MAINWINDOW_H
