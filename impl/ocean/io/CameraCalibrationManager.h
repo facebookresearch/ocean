@@ -358,6 +358,12 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		std::string serializeCamera(const AnyCamera& camera, const unsigned int precision = 6u) const;
 
 		/**
+		 * Returns the names of all registered cameras.
+		 * @return The names of all registered cameras
+		 */
+		Strings cameraNames() const;
+
+		/**
 		 * Clears all registered calibrations and aliases.
 		 * This function does not remove registered factory functions.
 		 */

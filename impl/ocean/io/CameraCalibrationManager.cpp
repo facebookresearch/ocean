@@ -502,6 +502,21 @@ std::string CameraCalibrationManager::serializeCamera(const AnyCamera& camera, c
 	return iSerializer->second(camera, precision);
 }
 
+Strings CameraCalibrationManager::cameraNames() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	Strings names;
+	names.reserve(cameraMap_.size());
+
+	for (const CameraMap::value_type& camera : cameraMap_)
+	{
+		names.emplace_back(camera.first);
+	}
+
+	return names;
+}
+
 void CameraCalibrationManager::clear()
 {
 	const ScopedLock scopedLock(lock_);
