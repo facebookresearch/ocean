@@ -16,7 +16,7 @@
 
 #include "ocean/cv/fonts/FontManager.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
+#include "ocean/io/CameraCalibrationManager.h"
 #include "ocean/io/FileConfig.h"
 #include "ocean/io/FileResolver.h"
 
@@ -195,26 +195,13 @@ BOOL Application::InitInstance()
 
 	if (cameraCalibrationFile.isValid())
 	{
-		if (IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(cameraCalibrationFile()))
+		if (IO::CameraCalibrationManager::get().registerCalibrations(cameraCalibrationFile()))
 		{
 			Log::info() << "Successfully loaded the camera calibration file.";
 		}
 		else
 		{
 			Log::warning() << "Failed to load the camera calibration file \"" << cameraCalibrationFile() << "\".";
-		}
-	}
-	else
-	{
-		IO::File file(processDirectory + IO::File("data/cameracalibration/cameracalibration.occ"));
-
-		if (IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(file()))
-		{
-			Log::info() << "Successfully loaded the camera calibration file \"" << file() << "\".";
-		}
-		else
-		{
-			Log::warning() << "Failed to load the camera calibration file \"" << file() << "\".";
 		}
 	}
 
