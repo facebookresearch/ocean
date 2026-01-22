@@ -5,13 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_CV_LIVE_UNDISTORT_WIN_MAINWINDOW_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_CV_LIVE_UNDISTORT_WIN_MAINWINDOW_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_CV_LIVE_UNDISTORT_WIN_MAINWINDOW_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_CV_LIVE_UNDISTORT_WIN_MAINWINDOW_H
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
-
-#include "ocean/math/PinholeCamera.h"
 
 #include "ocean/media/FrameMedium.h"
 
@@ -35,8 +33,9 @@ class LiveUndistortMainWindow :
 		 * @param instance Application instance
 		 * @param name The name of the main window
 		 * @param file Optional media file
+		 * @param resolution Optional preferred resolution, e.g., "1280x720"
 		 */
-		LiveUndistortMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file = std::string());
+		LiveUndistortMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file = std::string(), const std::string& resolution = std::string());
 
 		/**
 		 * Destructs the main window.
@@ -59,7 +58,7 @@ class LiveUndistortMainWindow :
 
 		/**
 		 * Function for keyboard button down events.
-		 * @see Window::onKeyDonw().
+		 * @see Window::onKeyDown().
 		 */
 		void onKeyDown(const int key) override;
 
@@ -71,9 +70,10 @@ class LiveUndistortMainWindow :
 
 		/**
 		 * Event function if a new frame has arrived.
-		 * @param frame New frame
+		 * @param frame The new frame
+		 * @param camera The camera profile of the frame
 		 */
-		void onFrame(const Frame& frame);
+		void onFrame(const Frame& frame, const AnyCamera& camera);
 
 	protected:
 
@@ -86,14 +86,14 @@ class LiveUndistortMainWindow :
 		/// Optional media file to be used.
 		std::string mediaFile_;
 
-		/// The pinhole camera object providing the distortion information of the media object.
-		PinholeCamera camera_;
+		/// Optional preferred resolution.
+		std::string resolution_;
 
 		/// State determining whether the frame timestamp will be ignored.
 		bool ignoreTimestamp_ = false;
 
-		/// State to enable or disable the undistortion of the frame.
-		bool distortFrame_ = true;
+		/// True, to undistort the frame; False, to keep the origin frame.
+		bool undistortFrame_ = true;
 };
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CV_LIVE_UNDISTORT_WIN_MAINWINDOW_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_CV_LIVE_UNDISTORT_WIN_MAINWINDOW_H

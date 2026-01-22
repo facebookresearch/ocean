@@ -14,18 +14,20 @@
 #include "ocean/cv/FrameConverter.h"
 #include "ocean/cv/FrameInterpolatorBilinear.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
+#include "ocean/io/CameraCalibrationManager.h"
 
 #include "ocean/media/Manager.h"
+#include "ocean/media/Utilities.h"
 
 #include "ocean/platform/win/System.h"
 #include "ocean/platform/win/Utilities.h"
 
-LiveUndistortMainWindow::LiveUndistortMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file) :
+LiveUndistortMainWindow::LiveUndistortMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file, const std::string& resolution) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
-	mediaFile_(file)
+	mediaFile_(file),
+	resolution_(resolution)
 {
 	// nothing to do here
 }
@@ -54,6 +56,17 @@ void LiveUndistortMainWindow::onInitialized()
 
 	if (frameMedium_)
 	{
+		if (!resolution_.empty())
+		{
+			unsigned int preferredWidth = 0u;
+			unsigned int preferredHeight = 0u;
+
+			if (Media::Utilities::parseResolution(resolution_, preferredWidth, preferredHeight))
+			{
+				frameMedium_->setPreferredFrameDimension(preferredWidth, preferredHeight);
+			}
+		}
+
 		frameMedium_->start();
 
 		const Timestamp startTimestamp(true);
@@ -62,13 +75,6 @@ void LiveUndistortMainWindow::onInitialized()
 		{
 			Thread::sleep(1);
 		}
-
-		const FrameRef frame = frameMedium_->frame();
-
-		if (frame)
-		{
-			camera_ = IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), frame->width(), frame->height());
-		}
 	}
 }
 
@@ -76,18 +82,26 @@ void LiveUndistortMainWindow::onIdle()
 {
 	if (frameMedium_)
 	{
-		const FrameRef frame(frameMedium_->frame());
+		SharedAnyCamera camera;
+		const FrameRef frame(frameMedium_->frame(&camera));
 
 		if (frame && *frame && (frame->timestamp() != frameTimestamp_ || ignoreTimestamp_))
 		{
-			onFrame(*frame);
+			if (camera)
+			{
+				onFrame(*frame, *camera);
+			}
+			else
+			{
+				Log::warning() << "Missing camera profile";
+			}
 
 			frameTimestamp_ = frame->timestamp();
 			return;
 		}
 	}
 
-	Sleep(1);
+	Thread::sleep(1u);
 }
 
 void LiveUndistortMainWindow::onKeyDown(const int /*key*/)
@@ -97,29 +111,30 @@ void LiveUndistortMainWindow::onKeyDown(const int /*key*/)
 
 void LiveUndistortMainWindow::onMouseDown(const MouseButton /*button*/, const int /*x*/, const int /*y*/)
 {
-	distortFrame_ = !distortFrame_;
+	undistortFrame_ = !undistortFrame_;
 }
 
-void LiveUndistortMainWindow::onFrame(const Frame& frame)
+void LiveUndistortMainWindow::onFrame(const Frame& frame, const AnyCamera& camera)
 {
 	HighPerformanceTimer timer;
-	Frame rgbFrame;
 
+	Frame rgbFrame;
 	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "Invalid frame pixel format.");
 
 		setFrame(frame);
 		repaint();
+
 		return;
 	}
 
-	if (distortFrame_ && camera_)
+	if (undistortFrame_)
 	{
-		const PinholeCamera perfectCamera(camera_.intrinsic(), camera_.width(), camera_.height());
+		const AnyCameraPinhole perfectCamera(PinholeCamera(camera.width(), camera.height(), camera.fovX()));
 
 		Frame undistortedFrame;
-		if (CV::FrameInterpolatorBilinear::Comfort::resampleCameraImage(rgbFrame, AnyCameraPinhole(camera_), SquareMatrix3(true), AnyCameraPinhole(perfectCamera), undistortedFrame, nullptr, WorkerPool::get().scopedWorker()()))
+		if (CV::FrameInterpolatorBilinear::Comfort::resampleCameraImage(rgbFrame, camera, SquareMatrix3(true), perfectCamera, undistortedFrame, nullptr, WorkerPool::get().scopedWorker()()))
 		{
 			setFrame(undistortedFrame);
 		}
