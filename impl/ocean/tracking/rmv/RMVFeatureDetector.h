@@ -125,7 +125,7 @@ inline bool RMVFeatureDetector::needSmoothedFrame(const DetectorType detectorTyp
 
 		default:
 			break;
-	};
+	}
 
 	ocean_assert(false && "Invalid detector type!");
 	return false;
@@ -141,7 +141,7 @@ inline bool RMVFeatureDetector::needPyramidInitialization(const DetectorType det
 
 		default:
 			break;
-	};
+	}
 
 	ocean_assert(false && "Invalid detector type!");
 	return needSmoothedFrame(detectorType);

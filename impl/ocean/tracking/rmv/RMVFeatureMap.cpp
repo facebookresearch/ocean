@@ -21,27 +21,29 @@ namespace RMV
 {
 
 RMVFeatureMap::RMVFeatureMap() :
-	mapDetectorType(RMVFeatureDetector::DT_INVALID),
-	mapInitializationDetectorType(RMVFeatureDetector::DT_INVALID)
+	mapDetectorType_(RMVFeatureDetector::DT_INVALID),
+	mapInitializationDetectorType_(RMVFeatureDetector::DT_INVALID)
 {
 	// nothing to do here
 }
 
 void RMVFeatureMap::setFeatures(const Vector3* points, const size_t number, const PinholeCamera& pinholeCamera, const RMVFeatureDetector::DetectorType detectorType)
 {
-	mapCamera = pinholeCamera;
-	mapDetectorType = detectorType;
+	mapCamera_ = pinholeCamera;
+	mapDetectorType_ = detectorType;
 
-	mapObjectPoints.resize(number);
+	mapObjectPoints_.resize(number);
 
 	if (number != 0)
-		memcpy(mapObjectPoints.data(), points, sizeof(Vector3) * number);
+	{
+		memcpy(mapObjectPoints_.data(), points, sizeof(Vector3) * number);
+	}
 
-	mapRecentStrongObjectPointIndices.clear();
-	mapRecentSemiStrongObjectPointIndices.clear();
-	mapRecentUsedObjectPointIndices.clear();
+	mapRecentStrongObjectPointIndices_.clear();
+	mapRecentSemiStrongObjectPointIndices_.clear();
+	mapRecentUsedObjectPointIndices_.clear();
 
-	mapBoundingBox = Box3(mapObjectPoints);
+	mapBoundingBox_ = Box3(mapObjectPoints_);
 }
 
 bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, const PinholeCamera& pinholeCamera, const size_t numberFeatures, const RMVFeatureDetector::DetectorType detectorType, Worker* worker)
@@ -67,7 +69,7 @@ bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, 
 
 	ocean_assert(yAdjustedPattern);
 
-	const Geometry::ImagePoints points(RMVFeatureDetector::detectFeatures(yAdjustedPattern, detectorType, Scalar(15), numberFeatures, true, worker));
+	const Vectors2 points(RMVFeatureDetector::detectFeatures(yAdjustedPattern, detectorType, Scalar(15), numberFeatures, true, worker));
 
 	const Scalar patternDimensionX = dimension.x();
 	const Scalar patternDimensionY = dimension.y() > 0 ? dimension.y() : dimension.x() * Scalar(yAdjustedPattern.height()) / Scalar(yAdjustedPattern.width());
@@ -78,9 +80,9 @@ bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, 
 	Vectors3 objectPoints;
 	objectPoints.reserve(points.size());
 
-	for (Geometry::ImagePoints::const_iterator i = points.begin(); i != points.end(); ++i)
+	for (const Vector2& point : points)
 	{
-		const Vector3 position3(i->x() * patternFactorX - patternDimensionX * Scalar(0.5), 0, i->y() * patternFactorY - patternDimensionY * Scalar(0.5));
+		const Vector3 position3(point.x() * patternFactorX - patternDimensionX * Scalar(0.5), 0, point.y() * patternFactorY - patternDimensionY * Scalar(0.5));
 		objectPoints.push_back(position3);
 	}
 
@@ -94,29 +96,29 @@ bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, 
 
 void RMVFeatureMap::setInitializationFeatures(const Vector3* objectPoints, const size_t number, const PinholeCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType)
 {
-	mapInitializationCamera = initializationCamera;
-	mapInitializationDetectorType = initializationDetectorType;
+	mapInitializationCamera_ = initializationCamera;
+	mapInitializationDetectorType_ = initializationDetectorType;
 
-	mapInitializationObjectPoints.resize(number);
+	mapInitializationObjectPoints_.resize(number);
 
 	if (number != 0)
 	{
-		memcpy(mapInitializationObjectPoints.data(), objectPoints, sizeof(Vector3) * number);
+		memcpy(mapInitializationObjectPoints_.data(), objectPoints, sizeof(Vector3) * number);
 	}
 
-	mapInitializationBoundingBox = Box3(mapInitializationObjectPoints);
-	ocean_assert(mapInitializationBoundingBox);
+	mapInitializationBoundingBox_ = Box3(mapInitializationObjectPoints_);
+	ocean_assert(mapInitializationBoundingBox_);
 }
 
 void RMVFeatureMap::setInitializationFeatures(Vectors3&& objectPoints, const PinholeCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType)
 {
-	mapInitializationCamera = initializationCamera;
-	mapInitializationDetectorType = initializationDetectorType;
+	mapInitializationCamera_ = initializationCamera;
+	mapInitializationDetectorType_ = initializationDetectorType;
 
-	mapInitializationObjectPoints = std::move(objectPoints);
+	mapInitializationObjectPoints_ = std::move(objectPoints);
 
-	mapInitializationBoundingBox = Box3(mapInitializationObjectPoints);
-	ocean_assert(mapInitializationBoundingBox);
+	mapInitializationBoundingBox_ = Box3(mapInitializationObjectPoints_);
+	ocean_assert(mapInitializationBoundingBox_);
 }
 
 bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector3& dimension, const PinholeCamera& pinholeCamera, const size_t numberInitializationObjectPoints, const RMVFeatureDetector::DetectorType& initializationDetectorType, Worker* worker)
@@ -125,7 +127,9 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 
 	Frame yPattern;
 	if (!CV::FrameConverter::Comfort::convert(pattern, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yPattern, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	{
 		return false;
+	}
 
 	PinholeCamera adjustedCamera(pinholeCamera);
 
@@ -171,9 +175,9 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 	Vectors3 objectPoints;
 	objectPoints.reserve(initializationPoints.size());
 
-	for (Geometry::ImagePoints::const_iterator i = initializationPoints.begin(); i != initializationPoints.end(); ++i)
+	for (const Vector2& point : initializationPoints)
 	{
-		const Vector3 position3(i->x() * patternFactorX - patternDimensionX * Scalar(0.5), 0, i->y() * patternFactorY - patternDimensionY * Scalar(0.5));
+		const Vector3 position3(point.x() * patternFactorX - patternDimensionX * Scalar(0.5), 0, point.y() * patternFactorY - patternDimensionY * Scalar(0.5));
 		objectPoints.push_back(position3);
 	}
 
@@ -190,11 +194,11 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 
 void RMVFeatureMap::clear()
 {
-	mapObjectPoints.clear();
+	mapObjectPoints_.clear();
 
-	mapRecentStrongObjectPointIndices.clear();
-	mapRecentSemiStrongObjectPointIndices.clear();
-	mapRecentUsedObjectPointIndices.clear();
+	mapRecentStrongObjectPointIndices_.clear();
+	mapRecentSemiStrongObjectPointIndices_.clear();
+	mapRecentUsedObjectPointIndices_.clear();
 }
 
 }

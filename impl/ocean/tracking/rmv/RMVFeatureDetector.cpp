@@ -125,7 +125,9 @@ Vectors2 RMVFeatureDetector::detectFeatures(const Frame& frame, const DetectorTy
 					CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(frame, threshold, frameIsUndistorted, true, newFastFeatures, worker);
 
 					if (newFastFeatures.size() < numberFeatures * 110 / 100)
+					{
 						break;
+					}
 
 					fastFeatures = std::move(newFastFeatures);
 				}
@@ -208,7 +210,9 @@ Vectors2 RMVFeatureDetector::detectFeatures(const Frame& frame, const Box2& boun
 	ocean_assert(top <= bottom && bottom < frame.height());
 
 	if (right <= left || bottom <= top)
+	{
 		return Vectors2();
+	}
 
 	switch (detectorType)
 	{
@@ -227,7 +231,9 @@ Vectors2 RMVFeatureDetector::detectFeatures(const Frame& frame, const Box2& boun
 					if (newFastFeatures.size() <= numberFeatures * 110 / 100)
 					{
 						if (newFastFeatures.size() > numberFeatures)
+						{
 							fastFeatures = newFastFeatures;
+						}
 
 						break;
 					}

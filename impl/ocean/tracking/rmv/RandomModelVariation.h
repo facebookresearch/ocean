@@ -44,7 +44,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * The first mode (if tLessImagePoints is True) seeks a corresponding object point for each provided image point - thus, the number of image points must be smaller than the number of object points.<br>
 		 * The second mode (if tLessImagePoints is False) seeks a corresponding image point for each provided object point - thus, the number of object points must be smaller than the number of image points.<br>
 		 * Further, the amount of valid correspondences between image and object points must be defined to improve the accuracy of the pose determination.
-		 * @param initialPoseIF The initial and rough inverted and flipped pose that will be improved by application of the random model variation approach
+		 * @param initialFlippedCamera_T_world The initial and rough inverted and flipped pose that will be improved by application of the random model variation approach
 		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
@@ -52,7 +52,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param numberImagePoints Number of image points to be used for pose determination, with range [3, numberObjectPoints] if tLessImagePoints is True; with range [numberImagePoints, infinity) is tLessImagePoints is False
 		 * @param numberValidCorrespondences Approximately number of valid correspondences between image points and object points, with range [3, min(numberImagePoints, numberObjectPoints)]
 		 * @param randomGenerator Random generator object used as initialization for the local random generators
-		 * @param poseIF The resulting inverted and flipped optimized pose
+		 * @param flippedCamera_T_world The resulting inverted and flipped optimized pose
 		 * @param errorDetermination Defines the applied error determination method to allowing different error quality results
 		 * @param targetAverageSqrError The expected target average square pixel error for valid point correspondences to be reached before the calculation will stop, with range [0, infinity)
 		 * @param maximalTranslationOffset Maximal translation offset between the initial pose and the final resulting pose for all three axes (should be approx. 3 times higher than the real expected value)
@@ -66,7 +66,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @tparam tLessImagePoints True, to find a corresponding object point for each given image point (as the number of image points is smaller than the number of object points); False, to find a corresponding image points for each object point
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsWithOneInitialPoseIF(const HomogenousMatrix4& initialPoseIF, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& poseIF, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
+		static bool optimizedPoseFromPointCloudsWithOneInitialPoseIF(const HomogenousMatrix4& initialFlippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Returns the optimized camera pose for several given rough pose candidates, a cloud of object points and a cloud of image points with a sufficient number of valid correspondences.<br>
@@ -81,7 +81,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * In the case a worker object provided, this function will execute the pose determination using several CPU cores concurrently.<br>
 		 * Each CPU core will receive a different initial pose. The entire calculation stops if the first execute receives a valid result.<br>
 		 * Thus, the number of given initial poses should be a multiple of the existing CPU cores.
-		 * @param initialPosesIF Initial and rough inverted and flipped poses to be used for precise pose determination
+		 * @param initialFlippedCameras_T_world Initial and rough inverted and flipped poses to be used for precise pose determination
 		 * @param numberInitialPoses The number of given initial poses, with range [2, infinity)
 		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
@@ -90,7 +90,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param numberImagePoints Number of image points to be used for pose determination, with range [3, numberObjectPoints] if tLessImagePoints is True; with range [numberImagePoints, infinity) is tLessImagePoints is False
 		 * @param numberValidCorrespondences Approximately number of valid correspondences between image points and object points, with range [3, min(numberImagePoints, numberObjectPoints)]
 		 * @param randomGenerator Random generator object used as initialization for the local random generators
-		 * @param poseIF The one unique best matching (and optimized) inverted and flipped pose from the set of given poses
+		 * @param flippedCamera_T_world The one unique best matching (and optimized) inverted and flipped pose from the set of given poses
 		 * @param errorDetermination Defines the applied error determination method to allowing different error quality results
 		 * @param targetAverageSqrError The expected target average square pixel error for valid point correspondences to be reached before the calculation will stop, with range [0, infinity)
 		 * @param maximalTranslationOffset Maximal translation offset between the initial pose and the final resulting pose for all three axes (should be approx. 3 times higher than the real expected value)
@@ -104,7 +104,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @see Worker::threads().
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsWithSeveralInitialPosesIF(const HomogenousMatrix4* initialPosesIF, const size_t numberInitialPoses, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& poseIF, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
+		static bool optimizedPoseFromPointCloudsWithSeveralInitialPosesIF(const HomogenousMatrix4* initialFlippedCameras_T_world, const size_t numberInitialPoses, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
 
 	private:
 
@@ -117,7 +117,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * The first mode (if tLessImagePoints is True) seeks a corresponding object point for each provided image point - thus, the number of image points must be smaller than the number of object points.<br>
 		 * The second mode (if tLessImagePoints is False) seeks a corresponding image point for each provided object point - thus, the number of object points must be smaller than the number of image points.<br>
 		 * Further, the amount of valid correspondences between image and object points must be defined to improve the accuracy of the pose determination.
-		 * @param initialPoseIF The initial and rough inverted and flipped pose that will be improved by application of the random model variation approach
+		 * @param initialFlippedCamera_T_world The initial and rough inverted and flipped pose that will be improved by application of the random model variation approach
 		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
@@ -125,7 +125,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param numberImagePoints Number of image points to be used for pose determination, with range [3, numberObjectPoints] if tLessImagePoints is True; with range [numberImagePoints, infinity) is tLessImagePoints is False
 		 * @param numberValidCorrespondences Approximately number of valid correspondences between image points and object points, with range [3, min(numberImagePoints, numberObjectPoints)]
 		 * @param randomGenerator Random generator object used as initialization for the local random generators
-		 * @param poseIF The resulting optimized inverted and flipped pose
+		 * @param flippedCamera_T_world The resulting optimized inverted and flipped pose
 		 * @param errorDetermination Defines the applied error determination method to allowing different error quality results
 		 * @param targetAverageSqrError The expected target average square pixel error for valid point correspondences to be reached before the calculation will stop, with range [0, infinity)
 		 * @param maximalTranslationOffset Maximal translation offset between the initial pose and the final resulting pose for all three axes (should be approx. 3 times higher than the real expected value)
@@ -139,7 +139,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @tparam tLessImagePoints True, to find a corresponding object point for each given image point (as the number of image points is smaller than the number of object points); False, to find a corresponding image points for each object point
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsAbortableIF(const HomogenousMatrix4* initialPoseIF, const PinholeCamera* pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* poseIF, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), Vector3 maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Lock* lock = nullptr);
+		static bool optimizedPoseFromPointCloudsAbortableIF(const HomogenousMatrix4* initialFlippedCamera_T_world, const PinholeCamera* pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), Vector3 maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Lock* lock = nullptr);
 
 		/**
 		 * Returns the optimized camera pose for a subset of several given rough pose candidates, a cloud of object points and a cloud of image points with a sufficient number of valid correspondences.<br>
@@ -150,7 +150,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * The first mode (if tLessImagePoints is True) seeks a corresponding object point for each provided image point - thus, the number of image points must be smaller than the number of object points.<br>
 		 * The second mode (if tLessImagePoints is False) seeks a corresponding image point for each provided object point - thus, the number of object points must be smaller than the number of image points.<br>
 		 * Further, the amount of valid correspondences between image and object points must be defined to improve the accuracy of the pose determination.
-		 * @param initialPosesIF The initial and rough inverted and flipped poses which will be improved by application of the random model variation approach
+		 * @param initialFlippedCameras_T_world The initial and rough inverted and flipped poses which will be improved by application of the random model variation approach
 		 * @param firstInitialPose First initial pose to be handled, must be valid
 		 * @param numberInitialPoses Number of initial poses to be handled, with range [1, infinity)
 		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
@@ -160,7 +160,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param numberImagePoints Number of image points to be used for pose determination, with range [3, numberObjectPoints] if tLessImagePoints is True; with range [numberImagePoints, infinity) is tLessImagePoints is False
 		 * @param numberValidCorrespondences Approximately number of valid correspondences between image points and object points, with range [3, min(numberImagePoints, numberObjectPoints)]
 		 * @param randomGenerator Random generator object used as initialization for the local random generators
-		 * @param poseIF The one unique best matching (and optimized) inverted and flipped pose from the set of given poses
+		 * @param flippedCamera_T_world The one unique best matching (and optimized) inverted and flipped pose from the set of given poses
 		 * @param errorDetermination Defines the applied error determination method to allowing different error quality results
 		 * @param targetAverageSqrError The expected target average square pixel error for valid point correspondences to be reached before the calculation will stop, with range [0, infinity)
 		 * @param maximalTranslationOffset Maximal translation offset between the initial pose and the final resulting pose for all three axes (should be approx. 3 times higher than the real expected value)
@@ -173,7 +173,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @tparam tLessImagePoints True, to find a corresponding object point for each given image point (as the number of image points is smaller than the number of object points); False, to find a corresponding image points for each object point
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsPoseIFSubset(const HomogenousMatrix4* initialPosesIF, const unsigned int firstInitialPose, const unsigned int numberInitialPoses, const PinholeCamera* pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* poseIF, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError, Vector3 maximalTranslationOffset, Scalar maximalOrientationOffset, const double timeout, Scalar* resultingSqrError, bool* explicitStop, Lock* lock);
+		static bool optimizedPoseFromPointCloudsPoseIFSubset(const HomogenousMatrix4* initialFlippedCameras_T_world, const unsigned int firstInitialPose, const unsigned int numberInitialPoses, const PinholeCamera* pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError, Vector3 maximalTranslationOffset, Scalar maximalOrientationOffset, const double timeout, Scalar* resultingSqrError, bool* explicitStop, Lock* lock);
 
 		/**
 		 * Assigns a pose candidate to a target pose if the pose quality is better than the currently known pose quality.
@@ -185,8 +185,8 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param largePointGroupNumber The number of points in the larger group, with range [smallPointGroupNumber, infinity)
 		 * @param numberValidCorrespondences The expected number of points that have a corresponding point in the other point set, with range [1, smallPointGroupNumber]
 		 * @param candidateSqrError The square error of the current candidate pose, with range [0, infinity)
-		 * @param poseCandidateIF The inverted and flipped candidate pose
-		 * @param poseIF The target pose (receiving the candidate pose if this pose is the best)
+		 * @param candidateFlippedCamera_T_world The inverted and flipped candidate pose
+		 * @param flippedCamera_T_world The target pose (receiving the candidate pose if this pose is the best)
 		 * @param errorDetermination The error determination to be used
 		 * @param targetAverageSqrError The maximal square distance between two corresponding points so that they count as valid pair, with range [0, infinity)
 		 * @param resultingSqrError Optional resulting square distance that can be used to decide the best result of parallel threads
@@ -195,7 +195,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param lock Optional lock object to make this function thread-safe
 		 * @return True, if the pose candidate has been assigned as better pose
 		 */
-		static bool assignBestPoseIF(const Vector2* smallPointGroup, const size_t smallPointGroupNumber, const Vector2* largePointGroup, const size_t largePointGroupNumber, const size_t numberValidCorrespondences, const Scalar candidateSqrError, const HomogenousMatrix4& poseCandidateIF, HomogenousMatrix4& poseIF, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError, Scalar* resultingSqrError, IndexPairs32* correspondences, bool* explicitStop, Lock* lock);
+		static bool assignBestPoseIF(const Vector2* smallPointGroup, const size_t smallPointGroupNumber, const Vector2* largePointGroup, const size_t largePointGroupNumber, const size_t numberValidCorrespondences, const Scalar candidateSqrError, const HomogenousMatrix4& candidateFlippedCamera_T_world, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError, Scalar* resultingSqrError, IndexPairs32* correspondences, bool* explicitStop, Lock* lock);
 };
 
 }

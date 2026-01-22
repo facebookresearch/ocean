@@ -12,14 +12,12 @@
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/ScopedValue.h"
-#include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/FrameConverter.h"
 #include "ocean/cv/FrameFilterGaussian.h"
 #include "ocean/cv/FrameShrinker.h"
 
 #include "ocean/geometry/NonLinearOptimizationPose.h"
-#include "ocean/geometry/RANSAC.h"
 #include "ocean/geometry/SpatialDistribution.h"
 
 #include "ocean/tracking/PointCorrespondences.h"
@@ -36,13 +34,13 @@ namespace RMV
 {
 
 RMVFeatureTracker6DOF::RMVFeatureTracker6DOF(const RMVFeatureDetector::DetectorType detectorType) :
-	trackerDetectorType(detectorType),
-	trackerFeatureDetectorStrength(25),
-	trackerMaximalPoseProjectionFeatureNumber(150),
-	trackerStrongCorrespondencesEmptyAreaRadius(10.0),
-	trackerSemiStrongCorrespondencesEmptyAreaRadius(6.0),
-	trackerAsynchronousDataProcessingActive(false),
-	trackerAsynchronousDataProcessingPoseIF(false)
+	trackerDetectorType_(detectorType),
+	trackerFeatureDetectorStrength_(25),
+	trackerMaximalPoseProjectionFeatureNumber_(150),
+	trackerStrongCorrespondencesEmptyAreaRadius_(10.0),
+	trackerSemiStrongCorrespondencesEmptyAreaRadius_(6.0),
+	trackerAsynchronousDataProcessingActive_(false),
+	trackerAsynchronousDataProcessingFlippedCamera_T_world_(false)
 {
 	startThread();
 }
@@ -50,7 +48,7 @@ RMVFeatureTracker6DOF::RMVFeatureTracker6DOF(const RMVFeatureDetector::DetectorT
 RMVFeatureTracker6DOF::~RMVFeatureTracker6DOF()
 {
 	stopThread();
-	trackerAsynchronousSignal.release();
+	trackerAsynchronousSignal_.release();
 	joinThread();
 
 	stopThreadExplicitly();
@@ -60,7 +58,7 @@ void RMVFeatureTracker6DOF::setFeatureMap(const RMVFeatureMap& featureMap, Rando
 {
 	const ScopedLock scopedLock(lock_);
 
-	trackerFeatureMap = featureMap;
+	trackerFeatureMap_ = featureMap;
 
 	const Box3& initializationBoundingBox = featureMap.initializationBoundingBox();
 	const Scalar boundingBoxDiagonal = initializationBoundingBox.diagonal();
@@ -74,9 +72,9 @@ void RMVFeatureTracker6DOF::setFeatureMap(const RMVFeatureMap& featureMap, Rando
 
 	const Vectors3& initializationObjectPoints = featureMap.initializationObjectPoints();
 
-	trackerPoseProjectionSet.setDimension(featureMap.initializationCamera().width(), featureMap.initializationCamera().height());
+	trackerPoseProjectionSet_.setDimension(featureMap.initializationCamera().width(), featureMap.initializationCamera().height());
 
-	if (initializationBoundingBox.isValid() && !initializationObjectPoints.empty() && trackerMaximalPoseProjectionFeatureNumber != 0)
+	if (initializationBoundingBox.isValid() && !initializationObjectPoints.empty() && trackerMaximalPoseProjectionFeatureNumber_ != 0)
 	{
 #if 1
 		// we can either use random poses based on a hemisphere
@@ -87,10 +85,12 @@ void RMVFeatureTracker6DOF::setFeatureMap(const RMVFeatureMap& featureMap, Rando
 		RandomizedPose::randomPoses(featureMap.initializationCamera(), initializationBoundingBox, randomGenerator, boundingBoxDiagonal * Scalar(0.7), boundingBoxDiagonal * Scalar(0.9), Scalar(0.25), randomPoses.size(), randomPoses.data(), WorkerPool::get().scopedWorker()());
 #endif
 
-		trackerPoseProjectionSet.clear();
+		trackerPoseProjectionSet_.clear();
 
-		for (HomogenousMatrices4::const_iterator i = randomPoses.begin(); i != randomPoses.end(); ++i)
-			trackerPoseProjectionSet.addPoseProjection(Tracking::PoseProjection(*i, featureMap.initializationCamera(), initializationObjectPoints.data(), min(initializationObjectPoints.size(), trackerMaximalPoseProjectionFeatureNumber), false));
+		for (const HomogenousMatrix4& randomPose : randomPoses)
+		{
+			trackerPoseProjectionSet_.addPoseProjection(Tracking::PoseProjection(randomPose, featureMap.initializationCamera(), initializationObjectPoints.data(), min(initializationObjectPoints.size(), trackerMaximalPoseProjectionFeatureNumber_), false));
+		}
 	}
 }
 
@@ -104,7 +104,7 @@ bool RMVFeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCame
 	ocean_assert(frame.isValid() && pinholeCamera.isValid());
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 
-	if (!trackerFeatureMap)
+	if (!trackerFeatureMap_)
 	{
 		return false;
 	}
@@ -118,12 +118,12 @@ bool RMVFeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCame
 	ocean_assert(transformations.empty());
 	transformations.clear();
 
-	HomogenousMatrix4 pose;
-	if (internDeterminePose(frame, pinholeCamera, frameIsUndistorted, pose, worker))
+	HomogenousMatrix4 world_T_camera;
+	if (internDeterminePose(frame, pinholeCamera, frameIsUndistorted, world_T_camera, worker))
 	{
-		motionModel_.update(pose);
+		motionModel_.update(world_T_camera);
 
-		transformations.push_back(TransformationSample(pose, 0u));
+		transformations.push_back(TransformationSample(world_T_camera, 0u));
 		return true;
 	}
 
@@ -131,7 +131,7 @@ bool RMVFeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCame
 	return false;
 }
 
-bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const PinholeCamera& pinholeCamera, const bool frameIsUndistorted, HomogenousMatrix4& pose, Worker* worker)
+bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const PinholeCamera& pinholeCamera, const bool frameIsUndistorted, HomogenousMatrix4& world_T_camera, Worker* worker)
 {
 	ocean_assert(frame && pinholeCamera.isValid());
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
@@ -148,12 +148,12 @@ bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const Pinhol
 	{
 		// we have a rough pose e.g., from the previous frame so that we first try to determine the new pose with very efficient strategies
 
-		const HomogenousMatrix4 roughPose = motionModel_.predictedPose();
+		const HomogenousMatrix4 world_T_roughCamera = motionModel_.predictedPose();
 
 		// first, we determine strong feature points in the current frame
 
 		ocean_assert(imagePoints.empty());
-		imagePoints = detectFeatures(yFrame, frameIsUndistorted, pinholeCamera.projectToImage<true>(roughPose, trackerFeatureMap.boundingBox(), false), worker);
+		imagePoints = detectFeatures(yFrame, frameIsUndistorted, pinholeCamera.projectToImage<true>(world_T_roughCamera, trackerFeatureMap_.boundingBox(), false), worker);
 
 		// if we have a current frame with almost no feature points we simply stop here
 		if (imagePoints.size() < 10)
@@ -161,41 +161,41 @@ bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const Pinhol
 			return false;
 		}
 
-		if (trackerFeatureMap.recentStrongObjectPointIndices().size() >= 5 && trackerFeatureMap.recentStrongObjectPointIndices().size() + trackerFeatureMap.recentSemiStrongObjectPointIndices().size() >= 20)
+		if (trackerFeatureMap_.recentStrongObjectPointIndices().size() >= 5 && trackerFeatureMap_.recentStrongObjectPointIndices().size() + trackerFeatureMap_.recentSemiStrongObjectPointIndices().size() >= 20)
 		{
 			// in the case we have enough strong feature points from the previous frame we first try to determine the camera pose based on these feature points as this would be very simple and would provide a reliable tracking result
 
-			if (determinePoseWithStrongPreviousCorrespondences(roughPose, pinholeCamera, imagePoints, pose, worker))
+			if (determinePoseWithStrongPreviousCorrespondences(world_T_roughCamera, pinholeCamera, imagePoints, world_T_camera, worker))
 			{
 				return true;
 			}
 		}
 
-		if (determinePoseWithAnyPreviousCorrespondences(roughPose, pinholeCamera, imagePoints, pose, worker))
+		if (determinePoseWithAnyPreviousCorrespondences(world_T_roughCamera, pinholeCamera, imagePoints, world_T_camera, worker))
 		{
 			return true;
 		}
 
 		// none of the above applied tracking strategies based on known feature correspondences succeeded, so that we now try to determine the current camera pose based on the rough guess from the motion model
 
-		if (determinePoseWithRoughPose(roughPose, pinholeCamera, imagePoints, pose, worker))
+		if (determinePoseWithRoughPose(world_T_roughCamera, pinholeCamera, imagePoints, world_T_camera, worker))
 		{
 			return true;
 		}
 	}
 
-	if (RMVFeatureDetector::needPyramidInitialization(trackerFeatureMap.initializationDetectorType()))
+	if (RMVFeatureDetector::needPyramidInitialization(trackerFeatureMap_.initializationDetectorType()))
 	{
-		if (!determinePoseWithoutKnowledgePyramid(yFrame, trackerFeatureMap.initializationCamera(), pose, worker))
+		if (!determinePoseWithoutKnowledgePyramid(yFrame, trackerFeatureMap_.initializationCamera(), world_T_camera, worker))
 		{
 			return false;
 		}
 
-		const HomogenousMatrix4 roughPose = pose;
+		const HomogenousMatrix4 world_T_roughCamera = world_T_camera;
 
-		imagePoints = detectFeatures(yFrame, frameIsUndistorted, pinholeCamera.projectToImage<true>(roughPose, trackerFeatureMap.boundingBox(), false), worker);
+		imagePoints = detectFeatures(yFrame, frameIsUndistorted, pinholeCamera.projectToImage<true>(world_T_roughCamera, trackerFeatureMap_.boundingBox(), false), worker);
 
-		if (!determinePoseWithRoughPose(roughPose, pinholeCamera, imagePoints, pose, worker))
+		if (!determinePoseWithRoughPose(world_T_roughCamera, pinholeCamera, imagePoints, world_T_camera, worker))
 		{
 			return false;
 		}
@@ -213,7 +213,7 @@ bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const Pinhol
 			return false;
 		}
 
-		if (!determinePoseWithoutKnowledgeDefault(pinholeCamera, imagePoints, pose, worker))
+		if (!determinePoseWithoutKnowledgeDefault(pinholeCamera, imagePoints, world_T_camera, worker))
 		{
 			return false;
 		}
@@ -222,24 +222,24 @@ bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const Pinhol
 	return true;
 }
 
-bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& frame, const PinholeCamera& pinholeCamera, HomogenousMatrix4& pose, Worker* worker)
+bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& frame, const PinholeCamera& pinholeCamera, HomogenousMatrix4& world_T_camera, Worker* worker)
 {
 	ocean_assert(frame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(frame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 
 	Frame adjustedFrame(frame, Frame::ACM_USE_KEEP_LAYOUT);
-	if (frame.width() != trackerPoseProjectionSet.width() || frame.height() != trackerPoseProjectionSet.height())
+	if (frame.width() != trackerPoseProjectionSet_.width() || frame.height() != trackerPoseProjectionSet_.height())
 	{
-		ocean_assert(frame.width() > trackerPoseProjectionSet.width() && frame.height() > trackerPoseProjectionSet.height());
+		ocean_assert(frame.width() > trackerPoseProjectionSet_.width() && frame.height() > trackerPoseProjectionSet_.height());
 
 		if (!CV::FrameShrinker::downsampleByTwo11(frame, adjustedFrame, worker))
 		{
 			return false;
 		}
 
-		while (adjustedFrame.width() != trackerPoseProjectionSet.width() || adjustedFrame.height() != trackerPoseProjectionSet.height())
+		while (adjustedFrame.width() != trackerPoseProjectionSet_.width() || adjustedFrame.height() != trackerPoseProjectionSet_.height())
 		{
-			ocean_assert(frame.width() > trackerPoseProjectionSet.width() && frame.height() > trackerPoseProjectionSet.height());
+			ocean_assert(frame.width() > trackerPoseProjectionSet_.width() && frame.height() > trackerPoseProjectionSet_.height());
 
 			if (!CV::FrameShrinker::downsampleByTwo11(adjustedFrame, worker))
 			{
@@ -250,7 +250,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& fr
 
 	ocean_assert(adjustedFrame.width() == pinholeCamera.width() && adjustedFrame.height() == pinholeCamera.height());
 
-	if (RMVFeatureDetector::needSmoothedFrame(trackerDetectorType))
+	if (RMVFeatureDetector::needSmoothedFrame(trackerDetectorType_))
 	{
 		if (!CV::FrameFilterGaussian::filter(adjustedFrame, 3u, worker))
 		{
@@ -258,10 +258,10 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& fr
 		}
 	}
 
-	const Vectors3& objectPoints = trackerFeatureMap.initializationObjectPoints();
+	const Vectors3& objectPoints = trackerFeatureMap_.initializationObjectPoints();
 	unsigned int numberImagePoints = (unsigned int)objectPoints.size() * 70u / 100u;
 
-	const Vectors2 imagePoints(RMVFeatureDetector::detectFeatures(adjustedFrame, trackerDetectorType, 55, numberImagePoints, false, worker));
+	const Vectors2 imagePoints(RMVFeatureDetector::detectFeatures(adjustedFrame, trackerDetectorType_, 55, numberImagePoints, false, worker));
 	numberImagePoints = (unsigned int)imagePoints.size();
 
 	if (imagePoints.size() < 20)
@@ -269,19 +269,19 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& fr
 		return false;
 	}
 
-	HomogenousMatrices4 roughPosesIF;
+	HomogenousMatrices4 roughFlippedCameras_T_world;
 
 	{
-		HomogenousMatrices4 roughPoses(8);
-		trackerPoseProjectionSet.findPosesWithMinimalError<Geometry::Estimator::ET_TUKEY>(imagePoints.data(), imagePoints.size(), (unsigned int)imagePoints.size() * 75u / 100u, Geometry::Error::ED_APPROXIMATED, roughPoses.size(), roughPoses.data(), nullptr, worker);
+		HomogenousMatrices4 world_T_roughCameras(8);
+		trackerPoseProjectionSet_.findPosesWithMinimalError<Geometry::Estimator::ET_TUKEY>(imagePoints.data(), imagePoints.size(), (unsigned int)imagePoints.size() * 75u / 100u, Geometry::Error::ED_APPROXIMATED, world_T_roughCameras.size(), world_T_roughCameras.data(), nullptr, worker);
 
 		// add default poses, **TODO** check for visibility of the default poses
-		roughPoses.insert(roughPoses.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2()) * Rotation(0, 0, 1, Numeric::pi_2())));
-		roughPoses.insert(roughPoses.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2()) * Rotation(0, 0, 1, Numeric::pi())));
-		roughPoses.insert(roughPoses.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2()) * Rotation(0, 0, 1, Numeric::pi() * Scalar(1.5))));
-		roughPoses.insert(roughPoses.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2())));
+		world_T_roughCameras.insert(world_T_roughCameras.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2()) * Rotation(0, 0, 1, Numeric::pi_2())));
+		world_T_roughCameras.insert(world_T_roughCameras.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2()) * Rotation(0, 0, 1, Numeric::pi())));
+		world_T_roughCameras.insert(world_T_roughCameras.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2()) * Rotation(0, 0, 1, Numeric::pi() * Scalar(1.5))));
+		world_T_roughCameras.insert(world_T_roughCameras.begin(), HomogenousMatrix4(Vector3(Scalar(0.0), Scalar(0.25), Scalar(0.0)), Rotation(1, 0, 0, -Numeric::pi_2())));
 
-		roughPosesIF = PinholeCamera::standard2InvertedFlipped(roughPoses.data(), roughPoses.size());
+		roughFlippedCameras_T_world = PinholeCamera::standard2InvertedFlipped(world_T_roughCameras.data(), world_T_roughCameras.size());
 	}
 
 	const Scalar resolutionFactor = cameraResolutionFactor(pinholeCamera);
@@ -292,21 +292,21 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& fr
 	const Scalar maxPixelError3 = Numeric::sqr(Scalar(7.0) * resolutionFactor);
 
 
-	HomogenousMatrix4 resultingPoseIF;
-	if (RandomModelVariation::optimizedPoseFromPointCloudsWithSeveralInitialPosesIF<true>(roughPosesIF.data(), roughPosesIF.size(), pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 65u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Numeric::deg2rad(30), Scalar(0.01), nullptr, nullptr, worker))
+	HomogenousMatrix4 resultingFlippedCamera_T_world;
+	if (RandomModelVariation::optimizedPoseFromPointCloudsWithSeveralInitialPosesIF<true>(roughFlippedCameras_T_world.data(), roughFlippedCameras_T_world.size(), pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 65u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Numeric::deg2rad(30), Scalar(0.01), nullptr, nullptr, worker))
 	{
-		HomogenousMatrix4 initialPoseIF = resultingPoseIF;
-		if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(initialPoseIF, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 55u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError1, Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Numeric::deg2rad(30), Scalar(0.01), nullptr, nullptr, nullptr, worker))
+		HomogenousMatrix4 initialFlippedCamera_T_world = resultingFlippedCamera_T_world;
+		if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(initialFlippedCamera_T_world, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 55u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError1, Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Numeric::deg2rad(30), Scalar(0.01), nullptr, nullptr, nullptr, worker))
 		{
-			initialPoseIF = resultingPoseIF;
+			initialFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
-			if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(initialPoseIF, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 55u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_AMBIGUOUS, maxPixelError2, Vector3(Scalar(0.25), Scalar(0.25), Scalar(0.25)), Numeric::deg2rad(25), Scalar(0.01), nullptr, nullptr, nullptr, worker))
+			if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(initialFlippedCamera_T_world, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 55u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_AMBIGUOUS, maxPixelError2, Vector3(Scalar(0.25), Scalar(0.25), Scalar(0.25)), Numeric::deg2rad(25), Scalar(0.01), nullptr, nullptr, nullptr, worker))
 			{
-				initialPoseIF = resultingPoseIF;
+				initialFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
-				if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(initialPoseIF, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 50u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_UNIQUE, maxPixelError3, Vector3(Scalar(0.2), Scalar(0.2), Scalar(0.2)), Numeric::deg2rad(20), Scalar(0.05), nullptr, nullptr, nullptr, worker))
+				if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(initialFlippedCamera_T_world, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 50u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_UNIQUE, maxPixelError3, Vector3(Scalar(0.2), Scalar(0.2), Scalar(0.2)), Numeric::deg2rad(20), Scalar(0.05), nullptr, nullptr, nullptr, worker))
 				{
-					pose = PinholeCamera::invertedFlipped2Standard(resultingPoseIF);
+					world_T_camera = PinholeCamera::invertedFlipped2Standard(resultingFlippedCamera_T_world);
 
 					return true;
 				}
@@ -317,9 +317,9 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgePyramid(const Frame& fr
 	return false;
 }
 
-bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, HomogenousMatrix4& pose, Worker* worker)
+bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, HomogenousMatrix4& world_T_camera, Worker* worker)
 {
-	const Vectors3& objectPoints = trackerFeatureMap.initializationObjectPoints();
+	const Vectors3& objectPoints = trackerFeatureMap_.initializationObjectPoints();
 	unsigned int numberImagePoints = min((unsigned int)objectPoints.size() * 70u / 100u, (unsigned int)imagePoints.size());
 
 	if (imagePoints.size() < 20)
@@ -327,18 +327,18 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCa
 		return false;
 	}
 
-	ocean_assert(trackerPoseProjectionSet.width() == pinholeCamera.width() && trackerPoseProjectionSet.height() == pinholeCamera.height());
+	ocean_assert(trackerPoseProjectionSet_.width() == pinholeCamera.width() && trackerPoseProjectionSet_.height() == pinholeCamera.height());
 
 	// first we guess several suitable start poses due to the set of pre-defined poses
 	// however, the accuracy can be very poor
 
-	HomogenousMatrices4 roughPosesIF;
+	HomogenousMatrices4 roughFlippedCameras_T_world;
 
 	{
-		HomogenousMatrices4 roughPoses(8);
-		trackerPoseProjectionSet.findPosesWithMinimalError<Geometry::Estimator::ET_TUKEY>(imagePoints.data(), imagePoints.size(), (unsigned int)imagePoints.size() * 75u / 100u, Geometry::Error::ED_APPROXIMATED, roughPoses.size(), roughPoses.data(), nullptr, worker);
+		HomogenousMatrices4 world_T_roughCameras(8);
+		trackerPoseProjectionSet_.findPosesWithMinimalError<Geometry::Estimator::ET_TUKEY>(imagePoints.data(), imagePoints.size(), (unsigned int)imagePoints.size() * 75u / 100u, Geometry::Error::ED_APPROXIMATED, world_T_roughCameras.size(), world_T_roughCameras.data(), nullptr, worker);
 
-		roughPosesIF = PinholeCamera::standard2InvertedFlipped(roughPoses.data(), roughPoses.size());
+		roughFlippedCameras_T_world = PinholeCamera::standard2InvertedFlipped(world_T_roughCameras.data(), world_T_roughCameras.size());
 	}
 
 #ifdef OCEAN_DEBUG
@@ -362,25 +362,25 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCa
 
 	// first, we determine the best pose out of the set of given random poses (already slightly improved)
 
-	HomogenousMatrix4 resultingPoseIF;
-	if (RandomModelVariation::optimizedPoseFromPointCloudsWithSeveralInitialPosesIF<true>(roughPosesIF.data(), roughPosesIF.size(), pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), Numeric::deg2rad(15), timeout, &resultingError, nullptr, worker))
+	HomogenousMatrix4 resultingFlippedCamera_T_world;
+	if (RandomModelVariation::optimizedPoseFromPointCloudsWithSeveralInitialPosesIF<true>(roughFlippedCameras_T_world.data(), roughFlippedCameras_T_world.size(), pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), Numeric::deg2rad(15), timeout, &resultingError, nullptr, worker))
 	{
 		// second, we try to optimize the best resulting pose further (with slightly stinger conditions)
 
-		HomogenousMatrix4 roughPoseIF = resultingPoseIF;
+		HomogenousMatrix4 roughFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
-		if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughPoseIF, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError1, Vector3(Scalar(0.05), Scalar(0.05), Scalar(0.05)), Numeric::deg2rad(12.5), timeout, nullptr, nullptr, nullptr, worker))
+		if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughFlippedCamera_T_world, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError1, Vector3(Scalar(0.05), Scalar(0.05), Scalar(0.05)), Numeric::deg2rad(12.5), timeout, nullptr, nullptr, nullptr, worker))
 		{
 			// third, we try to optimize the pose further (again with stronger conditions) and we determine point correspondences
 
-			roughPoseIF = resultingPoseIF;
+			roughFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
 			IndexPairs32 correspondences;
-			if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughPoseIF, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_AMBIGUOUS, maxPixelError2, Vector3(Scalar(0.02), Scalar(0.02), Scalar(0.02)), Numeric::deg2rad(10), timeout, nullptr, &correspondences, nullptr, worker))
+			if (RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughFlippedCamera_T_world, pinholeCamera, objectPoints.data(), objectPoints.size(), imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_AMBIGUOUS, maxPixelError2, Vector3(Scalar(0.02), Scalar(0.02), Scalar(0.02)), Numeric::deg2rad(10), timeout, nullptr, &correspondences, nullptr, worker))
 			{
 				// now as we found an almost precise pose we simply need to optimize the pose with traditional non-linear optimization approaches
 
-				roughPoseIF = resultingPoseIF;
+				roughFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
 				Vectors2 validImagePoints;
 				Vectors3 validObjectPoints;
@@ -388,35 +388,35 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCa
 				validImagePoints.reserve(correspondences.size());
 				validObjectPoints.reserve(correspondences.size());
 
-				for (IndexPairs32::const_iterator i = correspondences.begin(); i != correspondences.end(); ++i)
+				for (const IndexPair32& correspondence : correspondences)
 				{
-					ocean_assert(i->first < imagePoints.size());
-					ocean_assert(i->second < trackerFeatureMap.initializationObjectPoints().size());
+					ocean_assert(correspondence.first < imagePoints.size());
+					ocean_assert(correspondence.second < trackerFeatureMap_.initializationObjectPoints().size());
 
-					validObjectPoints.push_back(trackerFeatureMap.initializationObjectPoints()[i->second]);
-					validImagePoints.push_back(imagePoints[i->first]);
+					validObjectPoints.push_back(trackerFeatureMap_.initializationObjectPoints()[correspondence.second]);
+					validImagePoints.push_back(imagePoints[correspondence.first]);
 				}
 
-				if (Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingPoseIF, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
+				if (Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughFlippedCamera_T_world, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingFlippedCamera_T_world, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
 				{
 					// now we have a quite good pose based on the gathered points correspondences
 					// now we apply a last fine-tuning with more points as we now should be able to find significant more feature correspondences
 
-					roughPoseIF = resultingPoseIF;
+					roughFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
-					if (refinePoseIF(roughPoseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 200, 400, Scalar(10) * resolutionFactor, Scalar(30 * 30), Numeric::maxValue(), worker) < 5u)
+					if (refinePoseIF(roughFlippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 200, 400, Scalar(10) * resolutionFactor, Scalar(30 * 30), Numeric::maxValue(), worker) < 5u)
 					{
 						return false;
 					}
 
-					roughPoseIF = resultingPoseIF;
+					roughFlippedCamera_T_world = resultingFlippedCamera_T_world;
 
-					if (refinePoseIF(roughPoseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 400, 800, Scalar(4) * resolutionFactor, Scalar(2 * 2), Numeric::maxValue(), worker) < 5u)
+					if (refinePoseIF(roughFlippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 400, 800, Scalar(4) * resolutionFactor, Scalar(2 * 2), Numeric::maxValue(), worker) < 5u)
 					{
 						return false;
 					}
 
-					pose = PinholeCamera::invertedFlipped2Standard(resultingPoseIF);
+					world_T_camera = PinholeCamera::invertedFlipped2Standard(resultingFlippedCamera_T_world);
 
 					return true;
 				}
@@ -429,34 +429,34 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCa
 	return false;
 }
 
-bool RMVFeatureTracker6DOF::determinePoseWithStrongPreviousCorrespondences(const HomogenousMatrix4& roughPose, const PinholeCamera& pinholeCamera, Vectors2& imagePoints, HomogenousMatrix4& pose, Worker* worker)
+bool RMVFeatureTracker6DOF::determinePoseWithStrongPreviousCorrespondences(const HomogenousMatrix4& world_T_roughCamera, const PinholeCamera& pinholeCamera, Vectors2& imagePoints, HomogenousMatrix4& world_T_camera, Worker* worker)
 {
-	ocean_assert(roughPose.isValid() && pinholeCamera.isValid());
+	ocean_assert(world_T_roughCamera.isValid() && pinholeCamera.isValid());
 	ocean_assert(motionModel_);
 
-	ocean_assert(trackerFeatureMap.recentStrongObjectPointIndices().size() >= 5 && imagePoints.size() >= 10);
-	if (trackerFeatureMap.recentStrongObjectPointIndices().size() < 5 || imagePoints.size() < 10)
+	ocean_assert(trackerFeatureMap_.recentStrongObjectPointIndices().size() >= 5 && imagePoints.size() >= 10);
+	if (trackerFeatureMap_.recentStrongObjectPointIndices().size() < 5 || imagePoints.size() < 10)
 	{
 		return false;
 	}
 
 	// we try to re-find the previously used feature correspondences (we simply hope that the previous feature point locations do match quite well with the predicted location - and that in these image areas no other possible feature points occur)
 
-	const HomogenousMatrix4 roughPoseIF(PinholeCamera::standard2InvertedFlipped(roughPose));
+	const HomogenousMatrix4 roughFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_roughCamera));
 
-	HomogenousMatrix4 resultingPoseIF;
-	if (!refinePoseWithStrongPreviousCorrespondencesIF(roughPoseIF, pinholeCamera, imagePoints, resultingPoseIF))
+	HomogenousMatrix4 resultingFlippedCamera_T_world;
+	if (!refinePoseWithStrongPreviousCorrespondencesIF(roughFlippedCamera_T_world, pinholeCamera, imagePoints, resultingFlippedCamera_T_world))
 	{
 		return false;
 	}
 
 	const Scalar resolutionFactor = cameraResolutionFactor(pinholeCamera);
 
-	HomogenousMatrix4 poseIF(resultingPoseIF);
+	HomogenousMatrix4 flippedCamera_T_world(resultingFlippedCamera_T_world);
 
 	// now we try to improve/refine the pose
 
-	const unsigned int validCorrespondencesFirst = refinePoseIF(poseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 200u, 400u, Scalar(10) * resolutionFactor, Scalar(30 * 30), Numeric::maxValue(), worker);
+	const unsigned int validCorrespondencesFirst = refinePoseIF(flippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 200u, 400u, Scalar(10) * resolutionFactor, Scalar(30 * 30), Numeric::maxValue(), worker);
 
 	if (validCorrespondencesFirst <= 5u)
 	{
@@ -465,21 +465,21 @@ bool RMVFeatureTracker6DOF::determinePoseWithStrongPreviousCorrespondences(const
 
 	// and we try to improve/refine the pose again
 
-	poseIF = resultingPoseIF;
+	flippedCamera_T_world = resultingFlippedCamera_T_world;
 
-	const unsigned int validCorrespondencesSecond = refinePoseIF(poseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 400u, 600u, Scalar(4) * resolutionFactor, Scalar(2 * 2), Numeric::maxValue(), worker);
+	const unsigned int validCorrespondencesSecond = refinePoseIF(flippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 400u, 600u, Scalar(4) * resolutionFactor, Scalar(2 * 2), Numeric::maxValue(), worker);
 
 	if (validCorrespondencesSecond <= 20u)
 	{
 		return false;
 	}
 
-	poseIF = resultingPoseIF;
+	flippedCamera_T_world = resultingFlippedCamera_T_world;
 
 	// if we could not establish enough valid feature correspondences we give it another try, or if the camera pose is not similar to the rough guess
-	if (validCorrespondencesSecond < 150 || roughPoseIF.rotation().angle(resultingPoseIF.rotation()) > Numeric::deg2rad(2.5))
+	if (validCorrespondencesSecond < 150 || roughFlippedCamera_T_world.rotation().angle(resultingFlippedCamera_T_world.rotation()) > Numeric::deg2rad(2.5))
 	{
-		const unsigned int validCorrespondencesThird = refinePoseIF(poseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 800u, 1000u, Scalar(4) * resolutionFactor, Scalar(1.5 * 1.5), Numeric::maxValue(), worker);
+		const unsigned int validCorrespondencesThird = refinePoseIF(flippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 800u, 1000u, Scalar(4) * resolutionFactor, Scalar(1.5 * 1.5), Numeric::maxValue(), worker);
 
 		if (validCorrespondencesThird <= 30u)
 		{
@@ -487,24 +487,24 @@ bool RMVFeatureTracker6DOF::determinePoseWithStrongPreviousCorrespondences(const
 		}
 	}
 
-	startAsynchronousDataProcessingIF(resultingPoseIF, pinholeCamera, std::move(imagePoints));
+	startAsynchronousDataProcessingIF(resultingFlippedCamera_T_world, pinholeCamera, std::move(imagePoints));
 
-	pose = PinholeCamera::invertedFlipped2Standard(resultingPoseIF);
+	world_T_camera = PinholeCamera::invertedFlipped2Standard(resultingFlippedCamera_T_world);
 
 	return true;
 }
 
-bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const HomogenousMatrix4& roughPose, const PinholeCamera& pinholeCamera, Vectors2& imagePoints, HomogenousMatrix4& pose, Worker* worker)
+bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const HomogenousMatrix4& world_T_roughCamera, const PinholeCamera& pinholeCamera, Vectors2& imagePoints, HomogenousMatrix4& world_T_camera, Worker* worker)
 {
-	ocean_assert(roughPose.isValid() && pinholeCamera.isValid());
+	ocean_assert(world_T_roughCamera.isValid() && pinholeCamera.isValid());
 	ocean_assert(imagePoints.size() >= 10);
 
-	if (imagePoints.size() < 30 || trackerFeatureMap.recentUsedObjectPointIndices().size() < 30)
+	if (imagePoints.size() < 30 || trackerFeatureMap_.recentUsedObjectPointIndices().size() < 30)
 	{
 		return false;
 	}
 
-	const unsigned int numberPreviousUsedProjectedObjectPoints = min(50u, (unsigned int)trackerFeatureMap.recentUsedObjectPointIndices().size());
+	const unsigned int numberPreviousUsedProjectedObjectPoints = min(50u, (unsigned int)trackerFeatureMap_.recentUsedObjectPointIndices().size());
 	const unsigned int numberImagePoints = min(100u, (unsigned int)imagePoints.size());
 
 	if (numberPreviousUsedProjectedObjectPoints < 10)
@@ -515,15 +515,15 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 	// we take a very simple model (three is the minimal number of point correspondences)
 	const unsigned int modelSize = 3u;
 
-	const HomogenousMatrix4 roughPoseIF(PinholeCamera::standard2InvertedFlipped(roughPose));
+	const HomogenousMatrix4 roughFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_roughCamera));
 
 	// first we extract the subset of object points that has been used in the previous iteration, and we determine their projected image points
 
-	const Vectors3 previousUsedObjectPoints(trackerFeatureMap.recentUsedObjectPoints(numberPreviousUsedProjectedObjectPoints));
+	const Vectors3 previousUsedObjectPoints(trackerFeatureMap_.recentUsedObjectPoints(numberPreviousUsedProjectedObjectPoints));
 	ocean_assert(previousUsedObjectPoints.size() == size_t(numberPreviousUsedProjectedObjectPoints));
 
 	Vectors2 previousUsedProjectedObjectPoints(previousUsedObjectPoints.size());
-	pinholeCamera.projectToImageIF<true>(roughPoseIF, previousUsedObjectPoints.data(), previousUsedObjectPoints.size(), false, previousUsedProjectedObjectPoints.data());
+	pinholeCamera.projectToImageIF<true>(roughFlippedCamera_T_world, previousUsedObjectPoints.data(), previousUsedObjectPoints.size(), false, previousUsedProjectedObjectPoints.data());
 
 
 	// now we determine a distribution array for the current image points as we want to have all possible feature candidates (out of the projected object points) for each image point within a fixed small radius
@@ -534,15 +534,15 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 
 	IndexGroups32 neighborGroups;
 	neighborGroups.reserve(numberPreviousUsedProjectedObjectPoints);
-	for (Vectors2::const_iterator i = previousUsedProjectedObjectPoints.begin(); i != previousUsedProjectedObjectPoints.end(); ++i)
+	for (const Vector2& projectedObjectPoint : previousUsedProjectedObjectPoints)
 	{
-		neighborGroups.push_back(Geometry::SpatialDistribution::determineNeighbors(*i, imagePoints.data(), numberImagePoints, Scalar(3), distributionImagePoints));
+		neighborGroups.push_back(Geometry::SpatialDistribution::determineNeighbors(projectedObjectPoint, imagePoints.data(), numberImagePoints, Scalar(3), distributionImagePoints));
 	}
 
 	// now we randomly selected subset of the projected object points and image points and try to determine the best resulting pose, this is a simple RANSAC approach
 
 	Scalar bestTotalError = Numeric::maxValue();
-	HomogenousMatrix4 bestPoseIF;
+	HomogenousMatrix4 bestFlippedCamera_T_world;
 
 	Indices32 bestObjectPointIndices;
 	Indices32 bestImagePointIndices;
@@ -568,7 +568,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 		for (unsigned int n = 0u; n < numberPreviousUsedProjectedObjectPoints; ++n)
 		{
 			// we select one object prevously used object points which hasn't been selected in this iteration yet
-			const unsigned int randomUsedObjectPointIndex = RandomI::random(trackerRandomGenerator, numberPreviousUsedProjectedObjectPoints - 1u);
+			const unsigned int randomUsedObjectPointIndex = RandomI::random(trackerRandomGenerator_, numberPreviousUsedProjectedObjectPoints - 1u);
 			if (iterationMaskedObjectPoints.find(randomUsedObjectPointIndex) != iterationMaskedObjectPoints.end())
 			{
 				continue;
@@ -585,12 +585,12 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 				const Vector2& iterationProjectedObjectPoint = previousUsedProjectedObjectPoints[randomUsedObjectPointIndex];
 				const Vector3& iterationObjectPoint = previousUsedObjectPoints[randomUsedObjectPointIndex];
 
-				const unsigned int candidateNeighborIndex = RandomI::random(trackerRandomGenerator, (unsigned int)neihgbors.size() - 1u);
+				const unsigned int candidateNeighborIndex = RandomI::random(trackerRandomGenerator_, (unsigned int)neihgbors.size() - 1u);
 				ocean_assert(candidateNeighborIndex < neihgbors.size());
 
 				ocean_assert(neihgbors[candidateNeighborIndex] < imagePoints.size());
 				const Vector2& iterationImagePoint = imagePoints[neihgbors[candidateNeighborIndex]];
-				ocean_assert_and_suppress_unused(iterationProjectedObjectPoint == pinholeCamera.projectToImageIF<true>(roughPoseIF, iterationObjectPoint, false), iterationProjectedObjectPoint);
+				ocean_assert_and_suppress_unused(iterationProjectedObjectPoint == pinholeCamera.projectToImageIF<true>(roughFlippedCamera_T_world, iterationObjectPoint, false), iterationProjectedObjectPoint);
 
 				iterationImagePoints.push_back(iterationImagePoint);
 				iterationObjectPoints.push_back(iterationObjectPoint);
@@ -614,13 +614,13 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 		// **TODO** why not using a classical P3P?
 		ocean_assert(iterationObjectPoints.size() == 3);
 
-		HomogenousMatrix4 optimizedRoughPoseIF;
-		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(iterationObjectPoints), ConstArrayAccessor<Vector2>(iterationImagePoints), optimizedRoughPoseIF, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10)))
+		HomogenousMatrix4 optimizedRoughFlippedCamera_T_world;
+		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughFlippedCamera_T_world, ConstArrayAccessor<Vector3>(iterationObjectPoints), ConstArrayAccessor<Vector2>(iterationImagePoints), optimizedRoughFlippedCamera_T_world, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10)))
 		{
 			// now we count the number of perfect/good matches
 
 			Vectors2 iterationProjectedObjectPoints(previousUsedObjectPoints.size());
-			pinholeCamera.projectToImageIF<true>(optimizedRoughPoseIF, previousUsedObjectPoints.data(), previousUsedObjectPoints.size(), false, iterationProjectedObjectPoints.data());
+			pinholeCamera.projectToImageIF<true>(optimizedRoughFlippedCamera_T_world, previousUsedObjectPoints.data(), previousUsedObjectPoints.size(), false, iterationProjectedObjectPoints.data());
 
 			for (unsigned int n = 0u; n < previousUsedObjectPoints.size(); ++n)
 			{
@@ -643,7 +643,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 
 		if (iterationBestObjectPointIndices.size() > bestObjectPointIndices.size() || (iterationBestObjectPointIndices.size() == bestObjectPointIndices.size() && iterationTotalError < bestTotalError))
 		{
-			bestPoseIF = optimizedRoughPoseIF;
+			bestFlippedCamera_T_world = optimizedRoughFlippedCamera_T_world;
 			bestTotalError = iterationTotalError;
 
 			std::swap(bestObjectPointIndices, iterationBestObjectPointIndices);
@@ -673,58 +673,58 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 		Scalar sqrAverageError = Numeric::maxValue();
 		Scalar sqrMinimalError = Numeric::maxValue();
 		Scalar sqrMaximalError = Numeric::maxValue();
-		Geometry::Error::determinePoseErrorIF<ConstTemplateArraySubsetAccessor<Vector3, Index32>, ConstTemplateArraySubsetAccessor<Vector2, Index32>, true>(bestPoseIF, pinholeCamera, ConstTemplateArraySubsetAccessor<Vector3, Index32>(previousUsedObjectPoints, bestObjectPointIndices), ConstTemplateArraySubsetAccessor<Vector2, Index32>(imagePoints.data(), bestImagePointIndices), false, sqrAverageError, sqrMinimalError, sqrMaximalError);
+		Geometry::Error::determinePoseErrorIF<ConstTemplateArraySubsetAccessor<Vector3, Index32>, ConstTemplateArraySubsetAccessor<Vector2, Index32>, true>(bestFlippedCamera_T_world, pinholeCamera, ConstTemplateArraySubsetAccessor<Vector3, Index32>(previousUsedObjectPoints, bestObjectPointIndices), ConstTemplateArraySubsetAccessor<Vector2, Index32>(imagePoints.data(), bestImagePointIndices), false, sqrAverageError, sqrMinimalError, sqrMaximalError);
 
 		ocean_assert(sqrMaximalError <= Scalar(2.5 * 2.5));
 	}
 #endif
 
-	HomogenousMatrix4 optimizedPoseIF;
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), bestPoseIF, ConstArraySubsetAccessor<Vector3, Index32>(previousUsedObjectPoints, bestObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints.data(), bestImagePointIndices), optimizedPoseIF, 30u, Geometry::Estimator::ET_SQUARE))
+	HomogenousMatrix4 optimizedFlippedCamera_T_world;
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), bestFlippedCamera_T_world, ConstArraySubsetAccessor<Vector3, Index32>(previousUsedObjectPoints, bestObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints.data(), bestImagePointIndices), optimizedFlippedCamera_T_world, 30u, Geometry::Estimator::ET_SQUARE))
 	{
 		return false;
 	}
 
-	bestPoseIF = optimizedPoseIF;
+	bestFlippedCamera_T_world = optimizedFlippedCamera_T_world;
 
-	const unsigned int validCorrespondencesFirst = refinePoseIF(bestPoseIF, pinholeCamera, imagePoints, trackerFeatureMap.recentUsedObjectPoints(), optimizedPoseIF, 150u, 100u, Scalar(5), Scalar(3 * 3), Scalar(1.5 * 1.5), worker);
+	const unsigned int validCorrespondencesFirst = refinePoseIF(bestFlippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.recentUsedObjectPoints(), optimizedFlippedCamera_T_world, 150u, 100u, Scalar(5), Scalar(3 * 3), Scalar(1.5 * 1.5), worker);
 
 	if (validCorrespondencesFirst < 10u)
 	{
 		return false;
 	}
 
-	bestPoseIF = optimizedPoseIF;
+	bestFlippedCamera_T_world = optimizedFlippedCamera_T_world;
 
-	const unsigned int validCorrespondencesSecond = refinePoseIF(bestPoseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), optimizedPoseIF, 400u, 200u, Scalar(5), Scalar(3 * 3), Scalar(1.5 * 1.5), worker);
+	const unsigned int validCorrespondencesSecond = refinePoseIF(bestFlippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), optimizedFlippedCamera_T_world, 400u, 200u, Scalar(5), Scalar(3 * 3), Scalar(1.5 * 1.5), worker);
 
 	if (validCorrespondencesSecond < 10u)
 	{
 		return false;
 	}
 
-	startAsynchronousDataProcessingIF(optimizedPoseIF, pinholeCamera, std::move(imagePoints));
+	startAsynchronousDataProcessingIF(optimizedFlippedCamera_T_world, pinholeCamera, std::move(imagePoints));
 
-	pose = PinholeCamera::invertedFlipped2Standard(optimizedPoseIF);
+	world_T_camera = PinholeCamera::invertedFlipped2Standard(optimizedFlippedCamera_T_world);
 
 	return true;
 }
 
-bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& roughPose, const PinholeCamera& pinholeCamera, Vectors2& imagePoints, HomogenousMatrix4& pose, Worker* worker)
+bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& world_T_roughCamera, const PinholeCamera& pinholeCamera, Vectors2& imagePoints, HomogenousMatrix4& world_T_camera, Worker* worker)
 {
-	ocean_assert(roughPose.isValid() && pinholeCamera.isValid());
+	ocean_assert(world_T_roughCamera.isValid() && pinholeCamera.isValid());
 	ocean_assert(imagePoints.size() >= 5);
 
 	const Scalar resolutionFactor = cameraResolutionFactor(pinholeCamera);
 
 	const Scalar maxPixelError0 = Numeric::sqr(Scalar(3.1) * resolutionFactor);
 
-	const Vectors3& objectPoints = trackerFeatureMap.objectPoints();
+	const Vectors3& objectPoints = trackerFeatureMap_.objectPoints();
 
 	const unsigned int numberObjectPoints = min(60u, (unsigned int)objectPoints.size());
 	const unsigned int numberImagePoints = min(numberObjectPoints * 2u, (unsigned int)imagePoints.size());
 
-	const Scalar objectPointsDiagonal = trackerFeatureMap.boundingBox().diagonal();
+	const Scalar objectPointsDiagonal = trackerFeatureMap_.boundingBox().diagonal();
 	const Scalar maximalTranslationSmall = objectPointsDiagonal * Scalar(0.05);
 
 #ifdef OCEAN_DEBUG
@@ -733,19 +733,19 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 	const double timeout = 0.05;
 #endif
 
-	const HomogenousMatrix4 roughPoseIF(PinholeCamera::standard2InvertedFlipped(roughPose));
+	const HomogenousMatrix4 roughFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_roughCamera));
 
-	HomogenousMatrix4 resultingPoseIF;
+	HomogenousMatrix4 resultingFlippedCamera_T_world;
 	IndexPairs32 correspondences;
 
 	if (numberImagePoints < numberObjectPoints)
 	{
-		if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughPoseIF, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall), Numeric::deg2rad(5), timeout, nullptr, &correspondences, nullptr, worker))
+		if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughFlippedCamera_T_world, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall), Numeric::deg2rad(5), timeout, nullptr, &correspondences, nullptr, worker))
 		{
 			ocean_assert(correspondences.empty());
 
 			// we give it a second chance with slightly simpler conditions
-			if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughPoseIF, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall) * Scalar(2), Numeric::deg2rad(10), timeout * 2.0, nullptr, &correspondences, nullptr, worker))
+			if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughFlippedCamera_T_world, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall) * Scalar(2), Numeric::deg2rad(10), timeout * 2.0, nullptr, &correspondences, nullptr, worker))
 			{
 				return false;
 			}
@@ -753,19 +753,19 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 	}
 	else
 	{
-		if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<false>(roughPoseIF, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberObjectPoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall), Numeric::deg2rad(5), timeout, nullptr, &correspondences, nullptr, worker))
+		if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<false>(roughFlippedCamera_T_world, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberObjectPoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall), Numeric::deg2rad(5), timeout, nullptr, &correspondences, nullptr, worker))
 		{
 			ocean_assert(correspondences.empty());
 
 			// we give it a second chance with slightly simpler conditions
-			if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<false>(roughPoseIF, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberObjectPoints * 60u / 100u, trackerRandomGenerator, resultingPoseIF, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall) * Scalar(2), Numeric::deg2rad(10), timeout * 2.0, nullptr, &correspondences, nullptr, worker))
+			if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<false>(roughFlippedCamera_T_world, pinholeCamera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberObjectPoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall) * Scalar(2), Numeric::deg2rad(10), timeout * 2.0, nullptr, &correspondences, nullptr, worker))
 			{
 				return false;
 			}
 		}
 	}
 
-	const HomogenousMatrix4 initialPoseIF(resultingPoseIF);
+	const HomogenousMatrix4 initialFlippedCamera_T_world(resultingFlippedCamera_T_world);
 
 	// we could improve the rough pose and now we also can use the guessed point correspondences to apply a non-linear pose optimization
 
@@ -774,13 +774,13 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 	Vectors2 validImagePoints;
 	validImagePoints.reserve(correspondences.size());
 
-	for (IndexPairs32::const_iterator i = correspondences.begin(); i != correspondences.end(); ++i)
+	for (const IndexPair32& correspondence : correspondences)
 	{
-		ocean_assert(i->first < imagePoints.size());
-		ocean_assert(i->second < trackerFeatureMap.objectPoints().size());
+		ocean_assert(correspondence.first < imagePoints.size());
+		ocean_assert(correspondence.second < trackerFeatureMap_.objectPoints().size());
 
-		validObjectPoints.push_back(trackerFeatureMap.objectPoints()[i->first]);
-		validImagePoints.push_back(imagePoints[i->second]);
+		validObjectPoints.push_back(trackerFeatureMap_.objectPoints()[correspondence.first]);
+		validImagePoints.push_back(imagePoints[correspondence.second]);
 	}
 
 	ocean_assert(!validImagePoints.empty());
@@ -792,48 +792,48 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 
 	// first we apply the Huber estimator as we still do not know how good the correspondences are
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), initialPoseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingPoseIF, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), initialFlippedCamera_T_world, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingFlippedCamera_T_world, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
 	{
 		return false;
 	}
 
-	HomogenousMatrix4 poseIF(resultingPoseIF);
+	HomogenousMatrix4 flippedCamera_T_world(resultingFlippedCamera_T_world);
 
 	// now we apply the Tukey estimator to filter outliers
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), poseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingPoseIF, 30u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10), nullptr, nullptr))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), flippedCamera_T_world, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingFlippedCamera_T_world, 30u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10), nullptr, nullptr))
 	{
 		return false;
 	}
 
-	poseIF = resultingPoseIF;
+	flippedCamera_T_world = resultingFlippedCamera_T_world;
 
 	// finally we refine the current pose based on the entire set of image and object points, first with a small amount of point correspondences and week uniqueness constraints
 
-	if (refinePoseIF(poseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 200u, 400u, Scalar(10) * resolutionFactor, Scalar(30 * 30), Numeric::maxValue(), worker) < 10u) // **TOOD** the resulting number of correspondences should be rated wrt. the covered area (e.g., 10 points is too low if the entire pattern is visible)
+	if (refinePoseIF(flippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 200u, 400u, Scalar(10) * resolutionFactor, Scalar(30 * 30), Numeric::maxValue(), worker) < 10u) // **TOOD** the resulting number of correspondences should be rated wrt. the covered area (e.g., 10 points is too low if the entire pattern is visible)
 	{
 		return false;
 	}
 
-	poseIF = resultingPoseIF;
+	flippedCamera_T_world = resultingFlippedCamera_T_world;
 
 	// now we take a larger amount of point correspondences and we apply strong uniqueness constraints
 
-	if (refinePoseIF(poseIF, pinholeCamera, imagePoints, trackerFeatureMap.objectPoints(), resultingPoseIF, 400u, 800u, Scalar(4) * resolutionFactor, Scalar(2 * 2), Numeric::maxValue(), worker) < 10u)
+	if (refinePoseIF(flippedCamera_T_world, pinholeCamera, imagePoints, trackerFeatureMap_.objectPoints(), resultingFlippedCamera_T_world, 400u, 800u, Scalar(4) * resolutionFactor, Scalar(2 * 2), Numeric::maxValue(), worker) < 10u)
 	{
 		return false;
 	}
 
-	startAsynchronousDataProcessingIF(resultingPoseIF, pinholeCamera, std::move(imagePoints));
+	startAsynchronousDataProcessingIF(resultingFlippedCamera_T_world, pinholeCamera, std::move(imagePoints));
 
-	pose = PinholeCamera::invertedFlipped2Standard(resultingPoseIF);
+	world_T_camera = PinholeCamera::invertedFlipped2Standard(resultingFlippedCamera_T_world);
 
 	return true;
 }
 
-bool RMVFeatureTracker6DOF::refinePoseWithStrongPreviousCorrespondencesIF(const HomogenousMatrix4& roughPoseIF, const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, HomogenousMatrix4& poseIF)
+bool RMVFeatureTracker6DOF::refinePoseWithStrongPreviousCorrespondencesIF(const HomogenousMatrix4& roughFlippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, HomogenousMatrix4& flippedCamera_T_world)
 {
-	ocean_assert(roughPoseIF.isValid() && pinholeCamera.isValid() && imagePoints.size() >= 10);
+	ocean_assert(roughFlippedCamera_T_world.isValid() && pinholeCamera.isValid() && imagePoints.size() >= 10);
 
 	if (imagePoints.size() < 10)
 	{
@@ -847,14 +847,14 @@ bool RMVFeatureTracker6DOF::refinePoseWithStrongPreviousCorrespondencesIF(const 
 	Vectors3 candidateObjectPoints;
 	Vectors2 candidateImagePoints;
 
-	addUniqueCorrespondencesIF(roughPoseIF, pinholeCamera, imagePoints.data(), min(imagePoints.size(), size_t(200)), ConstArraySubsetAccessor<Vector3, Index32>(trackerFeatureMap.objectPoints(), trackerFeatureMap.recentStrongObjectPointIndices()), trackerStrongCorrespondencesEmptyAreaRadius * resolutionFactor, Scalar(4 * 4), candidateObjectPoints, candidateImagePoints);
+	addUniqueCorrespondencesIF(roughFlippedCamera_T_world, pinholeCamera, imagePoints.data(), min(imagePoints.size(), size_t(200)), ConstArraySubsetAccessor<Vector3, Index32>(trackerFeatureMap_.objectPoints(), trackerFeatureMap_.recentStrongObjectPointIndices()), trackerStrongCorrespondencesEmptyAreaRadius_ * resolutionFactor, Scalar(4 * 4), candidateObjectPoints, candidateImagePoints);
 	ocean_assert(candidateObjectPoints.size() == candidateImagePoints.size());
 
-	if (candidateObjectPoints.size() <= 10 && !trackerFeatureMap.recentSemiStrongObjectPointIndices().empty())
+	if (candidateObjectPoints.size() <= 10 && !trackerFeatureMap_.recentSemiStrongObjectPointIndices().empty())
 	{
 		// if we could not find enough strong correspondences so that we now weaken the conditions - so that we add more correspondences with more generous properties
 
-		addUniqueCorrespondencesIF(roughPoseIF, pinholeCamera, imagePoints.data(), min(imagePoints.size(), size_t(300)), ConstArraySubsetAccessor<Vector3, Index32>(trackerFeatureMap.objectPoints(), trackerFeatureMap.recentSemiStrongObjectPointIndices()), trackerSemiStrongCorrespondencesEmptyAreaRadius * resolutionFactor, Scalar(2.5 * 2.5), candidateObjectPoints, candidateImagePoints);
+		addUniqueCorrespondencesIF(roughFlippedCamera_T_world, pinholeCamera, imagePoints.data(), min(imagePoints.size(), size_t(300)), ConstArraySubsetAccessor<Vector3, Index32>(trackerFeatureMap_.objectPoints(), trackerFeatureMap_.recentSemiStrongObjectPointIndices()), trackerSemiStrongCorrespondencesEmptyAreaRadius_ * resolutionFactor, Scalar(2.5 * 2.5), candidateObjectPoints, candidateImagePoints);
 		ocean_assert(candidateObjectPoints.size() == candidateImagePoints.size());
 	}
 
@@ -865,15 +865,15 @@ bool RMVFeatureTracker6DOF::refinePoseWithStrongPreviousCorrespondencesIF(const 
 
 	// we could find/guess enough correspondences so that we now improve the rough pose based on a non-linear optimization, first we a Huber estimator (as we still do not know how good the quality of the correspondences is)
 
-	HomogenousMatrix4 optimizedPoseIF;
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), optimizedPoseIF, 10u, Geometry::Estimator::ET_HUBER))
+	HomogenousMatrix4 optimizedFlippedCamera_T_world;
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughFlippedCamera_T_world, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), optimizedFlippedCamera_T_world, 10u, Geometry::Estimator::ET_HUBER))
 	{
 		return false;
 	}
 
 	// and now we apply a Tukey estimator to remove outliers
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), optimizedPoseIF, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), poseIF, 5u, Geometry::Estimator::ET_TUKEY))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), optimizedFlippedCamera_T_world, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), flippedCamera_T_world, 5u, Geometry::Estimator::ET_TUKEY))
 	{
 		return false;
 	}
@@ -894,20 +894,20 @@ Vectors2 RMVFeatureTracker6DOF::detectFeatures(const Frame& yFrame, const bool f
 	static const size_t featureDetectorIdealNumber = 400;
 
 	Frame adjustedFrame(yFrame, Frame::ACM_USE_KEEP_LAYOUT);
-	if (RMVFeatureDetector::needSmoothedFrame(trackerDetectorType))
+	if (RMVFeatureDetector::needSmoothedFrame(trackerDetectorType_))
 	{
 		CV::FrameFilterGaussian::filter(yFrame, adjustedFrame, 3u, worker);
 	}
 
-	const Vectors2 imagePoints(RMVFeatureDetector::detectFeatures(adjustedFrame, boundingBox, trackerDetectorType, trackerFeatureDetectorStrength, frameIsUndistorted, worker));
+	const Vectors2 imagePoints(RMVFeatureDetector::detectFeatures(adjustedFrame, boundingBox, trackerDetectorType_, trackerFeatureDetectorStrength_, frameIsUndistorted, worker));
 
 	if (imagePoints.size() < featureDetectorIdealNumber)
 	{
-		trackerFeatureDetectorStrength = max(featureDetectorStrengthMin, trackerFeatureDetectorStrength - featureDetectorStrengthDelta);
+		trackerFeatureDetectorStrength_ = max(featureDetectorStrengthMin, trackerFeatureDetectorStrength_ - featureDetectorStrengthDelta);
 	}
 	else
 	{
-		trackerFeatureDetectorStrength = min(trackerFeatureDetectorStrength + featureDetectorStrengthDelta, featureDetectorStrengthMax);
+		trackerFeatureDetectorStrength_ = min(trackerFeatureDetectorStrength_ + featureDetectorStrengthDelta, featureDetectorStrengthMax);
 	}
 
 	return imagePoints;
@@ -915,73 +915,73 @@ Vectors2 RMVFeatureTracker6DOF::detectFeatures(const Frame& yFrame, const bool f
 
 bool RMVFeatureTracker6DOF::asynchronousDataProcessed()
 {
-	const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock);
-	return trackerAsynchronousDataProcessingActive == false;
+	const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock_);
+	return trackerAsynchronousDataProcessingActive_ == false;
 }
 
-void RMVFeatureTracker6DOF::startAsynchronousDataProcessingIF(const HomogenousMatrix4& poseIF, const PinholeCamera& pinholeCamera, Vectors2&& imagePoints)
+void RMVFeatureTracker6DOF::startAsynchronousDataProcessingIF(const HomogenousMatrix4& flippedCamera_T_world, const PinholeCamera& pinholeCamera, Vectors2&& imagePoints)
 {
-	const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock);
+	const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock_);
 
-	ocean_assert(trackerAsynchronousDataProcessingPoseIF.isNull());
-	trackerAsynchronousDataProcessingPoseIF = poseIF;
+	ocean_assert(trackerAsynchronousDataProcessingFlippedCamera_T_world_.isNull());
+	trackerAsynchronousDataProcessingFlippedCamera_T_world_ = flippedCamera_T_world;
 
-	ocean_assert(!trackerAsynchronousDataProcessingCamera.isValid());
-	trackerAsynchronousDataProcessingCamera = pinholeCamera;
+	ocean_assert(!trackerAsynchronousDataProcessingCamera_.isValid());
+	trackerAsynchronousDataProcessingCamera_ = pinholeCamera;
 
-	ocean_assert(trackerAsynchronousDataProcessingImagePoints.empty());
-	trackerAsynchronousDataProcessingImagePoints = std::move(imagePoints);
+	ocean_assert(trackerAsynchronousDataProcessingImagePoints_.empty());
+	trackerAsynchronousDataProcessingImagePoints_ = std::move(imagePoints);
 
-	trackerAsynchronousSignal.pulse();
+	trackerAsynchronousSignal_.pulse();
 }
 
 void RMVFeatureTracker6DOF::threadRun()
 {
 	while (!shouldThreadStop())
 	{
-		trackerAsynchronousSignal.wait();
+		trackerAsynchronousSignal_.wait();
 
 		if (shouldThreadStop())
 		{
 			break;
 		}
 
-		const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock);
+		const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock_);
 
-		ocean_assert(!trackerAsynchronousDataProcessingActive);
-		const ScopedValueT<bool> scopedValue(trackerAsynchronousDataProcessingActive, false, true);
+		ocean_assert(!trackerAsynchronousDataProcessingActive_);
+		const ScopedValueT<bool> scopedValue(trackerAsynchronousDataProcessingActive_, false, true);
 
-		ocean_assert(trackerAsynchronousDataProcessingPoseIF.isValid());
+		ocean_assert(trackerAsynchronousDataProcessingFlippedCamera_T_world_.isValid());
 
 		Indices32 strongObjectPointIndices, moderateObjectPointIndices, usedObjectPointIndices;
-		determineUsedFeaturesIF(trackerAsynchronousDataProcessingPoseIF, trackerAsynchronousDataProcessingCamera, trackerAsynchronousDataProcessingImagePoints, 30, strongObjectPointIndices, moderateObjectPointIndices, usedObjectPointIndices);
+		determineUsedFeaturesIF(trackerAsynchronousDataProcessingFlippedCamera_T_world_, trackerAsynchronousDataProcessingCamera_, trackerAsynchronousDataProcessingImagePoints_, 30, strongObjectPointIndices, moderateObjectPointIndices, usedObjectPointIndices);
 
-		trackerFeatureMap.setMostRecentObjectPointIndices(std::move(strongObjectPointIndices), std::move(moderateObjectPointIndices), std::move(usedObjectPointIndices));
+		trackerFeatureMap_.setMostRecentObjectPointIndices(std::move(strongObjectPointIndices), std::move(moderateObjectPointIndices), std::move(usedObjectPointIndices));
 
-		trackerAsynchronousDataProcessingPoseIF.toNull();
-		trackerAsynchronousDataProcessingCamera = PinholeCamera();
-		trackerAsynchronousDataProcessingImagePoints.clear();
+		trackerAsynchronousDataProcessingFlippedCamera_T_world_.toNull();
+		trackerAsynchronousDataProcessingCamera_ = PinholeCamera();
+		trackerAsynchronousDataProcessingImagePoints_.clear();
 	}
 }
 
-bool RMVFeatureTracker6DOF::determineUsedFeaturesIF(const HomogenousMatrix4& finePoseIF, const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, const size_t minimalStrongObjectPoints, Indices32& strongObjectPointIndices, Indices32& moderateObjectPointIndices, Indices32& usedObjectPointIndices)
+bool RMVFeatureTracker6DOF::determineUsedFeaturesIF(const HomogenousMatrix4& fineFlippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, const size_t minimalStrongObjectPoints, Indices32& strongObjectPointIndices, Indices32& moderateObjectPointIndices, Indices32& usedObjectPointIndices)
 {
-	ocean_assert(finePoseIF.isValid() && pinholeCamera.isValid());
+	ocean_assert(fineFlippedCamera_T_world.isValid() && pinholeCamera.isValid());
 	ocean_assert(strongObjectPointIndices.empty() && moderateObjectPointIndices.empty() && usedObjectPointIndices.empty());
 	ocean_assert(minimalStrongObjectPoints >= 1);
 
-	if (trackerFeatureMap.objectPoints().empty() || imagePoints.empty())
+	if (trackerFeatureMap_.objectPoints().empty() || imagePoints.empty())
 	{
 		return false;
 	}
 
 	const Scalar resolutionFactor = cameraResolutionFactor(pinholeCamera);
 
-	Vectors2 projectedObjectPoints(trackerFeatureMap.objectPoints().size());
-	pinholeCamera.projectToImageIF<true>(finePoseIF, trackerFeatureMap.objectPoints().data(), projectedObjectPoints.size(), false, projectedObjectPoints.data());
+	Vectors2 projectedObjectPoints(trackerFeatureMap_.objectPoints().size());
+	pinholeCamera.projectToImageIF<true>(fineFlippedCamera_T_world, trackerFeatureMap_.objectPoints().data(), projectedObjectPoints.size(), false, projectedObjectPoints.data());
 
 	const size_t maximalImagePoints = min(size_t(200), imagePoints.size());
-	const size_t maximalObjectPoints = min(size_t(400), trackerFeatureMap.objectPoints().size());
+	const size_t maximalObjectPoints = min(size_t(400), trackerFeatureMap_.objectPoints().size());
 
 	// now we seek image features with large distance to neighboring image features
 
@@ -993,16 +993,16 @@ bool RMVFeatureTracker6DOF::determineUsedFeaturesIF(const HomogenousMatrix4& fin
 	// first we seek for strong feature points (unique and accurate) and no other image points in the neighborhood
 
 	const PointCorrespondences::RedundantCorrespondences strongRedundantCorrespondences(PointCorrespondences::determineNearestCandidates(imagePoints.data(), maximalImagePoints, projectedObjectPoints.data(), maximalObjectPoints, Scalar(10) * resolutionFactor, distributionProjectedObjectPoints));
-	for (PointCorrespondences::RedundantCorrespondences::const_iterator i = strongRedundantCorrespondences.begin(); i != strongRedundantCorrespondences.end(); ++i)
+	for (const PointCorrespondences::RedundantCorrespondence& redundantCorrespondence : strongRedundantCorrespondences)
 	{
-		if (i->isUniqueAndAccurate(Scalar(10 * 10), Numeric::sqr(2 * resolutionFactor)))
+		if (redundantCorrespondence.isUniqueAndAccurate(Scalar(10 * 10), Numeric::sqr(2 * resolutionFactor)))
 		{
 			ocean_assert(maximalImagePoints >= strongRedundantCorrespondences.size());
 
-			if (Geometry::SpatialDistribution::determineMinimalSqrDistance(imagePoints.data(), strongRedundantCorrespondences.size(), i->index(), distributionImagePoints) > Numeric::sqr(trackerStrongCorrespondencesEmptyAreaRadius * resolutionFactor))
+			if (Geometry::SpatialDistribution::determineMinimalSqrDistance(imagePoints.data(), strongRedundantCorrespondences.size(), redundantCorrespondence.index(), distributionImagePoints) > Numeric::sqr(trackerStrongCorrespondencesEmptyAreaRadius_ * resolutionFactor))
 			{
 				// the indices of the strong object points
-				strongObjectPointIndices.push_back(i->candidateIndex());
+				strongObjectPointIndices.push_back(redundantCorrespondence.candidateIndex());
 			}
 		}
 	}
@@ -1019,14 +1019,16 @@ bool RMVFeatureTracker6DOF::determineUsedFeaturesIF(const HomogenousMatrix4& fin
 		// semi-strong features must not be strong features
 		const IndexSet32 strongIndexSet(strongObjectPointIndices.begin(), strongObjectPointIndices.end());
 
-		for (PointCorrespondences::RedundantCorrespondences::const_iterator i = strongRedundantCorrespondences.begin(); i != strongRedundantCorrespondences.end(); ++i)
+		for (const PointCorrespondences::RedundantCorrespondence& redundantCorrespondence : strongRedundantCorrespondences)
 		{
-			if (strongIndexSet.find(i->candidateIndex()) == strongIndexSet.end() && i->isUniqueAndAccurate(5 * 5, Numeric::sqr(4 * resolutionFactor)))
+			if (strongIndexSet.find(redundantCorrespondence.candidateIndex()) == strongIndexSet.end() && redundantCorrespondence.isUniqueAndAccurate(5 * 5, Numeric::sqr(4 * resolutionFactor)))
 			{
 				ocean_assert(maximalImagePoints >= strongRedundantCorrespondences.size());
 
-				if (Geometry::SpatialDistribution::determineMinimalSqrDistance(imagePoints.data(), strongRedundantCorrespondences.size(), i->index(), distributionImagePoints) > Numeric::sqr(trackerSemiStrongCorrespondencesEmptyAreaRadius * resolutionFactor))
-					moderateObjectPointIndices.push_back(i->candidateIndex());
+				if (Geometry::SpatialDistribution::determineMinimalSqrDistance(imagePoints.data(), strongRedundantCorrespondences.size(), redundantCorrespondence.index(), distributionImagePoints) > Numeric::sqr(trackerSemiStrongCorrespondencesEmptyAreaRadius_ * resolutionFactor))
+				{
+					moderateObjectPointIndices.push_back(redundantCorrespondence.candidateIndex());
+				}
 			}
 		}
 	}
@@ -1038,14 +1040,14 @@ bool RMVFeatureTracker6DOF::determineUsedFeaturesIF(const HomogenousMatrix4& fin
 
 	IndexSet32 objectPointIndexSet;
 	const PointCorrespondences::RedundantCorrespondences weakRedundantCorrespondences(PointCorrespondences::determineNearestCandidates(imagePoints.data(), min(size_t(400), imagePoints.size()), projectedObjectPoints.data(), min(size_t(800), projectedObjectPoints.size()), 4 * resolutionFactor, distributionProjectedObjectPoints));
-	for (PointCorrespondences::RedundantCorrespondences::const_iterator i = weakRedundantCorrespondences.begin(); i != weakRedundantCorrespondences.end(); ++i)
+	for (const PointCorrespondences::RedundantCorrespondence& redundantCorrespondence : weakRedundantCorrespondences)
 	{
-		if (i->isUnique(2 * 2))
+		if (redundantCorrespondence.isUnique(2 * 2))
 		{
-			ocean_assert(i->candidateIndex() < trackerFeatureMap.objectPoints().size());
+			ocean_assert(redundantCorrespondence.candidateIndex() < trackerFeatureMap_.objectPoints().size());
 
 			// although an object point should not be unique for more than one image point, some object points may occur more than once, therefore we use a set
-			objectPointIndexSet.insert(i->candidateIndex());
+			objectPointIndexSet.insert(redundantCorrespondence.candidateIndex());
 		}
 	}
 
@@ -1054,9 +1056,9 @@ bool RMVFeatureTracker6DOF::determineUsedFeaturesIF(const HomogenousMatrix4& fin
 	return true;
 }
 
-void RMVFeatureTracker6DOF::addUniqueCorrespondencesIF(const HomogenousMatrix4& roughPoseIF, const PinholeCamera& pinholeCamera, const Vector2* imagePoints, const size_t numberImagePoints, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const Scalar searchWindow, const Scalar uniquenessSqrFactor, Vectors3& resultingObjectPoints, Vectors2& resultingImagePoints)
+void RMVFeatureTracker6DOF::addUniqueCorrespondencesIF(const HomogenousMatrix4& roughFlippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vector2* imagePoints, const size_t numberImagePoints, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const Scalar searchWindow, const Scalar uniquenessSqrFactor, Vectors3& resultingObjectPoints, Vectors2& resultingImagePoints)
 {
-	ocean_assert(roughPoseIF.isValid() && pinholeCamera.isValid());
+	ocean_assert(roughFlippedCamera_T_world.isValid() && pinholeCamera.isValid());
 	ocean_assert(imagePoints && numberImagePoints != 0 && objectPointAccessor.size() != 0);
 
 	ocean_assert(searchWindow > 0 && uniquenessSqrFactor > 0);
@@ -1067,7 +1069,7 @@ void RMVFeatureTracker6DOF::addUniqueCorrespondencesIF(const HomogenousMatrix4& 
 
 	for (size_t n = 0; n < objectPointAccessor.size(); ++n)
 	{
-		projectedObjectPoints.push_back(pinholeCamera.projectToImageIF<true>(roughPoseIF, objectPointAccessor[n], false));
+		projectedObjectPoints.push_back(pinholeCamera.projectToImageIF<true>(roughFlippedCamera_T_world, objectPointAccessor[n], false));
 	}
 
 	const PointCorrespondences::RedundantCorrespondences redundantCorrespondences(PointCorrespondences::determineNearestCandidates(projectedObjectPoints.data(), projectedObjectPoints.size(), imagePoints, numberImagePoints, searchWindow));
@@ -1076,27 +1078,27 @@ void RMVFeatureTracker6DOF::addUniqueCorrespondencesIF(const HomogenousMatrix4& 
 	resultingObjectPoints.reserve(resultingObjectPoints.size() + redundantCorrespondences.size());
 	resultingImagePoints.reserve(resultingImagePoints.size() + redundantCorrespondences.size());
 
-	for (PointCorrespondences::RedundantCorrespondences::const_iterator i = redundantCorrespondences.begin(); i != redundantCorrespondences.end(); ++i)
+	for (const PointCorrespondences::RedundantCorrespondence& redundantCorrespondence : redundantCorrespondences)
 	{
-		if (i->isUnique(uniquenessSqrFactor))
+		if (redundantCorrespondence.isUnique(uniquenessSqrFactor))
 		{
-			ocean_assert(i->index() < objectPointAccessor.size());
-			ocean_assert(i->candidateIndex() < numberImagePoints);
+			ocean_assert(redundantCorrespondence.index() < objectPointAccessor.size());
+			ocean_assert(redundantCorrespondence.candidateIndex() < numberImagePoints);
 
-			const Vector3& objectPoint = objectPointAccessor[i->index()];
+			const Vector3& objectPoint = objectPointAccessor[redundantCorrespondence.index()];
 
-			if (PinholeCamera::isObjectPointInFrontIF(roughPoseIF, objectPoint))
+			if (PinholeCamera::isObjectPointInFrontIF(roughFlippedCamera_T_world, objectPoint))
 			{
 				resultingObjectPoints.push_back(objectPoint);
-				resultingImagePoints.push_back(imagePoints[i->candidateIndex()]);
+				resultingImagePoints.push_back(imagePoints[redundantCorrespondence.candidateIndex()]);
 			}
 		}
 	}
 }
 
-unsigned int RMVFeatureTracker6DOF::refinePoseIF(const HomogenousMatrix4& roughPoseIF, const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, const Vectors3& objectPoints, HomogenousMatrix4& poseIF, const unsigned int useNumberImagePoints, const unsigned int useNumberObjectPoints, const Scalar searchWindow, const Scalar uniquenessSqrFactor, const Scalar maxSqrDistance, Worker* /*worker*/)
+unsigned int RMVFeatureTracker6DOF::refinePoseIF(const HomogenousMatrix4& roughFlippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vectors2& imagePoints, const Vectors3& objectPoints, HomogenousMatrix4& flippedCamera_T_world, const unsigned int useNumberImagePoints, const unsigned int useNumberObjectPoints, const Scalar searchWindow, const Scalar uniquenessSqrFactor, const Scalar maxSqrDistance, Worker* /*worker*/)
 {
-	ocean_assert(roughPoseIF.isValid() && pinholeCamera.isValid());
+	ocean_assert(roughFlippedCamera_T_world.isValid() && pinholeCamera.isValid());
 	ocean_assert(imagePoints.size() >= 10 && objectPoints.size() >= 10);
 
 	const unsigned int numberImagePoints = min(useNumberImagePoints, (unsigned int)imagePoints.size());
@@ -1109,7 +1111,7 @@ unsigned int RMVFeatureTracker6DOF::refinePoseIF(const HomogenousMatrix4& roughP
 	}
 
 	Vectors2 projectedObjectPoints(numberObjectPoints);
-	pinholeCamera.projectToImageIF<true>(roughPoseIF, objectPoints.data(), numberObjectPoints, false, projectedObjectPoints.data());
+	pinholeCamera.projectToImageIF<true>(roughFlippedCamera_T_world, objectPoints.data(), numberObjectPoints, false, projectedObjectPoints.data());
 
 	// we determine possible correspondence candidates (and also store a second candidate for each point)
 	const PointCorrespondences::RedundantCorrespondences redundantCorrespondences(PointCorrespondences::determineNearestCandidates(imagePoints.data(), numberImagePoints, projectedObjectPoints.data(), numberObjectPoints, pinholeCamera.width(), pinholeCamera.height(), searchWindow));
@@ -1120,15 +1122,15 @@ unsigned int RMVFeatureTracker6DOF::refinePoseIF(const HomogenousMatrix4& roughP
 	Vectors3 correspondenceObjectPoints;
 	correspondenceObjectPoints.reserve(redundantCorrespondences.size());
 
-	for (PointCorrespondences::RedundantCorrespondences::const_iterator i = redundantCorrespondences.begin(); i != redundantCorrespondences.end(); ++i)
+	for (const PointCorrespondences::RedundantCorrespondence& redundantCorrespondence : redundantCorrespondences)
 	{
-		if (i->isUniqueAndAccurate(uniquenessSqrFactor, maxSqrDistance)) // in the case maxSqrDistance == Numeric::maxValue() we have the simple isUnique() check
+		if (redundantCorrespondence.isUniqueAndAccurate(uniquenessSqrFactor, maxSqrDistance)) // in the case maxSqrDistance == Numeric::maxValue() we have the simple isUnique() check
 		{
-			ocean_assert(i->index() < imagePoints.size());
-			ocean_assert(i->candidateIndex() < objectPoints.size());
+			ocean_assert(redundantCorrespondence.index() < imagePoints.size());
+			ocean_assert(redundantCorrespondence.candidateIndex() < objectPoints.size());
 
-			correspondenceImagePoints.push_back(imagePoints[i->index()]);
-			correspondenceObjectPoints.push_back(objectPoints[i->candidateIndex()]);
+			correspondenceImagePoints.push_back(imagePoints[redundantCorrespondence.index()]);
+			correspondenceObjectPoints.push_back(objectPoints[redundantCorrespondence.candidateIndex()]);
 		}
 	}
 
@@ -1139,14 +1141,14 @@ unsigned int RMVFeatureTracker6DOF::refinePoseIF(const HomogenousMatrix4& roughP
 
 	ocean_assert(correspondenceImagePoints.size() == correspondenceObjectPoints.size());
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), poseIF, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughFlippedCamera_T_world, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), flippedCamera_T_world, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 	{
 		return 0u;
 	}
 
-	const HomogenousMatrix4 optimizedPoseIF = poseIF;
+	const HomogenousMatrix4 optimizedFlippedCamera_T_world = flippedCamera_T_world;
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), optimizedPoseIF, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), poseIF, 5u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10)))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), optimizedFlippedCamera_T_world, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), flippedCamera_T_world, 5u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10)))
 	{
 		return 0u;
 	}

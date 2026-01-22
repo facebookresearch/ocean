@@ -12,8 +12,6 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Rotation.h"
 
-#include "ocean/math/SquareMatrix3.h"
-
 namespace Ocean
 {
 
@@ -85,7 +83,9 @@ HomogenousMatrix4 RandomizedPose::constantDistance(const Box3& box, const Scalar
 		const Vector3 axis(Random::scalar(-1, 1), Random::scalar(max(Scalar(0.00001), min(minYFactor, Scalar(1))), 1), Random::scalar(-1, 1));
 
 		if (axis.sqr() > 1)
+		{
 			continue;
+		}
 
 		ocean_assert(axis.length() > Numeric::eps());
 
@@ -93,9 +93,9 @@ HomogenousMatrix4 RandomizedPose::constantDistance(const Box3& box, const Scalar
 		break;
 	}
 
-	const HomogenousMatrix4 transformation(HomogenousMatrix4(box.center()) * HomogenousMatrix4(rotation) * HomogenousMatrix4(Vector3(0, distance, 0)) * HomogenousMatrix4(Rotation(1, 0, 0, -Numeric::pi_2())));
+	const HomogenousMatrix4 world_T_camera(HomogenousMatrix4(box.center()) * HomogenousMatrix4(rotation) * HomogenousMatrix4(Vector3(0, distance, 0)) * HomogenousMatrix4(Rotation(1, 0, 0, -Numeric::pi_2())));
 
-	return transformation;
+	return world_T_camera;
 }
 
 void RandomizedPose::constantDistance(const Box3& box, const Scalar distance, const Scalar minYFactor, const unsigned int number, const unsigned int maximalIterations, const Scalar angleOffset, HomogenousMatrix4* poses)
@@ -118,7 +118,9 @@ void RandomizedPose::constantDistance(const Box3& box, const Scalar distance, co
 				const Vector3 axis(Random::scalar(-1, 1), Random::scalar(max(Scalar(0.00001), min(minYFactor, Scalar(1))), 1), Random::scalar(-1, 1));
 
 				if (axis.sqr() > 1)
+				{
 					continue;
+				}
 
 				ocean_assert(axis.length() > Numeric::eps());
 
@@ -127,12 +129,14 @@ void RandomizedPose::constantDistance(const Box3& box, const Scalar distance, co
 			}
 
 			bool similarRotation = false;
-			for (Quaternions::const_iterator i = rotations.begin(); i != rotations.end(); ++i)
-				if (rotation.angle(*i) < angleOffset)
+			for (const Quaternion& existingRotation : rotations)
+			{
+				if (rotation.angle(existingRotation) < angleOffset)
 				{
 					similarRotation = true;
 					break;
 				}
+			}
 
 			if (!similarRotation)
 			{
@@ -142,7 +146,9 @@ void RandomizedPose::constantDistance(const Box3& box, const Scalar distance, co
 		}
 
 		if (!foundNewRotation)
+		{
 			break;
+		}
 
 		poses[rotations.size()] = HomogenousMatrix4(box.center()) * HomogenousMatrix4(rotation) * HomogenousMatrix4(Vector3(0, distance, 0)) * HomogenousMatrix4(Rotation(1, 0, 0, -Numeric::pi_2()));
 		rotations.push_back(rotation);
@@ -169,14 +175,14 @@ HomogenousMatrix4 RandomizedPose::randomPose(const PinholeCamera& pinholeCamera,
 
 		const Quaternion rotation(Random::rotation(randomGenerator));
 
-		const HomogenousMatrix4 extrinsic(translation, rotation);
-		const HomogenousMatrix4 iExtrinsic(extrinsic.inverted());
-		const HomogenousMatrix4 ifExtrinsic(PinholeCamera::standard2InvertedFlipped(extrinsic));
+		const HomogenousMatrix4 world_T_camera(translation, rotation);
+		const HomogenousMatrix4 camera_T_world(world_T_camera.inverted());
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 		bool valid = true;
 		for (unsigned int n = 0; n < numberMapPoints; ++n)
 		{
-			const Vector3 mapRay(iExtrinsic * mapPoints[n]);
+			const Vector3 mapRay(camera_T_world * mapPoints[n]);
 
 			if (mapRay.z() > 0)
 			{
@@ -186,22 +192,30 @@ HomogenousMatrix4 RandomizedPose::randomPose(const PinholeCamera& pinholeCamera,
 		}
 
 		if (!valid)
+		{
 			continue;
+		}
 
-		const Box2 projectedBox(pinholeCamera.projectToImageIF<true>(ifExtrinsic, box, false));
+		const Box2 projectedBox(pinholeCamera.projectToImageIF<true>(flippedCamera_T_world, box, false));
 		ocean_assert(projectedBox.isValid());
 
 		const Box2 intersectedBox(cameraBox.intersection(projectedBox));
 		if (!intersectedBox.isValid())
+		{
 			continue;
+		}
 
 		if (intersectedBox.area() / cameraBox.area() < minVisibleRatio)
+		{
 			continue;
+		}
 
 		if (projectedBox.area() / cameraBox.area() > maxVisibleRatio)
+		{
 			continue;
+		}
 
-		return extrinsic;
+		return world_T_camera;
 	}
 }
 
@@ -213,9 +227,13 @@ void RandomizedPose::randomPoses(const PinholeCamera& pinholeCamera, const Box3&
 	ocean_assert(number >= 1 && poses);
 
 	if (worker)
+	{
 		worker->executeFunction(Worker::Function::createStatic(&RandomizedPose::randomPoseSubset, &pinholeCamera, &box, &randomGenerator, minDistance, maxDistance, visibleRatio, poses, 0u, 0u), 0u, (unsigned int)number, 7u, 8u, 20u);
+	}
 	else
+	{
 		randomPoseSubset(&pinholeCamera, &box, &randomGenerator, minDistance, maxDistance, visibleRatio, poses, 0u, (unsigned int)number);
+	}
 }
 
 void RandomizedPose::randomPoseSubset(const PinholeCamera* pinholeCamera, const Box3* box, RandomGenerator* randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, HomogenousMatrix4* poses, const unsigned int firstPose, const unsigned int numberPoses)
@@ -226,7 +244,9 @@ void RandomizedPose::randomPoseSubset(const PinholeCamera* pinholeCamera, const 
 	RandomGenerator localRandomGenerator(*randomGenerator);
 
 	for (unsigned int n = firstPose; n < firstPose + numberPoses; ++n)
+	{
 		poses[n] = randomPose(*pinholeCamera, *box, localRandomGenerator, minDistance, maxDistance, visibleRatio);
+	}
 }
 
 }

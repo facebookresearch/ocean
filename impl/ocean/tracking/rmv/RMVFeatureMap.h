@@ -16,8 +16,6 @@
 #include "ocean/math/Box3.h"
 #include "ocean/math/PinholeCamera.h"
 
-#include <vector>
-
 namespace Ocean
 {
 
@@ -203,77 +201,77 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 	protected:
 
 		/// Object points defining the feature map.
-		Vectors3 mapObjectPoints;
+		Vectors3 mapObjectPoints_;
 
 		/// Object points defining the initialization feature map.
-		Vectors3 mapInitializationObjectPoints;
+		Vectors3 mapInitializationObjectPoints_;
 
 		/// Indices of the strongest object points from the most recently tracking iteration.
-		Indices32 mapRecentStrongObjectPointIndices;
+		Indices32 mapRecentStrongObjectPointIndices_;
 
 		/// Indices of the semi-strongest object points from the most recently tracking iteration.
-		Indices32 mapRecentSemiStrongObjectPointIndices;
+		Indices32 mapRecentSemiStrongObjectPointIndices_;
 
 		/// Indices of the used object points from the most recently tracking iteration.
-		Indices32 mapRecentUsedObjectPointIndices;
+		Indices32 mapRecentUsedObjectPointIndices_;
 
 		/// Bounding box covering all feature points.
-		Box3 mapBoundingBox;
+		Box3 mapBoundingBox_;
 
 		/// Bounding box covering all initialization feature points, if existing.
-		Box3 mapInitializationBoundingBox;
+		Box3 mapInitializationBoundingBox_;
 
 		/// Standard camera.
-		PinholeCamera mapCamera;
+		PinholeCamera mapCamera_;
 
 		/// PinholeCamera object explicitly used for camera initialization, if defined.
-		PinholeCamera mapInitializationCamera;
+		PinholeCamera mapInitializationCamera_;
 
 		/// Detector type used for the normal feature map features.
-		RMVFeatureDetector::DetectorType mapDetectorType;
+		RMVFeatureDetector::DetectorType mapDetectorType_;
 
 		/// Detector type explicitly used for initialization features.
-		RMVFeatureDetector::DetectorType mapInitializationDetectorType;
+		RMVFeatureDetector::DetectorType mapInitializationDetectorType_;
 };
 
 inline const Vectors3& RMVFeatureMap::objectPoints() const
 {
-	return mapObjectPoints;
+	return mapObjectPoints_;
 }
 
 inline const Vectors3& RMVFeatureMap::initializationObjectPoints() const
 {
-	return mapInitializationObjectPoints.empty() ? mapObjectPoints : mapInitializationObjectPoints;
+	return mapInitializationObjectPoints_.empty() ? mapObjectPoints_ : mapInitializationObjectPoints_;
 }
 
 inline const Indices32& RMVFeatureMap::recentStrongObjectPointIndices() const
 {
-	return mapRecentStrongObjectPointIndices;
+	return mapRecentStrongObjectPointIndices_;
 }
 
 inline const Indices32& RMVFeatureMap::recentSemiStrongObjectPointIndices() const
 {
-	return mapRecentSemiStrongObjectPointIndices;
+	return mapRecentSemiStrongObjectPointIndices_;
 }
 
 inline const Indices32& RMVFeatureMap::recentUsedObjectPointIndices() const
 {
-	ocean_assert(mapRecentUsedObjectPointIndices.size() < mapObjectPoints.size());
-	return mapRecentUsedObjectPointIndices;
+	ocean_assert(mapRecentUsedObjectPointIndices_.size() < mapObjectPoints_.size());
+	return mapRecentUsedObjectPointIndices_;
 }
 
 inline Vectors3 RMVFeatureMap::recentUsedObjectPoints(const size_t maxNumber) const
 {
 	ocean_assert(maxNumber != 0);
 
-	const size_t number = min(mapRecentUsedObjectPointIndices.size(), maxNumber);
+	const size_t number = min(mapRecentUsedObjectPointIndices_.size(), maxNumber);
 
 	Vectors3 result(number);
 
 	for (size_t n = 0; n < number; ++n)
 	{
-		ocean_assert(mapRecentUsedObjectPointIndices[n] < mapObjectPoints.size());
-		result[n] = mapObjectPoints[mapRecentUsedObjectPointIndices[n]];
+		ocean_assert(mapRecentUsedObjectPointIndices_[n] < mapObjectPoints_.size());
+		result[n] = mapObjectPoints_[mapRecentUsedObjectPointIndices_[n]];
 	}
 
 	return result;
@@ -285,16 +283,18 @@ inline void RMVFeatureMap::setMostRecentObjectPointIndices(Indices32&& strongObj
 #ifdef OCEAN_DEBUG
 
 	// check whether the given strong and semi-strong features have no index in common
-	for (Indices32::const_iterator i = strongObjectPointIndices.begin(); i != strongObjectPointIndices.end(); ++i)
+	for (const Index32& strongIndex : strongObjectPointIndices)
 	{
 		bool found = false;
 
-		for (Indices32::const_iterator iS = semiStrongObjectPointIndices.begin(); iS != semiStrongObjectPointIndices.end(); ++iS)
-			if (*i == *iS)
+		for (const Index32& semiStrongIndex : semiStrongObjectPointIndices)
+		{
+			if (strongIndex == semiStrongIndex)
 			{
 				found = true;
 				break;
 			}
+		}
 
 		ocean_assert(!found);
 	}
@@ -302,62 +302,68 @@ inline void RMVFeatureMap::setMostRecentObjectPointIndices(Indices32&& strongObj
 	// check whether the order of the index is correct
 
 	for (size_t n = 1; n < strongObjectPointIndices.size(); ++n)
+	{
 		ocean_assert(strongObjectPointIndices[n - 1] < strongObjectPointIndices[n]);
+	}
 
 	for (size_t n = 1; n < semiStrongObjectPointIndices.size(); ++n)
+	{
 		ocean_assert(semiStrongObjectPointIndices[n - 1] < semiStrongObjectPointIndices[n]);
+	}
 
 	for (size_t n = 1; n < usedObjectPointIndices.size(); ++n)
+	{
 		ocean_assert(usedObjectPointIndices[n - 1] < usedObjectPointIndices[n]);
+	}
 
 #endif // OCEAN_DEBUG
 
-	mapRecentStrongObjectPointIndices = std::move(strongObjectPointIndices);
-	mapRecentSemiStrongObjectPointIndices = std::move(semiStrongObjectPointIndices);
-	mapRecentUsedObjectPointIndices = std::move(usedObjectPointIndices);
+	mapRecentStrongObjectPointIndices_ = std::move(strongObjectPointIndices);
+	mapRecentSemiStrongObjectPointIndices_ = std::move(semiStrongObjectPointIndices);
+	mapRecentUsedObjectPointIndices_ = std::move(usedObjectPointIndices);
 }
 
 inline void RMVFeatureMap::clearMostRecentObjectPointIndices()
 {
-	mapRecentStrongObjectPointIndices.clear();
-	mapRecentSemiStrongObjectPointIndices.clear();
-	mapRecentUsedObjectPointIndices.clear();
+	mapRecentStrongObjectPointIndices_.clear();
+	mapRecentSemiStrongObjectPointIndices_.clear();
+	mapRecentUsedObjectPointIndices_.clear();
 }
 
 inline const Box3& RMVFeatureMap::boundingBox() const
 {
-	return mapBoundingBox;
+	return mapBoundingBox_;
 }
 
 inline const PinholeCamera& RMVFeatureMap::initializationCamera() const
 {
-	ocean_assert(mapCamera || mapInitializationCamera);
-	return mapInitializationCamera ? mapInitializationCamera : mapCamera;
+	ocean_assert(mapCamera_ || mapInitializationCamera_);
+	return mapInitializationCamera_ ? mapInitializationCamera_ : mapCamera_;
 }
 
 inline RMVFeatureDetector::DetectorType RMVFeatureMap::initializationDetectorType() const
 {
-	return mapInitializationDetectorType;
+	return mapInitializationDetectorType_;
 }
 
 inline RMVFeatureDetector::DetectorType RMVFeatureMap::detectorType() const
 {
-	return mapDetectorType;
+	return mapDetectorType_;
 }
 
 inline const Box3& RMVFeatureMap::initializationBoundingBox() const
 {
-	return mapInitializationBoundingBox.isValid() ? mapInitializationBoundingBox : mapBoundingBox;
+	return mapInitializationBoundingBox_.isValid() ? mapInitializationBoundingBox_ : mapBoundingBox_;
 }
 
 inline bool RMVFeatureMap::isEmpty() const
 {
-	return mapObjectPoints.empty();
+	return mapObjectPoints_.empty();
 }
 
 inline RMVFeatureMap::operator bool() const
 {
-	return !mapObjectPoints.empty();
+	return !mapObjectPoints_.empty();
 }
 
 }
