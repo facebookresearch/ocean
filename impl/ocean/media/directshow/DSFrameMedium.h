@@ -120,14 +120,14 @@ class OCEAN_MEDIA_DS_EXPORT DSFrameMedium :
 		static bool collectFrameFormats(IPin* pin, FrameTypes& frameTypes);
 
 		/**
-		 * Converts a Directshow media subtype to a pixel format.
+		 * Converts a DirectShow media subtype to a pixel format.
 		 * @param mediaSubtype DirectShow media type to convert
 		 * @return Resulting pixel format
 		 */
 		static FrameType::PixelFormat convertMediaSubtype(const GUID& mediaSubtype);
 
 		/**
-		 * Returns the pixel origin of a Directshow media subtype.
+		 * Returns the pixel origin of a DirectShow media subtype.
 		 * @param mediaSubtype DirectShow media type to return the pixel origin for
 		 * @return Pixel origin
 		 */
@@ -195,9 +195,9 @@ class OCEAN_MEDIA_DS_EXPORT DSFrameMedium :
 		FrameType recentFrameType_;
 
 		/// The recent camera profile, if known.
-		SharedAnyCamera recentAnyCamera_;
+		SharedAnyCamera recentCamera_;
 
-		/// DirecShow media sub type for YUV420, 30323449-0000-0010-8000-00AA00389B71 'I420' == MEDIASUBTYPE_I420
+		/// DirectShow media sub type for YUV420, 30323449-0000-0010-8000-00AA00389B71 'I420' == MEDIASUBTYPE_I420
 		static constexpr GUID MEDIASUBTYPE_I420 = {0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71};
 
 		/// True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible.

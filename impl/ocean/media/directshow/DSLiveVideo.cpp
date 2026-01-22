@@ -12,9 +12,7 @@
 #include "ocean/base/ScopedFunction.h"
 #include "ocean/base/String.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
-
-#include "ocean/math/PinholeCamera.h"
+#include "ocean/io/CameraCalibrationManager.h"
 
 namespace Ocean
 {
@@ -147,7 +145,7 @@ bool DSLiveVideo::createVideoSourceFilter()
 	ocean_assert(videoMoniker.isValid());
 
 	ocean_assert(!videoSourceFilter_.isValid());
-	if (S_OK != videoMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)(&videoSourceFilter_.resetObject())))
+	if (S_OK != videoMoniker->BindToObject(nullptr, nullptr, IID_IBaseFilter, (void**)(&videoSourceFilter_.resetObject())))
 	{
 		Log::error() << "Could not create a video source filter for \"" << url() << "\".";
 
@@ -304,24 +302,11 @@ bool DSLiveVideo::configuration(const std::string& name, long long data)
 			recentFrameType_ = FrameType(type.width(), type.height(), type.pixelFormat(), type.pixelOrigin());
 			recentFrameFrequency_ = type.frequency();
 
-			recentAnyCamera_ = nullptr;
+			recentCamera_ = nullptr;
 
 			if (recentFrameType_.isValid())
 			{
-				// we try to create a (static) camera profile based on the LegacyCameraCalibrationManager
-
-				IO::LegacyCameraCalibrationManager::Quality quality = IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT;
-				const PinholeCamera camera = IO::LegacyCameraCalibrationManager::get().camera(url(), recentFrameType_.width(), recentFrameType_.height(), &quality);
-
-				if (!recentAnyCamera_ || quality != IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT)
-				{
-					recentAnyCamera_ = std::make_shared<AnyCameraPinhole>(camera);
-
-					if (quality == IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT)
-					{
-						Log::warning() << "Used default camera calibration for '" << url() << "'";
-					}
-				}
+				recentCamera_ = IO::CameraCalibrationManager::get().camera(url(), recentFrameType_.width(), recentFrameType_.height());
 			}
 		}
 	}

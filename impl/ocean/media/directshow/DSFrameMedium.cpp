@@ -10,7 +10,7 @@
 
 #include "ocean/base/ScopedFunction.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
+#include "ocean/io/CameraCalibrationManager.h"
 
 #include "ocean/math/PinholeCamera.h"
 
@@ -291,28 +291,44 @@ bool DSFrameMedium::collectFrameFormats(IPin* pin, FrameTypes& frameTypes)
 FrameType::PixelFormat DSFrameMedium::convertMediaSubtype(const GUID& mediaSubtype)
 {
 	if (mediaSubtype == MEDIASUBTYPE_ARGB32)
+	{
 		return FrameType::FORMAT_BGRA32;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_I420)
+	{
 		return FrameType::FORMAT_Y_U_V12;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_IYUV)
+	{
 		return FrameType::FORMAT_UNDEFINED;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_RGB24)
+	{
 		return FrameType::FORMAT_BGR24;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_RGB32)
+	{
 		return FrameType::FORMAT_BGR32;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_YUY2)
+	{
 		return FrameType::FORMAT_YUYV16;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_NV12)
+	{
 		return FrameType::FORMAT_Y_UV12;
+	}
 
 	if (mediaSubtype == MEDIASUBTYPE_YV12)
+	{
 		return FrameType::FORMAT_UNDEFINED;
+	}
 
 	return FrameType::FORMAT_UNDEFINED;
 }
@@ -495,24 +511,13 @@ bool DSFrameMedium::insertFrameSampleSinkFilter(IPin* outputPin, FrameType::Pixe
 		recentFrameType_ = type;
 		recentFrameFrequency_ = type.frequency();
 
-		recentAnyCamera_ = nullptr;
+		recentCamera_ = nullptr;
 
 		if (recentFrameType_.isValid())
 		{
 			// we try to create a (static) camera profile based on the CameraCalibrationManager
 
-			IO::LegacyCameraCalibrationManager::Quality quality = IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT;
-			const PinholeCamera camera = IO::LegacyCameraCalibrationManager::get().camera(url(), recentFrameType_.width(), recentFrameType_.height(), &quality);
-
-			if (!recentAnyCamera_ || quality != IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT)
-			{
-				recentAnyCamera_ = std::make_shared<AnyCameraPinhole>(camera);
-
-				if (quality == IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT)
-				{
-					Log::warning() << "Used default camera calibration for '" << url() << "'";
-				}
-			}
+			recentCamera_ = IO::CameraCalibrationManager::get().camera(url(), recentFrameType_.width(), recentFrameType_.height());
 		}
 	}
 	else
@@ -594,7 +599,7 @@ void DSFrameMedium::onNewSample(IMediaSample* sample, const Timestamp timestamp,
 						Frame frame(recentFrameType_, planeInitializers, timestamp);
 						frame.setRelativeTimestamp(relativeTimestamp);
 
-						deliverNewFrame(std::move(frame), SharedAnyCamera(recentAnyCamera_));
+						deliverNewFrame(std::move(frame), SharedAnyCamera(recentCamera_));
 
 						return;
 					}
