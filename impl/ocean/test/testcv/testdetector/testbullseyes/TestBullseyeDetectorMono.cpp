@@ -679,20 +679,28 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	std::sort(detectionAccuracyErrors.begin(), detectionAccuracyErrors.end());
-	const Scalar detectionAccuracyErrorP50 = detectionAccuracyErrors[detectionAccuracyErrors.size() / 2];
-	const Scalar detectionAccuracyErrorP95 = detectionAccuracyErrors[95 * detectionAccuracyErrors.size() / 100];
-	const Scalar detectionAccuracyErrorP99 = detectionAccuracyErrors[99 * detectionAccuracyErrors.size() / 100];
-	const Scalar detectionAccuracyErrorMax = detectionAccuracyErrors.back();
-	Log::info() << "Detection accuracy errors: P50: " << String::toAString(detectionAccuracyErrorP50, 1u) << "px, P95: " << String::toAString(detectionAccuracyErrorP95, 1u) << "px, P99: " << String::toAString(detectionAccuracyErrorP99, 1u) << "px, max: " << String::toAString(detectionAccuracyErrorMax, 1u) << "px";
-
-	if (detectionAccuracyErrorMax > 1.5)
+	if (detectionAccuracyErrors.empty())
 	{
+		Log::info() << "Detection accuracy errors: no valid detections recorded";
 		allSucceeded = false;
 	}
+	else
+	{
+		std::sort(detectionAccuracyErrors.begin(), detectionAccuracyErrors.end());
+		const Scalar detectionAccuracyErrorP50 = detectionAccuracyErrors[detectionAccuracyErrors.size() / 2];
+		const Scalar detectionAccuracyErrorP95 = detectionAccuracyErrors[95 * detectionAccuracyErrors.size() / 100];
+		const Scalar detectionAccuracyErrorP99 = detectionAccuracyErrors[99 * detectionAccuracyErrors.size() / 100];
+		const Scalar detectionAccuracyErrorMax = detectionAccuracyErrors.back();
+		Log::info() << "Detection accuracy errors: P50: " << String::toAString(detectionAccuracyErrorP50, 1u) << "px, P95: " << String::toAString(detectionAccuracyErrorP95, 1u) << "px, P99: " << String::toAString(detectionAccuracyErrorP99, 1u) << "px, max: " << String::toAString(detectionAccuracyErrorMax, 1u) << "px";
 
-	const Scalar detectionRate = Scalar(iterationsWithDetections) / Scalar(iterations);
-	Log::info() << "Detection rate: " << String::toAString(detectionRate * 100.0, 1u) << "%";
+		if (detectionAccuracyErrorMax > 1.5)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	const Scalar detectionRate = iterations != 0u ? (Scalar(iterationsWithDetections) / Scalar(iterations) * Scalar(100.0)) : Scalar(-1.0);
+	Log::info() << "Detection rate: " << String::toAString(detectionRate, 1u) << "%";
 
 	if (detectionRate < 0.99)
 	{
