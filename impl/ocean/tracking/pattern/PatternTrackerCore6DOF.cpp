@@ -365,7 +365,7 @@ bool PatternTrackerCore6DOF::convertPoseForCamera(const PinholeCamera& newCamera
 
 	// and now we use the object points to determine the camera pose for the new camera profile
 
-	return Geometry::NonLinearOptimizationPose::optimizePose(newCamera, referencePose, ConstArrayAccessor<Vector3>(objectPoints, numberPoints), ConstArrayAccessor<Vector2>(distortedImagePoints, numberPoints), true, newPose);
+	return Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(newCamera), referencePose, ConstArrayAccessor<Vector3>(objectPoints, numberPoints), ConstArrayAccessor<Vector2>(distortedImagePoints, numberPoints), newPose);
 }
 
 bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const Frame& yFrame, const PinholeCamera& pinholeCamera, const Quaternion& previousCamera_R_camera, Worker* worker)
@@ -814,7 +814,7 @@ bool PatternTrackerCore6DOF::trackFrame2FrameHierarchy(const PinholeCamera& pinh
 	ocean_assert(hierarchyPreviousObjectPoints.size() == hierarchyCurrentImagePoints.size());
 
 	Scalar initialError, finalError;
-	if (!Geometry::NonLinearOptimizationPose::optimizePose(hierarchyCamera, previousPose, ConstArrayAccessor<Vector3>(hierarchyPreviousObjectPoints), ConstArrayAccessor<Vector2>(hierarchyCurrentImagePoints), pinholeCamera.hasDistortionParameters(), roughPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), &initialError, &finalError))
+	if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(hierarchyCamera), previousPose, ConstArrayAccessor<Vector3>(hierarchyPreviousObjectPoints), ConstArrayAccessor<Vector2>(hierarchyCurrentImagePoints), roughPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), &initialError, &finalError))
 	{
 		return false;
 	}
@@ -955,7 +955,7 @@ bool PatternTrackerCore6DOF::trackFrame2Frame(const PinholeCamera& pinholeCamera
 	ocean_assert(previousObjectPoints.size() == currentImagePoints.size());
 
 	Scalar initialError, finalError;
-	if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, previousPose, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), pinholeCamera.hasDistortionParameters(), currentPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), &initialError, &finalError))
+	if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), previousPose, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), currentPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), &initialError, &finalError))
 	{
 		return false;
 	}
@@ -1098,7 +1098,7 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 		if (imagePoints.size() >= minNumPoints)
 		{
 			Scalar initError, finalError;
-			if (Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, roughPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), &initError, &finalError))
+			if (Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), roughPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), &initError, &finalError))
 			{
 				if (occupancyArray)
 				{

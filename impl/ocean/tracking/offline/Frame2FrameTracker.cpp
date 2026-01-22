@@ -25,13 +25,13 @@ bool Frame2FrameTracker::trackPlanarObject(const PinholeCamera& pinholeCamera, c
 
 	const Vectors3 previousObjectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, previousPose, previousPlane, previousImagePoints, correspondences, pinholeCamera.hasDistortionParameters()));
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, previousPose, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(nextImagePoints, correspondences), pinholeCamera.hasDistortionParameters(), nextPose, 20u, Geometry::Estimator::ET_HUBER))
+	if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), previousPose, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(nextImagePoints, correspondences), nextPose, 20u, Geometry::Estimator::ET_HUBER))
 	{
 		return false;
 	}
 
 	const HomogenousMatrix4 intermediatePose(nextPose);
-	return Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, intermediatePose, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(nextImagePoints, correspondences), pinholeCamera.hasDistortionParameters(), nextPose, 5u, Geometry::Estimator::ET_TUKEY);
+	return Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), intermediatePose, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(nextImagePoints, correspondences), nextPose, 5u, Geometry::Estimator::ET_TUKEY);
 }
 
 }

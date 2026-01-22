@@ -397,7 +397,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithoutKnowledgeDefault(const PinholeCa
 					validImagePoints.push_back(imagePoints[i->first]);
 				}
 
-				if (Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, roughPoseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), false, resultingPoseIF, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
+				if (Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingPoseIF, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
 				{
 					// now we have a quite good pose based on the gathered points correspondences
 					// now we apply a last fine-tuning with more points as we now should be able to find significant more feature correspondences
@@ -615,7 +615,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 		ocean_assert(iterationObjectPoints.size() == 3);
 
 		HomogenousMatrix4 optimizedRoughPoseIF;
-		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, roughPoseIF, ConstArrayAccessor<Vector3>(iterationObjectPoints), ConstArrayAccessor<Vector2>(iterationImagePoints), false, optimizedRoughPoseIF, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10)))
+		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(iterationObjectPoints), ConstArrayAccessor<Vector2>(iterationImagePoints), optimizedRoughPoseIF, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10)))
 		{
 			// now we count the number of perfect/good matches
 
@@ -680,7 +680,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithAnyPreviousCorrespondences(const Ho
 #endif
 
 	HomogenousMatrix4 optimizedPoseIF;
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, bestPoseIF, ConstArraySubsetAccessor<Vector3, Index32>(previousUsedObjectPoints, bestObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints.data(), bestImagePointIndices), false, optimizedPoseIF, 30u, Geometry::Estimator::ET_SQUARE))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), bestPoseIF, ConstArraySubsetAccessor<Vector3, Index32>(previousUsedObjectPoints, bestObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints.data(), bestImagePointIndices), optimizedPoseIF, 30u, Geometry::Estimator::ET_SQUARE))
 	{
 		return false;
 	}
@@ -792,7 +792,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 
 	// first we apply the Huber estimator as we still do not know how good the correspondences are
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, initialPoseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), false, resultingPoseIF, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), initialPoseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingPoseIF, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), nullptr, nullptr))
 	{
 		return false;
 	}
@@ -801,7 +801,7 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 
 	// now we apply the Tukey estimator to filter outliers
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, poseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), false, resultingPoseIF, 30u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10), nullptr, nullptr))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), poseIF, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArrayAccessor<Vector2>(validImagePoints), resultingPoseIF, 30u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10), nullptr, nullptr))
 	{
 		return false;
 	}
@@ -866,14 +866,14 @@ bool RMVFeatureTracker6DOF::refinePoseWithStrongPreviousCorrespondencesIF(const 
 	// we could find/guess enough correspondences so that we now improve the rough pose based on a non-linear optimization, first we a Huber estimator (as we still do not know how good the quality of the correspondences is)
 
 	HomogenousMatrix4 optimizedPoseIF;
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, roughPoseIF, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), false, optimizedPoseIF, 10u, Geometry::Estimator::ET_HUBER))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), optimizedPoseIF, 10u, Geometry::Estimator::ET_HUBER))
 	{
 		return false;
 	}
 
 	// and now we apply a Tukey estimator to remove outliers
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, optimizedPoseIF, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), false, poseIF, 5u, Geometry::Estimator::ET_TUKEY))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), optimizedPoseIF, ConstArrayAccessor<Vector3>(candidateObjectPoints), ConstArrayAccessor<Vector2>(candidateImagePoints), poseIF, 5u, Geometry::Estimator::ET_TUKEY))
 	{
 		return false;
 	}
@@ -1139,14 +1139,14 @@ unsigned int RMVFeatureTracker6DOF::refinePoseIF(const HomogenousMatrix4& roughP
 
 	ocean_assert(correspondenceImagePoints.size() == correspondenceObjectPoints.size());
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, roughPoseIF, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), false, poseIF, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), roughPoseIF, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), poseIF, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 	{
 		return 0u;
 	}
 
 	const HomogenousMatrix4 optimizedPoseIF = poseIF;
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(pinholeCamera, optimizedPoseIF, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), false, poseIF, 5u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10)))
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), optimizedPoseIF, ConstArrayAccessor<Vector3>(correspondenceObjectPoints), ConstArrayAccessor<Vector2>(correspondenceImagePoints), poseIF, 5u, Geometry::Estimator::ET_TUKEY, Scalar(0.001), Scalar(10)))
 	{
 		return 0u;
 	}

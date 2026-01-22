@@ -1727,7 +1727,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		}
 
 		HomogenousMatrix4 world_T_camera;
-		if (!NonLinearOptimizationPose::optimizePose(finalCamera, world_T_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), true, world_T_camera))
+		if (!NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(finalCamera), world_T_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), world_T_camera))
 		{
 			ocean_assert(false && "Should always succeed!");
 			continue;

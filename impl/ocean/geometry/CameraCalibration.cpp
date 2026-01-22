@@ -298,7 +298,7 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 		}
 
 		HomogenousMatrix4 pose;
-		if (!NonLinearOptimizationPose::optimizePose(roughCamera, roughPose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), true, pose))
+		if (!NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(roughCamera), roughPose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), pose))
 		{
 			ocean_assert(false && "Should always succeeded!");
 			continue;
@@ -459,7 +459,7 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 
 			Scalar finalSqrError = 0;
 			HomogenousMatrix4 optimizedPose;
-			if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, pose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), pinholeCamera.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &finalSqrError))
+			if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), pose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), optimizedPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &finalSqrError))
 			{
 				ocean_assert(false && "Pose error minimization failed!");
 				return false;
@@ -524,7 +524,7 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 
 			Scalar finalSqrError = 0;
 			HomogenousMatrix4 optimizedPose;
-			if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, pose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), pinholeCamera.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &finalSqrError))
+			if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), pose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), optimizedPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &finalSqrError))
 			{
 				ocean_assert(false && "Pose error minimization failed!");
 				return false;
@@ -628,7 +628,7 @@ bool CameraCalibration::successiveCameraPoseOptimization(const PinholeCamera& pi
 		const ImagePoints& imagePoints = imagePointGroups[n];
 
 		Scalar setFinalSqrError = 0;
-		if (!Geometry::NonLinearOptimizationPose::optimizePose(optimizedCamera, pose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), true, optimizedPoses[n], 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &setFinalSqrError))
+		if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(optimizedCamera), pose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), optimizedPoses[n], 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &setFinalSqrError))
 		{
 			ocean_assert(false && "Pose error minimization failed!");
 			return false;

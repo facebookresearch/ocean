@@ -597,7 +597,7 @@ SLAMPlaneTracker::FramePyramidTrackerComponent::IterationResult SLAMPlaneTracker
 			ocean_assert(componentPreviousPoses_[p].isValid());
 
 			HomogenousMatrix4 optimizedPose;
-			if (!Geometry::NonLinearOptimizationPose::optimizePose(componentCamera_, componentPreviousPoses_[p], ConstArrayAccessor<Vector3>(componentObjectPoints_[p]), ConstArrayAccessor<Vector2>(componentCurrentImagePoints_), componentCamera_.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
+			if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(componentCamera_), componentPreviousPoses_[p], ConstArrayAccessor<Vector3>(componentObjectPoints_[p]), ConstArrayAccessor<Vector2>(componentCurrentImagePoints_), optimizedPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
 			{
 				ocean_assert(false && "This should never happen!");
 				return IR_FAILED;
@@ -876,7 +876,7 @@ bool SLAMPlaneTracker::PlaneTrackerComponent::optimizePose(const CV::FramePyrami
 	const Vectors3 objectPoints(Geometry::Utilities::backProjectImagePoints(componentCamera_, previousPose, componentPlane_, previousImagePoints.data(), previousImagePoints.size(), componentCamera_.hasDistortionParameters()));
 
 	// optimize the pose due to the new image points
-	return Geometry::NonLinearOptimizationPose::optimizePose(componentCamera_, currentPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), componentCamera_.hasDistortionParameters(), optimizedPose, 40u, Geometry::Estimator::ET_HUBER);
+	return Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(componentCamera_), currentPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedPose, 40u, Geometry::Estimator::ET_HUBER);
 }
 
 bool SLAMPlaneTracker::PlaneTrackerComponent::optimizePlane(Plane3& optimizedPlane, const unsigned int numberFrames)

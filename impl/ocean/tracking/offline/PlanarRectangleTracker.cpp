@@ -542,7 +542,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizePose(const Frame& cu
 	ocean_assert(objectPoints.size() == cameraCurrentPoints.size());
 
 	// we optimize the camera pose, and we apply the camera distortion parameters, as the camera image points are distorted
-	if (!Geometry::NonLinearOptimizationPose::optimizePose(camera_, currentPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(cameraCurrentPoints), camera_.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5)))
+	if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(camera_), currentPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(cameraCurrentPoints), optimizedPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5)))
 	{
 		return false;
 	}

@@ -415,7 +415,7 @@ bool PatternTracker::FineTrackingComponent::optimizePose(const PinholeCamera& pi
 
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
-	if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, pose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5)))
+	if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(pinholeCamera), pose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5)))
 	{
 		return false;
 	}
@@ -540,7 +540,7 @@ bool PatternTracker::FineTrackingComponent::optimizeCamera(const PinholeCamera& 
 		ObjectPoints& objectPoints = bestObjectPoints[n];
 
 		HomogenousMatrix4 optimizedPose;
-		if (!Geometry::NonLinearOptimizationPose::optimizePose(localCamera, pose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), localCamera.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_HUBER))
+		if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(localCamera), pose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedPose, 20u, Geometry::Estimator::ET_HUBER))
 		{
 			ocean_assert(false && "This should never happen!");
 			continue;
@@ -619,7 +619,7 @@ bool PatternTracker::FineTrackingComponent::optimizeCamera(const PinholeCamera& 
 			const ObjectPoints& objectPoints = objectPointsSet_[n];
 
 			HomogenousMatrix4 optimizedPose;
-			if (!Geometry::NonLinearOptimizationPose::optimizePose(optimizedCamera, pose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedCamera.hasDistortionParameters(), optimizedPose, 20u, Geometry::Estimator::ET_HUBER))
+			if (!Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(optimizedCamera), pose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedPose, 20u, Geometry::Estimator::ET_HUBER))
 			{
 				ocean_assert(false && "This should never happen!");
 				continue;

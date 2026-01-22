@@ -243,7 +243,7 @@ bool FeatureTracker6DOF::determinePoseWithPreviousPose(ORBFeatures& features, co
 		FeatureIndices resultingValidCorrespondences;
 
 		Scalar initialError = 0, finalError = 0;
-		if (Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, recentPose_, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), false, resultingPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), &initialError, &finalError))
+		if (Geometry::NonLinearOptimizationPose::optimizePose(AnyCameraPinhole(PinholeCamera(pinholeCamera, false)), recentPose_, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), resultingPose, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10), &initialError, &finalError))
 		{
 			// check whether the determined pose is close enough to the previous pose
 			if (Geometry::Error::posesAlmostEqual(recentPose_, resultingPose, maxPositionOffset_, maxOrientationOffset_))
