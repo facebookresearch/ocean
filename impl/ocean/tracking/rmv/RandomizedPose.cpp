@@ -6,6 +6,7 @@
  */
 
 #include "ocean/tracking/rmv/RandomizedPose.h"
+#include "ocean/tracking/rmv/RMVFeatureMap.h"
 
 #include "ocean/math/Euler.h"
 #include "ocean/math/Quaternion.h"
@@ -31,10 +32,10 @@ HomogenousMatrices4 RandomizedPose::hemispherePoses(const Box3& box, RandomGener
 
 	const Scalar diagonal_20 = diagonal * Scalar(0.05);
 
-	const HomogenousMatrix4 wTcenter(center);
-	const HomogenousMatrix4 centerTdistance(Vector3(0, distance, 0));
-	const HomogenousMatrix4 distanceTlookat(Rotation(1, 0, 0, -Numeric::pi_2()));
-	const HomogenousMatrix4 wTlookat(wTcenter * centerTdistance * distanceTlookat);
+	const HomogenousMatrix4 world_T_center(center);
+	const HomogenousMatrix4 center_T_distance(Vector3(0, distance, 0));
+	const HomogenousMatrix4 distance_T_lookat(Rotation(1, 0, 0, -Numeric::pi_2()));
+	const HomogenousMatrix4 world_T_lookat(world_T_center * center_T_distance * distance_T_lookat);
 
 	const Scalar invRollStepsPI2 = Numeric::pi2() / Scalar(rollSteps);
 	const Scalar invLongitudeStepsPI2 = Numeric::pi2() / Scalar(longitudeSteps);
@@ -48,23 +49,23 @@ HomogenousMatrices4 RandomizedPose::hemispherePoses(const Box3& box, RandomGener
 		const Rotation rotationZ(0, 0, 1, invRollStepsPI2 * Scalar(n));
 		const HomogenousMatrix4 randomOffset(Random::vector3(randomGenerator, Scalar(-diagonal_20), Scalar(diagonal_20)), Random::euler(randomGenerator, Numeric::deg2rad(5)));
 
-		results.push_back(wTlookat * HomogenousMatrix4(rotationZ) * randomOffset);
+		results.push_back(world_T_lookat * HomogenousMatrix4(rotationZ) * randomOffset);
 	}
 
 	// one ring with 40 degree offset to the north pole (latitude 60 degree)
 	for (unsigned int n = 0u; n < longitudeSteps; ++n)
 	{
-		const HomogenousMatrix4 centerTcenterY(Rotation(0, 1, 0, invLongitudeStepsPI2 * Scalar(n)));
-		const HomogenousMatrix4 centerYcenterX(Rotation(1, 0, 0, Numeric::deg2rad(40)));
+		const HomogenousMatrix4 center_T_centerY(Rotation(0, 1, 0, invLongitudeStepsPI2 * Scalar(n)));
+		const HomogenousMatrix4 center_Y_centerX(Rotation(1, 0, 0, Numeric::deg2rad(40)));
 
 		for (unsigned int rollStep = 0u; rollStep < rollSteps; ++rollStep)
 		{
 			const Rotation rotationZ(0, 0, 1, invRollStepsPI2 * Scalar(rollStep));
 
-			const HomogenousMatrix4 wTlookatF(wTcenter * centerTcenterY * centerYcenterX * centerTdistance * distanceTlookat * HomogenousMatrix4(rotationZ));
+			const HomogenousMatrix4 world_T_lookatF(world_T_center * center_T_centerY * center_Y_centerX * center_T_distance * distance_T_lookat * HomogenousMatrix4(rotationZ));
 			const HomogenousMatrix4 randomOffset(Random::vector3(randomGenerator, Scalar(-diagonal_20), Scalar(diagonal_20)), Random::euler(randomGenerator, Numeric::deg2rad(5)));
 
-			results.push_back(wTlookatF * randomOffset);
+			results.push_back(world_T_lookatF * randomOffset);
 		}
 	}
 
@@ -155,16 +156,16 @@ void RandomizedPose::constantDistance(const Box3& box, const Scalar distance, co
 	}
 }
 
-HomogenousMatrix4 RandomizedPose::randomPose(const PinholeCamera& pinholeCamera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio)
+HomogenousMatrix4 RandomizedPose::randomPose(const AnyCamera& camera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio)
 {
-	ocean_assert(pinholeCamera && box.isValid());
+	ocean_assert(camera.isValid() && box.isValid());
 	ocean_assert(minDistance > Numeric::eps() && minDistance < maxDistance);
 	ocean_assert(visibleRatio >= 0 && visibleRatio < 1);
 
 	Vector3 mapPoints[8];
 	const unsigned int numberMapPoints = box.corners(mapPoints);
 
-	const Box2 cameraBox(Scalar(0), Scalar(0), Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height()));
+	const Box2 cameraBox(Scalar(0), Scalar(0), Scalar(camera.width()), Scalar(camera.height()));
 
 	const Scalar minVisibleRatio = Scalar(1) - visibleRatio;
 	const Scalar maxVisibleRatio = Scalar(1) + visibleRatio;
@@ -177,7 +178,7 @@ HomogenousMatrix4 RandomizedPose::randomPose(const PinholeCamera& pinholeCamera,
 
 		const HomogenousMatrix4 world_T_camera(translation, rotation);
 		const HomogenousMatrix4 camera_T_world(world_T_camera.inverted());
-		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 		bool valid = true;
 		for (unsigned int n = 0; n < numberMapPoints; ++n)
@@ -196,7 +197,7 @@ HomogenousMatrix4 RandomizedPose::randomPose(const PinholeCamera& pinholeCamera,
 			continue;
 		}
 
-		const Box2 projectedBox(pinholeCamera.projectToImageIF<true>(flippedCamera_T_world, box, false));
+		const Box2 projectedBox = RMVFeatureMap::projectToImageIF(camera, flippedCamera_T_world, box);
 		ocean_assert(projectedBox.isValid());
 
 		const Box2 intersectedBox(cameraBox.intersection(projectedBox));
@@ -219,33 +220,33 @@ HomogenousMatrix4 RandomizedPose::randomPose(const PinholeCamera& pinholeCamera,
 	}
 }
 
-void RandomizedPose::randomPoses(const PinholeCamera& pinholeCamera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, const size_t number, HomogenousMatrix4* poses, Worker* worker)
+void RandomizedPose::randomPoses(const AnyCamera& camera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, const size_t number, HomogenousMatrix4* poses, Worker* worker)
 {
-	ocean_assert(pinholeCamera.isValid() && box.isValid());
+	ocean_assert(camera.isValid() && box.isValid());
 	ocean_assert(minDistance > Numeric::eps() && minDistance < maxDistance);
 	ocean_assert(visibleRatio >= 0 && visibleRatio < 1);
 	ocean_assert(number >= 1 && poses);
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&RandomizedPose::randomPoseSubset, &pinholeCamera, &box, &randomGenerator, minDistance, maxDistance, visibleRatio, poses, 0u, 0u), 0u, (unsigned int)number, 7u, 8u, 20u);
+		worker->executeFunction(Worker::Function::createStatic(&RandomizedPose::randomPoseSubset, &camera, &box, &randomGenerator, minDistance, maxDistance, visibleRatio, poses, 0u, 0u), 0u, (unsigned int)(number), 7u, 8u, 20u);
 	}
 	else
 	{
-		randomPoseSubset(&pinholeCamera, &box, &randomGenerator, minDistance, maxDistance, visibleRatio, poses, 0u, (unsigned int)number);
+		randomPoseSubset(&camera, &box, &randomGenerator, minDistance, maxDistance, visibleRatio, poses, 0u, (unsigned int)(number));
 	}
 }
 
-void RandomizedPose::randomPoseSubset(const PinholeCamera* pinholeCamera, const Box3* box, RandomGenerator* randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, HomogenousMatrix4* poses, const unsigned int firstPose, const unsigned int numberPoses)
+void RandomizedPose::randomPoseSubset(const AnyCamera* camera, const Box3* box, RandomGenerator* randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, HomogenousMatrix4* poses, const unsigned int firstPose, const unsigned int numberPoses)
 {
-	ocean_assert(pinholeCamera && box && poses && randomGenerator);
+	ocean_assert(camera != nullptr && box != nullptr && poses != nullptr && randomGenerator != nullptr);
 
 	// Initializes the local random generator by the global generator
 	RandomGenerator localRandomGenerator(*randomGenerator);
 
 	for (unsigned int n = firstPose; n < firstPose + numberPoses; ++n)
 	{
-		poses[n] = randomPose(*pinholeCamera, *box, localRandomGenerator, minDistance, maxDistance, visibleRatio);
+		poses[n] = randomPose(*camera, *box, localRandomGenerator, minDistance, maxDistance, visibleRatio);
 	}
 }
 

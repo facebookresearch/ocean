@@ -17,32 +17,16 @@ namespace Ocean
 namespace Tracking
 {
 
-PoseProjection::PoseProjection() :
-	poseDistortionState(CV::Detector::PointFeature::DS_INVALID)
+PoseProjection::PoseProjection(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Geometry::ObjectPoint* objectPoints, const size_t number) :
+	world_T_camera_(world_T_camera),
+	imagePoints_(number)
 {
-	// nothing to do here
-}
+	ocean_assert(objectPoints != nullptr);
 
-PoseProjection::PoseProjection(const HomogenousMatrix4& pose, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const size_t number, const bool distortImagePoints) :
-	poseTransformation(pose),
-	poseImagePoints(number)
-{
-	ocean_assert(objectPoints);
-
-	if (number > 0)
-		pinholeCamera.projectToImageIF<true>(PinholeCamera::standard2InvertedFlipped(pose), objectPoints, number, distortImagePoints, poseImagePoints.data());
-
-	if (distortImagePoints)
-		poseDistortionState = CV::Detector::PointFeature::DS_DISTORTED;
-	else
-		poseDistortionState = CV::Detector::PointFeature::DS_UNDISTORTED;
-}
-
-PoseProjectionSet::PoseProjectionSet() :
-	projectionSetCameraWidth(0),
-	projectionSetCameraHeight(0)
-{
-	// nothing to do here
+	if (number != 0)
+	{
+		camera.projectToImage(world_T_camera, objectPoints, number, imagePoints_.data());
+	}
 }
 
 PoseProjectionSet::~PoseProjectionSet()
@@ -52,7 +36,7 @@ PoseProjectionSet::~PoseProjectionSet()
 
 void PoseProjectionSet::clear()
 {
-	projectionSetPoseProjections.clear();
+	poseProjections_.clear();
 }
 
 }

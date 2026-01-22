@@ -12,7 +12,7 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Worker.h"
 
-#include "ocean/math/PinholeCamera.h"
+#include "ocean/math/AnyCamera.h"
 
 #include "ocean/media/FrameMedium.h"
 
@@ -63,9 +63,10 @@ class RMVTrackerMainWindow :
 
 		/**
 		 * Event function if a new frame has arrived.
-		 * @param frame New frame
+		 * @param frame The new frame
+		 * @param camera The camera profile of the frame
 		 */
-		void onFrame(const Frame& frame);
+		void onFrame(const Frame& frame, const SharedAnyCamera& camera);
 
 	protected:
 
@@ -88,7 +89,7 @@ class RMVTrackerMainWindow :
 		std::string patternFilename_;
 
 		/// The camera profile to be used.
-		PinholeCamera camera_;
+		SharedAnyCamera camera_;
 
 		/// The performance measurement object.
 		HighPerformanceStatistic performance_;

@@ -19,8 +19,8 @@
 #include "ocean/geometry/Geometry.h"
 #include "ocean/geometry/Estimator.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 
 #include <algorithm>
 
@@ -41,35 +41,28 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		/**
 		 * Creates an empty pose projection object.
 		 */
-		PoseProjection();
+		PoseProjection() = default;
 
 		/**
 		 * Creates a new pose projection object by a given pose and object points.
-		 * @param pose Pose used to project the object points to the image plane
-		 * @param pinholeCamera The pinhole camera object defining the projection
+		 * @param world_T_camera The transformation between camera and world, with default camera looking into the negative z-space with y-axis up, must be valid
+		 * @param camera The camera object defining the projection
 		 * @param objectPoints Object points to be projected
 		 * @param number Number Of object points to be projected
-		 * @param distortImagePoints Distorts the image points after projection if True
 		 */
-		PoseProjection(const HomogenousMatrix4& pose, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const size_t number, const bool distortImagePoints);
+		PoseProjection(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Geometry::ObjectPoint* objectPoints, const size_t number);
 
 		/**
 		 * Returns the pose of this projection.
 		 * @return Projection pose
 		 */
-		inline const HomogenousMatrix4& pose() const;
+		inline const HomogenousMatrix4& world_T_camera() const;
 
 		/**
 		 * Returns the image points (the projected object points) of this pose projection.
 		 * @return Pose image points
 		 */
 		inline const Geometry::ImagePoints& imagePoints() const;
-
-		/**
-		 * Returns the distortion state of this projection.
-		 * @return Distortion state
-		 */
-		inline CV::Detector::PointFeature::DistortionState distortionState() const;
 
 		/**
 		 * Returns the number of stored pose points.
@@ -114,13 +107,10 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 	private:
 
 		/// Pose of this projection.
-		HomogenousMatrix4 poseTransformation;
+		HomogenousMatrix4 world_T_camera_ = HomogenousMatrix4(false);
 
 		/// Projection object points for this pose.
-		Geometry::ImagePoints poseImagePoints;
-
-		/// Distortion state of the image points.
-		CV::Detector::PointFeature::DistortionState poseDistortionState;
+		Vectors2 imagePoints_;
 };
 
 /**
@@ -188,7 +178,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		/**
 		 * Creates an empty set of pose projections.
 		 */
-		PoseProjectionSet();
+		PoseProjectionSet() = default;
 
 		/**
 		 * Destructs a set of pose projections.
@@ -303,13 +293,13 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 	private:
 
 		/// All registered pose projections.
-		PoseProjections projectionSetPoseProjections;
+		PoseProjections poseProjections_;
 
 		/// Width of the camera in pixel used for all pose projections
-		unsigned int projectionSetCameraWidth;
+		unsigned int cameraWidth_ = 0u;
 
 		/// Height of the camera in pixel used for all pose projections
-		unsigned int projectionSetCameraHeight;
+		unsigned int cameraHeight_ = 0u;
 };
 
 inline const Vector3& PoseProjection::objectPoint2objectPoint(const Geometry::ObjectPoint& objectPoint)
@@ -317,75 +307,70 @@ inline const Vector3& PoseProjection::objectPoint2objectPoint(const Geometry::Ob
 	return objectPoint;
 }
 
-inline const HomogenousMatrix4& PoseProjection::pose() const
+inline const HomogenousMatrix4& PoseProjection::world_T_camera() const
 {
-	return poseTransformation;
+	return world_T_camera_;
 }
 
 inline const Geometry::ImagePoints& PoseProjection::imagePoints() const
 {
-	return poseImagePoints;
-}
-
-inline CV::Detector::PointFeature::DistortionState PoseProjection::distortionState() const
-{
-	return poseDistortionState;
+	return imagePoints_;
 }
 
 inline size_t PoseProjection::size() const
 {
-	return poseImagePoints.size();
+	return imagePoints_.size();
 }
 
 inline bool PoseProjection::isEmpty() const
 {
-	return poseImagePoints.empty();
+	return imagePoints_.empty();
 }
 
 inline PoseProjection::operator bool() const
 {
-	return !poseImagePoints.empty();
+	return !imagePoints_.empty();
 }
 
 inline unsigned int PoseProjectionSet::width() const
 {
-	return projectionSetCameraWidth;
+	return cameraWidth_;
 }
 
 inline unsigned int PoseProjectionSet::height() const
 {
-	return projectionSetCameraHeight;
+	return cameraHeight_;
 }
 
 inline void PoseProjectionSet::setDimension(const unsigned int width, const unsigned int height)
 {
-	projectionSetCameraWidth = width;
-	projectionSetCameraHeight = height;
+	cameraWidth_ = width;
+	cameraHeight_ = height;
 }
 
 inline void PoseProjectionSet::addPoseProjection(const PoseProjection& poseProjection)
 {
-	projectionSetPoseProjections.push_back(poseProjection);
+	poseProjections_.push_back(poseProjection);
 }
 
 inline const PoseProjectionSet::PoseProjections& PoseProjectionSet::poseProjections() const
 {
-	return projectionSetPoseProjections;
+	return poseProjections_;
 }
 
 inline size_t PoseProjectionSet::size() const
 {
-	return projectionSetPoseProjections.size();
+	return poseProjections_.size();
 }
 
 inline bool PoseProjectionSet::isEmpty() const
 {
-	return projectionSetPoseProjections.empty();
+	return poseProjections_.empty();
 }
 
 inline PoseProjectionSet::operator bool() const
 {
-	return !projectionSetPoseProjections.empty();
+	return !poseProjections_.empty();
 }
 
 inline PoseProjectionSet::ErrorObject::ErrorObject(const unsigned int index, const Scalar error) :
@@ -414,12 +399,14 @@ template <Geometry::Estimator::EstimatorType tEstimator>
 Scalar PoseProjection::minimalAverageSquareError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination)
 {
 	if (isEmpty())
+	{
 		return Numeric::maxValue();
+	}
 
 	const size_t points = min(size(), numberImagePoints);
 	const size_t validPoints = min(validImagePoints, points);
 
-	return Geometry::Error::averagedRobustErrorInPointCloud<tEstimator>(imagePoints, points, validPoints, poseImagePoints.data(), size(), errorDetermination);
+	return Geometry::Error::averagedRobustErrorInPointCloud<tEstimator>(imagePoints, points, validPoints, imagePoints_.data(), size(), errorDetermination);
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
@@ -428,22 +415,30 @@ HomogenousMatrix4 PoseProjectionSet::findPoseWithMinimalError(const Geometry::Im
 	ocean_assert(!isEmpty());
 
 	if (isEmpty())
+	{
 		return HomogenousMatrix4();
+	}
 
-	ErrorObjects errorObjects(projectionSetPoseProjections.size(), ErrorObject(0xFFFFFFFF, Numeric::maxValue()));
+	ErrorObjects errorObjects(poseProjections_.size(), ErrorObject(0xFFFFFFFF, Numeric::maxValue()));
 
 	if (worker)
+	{
 		worker->executeFunction(Worker::Function::create(*this, &PoseProjectionSet::findPoseWithMinimalErrorSubset<tEstimator>, imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, 0u), 0u, size(), 5u, 6u);
+	}
 	else
-		findPoseWithMinimalErrorSubset<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, (unsigned int)size());
+	{
+		findPoseWithMinimalErrorSubset<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, (unsigned int)(size()));
+	}
 
 	std::sort(errorObjects.begin(), errorObjects.end());
 
-	if (resultingError)
+	if (resultingError != nullptr)
+	{
 		*resultingError = errorObjects.front().error();
+	}
 
-	ocean_assert(errorObjects.front().index() < projectionSetPoseProjections.size());
-	return projectionSetPoseProjections[errorObjects.front().index()].pose();
+	ocean_assert(errorObjects.front().index() < poseProjections_.size());
+	return poseProjections_[errorObjects.front().index()].world_T_camera();
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
@@ -452,14 +447,20 @@ unsigned int PoseProjectionSet::findPosesWithMinimalError(const Geometry::ImageP
 	ocean_assert(poses);
 
 	if (isEmpty() || numberPoses == 0)
+	{
 		return 0;
+	}
 
-	ErrorObjects errorObjects(projectionSetPoseProjections.size(), ErrorObject(0xFFFFFFFF, Numeric::maxValue()));
+	ErrorObjects errorObjects(poseProjections_.size(), ErrorObject(0xFFFFFFFF, Numeric::maxValue()));
 
 	if (worker)
+	{
 		worker->executeFunction(Worker::Function::create(*this, &PoseProjectionSet::findPoseWithMinimalErrorSubset<tEstimator>, imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, 0u), 0u, (unsigned int)size(), 5u, 6u);
+	}
 	else
+	{
 		findPoseWithMinimalErrorSubset<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, (unsigned int)size());
+	}
 
 	// **NOTE** We should seek a slightly larger set of best matching poses as we should try to find good poses but also different poses
 	// **NOTE** We should think about the application of more suitable data structures like KD-Trees to improve the performance
@@ -470,12 +471,15 @@ unsigned int PoseProjectionSet::findPosesWithMinimalError(const Geometry::ImageP
 
 	for (size_t n = 0; n < results; ++n)
 	{
-		poses[n] = projectionSetPoseProjections[errorObjects[n].index()].pose();
+		poses[n] = poseProjections_[errorObjects[n].index()].world_T_camera();
+
 		if (resultingErrors)
+		{
 			resultingErrors[n] = errorObjects[n].error();
+		}
 	}
 
-	return (unsigned int)results;
+	return (unsigned int)(results);
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
@@ -484,11 +488,11 @@ void PoseProjectionSet::findPoseWithMinimalErrorSubset(const Geometry::ImagePoin
 	ocean_assert(imagePoints);
 	ocean_assert(errorObjects);
 
-	ocean_assert(firstProjection + numberProjections <= projectionSetPoseProjections.size());
+	ocean_assert(firstProjection + numberProjections <= poseProjections_.size());
 
 	for (unsigned int n = firstProjection; n < firstProjection + numberProjections; ++n)
 	{
-		const Scalar errorValue = projectionSetPoseProjections[n].minimalAverageSquareError<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination);
+		const Scalar errorValue = poseProjections_[n].minimalAverageSquareError<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination);
 		errorObjects[n] = ErrorObject(n, errorValue);
 	}
 }

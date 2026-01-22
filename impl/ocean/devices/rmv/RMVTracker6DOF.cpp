@@ -15,11 +15,10 @@
 #include "ocean/cv/FrameShrinker.h"
 #include "ocean/cv/IntegralImage.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/File.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Random.h"
 #include "ocean/math/Rotation.h"
 
@@ -101,44 +100,35 @@ RMVTracker6DOF::ObjectId RMVTracker6DOF::registerObject(const std::string& descr
 
 	Log::info() << "Creating camera: " << frameMedium.url();
 
-	PinholeCamera pinholeCamera = IO::LegacyCameraCalibrationManager::get().camera(frameMedium.url(), pattern.width(), pattern.height());
-
-	Log::info() << "Standard camera resolution: " << pinholeCamera.width() << "x" << pinholeCamera.height();
-
-	if (pinholeCamera)
-	{
-		const WorkerPool::ScopedWorker worker(WorkerPool::get().scopedWorker());
-
-		Tracking::RMV::RMVFeatureMap featureMap;
+	Tracking::RMV::RMVFeatureMap featureMap;
 
 #ifdef OCEAN_HARDWARE_REDUCED_PERFORMANCE
 
-		Tracking::RMV::RMVFeatureDetector::DetectorType initilizationDetectorType = Tracking::RMV::RMVFeatureDetector::DT_HARRIS_FEATURE;
+	Tracking::RMV::RMVFeatureDetector::DetectorType initializationDetectorType = Tracking::RMV::RMVFeatureDetector::DT_HARRIS_FEATURE;
 
-		const unsigned int numberMapPoints = 300u;
-		const unsigned int numberInitializationPoints = 120u;
+	constexpr unsigned int numberMapPoints = 300u;
+	constexpr unsigned int numberInitializationPoints = 120u;
 
 #else
 
-		Tracking::RMV::RMVFeatureDetector::DetectorType initilizationDetectorType = Tracking::RMV::RMVFeatureDetector::DT_HARRIS_FEATURE;
+	Tracking::RMV::RMVFeatureDetector::DetectorType initializationDetectorType = Tracking::RMV::RMVFeatureDetector::DT_HARRIS_FEATURE;
 
-		const unsigned int numberMapPoints = 600u;
-		const unsigned int numberInitializationPoints = 150u;
+	constexpr unsigned int numberMapPoints = 600u;
+	constexpr unsigned int numberInitializationPoints = 150u;
 
 #endif
 
-		featureMap.setFeatures(pattern, dimension, pinholeCamera, numberMapPoints, featureTracker_.detectorType(), worker());
-		featureMap.setInitializationFeatures(pattern, dimension, pinholeCamera, numberInitializationPoints, initilizationDetectorType, worker());
+	const SharedAnyCamera camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(pattern.width(), pattern.height(), Numeric::deg2rad(60)));
 
-		ocean_assert(uniqueObjectId_ == invalidObjectId());
-		uniqueObjectId_ = addUniqueObjectId("RMV");
+	const WorkerPool::ScopedWorker worker(WorkerPool::get().scopedWorker());
 
-		return uniqueObjectId_;
-	}
+	featureMap.setFeatures(pattern, dimension, camera, numberMapPoints, featureTracker_.detectorType(), worker());
+	featureMap.setInitializationFeatures(pattern, dimension, camera, numberInitializationPoints, initializationDetectorType, worker());
 
-	Log::error() << "FAILED to create a feature map for the RMV tracker";
+	ocean_assert(uniqueObjectId_ == invalidObjectId());
+	uniqueObjectId_ = addUniqueObjectId("RMV");
 
-	return invalidObjectId();
+	return uniqueObjectId_;
 }
 
 bool RMVTracker6DOF::isStarted() const

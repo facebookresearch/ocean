@@ -14,7 +14,6 @@
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
@@ -76,23 +75,26 @@ void RMVTrackerMainWindow::onInitialized()
 		// we wait until we have the first frame so that we can request the correct camera profile
 
 		const Timestamp startTimestamp(true);
-		while (frameMedium_->frame().isNull() && startTimestamp + 5.0 > Timestamp(true))
+		while (frameMedium_->frame().isNull() && !startTimestamp.hasTimePassed(5.0))
 		{
 			Thread::sleep(1u);
 		}
 
-		const FrameRef frame = frameMedium_->frame();
+		const FrameRef frame = frameMedium_->frame(&camera_);
+	}
 
-		if (frame)
-		{
-			camera_ = IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), frame->width(), frame->height());
-		}
+	if (!camera_)
+	{
+		Log::error() << "Failed to access a valid camera";
+		return;
 	}
 
 	IO::File absoluteFile;
 
 	if (!patternFilename_.empty())
+	{
 		absoluteFile = IO::File(patternFilename_);
+	}
 
 	if (!absoluteFile.exists())
 	{
@@ -134,11 +136,12 @@ void RMVTrackerMainWindow::onIdle()
 {
 	if (frameMedium_)
 	{
-		const FrameRef frame(frameMedium_->frame());
+		SharedAnyCamera camera;
+		const FrameRef frame(frameMedium_->frame(&camera));
 
-		if (frame && *frame && frame->timestamp() != frameTimestamp_)
+		if (frame && *frame && frame->timestamp() != frameTimestamp_ && camera)
 		{
-			onFrame(*frame);
+			onFrame(*frame, camera);
 
 			frameTimestamp_ = frame->timestamp();
 			return;
@@ -148,8 +151,11 @@ void RMVTrackerMainWindow::onIdle()
 	Thread::sleep(1u);
 }
 
-void RMVTrackerMainWindow::onFrame(const Frame& frame)
+void RMVTrackerMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& camera)
 {
+	ocean_assert(frame.isValid() && camera);
+	ocean_assert(frame.width() == camera->width() && frame.height() == camera->height());
+
 	if ((performance_.measurements() % 20u) == 0u)
 	{
 		performance_.reset();
@@ -162,10 +168,13 @@ void RMVTrackerMainWindow::onFrame(const Frame& frame)
 		return;
 	}
 
+	const Frames yFrames({Frame(yFrame, Frame::ACM_USE_KEEP_LAYOUT)});
+	const SharedAnyCameras cameras({camera});
+
 	performance_.start();
 
 	Tracking::VisualTracker::TransformationSamples transformations;
-	if (tracker_.determinePoses(yFrame, camera_, true, transformations, Quaternion(false), WorkerPool::get().scopedWorker()()))
+	if (tracker_.determinePoses(yFrames, cameras, transformations, Quaternion(false), WorkerPool::get().scopedWorker()()))
 	{
 		performance_.stop();
 
@@ -187,8 +196,8 @@ void RMVTrackerMainWindow::onFrame(const Frame& frame)
 
 		const HomogenousMatrix4 resultingPoseIF(PinholeCamera::standard2InvertedFlipped(resultingPose));
 
-		Tracking::Utilities::paintBoundingBoxIF(rgbFrame, resultingPoseIF, AnyCameraPinhole(camera_), boundingBox, CV::Canvas::white(rgbFrame.pixelFormat()), CV::Canvas::black(rgbFrame.pixelFormat()));
-		Tracking::Utilities::paintCoordinateSystemIF(rgbFrame, resultingPoseIF, AnyCameraPinhole(camera_), HomogenousMatrix4(true), boundingBox.diagonal() * Scalar(0.1));
+		Tracking::Utilities::paintBoundingBoxIF(rgbFrame, resultingPoseIF, *camera, boundingBox, CV::Canvas::white(rgbFrame.pixelFormat()), CV::Canvas::black(rgbFrame.pixelFormat()));
+		Tracking::Utilities::paintCoordinateSystemIF(rgbFrame, resultingPoseIF, *camera, HomogenousMatrix4(true), boundingBox.diagonal() * Scalar(0.1));
 
 		setFrame(rgbFrame);
 	}

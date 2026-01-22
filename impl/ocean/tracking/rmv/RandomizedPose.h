@@ -13,9 +13,9 @@
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Worker.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/Box3.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 
 namespace Ocean
 {
@@ -73,7 +73,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomizedPose
 		/**
 		 * Returns a randomized pose looking at a box.
 		 * The pose points to the box with positive y-axis as up vector.
-		 * @param pinholeCamera The pinhole camera object to be used for tracking, must be valid
+		 * @param camera The camera object to be used for tracking, must be valid
 		 * @param box Box to be looked at, must be valid
 		 * @param randomGenerator Random generator to be used
 		 * @param minDistance Minimal distance to the box's center, with range (0, infinity)
@@ -81,12 +81,12 @@ class OCEAN_TRACKING_RMV_EXPORT RandomizedPose
 		 * @param visibleRatio Defines the minimal ratio between projected box and image size (1 - visibleRatio), and the maximal ratio between projected box and image size (1 + visibleRatio), with range [0, 1)
 		 * @return Resulting randomized pose
 		 */
-		static HomogenousMatrix4 randomPose(const PinholeCamera& pinholeCamera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio = Scalar(0.25));
+		static HomogenousMatrix4 randomPose(const AnyCamera& camera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio = Scalar(0.25));
 
 		/**
 		 * Returns a set of randomized pose looking at a box.
 		 * The pose points to the box with positive y-axis as up vector.
-		 * @param pinholeCamera The pinhole camera object defining the projection, must be valid
+		 * @param camera The camera object defining the projection, must be valid
 		 * @param box Box to be looked at, must be valid
 		 * @param randomGenerator Random generator to be used
 		 * @param minDistance Minimal distance to the box's center, with range (0, infinity)
@@ -96,14 +96,14 @@ class OCEAN_TRACKING_RMV_EXPORT RandomizedPose
 		 * @param poses Resulting poses, must provide enough space for all requested poses
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		static void randomPoses(const PinholeCamera& pinholeCamera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, const size_t number, HomogenousMatrix4* poses, Worker* worker = nullptr);
+		static void randomPoses(const AnyCamera& camera, const Box3& box, RandomGenerator& randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, const size_t number, HomogenousMatrix4* poses, Worker* worker = nullptr);
 
 	private:
 
 		/**
 		 * Returns a subset of randomized pose looking at a box.
 		 * The pose points to the box with positive y-axis as up vector.
-		 * @param pinholeCamera The pinhole camera object defining the projection, must be valid
+		 * @param camera The camera object defining the projection, must be valid
 		 * @param box Box to be looked at, must be valid
 		 * @param randomGenerator Random generator to be used
 		 * @param minDistance Minimal distance to the box's center, with range (0, infinity)
@@ -113,7 +113,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomizedPose
 		 * @param firstPose First pose to be handled, with range [0, numberPoses)
 		 * @param numberPoses Number of poses to be generated, with range [1, numberPoses]
 		 */
-		static void randomPoseSubset(const PinholeCamera* pinholeCamera, const Box3* box, RandomGenerator* randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, HomogenousMatrix4* poses, const unsigned int firstPose, const unsigned int numberPoses);
+		static void randomPoseSubset(const AnyCamera* camera, const Box3* box, RandomGenerator* randomGenerator, const Scalar minDistance, const Scalar maxDistance, const Scalar visibleRatio, HomogenousMatrix4* poses, const unsigned int firstPose, const unsigned int numberPoses);
 };
 
 }

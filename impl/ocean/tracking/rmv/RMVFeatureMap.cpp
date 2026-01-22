@@ -27,9 +27,9 @@ RMVFeatureMap::RMVFeatureMap() :
 	// nothing to do here
 }
 
-void RMVFeatureMap::setFeatures(const Vector3* points, const size_t number, const PinholeCamera& pinholeCamera, const RMVFeatureDetector::DetectorType detectorType)
+void RMVFeatureMap::setFeatures(const Vector3* points, const size_t number, const SharedAnyCamera& camera, const RMVFeatureDetector::DetectorType detectorType)
 {
-	mapCamera_ = pinholeCamera;
+	mapCamera_ = camera;
 	mapDetectorType_ = detectorType;
 
 	mapObjectPoints_.resize(number);
@@ -46,7 +46,7 @@ void RMVFeatureMap::setFeatures(const Vector3* points, const size_t number, cons
 	mapBoundingBox_ = Box3(mapObjectPoints_);
 }
 
-bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, const PinholeCamera& pinholeCamera, const size_t numberFeatures, const RMVFeatureDetector::DetectorType detectorType, Worker* worker)
+bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, const SharedAnyCamera& camera, const size_t numberFeatures, const RMVFeatureDetector::DetectorType detectorType, Worker* worker)
 {
 	ocean_assert(pattern);
 
@@ -89,12 +89,12 @@ bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, 
 	ocean_assert(Box3(objectPoints).xDimension() <= patternDimensionX);
 	ocean_assert(Box3(objectPoints).zDimension() <= patternDimensionY);
 
-	setFeatures(objectPoints.data(), objectPoints.size(), pinholeCamera, detectorType);
+	setFeatures(objectPoints.data(), objectPoints.size(), camera, detectorType);
 
 	return true;
 }
 
-void RMVFeatureMap::setInitializationFeatures(const Vector3* objectPoints, const size_t number, const PinholeCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType)
+void RMVFeatureMap::setInitializationFeatures(const Vector3* objectPoints, const size_t number, const SharedAnyCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType)
 {
 	mapInitializationCamera_ = initializationCamera;
 	mapInitializationDetectorType_ = initializationDetectorType;
@@ -110,7 +110,7 @@ void RMVFeatureMap::setInitializationFeatures(const Vector3* objectPoints, const
 	ocean_assert(mapInitializationBoundingBox_);
 }
 
-void RMVFeatureMap::setInitializationFeatures(Vectors3&& objectPoints, const PinholeCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType)
+void RMVFeatureMap::setInitializationFeatures(Vectors3&& objectPoints, const SharedAnyCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType)
 {
 	mapInitializationCamera_ = initializationCamera;
 	mapInitializationDetectorType_ = initializationDetectorType;
@@ -121,9 +121,9 @@ void RMVFeatureMap::setInitializationFeatures(Vectors3&& objectPoints, const Pin
 	ocean_assert(mapInitializationBoundingBox_);
 }
 
-bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector3& dimension, const PinholeCamera& pinholeCamera, const size_t numberInitializationObjectPoints, const RMVFeatureDetector::DetectorType& initializationDetectorType, Worker* worker)
+bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector3& dimension, const SharedAnyCamera& camera, const size_t numberInitializationObjectPoints, const RMVFeatureDetector::DetectorType& initializationDetectorType, Worker* worker)
 {
-	ocean_assert(pattern && dimension.x() > Numeric::eps() && pinholeCamera && numberInitializationObjectPoints >= 10);
+	ocean_assert(pattern && dimension.x() > Numeric::eps() && camera && numberInitializationObjectPoints >= 10);
 
 	Frame yPattern;
 	if (!CV::FrameConverter::Comfort::convert(pattern, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yPattern, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
@@ -131,10 +131,10 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 		return false;
 	}
 
-	PinholeCamera adjustedCamera(pinholeCamera);
+	SharedAnyCamera adjustedCamera = camera;
 
 	Frame yAdjustedPattern(yPattern, Frame::ACM_USE_KEEP_LAYOUT);
-	if (RMVFeatureDetector::needPyramidInitialization(initializationDetectorType) && pinholeCamera.width() >= 640u)
+	if (RMVFeatureDetector::needPyramidInitialization(initializationDetectorType) && camera->width() >= 640u)
 	{
 		if (!CV::FrameShrinker::downsampleByTwo11(yPattern, yAdjustedPattern, worker))
 		{
@@ -142,7 +142,7 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 		}
 
 		// we will use a smaller camera frame during the initialization
-		adjustedCamera = PinholeCamera(pinholeCamera.width() / 2u, pinholeCamera.height() / 2u, pinholeCamera);
+		adjustedCamera = camera->clone(yAdjustedPattern.width(), yAdjustedPattern.height());
 	}
 
 	ocean_assert(yAdjustedPattern);
@@ -186,7 +186,7 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 
 	setInitializationFeatures(std::move(objectPoints), adjustedCamera, initializationDetectorType);
 
-	Log::info() << "Initialization with camera dimension: " << adjustedCamera.width() << "x" << adjustedCamera.height();
+	Log::info() << "Initialization with camera dimension: " << adjustedCamera->width() << "x" << adjustedCamera->height();
 	Log::info() << "Initialization with pattern size: " << yAdjustedPattern.width() << "x" << yAdjustedPattern.height();
 
 	return true;
@@ -199,6 +199,25 @@ void RMVFeatureMap::clear()
 	mapRecentStrongObjectPointIndices_.clear();
 	mapRecentSemiStrongObjectPointIndices_.clear();
 	mapRecentUsedObjectPointIndices_.clear();
+}
+
+Box2 RMVFeatureMap::projectToImage(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const Box3& objectBoundingBox)
+{
+	return projectToImageIF(camera, Camera::standard2InvertedFlipped(world_T_camera), objectBoundingBox);
+}
+
+Box2 RMVFeatureMap::projectToImageIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const Box3& objectBoundingBox)
+{
+	Vector3 boxObjectCorners[8];
+	const unsigned int numberBoxImagePoints = objectBoundingBox.corners(boxObjectCorners);
+
+	Box2 projectedBox;
+	for (unsigned int n = 0; n < numberBoxImagePoints; ++n)
+	{
+		projectedBox += camera.projectToImageIF(flippedCamera_T_world, boxObjectCorners[n]);
+	}
+
+	return projectedBox;
 }
 
 }

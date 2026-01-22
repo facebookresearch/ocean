@@ -15,8 +15,8 @@
 
 #include "ocean/geometry/Error.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 
 namespace Ocean
 {
@@ -45,7 +45,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * The second mode (if tLessImagePoints is False) seeks a corresponding image point for each provided object point - thus, the number of object points must be smaller than the number of image points.<br>
 		 * Further, the amount of valid correspondences between image and object points must be defined to improve the accuracy of the pose determination.
 		 * @param initialFlippedCamera_T_world The initial and rough inverted and flipped pose that will be improved by application of the random model variation approach
-		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
 		 * @param imagePoints Image points to be used for pose determination, must be valid
@@ -66,7 +66,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @tparam tLessImagePoints True, to find a corresponding object point for each given image point (as the number of image points is smaller than the number of object points); False, to find a corresponding image points for each object point
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsWithOneInitialPoseIF(const HomogenousMatrix4& initialFlippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
+		static bool optimizedPoseFromPointCloudsWithOneInitialPoseIF(const HomogenousMatrix4& initialFlippedCamera_T_world, const AnyCamera& camera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Returns the optimized camera pose for several given rough pose candidates, a cloud of object points and a cloud of image points with a sufficient number of valid correspondences.<br>
@@ -83,7 +83,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * Thus, the number of given initial poses should be a multiple of the existing CPU cores.
 		 * @param initialFlippedCameras_T_world Initial and rough inverted and flipped poses to be used for precise pose determination
 		 * @param numberInitialPoses The number of given initial poses, with range [2, infinity)
-		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
 		 * @param imagePoints Image points to be used for pose determination, must be valid
@@ -104,7 +104,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @see Worker::threads().
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsWithSeveralInitialPosesIF(const HomogenousMatrix4* initialFlippedCameras_T_world, const size_t numberInitialPoses, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
+		static bool optimizedPoseFromPointCloudsWithSeveralInitialPosesIF(const HomogenousMatrix4* initialFlippedCameras_T_world, const size_t numberInitialPoses, const AnyCamera& camera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator& randomGenerator, HomogenousMatrix4& flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), const Vector3& maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), const Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, bool* explicitStop = nullptr, Worker* worker = nullptr);
 
 	private:
 
@@ -118,7 +118,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * The second mode (if tLessImagePoints is False) seeks a corresponding image point for each provided object point - thus, the number of object points must be smaller than the number of image points.<br>
 		 * Further, the amount of valid correspondences between image and object points must be defined to improve the accuracy of the pose determination.
 		 * @param initialFlippedCamera_T_world The initial and rough inverted and flipped pose that will be improved by application of the random model variation approach
-		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
 		 * @param imagePoints Image points to be used for pose determination, must be valid
@@ -139,7 +139,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @tparam tLessImagePoints True, to find a corresponding object point for each given image point (as the number of image points is smaller than the number of object points); False, to find a corresponding image points for each object point
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsAbortableIF(const HomogenousMatrix4* initialFlippedCamera_T_world, const PinholeCamera* pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), Vector3 maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Lock* lock = nullptr);
+		static bool optimizedPoseFromPointCloudsAbortableIF(const HomogenousMatrix4* initialFlippedCamera_T_world, const AnyCamera* camera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError = Scalar(4 * 4), Vector3 maximalTranslationOffset = Vector3(Scalar(0.3), Scalar(0.3), Scalar(0.3)), Scalar maximalOrientationOffset = Numeric::deg2rad(30), const double timeout = 1, Scalar* resultingSqrError = nullptr, IndexPairs32* correspondences = nullptr, bool* explicitStop = nullptr, Lock* lock = nullptr);
 
 		/**
 		 * Returns the optimized camera pose for a subset of several given rough pose candidates, a cloud of object points and a cloud of image points with a sufficient number of valid correspondences.<br>
@@ -153,7 +153,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param initialFlippedCameras_T_world The initial and rough inverted and flipped poses which will be improved by application of the random model variation approach
 		 * @param firstInitialPose First initial pose to be handled, must be valid
 		 * @param numberInitialPoses Number of initial poses to be handled, with range [1, infinity)
-		 * @param pinholeCamera The pinhole camera profile defining the projection between 3D object points and 2D image points
+		 * @param Camera The camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
 		 * @param imagePoints Image points to be used for pose determination, must be valid
@@ -173,7 +173,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @tparam tLessImagePoints True, to find a corresponding object point for each given image point (as the number of image points is smaller than the number of object points); False, to find a corresponding image points for each object point
 		 */
 		template <bool tLessImagePoints>
-		static bool optimizedPoseFromPointCloudsPoseIFSubset(const HomogenousMatrix4* initialFlippedCameras_T_world, const unsigned int firstInitialPose, const unsigned int numberInitialPoses, const PinholeCamera* pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError, Vector3 maximalTranslationOffset, Scalar maximalOrientationOffset, const double timeout, Scalar* resultingSqrError, bool* explicitStop, Lock* lock);
+		static bool optimizedPoseFromPointCloudsPoseIFSubset(const HomogenousMatrix4* initialFlippedCameras_T_world, const unsigned int firstInitialPose, const unsigned int numberInitialPoses, const AnyCamera* camera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const size_t numberValidCorrespondences, RandomGenerator* randomGenerator, HomogenousMatrix4* flippedCamera_T_world, const Geometry::Error::ErrorDetermination errorDetermination, const Scalar targetAverageSqrError, Vector3 maximalTranslationOffset, Scalar maximalOrientationOffset, const double timeout, Scalar* resultingSqrError, bool* explicitStop, Lock* lock);
 
 		/**
 		 * Assigns a pose candidate to a target pose if the pose quality is better than the currently known pose quality.

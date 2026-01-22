@@ -13,8 +13,8 @@
 
 #include "ocean/base/Frame.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/Box3.h"
-#include "ocean/math/PinholeCamera.h"
 
 namespace Ocean
 {
@@ -104,7 +104,7 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 		 * Returns the initialization camera if defined.
 		 * @return Initialization camera object
 		 */
-		inline const PinholeCamera& initializationCamera() const;
+		inline const AnyCamera& initializationCamera() const;
 
 		/**
 		 * Returns the detector type for the normal feature map.
@@ -131,22 +131,22 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 		 * Sets or replaces the features for this feature map by a given set of 3D features points.
 		 * @param points The points to be used as new feature map, can be nullptr if number is zero
 		 * @param number The number of features to be set, with range [0, infinity)
-		 * @param pinholeCamera The pinhole camera profile which will be used during the tracking
+		 * @param camera The camera profile which will be used during the tracking
 		 * @param detectorType The type of the detector which has been used to detect the provided feature points
 		 */
-		void setFeatures(const Vector3* points, const size_t number, const PinholeCamera& pinholeCamera, const RMVFeatureDetector::DetectorType detectorType);
+		void setFeatures(const Vector3* points, const size_t number, const SharedAnyCamera& camera, const RMVFeatureDetector::DetectorType detectorType);
 
 		/**
 		 * Sets or replaces the features for this feature map by a given tracking pattern.
 		 * @param pattern The tracking pattern from which unique and strong feature points will be extracted and stored as feature map, must be valid
 		 * @param dimension The dimension of the pattern in the world coordinate system, with range (0, infinity)x[0, infinity)x[0]
-		 * @param pinholeCamera The pinhole camera profile which will be used during tracking
+		 * @param camera The camera profile which will be used during tracking
 		 * @param numberFeatures The maximal number of feature points which will be extracted from the provided pattern, with range [10, infinity)
 		 * @param detectorType Detector type the feature points has been detected with
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		bool setFeatures(const Frame& pattern, const Vector3& dimension, const PinholeCamera& pinholeCamera, const size_t numberFeatures, const RMVFeatureDetector::DetectorType detectorType, Worker* worker = nullptr);
+		bool setFeatures(const Frame& pattern, const Vector3& dimension, const SharedAnyCamera& camera, const size_t numberFeatures, const RMVFeatureDetector::DetectorType detectorType, Worker* worker = nullptr);
 
 		/**
 		 * Sets or replaces the initialization features for this feature map by a given set of 3D features points.
@@ -157,7 +157,7 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 		 * @param initializationCamera Specific initialization camera
 		 * @param initializationDetectorType Specific detector type for the initialization
 		 */
-		void setInitializationFeatures(const Vector3* objectPoints, const size_t number, const PinholeCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType);
+		void setInitializationFeatures(const Vector3* objectPoints, const size_t number, const SharedAnyCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType);
 
 		/**
 		 * Sets or replaces the initialization features for this feature map by a given set of 3D features points.
@@ -167,19 +167,19 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 		 * @param initializationCamera Specific initialization camera
 		 * @param initializationDetectorType Specific detector type for the initialization
 		 */
-		void setInitializationFeatures(Vectors3&& objectPoints, const PinholeCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType);
+		void setInitializationFeatures(Vectors3&& objectPoints, const SharedAnyCamera& initializationCamera, const RMVFeatureDetector::DetectorType initializationDetectorType);
 
 		/**
 		 * Sets or replaces the features that will be used during the initialization only for this feature map by a given tracking pattern.
 		 * @param pattern The pattern frame the tracker will detect and track, must be valid
 		 * @param dimension The dimension of the pattern in the world coordinate system, with range (0, infinity)x[0, infinity)x[0]
-		 * @param pinholeCamera The pinhole camera profile which will be used during the tracking
+		 * @param camera The pinhole camera profile which will be used during the tracking
 		 * @param numberInitializationObjectPoints The number of 3D object points that will be used during the initialization, with range [1, infinity)
 		 * @param initializationDetectorType The detector type which will be used during the initialization, may be different from the detector type which will be used after a successful initialization
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		bool setInitializationFeatures(const Frame& pattern, const Vector3& dimension, const PinholeCamera& pinholeCamera, const size_t numberInitializationObjectPoints, const RMVFeatureDetector::DetectorType& initializationDetectorType, Worker* worker = nullptr);
+		bool setInitializationFeatures(const Frame& pattern, const Vector3& dimension, const SharedAnyCamera& camera, const size_t numberInitializationObjectPoints, const RMVFeatureDetector::DetectorType& initializationDetectorType, Worker* worker = nullptr);
 
 		/**
 		 * Removes all registered map feature points.
@@ -197,6 +197,24 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 		 * @return True, if so
 		 */
 		explicit inline operator bool() const;
+
+		/**
+		 * Projects a 3D bounding box into the image plane of a given camera.
+		 * @param camera The camera profile to be used, must be valid
+		 * @param world_T_camera The transformation between camera and world, must be valid
+		 * @param objectBoundingBox The bounding box to be projected, must be valid
+		 * @return Resulting bounding box in the image plane
+		 */
+		static Box2 projectToImage(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const Box3& objectBoundingBox);
+
+		/**
+		 * Projects a 3D bounding box into the image plane of a given camera.
+		 * @param camera The camera profile to be used, must be valid
+		 * @param flippedCamera_T_world The transformation between world and flipped camera, must be valid
+		 * @param objectBoundingBox The bounding box to be projected, must be valid
+		 * @return Resulting bounding box in the image plane
+		 */
+		static Box2 projectToImageIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const Box3& objectBoundingBox);
 
 	protected:
 
@@ -222,10 +240,10 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureMap
 		Box3 mapInitializationBoundingBox_;
 
 		/// Standard camera.
-		PinholeCamera mapCamera_;
+		SharedAnyCamera mapCamera_;
 
-		/// PinholeCamera object explicitly used for camera initialization, if defined.
-		PinholeCamera mapInitializationCamera_;
+		/// Camera object explicitly used for camera initialization, if defined.
+		SharedAnyCamera mapInitializationCamera_;
 
 		/// Detector type used for the normal feature map features.
 		RMVFeatureDetector::DetectorType mapDetectorType_;
@@ -335,10 +353,11 @@ inline const Box3& RMVFeatureMap::boundingBox() const
 	return mapBoundingBox_;
 }
 
-inline const PinholeCamera& RMVFeatureMap::initializationCamera() const
+inline const AnyCamera& RMVFeatureMap::initializationCamera() const
 {
 	ocean_assert(mapCamera_ || mapInitializationCamera_);
-	return mapInitializationCamera_ ? mapInitializationCamera_ : mapCamera_;
+
+	return mapInitializationCamera_ ? *mapInitializationCamera_ : *mapCamera_;
 }
 
 inline RMVFeatureDetector::DetectorType RMVFeatureMap::initializationDetectorType() const
