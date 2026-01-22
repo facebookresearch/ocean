@@ -7,8 +7,6 @@
 
 #include "application/ocean/demo/rendering/openglstereo/win/Background.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
-
 #include "ocean/media/ConfigMedium.h"
 
 using namespace Ocean;
