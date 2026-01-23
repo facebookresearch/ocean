@@ -9,9 +9,10 @@
 #include "application/ocean/demo/tracking/rmvtracker/win/RMVTrackerMainWindow.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
+#include "ocean/io/CameraCalibrationManager.h"
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
@@ -31,20 +32,46 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 	Messenger::get().setFileOutput("demotrackingrmvtrackeroutput.txt");
 	Messenger::get().setOutputType(Messenger::MessageOutput(Messenger::OUTPUT_FILE | Messenger::OUTPUT_DEBUG_WINDOW));
 
-	const IO::Directory environmentDirectory(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
+	CommandArguments commandArguments("Demo application for RMV feature tracker");
+	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as media input, the second as pattern file");
+	commandArguments.registerParameter("help", "h", "Showing this help output.");
+	commandArguments.registerParameter("input", "i", "Input to be used for tracking, e.g., a video file or live camera");
+	commandArguments.registerParameter("pattern", "p", "The pattern file to be used for tracking");
+	commandArguments.registerParameter("calibration", "c", "Optional: the filename of the camera calibration file (*.occ or *.json)");
 
-	IO::File absoluteFile("cameracalibration.occ");
+	commandArguments.parse(Platform::Utilities::parseCommandLine(lpCmdLine));
 
-	if (!absoluteFile.exists())
+	if (commandArguments.hasValue("help"))
 	{
-		const IO::File relativeFile("/data/cameracalibration/cameracalibration.occ");
-
-		absoluteFile = environmentDirectory + relativeFile;
+		Log::info() << commandArguments.makeSummary();
+		return 0;
 	}
 
-	if (absoluteFile.exists())
+	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
+
+	IO::File cameraCalibrationFile;
+
+	Value calibrationValue;
+	if (commandArguments.hasValue("calibration", &calibrationValue, false, 0u) && calibrationValue.isString())
 	{
-		IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(absoluteFile());
+		const IO::File file(calibrationValue.stringValue());
+
+		if (file.exists())
+		{
+			cameraCalibrationFile = file;
+		}
+	}
+
+	if (cameraCalibrationFile.isNull())
+	{
+		const IO::File relativeFile("res/ocean/cv/calibration/camera_calibration.json");
+
+		cameraCalibrationFile = IO::Directory(frameworkPath) + relativeFile;
+	}
+
+	if (cameraCalibrationFile.exists())
+	{
+		IO::CameraCalibrationManager::get().registerCalibrations(cameraCalibrationFile());
 	}
 
 #ifdef OCEAN_RUNTIME_STATIC
@@ -52,22 +79,20 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 	Media::MediaFoundation::registerMediaFoundationLibrary();
 	Media::WIC::registerWICLibrary();
 #else
-	PluginManager::get().collectPlugins(environmentDirectory() + std::string("/bin/plugins/") + Build::buildString());
+	PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString());
 	PluginManager::get().loadPlugins(PluginManager::TYPE_MEDIA);
 #endif
 
-	const Platform::Utilities::Commands commands(Platform::Utilities::parseCommandLine(lpCmdLine));
-
 	std::string mediaFilename;
-	if (commands.size() >= 1)
+	if (!commandArguments.hasValue("input", mediaFilename, false, 0u) || mediaFilename.empty())
 	{
-		mediaFilename = String::toAString(commands[0]);
+		mediaFilename = commandArguments.value<std::string>("input", std::string(), true);
 	}
 
 	std::string patternFilename;
-	if (commands.size() >= 2)
+	if (!commandArguments.hasValue("pattern", patternFilename, false, 0u) || patternFilename.empty())
 	{
-		patternFilename = String::toAString(commands[1]);
+		patternFilename = commandArguments.value<std::string>("pattern", std::string(), true);
 	}
 
 	try
