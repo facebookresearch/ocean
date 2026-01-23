@@ -102,8 +102,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testbase", "application\oce
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "detector", "detector", "{A47B4976-C02F-4089-8BB7-97E36186C2DB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorcalibrationpattern", "application\ocean\demo\cv\detector\calibrationpattern\win\democvdetectorcalibrationpattern.vcxproj", "{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorfastcorner", "application\ocean\demo\cv\detector\fastcorner\win\democvdetectorfastcorner.vcxproj", "{2EF41062-AA6F-4DB8-9E44-F29BDBBDB81E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorharriscorner", "application\ocean\demo\cv\detector\harriscorner\win\democvdetectorharriscorner.vcxproj", "{B6F2474A-941A-497E-B21E-08C4459E789E}"
@@ -1436,30 +1434,6 @@ Global
 		{F5A19DF7-54C6-456A-BBCE-3042739066D7}.Static Release|Win32.Build.0 = Static Release|Win32
 		{F5A19DF7-54C6-456A-BBCE-3042739066D7}.Static Release|x64.ActiveCfg = Static Release|x64
 		{F5A19DF7-54C6-456A-BBCE-3042739066D7}.Static Release|x64.Build.0 = Static Release|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Debug|x64.Build.0 = Shared Debug|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Profile|Win32.ActiveCfg = Shared Profile|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Profile|Win32.Build.0 = Shared Profile|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Profile|x64.Build.0 = Shared Profile|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Release|Win32.Build.0 = Shared Release|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Release|x64.ActiveCfg = Shared Release|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Shared Release|x64.Build.0 = Shared Release|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Debug|Win32.Build.0 = Static Debug|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Debug|x64.ActiveCfg = Static Debug|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Debug|x64.Build.0 = Static Debug|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Profile|Win32.ActiveCfg = Static Profile|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Profile|Win32.Build.0 = Static Profile|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Profile|x64.ActiveCfg = Static Profile|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Profile|x64.Build.0 = Static Profile|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Release|Win32.ActiveCfg = Static Release|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Release|Win32.Build.0 = Static Release|Win32
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Release|x64.ActiveCfg = Static Release|x64
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE}.Static Release|x64.Build.0 = Static Release|x64
 		{2EF41062-AA6F-4DB8-9E44-F29BDBBDB81E}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
 		{2EF41062-AA6F-4DB8-9E44-F29BDBBDB81E}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
 		{2EF41062-AA6F-4DB8-9E44-F29BDBBDB81E}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
@@ -5333,7 +5307,6 @@ Global
 		{13637430-05FA-4C26-A7AA-5F5A5ACF6612} = {19FCC32D-C049-4DC4-BEAC-D39926062145}
 		{F5A19DF7-54C6-456A-BBCE-3042739066D7} = {13637430-05FA-4C26-A7AA-5F5A5ACF6612}
 		{A47B4976-C02F-4089-8BB7-97E36186C2DB} = {79B55C4B-BA8F-48EE-B6F9-1019B251B4A7}
-		{5B97CB42-11B2-45BF-A2CE-EA0F0BF35CFE} = {A47B4976-C02F-4089-8BB7-97E36186C2DB}
 		{2EF41062-AA6F-4DB8-9E44-F29BDBBDB81E} = {A47B4976-C02F-4089-8BB7-97E36186C2DB}
 		{B6F2474A-941A-497E-B21E-08C4459E789E} = {A47B4976-C02F-4089-8BB7-97E36186C2DB}
 		{BD267AAF-300F-4134-A515-AA52EEE96003} = {A47B4976-C02F-4089-8BB7-97E36186C2DB}

@@ -49,7 +49,6 @@
     <Project Path="application/ocean/demo/cv/calibration/picturetaker/win/democvcalibrationpicturetaker.vcxproj" Id="f5a8e4c2-2d7f-4b1a-9c3e-8d6f5a4b2e1c" />
   </Folder>
   <Folder Name="/application/ocean/demo/cv/detector/">
-    <Project Path="application/ocean/demo/cv/detector/calibrationpattern/win/democvdetectorcalibrationpattern.vcxproj" Id="5b97cb42-11b2-45bf-a2ce-ea0f0bf35cfe" />
     <Project Path="application/ocean/demo/cv/detector/fastcorner/win/democvdetectorfastcorner.vcxproj" Id="2ef41062-aa6f-4db8-9e44-f29bdbbdb81e" />
     <Project Path="application/ocean/demo/cv/detector/fastcornerpyramid/win/democvdetectorfastcornerpyramid.vcxproj" Id="7b745de0-8c48-46ea-a0f9-37638508bdf7" />
     <Project Path="application/ocean/demo/cv/detector/harriscorner/win/democvdetectorharriscorner.vcxproj" Id="b6f2474a-941a-497e-b21e-08c4459e789e" />
