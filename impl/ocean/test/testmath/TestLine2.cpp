@@ -14,6 +14,7 @@
 #include "ocean/math/Rotation.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -37,6 +38,8 @@ bool TestLine2::test(const double testDuration, const TestSelector& selector)
 		testResult = testIsOnLine(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("isleftofline"))
@@ -44,11 +47,13 @@ bool TestLine2::test(const double testDuration, const TestSelector& selector)
 		testResult = testIsLeftOfLine(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("decomposenormaldistance"))
 	{
-		testResult = decomposeNormalDistance(testDuration);
+		testResult = testDecomposeNormalDistance(testDuration);
 
 		Log::info() << " ";
 	}
@@ -70,6 +75,11 @@ TEST(TestLine2, IsLeftOfLine)
 	EXPECT_TRUE(TestLine2::testIsLeftOfLine(GTEST_TEST_DURATION));
 }
 
+TEST(TestLine2, DecomposeNormalDistance)
+{
+	EXPECT_TRUE(TestLine2::testDecomposeNormalDistance(GTEST_TEST_DURATION));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestLine2::testIsOnLine(const double testDuration)
@@ -78,8 +88,10 @@ bool TestLine2::testIsOnLine(const double testDuration)
 
 	Log::info() << "isOnLine test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
 
@@ -89,7 +101,12 @@ bool TestLine2::testIsOnLine(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Line2 line(Random::vector2(-range, range), Random::vector2());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Vector2 point = Random::vector2(randomGenerator, -range, range);
+			const Vector2 direction = Random::vector2(randomGenerator);
+
+			const Line2 line(point, direction);
 			ocean_assert(Numeric::isEqual(line.direction().length(), 1));
 
 			Vector2 perpendicular(line.direction().perpendicular());
@@ -103,45 +120,33 @@ bool TestLine2::testIsOnLine(const double testDuration)
 			ocean_assert(Numeric::isEqual(perpendicular.length(), 1));
 			ocean_assert(Numeric::isEqualEps(line.direction() * perpendicular));
 
-			bool localSucceeded = true;
-
-			const Vector2 pointOnLine(line.point() + line.direction() * Random::scalar(-range * Scalar(10), range * Scalar(10)));
+			const Vector2 pointOnLine(line.point() + line.direction() * Random::scalar(randomGenerator, -range * Scalar(10), range * Scalar(10)));
 
 			if (line.isOnLine(pointOnLine) == false)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
-			const Vector2 pointOffset(line.point() + perpendicular * Random::scalar(-range, range));
+			const Vector2 pointOffset(line.point() + perpendicular * Random::scalar(randomGenerator, -range, range));
 
 			if (line.point() != pointOffset && line.isOnLine(pointOffset) == true)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
-			const Vector2 pointOffset2(pointOnLine + perpendicular * Random::scalar(Scalar(0.5), range) * Random::sign());
+			const Vector2 pointOffset2(pointOnLine + perpendicular * Random::scalar(randomGenerator, Scalar(0.5), range) * Random::sign(randomGenerator));
 
 			if (line.isOnLine(pointOffset2) == true)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestLine2::testIsLeftOfLine(const double testDuration)
@@ -150,8 +155,10 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 
 	Log::info() << "isLeftOfLine test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
 
@@ -161,32 +168,32 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			bool soFarSoGood = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Line2 referenceLine(Vector2(0, 0), Vector2(0, Random::scalar(1, range)));
+			const Line2 referenceLine(Vector2(0, 0), Vector2(0, Random::scalar(randomGenerator, 1, range)));
 			ocean_assert(referenceLine.direction().length() > Numeric::eps());
 
-			const Vector2 pointLeftOfReferenceLine(Random::scalar(-range, Scalar(-0.1)), Random::scalar(-range, range));
+			const Vector2 pointLeftOfReferenceLine(Random::scalar(randomGenerator, -range, Scalar(-0.1)), Random::scalar(randomGenerator, -range, range));
 			const Vector2 pointRightOfReferenceLine(-pointLeftOfReferenceLine.x(), pointLeftOfReferenceLine.y());
 			const Vector2 pointOnReferenceLine(referenceLine.point() + referenceLine.direction().normalized() * pointLeftOfReferenceLine.y());
 
 			if (referenceLine.isLeftOfLine(pointLeftOfReferenceLine) != true)
 			{
-				soFarSoGood = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (referenceLine.isLeftOfLine(pointRightOfReferenceLine) != false)
 			{
-				soFarSoGood = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (referenceLine.isLeftOfLine(pointOnReferenceLine) != false)
 			{
-				soFarSoGood = false;
+				scopedIteration.setInaccurate();
 			}
 
-			const SquareMatrix3 randomRotation = SquareMatrix3(Rotation(0, 0, 1, Random::scalar(-Numeric::pi(), Numeric::pi())));
-			const SquareMatrix3 randomTranslation = SquareMatrix3(1, 0, 0, 0, 1, 0, Random::scalar(-range, range), Random::scalar(-range, range), 1);
+			const SquareMatrix3 randomRotation = SquareMatrix3(Rotation(0, 0, 1, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi())));
+			const SquareMatrix3 randomTranslation = SquareMatrix3(1, 0, 0, 0, 1, 0, Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range), 1);
 			const SquareMatrix3 randomTransformation = randomTranslation * randomRotation;
 
 			const Line2 transformedLine = Line2(randomTranslation * referenceLine.point(), randomRotation * referenceLine.direction());
@@ -198,81 +205,73 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 
 			if (transformedLine.isLeftOfLine(pointLeftOfTransformedLine) != true)
 			{
-				soFarSoGood = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (transformedLine.isLeftOfLine(pointRightOfTransformedLine) != false)
 			{
-				soFarSoGood = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (transformedLine.isLeftOfLine(pointOnTransformedLine) != false)
 			{
-				soFarSoGood = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (soFarSoGood)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
-bool TestLine2::decomposeNormalDistance(const double testDuration)
+bool TestLine2::testDecomposeNormalDistance(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "decomposeNormalDistance test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const Vector2 linePoint(Random::vector2(-10, 10));
-		const Vector2 lineDirection(Random::vector2());
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const Vector2 linePoint(Random::vector2(randomGenerator, -10, 10));
+		const Vector2 lineDirection(Random::vector2(randomGenerator));
 		ocean_assert(lineDirection.isUnit());
 
 		const Line2 line(linePoint, lineDirection);
 		ocean_assert(line.isValid());
 
-		const bool forcePositiveDistanceValue = RandomI::random(1u) == 0u;
+		const bool forcePositiveDistanceValue = RandomI::random(randomGenerator, 1u) == 0u;
 
 		const Vector3 implicitLine = line.decomposeNormalDistance(forcePositiveDistanceValue);
 
-		bool localSucceeded = true;
-
 		if (Numeric::isNotEqualEps(implicitLine * Vector3(linePoint, 1)))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Numeric::isNotEqualEps(implicitLine * Vector3(linePoint + lineDirection, 1)))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Numeric::isNotEqualEps(implicitLine * Vector3(linePoint - lineDirection, 1)))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (forcePositiveDistanceValue && implicitLine.z() < 0)
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		const Line2 newLine(implicitLine);
@@ -280,34 +279,24 @@ bool TestLine2::decomposeNormalDistance(const double testDuration)
 
 		if (Numeric::isNotWeakEqualEps(newLine.distance(linePoint)))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Numeric::isNotWeakEqualEps(newLine.distance(linePoint + lineDirection)))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Numeric::isNotWeakEqualEps(newLine.distance(linePoint - lineDirection)))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
-
-		if (localSucceeded)
-		{
-			++validIterations;
-		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

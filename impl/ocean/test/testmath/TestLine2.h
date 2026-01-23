@@ -56,7 +56,7 @@ class OCEAN_TEST_MATH_EXPORT TestLine2
 		 * @param testDuration Number of seconds for this test, range: (0, infinity)
 		 * @return True if succeeded
 		 */
-		static bool decomposeNormalDistance(const double testDuration);
+		static bool testDecomposeNormalDistance(const double testDuration);
 };
 
 }
