@@ -93,7 +93,6 @@
     <Project Path="application/ocean/demo/cv/synthesis/videoinpainting/win/democvsynthesisvideoinpainting.vcxproj" Id="5dacb9f4-f862-4e41-a97f-f44bec02b51f" />
   </Folder>
   <Folder Name="/application/ocean/demo/geometry/">
-    <Project Path="application/ocean/demo/geometry/cameracalibration/win/demogeometrycameracalibration.vcxproj" Id="850f5a77-8674-46ba-b8fb-162767f58cfc" />
     <Project Path="application/ocean/demo/geometry/vanishingprojection/win/demogeometryvanishingprojection.vcxproj" Id="96f2fca5-a68b-4d0a-8914-74e51e2d43f1" />
   </Folder>
   <Folder Name="/application/ocean/demo/io/">

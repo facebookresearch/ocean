@@ -164,8 +164,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvsynthesisadvancedfram
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "geometry", "geometry", "{4D96C40C-ACB9-4EFC-AE6C-9C7A6270B24B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demogeometrycameracalibration", "application\ocean\demo\geometry\cameracalibration\win\demogeometrycameracalibration.vcxproj", "{850F5A77-8674-46BA-B8FB-162767F58CFC}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvsynthesispointmotion", "application\ocean\demo\cv\synthesis\pointmotion\win\democvsynthesispointmotion.vcxproj", "{0C91020C-8493-4F5C-82CB-5920730F31F0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "trackingpoint", "ocean\tracking\point\trackingpoint.vcxproj", "{BF22C6CF-F370-4909-860A-DEF5D0929E0B}"
@@ -2038,30 +2036,6 @@ Global
 		{A7E34A9F-1FFE-4194-96FD-E1CED5436EDC}.Static Release|Win32.Build.0 = Static Release|Win32
 		{A7E34A9F-1FFE-4194-96FD-E1CED5436EDC}.Static Release|x64.ActiveCfg = Static Release|x64
 		{A7E34A9F-1FFE-4194-96FD-E1CED5436EDC}.Static Release|x64.Build.0 = Static Release|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Debug|x64.Build.0 = Shared Debug|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Profile|Win32.ActiveCfg = Shared Profile|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Profile|Win32.Build.0 = Shared Profile|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Profile|x64.Build.0 = Shared Profile|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Release|Win32.Build.0 = Shared Release|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Release|x64.ActiveCfg = Shared Release|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Shared Release|x64.Build.0 = Shared Release|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Debug|Win32.Build.0 = Static Debug|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Debug|x64.ActiveCfg = Static Debug|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Debug|x64.Build.0 = Static Debug|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Profile|Win32.ActiveCfg = Static Profile|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Profile|Win32.Build.0 = Static Profile|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Profile|x64.ActiveCfg = Static Profile|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Profile|x64.Build.0 = Static Profile|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Release|Win32.ActiveCfg = Static Release|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Release|Win32.Build.0 = Static Release|Win32
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Release|x64.ActiveCfg = Static Release|x64
-		{850F5A77-8674-46BA-B8FB-162767F58CFC}.Static Release|x64.Build.0 = Static Release|x64
 		{0C91020C-8493-4F5C-82CB-5920730F31F0}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
 		{0C91020C-8493-4F5C-82CB-5920730F31F0}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
 		{0C91020C-8493-4F5C-82CB-5920730F31F0}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
@@ -5390,7 +5364,6 @@ Global
 		{9E797945-27E4-43F7-84C1-3829DEDD0C7A} = {79B55C4B-BA8F-48EE-B6F9-1019B251B4A7}
 		{A7E34A9F-1FFE-4194-96FD-E1CED5436EDC} = {9E797945-27E4-43F7-84C1-3829DEDD0C7A}
 		{4D96C40C-ACB9-4EFC-AE6C-9C7A6270B24B} = {9EA056A0-ADA8-4697-A3B1-7D126466ED59}
-		{850F5A77-8674-46BA-B8FB-162767F58CFC} = {4D96C40C-ACB9-4EFC-AE6C-9C7A6270B24B}
 		{0C91020C-8493-4F5C-82CB-5920730F31F0} = {9E797945-27E4-43F7-84C1-3829DEDD0C7A}
 		{BF22C6CF-F370-4909-860A-DEF5D0929E0B} = {1F742B1E-D6E7-43B2-BBFB-A0528FE64731}
 		{CF3E51F9-C90D-48B3-A2D2-A0D4E3216A0B} = {9F99B3A8-4319-46D7-9971-4F489345FF35}
