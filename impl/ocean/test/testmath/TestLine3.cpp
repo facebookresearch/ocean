@@ -10,10 +10,10 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Line3.h"
 #include "ocean/math/Random.h"
-#include "ocean/math/Rotation.h"
 
 namespace Ocean
 {
@@ -70,34 +70,34 @@ bool TestLine3::test(const double testDuration, const TestSelector& selector)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestLine3, IsOnLine_Float)
+TEST(TestLine3, IsOnLine_float)
 {
 	EXPECT_TRUE((TestLine3::testIsOnLine<float>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestLine3, IsOnLine_Double)
+TEST(TestLine3, IsOnLine_double)
 {
 	EXPECT_TRUE((TestLine3::testIsOnLine<double>(GTEST_TEST_DURATION)));
 }
 
 
-TEST(TestLine3, NearestPoints_Float)
+TEST(TestLine3, NearestPoints_float)
 {
 	EXPECT_TRUE((TestLine3::testNearestPoints<float>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestLine3, NearestPoints_Double)
+TEST(TestLine3, NearestPoints_double)
 {
 	EXPECT_TRUE((TestLine3::testNearestPoints<double>(GTEST_TEST_DURATION)));
 }
 
 
-TEST(TestLine3, Distance_Float)
+TEST(TestLine3, Distance_float)
 {
 	EXPECT_TRUE((TestLine3::testDistance<float>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestLine3, Distance_Double)
+TEST(TestLine3, Distance_double)
 {
 	EXPECT_TRUE((TestLine3::testDistance<double>(GTEST_TEST_DURATION)));
 }
@@ -111,8 +111,10 @@ bool TestLine3::testIsOnLine(const double testDuration)
 
 	Log::info() << "isOnLine test, with " << TypeNamer::name<T>() << ":";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const T range = std::is_same<T, float>::value ? T(10) : T(1000);
 
@@ -122,7 +124,9 @@ bool TestLine3::testIsOnLine(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const LineT3<T> line(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const LineT3<T> line(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
 			ocean_assert(NumericT<T>::isEqual(line.direction().length(), 1));
 
 			VectorT3<T> perpendicular(line.direction().perpendicular());
@@ -136,45 +140,33 @@ bool TestLine3::testIsOnLine(const double testDuration)
 			ocean_assert(NumericT<T>::isEqual(perpendicular.length(), 1));
 			ocean_assert(NumericT<T>::isEqualEps(line.direction() * perpendicular));
 
-			bool localSucceeded = true;
-
-			const VectorT3<T> pointOnLine(line.point() + line.direction() * RandomT<T>::scalar(-range * T(10), range * T(10)));
+			const VectorT3<T> pointOnLine(line.point() + line.direction() * RandomT<T>::scalar(randomGenerator, -range * T(10), range * T(10)));
 
 			if (line.isOnLine(pointOnLine) == false)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
-			const VectorT3<T> pointOffset(line.point() + perpendicular * RandomT<T>::scalar(-range, range));
+			const VectorT3<T> pointOffset(line.point() + perpendicular * RandomT<T>::scalar(randomGenerator, -range, range));
 
 			if (line.point() != pointOffset && line.isOnLine(pointOffset) == true)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
-			const VectorT3<T> pointOffset2(pointOnLine + perpendicular * RandomT<T>::scalar(T(0.5), range) * RandomT<T>::sign());
+			const VectorT3<T> pointOffset2(pointOnLine + perpendicular * RandomT<T>::scalar(randomGenerator, T(0.5), range) * RandomT<T>::sign(randomGenerator));
 
 			if (line.isOnLine(pointOffset2) == true)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -184,8 +176,10 @@ bool TestLine3::testNearestPoints(const double testDuration)
 
 	Log::info() << "Nearest points test, with " << TypeNamer::name<T>() << ":";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const T range = std::is_same<T, float>::value ? T(10) : T(1000);
 
@@ -195,8 +189,10 @@ bool TestLine3::testNearestPoints(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const LineT3<T> lineA(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
-			const LineT3<T> lineB(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const LineT3<T> lineA(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
+			const LineT3<T> lineB(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
 
 			ocean_assert(lineA.direction().isUnit() && lineB.direction().isUnit());
 
@@ -210,14 +206,9 @@ bool TestLine3::testNearestPoints(const double testDuration)
 
 					if (direction.normalize())
 					{
-						// the vector between both nearest points must be perpendicular to both lines
 						if (NumericT<T>::isWeakEqualEps(lineA.direction() * direction) && NumericT<T>::isWeakEqualEps(lineB.direction() * direction))
 						{
-							// ensuring that we cannot find better points
-
 							const T bestDistance = pointA.distance(pointB);
-
-							bool allSucceeded = true;
 
 							for (T offset : {T(-0.01), T(0.01)})
 							{
@@ -225,44 +216,46 @@ bool TestLine3::testNearestPoints(const double testDuration)
 
 								if (checkDistance < bestDistance)
 								{
-									allSucceeded = false;
+									scopedIteration.setInaccurate();
 								}
 
 								checkDistance = pointA.distance(pointB + lineB.direction() * offset);
 
 								if (checkDistance < bestDistance)
 								{
-									allSucceeded = false;
+									scopedIteration.setInaccurate();
 								}
 							}
-
-							if (allSucceeded)
-							{
-								++validIterations;
-							}
+						}
+						else
+						{
+							scopedIteration.setInaccurate();
 						}
 					}
 					else
 					{
-						if (pointA.isEqual(pointB, NumericT<T>::weakEps()))
+						if (!pointA.isEqual(pointB, NumericT<T>::weakEps()))
 						{
-							++validIterations;
+							scopedIteration.setInaccurate();
 						}
 					}
 				}
+				else
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
-
-			++iterations;
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -272,8 +265,10 @@ bool TestLine3::testDistance(const double testDuration)
 
 	Log::info() << "Distance between lines test, with " << TypeNamer::name<T>() << ":";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const T range = std::is_same<T, float>::value ? T(10) : T(1000);
 
@@ -283,8 +278,10 @@ bool TestLine3::testDistance(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const LineT3<T> lineA(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
-			const LineT3<T> lineB(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const LineT3<T> lineA(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
+			const LineT3<T> lineB(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
 
 			ocean_assert(lineA.direction().isUnit() && lineB.direction().isUnit());
 
@@ -296,23 +293,22 @@ bool TestLine3::testDistance(const double testDuration)
 			{
 				const T pointDistance = pointA.distance(pointB);
 
-				if (NumericT<T>::isWeakEqual(distance, pointDistance))
+				if (!NumericT<T>::isWeakEqual(distance, pointDistance))
 				{
-					++validIterations;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++iterations;
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }
