@@ -21,9 +21,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Descriptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,9 +117,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp">

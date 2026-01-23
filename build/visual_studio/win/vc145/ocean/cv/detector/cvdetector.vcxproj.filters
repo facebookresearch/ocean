@@ -14,9 +14,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -68,9 +65,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Descriptor.h">

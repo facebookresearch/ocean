@@ -41,11 +41,7 @@
 		5D222C481BB18A7B00298788 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
 		5D222C491BB18A7B00298788 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
 		5D222C4A1BB18A7B00298788 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
-		5D222C4B1BB18A7B00298788 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
 		5D222C4C1BB18A7B00298788 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
-		5D222C4F1BB18A7B00298788 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
-		5D222C501BB18A7B00298788 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
-		5D222C521BB18A7B00298788 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
 		5D222C531BB18A7B00298788 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
 		5D222C541BB18A7B00298788 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
 		5D222C551BB18A7B00298788 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
@@ -60,7 +56,6 @@
 		5D222C5E1BB18A7B00298788 /* ORBFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932F1BA9DA6500D38120 /* ORBFeature.h */; };
 		5D222C5F1BB18A7B00298788 /* LineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */; };
 		5D222C601BB18A7B00298788 /* FASTFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */; };
-		5D7D931C1BA9DA5300D38120 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
 		5D7D931D1BA9DA5300D38120 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
 		5D7D931E1BA9DA5300D38120 /* FeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */; };
 		5D7D931F1BA9DA5300D38120 /* HarrisCornerDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */; };
@@ -68,7 +63,6 @@
 		5D7D93211BA9DA5300D38120 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
 		5D7D93221BA9DA5300D38120 /* ORBFeatureOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */; };
 		5D7D93231BA9DA5300D38120 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
-		5D7D93361BA9DA6500D38120 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
 		5D7D93371BA9DA6500D38120 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
 		5D7D93381BA9DA6500D38120 /* Detector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93261BA9DA6500D38120 /* Detector.h */; };
 		5D7D93391BA9DA6500D38120 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
@@ -91,11 +85,7 @@
 		5D9860F01D8B531D00DEDB00 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
 		5D9860F11D8B531D00DEDB00 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
 		5D9860F21D8B531D00DEDB00 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
-		5D9860F31D8B531D00DEDB00 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
 		5D9860F41D8B531D00DEDB00 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
-		5D9860F71D8B531D00DEDB00 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
-		5D9860F81D8B531D00DEDB00 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
-		5D9860FA1D8B531D00DEDB00 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
 		5D9860FB1D8B531D00DEDB00 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
 		5D9860FC1D8B531D00DEDB00 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
 		5D9860FD1D8B531D00DEDB00 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
@@ -144,11 +134,7 @@
 		C041EAEF1DABD68100BF5D76 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
 		C041EAF01DABD68100BF5D76 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
 		C041EAF11DABD68100BF5D76 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
-		C041EAF21DABD68100BF5D76 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
 		C041EAF31DABD68100BF5D76 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
-		C041EAF61DABD68100BF5D76 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
-		C041EAF71DABD68100BF5D76 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
-		C041EAF91DABD68100BF5D76 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
 		C041EAFA1DABD68100BF5D76 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
 		C041EAFB1DABD68100BF5D76 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
 		C041EAFC1DABD68100BF5D76 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
@@ -175,7 +161,6 @@
 		5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameChangeDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/FrameChangeDetector.cpp; sourceTree = "<group>"; };
 		5D222C641BB18A7B00298788 /* libOceanCVDetectorD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D7D93051BA9D8F700D38120 /* libOceanCVDetectorD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorD.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CalibrationPatternDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/CalibrationPatternDetector.cpp; sourceTree = "<group>"; };
 		5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FASTFeatureDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/FASTFeatureDetector.cpp; sourceTree = "<group>"; };
 		5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FeatureDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/FeatureDetector.cpp; sourceTree = "<group>"; };
 		5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HarrisCornerDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/HarrisCornerDetector.cpp; sourceTree = "<group>"; };
@@ -183,7 +168,6 @@
 		5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ORBFeatureDescriptor.cpp; path = ../../../../../../impl/ocean/cv/detector/ORBFeatureDescriptor.cpp; sourceTree = "<group>"; };
 		5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ORBFeatureOrientation.cpp; path = ../../../../../../impl/ocean/cv/detector/ORBFeatureOrientation.cpp; sourceTree = "<group>"; };
 		5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ORBSamplingPattern.cpp; path = ../../../../../../impl/ocean/cv/detector/ORBSamplingPattern.cpp; sourceTree = "<group>"; };
-		5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CalibrationPatternDetector.h; path = ../../../../../../impl/ocean/cv/detector/CalibrationPatternDetector.h; sourceTree = "<group>"; };
 		5D7D93251BA9DA6500D38120 /* Descriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Descriptor.h; path = ../../../../../../impl/ocean/cv/detector/Descriptor.h; sourceTree = "<group>"; };
 		5D7D93261BA9DA6500D38120 /* Detector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Detector.h; path = ../../../../../../impl/ocean/cv/detector/Detector.h; sourceTree = "<group>"; };
 		5D7D93271BA9DA6500D38120 /* FASTFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FASTFeature.h; path = ../../../../../../impl/ocean/cv/detector/FASTFeature.h; sourceTree = "<group>"; };
@@ -266,7 +250,6 @@
 		5D7D93131BA9D93D00D38120 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
-				5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */,
 				5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */,
 				5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */,
 				5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */,
@@ -287,7 +270,6 @@
 		5D9371791BC7FEBB0046ACD4 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */,
 				5D7D93251BA9DA6500D38120 /* Descriptor.h */,
 				5D7D93261BA9DA6500D38120 /* Detector.h */,
 				5D7D93271BA9DA6500D38120 /* FASTFeature.h */,
@@ -323,7 +305,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D222C4F1BB18A7B00298788 /* CalibrationPatternDetector.h in Headers */,
 				50873DD4235F707D003C4E11 /* Utilities.h in Headers */,
 				5D222C501BB18A7B00298788 /* Feature.h in Headers */,
 				93325ED9215D7930009CBA15 /* LineEvaluator.h in Headers */,
@@ -355,7 +336,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D7D93361BA9DA6500D38120 /* CalibrationPatternDetector.h in Headers */,
 				5D7D933B1BA9DA6500D38120 /* Feature.h in Headers */,
 				50873DC9235E1DA8003C4E11 /* ShapeDetector.h in Headers */,
 				5A2D013A2477178B001E63F2 /* FrameChangeDetector.h in Headers */,
@@ -387,7 +367,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D9860F71D8B531D00DEDB00 /* CalibrationPatternDetector.h in Headers */,
 				50873DD5235F707D003C4E11 /* Utilities.h in Headers */,
 				5D9860F81D8B531D00DEDB00 /* Feature.h in Headers */,
 				93325EDA215D7930009CBA15 /* LineEvaluator.h in Headers */,
@@ -419,7 +398,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C041EAF61DABD68100BF5D76 /* CalibrationPatternDetector.h in Headers */,
 				50873DD6235F707D003C4E11 /* Utilities.h in Headers */,
 				C041EAF71DABD68100BF5D76 /* Feature.h in Headers */,
 				93325EDB215D7930009CBA15 /* LineEvaluator.h in Headers */,
@@ -613,7 +591,6 @@
 				5A2D0140247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
 				5D222C491BB18A7B00298788 /* FASTFeatureDetector.cpp in Sources */,
 				5D222C4A1BB18A7B00298788 /* LineDetectorHough.cpp in Sources */,
-				5D222C4B1BB18A7B00298788 /* CalibrationPatternDetector.cpp in Sources */,
 				5D222C4C1BB18A7B00298788 /* ORBFeatureDescriptor.cpp in Sources */,
 				930D74E5219E2C6E00861D36 /* HemiCube.cpp in Sources */,
 				9326FA6321C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,
@@ -636,7 +613,6 @@
 				5D7D931D1BA9DA5300D38120 /* FASTFeatureDetector.cpp in Sources */,
 				50873DCE235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */,
 				5D7D93201BA9DA5300D38120 /* LineDetectorHough.cpp in Sources */,
-				5D7D931C1BA9DA5300D38120 /* CalibrationPatternDetector.cpp in Sources */,
 				5D7D93211BA9DA5300D38120 /* ORBFeatureDescriptor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -655,7 +631,6 @@
 				5A2D0141247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
 				5D9860F11D8B531D00DEDB00 /* FASTFeatureDetector.cpp in Sources */,
 				5D9860F21D8B531D00DEDB00 /* LineDetectorHough.cpp in Sources */,
-				5D9860F31D8B531D00DEDB00 /* CalibrationPatternDetector.cpp in Sources */,
 				5D9860F41D8B531D00DEDB00 /* ORBFeatureDescriptor.cpp in Sources */,
 				930D74E6219E2C6E00861D36 /* HemiCube.cpp in Sources */,
 				9326FA6421C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,
@@ -676,7 +651,6 @@
 				5A2D0142247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
 				C041EAF01DABD68100BF5D76 /* FASTFeatureDetector.cpp in Sources */,
 				C041EAF11DABD68100BF5D76 /* LineDetectorHough.cpp in Sources */,
-				C041EAF21DABD68100BF5D76 /* CalibrationPatternDetector.cpp in Sources */,
 				C041EAF31DABD68100BF5D76 /* ORBFeatureDescriptor.cpp in Sources */,
 				930D74E7219E2C6E00861D36 /* HemiCube.cpp in Sources */,
 				9326FA6521C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,

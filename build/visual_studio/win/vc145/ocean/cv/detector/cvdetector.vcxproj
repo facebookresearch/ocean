@@ -109,7 +109,6 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FeatureDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.cpp" />
@@ -126,7 +125,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Descriptor.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Detector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeature.h" />
