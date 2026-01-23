@@ -12,6 +12,7 @@
 
 #include "ocean/test/TestSelector.h"
 
+#include "ocean/base/Frame.h"
 #include "ocean/base/RandomGenerator.h"
 
 namespace Ocean
@@ -53,7 +54,31 @@ class OCEAN_TEST_MEDIA_EXPORT TestAVFoundation
 		 */
 		static bool testPixelBufferAccessorNonGenericPixelFormats(const double testDuration);
 
+		/**
+		 * Tests the video encoder and decoder by encoding frames and decoding them again.
+		 * @param testDuration The number of seconds for each test
+		 * @return True, if succeeded
+		 */
+		static bool testVideoEncoderDecoder(const double testDuration);
+
 	protected:
+
+		/**
+		 * Creates a test frame with a unique pattern based on the frame index.
+		 * @param width The width of the frame, in pixel, with range [1, infinity)
+		 * @param height The height of the frame, in pixel, with range [1, infinity)
+		 * @param frameIndex The index of the frame, used to create a unique pattern
+		 * @return The resulting test frame
+		 */
+		static Frame createTestFrame(const unsigned int width, const unsigned int height, const unsigned int frameIndex);
+
+		/**
+		 * Validates that the decoded frame matches the original test frame within acceptable compression tolerances.
+		 * @param testFrame The original test frame
+		 * @param decodedFrame The decoded frame to validate
+		 * @return True, if the frames match within tolerance
+		 */
+		static bool validateTestFrame(const Frame& testFrame, const Frame& decodedFrame);
 
 		/**
 		 * Fills a CVPixelBuffer object with random image data.
