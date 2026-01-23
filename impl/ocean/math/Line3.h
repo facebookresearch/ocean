@@ -10,6 +10,7 @@
 
 #include "ocean/math/Math.h"
 #include "ocean/math/Numeric.h"
+#include "ocean/math/SquareMatrix3.h"
 #include "ocean/math/Vector3.h"
 
 namespace Ocean
@@ -239,6 +240,16 @@ class LineT3
 		 * @return True, if so
 		 */
 		explicit inline operator bool() const;
+
+		/**
+		 * Fits a line to a set of given 3D points by application of the least square measure.
+		 * This function uses PCA (Principal Component Analysis) to find the best-fitting line direction.
+		 * @param points The points for which the best fitting line is requested, must be valid
+		 * @param size The number of given points, with range [2, infinity)
+		 * @param line The resulting line with unit direction vector
+		 * @return True, if succeeded
+		 */
+		static inline bool fitLineLeastSquare(const VectorT3<T>* points, const size_t size, LineT3<T>& line);
 
 	protected:
 
@@ -507,6 +518,95 @@ bool LineT3<T>::nearestPoints(const LineT3<T>& line, VectorT3<T>& first, VectorT
 	return true;
 }
 
+template <typename T>
+bool LineT3<T>::fitLineLeastSquare(const VectorT3<T>* points, const size_t size, LineT3<T>& line)
+{
+	static_assert(std::is_same<float, T>::value || std::is_same<double, T>::value, "Type T can be either float or double.");
+	ocean_assert(points != nullptr && size >= 2);
+
+	// Step 1: Compute the centroid (mean point)
+	VectorT3<T> centroid(T(0), T(0), T(0));
+
+	for (size_t i = 0; i < size; ++i)
+	{
+		centroid += points[i];
+	}
+
+	ocean_assert(size != 0);
+	const T invSize = T(1) / T(size);
+	centroid *= invSize;
+
+	// Step 2: Compute the covariance matrix
+	T cxx = T(0);
+	T cxy = T(0);
+	T cxz = T(0);
+	T cyy = T(0);
+	T cyz = T(0);
+	T czz = T(0);
+
+	for (size_t i = 0; i < size; ++i)
+	{
+		const VectorT3<T> diff = points[i] - centroid;
+
+		cxx += diff.x() * diff.x();
+		cxy += diff.x() * diff.y();
+		cxz += diff.x() * diff.z();
+		cyy += diff.y() * diff.y();
+		cyz += diff.y() * diff.z();
+		czz += diff.z() * diff.z();
+	}
+
+	// Step 3: Find the eigenvector with the largest eigenvalue using power iteration
+	const SquareMatrixT3<T> covarianceMatrix(cxx, cxy, cxz, cxy, cyy, cyz, cxz, cyz, czz);
+
+	// Initial guess - use the first point's direction from centroid, or a default if that fails
+	VectorT3<T> direction(T(1), T(0), T(0));
+
+	if (size >= 2)
+	{
+		const VectorT3<T> diff = points[0] - centroid;
+
+		if (!diff.isNull())
+		{
+			direction = diff.normalized();
+		}
+	}
+
+	// Power iteration to find the principal eigenvector
+	constexpr unsigned int maxIterations = 100u;
+
+	for (unsigned int iteration = 0u; iteration < maxIterations; ++iteration)
+	{
+		const VectorT3<T> newDirection = covarianceMatrix * direction;
+		const T length = newDirection.length();
+
+		if (NumericT<T>::isEqualEps(length))
+		{
+			return false;
+		}
+
+		const VectorT3<T> normalizedDirection = newDirection / length;
+
+		// Check for convergence
+		if (NumericT<T>::isEqual(NumericT<T>::abs(normalizedDirection * direction), T(1), NumericT<T>::weakEps()))
+		{
+			direction = normalizedDirection;
+			break;
+		}
+
+		direction = normalizedDirection;
+	}
+
+	if (direction.isNull())
+	{
+		return false;
+	}
+
+	line = LineT3<T>(centroid, direction);
+
+	return true;
 }
+
+} // namespace Ocean
 
 #endif // META_OCEAN_MATH_LINE_3_H

@@ -7,6 +7,7 @@
 
 #include "ocean/test/testmath/TestLine3.h"
 
+#include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
@@ -61,6 +62,17 @@ bool TestLine3::test(const double testDuration, const TestSelector& selector)
 		testResult = testDistance<double>(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fitlineleastsquare"))
+	{
+		testResult = testFitLineLeastSquare<float>(testDuration);
+		Log::info() << " ";
+		testResult = testFitLineLeastSquare<double>(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -100,6 +112,16 @@ TEST(TestLine3, Distance_float)
 TEST(TestLine3, Distance_double)
 {
 	EXPECT_TRUE((TestLine3::testDistance<double>(GTEST_TEST_DURATION)));
+}
+
+TEST(TestLine3, FitLineLeastSquare_float)
+{
+	EXPECT_TRUE((TestLine3::testFitLineLeastSquare<float>(GTEST_TEST_DURATION)));
+}
+
+TEST(TestLine3, FitLineLeastSquare_double)
+{
+	EXPECT_TRUE((TestLine3::testFitLineLeastSquare<double>(GTEST_TEST_DURATION)));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -306,6 +328,145 @@ bool TestLine3::testDistance(const double testDuration)
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestLine3::testFitLineLeastSquare(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "fitLineLeastSquare test, with " << TypeNamer::name<T>() << ":";
+
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	HighPerformanceStatistic performance;
+
+	const T range = std::is_same<T, float>::value ? T(100) : T(1000);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const bool performanceIteration : {true, false})
+		{
+			{
+				// testing with points exactly on a line (no noise)
+
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const VectorT3<T> linePoint = RandomT<T>::vector3(randomGenerator, -range, range);
+				const VectorT3<T> lineDirection = RandomT<T>::vector3(randomGenerator);
+				ocean_assert(lineDirection.isUnit());
+
+				const LineT3<T> groundTruthLine(linePoint, lineDirection);
+				ocean_assert(groundTruthLine.isValid());
+
+				const size_t numberPoints = performanceIteration ? 100 : size_t(RandomI::random(randomGenerator, 2u, 100u));
+
+				std::vector<VectorT3<T>> points;
+				points.reserve(numberPoints);
+
+				for (size_t i = 0; i < numberPoints; ++i)
+				{
+					const T distance = RandomT<T>::scalar(randomGenerator, -range, range);
+					points.emplace_back(groundTruthLine.point(distance));
+				}
+
+				LineT3<T> fittedLine;
+
+				performance.startIf(performanceIteration);
+					const bool result = LineT3<T>::fitLineLeastSquare(points.data(), points.size(), fittedLine);
+				performance.stopIf(performanceIteration);
+
+				if (!result)
+				{
+					scopedIteration.setInaccurate();
+					continue;
+				}
+
+				ocean_assert(fittedLine.isValid());
+
+				const T maxDistanceThreshold = std::is_same<T, float>::value ? T(0.01) : T(0.0001);
+
+				for (const VectorT3<T>& point : points)
+				{
+					if (fittedLine.distance(point) > maxDistanceThreshold)
+					{
+						scopedIteration.setInaccurate();
+						break;
+					}
+				}
+			}
+
+			{
+				// testing with points with small perpendicular noise
+
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const VectorT3<T> linePoint = RandomT<T>::vector3(randomGenerator, -range, range);
+				const VectorT3<T> lineDirection = RandomT<T>::vector3(randomGenerator);
+				ocean_assert(lineDirection.isUnit());
+
+				const LineT3<T> groundTruthLine(linePoint, lineDirection);
+				ocean_assert(groundTruthLine.isValid());
+
+				const VectorT3<T> perpendicular0 = lineDirection.perpendicular().normalized();
+				const VectorT3<T> perpendicular1 = lineDirection.cross(perpendicular0).normalized();
+
+				const size_t numberPoints = performanceIteration ? 100 : size_t(RandomI::random(randomGenerator, 2u, 100u));
+
+				const T maxNoise = std::is_same<T, float>::value ? T(0.01) : T(0.001);
+
+				std::vector<VectorT3<T>> points;
+				points.reserve(numberPoints);
+
+				for (size_t i = 0; i < numberPoints; ++i)
+				{
+					const T distance = RandomT<T>::scalar(randomGenerator, -range, range);
+					const T noise0 = RandomT<T>::scalar(randomGenerator, -maxNoise, maxNoise);
+					const T noise1 = RandomT<T>::scalar(randomGenerator, -maxNoise, maxNoise);
+					points.emplace_back(groundTruthLine.point(distance) + perpendicular0 * noise0 + perpendicular1 * noise1);
+				}
+
+				LineT3<T> fittedLine;
+
+				performance.startIf(performanceIteration);
+					const bool result = LineT3<T>::fitLineLeastSquare(points.data(), points.size(), fittedLine);
+				performance.stopIf(performanceIteration);
+
+				if (!result)
+				{
+					scopedIteration.setInaccurate();
+					continue;
+				}
+
+				ocean_assert(fittedLine.isValid());
+
+				T sqrDistanceGroundTruth = 0;
+				T sqrDistanceFitted = 0;
+
+				for (const VectorT3<T>& point : points)
+				{
+					sqrDistanceGroundTruth += groundTruthLine.sqrDistance(point);
+					sqrDistanceFitted += fittedLine.sqrDistance(point);
+				}
+
+				if (sqrDistanceFitted > sqrDistanceGroundTruth)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
