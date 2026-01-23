@@ -112,7 +112,6 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Base64.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Bitstream.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\LegacyCameraCalibrationManager.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Compression.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Directory.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\File.cpp" />
@@ -132,7 +131,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Base64.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Bitstream.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\LegacyCameraCalibrationManager.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Compression.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Directory.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\File.h" />
