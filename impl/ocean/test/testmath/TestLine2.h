@@ -57,6 +57,13 @@ class OCEAN_TEST_MATH_EXPORT TestLine2
 		 * @return True if succeeded
 		 */
 		static bool testDecomposeNormalDistance(const double testDuration);
+
+		/**
+		 * Tests the fitLineLeastSquare function.
+		 * @param testDuration Number of seconds for this test, range: (0, infinity)
+		 * @return True if succeeded
+		 */
+		static bool testFitLineLeastSquare(const double testDuration);
 };
 
 }

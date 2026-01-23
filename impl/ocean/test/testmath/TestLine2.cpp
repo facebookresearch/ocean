@@ -56,6 +56,15 @@ bool TestLine2::test(const double testDuration, const TestSelector& selector)
 		testResult = testDecomposeNormalDistance(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("fitlineleastsquare"))
+	{
+		testResult = testFitLineLeastSquare(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;
@@ -78,6 +87,11 @@ TEST(TestLine2, IsLeftOfLine)
 TEST(TestLine2, DecomposeNormalDistance)
 {
 	EXPECT_TRUE(TestLine2::testDecomposeNormalDistance(GTEST_TEST_DURATION));
+}
+
+TEST(TestLine2, FitLineLeastSquare)
+{
+	EXPECT_TRUE(TestLine2::testFitLineLeastSquare(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -290,6 +304,116 @@ bool TestLine2::testDecomposeNormalDistance(const double testDuration)
 		if (Numeric::isNotWeakEqualEps(newLine.distance(linePoint - lineDirection)))
 		{
 			scopedIteration.setInaccurate();
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestLine2::testFitLineLeastSquare(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "fitLineLeastSquare test:";
+
+	constexpr double successThreshold = 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// testing with points exactly on a line (no noise)
+
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Vector2 linePoint = Random::vector2(randomGenerator, -range, range);
+			const Vector2 lineDirection = Random::vector2(randomGenerator);
+			ocean_assert(lineDirection.isUnit());
+
+			const Line2 groundTruthLine(linePoint, lineDirection);
+			ocean_assert(groundTruthLine.isValid());
+
+			const size_t numberPoints = size_t(RandomI::random(randomGenerator, 2u, 100u));
+
+			Vectors2 points;
+			points.reserve(numberPoints);
+
+			for (size_t i = 0; i < numberPoints; ++i)
+			{
+				const Scalar distance = Random::scalar(randomGenerator, -range, range);
+				points.emplace_back(groundTruthLine.point(distance));
+			}
+
+			Line2 fittedLine;
+			OCEAN_EXPECT_TRUE(validation, Line2::fitLineLeastSquare(points.data(), points.size(), fittedLine));
+			ocean_assert(fittedLine.isValid());
+
+			const Scalar maxDistanceThreshold = std::is_same<Scalar, float>::value ? Scalar(0.01) : Scalar(0.0001);
+
+			for (const Vector2& point : points)
+			{
+				if (fittedLine.distance(point) > maxDistanceThreshold)
+				{
+					scopedIteration.setInaccurate();
+					break;
+				}
+			}
+		}
+
+		{
+			// testing with points with small perpendicular noise
+
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Vector2 linePoint = Random::vector2(randomGenerator, -range, range);
+			const Vector2 lineDirection = Random::vector2(randomGenerator);
+			ocean_assert(lineDirection.isUnit());
+
+			const Line2 groundTruthLine(linePoint, lineDirection);
+			ocean_assert(groundTruthLine.isValid());
+
+			const Vector2 perpendicular = lineDirection.perpendicular();
+
+			const size_t numberPoints = size_t(RandomI::random(randomGenerator, 2u, 100u));
+
+			const Scalar maxNoise = std::is_same<Scalar, float>::value ? Scalar(0.01) : Scalar(0.001);
+
+			Vectors2 points;
+			points.reserve(numberPoints);
+
+			for (size_t i = 0; i < numberPoints; ++i)
+			{
+				const Scalar distance = Random::scalar(randomGenerator, -range, range);
+				const Scalar noise = Random::scalar(randomGenerator, -maxNoise, maxNoise);
+				points.emplace_back(groundTruthLine.point(distance) + perpendicular * noise);
+			}
+
+			Line2 fittedLine;
+			OCEAN_EXPECT_TRUE(validation, Line2::fitLineLeastSquare(points.data(), points.size(), fittedLine));
+			ocean_assert(fittedLine.isValid());
+
+			Scalar sqrDistanceGroundTruth = 0;
+			Scalar sqrDistanceFitted = 0;
+
+			for (const Vector2& point : points)
+			{
+				sqrDistanceGroundTruth += groundTruthLine.sqrDistance(point);
+				sqrDistanceFitted += fittedLine.sqrDistance(point);
+			}
+
+			if (sqrDistanceFitted > sqrDistanceGroundTruth)
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
