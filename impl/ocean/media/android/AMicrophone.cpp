@@ -311,7 +311,7 @@ bool AMicrophone::initialize(const SLEngineItf& slEngineInterface, const Microph
 
 			presetValue = SL_ANDROID_RECORDING_PRESET_GENERIC;
 
-			resultingMicrophoneConfigurations = MicrophoneConfigurations(resultingMicrophoneConfigurations | MC_VOICE_COMMUNICATION);
+			resultingMicrophoneConfigurations = MC_DEFAULT;
 		}
 	}
 
