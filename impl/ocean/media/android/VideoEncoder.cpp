@@ -119,16 +119,16 @@ bool VideoEncoder::initialize(const unsigned int width, const unsigned int heigh
 	}
 
 	// Set required encoder parameters
-	nativeMediaLibrary.AMediaFormat_setString(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_MIME, mime.c_str());
-	nativeMediaLibrary.AMediaFormat_setInt32(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_WIDTH, int(width));
-	nativeMediaLibrary.AMediaFormat_setInt32(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_HEIGHT, int(height));
-	nativeMediaLibrary.AMediaFormat_setInt32(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_BIT_RATE, int(bitrate));
-	nativeMediaLibrary.AMediaFormat_setFloat(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_FRAME_RATE, float(frameRate));
+	nativeMediaLibrary.AMediaFormat_setString(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_MIME, mime.c_str());
+	nativeMediaLibrary.AMediaFormat_setInt32(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_WIDTH, int(width));
+	nativeMediaLibrary.AMediaFormat_setInt32(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_HEIGHT, int(height));
+	nativeMediaLibrary.AMediaFormat_setInt32(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_BIT_RATE, int(bitrate));
+	nativeMediaLibrary.AMediaFormat_setFloat(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_FRAME_RATE, float(frameRate));
 
-	nativeMediaLibrary.AMediaFormat_setInt32(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_COLOR_FORMAT, androidColorFormat);
-	nativeMediaLibrary.AMediaFormat_setInt32(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_COLOR_RANGE, androidColorRange);
+	nativeMediaLibrary.AMediaFormat_setInt32(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_FORMAT, androidColorFormat);
+	nativeMediaLibrary.AMediaFormat_setInt32(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_RANGE, androidColorRange);
 
-	nativeMediaLibrary.AMediaFormat_setInt32(*format, nativeMediaLibrary.AMEDIAFORMAT_KEY_I_FRAME_INTERVAL, iFrameInterval);
+	nativeMediaLibrary.AMediaFormat_setInt32(*format, NativeMediaLibrary::AMEDIAFORMAT_KEY_I_FRAME_INTERVAL, iFrameInterval);
 
 	const media_status_t configureStatus = nativeMediaLibrary.AMediaCodec_configure(*encoder, *format, nullptr /*surface*/, nullptr /*crypto*/, AMEDIACODEC_CONFIGURE_FLAG_ENCODE);
 
@@ -246,6 +246,12 @@ bool VideoEncoder::pushFrame(const Frame& frame, const uint64_t presentationTime
 		return false;
 	}
 
+	if ((unsigned int)(expectedWidth) != frame.width() || (unsigned int)(expectedHeight) != frame.height())
+	{
+		Log::error() << "VideoEncoder: Invalid frame dimensions, expected " << expectedWidth << "x" << expectedHeight << ", got " << frame.width() << "x" << frame.height();
+		return false;
+	}
+
 	const int64_t timeoutUs = Timestamp::seconds2microseconds(0.5);
 	const ssize_t inputBufferIndex = nativeMediaLibrary.AMediaCodec_dequeueInputBuffer(*encoder_, timeoutUs);
 
@@ -321,6 +327,13 @@ VideoEncoder::Sample VideoEncoder::popSample()
 	if (outputBuffer == nullptr || codecBufferInfo.size <= 0)
 	{
 		Log::warning() << "Invalid output buffer or empty data";
+		nativeMediaLibrary.AMediaCodec_releaseOutputBuffer(*encoder_, size_t(outputBufferIndex), false /*render*/);
+		return Sample();
+	}
+
+	if (codecBufferInfo.offset < 0 || size_t(codecBufferInfo.offset) + size_t(codecBufferInfo.size) > outputBufferSize)
+	{
+		Log::error() << "VideoEncoder: Buffer info exceeds output buffer bounds, offset: " << codecBufferInfo.offset << ", size: " << codecBufferInfo.size << ", buffer size: " << outputBufferSize;
 		nativeMediaLibrary.AMediaCodec_releaseOutputBuffer(*encoder_, size_t(outputBufferIndex), false /*render*/);
 		return Sample();
 	}

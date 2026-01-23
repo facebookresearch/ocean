@@ -432,7 +432,7 @@ inline VideoEncoder::Sample& VideoEncoder::Sample::operator=(Sample&& sample) no
 		presentationTime_ = sample.presentationTime_;
 		bufferFlags_ = sample.bufferFlags_;
 
-		sample.presentationTime_ = -1;
+		sample.presentationTime_ = NumericT<int64_t>::minValue();
 		sample.bufferFlags_ = BUFFER_FLAG_NONE;
 	}
 
@@ -471,6 +471,7 @@ inline VideoEncoder& VideoEncoder::operator=(VideoEncoder&& videoEncoder) noexce
 	{
 		release();
 
+		nativeMediaLibrarySubscription_ = std::move(videoEncoder.nativeMediaLibrarySubscription_);
 		encoder_ = std::move(videoEncoder.encoder_);
 
 		isStarted_ = videoEncoder.isStarted_;
