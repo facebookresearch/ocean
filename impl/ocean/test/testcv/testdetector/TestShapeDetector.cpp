@@ -55,7 +55,7 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 	{
 		// top-down
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
 
 		for (unsigned int y = 0u; y < yFrame.height(); ++y)
 		{
@@ -72,10 +72,10 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppression::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -87,7 +87,7 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(x), Scalar(y)) + offset, Vector2(0, 1), Scalar(shapes[n].strength()));
 		}
@@ -99,7 +99,7 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 		Frame yRotatedFrame(yFrame.frameType(), yFrame.paddingElements());
 		CV::FrameConverterY8::convertY8ToY8(yFrame.constdata<uint8_t>(), yRotatedFrame.data<uint8_t>(), yFrame.width(), yFrame.height(), CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, yFrame.paddingElements(), yRotatedFrame.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
 
 		for (unsigned int y = 0u; y < yRotatedFrame.height(); ++y)
 		{
@@ -116,10 +116,10 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -131,7 +131,7 @@ void TestShapeDetector::GradientBasedDetector::detectShapes(const Frame& yFrame,
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(yRotatedFrame.width() - x - 1u), Scalar(yRotatedFrame.height() - y - 1u)) - offset, Vector2(0, -1), Scalar(shapes[n].strength()));
 		}
@@ -565,7 +565,7 @@ double TestShapeDetector::GradientBasedDetector::tShapeDetectorResponse(const Fr
 	}
 	ocean_assert_and_suppress_unused(backgroundResponseCounterC == (shapeWidth - shapeStepSize - 2u) * shapeBottomBand, backgroundResponseCounterC);
 
-	// bottom band - vertial gradient filter (upper area)
+	// bottom band - vertical gradient filter (upper area)
 
 	unsigned int backgroundResponseCounterD = 0u;
 	for (unsigned int yy = y + shapeStepSize_2 + 1u; yy < y + shapeStepSize_2 + shapeBottomBand; ++yy)
@@ -597,7 +597,7 @@ double TestShapeDetector::GradientBasedDetector::tShapeDetectorResponse(const Fr
 	}
 	ocean_assert_and_suppress_unused(backgroundResponseCounterE == (shapeBottomBand - 1u) * (shapeHeight - shapeBottomBand - shapeStepSize) * 2u, backgroundResponseCounterE);
 
-	// bottom band - vertial gradient filter (lower area)
+	// bottom band - vertical gradient filter (lower area)
 
 	unsigned int backgroundResponseCounterF = 0u;
 	for (unsigned int yy = y + shapeStepSize_2 + shapeBottomBand; yy < y + shapeHeight - shapeStepSize_2 - 1u; ++yy)
@@ -618,7 +618,7 @@ double TestShapeDetector::GradientBasedDetector::tShapeDetectorResponse(const Fr
 	return result;
 }
 
-void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame, const double threshold, const double responseMultiplicationFactor, LShapes& lShapes, TShapes& tShapes, XShapes& xShapes, const unsigned int shapeWidth, const unsigned int shapeHeight, const unsigned int shapeStepSize, const unsigned int shapeTopBand, const unsigned int shapeBottomBand, const ResponseType responseType, const double minimalGradient, const double varianceFactor, const double minimalVariance, const double maximalRatio, const double nonMaximumSupressionRadius, const ThresholdStrategy thresholdStrategy, const GradientResponseStrategy gradientResponseStrategy, const BandStrategy bandStrategy, Frame* fResponseTopDown, Frame* fResponseBottomUp)
+void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame, const double threshold, const double responseMultiplicationFactor, LShapes& lShapes, TShapes& tShapes, XShapes& xShapes, const unsigned int shapeWidth, const unsigned int shapeHeight, const unsigned int shapeStepSize, const unsigned int shapeTopBand, const unsigned int shapeBottomBand, const ResponseType responseType, const double minimalGradient, const double varianceFactor, const double minimalVariance, const double maximalRatio, const double nonMaximumSuppressionRadius, const ThresholdStrategy thresholdStrategy, const GradientResponseStrategy gradientResponseStrategy, const BandStrategy bandStrategy, Frame* fResponseTopDown, Frame* fResponseBottomUp)
 {
 	ocean_assert(yFrame.isValid());
 	ocean_assert(lShapes.empty() && tShapes.empty() && xShapes.empty());
@@ -648,7 +648,7 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 		CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yFrame.constdata<uint8_t>(), linedIntegral.data<uint32_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), linedIntegral.paddingElements());
 		CV::IntegralImage::createLinedImageSquared<uint8_t, uint64_t, 1u>(yFrame.constdata<uint8_t>(), linedIntegralSquared.data<uint64_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), linedIntegralSquared.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
 
 		for (unsigned int y = 0u; y < yFrame.height(); ++y)
 		{
@@ -667,10 +667,10 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSuppressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -682,7 +682,7 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(x), Scalar(y)) + offset, Vector2(0, 1), Scalar(shapes[n].strength()));
 		}
@@ -697,7 +697,7 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 		CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yRotatedFrame.constdata<uint8_t>(), linedIntegral.data<uint32_t>(), yRotatedFrame.width(), yRotatedFrame.height(), yRotatedFrame.paddingElements(), linedIntegral.paddingElements());
 		CV::IntegralImage::createLinedImageSquared<uint8_t, uint64_t, 1u>(yRotatedFrame.constdata<uint8_t>(), linedIntegralSquared.data<uint64_t>(), yRotatedFrame.width(), yRotatedFrame.height(), yRotatedFrame.paddingElements(), linedIntegralSquared.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
 
 		for (unsigned int y = 0u; y < yRotatedFrame.height(); ++y)
 		{
@@ -716,10 +716,10 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSuppressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -731,7 +731,7 @@ void TestShapeDetector::VarianceBasedDetector::detectShapes(const Frame& yFrame,
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(yRotatedFrame.width() - x - 1u), Scalar(yRotatedFrame.height() - y - 1u)) - offset, Vector2(0, -1), Scalar(shapes[n].strength()));
 		}
@@ -1055,7 +1055,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 		CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yFrame.constdata<uint8_t>(), linedIntegral.data<uint32_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), linedIntegral.paddingElements());
 		CV::IntegralImage::createLinedImageSquared<uint8_t, uint64_t, 1u>(yFrame.constdata<uint8_t>(), linedIntegralSquared.data<uint64_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), linedIntegralSquared.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
 
 		for (unsigned int y = 0u; y < yFrame.height(); ++y)
 		{
@@ -1074,10 +1074,10 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -1089,7 +1089,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(x), Scalar(y)) + offset, Vector2(0, 1), Scalar(shapes[n].strength()));
 		}
@@ -1104,7 +1104,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 		CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yRotatedFrame.constdata<uint8_t>(), linedIntegral.data<uint32_t>(), yRotatedFrame.width(), yRotatedFrame.height(), yRotatedFrame.paddingElements(), linedIntegral.paddingElements());
 		CV::IntegralImage::createLinedImageSquared<uint8_t, uint64_t, 1u>(yRotatedFrame.constdata<uint8_t>(), linedIntegralSquared.data<uint64_t>(), yRotatedFrame.width(), yRotatedFrame.height(), yRotatedFrame.paddingElements(), linedIntegralSquared.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
 
 		for (unsigned int y = 0u; y < yRotatedFrame.height(); ++y)
 		{
@@ -1123,10 +1123,10 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -1138,7 +1138,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapes(const Frame&
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(yRotatedFrame.width() - x - 1u), Scalar(yRotatedFrame.height() - y - 1u)) - offset, Vector2(0, -1), Scalar(shapes[n].strength()));
 		}
@@ -1194,7 +1194,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 		CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yFrame.constdata<uint8_t>(), linedIntegral.data<uint32_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), linedIntegral.paddingElements());
 		CV::IntegralImage::createLinedImageSquared<uint8_t, uint64_t, 1u>(yFrame.constdata<uint8_t>(), linedIntegralSquared.data<uint64_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), linedIntegralSquared.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yFrame.width(), yFrame.height());
 
 		for (unsigned int y = 0u; y < yFrame.height(); ++y)
 		{
@@ -1213,10 +1213,10 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yFrame.width() - 2u, 1u, yFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -1228,7 +1228,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameTopDown.constpixel<double>(x - 1u, y - 1u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 0u), floatResponseFrameTopDown.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(x), Scalar(y)) + offset, Vector2(0, 1), Scalar(shapes[n].strength()));
 		}
@@ -1243,7 +1243,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 		CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yRotatedFrame.constdata<uint8_t>(), linedIntegral.data<uint32_t>(), yRotatedFrame.width(), yRotatedFrame.height(), yRotatedFrame.paddingElements(), linedIntegral.paddingElements());
 		CV::IntegralImage::createLinedImageSquared<uint8_t, uint64_t, 1u>(yRotatedFrame.constdata<uint8_t>(), linedIntegralSquared.data<uint64_t>(), yRotatedFrame.width(), yRotatedFrame.height(), yRotatedFrame.paddingElements(), linedIntegralSquared.paddingElements());
 
-		CV::NonMaximumSuppression<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
+		CV::NonMaximumSuppressionT<double> nonMaximumSuppressionAlignedTShape(yRotatedFrame.width(), yRotatedFrame.height());
 
 		for (unsigned int y = 0u; y < yRotatedFrame.height(); ++y)
 		{
@@ -1262,10 +1262,10 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<unsigned int, double> shapes;
 
 		nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double, false /*tStrictMaximum*/>(1u, yRotatedFrame.width() - 2u, 1u, yRotatedFrame.height() - 2u, shapes, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
+		shapes = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<unsigned int, double, true>(yFrame.width(), yFrame.height(), shapes, (unsigned int)(nonMaximumSupressionRadius));
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -1277,7 +1277,7 @@ void TestShapeDetector::GradientVarianceBasedDetector::detectShapesModified(cons
 			ocean_assert(x >= 1u && x <= yFrame.width() - 2u && y >= 1u && y <= yFrame.height() - 2u);
 
 			Vector2 offset(0, 0);
-			CV::NonMaximumSuppression<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
+			CV::NonMaximumSuppressionT<double>::determinePrecisePeakLocation2(floatResponseFrameBottomUp.constpixel<double>(x - 1u, y - 1u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 0u), floatResponseFrameBottomUp.constpixel<double>(x - 1u, y + 1u), offset);
 
 			tShapes.emplace_back(Vector2(Scalar(yRotatedFrame.width() - x - 1u), Scalar(yRotatedFrame.height() - y - 1u)) - offset, Vector2(0, -1), Scalar(shapes[n].strength()));
 		}
@@ -1497,7 +1497,7 @@ double TestShapeDetector::GradientVarianceBasedDetector::tShapeDetectorResponse(
 
 		default:
 		{
-			ocean_assert(false && "Invlaid optimization stragegy!");
+			ocean_assert(false && "Invalid optimization strategy!");
 			break;
 		}
 	}
@@ -1526,7 +1526,7 @@ double TestShapeDetector::GradientVarianceBasedDetector::tShapeDetectorResponse(
 
 		default:
 		{
-			ocean_assert(false && "Invlaid optimization stragegy!");
+			ocean_assert(false && "Invalid optimization strategy!");
 			break;
 		}
 	}
@@ -1575,7 +1575,7 @@ double TestShapeDetector::GradientVarianceBasedDetector::tShapeDetectorResponse(
 
 	if (sign == 0)
 	{
-		// we accept any sign, however the sign of horizontal and vertical reponse must be identical
+		// we accept any sign, however the sign of horizontal and vertical response must be identical
 
 		if (signInternalHorizontalResponse != signInternalVerticalResponse)
 		{

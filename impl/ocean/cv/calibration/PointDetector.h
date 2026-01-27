@@ -356,7 +356,7 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		 * @tparam tDarkPoint True, to detect dark points (dark center, bright surrounding); False, to detect bright points
 		 */
 		template <bool tDarkPoint>
-		static void detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppression<uint32_t>& nonMaximumSuppression, Worker* worker = nullptr);
+		static void detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppression, Worker* worker = nullptr);
 
 		/**
 		 * Detects point candidates in a subset of rows (worker function for parallel execution).
@@ -375,7 +375,7 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		 * @tparam tUseMask True, if a mask is used; False, if no mask is used
 		 */
 		template <bool tDarkPoint, bool tUseMask>
-		static void detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPatterns, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppression<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPatterns, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Determines the best matching radius for a detected point by testing smaller point patterns.

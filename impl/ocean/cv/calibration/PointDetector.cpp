@@ -669,7 +669,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& point
 
 		darkPointsDistributionArray.clear();
 
-		CV::NonMaximumSuppression<uint32_t> nonMaximumSuppression(yFrame.width(), yFrame.height());
+		CV::NonMaximumSuppressionT<uint32_t> nonMaximumSuppression(yFrame.width(), yFrame.height());
 
 		const uint8_t* mask = nullptr;
 
@@ -693,7 +693,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& point
 				detectPointCandidates<false>(yFrame.constdata<uint8_t>(), yFrame.paddingElements(), mask, detectionPointPattern, uint8_t(minDifference), maxVariance, nonMaximumSuppression, worker);
 			}
 
-			using StrengthPositions = NonMaximumSuppression<uint32_t>::StrengthPositions<unsigned int, uint32_t>;
+			using StrengthPositions = NonMaximumSuppression::StrengthPositions<unsigned int, uint32_t>;
 			using StrengthPosition = StrengthPositions::value_type;
 
 			StrengthPositions strengthPositions;
@@ -818,7 +818,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& point
 
 
 template <bool tDarkPoint>
-void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppression<uint32_t>& nonMaximumSuppression, Worker* worker)
+void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppression, Worker* worker)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(pointPattern.isValid());
@@ -857,7 +857,7 @@ void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned 
 }
 
 template <bool tDarkPoint, bool tUseMask>
-void PointDetector::detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppression<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
+void PointDetector::detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(pointPattern != nullptr && pointPattern->isValid());

@@ -208,7 +208,7 @@ bool TestNonMaximumSuppression::testSuppressionInFrame(const unsigned int width,
 			const unsigned int subFrameExtraBorderBottom = std::min(subFrameTop + subFrameHeight + 1u, height);
 
 			performanceCreation.start();
-				CV::NonMaximumSuppression<uint8_t> nonMaximumSuppression(width, height, 0u);
+				CV::NonMaximumSuppressionT<uint8_t> nonMaximumSuppression(width, height, 0u);
 				nonMaximumSuppression.addCandidates(yFrame.constdata<uint8_t>(), yFrame.paddingElements(), subFrameExtraBorderLeft, subFrameExtraBorderRight - subFrameExtraBorderLeft, subFrameExtraBorderTop, subFrameExtraBorderBottom - subFrameExtraBorderTop, minimalThreshold, useWorker);
 			performanceCreation.stop();
 
@@ -307,7 +307,7 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 
 		const unsigned int size = RandomI::random(randomGenerator, 1u, 10000u);
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<TCoordinate, TStrength> strengthPositions;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<TCoordinate, TStrength> strengthPositions;
 		strengthPositions.reserve(size);
 
 		while (strengthPositions.size() < size_t(size))
@@ -328,15 +328,15 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 		const bool strictMaximum = RandomI::boolean(randomGenerator);
 
 		Indices32 validIndices;
-		CV::NonMaximumSuppression<double>::StrengthPositions<TCoordinate, TStrength> remainingStrengthPositions;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<TCoordinate, TStrength> remainingStrengthPositions;
 
 		if (strictMaximum)
 		{
-			remainingStrengthPositions = CV::NonMaximumSuppression<double>::suppressNonMaximum<TCoordinate, TStrength, true>(width, height, strengthPositions, radius, &validIndices);
+			remainingStrengthPositions = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<TCoordinate, TStrength, true>(width, height, strengthPositions, radius, &validIndices);
 		}
 		else
 		{
-			remainingStrengthPositions = CV::NonMaximumSuppression<double>::suppressNonMaximum<TCoordinate, TStrength, false>(width, height, strengthPositions, radius, &validIndices);
+			remainingStrengthPositions = CV::NonMaximumSuppressionT<double>::suppressNonMaximum<TCoordinate, TStrength, false>(width, height, strengthPositions, radius, &validIndices);
 		}
 
 		const UnorderedIndexSet32 debugValidIndexSet(validIndices.cbegin(), validIndices.cend());
@@ -346,7 +346,7 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 
 		for (size_t nOuter = 0; nOuter < strengthPositions.size(); ++nOuter)
 		{
-			const CV::NonMaximumSuppression<double>::StrengthPosition<TCoordinate, TStrength>& outer = strengthPositions[nOuter];
+			const CV::NonMaximumSuppressionT<double>::StrengthPosition<TCoordinate, TStrength>& outer = strengthPositions[nOuter];
 
 			for (size_t nInner = 0; nInner < strengthPositions.size(); ++nInner)
 			{
@@ -355,7 +355,7 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 					continue;
 				}
 
-				const CV::NonMaximumSuppression<double>::StrengthPosition<TCoordinate, TStrength>& inner = strengthPositions[nInner];
+				const CV::NonMaximumSuppressionT<double>::StrengthPosition<TCoordinate, TStrength>& inner = strengthPositions[nInner];
 
 				if (outer.sqrDistance(inner) <= sqrRadius)
 				{
@@ -387,7 +387,7 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 			}
 		}
 
-		CV::NonMaximumSuppression<double>::StrengthPositions<TCoordinate, TStrength> testStrengthPositions;
+		CV::NonMaximumSuppressionT<double>::StrengthPositions<TCoordinate, TStrength> testStrengthPositions;
 		testStrengthPositions.reserve(remainingStrengthPositions.size());
 
 		for (size_t n = 0; n < statementsStrengthPositions.size(); ++n)
@@ -417,21 +417,21 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 
 	{
 		T precisePeak = NumericT<T>::minValue();
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(0, 0, 0, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation1(0, 0, 0, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, T(0));
 	}
 
 	{
 		T precisePeak = NumericT<T>::minValue();
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(0, 1, 0, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation1(0, 1, 0, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, T(0));
 	}
 
 	{
 		T precisePeak = NumericT<T>::minValue();
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(1, 2, 0, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation1(1, 2, 0, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_GREATER_EQUAL(validation, precisePeak, T(-0.5));
 		OCEAN_EXPECT_LESS(validation, precisePeak, T(0));
@@ -439,7 +439,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 
 	{
 		T precisePeak = NumericT<T>::minValue();
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(0, 2, 1, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation1(0, 2, 1, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_LESS_EQUAL(validation, precisePeak, T(0.5));
 		OCEAN_EXPECT_GREATER(validation, precisePeak, T(0));
@@ -478,7 +478,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 			}
 
 			T precisePeak = NumericT<T>::minValue();
-			if (CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(values[0], values[1], values[2], precisePeak))
+			if (CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation1(values[0], values[1], values[2], precisePeak))
 			{
 				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(precisePeak, offset, T(0.01)));
 			}
@@ -508,7 +508,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {0, 0, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, VectorT2<T>(0, 0));
 	}
@@ -519,7 +519,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {0, 0, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, VectorT2<T>(0, 0));
 	}
@@ -530,7 +530,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {0, 0, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, VectorT2<T>(0, 0));
 	}
@@ -541,7 +541,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {0, 1, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, VectorT2<T>(0, 0));
 	}
@@ -552,7 +552,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {1, 2, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, VectorT2<T>(0, 0));
 	}
@@ -563,7 +563,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {0, 0, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_EQUAL(validation, precisePeak, VectorT2<T>(0, 0));
 	}
@@ -574,7 +574,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {2, 0, 0};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_GREATER_EQUAL(validation, precisePeak.x(), T(-0.5));
 		OCEAN_EXPECT_LESS(validation, precisePeak.x(), T(0));
@@ -588,7 +588,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 		constexpr T bottomValues[3] = {2, 1, 1};
 
 		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-		const bool result = CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
+		const bool result = CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak);
 		OCEAN_EXPECT_TRUE(validation, result);
 		OCEAN_EXPECT_LESS_EQUAL(validation, precisePeak.x(), T(0.5));
 		OCEAN_EXPECT_GREATER(validation, precisePeak.x(), T(0));
@@ -639,7 +639,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 			}
 
 			VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
-			if (CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(values.data() + 0, values.data() + 3, values.data() + 6, precisePeak))
+			if (CV::NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(values.data() + 0, values.data() + 3, values.data() + 6, precisePeak))
 			{
 				const T distance = precisePeak.distance(offset);
 

@@ -66,7 +66,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Definition of a maximum suppression object holding integer strength parameters.
 		 */
-		using NonMaximumSuppressionVote = NonMaximumSuppression<int32_t>;
+		using NonMaximumSuppressionVote = NonMaximumSuppressionT<int32_t>;
 
 		/**
 		 * This class implements a helper object allowing to determine the precise 2D position of Harris corners.

@@ -781,7 +781,7 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @tparam tCreateResponseFrame True, to create a response frame
 				 */
 				template <bool tSquaredResponse, bool tCreateResponseFrame = false>
-				static void determineTopDownResponsesF(const float* horizontalResponses, const float* verticalResponses, const unsigned int width, const unsigned int height, const int32_t sign, const float minimalThreshold, CV::NonMaximumSuppression<float>& nonMaximumSuppression, Frame* responseFrame = nullptr);
+				static void determineTopDownResponsesF(const float* horizontalResponses, const float* verticalResponses, const unsigned int width, const unsigned int height, const int32_t sign, const float minimalThreshold, CV::NonMaximumSuppressionT<float>& nonMaximumSuppression, Frame* responseFrame = nullptr);
 
 				/**
 				 * Determines the floating-point T-shape responses for the bottom-up direction.
@@ -797,7 +797,7 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @tparam tCreateResponseFrame True, to create a response frame
 				 */
 				template <bool tSquaredResponse, bool tCreateResponseFrame = false>
-				static void determineBottomUpResponsesF(const float* horizontalResponses, const float* verticalResponses, const unsigned int width, const unsigned int height, const int32_t sign, const float minimalThreshold, CV::NonMaximumSuppression<float>& nonMaximumSuppression, Frame* responseFrame = nullptr);
+				static void determineBottomUpResponsesF(const float* horizontalResponses, const float* verticalResponses, const unsigned int width, const unsigned int height, const int32_t sign, const float minimalThreshold, CV::NonMaximumSuppressionT<float>& nonMaximumSuppression, Frame* responseFrame = nullptr);
 
 				/**
 				 * Determines the integer T-shape responses for the top-down and bottom-up direction.
@@ -814,7 +814,7 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 				 * @tparam tCreateResponseFrame True, to create a response frame
 				 */
 				template <bool tCreateResponseFrame = false>
-				static void determineResponsesI(const int32_t* horizontalResponses, const int32_t* verticalResponses, const unsigned int width, const unsigned int height, const int32_t sign, const uint32_t minimalSqrThreshold, CV::NonMaximumSuppression<uint32_t>& nonMaximumSuppressionTopDown, CV::NonMaximumSuppression<uint32_t>& nonMaximumSuppressionBottomUp, Frame* responseFrameTopDown = nullptr, Frame* responseFrameBottomUp = nullptr);
+				static void determineResponsesI(const int32_t* horizontalResponses, const int32_t* verticalResponses, const unsigned int width, const unsigned int height, const int32_t sign, const uint32_t minimalSqrThreshold, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppressionTopDown, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppressionBottomUp, Frame* responseFrameTopDown = nullptr, Frame* responseFrameBottomUp = nullptr);
 
 				/**
 				 * Returns whether the sign of two responses matches the expected sign.

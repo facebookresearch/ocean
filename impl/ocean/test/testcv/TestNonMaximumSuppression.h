@@ -37,7 +37,7 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		/**
 		 * Definition of a location combining a strength parameter.
 		 */
-		using StrengthPosition = CV::NonMaximumSuppression<uint8_t>::StrengthPosition<int, uint8_t>;
+		using StrengthPosition = CV::NonMaximumSuppressionT<uint8_t>::StrengthPosition<int, uint8_t>;
 
 		/**
 		 * Definition of a vector holding locations.
