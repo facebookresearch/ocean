@@ -6,6 +6,10 @@
 @echo off
 setlocal enableDelayedExpansion
 
+@REM Check for required dependencies
+call "%~dp0build_common.bat" :check_build_dependencies
+if %errorlevel% neq 0 exit /b 1
+
 set OCEAN_PLATFORM=windows
 
 @REM Determine the location of the source directory from the location of this script

@@ -4,6 +4,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source "${SCRIPT_DIR}/build_common.sh"
+
 if [ -z "${ANDROID_NDK}" ]; then
   echo "ERROR: Set ANDROID_NDK to the location of your Android NDK installation."
   exit 1
@@ -15,6 +18,9 @@ if [ -z "${JAVA_HOME}" ]; then
 fi
 
 OCEAN_PLATFORM="android"
+
+# Check for required dependencies
+check_build_dependencies
 
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )

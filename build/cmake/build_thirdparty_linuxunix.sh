@@ -4,6 +4,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source "${SCRIPT_DIR}/build_common.sh"
+
 if [[ $(uname -s) == "Darwin" ]]; then
   OCEAN_PLATFORM="macos"
 elif [[ $(uname -s) == "Linux" ]]; then
@@ -14,6 +17,9 @@ else
   echo "ERROR: Unsupported operating system: $(uname -s)" >&2
   exit 1
 fi
+
+# Check for required dependencies
+check_build_dependencies "${OCEAN_PLATFORM}"
 
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )

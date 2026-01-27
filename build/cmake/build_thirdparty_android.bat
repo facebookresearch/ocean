@@ -5,6 +5,10 @@
 
 echo off
 
+@REM Check for required dependencies
+call "%~dp0build_common.bat" :check_build_dependencies
+if %errorlevel% neq 0 exit /b 1
+
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR="%~dp0..\..\build\cmake\third-party"
 

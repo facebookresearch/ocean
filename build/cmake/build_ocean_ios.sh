@@ -4,6 +4,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source "${SCRIPT_DIR}/build_common.sh"
+
 if [[ "$(uname)" != "Darwin" ]]; then
     echo "ERROR: This script can only be used on macOS."
     exit 1
@@ -11,7 +14,8 @@ fi
 
 OCEAN_PLATFORM="ios"
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# Check for required dependencies
+check_build_dependencies "macos"
 
 OCEAN_SOURCE_DIR=$( cd "${SCRIPT_DIR}" && cd ../.. && pwd )
 
