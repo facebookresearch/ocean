@@ -14,6 +14,7 @@ if (MACOS OR IOS)
     find_library(COREMEDIA_LIB CoreMedia)
     find_library(COREVIDEO_LIB CoreVideo)
     find_library(FOUNDATION_LIB Foundation)
+    find_library(VIDEOTOOLBOX_LIB VideoToolbox)
 
     if (MACOS)
         find_library(APPKIT_LIB AppKit)
@@ -57,6 +58,7 @@ if (MACOS OR IOS)
             ${COREMEDIA_LIB}
             ${COREVIDEO_LIB}
             ${FOUNDATION_LIB}
+            ${VIDEOTOOLBOX_LIB}
     )
 
     # Installation
