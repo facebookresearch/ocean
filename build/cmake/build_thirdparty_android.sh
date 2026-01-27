@@ -43,6 +43,8 @@ OTP_ARCHIVE=""
 
 OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibility
 
+OTP_SEQUENTIAL="OFF"  # Default: build configurations in parallel
+
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
 
@@ -93,6 +95,9 @@ display_help()
     echo "  -s | --subdivide : Install each library into its own subdirectory. When enabled,"
     echo "                libraries will be installed to {INSTALL_DIR}/library_name/{lib,include,...}."
     echo "                Default: disabled (flat structure for backward compatibility)"
+    echo ""
+    echo "  --sequential : Build configurations sequentially instead of in parallel."
+    echo "                By default, debug and release builds run concurrently."
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -218,6 +223,10 @@ while [[ $# -gt 0 ]]; do
         OTP_SUBDIVIDE_INSTALL="ON"
         shift # past argument
         ;;
+        --sequential)
+        OTP_SEQUENTIAL="ON"
+        shift # past argument
+        ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
         exit 1
@@ -294,13 +303,48 @@ echo ""
 echo ""
 
 # Build
-for abi in ${OTP_ANDROID_ABIS}; do
-    for build_config in ${OTP_BUILD_CONFIGS}; do
-        for link_type in ${OTP_LINKING_TYPES}; do
-            run_build "${build_config}" "${link_type}" "${abi}" "${OTP_ANDROID_SDK}"
+if [ "${OTP_SEQUENTIAL}" == "ON" ]; then
+    echo "Building configurations sequentially..."
+    echo ""
+    for abi in ${OTP_ANDROID_ABIS}; do
+        for build_config in ${OTP_BUILD_CONFIGS}; do
+            for link_type in ${OTP_LINKING_TYPES}; do
+                run_build "${build_config}" "${link_type}" "${abi}" "${OTP_ANDROID_SDK}"
+            done
         done
     done
-done
+else
+    echo "Building configurations in parallel..."
+    echo ""
+    OTP_FAILED_BUILDS_FILE=$(mktemp)
+    trap "rm -f ${OTP_FAILED_BUILDS_FILE}" EXIT
+
+    declare -a BUILD_PIDS=()
+
+    for abi in ${OTP_ANDROID_ABIS}; do
+        for build_config in ${OTP_BUILD_CONFIGS}; do
+            for link_type in ${OTP_LINKING_TYPES}; do
+                (
+                    run_build "${build_config}" "${link_type}" "${abi}" "${OTP_ANDROID_SDK}"
+                    if [ $? -ne 0 ]; then
+                        echo "${abi} + ${link_type} + ${build_config}" >> "${OTP_FAILED_BUILDS_FILE}"
+                    fi
+                ) &
+                BUILD_PIDS+=($!)
+            done
+        done
+    done
+
+    for pid in "${BUILD_PIDS[@]}"; do
+        wait $pid
+    done
+
+    if [ -f "${OTP_FAILED_BUILDS_FILE}" ]; then
+        while IFS= read -r line; do
+            OTP_FAILED_BUILDS+=("$line")
+        done < "${OTP_FAILED_BUILDS_FILE}"
+    fi
+fi
 
 # Determine if all of the above builds were successful.
 OTP_BUILD_SUCCESSFUL=0

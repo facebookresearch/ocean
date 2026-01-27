@@ -28,7 +28,7 @@ OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
 OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
-OTP_BUILD_CONFIG="release"
+OTP_BUILD_CONFIG="debug,release"
 
 OTP_VALID_LINKING_TYPES="static,shared"
 OTP_LINKING_TYPES="static"
@@ -36,6 +36,8 @@ OTP_LINKING_TYPES="static"
 OTP_ARCHIVE=""
 
 OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibility
+
+OTP_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
@@ -78,6 +80,9 @@ display_help()
     echo "  -s | --subdivide : Install each library into its own subdirectory. When enabled,"
     echo "                libraries will be installed to {INSTALL_DIR}/library_name/{lib,include,...}."
     echo "                Default: disabled (flat structure for backward compatibility)"
+    echo ""
+    echo "  --sequential : Build configurations sequentially instead of in parallel."
+    echo "                By default, debug and release builds run concurrently."
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -185,6 +190,10 @@ while [[ $# -gt 0 ]]; do
         OTP_SUBDIVIDE_INSTALL="ON"
         shift # past argument
         ;;
+        --sequential)
+        OTP_SEQUENTIAL="ON"
+        shift # past argument
+        ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
         exit 1
@@ -246,11 +255,50 @@ echo ""
 echo ""
 
 # Build
-for build_config in ${OTP_BUILD_CONFIG}; do
-    for link_type in ${OTP_LINKING_TYPES}; do
-        run_build "${build_config}" "${link_type}"
+if [ "${OTP_SEQUENTIAL}" == "ON" ]; then
+    echo "Building configurations sequentially..."
+    echo ""
+    for build_config in ${OTP_BUILD_CONFIG}; do
+        for link_type in ${OTP_LINKING_TYPES}; do
+            run_build "${build_config}" "${link_type}"
+        done
     done
-done
+else
+    echo "Building configurations in parallel..."
+    echo ""
+    # Create temp file to track failed builds across subprocesses
+    OTP_FAILED_BUILDS_FILE=$(mktemp)
+    trap "rm -f ${OTP_FAILED_BUILDS_FILE}" EXIT
+
+    # Array to store background job PIDs
+    declare -a BUILD_PIDS=()
+    declare -a BUILD_CONFIGS=()
+
+    for build_config in ${OTP_BUILD_CONFIG}; do
+        for link_type in ${OTP_LINKING_TYPES}; do
+            (
+                run_build "${build_config}" "${link_type}"
+                if [ $? -ne 0 ]; then
+                    echo "${link_type} + ${build_config}" >> "${OTP_FAILED_BUILDS_FILE}"
+                fi
+            ) &
+            BUILD_PIDS+=($!)
+            BUILD_CONFIGS+=("${build_config} + ${link_type}")
+        done
+    done
+
+    # Wait for all background jobs to complete
+    for pid in "${BUILD_PIDS[@]}"; do
+        wait $pid
+    done
+
+    # Read failed builds from temp file
+    if [ -f "${OTP_FAILED_BUILDS_FILE}" ]; then
+        while IFS= read -r line; do
+            OTP_FAILED_BUILDS+=("$line")
+        done < "${OTP_FAILED_BUILDS_FILE}"
+    fi
+fi
 
 # Determine if all of the above builds were successful.
 OTP_BUILD_SUCCESSFUL=0

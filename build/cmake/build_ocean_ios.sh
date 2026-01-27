@@ -23,12 +23,14 @@ OCEAN_BUILD_DIR="${PWD}/ocean_build"
 OCEAN_INSTALL_DIR="${PWD}/ocean_install"
 
 OCEAN_VALID_BUILD_CONFIGS="debug,release"
-OCEAN_BUILD_CONFIGS="release"
+OCEAN_BUILD_CONFIGS="debug,release"
 
 OCEAN_VALID_LINKING_TYPES="static,shared"
 OCEAN_LINKING_TYPES="static"
 
 OCEAN_THIRD_PARTY_DIR=""
+
+OCEAN_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
 # Collection of builds that have errors that will be listed at the end of the script
 OCEAN_FAILED_BUILDS=()
@@ -81,6 +83,9 @@ display_help()
     echo "  -t | --third-party : The location where the third-party libraries of Ocean are located, if they"
     echo "                were built manually. Otherwise standard CMake locations will be search for"
     echo "                compatible third-party libraries."
+    echo ""
+    echo "  --sequential : Build configurations sequentially instead of in parallel."
+    echo "                By default, debug and release builds run concurrently."
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -202,6 +207,10 @@ while [[ $# -gt 0 ]]; do
         shift # past argument
         shift # past value
         ;;
+        --sequential)
+        OCEAN_SEQUENTIAL="ON"
+        shift # past argument
+        ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
         exit 1
@@ -275,11 +284,44 @@ echo ""
 echo ""
 
 # Build
-for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do
-    for link_type in ${OCEAN_LINKING_TYPES[@]}; do
-        run_build "${build_config}" "${link_type}"
+if [ "${OCEAN_SEQUENTIAL}" == "ON" ]; then
+    echo "Building configurations sequentially..."
+    echo ""
+    for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do
+        for link_type in ${OCEAN_LINKING_TYPES[@]}; do
+            run_build "${build_config}" "${link_type}"
+        done
     done
-done
+else
+    echo "Building configurations in parallel..."
+    echo ""
+    OCEAN_FAILED_BUILDS_FILE=$(mktemp)
+    trap "rm -f ${OCEAN_FAILED_BUILDS_FILE}" EXIT
+
+    declare -a BUILD_PIDS=()
+
+    for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do
+        for link_type in ${OCEAN_LINKING_TYPES[@]}; do
+            (
+                run_build "${build_config}" "${link_type}"
+                if [ $? -ne 0 ]; then
+                    echo "${link_type}_${build_config}" >> "${OCEAN_FAILED_BUILDS_FILE}"
+                fi
+            ) &
+            BUILD_PIDS+=($!)
+        done
+    done
+
+    for pid in "${BUILD_PIDS[@]}"; do
+        wait $pid
+    done
+
+    if [ -f "${OCEAN_FAILED_BUILDS_FILE}" ]; then
+        while IFS= read -r line; do
+            OCEAN_FAILED_BUILDS+=("$line")
+        done < "${OCEAN_FAILED_BUILDS_FILE}"
+    fi
+fi
 
 # Determine if all of the above builds were successful.
 OCEAN_BUILD_SUCCESSFUL=0
@@ -292,7 +334,7 @@ if [ ${OCEAN_BUILD_SUCCESSFUL} -eq 1 ]; then
     echo "All builds were successful."
 else
     echo "Some builds have failed." >&2
-    for config in "${OTP_FAILED_BUILDS[@]}"; do
+    for config in "${OCEAN_FAILED_BUILDS[@]}"; do
         echo "- $config" >&2
     done
 
