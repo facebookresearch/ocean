@@ -25,11 +25,45 @@ git clone https://github.com/facebookresearch/ocean.git
 cd ocean
 ```
 
-Set the environment variable `OCEAN_DEVELOPMENT_PATH` to the location of the cloned repository. This variable is used by the build scripts:
+Set the environment variable `OCEAN_DEVELOPMENT_PATH` to the location of the cloned repository. This variable is used by the build scripts.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="os">
+<TabItem value="linux-macos" label="Linux / macOS">
 
 ```bash
-export OCEAN_DEVELOPMENT_PATH="${HOME}/ocean"
+# set the current directory as the development path (current session only)
+export OCEAN_DEVELOPMENT_PATH="$(pwd)"
+
+# or set a specific path (current session only)
+export OCEAN_DEVELOPMENT_PATH=/path/to/ocean
 ```
+
+:::note
+`export` only applies to the current shell session. To make the variable permanent, add the export command to your shell configuration file (e.g., `~/.bashrc`, `~/.zshrc`, or `~/.profile`).
+:::
+
+</TabItem>
+<TabItem value="windows" label="Windows">
+
+```batch
+:: set a specific path (current session only)
+set OCEAN_DEVELOPMENT_PATH=C:\path\to\ocean
+
+:: set a specific path (persisted to registry for current user)
+setx OCEAN_DEVELOPMENT_PATH "C:\path\to\ocean"
+```
+
+:::note
+`set` only applies to the current Command Prompt session. Use `setx` to set the variable permanently. After using `setx`, you'll need to open a new terminal for the change to take effect.
+
+Alternatively, you can set environment variables through the Windows UI: **Settings** → **System** → **About** → **Advanced system settings** → **Environment Variables**.
+:::
+
+</TabItem>
+</Tabs>
 
 ## Build Overview
 
