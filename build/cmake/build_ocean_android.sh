@@ -40,7 +40,7 @@ OCEAN_ANDROID_SDK="android-32"
 
 OCEAN_ENABLE_QUEST=""
 
-OCEAN_THIRD_PARTY_DIR=""
+OCEAN_THIRD_PARTY_DIR="${PWD}/ocean_install_thirdparty"
 
 OCEAN_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
@@ -252,17 +252,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [ "${OCEAN_THIRD_PARTY_DIR}" == "" ]; then
-    echo ""
-    echo ""
-    echo "WARNING: No location for the Ocean third-party libraries was specified. If this wasn't intentional make sure to build the third-party libraries first. Please refer to the build instructions for details." >&2
-    echo ""
-    echo ""
-else
-    if [ ! -d "${OCEAN_THIRD_PARTY_DIR}" ]; then
-        echo "ERROR: The following directory for the third-party libraries cannot be found: ${OCEAN_THIRD_PARTY_DIR} - did you run the script to build the third-party libraries?" >&2
-        exit 1
-    fi
+if [ ! -d "${OCEAN_THIRD_PARTY_DIR}" ]; then
+    echo "ERROR: The following directory for the third-party libraries cannot be found: ${OCEAN_THIRD_PARTY_DIR}" >&2
+    echo "       Did you run the script to build the third-party libraries first?" >&2
+    echo "       You can specify a custom location using the -t parameter." >&2
+    exit 1
 fi
 
 OCEAN_BUILD_DIR=$( cd -- "$( dirname -- "${OCEAN_BUILD_DIR}" )" &> /dev/null && pwd )/"$(basename "${OCEAN_BUILD_DIR}")"
