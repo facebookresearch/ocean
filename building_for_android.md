@@ -71,15 +71,23 @@ On Windows, define them manually:
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build scripts, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh) (on Windows: [`build/cmake/build_thirdparty_android.bat`](build/cmake/build_thirdparty_android.bat)). Simply comment out all build configurations that are not required for your project.  See below for an example configuration that is sufficient for building debug and release build of Android packages if targeting 64-bit ("arm64-v8a" ABI) and 32-bit ("armeabi-v7a" ABI) ARM hardware:
+The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh) (on Windows: [`build/cmake/build_thirdparty_android.bat`](build/cmake/build_thirdparty_android.bat)). By default, this will build all third-party libraries in both debug and release configurations with static linking for the `arm64-v8a` ABI.
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
+./build/cmake/build_thirdparty_android.sh
+```
 
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+
+The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `--abi` for Android ABI, `-b` for build directory, and `-i` for installation directory. For example:
+
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty_android/static_Debug` and `.../static_Release`.
+Run `./build/cmake/build_thirdparty_android.sh --help` to see all available options.
 
 
 ## 3 Using Ocean in external Android projects
@@ -88,16 +96,23 @@ This section provides an example of how to build the Ocean libraries so that the
 
 After that you have following options:
 
-If you already have a complete setup for an Android project and just need the header files and compiles libraries of Ocean, you
-can build it as follows:
+If you already have a complete setup for an Android project and just need the header files and compiled libraries of Ocean, you can build it as follows. By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
+./build/cmake/build_ocean_android.sh
+```
 
+Once the build is complete, the compiled binaries can be found in `ocean_install/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+
+The build script can be customized using command-line parameters. For example:
+
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Also as before, we're only building for the Android ABI, `arm64-v8a`. Change this as required. Once the build is complete, the compiled binaries can be found in `${HOME}/build_ocean_android/static_Debug` and `.../static_Release`.
+Run `./build/cmake/build_ocean_android.sh --help` to see all available options.
 
 For projects that use Gradle as their main build system, they can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
 

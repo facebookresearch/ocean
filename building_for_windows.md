@@ -13,35 +13,40 @@ This document describes the process to build Ocean for Windows. It covers:
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_windows.bat`](build/cmake/build_thirdparty_windows.bat). By default, this will build all third-party libraries in both debug and release configurations. Each of these will be built with static as well as dynamic linking. To build a specific configuration, use the parameters `-config BUILD_TYPE` and `-link LINKING_TYPE`. For example to build only the static debug configurations, run:
+The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_windows.bat`](build/cmake/build_thirdparty_windows.bat). By default, this will build all third-party libraries in both debug and release configurations with static linking.
 
 ```
 cd /D %OCEAN_DEVELOPMENT_PATH%
-.\build\cmake\build_thirdparty_windows.bat -config debug -link static
+.\build\cmake\build_thirdparty_windows.bat
 ```
 
-The installation location will be shown in the logs of the build script and defaults to a directory `ocean_install_thirdparty` in the current directory. It is advisable to place build and install directories as close to the root of a filesystem as possible, due to Windows limitations on path lengths. Build directories in particular can be very deep.
+Once the build is complete, there will be one subdirectory per build config within the installation directory `ocean_install_thirdparty` in the current directory.
 
-Methods for specifying the build and install directories, in descending order of preference are:
-1. Using `-build X:\build\path` and/or `-install X:\install\path`
-2. Changing hard-coded defaults `DEFAULT_BUILD_PATH` and `DEFAULT_INSTALL_PATH` in the build script files
-
-For example:
+The build script can be customized using command-line parameters. Use `-config` to specify build configurations, `-link` for linking type, `-build` for build directory, and `-install` for installation directory. For example:
 
 ```
 cd /D %OCEAN_DEVELOPMENT_PATH%
-.\build\cmake\build_thirdparty_windows.bat -build C:\build_oceanTP -install C:\install_oceanTP
+.\build\cmake\build_thirdparty_windows.bat -config debug,release -link static -build C:\build_oceanTP -install C:\install_oceanTP
 ```
 
-Otherwise the code will be built in `ocean_build_thirdparty` in the current directory. Once the build is finished, this build directory can be discarded.
+It is advisable to place build and install directories as close to the root of a filesystem as possible, due to Windows limitations on path lengths. Build directories in particular can be very deep.
 
-Under the installation and build directories, there will be one subdirectory per build config.
+Run `.\build\cmake\build_thirdparty_windows.bat -help` to see all available options.
 
 ## 3 Building Ocean
 
-The provided build script [`build/cmake/build_ocean_windows.bat`](build/cmake/build_ocean_windows.bat) will build all Ocean libraries and apps. It supports the same command-line configuration options (where applicable) as the third-party library build script. If the third-party dependencies were installed somewhere other than `ocean_install_thirdparty` in the current directory the Ocean build script needs to be informed, using the `-third-party` option, where to find them. For example to build only the static debug configurations, run:
+The easiest way to build all Ocean libraries and apps is by using the provided build script. By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
 cd /D %OCEAN_DEVELOPMENT_PATH%
-.\build\cmake\build_ocean_windows.bat -config debug -link static -third-party X:\path\to\third-party\install\dir
+.\build\cmake\build_ocean_windows.bat
 ```
+
+The build script can be customized using command-line parameters. For example:
+
+```
+cd /D %OCEAN_DEVELOPMENT_PATH%
+.\build\cmake\build_ocean_windows.bat -config debug,release -link static -third-party C:\install_oceanTP
+```
+
+Run `.\build\cmake\build_ocean_windows.bat -help` to see all available options.

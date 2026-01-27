@@ -25,27 +25,45 @@ As with the desktop use case, this process consists of two steps:
 1. Building the required third-party libraries
 2. Building the Ocean libraries
 
-The easiest way to build the third-party libraries is by using the provided build scripts. In a terminal, run:
+The easiest way to build the third-party libraries is by using the provided build script. By default, this will build all third-party libraries in both debug and release configurations with static linking.
+
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
+./build/cmake/build_thirdparty_ios.sh
+```
+
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/ios/OS64_static_debug` and `.../ios/OS64_static_release`.
+
+The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_ios.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty/static_Debug` and `.../static_Release`.
+Run `./build/cmake/build_thirdparty_ios.sh --help` to see all available options.
 
 ## 3 Using Ocean in external XCode projects
 
 This section provides an example of how to build the Ocean libraries for the case that you plan to integrate them into an existing iOS project.
 
-Make sure that the third-party libraries have been built and installed as described above.
+Make sure that the third-party libraries have been built and installed as described above. By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
+./build/cmake/build_ocean_ios.sh
+```
+
+Once the build is complete, the compiled binaries can be found in `ocean_install/ios/OS64_static_debug` and `.../ios/OS64_static_release`.
+
+The build script can be customized using command-line parameters. For example:
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_ocean_ios.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean/static_Debug` and `.../static_Release`.
+Run `./build/cmake/build_ocean_ios.sh --help` to see all available options.
 
 From here, the Ocean binaries and include files can be used in any other project. Details on how to do this will be left. Of check out this guide on how to [include the CMake project of Ocean in an XCode project](https://blog.tomtasche.at/2019/05/how-to-include-cmake-project-in-xcode.html).
 
@@ -67,7 +85,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios_OS64_static_Debug" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/OS64_static_debug" \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```
@@ -84,7 +102,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios_OS64_static_Release" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/OS64_static_release" \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```

@@ -49,24 +49,30 @@ While this SDK is optional some of the Ocean demo apps for Quest require this se
 
 ## 2 Building the third-party libraries
 
-Please refer to the builds steps in the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest only the following build parameters are required:
-
-* Android ABI: `arm64-v8a`
-* Android SDK: `android-32`
-* Linking type: `static`
-* Build config: `debug` and/or `release`
-
-The following is a possible example build command:
+Please refer to the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest, the default build parameters are sufficient:
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
+./build/cmake/build_thirdparty_android.sh
+```
 
+This will build the third-party libraries with the following default settings which are compatible with Quest:
+* Android ABI: `arm64-v8a`
+* Linking type: `static`
+* Build config: `debug` and `release`
+
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+
+The build script can be customized if needed. For example, to specify a different Android SDK version:
+
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a --sdk android-32
 ```
 
-Once the script completes, all binaries and include files of the third-party libraries will have been installed into `${HOME}/install_ocean_thirdparty/android_${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_TYPE}`.
+Run `./build/cmake/build_thirdparty_android.sh --help` to see all available options.
 
-**Note:** on a Windows build host, the binaries and include files the third-party libraries will be installed into `C:\and\...`.  This is required due to Windows imposing a maximum path length. Exceeding this limit will result in build errors, for example errors about missing files.
+**Note:** on a Windows build host, the binaries and include files the third-party libraries will be installed into `C:\and\...`. This is required due to Windows imposing a maximum path length. Exceeding this limit will result in build errors, for example errors about missing files.
 ## 3 Building Quest demo apps that come with Ocean
 
 Please refer to the builds steps in the [instructions for Android](building_for_android.md#4-building-the-ocean-android-demo-test-apps) for details about building Ocean Android apps with Gradle.
