@@ -132,8 +132,10 @@ function run_build {
 
     # Convert the name of the build mode to the CMake notation.
     if [[ ${BUILD_CONFIG} == "debug" ]]; then
+        BUILD_CONFIG_LOWER="debug"
         BUILD_CONFIG="Debug"
     elif [[ ${BUILD_CONFIG} == "release" ]]; then
+        BUILD_CONFIG_LOWER="release"
         BUILD_CONFIG="Release"
     else
         echo "ERROR: Invalid value: BUILD_CONFIG=${BUILD_CONFIG}" >&2
@@ -151,8 +153,8 @@ function run_build {
     fi
 
     # Specific build and installation directory for the current build config
-    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
-    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     echo ""
     echo ""

@@ -92,8 +92,10 @@ for %%c in (!-config!) do (
 
   if /I %%c==debug (
     set BUILD_TYPE=Debug
+    set BUILD_TYPE_LOWER=debug
   ) else if /I %%c==release (
     set BUILD_TYPE=Release
+    set BUILD_TYPE_LOWER=release
   ) else (
     echo Invalid build config %%c
     exit /b
@@ -102,10 +104,10 @@ for %%c in (!-config!) do (
   for %%l in (!-link!) do (
     if /I %%l==static (
       set BUILD_SHARED_LIBS=OFF
-      set bibase=%OCEAN_PLATFORM%\static_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%\static_!BUILD_TYPE_LOWER!
     ) else if /I %%l==shared (
       set BUILD_SHARED_LIBS=ON
-      set bibase=%OCEAN_PLATFORM%\shared_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%\shared_!BUILD_TYPE_LOWER!
     ) else (
       echo Invalid link mode %%l
       exit /b

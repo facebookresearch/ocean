@@ -97,8 +97,10 @@ function run_build {
 
     # Convert the name of the build mode to the CMake notation.
     if [[ ${BUILD_CONFIG} == "debug" ]]; then
+        BUILD_CONFIG_LOWER="debug"
         BUILD_CONFIG="Debug"
     elif [[ ${BUILD_CONFIG} == "release" ]]; then
+        BUILD_CONFIG_LOWER="release"
         BUILD_CONFIG="Release"
     else
         echo "ERROR: Invalid value: BUILD_CONFIG=${BUILD_CONFIG}" >&2
@@ -115,8 +117,8 @@ function run_build {
         exit 1
     fi
 
-    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
-    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     echo " "
     echo "BUILD_CONFIG: ${BUILD_CONFIG}"
@@ -140,7 +142,7 @@ function run_build {
 
     if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
         # This must match the INSTALL_DIR from ./build_thirdparty_ios.sh
-        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
         echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"
         echo " "
