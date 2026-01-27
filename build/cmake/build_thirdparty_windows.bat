@@ -109,10 +109,10 @@ for %%c in (!-config!) do (
   for %%l in (!-link!) do (
     if /I %%l==static (
       set BUILD_SHARED_LIBS=OFF
-      set bibase=%OCEAN_PLATFORM%_static_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%\static_!BUILD_TYPE!
     ) else if /I %%l==shared (
       set BUILD_SHARED_LIBS=ON
-      set bibase=%OCEAN_PLATFORM%_shared_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%\shared_!BUILD_TYPE!
     ) else (
       echo Invalid link mode %%l
       exit /b

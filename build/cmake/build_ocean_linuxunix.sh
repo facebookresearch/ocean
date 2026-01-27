@@ -109,8 +109,8 @@ function run_build {
         exit 1
     fi
 
-    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
-    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo " "
     echo "BUILD_CONFIG: ${BUILD_CONFIG}"
@@ -132,7 +132,7 @@ function run_build {
 
     if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
         # This must match the INSTALL_DIR from ./build_thirdparty_linuxunix.sh
-        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG}"
 
         echo " "
         echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"
