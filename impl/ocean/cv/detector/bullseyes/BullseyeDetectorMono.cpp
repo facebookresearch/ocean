@@ -955,6 +955,130 @@ Vector2 BullseyeDetectorMono::computeTransitionPointOnRay(const VectorT2<unsigne
 	return center + rayDirection * interpolatedDistance;
 }
 
+bool BullseyeDetectorMono::castHalfRay(const uint8_t* yFrameData, const unsigned int yFrameWidth, const unsigned int yFrameHeight, const unsigned int yFrameStrideElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const Scalar maxSearchRadius, const uint8_t centerIntensity, const uint8_t grayThreshold, HalfRay& ray)
+{
+	// TODO ocean_assert(...)
+
+	const Scalar maxSqrSearchRadius = maxSearchRadius * maxSearchRadius;
+
+	ray = HalfRay();
+	ray.angle = angle;
+
+	const Scalar cosAngle = Numeric::cos(angle);
+	const Scalar sinAngle = Numeric::sin(angle);
+
+	// Center and ray direction for direct distance interpolation.
+	//
+	// Problem: Bresenham's line algorithm steps along the "major axis" (the axis with
+	// greater displacement) one pixel at a time. For near-vertical rays (e.g., 67.5°,
+	// 90°, 112.5°), the Y-axis is the major axis, so the first step is always in the
+	// Y direction. When the bullseye center is at or near integer pixel coordinates,
+	// multiple rays at different angles will step to the same first pixel, causing
+	// their first transition points (r0) to be incorrectly computed at identical
+	// locations despite having different angular directions.
+	//
+	// Solution: Instead of computing a 2D subpixel point via linear interpolation
+	// between Bresenham pixels and then projecting onto the ray, we directly interpolate
+	// the distance along the ray. For each Bresenham pixel, we compute its parametric
+	// distance along the ray (via dot product with the ray direction), then interpolate
+	// between these distances based on intensity. This ensures the transition point
+	// lies exactly on the ray at the correct distance from center.
+	const Vector2 center{Scalar(xCenter), Scalar(yCenter)};
+	const Vector2 rayDirection{cosAngle, sinAngle};
+
+	const int xStart = int(xCenter);
+	const int yStart = int(yCenter);
+	const int xEnd = int(Scalar(xCenter) + cosAngle * maxSearchRadius + Scalar(0.5));
+	const int yEnd = int(Scalar(yCenter) + sinAngle * maxSearchRadius + Scalar(0.5));
+
+	CV::Bresenham bresenham(xStart, yStart, xEnd, yEnd);
+	if (!bresenham.isValid())
+	{
+		return false;
+	}
+
+	enum class State : unsigned int
+	{
+		Center = 0u,
+		Ring0,
+		Ring1,
+		Done
+	};
+
+	State state = State::Center;
+	int xCurrent = xStart;
+	int yCurrent = yStart;
+
+	VectorT2<unsigned int> lastPointInside((unsigned int)xStart, (unsigned int)yStart);
+	uint8_t lastIntensityInside = centerIntensity;
+
+	while (state < State::Done)
+	{
+		int xNext = xCurrent;
+		int yNext = yCurrent;
+
+		bresenham.findNext(xNext, yNext);
+
+		if (xNext < 0 || xNext >= int(yFrameWidth) || yNext < 0 || yNext >= int(yFrameHeight))
+		{
+			break;
+		}
+
+		const Scalar dx = Scalar(xNext) - Scalar(xCenter);
+		const Scalar dy = Scalar(yNext) - Scalar(yCenter);
+		if (dx * dx + dy * dy > maxSqrSearchRadius)
+		{
+			break;
+		}
+
+		const VectorT2<unsigned int> nextPoint((unsigned int)xNext, (unsigned int)yNext);
+		const uint8_t* nextPixel = yFrameData + yNext * yFrameStrideElements + xNext;
+		const uint8_t nextIntensity = *nextPixel;
+		const bool nextIsBlack = isBlackPixel(nextPixel, grayThreshold);
+
+		if (state == State::Center)
+		{
+			if (!nextIsBlack)
+			{
+				ray.transitionPoints[0] = computeTransitionPointOnRay(lastPointInside, nextPoint, lastIntensityInside, nextIntensity, grayThreshold, center, rayDirection);
+				state = State::Ring0;
+			}
+
+			lastPointInside = nextPoint;
+			lastIntensityInside = nextIntensity;
+		}
+		else if (state == State::Ring0)
+		{
+			if (nextIsBlack)
+			{
+				ray.transitionPoints[1] = computeTransitionPointOnRay(lastPointInside, nextPoint, lastIntensityInside, nextIntensity, grayThreshold, center, rayDirection);
+				state = State::Ring1;
+			}
+
+			lastPointInside = nextPoint;
+			lastIntensityInside = nextIntensity;
+		}
+		else if (state == State::Ring1)
+		{
+			if (!nextIsBlack)
+			{
+				ray.transitionPoints[2] = computeTransitionPointOnRay(lastPointInside, nextPoint, lastIntensityInside, nextIntensity, grayThreshold, center, rayDirection);
+				state = State::Done;
+			}
+			else
+			{
+				lastPointInside = nextPoint;
+				lastIntensityInside = nextIntensity;
+			}
+		}
+
+		xCurrent = xNext;
+		yCurrent = yNext;
+	}
+
+	return state == State::Done;
+};
+
 Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
 {
 	ocean_assert(!values.empty());

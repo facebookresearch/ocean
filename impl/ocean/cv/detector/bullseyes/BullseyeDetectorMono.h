@@ -333,6 +333,25 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static Vector2 computeTransitionPointOnRay(const VectorT2<unsigned int>& insidePoint, const VectorT2<unsigned int>& outsidePoint, const uint8_t insideIntensity, const uint8_t outsideIntensity, const unsigned int threshold, const Vector2& center, const Vector2& rayDirection);
 
 		/**
+		 * Casts a half-ray from the bullseye center and finds transition points.
+		 * Uses Bresenham's line algorithm to step through pixels and detects the three
+		 * threshold crossings: center-to-ring0, ring0-to-ring1, and ring1-to-background.
+		 * @param yFrameData The 8-bit grayscale frame data, must be valid
+		 * @param yFrameWidth The width of the frame in pixels
+		 * @param yFrameHeight The height of the frame in pixels
+		 * @param yFrameStrideElements The stride of the frame in elements
+		 * @param xCenter The horizontal center location of the bullseye, in pixels
+		 * @param yCenter The vertical center location of the bullseye, in pixels
+		 * @param angle The angle of the ray in radians, with range [0, 2*PI)
+		 * @param maxSearchRadius The maximum search radius in pixels
+		 * @param centerIntensity The intensity at the center pixel
+		 * @param grayThreshold The threshold separating dark from bright pixels
+		 * @param ray The resulting half-ray with transition points
+		 * @return True if all three transition points were found
+		 */
+		static bool castHalfRay(const uint8_t* yFrameData, const unsigned int yFrameWidth, const unsigned int yFrameHeight, const unsigned int yFrameStrideElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const Scalar maxSearchRadius, const uint8_t centerIntensity, const uint8_t grayThreshold, HalfRay& ray);
+
+		/**
 		 * Computes the arithmetic mean of a vector of scalar values.
 		 * @param values The scalar values, must not be empty
 		 * @return The arithmetic mean
