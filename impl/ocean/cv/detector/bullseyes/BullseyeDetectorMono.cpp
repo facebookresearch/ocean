@@ -892,6 +892,69 @@ bool BullseyeDetectorMono::isWhitePixel(const uint8_t* pixel, const uint8_t thre
 	return *pixel >= threshold;
 }
 
+Vector2 BullseyeDetectorMono::computeSubpixelTransition(const VectorT2<unsigned int>& lastPointInside, const VectorT2<unsigned int>& firstPointOutside, uint8_t insideIntensity, uint8_t outsideIntensity, const unsigned int threshold)
+{
+	ocean_assert(threshold < 256u);
+
+	const int intensityDifference = int(outsideIntensity) - int(insideIntensity);
+	if (intensityDifference == 0)
+	{
+		return Vector2((Scalar(lastPointInside.x()) + Scalar(firstPointOutside.x())) * Scalar(0.5), (Scalar(lastPointInside.y()) + Scalar(firstPointOutside.y())) * Scalar(0.5));
+	}
+
+	const Scalar interpolationScale = Scalar(int(outsideIntensity) - int(threshold)) / Scalar(intensityDifference);
+	ocean_assert(Numeric::isInsideRange(Scalar(0), interpolationScale, Scalar(1)));
+
+	const Scalar x = Scalar(firstPointOutside.x()) + (Scalar(lastPointInside.x()) - Scalar(firstPointOutside.x())) * interpolationScale;
+	const Scalar y = Scalar(firstPointOutside.y()) + (Scalar(lastPointInside.y()) - Scalar(firstPointOutside.y())) * interpolationScale;
+	ocean_assert(x > Numeric::minValue() && x < Numeric::maxValue());
+	ocean_assert(y > Numeric::minValue() && y < Numeric::maxValue());
+
+	ocean_assert(!Numeric::isInf(x));
+	ocean_assert(!Numeric::isNan(x));
+
+	ocean_assert(!Numeric::isInf(y));
+	ocean_assert(!Numeric::isNan(y));
+
+	return Vector2(x, y);
+}
+
+Scalar BullseyeDetectorMono::computeIntensityInterpolationFactor(const uint8_t insideIntensity, const uint8_t outsideIntensity, const unsigned int threshold)
+{
+	ocean_assert(threshold < 256u);
+
+	const int intensityDifference = int(outsideIntensity) - int(insideIntensity);
+
+	if (intensityDifference == 0)
+	{
+		return Scalar(0.5);
+	}
+
+	const Scalar t = Scalar(int(threshold) - int(insideIntensity)) / Scalar(intensityDifference);
+
+	// Clamp to [0, 1] for safety
+	return std::max(Scalar(0), std::min(Scalar(1), t));
+}
+
+Vector2 BullseyeDetectorMono::computeTransitionPointOnRay(const VectorT2<unsigned int>& insidePoint, const VectorT2<unsigned int>& outsidePoint, const uint8_t insideIntensity, const uint8_t outsideIntensity, const unsigned int threshold, const Vector2& center, const Vector2& rayDirection)
+{
+	ocean_assert(rayDirection.isUnit());
+
+	// Compute the parametric distance along the ray for each Bresenham pixel
+	const Vector2 insidePointF(Scalar(insidePoint.x()), Scalar(insidePoint.y()));
+	const Vector2 outsidePointF(Scalar(outsidePoint.x()), Scalar(outsidePoint.y()));
+
+	const Scalar distanceInside = (insidePointF - center) * rayDirection;  // dot product
+	const Scalar distanceOutside = (outsidePointF - center) * rayDirection;
+
+	// Interpolate the distance based on intensity
+	const Scalar t = computeIntensityInterpolationFactor(insideIntensity, outsideIntensity, threshold);
+	const Scalar interpolatedDistance = distanceInside + (distanceOutside - distanceInside) * t;
+
+	// Reconstruct the 2D point exactly on the ray
+	return center + rayDirection * interpolatedDistance;
+}
+
 } // namespace Bullseyes
 
 } // namespace Detector

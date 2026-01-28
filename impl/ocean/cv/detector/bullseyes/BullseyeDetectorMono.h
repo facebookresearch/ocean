@@ -291,6 +291,46 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		 * @return True if the pixel intensity is at or above the threshold
 		 */
 		static bool isWhitePixel(const uint8_t* pixel, const uint8_t threshold);
+
+		/**
+		 * Computes the subpixel transition point between two integer pixels using intensity interpolation.
+		 * @param lastPointInside The last pixel inside the transition region
+		 * @param firstPointOutside The first pixel outside the transition region
+		 * @param insideIntensity The intensity at the inside point
+		 * @param outsideIntensity The intensity at the outside point
+		 * @param threshold The intensity threshold being crossed, with range [0, 255]
+		 * @return The interpolated subpixel transition point
+		 */
+		static Vector2 computeSubpixelTransition(const VectorT2<unsigned int>& lastPointInside, const VectorT2<unsigned int>& firstPointOutside, uint8_t insideIntensity, uint8_t outsideIntensity, const unsigned int threshold);
+
+		/**
+		 * Computes the interpolation factor for a threshold crossing between two intensity values.
+		 * @param insideIntensity The intensity at the inside point
+		 * @param outsideIntensity The intensity at the outside point
+		 * @param threshold The intensity threshold being crossed, with range [0, 255]
+		 * @return The interpolation factor in range [0, 1], where 0 means at inside point and 1 means at outside point
+		 */
+		static Scalar computeIntensityInterpolationFactor(const uint8_t insideIntensity, const uint8_t outsideIntensity, const unsigned int threshold);
+
+		/**
+		 * Computes the transition point along a ray using direct distance interpolation.
+		 *
+		 * Instead of computing a 2D subpixel point and projecting it onto the ray, this function
+		 * directly interpolates the distance along the ray direction. This is mathematically
+		 * equivalent but conceptually cleaner: we compute the ray distance for each Bresenham
+		 * pixel and interpolate based on intensity, then reconstruct the 2D point from the
+		 * interpolated distance.
+		 *
+		 * @param insidePoint The last Bresenham pixel inside the current region
+		 * @param outsidePoint The first Bresenham pixel outside the current region
+		 * @param insideIntensity The intensity at the inside point
+		 * @param outsideIntensity The intensity at the outside point
+		 * @param threshold The intensity threshold being crossed, with range [0, 255]
+		 * @param center The center of the bullseye (ray origin)
+		 * @param rayDirection The unit direction vector of the ray
+		 * @return The transition point lying exactly on the ray at the interpolated distance from center
+		 */
+		static Vector2 computeTransitionPointOnRay(const VectorT2<unsigned int>& insidePoint, const VectorT2<unsigned int>& outsidePoint, const uint8_t insideIntensity, const uint8_t outsideIntensity, const unsigned int threshold, const Vector2& center, const Vector2& rayDirection);
 };
 
 } // namespace Bullseyes
