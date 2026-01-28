@@ -33,7 +33,8 @@ void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame
 	    !isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD) &&
 	    !isElementActive(EI_PIXEL_VALIDATION) &&
 	    !isElementActive(EI_RADIAL_CONSISTENCY_PHASE1) &&
-	    !isElementActive(EI_RADIAL_CONSISTENCY_PHASE2))
+	    !isElementActive(EI_RADIAL_CONSISTENCY_PHASE2) &&
+	    !isElementActive(EI_RADIAL_CONSISTENCY_PHASE3))
 	{
 		return;
 	}
@@ -88,6 +89,12 @@ void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame
 		{
 			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 			updateElement(EI_RADIAL_CONSISTENCY_PHASE2, std::move(rgbFrameCopy), {hierarchyName});
+		}
+
+		if (isElementActive(EI_RADIAL_CONSISTENCY_PHASE3))
+		{
+			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			updateElement(EI_RADIAL_CONSISTENCY_PHASE3, std::move(rgbFrameCopy), {hierarchyName});
 		}
 	}
 }
@@ -358,6 +365,66 @@ void BullseyesDebugElements::drawRadialConsistencyPhase2(const unsigned int yCen
 	CV::Canvas::point<7u>(rgbFrame, center, centerColor);
 
 	updateElement(EI_RADIAL_CONSISTENCY_PHASE2, std::move(rgbFrame));
+}
+
+void BullseyesDebugElements::drawRadialConsistencyPhase3(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed)
+{
+	if (!isElementActive(EI_RADIAL_CONSISTENCY_PHASE3))
+	{
+		return;
+	}
+
+	Frame rgbFrame = elementForCurrentHierarchy(EI_RADIAL_CONSISTENCY_PHASE3);
+
+	if (!rgbFrame.isValid())
+	{
+		const bool isLeft = !hierarchy_.empty() && hierarchy_.back() == hierarchyNameLeftFrame();
+		const Frame& cameraFrame = isLeft ? leftCameraFrame_ : rightCameraFrame_;
+
+		if (!cameraFrame.isValid())
+		{
+			ocean_assert(false && "Camera frame not set - call setCameraFrames before detection!");
+			return;
+		}
+
+		if (!CV::FrameConverter::Comfort::convert(cameraFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+	}
+
+	const Scalar scaledX = Scalar(xCenter) * scale;
+	const Scalar scaledY = Scalar(yCenter) * scale;
+	const Vector2 center(scaledX + Scalar(0.5), scaledY + Scalar(0.5));
+
+	const uint8_t* greenColor = CV::Canvas::green(rgbFrame.pixelFormat());
+	const uint8_t* redColor = CV::Canvas::red(rgbFrame.pixelFormat());
+
+	// Draw intensity check points for each diameter
+	// Green = intensity correct, Red = intensity incorrect
+	// Invalid half-rays are skipped
+	for (const auto& diameter : diameters)
+	{
+		// Draw midpoints and outside points for both half-rays
+		for (const HalfRay* ray : {&diameter.halfRayPositive, &diameter.halfRayNegative})
+		{
+			const uint8_t* color0 = ray->isIntensityValid[0] ? greenColor : redColor;
+			CV::Canvas::point<3u>(rgbFrame, ray->intensityCheckPoints[0] * scale + Vector2(Scalar(0.5), Scalar(0.5)), color0);
+
+			const uint8_t* color1 = ray->isIntensityValid[1] ? greenColor : redColor;
+			CV::Canvas::point<3u>(rgbFrame, ray->intensityCheckPoints[1] * scale + Vector2(Scalar(0.5), Scalar(0.5)), color1);
+
+			const uint8_t* color2 = ray->isIntensityValid[2] ? greenColor : redColor;
+			CV::Canvas::point<3u>(rgbFrame, ray->intensityCheckPoints[2] * scale + Vector2(Scalar(0.5), Scalar(0.5)), color2);
+		}
+	}
+
+	// Draw center point
+	const uint8_t* centerColor = passed ? greenColor : redColor;
+	CV::Canvas::point<7u>(rgbFrame, center, centerColor);
+
+	updateElement(EI_RADIAL_CONSISTENCY_PHASE3, std::move(rgbFrame));
 }
 
 }

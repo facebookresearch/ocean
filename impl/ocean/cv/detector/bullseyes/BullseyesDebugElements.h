@@ -10,6 +10,7 @@
 
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
+#include "ocean/cv/detector/bullseyes/Bullseye.h"
 
 #include "ocean/base/DebugElements.h"
 #include "ocean/base/Frame.h"
@@ -67,7 +68,10 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 			EI_RADIAL_CONSISTENCY_PHASE1,
 
 			/// BullseyeDetectorMono: Radial consistency Phase 2 - symmetry validation.
-			EI_RADIAL_CONSISTENCY_PHASE2
+			EI_RADIAL_CONSISTENCY_PHASE2,
+
+			/// BullseyeDetectorMono: Radial consistency Phase 3 - intensity verification.
+			EI_RADIAL_CONSISTENCY_PHASE3
 		};
 
 		/**
@@ -201,6 +205,20 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 		 * @sa setCameraFrames()
 		 */
 		void drawRadialConsistencyPhase2(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed);
+
+		/**
+		 * Draws debug visualization for radial consistency Phase 3 - intensity verification.
+		 * Visualizes the intensity check points and whether they passed verification.
+		 * Green = intensity correct, red = intensity incorrect.
+		 * Uses the stored camera frame based on the current hierarchy (left/right).
+		 * @param yCenter The y-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.height())
+		 * @param xCenter The x-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.width())
+		 * @param scale Scale factor for coordinates, e.g., 2^i for pyramid layer i, with range [1, infinity)
+		 * @param diameters The diameter results after Phase 3 intensity verification
+		 * @param passed True if Phase 3 passed (enough intensity checks passed)
+		 * @sa setCameraFrames()
+		 */
+		void drawRadialConsistencyPhase3(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed);
 
 	protected:
 
