@@ -1118,6 +1118,51 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase1CastRays(const uint8_t* y
 	return passed;
 }
 
+bool BullseyeDetectorMono::checkRadialConsistencyPhase2SymmetryValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters)
+{
+	ocean_assert(numberDiameters >= 4u);
+	ocean_assert(minValidRayFraction > Scalar(0) && minValidRayFraction <= Scalar(1));
+
+	constexpr Scalar symmetryTolerance = Scalar(0.25);
+	constexpr Scalar minTolerance = Scalar(1) - symmetryTolerance;
+	constexpr Scalar maxTolerance = Scalar(1) + symmetryTolerance;
+
+	unsigned int symmetricCount = 0u;
+	const Vector2 center{Scalar(xCenter), Scalar(yCenter)};
+
+	for (unsigned int i = 0u; i < numberDiameters; ++i)
+	{
+		Diameter& diameter = diameters[i];
+
+		if (!diameter.areHalfRaysValid())
+		{
+			continue;
+		}
+
+		const Scalar distancePositive = (diameter.halfRayPositive.transitionPoints[2] - center).length();
+		const Scalar distanceNegative = (diameter.halfRayNegative.transitionPoints[2] - center).length();
+
+		const bool inRange = ((minTolerance * distancePositive <= distanceNegative) && (maxTolerance * distancePositive >= distanceNegative)) ||
+		                     ((minTolerance * distanceNegative <= distancePositive) && (maxTolerance * distanceNegative >= distancePositive));
+
+		if (inRange)
+		{
+			diameter.isSymmetryValid = true;
+			++symmetricCount;
+		}
+		else
+		{
+			diameter.isSymmetryValid = false;
+		}
+	}
+
+	const bool passed = Scalar(symmetricCount) >= Scalar(numberDiameters) * minValidRayFraction;
+
+	BullseyesDebugElements::get().drawRadialConsistencyPhase2(yCenter, xCenter, scale, diameters, passed);
+
+	return passed;
+}
+
 Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
 {
 	ocean_assert(!values.empty());

@@ -372,6 +372,19 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool checkRadialConsistencyPhase1CastRays(const uint8_t* yData, const unsigned int width, const unsigned int height, const unsigned int strideElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float maxSearchRadius, const uint8_t centerIntensity, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters);
 
 		/**
+		 * Phase 2 of radial consistency check: Symmetry validation.
+		 * Checks if transition points are symmetric around the center.
+		 * @param xCenter Horizontal center coordinate
+		 * @param yCenter Vertical center coordinate
+		 * @param numberDiameters Number of diameters
+		 * @param minValidRayFraction Minimum fraction of symmetric diameters required
+		 * @param scale Scale factor for debug visualization
+		 * @param diameters The diameter data to validate (modified with symmetry flags)
+		 * @return True if phase passes (enough symmetric diameters found)
+		 */
+		static bool checkRadialConsistencyPhase2SymmetryValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters);
+
+		/**
 		 * Computes the arithmetic mean of a vector of scalar values.
 		 * @param values The scalar values, must not be empty
 		 * @return The arithmetic mean
