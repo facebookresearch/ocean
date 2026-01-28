@@ -172,7 +172,7 @@ void BullseyesDebugElements::drawCheckBullseyeInNeighborhood(const unsigned int 
 	const Bullseye bullseye(Vector2(scaledX, scaledY), scaledRadius, 128u);
 
 	// Draw the bullseye outline (center point + circle)
-	Utilities::drawBullseyeOutline(rgbFrame, bullseye, CV::Canvas::red(rgbFrame.pixelFormat()));
+	Utilities::drawBullseye(rgbFrame, bullseye, CV::Canvas::red(rgbFrame.pixelFormat()));
 
 	updateElement(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD, std::move(rgbFrame));
 }

@@ -10,6 +10,8 @@
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/PixelPosition.h"
 
+#include "ocean/cv/detector/bullseyes/BullseyeDetectorMono.h"
+
 namespace Ocean
 {
 
@@ -89,42 +91,74 @@ void Utilities::drawBullseye(Frame& rgbFrame, const Bullseye& bullseye, const ui
 	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
 	ocean_assert(bullseye.isValid());
 
-	const Vector2& center = bullseye.position();
-	const Scalar radius = bullseye.radius();
-
-	CV::Canvas::line<3u>(rgbFrame, center.x() - radius, center.y(), center.x() + radius, center.y(), color);
-	CV::Canvas::line<3u>(rgbFrame, center.x(), center.y() - radius, center.x(), center.y() + radius, color);
-}
-
-void Utilities::drawBullseyeOutline(Frame& rgbFrame, const Bullseye& bullseye, const uint8_t* color)
-{
-	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
-	ocean_assert(bullseye.isValid());
-
 	color = color != nullptr ? color : CV::Canvas::green(rgbFrame.pixelFormat());
 
 	const Vector2& center = bullseye.position();
-	const Scalar radius = bullseye.radius();
 
 	// Draw center point
-	CV::Canvas::point<5u>(rgbFrame, center, color);
+	CV::Canvas::point<3u>(rgbFrame, center + Vector2(0.5, 0.5), color);
 
-	// Draw circle outline using line segments
-	// Use enough segments for a smooth appearance (approximately one segment per 5 degrees = 72 segments)
-	constexpr unsigned int numSegments = 72u;
-	constexpr Scalar angleStep = Numeric::pi2() / Scalar(numSegments);
+	const Diameters& diameters = bullseye.diameters();
 
-	for (unsigned int i = 0u; i < numSegments; ++i)
+	if (!diameters.empty())
 	{
-		const Scalar angle0 = Scalar(i) * angleStep;
-		const Scalar angle1 = Scalar(i + 1u) * angleStep;
+		// Collect all half-rays for drawing (positive first, then negative for each diameter)
+		std::vector<const HalfRay*> halfRays;
+		halfRays.reserve(diameters.size() * 2);
 
-		const Scalar x0 = center.x() + radius * Numeric::cos(angle0);
-		const Scalar y0 = center.y() + radius * Numeric::sin(angle0);
-		const Scalar x1 = center.x() + radius * Numeric::cos(angle1);
-		const Scalar y1 = center.y() + radius * Numeric::sin(angle1);
+		for (const Diameter& diameter : diameters)
+		{
+			halfRays.push_back(&diameter.halfRayPositive);
+		}
+		for (const Diameter& diameter : diameters)
+		{
+			halfRays.push_back(&diameter.halfRayNegative);
+		}
 
-		CV::Canvas::line<1u>(rgbFrame, x0, y0, x1, y1, color);
+		for (size_t i = 0; i < halfRays.size(); ++i)
+		{
+			const HalfRay* currentRay = halfRays[i];
+			const HalfRay* nextRay = halfRays[(i + 1) % halfRays.size()];
+
+			// Draw the circumference line (outermost transition point)
+			const Vector2& currentOuter = currentRay->transitionPoints[2];
+			const Vector2& nextOuter = nextRay->transitionPoints[2];
+
+			if (currentOuter != HalfRay::invalidTransitionPoint() && nextOuter != HalfRay::invalidTransitionPoint())
+			{
+				CV::Canvas::line<1u>(rgbFrame, currentOuter + Vector2(0.5, 0.5), nextOuter + Vector2(0.5, 0.5), color);
+			}
+
+			// Draw the transition points themselves
+			for (const Vector2& point : currentRay->transitionPoints)
+			{
+				if (point != HalfRay::invalidTransitionPoint())
+				{
+					CV::Canvas::point<3u>(rgbFrame, point + Vector2(0.5, 0.5), color);
+				}
+			}
+		}
+	}
+	else
+	{
+		// No diameter data - draw circle outline
+		constexpr unsigned int numSegments = 72u;
+		constexpr Scalar angleStep = Numeric::pi2() / Scalar(numSegments);
+
+		const Scalar radius = bullseye.radius();
+
+		for (unsigned int i = 0u; i < numSegments; ++i)
+		{
+			const Scalar angle0 = Scalar(i) * angleStep;
+			const Scalar angle1 = Scalar(i + 1u) * angleStep;
+
+			const Scalar x0 = center.x() + radius * Numeric::cos(angle0);
+			const Scalar y0 = center.y() + radius * Numeric::sin(angle0);
+			const Scalar x1 = center.x() + radius * Numeric::cos(angle1);
+			const Scalar y1 = center.y() + radius * Numeric::sin(angle1);
+
+			CV::Canvas::line<1u>(rgbFrame, x0, y0, x1, y1, color);
+		}
 	}
 }
 
