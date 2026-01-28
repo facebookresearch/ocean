@@ -418,6 +418,18 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 		{
 			// we have a valid combination of segments
 
+			// Early filtering: reject segments that are too small for reliable threshold computation
+			if (segment_1_size < minimumSegmentSize || segment_2_size < minimumSegmentSize || segment_3_size < minimumSegmentSize || segment_4_size < minimumSegmentSize || segment_5_size < minimumSegmentSize)
+			{
+				// One or more segments are too small - skip this candidate
+
+				segment_1_start_black = segment_3_start_black;
+				segment_2_start_white = segment_4_start_white;
+				x = segment_2_start_white;
+
+				continue;
+			}
+
 			BullseyesDebugElements::get().drawBullseyeCandidateInRow(y, segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size, scale);
 
 			const unsigned int xCenter = (segment_3_start_black + segment_4_start_white + 1u) / 2u;
