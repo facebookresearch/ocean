@@ -8,6 +8,7 @@
 #include "ocean/cv/detector/bullseyes/BullseyesDebugElements.h"
 
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
+#include "ocean/cv/detector/bullseyes/BullseyeDetectorMono.h"
 #include "ocean/cv/detector/bullseyes/Utilities.h"
 
 #include "ocean/cv/Canvas.h"
@@ -28,7 +29,7 @@ namespace Bullseyes
 void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame& rightFrame)
 {
 	// Only store frames if any element is active
-	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE) && !isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD) && !isElementActive(EI_PIXEL_VALIDATION))
+	if (!isElementActive(EI_DETECT_BULLSEYE_IN_ROW_VALID_SEQUENCE) && !isElementActive(EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD) && !isElementActive(EI_PIXEL_VALIDATION) && !isElementActive(EI_RADIAL_CONSISTENCY_PHASE1))
 	{
 		return;
 	}
@@ -71,6 +72,12 @@ void BullseyesDebugElements::setCameraFrames(const Frame& leftFrame, const Frame
 		{
 			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 			updateElement(EI_PIXEL_VALIDATION, std::move(rgbFrameCopy), {hierarchyName});
+		}
+
+		if (isElementActive(EI_RADIAL_CONSISTENCY_PHASE1))
+		{
+			Frame rgbFrameCopy(rgbFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			updateElement(EI_RADIAL_CONSISTENCY_PHASE1, std::move(rgbFrameCopy), {hierarchyName});
 		}
 	}
 }
@@ -218,6 +225,69 @@ void BullseyesDebugElements::drawPixelValidation(const unsigned int y, const uns
 	CV::Canvas::point<1u>(rgbFrame, Vector2(Scalar(x) + Scalar(0.5), Scalar(y) + Scalar(0.5)), color);
 
 	updateElement(EI_PIXEL_VALIDATION, std::move(rgbFrame));
+}
+
+void BullseyesDebugElements::drawRadialConsistencyPhase1(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed)
+{
+	if (!isElementActive(EI_RADIAL_CONSISTENCY_PHASE1))
+	{
+		return;
+	}
+
+	Frame rgbFrame = elementForCurrentHierarchy(EI_RADIAL_CONSISTENCY_PHASE1);
+
+	if (!rgbFrame.isValid())
+	{
+		const bool isLeft = !hierarchy_.empty() && hierarchy_.back() == hierarchyNameLeftFrame();
+		const Frame& cameraFrame = isLeft ? leftCameraFrame_ : rightCameraFrame_;
+
+		if (!cameraFrame.isValid())
+		{
+			ocean_assert(false && "Camera frame not set - call setCameraFrames before detection!");
+			return;
+		}
+
+		if (!CV::FrameConverter::Comfort::convert(cameraFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+	}
+
+	const Scalar scaledX = Scalar(xCenter) * scale;
+	const Scalar scaledY = Scalar(yCenter) * scale;
+	const Vector2 center(scaledX + Scalar(0.5), scaledY + Scalar(0.5));
+
+	const uint8_t* greenColor = CV::Canvas::green(rgbFrame.pixelFormat());
+	const uint8_t* redColor = CV::Canvas::red(rgbFrame.pixelFormat());
+
+	// Draw transition points for each diameter
+	for (const auto& diameter : diameters)
+	{
+		// Draw positive half-ray points
+		for (const Vector2& transitionPoint : diameter.halfRayPositive.transitionPoints)
+		{
+			if (transitionPoint != HalfRay::invalidTransitionPoint())
+			{
+				CV::Canvas::point<3u>(rgbFrame, transitionPoint * scale + Vector2(Scalar(0.5), Scalar(0.5)), greenColor);
+			}
+		}
+
+		// Draw negative half-ray points
+		for (const Vector2& transitionPoint : diameter.halfRayNegative.transitionPoints)
+		{
+			if (transitionPoint != HalfRay::invalidTransitionPoint())
+			{
+				CV::Canvas::point<3u>(rgbFrame, transitionPoint * scale + Vector2(Scalar(0.5), Scalar(0.5)), greenColor);
+			}
+		}
+	}
+
+	// Draw center point
+	const uint8_t* centerColor = passed ? greenColor : redColor;
+	CV::Canvas::point<7u>(rgbFrame, center, centerColor);
+
+	updateElement(EI_RADIAL_CONSISTENCY_PHASE1, std::move(rgbFrame));
 }
 
 }

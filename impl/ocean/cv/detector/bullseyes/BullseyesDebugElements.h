@@ -8,12 +8,15 @@
 #ifndef META_OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYES_DEBUG_ELEMENTS_H
 #define META_OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYES_DEBUG_ELEMENTS_H
 
+#include "ocean/cv/detector/bullseyes/Bullseye.h"
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
 
 #include "ocean/base/DebugElements.h"
 #include "ocean/base/Frame.h"
 
 #include "ocean/math/Math.h"
+
+#include <vector>
 
 namespace Ocean
 {
@@ -58,7 +61,10 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 			EI_CHECK_BULLSEYE_IN_NEIGHBORHOOD,
 
 			/// BullseyeDetectorMono: Image visualizing pixel validation during neighborhood checks.
-			EI_PIXEL_VALIDATION
+			EI_PIXEL_VALIDATION,
+
+			/// BullseyeDetectorMono: Radial consistency Phase 1 - ray casting and transition detection.
+			EI_RADIAL_CONSISTENCY_PHASE1
 		};
 
 		/**
@@ -164,6 +170,20 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 		 * @sa setCameraFrames()
 		 */
 		void drawPixelValidation(const unsigned int y, const unsigned int x, const bool isInvalid);
+
+		/**
+		 * Draws debug visualization for radial consistency Phase 1 - ray casting.
+		 * Visualizes the transition points found on each diameter (positive and negative half-rays).
+		 * Green points indicate valid transitions, red points indicate invalid/missing transitions.
+		 * Uses the stored camera frame based on the current hierarchy (left/right).
+		 * @param yCenter The y-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.height())
+		 * @param xCenter The x-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.width())
+		 * @param scale Scale factor for coordinates, e.g., 2^i for pyramid layer i, with range [1, infinity)
+		 * @param diameters The diameter results from Phase 1 ray casting
+		 * @param passed True if Phase 1 passed (enough valid diameters found)
+		 * @sa setCameraFrames()
+		 */
+		void drawRadialConsistencyPhase1(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed);
 
 	protected:
 
