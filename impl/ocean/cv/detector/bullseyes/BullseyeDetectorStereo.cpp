@@ -164,13 +164,13 @@ bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, co
 		if (scaleFactors[0] != Scalar(1))
 		{
 			const Scalar inverseScaleFactor = Scalar(1) / scaleFactors[0];
-			bullseyePair.first = Bullseye(bullseyePair.first.position() * inverseScaleFactor, bullseyePair.first.radius() * inverseScaleFactor, bullseyePair.first.grayThreshold());
+			bullseyePair.first = bullseyePair.first.scaled(inverseScaleFactor);
 		}
 
 		if (scaleFactors[1] != Scalar(1))
 		{
 			const Scalar inverseScaleFactor = Scalar(1) / scaleFactors[1];
-			bullseyePair.second = Bullseye(bullseyePair.second.position() * inverseScaleFactor, bullseyePair.second.radius() * inverseScaleFactor, bullseyePair.second.grayThreshold());
+			bullseyePair.second = bullseyePair.second.scaled(inverseScaleFactor);
 		}
 	}
 

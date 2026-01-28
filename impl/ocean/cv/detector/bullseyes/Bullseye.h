@@ -198,6 +198,14 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 		const Diameters& diameters() const;
 
 		/**
+		 * Returns a scaled copy of this bullseye.
+		 * Scales position, radius, and all diameter data by the given factor.
+		 * @param scaleFactor The scale factor to apply, with range (0, infinity)
+		 * @return A new Bullseye with scaled coordinates
+		 */
+		Bullseye scaled(const Scalar scaleFactor) const;
+
+		/**
 		 * Returns an invalid bullseye position.
 		 * @return Invalid bullseye position
 		 */
