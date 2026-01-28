@@ -1,6 +1,6 @@
 ---
 title: Camera Calibration
-sidebar_position: 7
+sidebar_position: 5
 ---
 
 import React from 'react';
