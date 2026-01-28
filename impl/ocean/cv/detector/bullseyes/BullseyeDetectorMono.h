@@ -352,6 +352,21 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool castHalfRay(const uint8_t* yFrameData, const unsigned int yFrameWidth, const unsigned int yFrameHeight, const unsigned int yFrameStrideElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const Scalar maxSearchRadius, const uint8_t centerIntensity, const uint8_t grayThreshold, HalfRay& ray);
 
 		/**
+		 * Checks radial consistency of a bullseye candidate by casting rays in multiple directions.
+		 * The check verifies that the pattern of transitions (black->white->black->white) is consistent across all directions.
+		 * @param yFrame The 8-bit grayscale frame, must be valid
+		 * @param xCenter The horizontal center of the bullseye candidate, with range [0, yFrame.width())
+		 * @param yCenter The vertical center of the bullseye candidate, with range [0, yFrame.height())
+		 * @param threshold The grayscale threshold separating bright from dark pixels, with range [0, 255]
+		 * @param maxSearchRadius Maximum ray length in pixels, with range [1, infinity)
+		 * @param numberDiameters Number of diameters to cast (a diameter consists of two half-rays eminating from the center of the bullseye, one in positive direction and one in negative direction), with range [8, infinity)
+		 * @param backgroundExtensionFactor How far to extend beyond r2 as fraction of ring width, with range [0, 1]
+		 * @param scale Scale factor for debug visualization (2^pyramidLayer), with range [1, infinity)
+		 * @return True if the candidate passes the radial consistency check
+		 */
+		static bool checkRadialConsistency(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float maxSearchRadius, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar backgroundExtensionFactor, const Scalar scale = Scalar(1), Diameters* diameters = nullptr);
+
+		/**
 		 * Phase 1 of radial consistency check: Cast symmetric half-rays.
 		 * Casts half-rays in positive and negative directions for each diameter.
 		 * @param yData Pointer to the frame data

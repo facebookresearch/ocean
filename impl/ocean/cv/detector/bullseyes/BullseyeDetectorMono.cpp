@@ -1079,6 +1079,65 @@ bool BullseyeDetectorMono::castHalfRay(const uint8_t* yFrameData, const unsigned
 	return state == State::Done;
 };
 
+bool BullseyeDetectorMono::checkRadialConsistency(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float maxSearchRadius, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar backgroundExtensionFactor, const Scalar scale, Diameters* diameters)
+{
+	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
+	ocean_assert(xCenter < yFrame.width() && yCenter < yFrame.height());
+	ocean_assert(numberDiameters >= 4u);
+	ocean_assert(minValidRayFraction > Scalar(0) && minValidRayFraction <= Scalar(1));
+
+	const unsigned int width = yFrame.width();
+	const unsigned int height = yFrame.height();
+	const unsigned int strideElements = yFrame.strideElements();
+	const uint8_t* const yData = yFrame.constdata<uint8_t>();
+
+	const uint8_t centerIntensity = *yFrame.constpixel<uint8_t>(xCenter, yCenter);
+	if (centerIntensity > threshold)
+	{
+		// Center pixel is not black
+		return false;
+	}
+
+	Diameters localDiameters(numberDiameters);
+
+	// Phase 1: Cast symmetric half-rays
+	if (!checkRadialConsistencyPhase1CastRays(yData, width, height, strideElements, xCenter, yCenter, threshold, maxSearchRadius, centerIntensity, numberDiameters, minValidRayFraction, scale, localDiameters))
+	{
+		return false;
+	}
+
+	// Phase 2: Symmetry validation
+	if (!checkRadialConsistencyPhase2SymmetryValidation(xCenter, yCenter, numberDiameters, minValidRayFraction, scale, localDiameters))
+	{
+		return false;
+	}
+
+	// Phase 3: Intensity validation
+	if (!checkRadialConsistencyPhase3IntensityValidation(yFrame, threshold, numberDiameters, backgroundExtensionFactor, scale, xCenter, yCenter, localDiameters))
+	{
+		return false;
+	}
+
+	// Phase 4: Radial profile validation
+	if (!checkRadialConsistencyPhase4RadialProfileValidation(xCenter, yCenter, numberDiameters, localDiameters))
+	{
+		return false;
+	}
+
+	// Phase 5: Ring proportion validation
+	if (!checkRadialConsistencyPhase5RingProportionValidation(xCenter, yCenter, numberDiameters, localDiameters))
+	{
+		return false;
+	}
+
+	if (diameters != nullptr)
+	{
+		*diameters = std::move(localDiameters);
+	}
+
+	return true;
+}
+
 bool BullseyeDetectorMono::checkRadialConsistencyPhase1CastRays(const uint8_t* yData, const unsigned int width, const unsigned int height, const unsigned int strideElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float maxSearchRadius, const uint8_t centerIntensity, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters)
 {
 	ocean_assert(yData != nullptr);
