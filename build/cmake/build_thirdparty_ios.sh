@@ -21,6 +21,9 @@ check_build_dependencies "macos"
 # OS64 - build for iOS (arm64 only)
 IOS_CMAKE_TOOLCHAIN_PLATFORM="OS64"
 
+# Architecture name used for folder naming (maps from toolchain platform)
+IOS_ARCH="arm64"
+
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd "${SCRIPT_DIR}/third-party" && pwd )
 
@@ -162,8 +165,8 @@ function run_build {
     fi
 
     # Specific build and installation directory for the current build config
-    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
-    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${IOS_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${IOS_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     echo ""
     echo ""

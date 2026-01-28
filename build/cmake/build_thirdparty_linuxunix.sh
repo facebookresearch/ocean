@@ -18,6 +18,15 @@ else
   exit 1
 fi
 
+# Detect architecture and map to folder naming
+if [[ $(uname -m) == "arm64" ]]; then
+  OCEAN_ARCH="arm64"
+elif [[ $(uname -m) == "x86_64" ]]; then
+  OCEAN_ARCH="x64"
+else
+  OCEAN_ARCH=$(uname -m)
+fi
+
 # Check for required dependencies
 check_build_dependencies "${OCEAN_PLATFORM}"
 
@@ -117,8 +126,8 @@ function run_build {
         exit 1
     fi
 
-    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
-    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     PAR_SWITCH="-- -j16"
     CONF_SWITCH="CMAKE_BUILD_TYPE"

@@ -27,7 +27,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_linuxunix.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/linux/static_debug` and `.../linux/static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -48,7 +48,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_ocean_linuxunix.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/linux/static_debug` and `.../linux/static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
 
 The build script can be customized using command-line parameters. For example:
 

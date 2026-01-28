@@ -20,7 +20,7 @@ cd /D %OCEAN_DEVELOPMENT_PATH%
 .\build\cmake\build_thirdparty_windows.bat
 ```
 
-Once the build is complete, there will be one subdirectory per build config within the installation directory `ocean_install_thirdparty` in the current directory.
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty\windows\x64_static_debug` and `...\windows\x64_static_release` (or with `x86_` prefix on 32-bit systems).
 
 The build script can be customized using command-line parameters. Use `-config` to specify build configurations, `-link` for linking type, `-build` for build directory, and `-install` for installation directory. For example:
 
@@ -41,6 +41,8 @@ The easiest way to build all Ocean libraries and apps is by using the provided b
 cd /D %OCEAN_DEVELOPMENT_PATH%
 .\build\cmake\build_ocean_windows.bat
 ```
+
+Once the build is complete, the compiled binaries can be found in `ocean_install\windows\x64_static_debug` and `...\windows\x64_static_release`.
 
 The build script can be customized using command-line parameters. For example:
 

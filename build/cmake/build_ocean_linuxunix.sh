@@ -16,6 +16,15 @@ else
   exit 1
 fi
 
+# Detect architecture and map to folder naming
+if [[ $(uname -m) == "arm64" ]]; then
+  OCEAN_ARCH="arm64"
+elif [[ $(uname -m) == "x86_64" ]]; then
+  OCEAN_ARCH="x64"
+else
+  OCEAN_ARCH=$(uname -m)
+fi
+
 # Check for required dependencies
 check_build_dependencies "${OCEAN_PLATFORM}"
 
@@ -116,8 +125,8 @@ function run_build {
         exit 1
     fi
 
-    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
-    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     echo " "
     echo "BUILD_CONFIG: ${BUILD_CONFIG}"
@@ -139,7 +148,7 @@ function run_build {
 
     if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
         # This must match the INSTALL_DIR from ./build_thirdparty_linuxunix.sh
-        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
         echo " "
         echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"

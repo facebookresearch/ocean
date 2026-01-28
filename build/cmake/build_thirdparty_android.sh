@@ -140,8 +140,17 @@ function run_build {
 
     ANDROID_SDK_VERSION=$4
 
-    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
-    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    # Map Android ABI to architecture name for folder naming
+    case "${ANDROID_ABI}" in
+        "arm64-v8a") ANDROID_ARCH="arm64" ;;
+        "armeabi-v7a") ANDROID_ARCH="arm32" ;;
+        "x86_64") ANDROID_ARCH="x64" ;;
+        "x86") ANDROID_ARCH="x86" ;;
+        *) ANDROID_ARCH="${ANDROID_ABI}" ;;
+    esac
+
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${ANDROID_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${ANDROID_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     echo ""
     echo ""

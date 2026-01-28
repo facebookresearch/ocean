@@ -78,7 +78,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_android.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64_static_debug` and `.../android/arm64_static_release`.
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `--abi` for Android ABI, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -103,7 +103,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_ocean_android.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install/android/arm64_static_debug` and `.../android/arm64_static_release`.
 
 The build script can be customized using command-line parameters. For example:
 

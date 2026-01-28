@@ -21,7 +21,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_linuxunix.sh
 ```
 
-Once the build is complete, there will be one subdirectory per build config within the installation and build directories. For example, for macOS it will be similar to `ocean_install_thirdparty/macos/static_debug` and `.../macos/static_release`.
+Once the build is complete, there will be one subdirectory per build config within the installation and build directories. For example, on an Apple Silicon Mac it will be similar to `ocean_install_thirdparty/macos/arm64_static_debug` and `.../macos/arm64_static_release`. On Intel Macs, the folder will use `x64` instead of `arm64`.
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -41,7 +41,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_ocean_linuxunix.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/macos/static_debug` and `.../macos/static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install/macos/arm64_static_debug` and `.../macos/arm64_static_release` (or `x64_static_*` on Intel Macs).
 
 The build script can be customized using command-line parameters. For example:
 
@@ -65,7 +65,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -B"${HOME}/build_ocean_macos_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
-    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/macos/static_debug" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/macos/arm64_static_debug" \
     -DBUILD_SHARED_LIBS="OFF"
 ```
 
@@ -78,7 +78,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -B"${HOME}/build_ocean_macos_release" \
     -DCMAKE_BUILD_TYPE="Release" \
     -G Xcode \
-    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/macos/static_release" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/macos/arm64_static_release" \
     -DBUILD_SHARED_LIBS="OFF"
 ```
 Once the configuration is complete, open the generated the XCode project:

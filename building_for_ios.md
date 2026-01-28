@@ -32,7 +32,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_thirdparty_ios.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/ios/OS64_static_debug` and `.../ios/OS64_static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/ios/arm64_static_debug` and `.../ios/arm64_static_release`.
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -54,7 +54,7 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ./build/cmake/build_ocean_ios.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/ios/OS64_static_debug` and `.../ios/OS64_static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install/ios/arm64_static_debug` and `.../ios/arm64_static_release`.
 
 The build script can be customized using command-line parameters. For example:
 
@@ -85,7 +85,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/OS64_static_debug" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/arm64_static_debug" \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```
@@ -102,7 +102,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/OS64_static_release" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/arm64_static_release" \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```

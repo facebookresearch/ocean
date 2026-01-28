@@ -137,8 +137,17 @@ function run_build {
         exit 1
     fi
 
-    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
-    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    # Map Android ABI to architecture name for folder naming
+    case "${ANDROID_ABI}" in
+        "arm64-v8a") ANDROID_ARCH="arm64" ;;
+        "armeabi-v7a") ANDROID_ARCH="arm32" ;;
+        "x86_64") ANDROID_ARCH="x64" ;;
+        "x86") ANDROID_ARCH="x86" ;;
+        *) ANDROID_ARCH="${ANDROID_ABI}" ;;
+    esac
+
+    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}/${ANDROID_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}/${ANDROID_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
     echo " "
     echo "ANDROID_ABI: ${ANDROID_ABI}"
@@ -164,7 +173,7 @@ function run_build {
 
     if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
         # This must match the INSTALL_DIR from ./build_thirdparty_android.sh
-        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
+        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}/${ANDROID_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
         echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"
         echo " "

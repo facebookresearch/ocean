@@ -12,6 +12,17 @@ if %errorlevel% neq 0 exit /b 1
 
 set OCEAN_PLATFORM=windows
 
+@REM Detect architecture and map to folder naming
+if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
+    set "OCEAN_ARCH=x64"
+) else if "%PROCESSOR_ARCHITECTURE%"=="x86" (
+    set "OCEAN_ARCH=x86"
+) else if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
+    set "OCEAN_ARCH=arm64"
+) else (
+    set "OCEAN_ARCH=%PROCESSOR_ARCHITECTURE%"
+)
+
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_SOURCE_DIR=%~dp0..\..
 set DEFAULT_BUILD_PATH=%cd%\ocean_build
@@ -104,10 +115,10 @@ for %%c in (!-config!) do (
   for %%l in (!-link!) do (
     if /I %%l==static (
       set BUILD_SHARED_LIBS=OFF
-      set bibase=%OCEAN_PLATFORM%\static_!BUILD_TYPE_LOWER!
+      set bibase=%OCEAN_PLATFORM%\%OCEAN_ARCH%_static_!BUILD_TYPE_LOWER!
     ) else if /I %%l==shared (
       set BUILD_SHARED_LIBS=ON
-      set bibase=%OCEAN_PLATFORM%\shared_!BUILD_TYPE_LOWER!
+      set bibase=%OCEAN_PLATFORM%\%OCEAN_ARCH%_shared_!BUILD_TYPE_LOWER!
     ) else (
       echo Invalid link mode %%l
       exit /b
