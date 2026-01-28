@@ -445,6 +445,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 			// let's ensure that the center pixel actually fits with the determined gray threshold
 			if (grayThreshold < 255u && *yFrame.constpixel<uint8_t>(xCenter, y) <= grayThreshold)
 			{
+#if OCEAN_USE_OLD_RADIAL_CHECK
 				// the diameter of the bullseye including the left and right black segment
 				const unsigned int diameter = x - segment_1_start_black;
 				ocean_assert(diameter >= 5u);
@@ -477,6 +478,95 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 					}
 				}
 			}
+#else // OCEAN_USE_OLD_RADIAL_CHECK
+				// the diameter of the bullseye including the left and right black segment
+				const unsigned int horizontalDiameter = x - segment_1_start_black;
+				ocean_assert(horizontalDiameter >= 5u);
+
+				const unsigned int horizontalDiameter3_4 = (horizontalDiameter * 3u + 2u) / 4u;
+
+				// now we check whether we can find the same bullseye pattern in vertical direction
+
+				const bool boundsCheck = xCenter >= horizontalDiameter3_4 && y >= horizontalDiameter3_4 && xCenter < width - horizontalDiameter3_4 && y < height - horizontalDiameter3_4;
+
+				if (boundsCheck)
+				{
+					if (checkBullseyeInColumn(yFrame, xCenter, y, grayThreshold, blackRingSegmentMin, blackRingSegmentMax, whiteRingSegmentMin, whiteRingSegmentMax, dotSegmentMin, dotSegmentMax))
+					{
+						const float whiteRingRadius = float(segment_3_size) * 0.5f + float(segment_2_size + segment_4_size) * 0.25f;
+						const float blackRingRadius = whiteRingRadius + float(segment_2_size + segment_4_size) * 0.25f + float(segment_1_size + segment_5_size) * 0.25f;
+						const float whiteBorderRadius = blackRingRadius * 1.5f;
+
+						// Radial consistency check with relaxed geometry for fisheye cameras, strict intensity
+						constexpr unsigned int numberDiameters = 8u;
+						constexpr Scalar minValidRayFraction = Scalar(0.75);
+						constexpr Scalar backgroundExtensionFactor = Scalar(0.3);
+						const float maxSearchRadius = whiteBorderRadius * 2.0f; // Use larger search radius to handle ellipses (2x whiteBorderRadius)
+
+						Diameters diameters;
+						const bool isRadiallyConsistent = checkRadialConsistency(yFrame, xCenter, y, grayThreshold, maxSearchRadius, numberDiameters, minValidRayFraction, backgroundExtensionFactor, scale, &diameters);
+
+						if (isRadiallyConsistent)
+						{
+							BullseyesDebugElements::get().drawCheckBullseyeInNeighborhood(y, xCenter, scale, horizontalDiameter);
+
+							Vector2 location;
+							if (determineAccurateBullseyeLocation(yFrame, xCenter, y, grayThreshold, location))
+							{
+								const float radius = float(horizontalDiameter) * 0.5f;
+
+								ocean_assert(location.x() >= Scalar(radius) && location.y() >= Scalar(radius));
+								ocean_assert(location.x() < Scalar(width) - Scalar(radius) && location.y() < Scalar(height) - Scalar(radius));
+
+								// Scale diameter data for output
+								Diameters scaledDiameters;
+								scaledDiameters.reserve(diameters.size());
+
+								for (const Diameter& diameter : diameters)
+								{
+									Diameter scaledDiameter;
+									scaledDiameter.isSymmetryValid = diameter.isSymmetryValid;
+
+									// Scale positive half-ray
+									for (size_t i = 0; i < diameter.halfRayPositive.transitionPoints.size(); ++i)
+									{
+										const Vector2& point = diameter.halfRayPositive.transitionPoints[i];
+										scaledDiameter.halfRayPositive.transitionPoints[i] = (point != HalfRay::invalidTransitionPoint()) ? point * scale : HalfRay::invalidTransitionPoint();
+									}
+
+									for (size_t i = 0; i < 3; ++i)
+									{
+										scaledDiameter.halfRayPositive.intensityCheckPoints[i] = diameter.halfRayPositive.intensityCheckPoints[i] * scale;
+										scaledDiameter.halfRayPositive.isIntensityValid[i] = diameter.halfRayPositive.isIntensityValid[i];
+									}
+
+									scaledDiameter.halfRayPositive.angle = diameter.halfRayPositive.angle;
+
+									// Scale negative half-ray
+									for (size_t i = 0; i < diameter.halfRayNegative.transitionPoints.size(); ++i)
+									{
+										const Vector2& point = diameter.halfRayNegative.transitionPoints[i];
+										scaledDiameter.halfRayNegative.transitionPoints[i] = (point != HalfRay::invalidTransitionPoint()) ? point * scale : HalfRay::invalidTransitionPoint();
+									}
+
+									for (size_t i = 0; i < 3; ++i)
+									{
+										scaledDiameter.halfRayNegative.intensityCheckPoints[i] = diameter.halfRayNegative.intensityCheckPoints[i] * scale;
+										scaledDiameter.halfRayNegative.isIntensityValid[i] = diameter.halfRayNegative.isIntensityValid[i];
+									}
+
+									scaledDiameter.halfRayNegative.angle = diameter.halfRayNegative.angle;
+
+									scaledDiameters.emplace_back(std::move(scaledDiameter));
+								}
+
+								bullseyes.emplace_back(location * scale, Scalar(radius) * scale, grayThreshold, std::move(scaledDiameters), pyramidLayer);
+							}
+						}
+					}
+				}
+			}
+#endif // OCEAN_USE_OLD_RADIAL_CHECK
 		}
 
 		// in any case (either if the last segment does not have the correct size, or if we found a valid segment combination)
