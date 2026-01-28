@@ -64,7 +64,10 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 			EI_PIXEL_VALIDATION,
 
 			/// BullseyeDetectorMono: Radial consistency Phase 1 - ray casting and transition detection.
-			EI_RADIAL_CONSISTENCY_PHASE1
+			EI_RADIAL_CONSISTENCY_PHASE1,
+
+			/// BullseyeDetectorMono: Radial consistency Phase 2 - symmetry validation.
+			EI_RADIAL_CONSISTENCY_PHASE2
 		};
 
 		/**
@@ -184,6 +187,20 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyesDebugElements final :
 		 * @sa setCameraFrames()
 		 */
 		void drawRadialConsistencyPhase1(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed);
+
+		/**
+		 * Draws debug visualization for radial consistency Phase 2 - symmetry validation.
+		 * Visualizes the symmetry between positive and negative half-rays of each diameter.
+		 * Green = symmetric (passed), red = asymmetric (failed), gray = invalid diameter.
+		 * Uses the stored camera frame based on the current hierarchy (left/right).
+		 * @param yCenter The y-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.height())
+		 * @param xCenter The x-coordinate of the bullseye center (in pyramid layer coordinates), with range [0, frame.width())
+		 * @param scale Scale factor for coordinates, e.g., 2^i for pyramid layer i, with range [1, infinity)
+		 * @param diameters The diameter results after Phase 2 symmetry validation
+		 * @param passed True if Phase 2 passed (enough symmetric diameters)
+		 * @sa setCameraFrames()
+		 */
+		void drawRadialConsistencyPhase2(const unsigned int yCenter, const unsigned int xCenter, const Scalar scale, const Diameters& diameters, const bool passed);
 
 	protected:
 
