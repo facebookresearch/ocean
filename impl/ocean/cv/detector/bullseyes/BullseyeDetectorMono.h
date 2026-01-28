@@ -61,11 +61,11 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		 *   - When disabled: Every row is scanned (slower but more accurate)
 		 *   - Recommended: true for real-time applications, false for offline/accuracy-critical applications
 		 *
-		 * minimumDiameter:
-		 *   Minimum diameter in pixels for a valid bullseye detection.
-		 *   - Default: 15 pixels
-		 *   - Bullseyes smaller than this threshold are rejected
-		 *   - Helps filter out noise and false positives from tiny patterns
+		 * minimumSegmentSize:
+		 *   Minimum size in pixels for each of the 5 segments in the bullseye pattern.
+		 *   - Default: 2 pixels
+		 *   - Segments smaller than this are rejected as unreliable for threshold computation
+		 *   - Helps filter out noise and false positives from tiny patterns at higher pyramid layers
 		 */
 		class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Parameters
 		{
@@ -121,17 +121,17 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 				void setUseAdaptiveRowSpacing(bool useAdaptiveRowSpacing) noexcept;
 
 				/**
-				 * Returns the minimum diameter for a valid bullseye detection.
-				 * @return The minimum diameter in pixels, with range [1, infinity)
+				 * Returns the minimum segment size for a valid bullseye detection.
+				 * @return The minimum segment size in pixels, with range [1, infinity)
 				 */
-				unsigned int minimumDiameter() const noexcept;
+				unsigned int minimumSegmentSize() const noexcept;
 
 				/**
-				 * Sets the minimum diameter for a valid bullseye detection.
-				 * Bullseyes with a diameter smaller than this value will be rejected.
-				 * @param minimumDiameter The minimum diameter in pixels, with range [1, infinity)
+				 * Sets the minimum segment size for a valid bullseye detection.
+				 * Segments smaller than this value are rejected as unreliable for threshold computation.
+				 * @param minimumSegmentSize The minimum segment size in pixels, with range [1, infinity)
 				 */
-				void setMinimumDiameter(unsigned int minimumDiameter) noexcept;
+				void setMinimumSegmentSize(unsigned int minimumSegmentSize) noexcept;
 
 				/**
 				 * Returns the default parameters for the detector.
@@ -150,8 +150,8 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 				/// Determines whether adaptive row spacing is used (true) or every row is scanned (false) during bullseye detection
 				bool useAdaptiveRowSpacing_ = true;
 
-				/// The minimum diameter in pixels for a valid bullseye detection, with range [1, infinity)
-				unsigned int minimumDiameter_ = 15u;
+				/// The minimum segment size in pixels for a valid bullseye detection, with range [1, infinity)
+				unsigned int minimumSegmentSize_ = 2u;
 		};
 
 	public:
@@ -174,20 +174,22 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		 * @param bullseyes The resulting bullseyes, will be added to the end of the vector
 		 * @param multiThreadLock Lock object in case this function is executed in multiple threads concurrently, otherwise nullptr
 		 * @param useAdaptiveRowSpacing True to use adaptive row spacing, false to scan every row
+		 * @param minimumSegmentSize The minimum segment size in pixels for a valid bullseye detection, with range [1, infinity)
 		 * @param pyramidLayer The pyramid layer at which this detection is performed, with range [0, infinity)
 		 * @param firstRow The first row to be handled, with range [0, yFrame.height())
 		 * @param numberRows The number of rows to be handled, with range [1, yFrame.height() - firstRow]
 		 */
-		static void detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int pyramidLayer, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int minimumSegmentSize, const unsigned int pyramidLayer, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Detects bullseyes in a row of a grayscale image.
 		 * @param yFrame The 8-bit grayscale frame in which the bullseyes will be detected, must be valid
 		 * @param y The index of the row in which the bullseyes will be detected, with range [0, yFrame.height())
 		 * @param bullseyes The resulting detected bullseyes, will be added to the end of the vector
+		 * @param minimumSegmentSize The minimum segment size in pixels for a valid bullseye detection, with range [1, infinity)
 		 * @param pyramidLayer The pyramid layer at which this detection is performed, with range [0, infinity)
 		 */
-		static void detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes, const unsigned int pyramidLayer = 0u);
+		static void detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes, const unsigned int minimumSegmentSize, const unsigned int pyramidLayer = 0u);
 
 		/**
 		 * Finds either the next black or the next white pixel towards negative y direction (upwards in an image).

@@ -57,14 +57,15 @@ void BullseyeDetectorMono::Parameters::setUseAdaptiveRowSpacing(bool useAdaptive
 	useAdaptiveRowSpacing_ = useAdaptiveRowSpacing;
 }
 
-unsigned int BullseyeDetectorMono::Parameters::minimumDiameter() const noexcept
+unsigned int BullseyeDetectorMono::Parameters::minimumSegmentSize() const noexcept
 {
-	return minimumDiameter_;
+	return minimumSegmentSize_;
 }
 
-void BullseyeDetectorMono::Parameters::setMinimumDiameter(unsigned int minimumDiameter) noexcept
+void BullseyeDetectorMono::Parameters::setMinimumSegmentSize(unsigned int minimumSegmentSize) noexcept
 {
-	minimumDiameter_ = minimumDiameter;
+	ocean_assert(minimumSegmentSize >= 1u);
+	minimumSegmentSize_ = minimumSegmentSize;
 }
 
 BullseyeDetectorMono::Parameters BullseyeDetectorMono::Parameters::defaultParameters() noexcept
@@ -125,11 +126,11 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 		if (worker && yFrameLayer.height() >= 600u)
 		{
 			Lock multiThreadLock;
-			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, &yFrameLayer, &newBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), layer, 0u, 0u), 10u, yFrameLayer.height() - 20u);
+			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, &yFrameLayer, &newBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), parameters.minimumSegmentSize(), layer, 0u, 0u), 10u, yFrameLayer.height() - 20u);
 		}
 		else
 		{
-			detectBullseyesSubset(&yFrameLayer, &newBullseyes, nullptr, parameters.useAdaptiveRowSpacing(), layer, 10u, yFrameLayer.height() - 20u);
+			detectBullseyesSubset(&yFrameLayer, &newBullseyes, nullptr, parameters.useAdaptiveRowSpacing(), parameters.minimumSegmentSize(), layer, 10u, yFrameLayer.height() - 20u);
 		}
 
 		for (const Bullseye& newBullseye : newBullseyes)
@@ -137,12 +138,6 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 			// Bullseyes are already upscaled to original image coordinates in detectBullseyesInRow()
 			ocean_assert(newBullseye.isValid());
 			if (!newBullseye.isValid())
-			{
-				continue;
-			}
-
-			// Filter out bullseyes smaller than the minimum diameter
-			if (newBullseye.radius() * Scalar(2) < Scalar(parameters.minimumDiameter()))
 			{
 				continue;
 			}
@@ -173,7 +168,7 @@ bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bulls
 	return true;
 }
 
-void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int pyramidLayer, const unsigned int firstRow, const unsigned int numberRows)
+void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int minimumSegmentSize, const unsigned int pyramidLayer, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(yFrame != nullptr && yFrame->isValid() && yFrame->pixelFormat() == FrameType::FORMAT_Y8);
 
@@ -198,7 +193,7 @@ void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes*
 	Bullseyes localBullseyes;
 	for (unsigned int y = firstRow; y < firstRow + numberRows; y += rowSpacing)
 	{
-		detectBullseyesInRow(*yFrame, y, localBullseyes, pyramidLayer);
+		detectBullseyesInRow(*yFrame, y, localBullseyes, minimumSegmentSize, pyramidLayer);
 	}
 
 	const OptionalScopedLock scopedLock(multiThreadLock);
@@ -206,7 +201,7 @@ void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes*
 	bullseyes->insert(bullseyes->end(), localBullseyes.cbegin(), localBullseyes.cend());
 }
 
-void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes, const unsigned int pyramidLayer)
+void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes, const unsigned int minimumSegmentSize, const unsigned int pyramidLayer)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(y < yFrame.height());
