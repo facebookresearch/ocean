@@ -146,6 +146,16 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 		Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold, const unsigned int pyramidLayer = 0u);
 
 		/**
+		 * Creates a new bullseye object with diameter data from radial consistency checking.
+		 * @param position The (center) position of the bullseye within the camera frame
+		 * @param radius The radius of the bullseye in pixels, with range (0, infinity)
+		 * @param grayThreshold Threshold that was used during the detection, range [1, 255]
+		 * @param diameters The diameter data from radial consistency checking
+		 * @param pyramidLayer The pyramid layer at which this bullseye was detected, with range [0, infinity)
+		 */
+		Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold, Diameters&& diameters, const unsigned int pyramidLayer = 0u);
+
+		/**
 		 * Returns whether this bullseye is valid.
 		 * @return True, if so
 		 */
@@ -176,6 +186,18 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 		unsigned int pyramidLayer() const;
 
 		/**
+		 * Returns whether this bullseye has diameter data from radial consistency checking.
+		 * @return True if diameter data is available, false otherwise
+		 */
+		bool hasDiameters() const;
+
+		/**
+		 * Returns the diameter data from radial consistency checking.
+		 * @return The diameters, empty if not available
+		 */
+		const Diameters& diameters() const;
+
+		/**
 		 * Returns an invalid bullseye position.
 		 * @return Invalid bullseye position
 		 */
@@ -203,6 +225,9 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 
 		/// The threshold that was used during the detection of this bullseye
 		unsigned int grayThreshold_ = invalidGrayThreshold();
+
+		/// The diameter data from radial consistency checking.
+		Diameters diameters_;
 
 		/// The pyramid layer at which this bullseye was detected, with range [0, infinity).
 		unsigned int pyramidLayer_ = 0u;

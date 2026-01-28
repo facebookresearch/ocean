@@ -30,6 +30,16 @@ Bullseye::Bullseye(const Vector2& position, const Scalar& radius, const unsigned
 	// Nothing else to do.
 }
 
+Bullseye::Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold, Diameters&& diameters, const unsigned int pyramidLayer) :
+	position_(position),
+	radius_(radius),
+	grayThreshold_(grayThreshold),
+	diameters_(std::move(diameters)),
+	pyramidLayer_(pyramidLayer)
+{
+	// Nothing else to do.
+}
+
 bool Bullseye::isValid() const
 {
 	return position_ != invalidPosition() && radius_ != invalidRadius() && radius_ > 0 && grayThreshold_ != invalidGrayThreshold() && grayThreshold_ != 0u && grayThreshold_ < 256u;
@@ -53,6 +63,16 @@ unsigned int Bullseye::grayThreshold() const
 unsigned int Bullseye::pyramidLayer() const
 {
 	return pyramidLayer_;
+}
+
+bool Bullseye::hasDiameters() const
+{
+	return !diameters_.empty();
+}
+
+const Diameters& Bullseye::diameters() const
+{
+	return diameters_;
 }
 
 Vector2 Bullseye::invalidPosition()
