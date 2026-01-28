@@ -38,7 +38,7 @@ OTP_LINKING_TYPES="static"
 
 OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibility
 
-OTP_SEQUENTIAL="ON"  # Default: build configurations sequentially
+OTP_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
 OTP_LOG_LEVEL="ERROR"  # Default: only show errors
 OTP_VALID_LOG_LEVELS="ERROR,WARNING,NOTICE,STATUS,VERBOSE,DEBUG,TRACE"
