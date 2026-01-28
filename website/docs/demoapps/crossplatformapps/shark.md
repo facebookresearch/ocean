@@ -96,7 +96,7 @@ This will allow you to customize the demo with your own images and 3D models. Pl
     export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty"
 
     # Change into the directory with the Gradle config of this project
-    cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/shark/android
+    cd /path/to/ocean/build/gradle/application/ocean/shark/android
 
     # In ./app/build.gradle.kts, ensure that only those Android ABIs are enabled for which the corresponding third-party libraries have been built. Otherwise, your build will fail, cf. the [general build instructions](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_android.md#4-building-the-ocean-android-demotest-apps).
 

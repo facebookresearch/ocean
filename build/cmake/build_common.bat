@@ -11,7 +11,6 @@
 @echo off
 
 if "%~1"==":check_build_dependencies" goto :check_build_dependencies
-if "%~1"==":check_ocean_development_path" goto :check_ocean_development_path
 if "%~1"==":check_cmake" goto :check_cmake
 
 @REM If called without arguments, show usage
@@ -20,25 +19,12 @@ echo It should be called from other build scripts, not run directly.
 echo.
 echo Available functions:
 echo   :check_build_dependencies      - Check all required build tools
-echo   :check_ocean_development_path  - Check if OCEAN_DEVELOPMENT_PATH is set
 echo   :check_cmake                   - Check if CMake is installed
 exit /b 0
 
 :check_build_dependencies
-call :check_ocean_development_path
-if %errorlevel% neq 0 exit /b 1
 call :check_cmake
 if %errorlevel% neq 0 exit /b 1
-exit /b 0
-
-:check_ocean_development_path
-if "%OCEAN_DEVELOPMENT_PATH%"=="" (
-    echo ERROR: OCEAN_DEVELOPMENT_PATH is not set. 1>&2
-    echo. 1>&2
-    echo Please set OCEAN_DEVELOPMENT_PATH to the root of your Ocean development directory: 1>&2
-    echo   set OCEAN_DEVELOPMENT_PATH=C:\path\to\ocean 1>&2
-    exit /b 1
-)
 exit /b 0
 
 :check_cmake

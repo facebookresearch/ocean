@@ -67,15 +67,6 @@ check_command() {
 check_build_dependencies() {
   local platform=${1:-$(detect_platform)}
 
-  # OCEAN_DEVELOPMENT_PATH must be set
-  if [ -z "${OCEAN_DEVELOPMENT_PATH}" ]; then
-    echo "ERROR: OCEAN_DEVELOPMENT_PATH is not set." >&2
-    echo "" >&2
-    echo "Please set OCEAN_DEVELOPMENT_PATH to the root of your Ocean development directory:" >&2
-    echo "  export OCEAN_DEVELOPMENT_PATH=/path/to/ocean" >&2
-    exit 1
-  fi
-
   # CMake is required for all builds
   check_command "cmake" "${platform}" || exit 1
 }

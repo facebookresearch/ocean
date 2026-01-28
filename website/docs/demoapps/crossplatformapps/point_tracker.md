@@ -36,7 +36,7 @@ The demo utilizes a platform-independent class called [`PointTrackerWrapper`](ht
     export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty"
 
     # Change into the directory with the Gradle config of this project
-    cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/tracking/pointtracker/android
+    cd /path/to/ocean/build/gradle/application/ocean/demo/tracking/pointtracker/android
 
     # In ./app/build.gradle.kts, ensure that only those Android ABIs are enabled for which the corresponding third-party libraries have been built. Otherwise, your build will fail, cf. the [general build instructions](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_android.md#4-building-the-ocean-android-demotest-apps).
 
@@ -64,7 +64,7 @@ The demo utilizes a platform-independent class called [`PointTrackerWrapper`](ht
     Ensure the [third-party libraries have been built for macOS](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_macos.md#2-building-the-third-party-libraries). Then follow the instructions to build the Ocean code base. Let's assume you're building Ocean with the release build config:
 
     ```bash
-    cd ${OCEAN_DEVELOPMENT_PATH}
+    cd /path/to/ocean
 
     # Build the third-party libraries
     ./build/cmake/build_thirdparty_linuxunix.sh -c release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"

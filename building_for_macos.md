@@ -17,7 +17,7 @@ This document describes the process to build Ocean for macOS. It covers:
 The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_linuxunix.sh`](build/cmake/build_thirdparty_linuxunix.sh). This script handles both Linux and macOS builds and will automatically detect the platform. By default, it will build all third-party libraries in both debug and release configurations with static linking.
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_linuxunix.sh
 ```
 
@@ -26,7 +26,7 @@ Once the build is complete, there will be one subdirectory per build config with
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
 ```
 
@@ -37,7 +37,7 @@ Run `./build/cmake/build_thirdparty_linuxunix.sh --help` to see all available op
 The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean_linuxunix.sh`](build/cmake/build_ocean_linuxunix.sh). Like the third-party script, this handles both Linux and macOS. By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_ocean_linuxunix.sh
 ```
 
@@ -46,7 +46,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. For example:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_ocean_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
 ```
 
@@ -60,8 +60,8 @@ To configure the CMake project of Ocean as a debug build, use:
 
 ```
 # Debug
-cd ${OCEAN_DEVELOPMENT_PATH}
-cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+cd /path/to/ocean
+cmake -S"/path/to/ocean" \
     -B"${HOME}/build_ocean_macos_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
@@ -73,8 +73,8 @@ and for release builds, use:
 
 ```
 # Release
-cd ${OCEAN_DEVELOPMENT_PATH}
-cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+cd /path/to/ocean
+cmake -S"/path/to/ocean" \
     -B"${HOME}/build_ocean_macos_release" \
     -DCMAKE_BUILD_TYPE="Release" \
     -G Xcode \

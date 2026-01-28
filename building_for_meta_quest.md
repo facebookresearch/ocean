@@ -52,7 +52,7 @@ While this SDK is optional some of the Ocean demo apps for Quest require this se
 Please refer to the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest, the default build parameters are sufficient:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh
 ```
 
@@ -66,7 +66,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized if needed. For example, to specify a different Android SDK version:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a --sdk android-32
 ```
 
@@ -87,7 +87,7 @@ To build the APK, run "gradlew" from the directory in the manner examplified bel
 # Adjust this to your location of the third-party libraries
 export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android
 
-cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest
+cd /path/to/ocean/build/gradle/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest
 
 # Build the APK of the application
 ./gradlew build

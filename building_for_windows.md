@@ -16,7 +16,7 @@ This document describes the process to build Ocean for Windows. It covers:
 The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_windows.bat`](build/cmake/build_thirdparty_windows.bat). By default, this will build all third-party libraries in both debug and release configurations with static linking.
 
 ```
-cd /D %OCEAN_DEVELOPMENT_PATH%
+cd /D \path\to\ocean
 .\build\cmake\build_thirdparty_windows.bat
 ```
 
@@ -25,7 +25,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. Use `-config` to specify build configurations, `-link` for linking type, `-build` for build directory, and `-install` for installation directory. For example:
 
 ```
-cd /D %OCEAN_DEVELOPMENT_PATH%
+cd /D \path\to\ocean
 .\build\cmake\build_thirdparty_windows.bat -config debug,release -link static -build C:\build_oceanTP -install C:\install_oceanTP
 ```
 
@@ -38,7 +38,7 @@ Run `.\build\cmake\build_thirdparty_windows.bat -help` to see all available opti
 The easiest way to build all Ocean libraries and apps is by using the provided build script. By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
-cd /D %OCEAN_DEVELOPMENT_PATH%
+cd /D \path\to\ocean
 .\build\cmake\build_ocean_windows.bat
 ```
 
@@ -47,7 +47,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. For example:
 
 ```
-cd /D %OCEAN_DEVELOPMENT_PATH%
+cd /D \path\to\ocean
 .\build\cmake\build_ocean_windows.bat -config debug,release -link static -third-party C:\install_oceanTP
 ```
 

@@ -39,7 +39,7 @@ Then run the following steps:
 # Adjust this to your location of the third-party libraries
 export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty"
 
-cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/platform/meta/quest/openxr/vrnativeapplicationadvanced/quest
+cd /path/to/ocean/build/gradle/application/ocean/demo/platform/meta/quest/openxr/vrnativeapplicationadvanced/quest
 
 ./gradlew assemble
 

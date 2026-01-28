@@ -84,7 +84,7 @@ Configure the environment variables through System Properties:
 The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh) (on Windows: [`build/cmake/build_thirdparty_android.bat`](build/cmake/build_thirdparty_android.bat)). By default, this will build all third-party libraries in both debug and release configurations with static linking for the `arm64-v8a` ABI.
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh
 ```
 
@@ -93,7 +93,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `--abi` for Android ABI, `-b` for build directory, and `-i` for installation directory. For example:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
@@ -109,7 +109,7 @@ After that you have following options:
 If you already have a complete setup for an Android project and just need the header files and compiled libraries of Ocean, you can build it as follows. By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_ocean_android.sh
 ```
 
@@ -118,7 +118,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. For example:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
@@ -162,7 +162,7 @@ To build the APK, run "gradlew" from the directory in the manner examplified bel
 # Adjust this to your location of the third-party libraries
 export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android
 
-cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/base/console/android
+cd /path/to/ocean/build/gradle/application/ocean/demo/base/console/android
 
 # Build the APK of the application
 ./gradlew build

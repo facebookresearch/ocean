@@ -28,7 +28,7 @@ As with the desktop use case, this process consists of two steps:
 The easiest way to build the third-party libraries is by using the provided build script. By default, this will build all third-party libraries in both debug and release configurations with static linking.
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_ios.sh
 ```
 
@@ -37,7 +37,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_thirdparty_ios.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
 ```
 
@@ -50,7 +50,7 @@ This section provides an example of how to build the Ocean libraries for the cas
 Make sure that the third-party libraries have been built and installed as described above. By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_ocean_ios.sh
 ```
 
@@ -59,7 +59,7 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 The build script can be customized using command-line parameters. For example:
 
 ```
-cd ${OCEAN_DEVELOPMENT_PATH}
+cd /path/to/ocean
 ./build/cmake/build_ocean_ios.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
 ```
 
@@ -77,12 +77,12 @@ To configure the CMake project of Ocean as a debug build, use:
 
 ```
 # Debug
-cd ${OCEAN_DEVELOPMENT_PATH}
-cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+cd /path/to/ocean
+cmake -S"/path/to/ocean" \
     -B"${HOME}/build_ocean_ios_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
-    -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE="/path/to/ocean/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
     -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/arm64_static_debug" \
@@ -94,12 +94,12 @@ and for release builds, use:
 
 ```
 # Release
-cd ${OCEAN_DEVELOPMENT_PATH}
-cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+cd /path/to/ocean
+cmake -S"/path/to/ocean" \
     -B"${HOME}/build_ocean_ios_release" \
     -DCMAKE_BUILD_TYPE="Release" \
     -G Xcode \
-    -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE="/path/to/ocean/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
     -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios/arm64_static_release" \

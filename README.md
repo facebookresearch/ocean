@@ -18,7 +18,6 @@ For a general overview, the [project website](https://facebookresearch.github.io
 ## General Prerequisites
 
 - Install [CMake](https://cmake.org/download/) 3.26 or higher.
-- Define an environment variable `OCEAN_DEVELOPMENT_PATH` that points to the local directory containing this repository
 - Ocean requires C++20
 - Ensure that the [Git](https://www.git-scm.com/downloads) executable is available in your path.
 

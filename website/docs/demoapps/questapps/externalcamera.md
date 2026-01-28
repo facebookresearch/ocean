@@ -40,7 +40,7 @@ Then run the following steps:
 # Adjust this to your location of the third-party libraries
 export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty"
 
-cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/media/externalcamera/quest
+cd /path/to/ocean/build/gradle/application/ocean/demo/media/externalcamera/quest
 
 ./gradlew assemble
 
@@ -67,7 +67,7 @@ Then run the following steps:
 # Adjust this to your location of the third-party libraries
 export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty"
 
-cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/media/externalcamera/android
+cd /path/to/ocean/build/gradle/application/ocean/demo/media/externalcamera/android
 
 ./gradlew assemble
 
