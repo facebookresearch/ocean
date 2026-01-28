@@ -385,6 +385,21 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool checkRadialConsistencyPhase2SymmetryValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters);
 
 		/**
+		 * Phase 3 of radial consistency check: Intensity validation.
+		 * Validates that midpoints between transition points have expected intensities.
+		 * @param yFrame The grayscale frame
+		 * @param threshold Grayscale threshold
+		 * @param numberDiameters Number of diameters
+		 * @param backgroundExtensionFactor Extension factor for background check
+		 * @param scale Scale factor for debug visualization
+		 * @param xCenter Horizontal center coordinate
+		 * @param yCenter Vertical center coordinate
+		 * @param diameters The diameter data to validate (modified with intensity check results)
+		 * @return True if phase passes (enough intensity checks pass)
+		 */
+		static bool checkRadialConsistencyPhase3IntensityValidation(const Frame& yFrame, const unsigned int threshold, const unsigned int numberDiameters, const Scalar backgroundExtensionFactor, const Scalar scale, const unsigned int xCenter, const unsigned int yCenter, Diameters& diameters);
+
+		/**
 		 * Computes the arithmetic mean of a vector of scalar values.
 		 * @param values The scalar values, must not be empty
 		 * @return The arithmetic mean

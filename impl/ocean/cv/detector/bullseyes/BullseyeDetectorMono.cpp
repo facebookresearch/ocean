@@ -1163,6 +1163,99 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase2SymmetryValidation(const 
 	return passed;
 }
 
+bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const Frame& yFrame, const unsigned int threshold, const unsigned int numberDiameters, const Scalar backgroundExtensionFactor, const Scalar scale, const unsigned int xCenter, const unsigned int yCenter, Diameters& diameters)
+{
+	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
+	ocean_assert(numberDiameters >= 4u);
+
+	const unsigned int width = yFrame.width();
+	const unsigned int height = yFrame.height();
+
+	unsigned int intensityPassCount = 0u;
+	unsigned int intensityTotalCount = 0u;
+
+	for (unsigned int i = 0u; i < numberDiameters; ++i)
+	{
+		Diameter& diameter = diameters[i];
+
+		for (HalfRay* ray : {&diameter.halfRayPositive, &diameter.halfRayNegative})
+		{
+			const Vector2 midPoint0 = (ray->transitionPoints[0] + ray->transitionPoints[1]) * Scalar(0.5);
+			if (midPoint0.x() >= Scalar(1) && midPoint0.x() < Scalar(width - 1) && midPoint0.y() >= Scalar(1) && midPoint0.y() < Scalar(height - 1))
+			{
+				if (isWhitePixel(yFrame.constpixel<uint8_t>((unsigned int)midPoint0.x(), (unsigned int)midPoint0.y()), threshold))
+				{
+					ray->isIntensityValid[0] = true;
+					++intensityPassCount;
+				}
+				else
+				{
+					ray->isIntensityValid[0] = false;
+				}
+
+				++intensityTotalCount;
+			}
+
+			ray->intensityCheckPoints[0] = midPoint0;
+
+			const Vector2 midPoint1 = (ray->transitionPoints[1] + ray->transitionPoints[2]) * Scalar(0.5);
+			if (midPoint1.x() >= Scalar(1) && midPoint1.x() < Scalar(width - 1) && midPoint1.y() >= Scalar(1) && midPoint1.y() < Scalar(height - 1))
+			{
+				if (isBlackPixel(yFrame.constpixel<uint8_t>((unsigned int)midPoint1.x(), (unsigned int)midPoint1.y()), threshold))
+				{
+					ray->isIntensityValid[1] = true;
+					++intensityPassCount;
+				}
+				else
+				{
+					ray->isIntensityValid[1] = false;
+				}
+
+				ray->intensityCheckPoints[1] = midPoint1;
+
+				++intensityTotalCount;
+			}
+
+			if (ray->transitionPoints.size() >= 2 && ray->transitionPoints[1] != HalfRay::invalidTransitionPoint() && ray->transitionPoints[2] != HalfRay::invalidTransitionPoint())
+			{
+				const Scalar ringWidth = ray->transitionPoints[2].distance(ray->transitionPoints[1]);
+				const Vector2 direction = (ray->transitionPoints[2] - ray->transitionPoints[1]).normalizedOrZero();
+				ocean_assert(direction.isUnit());
+
+				const Scalar extensionWidth = ringWidth * backgroundExtensionFactor;
+				const Vector2 outsidePoint = ray->transitionPoints[2] + direction * extensionWidth;
+
+				if (outsidePoint.x() >= Scalar(1) && outsidePoint.x() < Scalar(width - 1) && outsidePoint.y() >= Scalar(1) && outsidePoint.y() < Scalar(height - 1))
+				{
+					if (isWhitePixel(yFrame.constpixel<uint8_t>((unsigned int)outsidePoint.x(), (unsigned int)outsidePoint.y()), threshold))
+					{
+						ray->isIntensityValid[2] = true;
+						++intensityPassCount;
+					}
+					else
+					{
+						ray->isIntensityValid[2] = false;
+					}
+
+					ray->intensityCheckPoints[2] = outsidePoint;
+				}
+
+				++intensityTotalCount;
+			}
+		}
+	}
+
+	constexpr Scalar minPassFraction = Scalar(0.75);
+	ocean_assert(intensityTotalCount != 0u);
+	const Scalar passFraction = intensityTotalCount == 0u ? Scalar(0) : (Scalar(intensityPassCount) / Scalar(intensityTotalCount));
+
+	const bool passed = passFraction >= minPassFraction;
+
+	BullseyesDebugElements::get().drawRadialConsistencyPhase3(yCenter, xCenter, scale, diameters, passed);
+
+	return passed;
+}
+
 Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
 {
 	ocean_assert(!values.empty());
