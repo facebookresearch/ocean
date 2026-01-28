@@ -498,7 +498,7 @@ T& ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, 
 template <typename T, typename TReleaseValue, typename TReleaseReturn, TReleaseReturn (*tReleaseFunction)(TReleaseValue), typename NotVoidTyper<TReleaseReturn>::Type tExpectedReturnValue, bool tCheckReturnValue, T tInvalidValue>
 void ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>::release()
 {
-	if (needsRelease_)
+	if (needsRelease_ && object_ != tInvalidValue)
 	{
 		if constexpr (std::is_same<TReleaseReturn, void>::value)
 		{
