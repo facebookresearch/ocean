@@ -400,6 +400,17 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool checkRadialConsistencyPhase3IntensityValidation(const Frame& yFrame, const unsigned int threshold, const unsigned int numberDiameters, const Scalar backgroundExtensionFactor, const Scalar scale, const unsigned int xCenter, const unsigned int yCenter, Diameters& diameters);
 
 		/**
+		 * Phase 4 of radial consistency check: Radial profile validation.
+		 * Validates that the radial profile has an ellipse-like shape (limited local extrema).
+		 * @param xCenter Horizontal center coordinate
+		 * @param yCenter Vertical center coordinate
+		 * @param numberDiameters Number of diameters
+		 * @param diameters The diameter data to validate
+		 * @return True if phase passes (radial profile is ellipse-like)
+		 */
+		static bool checkRadialConsistencyPhase4RadialProfileValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Diameters& diameters);
+
+		/**
 		 * Computes the arithmetic mean of a vector of scalar values.
 		 * @param values The scalar values, must not be empty
 		 * @return The arithmetic mean

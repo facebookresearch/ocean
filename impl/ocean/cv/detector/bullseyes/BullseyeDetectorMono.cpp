@@ -1256,6 +1256,101 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const
 	return passed;
 }
 
+bool BullseyeDetectorMono::checkRadialConsistencyPhase4RadialProfileValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Diameters& diameters)
+{
+	ocean_assert(numberDiameters >= 4u);
+
+	// Step 1: Compute centroid of outer ring (r2) points as more accurate center
+	Vector2 centroid(Scalar(0), Scalar(0));
+	unsigned int numberCentroidPoints = 0u;
+
+	for (unsigned int i = 0u; i < numberDiameters; ++i)
+	{
+		const Diameter& diameter = diameters[i];
+
+		if (!diameter.isSymmetryValid)
+		{
+			continue;
+		}
+
+		centroid += diameter.halfRayPositive.transitionPoints[2];
+		centroid += diameter.halfRayNegative.transitionPoints[2];
+
+		numberCentroidPoints += 2u;
+	}
+
+	if (numberCentroidPoints < 4u)
+	{
+		// Not enough symmetric diameters to validate radial profile - reject
+		return false;
+	}
+
+	centroid /= Scalar(numberCentroidPoints);
+
+	// Step 2: Collect squared distances from centroid, sorted by angle
+	using AngleDistanceSqrPair = std::pair<Scalar, Scalar>;
+	using AngleDistanceSqrPairs = std::vector<AngleDistanceSqrPair>;
+
+	auto angleDistanceSqrPairLess = [](const AngleDistanceSqrPair& a, const AngleDistanceSqrPair& b)
+	{
+		return a.first < b.first;
+	};
+
+	AngleDistanceSqrPairs angleDistanceSqrPairs;
+	angleDistanceSqrPairs.reserve(numberCentroidPoints);
+
+	for (unsigned int i = 0u; i < numberDiameters; ++i)
+	{
+		const Diameter& diameter = diameters[i];
+
+		if (!diameter.isSymmetryValid)
+		{
+			continue;
+		}
+
+		const Scalar distancePositiveSqr = (diameter.halfRayPositive.transitionPoints[2] - centroid).sqr();
+		const Scalar distanceNegativeSqr = (diameter.halfRayNegative.transitionPoints[2] - centroid).sqr();
+
+		angleDistanceSqrPairs.emplace_back(diameter.halfRayPositive.angle, distancePositiveSqr);
+		angleDistanceSqrPairs.emplace_back(diameter.halfRayNegative.angle, distanceNegativeSqr);
+	}
+
+	// Sort by angle for circular traversal
+	std::sort(angleDistanceSqrPairs.begin(), angleDistanceSqrPairs.end(), angleDistanceSqrPairLess);
+
+	// Step 3: Count local extrema using multiplicative distance threshold
+	constexpr Scalar distanceThreshold = Scalar(0.05);
+	static_assert(distanceThreshold >= Scalar(0) && distanceThreshold <= Scalar(1), "Invalid distance threshold");
+	constexpr Scalar maxDistanceThresholdSqr = (Scalar(1) + distanceThreshold) * (Scalar(1) + distanceThreshold);
+	constexpr Scalar minDistanceThresholdSqr = (Scalar(1) - distanceThreshold) * (Scalar(1) - distanceThreshold);
+
+	const size_t n = angleDistanceSqrPairs.size();
+	unsigned int extremaCount = 0u;
+
+	for (size_t i = 0; i < n; ++i)
+	{
+		const Scalar prevSqr = angleDistanceSqrPairs[(i + n - 1) % n].second;
+		const Scalar currSqr = angleDistanceSqrPairs[i].second;
+		const Scalar nextSqr = angleDistanceSqrPairs[(i + 1) % n].second;
+
+		// Local maximum: significantly higher than both neighbors
+		if (currSqr > prevSqr * maxDistanceThresholdSqr && currSqr > nextSqr * maxDistanceThresholdSqr)
+		{
+			++extremaCount;
+		}
+		// Local minimum: significantly lower than both neighbors
+		else if (currSqr < prevSqr * minDistanceThresholdSqr && currSqr < nextSqr * minDistanceThresholdSqr)
+		{
+			++extremaCount;
+		}
+	}
+
+	// Step 4: Reject if too many extrema (ellipse should have ~4, allow up to 6 for noise)
+	constexpr unsigned int maxExtrema = 6u;
+
+	return extremaCount <= maxExtrema;
+}
+
 Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
 {
 	ocean_assert(!values.empty());
