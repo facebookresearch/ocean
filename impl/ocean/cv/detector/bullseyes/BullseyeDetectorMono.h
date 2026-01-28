@@ -352,6 +352,26 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool castHalfRay(const uint8_t* yFrameData, const unsigned int yFrameWidth, const unsigned int yFrameHeight, const unsigned int yFrameStrideElements, const unsigned int xCenter, const unsigned int yCenter, const Scalar angle, const Scalar maxSearchRadius, const uint8_t centerIntensity, const uint8_t grayThreshold, HalfRay& ray);
 
 		/**
+		 * Phase 1 of radial consistency check: Cast symmetric half-rays.
+		 * Casts half-rays in positive and negative directions for each diameter.
+		 * @param yData Pointer to the frame data
+		 * @param width Frame width in pixels
+		 * @param height Frame height in pixels
+		 * @param strideElements Frame stride in elements
+		 * @param xCenter Horizontal center coordinate
+		 * @param yCenter Vertical center coordinate
+		 * @param threshold Grayscale threshold
+		 * @param maxSearchRadius Maximum ray search radius
+		 * @param centerIntensity Intensity at the center pixel
+		 * @param numberDiameters Number of diameters to cast
+		 * @param minValidRayFraction Minimum fraction of valid rays required
+		 * @param scale Scale factor for debug visualization
+		 * @param diameters Output: the diameter data with half-ray results
+		 * @return True if phase passes (enough valid rays found)
+		 */
+		static bool checkRadialConsistencyPhase1CastRays(const uint8_t* yData, const unsigned int width, const unsigned int height, const unsigned int strideElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float maxSearchRadius, const uint8_t centerIntensity, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters);
+
+		/**
 		 * Computes the arithmetic mean of a vector of scalar values.
 		 * @param values The scalar values, must not be empty
 		 * @return The arithmetic mean

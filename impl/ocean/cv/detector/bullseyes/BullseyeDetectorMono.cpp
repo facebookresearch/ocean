@@ -1079,6 +1079,45 @@ bool BullseyeDetectorMono::castHalfRay(const uint8_t* yFrameData, const unsigned
 	return state == State::Done;
 };
 
+bool BullseyeDetectorMono::checkRadialConsistencyPhase1CastRays(const uint8_t* yData, const unsigned int width, const unsigned int height, const unsigned int strideElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float maxSearchRadius, const uint8_t centerIntensity, const unsigned int numberDiameters, const Scalar minValidRayFraction, const Scalar scale, Diameters& diameters)
+{
+	ocean_assert(yData != nullptr);
+	ocean_assert(xCenter < width && yCenter < height);
+	ocean_assert(numberDiameters >= 4u);
+	ocean_assert(minValidRayFraction > Scalar(0) && minValidRayFraction <= Scalar(1));
+
+	const Scalar angleStep = Numeric::pi() / Scalar(numberDiameters);
+
+	unsigned int validDiameterCount = 0u;
+
+	for (unsigned int i = 0u; i < numberDiameters; ++i)
+	{
+		Diameter& diameter = diameters[i];
+		const Scalar angle = Scalar(i) * angleStep;
+
+		// Cast positive direction
+		if (!castHalfRay(yData, width, height, strideElements, xCenter, yCenter, angle, Scalar(maxSearchRadius), centerIntensity, threshold, diameter.halfRayPositive) || !diameter.halfRayPositive.isValid())
+		{
+			continue;
+		}
+
+		// Cast negative direction (angle + PI)
+		castHalfRay(yData, width, height, strideElements, xCenter, yCenter, angle + Numeric::pi(), Scalar(maxSearchRadius), centerIntensity, threshold, diameter.halfRayNegative);
+		if (!diameter.halfRayNegative.isValid())
+		{
+			continue;
+		}
+
+		++validDiameterCount;
+	}
+
+	const bool passed = Scalar(validDiameterCount) >= Scalar(numberDiameters) * minValidRayFraction;
+
+	BullseyesDebugElements::get().drawRadialConsistencyPhase1(yCenter, xCenter, scale, diameters, passed);
+
+	return passed;
+}
+
 Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
 {
 	ocean_assert(!values.empty());
