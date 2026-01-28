@@ -36,7 +36,7 @@ set ANDROID_SDK_VERSION=android-34
 
 setlocal enableDelayedExpansion
 
-set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install" -build:"%cd%\ocean_build" -config:"debug release" -link:"static" -third-party:"%cd%\ocean_install_thirdparty" -archive:NULL -h: -sdk:%ANDROID_SDK_VERSION% -quest:"
+set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install" -build:"%cd%\ocean_build" -config:"debug release" -link:"static" -third-party:"%cd%\ocean_install_thirdparty" -archive:NULL -log-level:ERROR -h: -sdk:%ANDROID_SDK_VERSION% -quest:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -104,6 +104,10 @@ if !-h!==1 (
     echo   -sdk ANDROID_SDK_VERSION : Default value is %ANDROID_SDK_VERSION%
     echo(
     echo   -quest : If specified, builds will be specialized for Quest apps. Otherwise generic Android is assumed.
+    echo(
+    echo   -log-level LEVEL : Set the CMake log level. Valid values are:
+    echo                 ERROR, WARNING, NOTICE, STATUS, VERBOSE, DEBUG, TRACE
+    echo                 Default: ERROR (only show errors^)
     echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
@@ -186,7 +190,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-cmake -G"Ninja" ^
+cmake --log-level=!-log-level! -G"Ninja" ^
       -S "%OCEAN_SOURCE_DIR%" ^
       -B "!BUILD_DIRECTORY!" ^
       "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" ^

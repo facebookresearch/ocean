@@ -32,6 +32,8 @@ cd /path/to/ocean
 
 Run `./build/cmake/build_thirdparty_linuxunix.sh --help` to see all available options.
 
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+
 ## 3 Building Ocean
 
 The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean_linuxunix.sh`](build/cmake/build_ocean_linuxunix.sh). Like the third-party script, this handles both Linux and macOS. By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).

@@ -43,6 +43,8 @@ cd /path/to/ocean
 
 Run `./build/cmake/build_thirdparty_ios.sh --help` to see all available options.
 
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+
 ## 3 Using Ocean in external XCode projects
 
 This section provides an example of how to build the Ocean libraries for the case that you plan to integrate them into an existing iOS project.

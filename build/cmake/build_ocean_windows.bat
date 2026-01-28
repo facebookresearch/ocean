@@ -28,7 +28,7 @@ set OCEAN_SOURCE_DIR=%~dp0..\..
 set DEFAULT_BUILD_PATH=%cd%\ocean_build
 set DEFAULT_INSTALL_PATH=%cd%\ocean_install
 
-set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -third-party:"%cd%\ocean_install_thirdparty" -archive:NULL -h:"
+set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -third-party:"%cd%\ocean_install_thirdparty" -archive:NULL -log-level:"ERROR" -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -91,6 +91,10 @@ if !-h!==1 (
     echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
+    echo(
+    echo   -log-level LEVEL : Set the CMake log level. Valid values are:
+    echo                 ERROR, WARNING, NOTICE, STATUS, VERBOSE, DEBUG, TRACE
+    echo                 Default: ERROR (only show errors^)
     echo(
     echo   -h : This summary
     echo(
@@ -162,8 +166,13 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-cmake -S "%OCEAN_SOURCE_DIR%" -B "%BUILD_DIRECTORY%" "-DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY%" -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% !TPSPEC!
-cmake --build "%BUILD_DIRECTORY%" --config %BUILD_TYPE% --target install -- /m:16
+cmake --log-level=!-log-level! -S "%OCEAN_SOURCE_DIR%" -B "%BUILD_DIRECTORY%" "-DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY%" -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% !TPSPEC!
+
+@REM Set quiet flag for MSBuild when log level is ERROR
+set MSBUILD_VERBOSITY=
+if /I "!-log-level!"=="ERROR" set MSBUILD_VERBOSITY=/v:q
+
+cmake --build "%BUILD_DIRECTORY%" --config %BUILD_TYPE% --target install -- /m:16 !MSBUILD_VERBOSITY!
 
 if %errorlevel% neq 0 (
     set BUILD_FAILURES=%BUILD_FAILURES% !bibase!

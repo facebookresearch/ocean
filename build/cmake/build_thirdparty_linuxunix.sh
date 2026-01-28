@@ -48,6 +48,9 @@ OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibilit
 
 OTP_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
+OTP_LOG_LEVEL="ERROR"  # Default: only show errors
+OTP_VALID_LOG_LEVELS="ERROR,WARNING,NOTICE,STATUS,VERBOSE,DEBUG,TRACE"
+
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
 
@@ -57,7 +60,7 @@ display_help()
     echo "Script to build the third-party libraries required by Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
-    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE]"
+    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE] [--log-level LEVEL]"
     echo ""
     echo "Arguments:"
     echo ""
@@ -90,8 +93,14 @@ display_help()
     echo "                libraries will be installed to {INSTALL_DIR}/library_name/{lib,include,...}."
     echo "                Default: disabled (flat structure for backward compatibility)"
     echo ""
-    echo "  --sequential : Build configurations sequentially instead of in parallel."
+    echo "  --seq | --sequential : Build configurations sequentially instead of in parallel."
     echo "                By default, debug and release builds run concurrently."
+    echo ""
+    echo "  --log-level LEVEL : Set the CMake log level. Valid values are:"
+    for level in $(echo "${OTP_VALID_LOG_LEVELS}" | tr ',' '\n'); do
+        echo "                  ${level}"
+    done
+    echo "                Default: ERROR (only show errors)"
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -129,10 +138,20 @@ function run_build {
     BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
     INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}/${OCEAN_ARCH}_${LINKING_TYPE}_${BUILD_CONFIG_LOWER}"
 
-    PAR_SWITCH="-- -j16"
+    # Add quiet flags to build tool when log level is ERROR
+    QUIET_FLAG=""
+    if [[ "${OTP_LOG_LEVEL}" == "ERROR" ]]; then
+        QUIET_FLAG="-s"  # Silent mode for make
+    fi
+
+    PAR_SWITCH="-- ${QUIET_FLAG} -j16"
     CONF_SWITCH="CMAKE_BUILD_TYPE"
     if [[ ${OCEAN_PLATFORM} == "windows" ]] ; then
-      PAR_SWITCH="--config ${BUILD_CONFIG} -- //m:16"
+      if [[ "${OTP_LOG_LEVEL}" == "ERROR" ]]; then
+        PAR_SWITCH="--config ${BUILD_CONFIG} -- //m:16 //v:q"
+      else
+        PAR_SWITCH="--config ${BUILD_CONFIG} -- //m:16"
+      fi
       CONF_SWITCH="CMAKE_CONFIGURATION_TYPES"
     fi
 
@@ -149,7 +168,7 @@ function run_build {
     echo ""
 
     eval "${OTP_SOURCE_DIR}/build_deps.sh" "${OCEAN_PLATFORM}" "${OTP_SOURCE_DIR}" "${BUILD_DIR}" \"${PAR_SWITCH}\" \
-          "${OTP_SUBDIVIDE_INSTALL}" \
+          "${OTP_SUBDIVIDE_INSTALL}" "${OTP_LOG_LEVEL}" \
           "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
           "-D${CONF_SWITCH}=${BUILD_CONFIG}" \
           "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}" "-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}" \
@@ -199,9 +218,14 @@ while [[ $# -gt 0 ]]; do
         OTP_SUBDIVIDE_INSTALL="ON"
         shift # past argument
         ;;
-        --sequential)
+        --seq|--sequential)
         OTP_SEQUENTIAL="ON"
         shift # past argument
+        ;;
+        --log-level)
+        OTP_LOG_LEVEL="$2"
+        shift # past argument
+        shift # past value
         ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
@@ -247,6 +271,14 @@ for type in ${OTP_LINKING_TYPES}; do
         exit 1
     fi
 done
+
+# Validate log level
+OTP_LOG_LEVEL=$(echo "${OTP_LOG_LEVEL}" | tr '[:lower:]' '[:upper:]')
+if ! echo "${OTP_VALID_LOG_LEVELS}" | grep -w "${OTP_LOG_LEVEL}" > /dev/null; then
+    echo "Error: Unknown log level \"${OTP_LOG_LEVEL}\"" >&2
+    echo "Valid values: ${OTP_VALID_LOG_LEVELS}" >&2
+    exit 1
+fi
 
 echo "The third-party libraries will be build for the following combinations:"
 for build_config in ${OTP_BUILD_CONFIG}; do

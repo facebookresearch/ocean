@@ -33,6 +33,8 @@ It is advisable to place build and install directories as close to the root of a
 
 Run `.\build\cmake\build_thirdparty_windows.bat -help` to see all available options.
 
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `-log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+
 ## 3 Building Ocean
 
 The easiest way to build all Ocean libraries and apps is by using the provided build script. By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).

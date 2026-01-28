@@ -38,7 +38,10 @@ OTP_LINKING_TYPES="static"
 
 OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibility
 
-OTP_SEQUENTIAL="OFF"  # Default: build configurations in parallel
+OTP_SEQUENTIAL="ON"  # Default: build configurations sequentially
+
+OTP_LOG_LEVEL="ERROR"  # Default: only show errors
+OTP_VALID_LOG_LEVELS="ERROR,WARNING,NOTICE,STATUS,VERBOSE,DEBUG,TRACE"
 
 IOS_CMAKE_TOOLCHAIN_FILE="${SCRIPT_DIR}/ios-cmake/ios.toolchain.cmake"
 
@@ -86,6 +89,12 @@ display_help()
     echo "  --sequential : Build configurations sequentially instead of in parallel."
     echo "                By default, debug and release builds run concurrently."
     echo ""
+    echo "  --log-level LEVEL : Set the CMake log level. Valid values are:"
+    for level in $(echo "${OTP_VALID_LOG_LEVELS}" | tr ',' '\n'); do
+        echo "                  ${level}"
+    done
+    echo "                Default: ERROR (only show errors)"
+    echo ""
     echo "  -h | --help : This summary"
     echo ""
 }
@@ -124,6 +133,11 @@ while [[ $# -gt 0 ]]; do
         --sequential)
         OTP_SEQUENTIAL="ON"
         shift # past argument
+        ;;
+        --log-level)
+        OTP_LOG_LEVEL="$2"
+        shift # past argument
+        shift # past value
         ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
@@ -180,8 +194,14 @@ function run_build {
     echo ""
     echo ""
 
-    BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"--config ${BUILD_CONFIG} -- -parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
-        \"${OTP_SUBDIVIDE_INSTALL}\" \
+    # Add -quiet to xcodebuild when log level is ERROR
+    XCODE_QUIET_FLAG=""
+    if [[ "${OTP_LOG_LEVEL}" == "ERROR" ]]; then
+        XCODE_QUIET_FLAG="-quiet"
+    fi
+
+    BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"--config ${BUILD_CONFIG} -- ${XCODE_QUIET_FLAG} -parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
+        \"${OTP_SUBDIVIDE_INSTALL}\" \"${OTP_LOG_LEVEL}\" \
         \"-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}\" \
         -GXcode \
         \"-DCMAKE_TOOLCHAIN_FILE=${IOS_CMAKE_TOOLCHAIN_FILE}\" \
@@ -237,6 +257,14 @@ for type in ${OTP_LINKING_TYPES}; do
         exit 1
     fi
 done
+
+# Validate log level
+OTP_LOG_LEVEL=$(echo "${OTP_LOG_LEVEL}" | tr '[:lower:]' '[:upper:]')
+if ! echo "${OTP_VALID_LOG_LEVELS}" | grep -w "${OTP_LOG_LEVEL}" > /dev/null; then
+    echo "Error: Unknown log level \"${OTP_LOG_LEVEL}\"" >&2
+    echo "Valid values: ${OTP_VALID_LOG_LEVELS}" >&2
+    exit 1
+fi
 
 echo "The third-party libraries will be build for the following combinations:"
 for build_config in ${OTP_BUILD_CONFIG}; do

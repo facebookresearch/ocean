@@ -45,6 +45,9 @@ OTP_SUBDIVIDE_INSTALL="OFF"  # Default: flat structure for backward compatibilit
 
 OTP_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
+OTP_LOG_LEVEL="ERROR"  # Default: only show errors
+OTP_VALID_LOG_LEVELS="ERROR,WARNING,NOTICE,STATUS,VERBOSE,DEBUG,TRACE"
+
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
 
@@ -98,6 +101,12 @@ display_help()
     echo ""
     echo "  --sequential : Build configurations sequentially instead of in parallel."
     echo "                By default, debug and release builds run concurrently."
+    echo ""
+    echo "  --log-level LEVEL : Set the CMake log level. Valid values are:"
+    for level in $(echo "${OTP_VALID_LOG_LEVELS}" | tr ',' '\n'); do
+        echo "                  ${level}"
+    done
+    echo "                Default: ERROR (only show errors)"
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -164,8 +173,14 @@ function run_build {
     echo ""
     echo ""
 
-    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" \"-- -j16\" \
-        "${OTP_SUBDIVIDE_INSTALL}" \
+    # Add quiet flag to build tool when log level is ERROR
+    QUIET_FLAG=""
+    if [[ "${OTP_LOG_LEVEL}" == "ERROR" ]]; then
+        QUIET_FLAG="-s"  # Silent mode for make
+    fi
+
+    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" \"-- ${QUIET_FLAG} -j16\" \
+        "${OTP_SUBDIVIDE_INSTALL}" "${OTP_LOG_LEVEL}" \
         "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
         "-DANDROID_ABI=${ANDROID_ABI}" \
         "-DANDROID_PLATFORM=${ANDROID_SDK_VERSION}" \
@@ -236,6 +251,11 @@ while [[ $# -gt 0 ]]; do
         OTP_SEQUENTIAL="ON"
         shift # past argument
         ;;
+        --log-level)
+        OTP_LOG_LEVEL="$2"
+        shift # past argument
+        shift # past value
+        ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
         exit 1
@@ -293,6 +313,14 @@ for type in ${OTP_LINKING_TYPES}; do
         exit 1
     fi
 done
+
+# Validate log level
+OTP_LOG_LEVEL=$(echo "${OTP_LOG_LEVEL}" | tr '[:lower:]' '[:upper:]')
+if ! echo "${OTP_VALID_LOG_LEVELS}" | grep -w "${OTP_LOG_LEVEL}" > /dev/null; then
+    echo "Error: Unknown log level \"${OTP_LOG_LEVEL}\"" >&2
+    echo "Valid values: ${OTP_VALID_LOG_LEVELS}" >&2
+    exit 1
+fi
 
 echo "The third-party libraries will be built for the following combinations:"
 for abi in ${OTP_ANDROID_ABIS}; do

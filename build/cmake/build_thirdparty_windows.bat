@@ -28,7 +28,7 @@ if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
 
 setlocal enableDelayedExpansion
 
-set "options=-install:%DEFAULT_INSTALL_PATH% -build:%DEFAULT_BUILD_PATH% -config:debug,release -link:static,shared -archive:NULL -subdivide:OFF -h:"
+set "options=-install:%DEFAULT_INSTALL_PATH% -build:%DEFAULT_BUILD_PATH% -config:debug,release -link:static,shared -archive:NULL -subdivide:OFF -log-level:ERROR -h:"
 set "SHOW_HELP=0"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
@@ -97,6 +97,10 @@ goto :skip_help
     echo                 libraries will be installed to {INSTALL_DIR}\library_name\{lib,include,...}.
     echo                 Default: OFF (flat structure for backward compatibility)
     echo(
+    echo   -log-level LEVEL : Set the CMake log level. Valid values are:
+    echo                 ERROR, WARNING, NOTICE, STATUS, VERBOSE, DEBUG, TRACE
+    echo                 Default: ERROR (only show errors^)
+    echo(
     echo   -h : This summary
     echo(
     endlocal
@@ -163,7 +167,11 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call "%OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat" windows "%OCEAN_THIRD_PARTY_SOURCE_DIR%" !BUILD_DIRECTORY! /m:16 !-subdivide! "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" "-DCMAKE_CONFIGURATION_TYPES=!BUILD_TYPE!" "-DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS!" "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!" "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+@REM Set quiet flag for MSBuild when log level is ERROR
+set MSBUILD_VERBOSITY=
+if /I "!-log-level!"=="ERROR" set MSBUILD_VERBOSITY=/v:q
+
+call "%OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat" windows "%OCEAN_THIRD_PARTY_SOURCE_DIR%" !BUILD_DIRECTORY! "/m:16 !MSBUILD_VERBOSITY!" !-subdivide! !-log-level! "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" "-DCMAKE_CONFIGURATION_TYPES=!BUILD_TYPE!" "-DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS!" "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!" "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 @echo off
 if %errorlevel% neq 0 (

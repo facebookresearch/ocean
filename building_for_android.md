@@ -99,6 +99,8 @@ cd /path/to/ocean
 
 Run `./build/cmake/build_thirdparty_android.sh --help` to see all available options.
 
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+
 
 ## 3 Using Ocean in external Android projects
 

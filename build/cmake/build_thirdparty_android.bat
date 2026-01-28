@@ -34,7 +34,7 @@ set ANDROID_SDK_VERSION=android-34
 @echo off
 setlocal enableDelayedExpansion
 
-set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install_thirdparty" -build:"%cd%\ocean_build_thirdparty" -config:"debug release" -link:"static" -archive:NULL -subdivide:OFF -h: -sdk:%ANDROID_SDK_VERSION%"
+set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install_thirdparty" -build:"%cd%\ocean_build_thirdparty" -config:"debug release" -link:"static" -archive:NULL -subdivide:OFF -log-level:ERROR -h: -sdk:%ANDROID_SDK_VERSION%"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -100,6 +100,10 @@ if !-h!==1 (
     echo   -subdivide ON/OFF : Install each library into its own subdirectory. When enabled,
     echo                 libraries will be installed to {INSTALL_DIR}\library_name\{lib,include,...}.
     echo                 Default: OFF (flat structure for backward compatibility)
+    echo(
+    echo   -log-level LEVEL : Set the CMake log level. Valid values are:
+    echo                 ERROR, WARNING, NOTICE, STATUS, VERBOSE, DEBUG, TRACE
+    echo                 Default: ERROR (only show errors^)
     echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
@@ -172,7 +176,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! "-j16" !-subdivide! ^
+call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! "-j16" !-subdivide! !-log-level! ^
         "-GNinja" ^
         "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" ^
         "-DCMAKE_BUILD_TYPE=!BUILD_TYPE!" ^

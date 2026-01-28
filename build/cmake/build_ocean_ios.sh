@@ -32,6 +32,9 @@ OCEAN_THIRD_PARTY_DIR="${PWD}/ocean_install_thirdparty"
 
 OCEAN_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
+OCEAN_LOG_LEVEL="ERROR"  # Default: only show errors
+OCEAN_VALID_LOG_LEVELS="ERROR,WARNING,NOTICE,STATUS,VERBOSE,DEBUG,TRACE"
+
 # Collection of builds that have errors that will be listed at the end of the script
 OCEAN_FAILED_BUILDS=()
 
@@ -90,9 +93,13 @@ display_help()
     echo "  --sequential : Build configurations sequentially instead of in parallel."
     echo "                By default, debug and release builds run concurrently."
     echo ""
-    echo "  -h | --help : This summary"
+    echo "  --log-level LEVEL : Set the CMake log level. Valid values are:"
+    for level in $(echo "${OCEAN_VALID_LOG_LEVELS}" | tr ',' '\n'); do
+        echo "                  ${level}"
+    done
+    echo "                Default: ERROR (only show errors)"
     echo ""
-    echo "  -h | --help                : This summary"
+    echo "  -h | --help : This summary"
     echo ""
 }
 
@@ -135,7 +142,7 @@ function run_build {
     echo "BUILD_DIR: ${BUILD_DIR}"
     echo "INSTALL_DIR: ${INSTALL_DIR}"
 
-    CMAKE_CONFIGURE_COMMAND="cmake -S\"${OCEAN_SOURCE_DIR}\" \\
+    CMAKE_CONFIGURE_COMMAND="cmake --log-level=${OCEAN_LOG_LEVEL} -S\"${OCEAN_SOURCE_DIR}\" \\
     -B\"${BUILD_DIR}\" \\
     -DCMAKE_BUILD_TYPE=\"${BUILD_CONFIG}\" \\
     -G Xcode \\
@@ -163,7 +170,13 @@ function run_build {
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${BUILD_DIR}" --target install --config ${BUILD_CONFIG} -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
+    # Add -quiet to xcodebuild when log level is ERROR
+    XCODE_QUIET_FLAG=""
+    if [[ "${OCEAN_LOG_LEVEL}" == "ERROR" ]]; then
+        XCODE_QUIET_FLAG="-quiet"
+    fi
+
+    cmake --build "${BUILD_DIR}" --target install --config ${BUILD_CONFIG} -- ${XCODE_QUIET_FLAG} CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
 
     build_exit_code=$?
 
@@ -214,6 +227,11 @@ while [[ $# -gt 0 ]]; do
         OCEAN_SEQUENTIAL="ON"
         shift # past argument
         ;;
+        --log-level)
+        OCEAN_LOG_LEVEL="$2"
+        shift # past argument
+        shift # past value
+        ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
         exit 1
@@ -263,6 +281,14 @@ for type in ${OCEAN_LINKING_TYPES[@]}; do
         exit 1
     fi
 done
+
+# Validate log level
+OCEAN_LOG_LEVEL=$(echo "${OCEAN_LOG_LEVEL}" | tr '[:lower:]' '[:upper:]')
+if ! echo "${OCEAN_VALID_LOG_LEVELS}" | grep -w "${OCEAN_LOG_LEVEL}" > /dev/null; then
+    echo "Error: Unknown log level \"${OCEAN_LOG_LEVEL}\"" >&2
+    echo "Valid values: ${OCEAN_VALID_LOG_LEVELS}" >&2
+    exit 1
+fi
 
 echo "The third-party libraries will be build for the following combinations:"
 for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do

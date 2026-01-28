@@ -48,6 +48,9 @@ OCEAN_BUILD_MINIMAL="OFF"  # Default value
 
 OCEAN_SEQUENTIAL="OFF"  # Default: build configurations in parallel
 
+OCEAN_LOG_LEVEL="ERROR"  # Default: only show errors
+OCEAN_VALID_LOG_LEVELS="ERROR,WARNING,NOTICE,STATUS,VERBOSE,DEBUG,TRACE"
+
 # Collection of builds that have errors that will be listed at the end of the script
 OCEAN_FAILED_BUILDS=()
 
@@ -59,7 +62,7 @@ display_help()
     echo "Arguments:"
     echo ""
     echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
-    echo "                   [-l|--link LINKING_TYPE] [-t|--third-party OCEAN_THIRD_PARTY_DIR]"
+    echo "                   [-l|--link LINKING_TYPE] [-t|--third-party OCEAN_THIRD_PARTY_DIR] [--log-level LEVEL]"
     echo ""
     echo "Arguments:"
     echo ""
@@ -89,8 +92,14 @@ display_help()
     echo ""
     echo "  -m | --minimal : Enable ocean minimal build configuration."
     echo ""
-    echo "  --sequential : Build configurations sequentially instead of in parallel."
+    echo "  -s | --sequential : Build configurations sequentially instead of in parallel."
     echo "                By default, debug and release builds run concurrently."
+    echo ""
+    echo "  --log-level LEVEL : Set the CMake log level. Valid values are:"
+    for level in $(echo "${OCEAN_VALID_LOG_LEVELS}" | tr ',' '\n'); do
+        echo "                  ${level}"
+    done
+    echo "                Default: ERROR (only show errors)"
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -139,6 +148,7 @@ function run_build {
 
 
     CMAKE_CONFIGURE_COMMAND="cmake \\
+    --log-level=${OCEAN_LOG_LEVEL} \\
     -S \"${OCEAN_SOURCE_DIR}\" \\
     -B \"${BUILD_DIR}\" \\
     -DCMAKE_INSTALL_PREFIX=\"${INSTALL_DIR}\" \\
@@ -195,7 +205,13 @@ function run_build {
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${BUILD_DIR}" --target install -- -j16
+    # Add quiet flag to make when log level is ERROR
+    QUIET_FLAG=""
+    if [[ "${OCEAN_LOG_LEVEL}" == "ERROR" ]]; then
+        QUIET_FLAG="-s"  # Silent mode for make
+    fi
+
+    cmake --build "${BUILD_DIR}" --target install -- ${QUIET_FLAG} -j16
 
     build_exit_code=$?
 
@@ -246,9 +262,14 @@ while [[ $# -gt 0 ]]; do
         OCEAN_BUILD_MINIMAL="ON"
         shift # past argument
         ;;
-        --sequential)
+        -s|--sequential)
         OCEAN_SEQUENTIAL="ON"
         shift # past argument
+        ;;
+        --log-level)
+        OCEAN_LOG_LEVEL="$2"
+        shift # past argument
+        shift # past value
         ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
@@ -299,6 +320,14 @@ for type in ${OCEAN_LINKING_TYPES[@]}; do
         exit 1
     fi
 done
+
+# Validate log level
+OCEAN_LOG_LEVEL=$(echo "${OCEAN_LOG_LEVEL}" | tr '[:lower:]' '[:upper:]')
+if ! echo "${OCEAN_VALID_LOG_LEVELS}" | grep -w "${OCEAN_LOG_LEVEL}" > /dev/null; then
+    echo "Error: Unknown log level \"${OCEAN_LOG_LEVEL}\"" >&2
+    echo "Valid values: ${OCEAN_VALID_LOG_LEVELS}" >&2
+    exit 1
+fi
 
 echo "Ocean will be built for the following combinations:"
 for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do

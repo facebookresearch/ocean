@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-[ ! $# -ge 4 ] &&\
-echo "Usage: $0 PLATFORM OCEAN_THIRD_PARTY_SOURCE_DIR BUILD_DIRECTORY_BASE EXTRA_BUILD_FLAGS SUBDIVIDE_INSTALL [OTHER_CMAKE_CONFIG_ARGS...]" &&\
+[ ! $# -ge 5 ] &&\
+echo "Usage: $0 PLATFORM OCEAN_THIRD_PARTY_SOURCE_DIR BUILD_DIRECTORY_BASE EXTRA_BUILD_FLAGS SUBDIVIDE_INSTALL LOG_LEVEL [OTHER_CMAKE_CONFIG_ARGS...]" &&\
 exit 1
 
 PLATFORM=$1
@@ -9,12 +9,14 @@ OCEAN_THIRD_PARTY_SOURCE_DIR=$2
 BUILD_DIRECTORY_BASE=$3
 EXTRA_BUILD_FLAGS=$4
 SUBDIVIDE_INSTALL=$5  # "ON" or "OFF"
+LOG_LEVEL=$6  # CMake log level (ERROR, WARNING, NOTICE, STATUS, etc.)
 
 shift
 shift
 shift
 shift
-shift  # One more shift for the new parameter
+shift
+shift  # One more shift for LOG_LEVEL
 
 alldeps=$(grep -v '^#' "${OCEAN_THIRD_PARTY_SOURCE_DIR}"/dependencies_allplatforms.txt)
 
@@ -49,6 +51,14 @@ else
 	echo "Per-library subdivision: DISABLED (flat structure)"
 	echo "Libraries will be installed to: ${BASE_INSTALL_PREFIX}/"
 	echo ""
+fi
+
+# When log level is ERROR, suppress compiler warnings for third-party code
+SUPPRESS_WARNINGS_FLAGS=""
+CMAKE_WARN_FLAGS=""
+if [[ "${LOG_LEVEL}" == "ERROR" ]]; then
+	SUPPRESS_WARNINGS_FLAGS="-DCMAKE_C_FLAGS=-w -DCMAKE_CXX_FLAGS=-w"
+	CMAKE_WARN_FLAGS="--no-warn-unused-cli"
 fi
 
 current_dependency_index=1
@@ -96,7 +106,7 @@ for dep in $alldeps; do
 		echo "Installing to: ${BASE_INSTALL_PREFIX}/${dep}"
 		echo "CMAKE_FIND_ROOT_PATH includes $((current_dependency_index - 1)) previously built libraries"
 
-		cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep "${NEW_ARGS[@]}" \
+		cmake --log-level=${LOG_LEVEL} ${CMAKE_WARN_FLAGS} -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep ${SUPPRESS_WARNINGS_FLAGS} "${NEW_ARGS[@]}" \
 		|| exit 1
 
 		eval cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install $EXTRA_BUILD_FLAGS \
@@ -104,7 +114,7 @@ for dep in $alldeps; do
 	else
 		# --- FLAT STRUCTURE MODE (DEFAULT) ---
 
-		cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep "$@" \
+		cmake --log-level=${LOG_LEVEL} ${CMAKE_WARN_FLAGS} -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep ${SUPPRESS_WARNINGS_FLAGS} "$@" \
 		|| exit 1
 
 		eval cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install $EXTRA_BUILD_FLAGS \

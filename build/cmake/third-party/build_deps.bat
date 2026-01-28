@@ -12,7 +12,9 @@ set OCEAN_THIRD_PARTY_SOURCE_DIR=%~2
 set BUILD_DIRECTORY_BASE=%~3
 set EXTRA_BUILD_FLAGS=%4
 set SUBDIVIDE_INSTALL=%~5
+set LOG_LEVEL=%~6
 
+shift
 shift
 shift
 shift
@@ -57,6 +59,14 @@ if "%SUBDIVIDE_INSTALL%"=="ON" (
     echo Libraries will be installed to: %BASE_INSTALL_PREFIX%\
 )
 echo.
+
+@REM When log level is ERROR, suppress compiler warnings for third-party code
+set SUPPRESS_WARNINGS_FLAGS=
+set CMAKE_WARN_FLAGS=
+if /I "%LOG_LEVEL%"=="ERROR" (
+    set SUPPRESS_WARNINGS_FLAGS=-DCMAKE_C_FLAGS="/w" -DCMAKE_CXX_FLAGS="/w"
+    set CMAKE_WARN_FLAGS=--no-warn-unused-cli
+)
 
 @REM Track previously built libraries for CMAKE_FIND_ROOT_PATH
 set PREVIOUS_LIBS_PATH=%BASE_INSTALL_PREFIX%
@@ -105,7 +115,7 @@ for /F "eol=# usebackq delims=" %%d in ("%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependen
             set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "-DCMAKE_PREFIX_PATH=!LIB_PREFIX_PATH!"
         )
 
-        cmake -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d !LIB_CMAKE_ARGS!
+        cmake --log-level=%LOG_LEVEL% %CMAKE_WARN_FLAGS% -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d %SUPPRESS_WARNINGS_FLAGS% !LIB_CMAKE_ARGS!
         if ERRORLEVEL 1 (
             exit /b 1
         )
@@ -121,7 +131,7 @@ for /F "eol=# usebackq delims=" %%d in ("%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependen
         )
     ) else (
         @REM Flat structure mode (default)
-        cmake -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d !CMAKE_ARGS!
+        cmake --log-level=%LOG_LEVEL% %CMAKE_WARN_FLAGS% -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d %SUPPRESS_WARNINGS_FLAGS% !CMAKE_ARGS!
         if ERRORLEVEL 1 (
             exit /b 1
         )

@@ -72,6 +72,8 @@ cd /path/to/ocean
 
 Run `./build/cmake/build_thirdparty_android.sh --help` to see all available options.
 
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+
 **Note:** on a Windows build host, the binaries and include files the third-party libraries will be installed into `C:\and\...`. This is required due to Windows imposing a maximum path length. Exceeding this limit will result in build errors, for example errors about missing files.
 ## 3 Building Quest demo apps that come with Ocean
 
