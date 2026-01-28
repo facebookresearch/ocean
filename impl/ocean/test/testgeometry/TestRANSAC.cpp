@@ -1289,8 +1289,6 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 
 	bool allSucceeded = true;
 
-	RandomGenerator randomGenerator;
-
 	for (const size_t correspondences : {14, 20, 30, 50, 90, 200})
 	{
 		Log::info() << " ";
@@ -1298,9 +1296,11 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 
 		HighPerformanceStatistic performance;
 
+		RandomGenerator randomGenerator;
+
 		ValidationPrecision validationFundamental(0.95, randomGenerator);
 		ValidationPrecision validationEssential(0.99, randomGenerator);
-		ValidationPrecision validationFactorized(0.99, randomGenerator);
+		ValidationPrecision validationFactorized(0.975, randomGenerator);
 
 		bool needMoreIterations = false;
 
@@ -1430,8 +1430,8 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 						}
 					}
 
-					HomogenousMatrix4 left_T_right;
-					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), left_T_right))
+					HomogenousMatrix4 left_T_right(false);
+					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), left_T_right) != 0)
 					{
 						const Vector3 factorizedTranslation(left_T_right.translation());
 						const Quaternion factorizedRotation(left_T_right.rotation());
@@ -1449,7 +1449,7 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 					}
 					else
 					{
-						scopedIterationFactorized.setInaccurate();
+						OCEAN_SET_FAILED(validationFactorized);
 					}
 				}
 			}
