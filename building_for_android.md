@@ -46,28 +46,38 @@ Please refer to the [main page](README.md) for general build prerequisites.
 
 ### Environment Variables
 
-Define the following environment variables:
-* `ANDROID_HOME`: points to the Android SDK location (e.g., `${HOME}/Library/Android/sdk` on macOS).
-* `ANDROID_NDK`: points to the Android NDK location (e.g., `${HOME}/Library/Android/sdk/ndk/26.2.11394342` on macOS).
-* `ANDROID_NDK_VERSION`: the Android NDK version number (e.g., 26.2.11394342).
-* `JAVA_HOME`: points to the JDK location (e.g., `/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home` on macOS).
+Set the following environment variables to configure the Android build environment:
 
-**Setting Environment Variables**
+#### Linux/macOS
 
-On Linux, macOS (and other Unixes) add the following lines to your terminal config file (e.g., `.zshrc`, `.bashrc`, `.profile`) or copy-and-paste them directly into the current terminal (each time):
+Add these lines to your shell configuration file (`.zshrc`, `.bashrc`, or `.profile`) or run them in your current terminal session:
 
 ```bash
+# Android SDK location
 export ANDROID_HOME="${HOME}/Library/Android/sdk"
-export ANDROID_NDK="${HOME}/Library/Android/sdk/ndk/26.2.11394342"
-export ANDROID_NDK_VERSION="26.2.11394342"
+
+# Android NDK location and version
+export ANDROID_NDK="${HOME}/Library/Android/sdk/ndk/<NDK_VERSION>"
+export ANDROID_NDK_VERSION="<NDK_VERSION>"
+
+# Java Development Kit location
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home"
 ```
 
-On Windows, define them manually:
-* Press `WINDOWS + R`, type `sysdm.pl`, and click `OK`.
-* Switch to the "Advanced" tab and select "Environment variables".
-* Add the variables as "System variables" and ensure correct paths for your system.
-* A restart may be required.
+**Note:** Replace `<NDK_VERSION>` with your installed NDK version (e.g., `26.2.11394342`). Adjust other paths according to your system. On Linux, `ANDROID_HOME` is typically `${HOME}/Android/Sdk`.
+
+#### Windows
+
+Configure the environment variables through System Properties:
+
+1. Press `Windows + R`, type `sysdm.cpl`, and press Enter
+2. Go to the "Advanced" tab and click "Environment Variables"
+3. Under "System variables", add the following variables:
+   - `ANDROID_HOME`: Path to Android SDK (e.g., `C:\Users\%USERNAME%\AppData\Local\Android\Sdk`)
+   - `ANDROID_NDK`: Path to Android NDK (e.g., `C:\Users\%USERNAME%\AppData\Local\Android\Sdk\ndk\<NDK_VERSION>`)
+   - `ANDROID_NDK_VERSION`: NDK version number (e.g., `26.2.11394342`)
+   - `JAVA_HOME`: Path to JDK (e.g., `C:\Program Files\Java\jdk-22`)
+4. Click "OK" to save and restart your terminal or IDE
 
 ## 2 Building the third-party libraries
 
