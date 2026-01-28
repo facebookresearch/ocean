@@ -36,12 +36,12 @@ bool TestP4P::test(const double testDuration, const TestSelector& selector)
 
 	TestResult testResult("P4P test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("pose"))
 	{
 		testResult = testPose(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

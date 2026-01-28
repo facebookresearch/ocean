@@ -40,12 +40,16 @@ bool TestError::test(const double testDuration, const TestSelector& selector)
 		testResult = testDeterminePoseErrorSeparatePinhole(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("determineposeerrorseparateanycamera"))
 	{
 		testResult = testDeterminePoseErrorSeparateAnyCamera(testDuration);
 
+		Log::info() << " ";
+		Log::info() << "-";
 		Log::info() << " ";
 	}
 
@@ -54,6 +58,8 @@ bool TestError::test(const double testDuration, const TestSelector& selector)
 		testResult = testDeterminePoseErrorCombinedPinhole(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("determineposeerrorcombinedanycamera"))
@@ -61,11 +67,15 @@ bool TestError::test(const double testDuration, const TestSelector& selector)
 		testResult = testDeterminePoseErrorCombinedAnyCamera(testDuration);
 
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
 	}
 
 	if (selector.shouldRun("determinehomographyerrorseparate"))
 	{
 		testResult = testDetermineHomographyErrorSeparate(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;

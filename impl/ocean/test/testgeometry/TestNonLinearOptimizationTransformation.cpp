@@ -32,21 +32,23 @@ bool TestNonLinearOptimizationTransformation::test(const double testDuration, Wo
 {
 	TestResult testResult("Transformation non-linear optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("nonlinearoptimizationobjecttransformation"))
 	{
 		testResult = testNonLinearOptimizationObjectTransformation(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationobjecttransformationstereo"))
 	{
 		testResult = testNonLinearOptimizationObjectTransformationStereo(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

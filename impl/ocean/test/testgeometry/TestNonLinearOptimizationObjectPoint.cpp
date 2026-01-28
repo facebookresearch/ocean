@@ -34,6 +34,7 @@ namespace TestGeometry
 bool TestNonLinearOptimizationObjectPoint::test(const double testDuration, Worker* worker, const TestSelector& selector)
 {
 	TestResult testResult("Object point non linear optimization test");
+
 	Log::info() << " ";
 
 	if (selector.shouldRun("nonlinearoptimizationobjectpointspinholecamera"))
@@ -138,9 +139,10 @@ bool TestNonLinearOptimizationObjectPoint::test(const double testDuration, Worke
 	if (selector.shouldRun("clampdistantobjectpoints"))
 	{
 		testResult = testClampDistantObjectPoints(testDuration);
+
+		Log::info() << " ";
 	}
 
-	Log::info() << " ";
 	Log::info() << testResult;
 
 	return testResult.succeeded();

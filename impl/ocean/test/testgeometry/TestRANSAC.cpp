@@ -34,6 +34,8 @@ bool TestRANSAC::test(const double testDuration, Worker& worker, const TestSelec
 {
 	TestResult testResult("RANSAC test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("iterations"))
 	{
 		testResult = testIterations(testDuration);
@@ -92,8 +94,6 @@ bool TestRANSAC::test(const double testDuration, Worker& worker, const TestSelec
 	{
 		testResult = testFundamentalMatrix(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

@@ -33,6 +33,8 @@ bool TestUtilities::test(const double testDuration, const TestSelector& selector
 
 	TestResult testResult("Utilities test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("createobjectpoints"))
 	{
 		testResult = testCreateObjectPoints(testDuration);
@@ -73,8 +75,6 @@ bool TestUtilities::test(const double testDuration, const TestSelector& selector
 	{
 		testResult = testRandomCameraPoseFisheye(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

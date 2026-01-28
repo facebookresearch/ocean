@@ -37,19 +37,13 @@ bool TestPnP::test(const double testDuration, const TestSelector& selector)
 
 	TestResult testResult("PnP test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("pose"))
 	{
 		testResult = testPose(testDuration);
 
 		Log::info() << " ";
-		Log::info() << "-";
-		Log::info() << " ";
-	}
-
-	if (!testResult.succeeded() && std::is_same<Scalar, float>::value)
-	{
-		Log::info() << "The test failed, however the applied 32 bit floating point value precision is too low for this function so that we rate the result as expected.";
-		return true;
 	}
 
 	Log::info() << testResult;

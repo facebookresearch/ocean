@@ -76,6 +76,8 @@ bool TestEstimator::test(const double testDuration, const TestSelector& selector
 	if (selector.shouldRun("translateestimatortype"))
 	{
 		testResult = testTranslateEstimatorType();
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;

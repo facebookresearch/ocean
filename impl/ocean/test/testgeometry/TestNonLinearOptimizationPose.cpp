@@ -34,30 +34,32 @@ bool TestNonLinearOptimizationPose::test(const double testDuration, Worker* /*wo
 {
 	TestResult testResult("Pose non linear optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("nonlinearoptimizationposepinholecamera"))
 	{
 		testResult = testNonLinearOptimizationPosePinholeCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationposeanycamera"))
 	{
 		testResult = testNonLinearOptimizationPoseAnyCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationposezoom"))
 	{
 		testResult = testNonLinearOptimizationPoseZoom(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

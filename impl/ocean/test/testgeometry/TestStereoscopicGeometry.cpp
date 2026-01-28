@@ -35,12 +35,12 @@ bool TestStereoscopicGeometry::test(const double testDuration, const TestSelecto
 
 	TestResult testResult("StereoscopicGeometry test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("camerapose"))
 	{
 		testResult = testCameraPose(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

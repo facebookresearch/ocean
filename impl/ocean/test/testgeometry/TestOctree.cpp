@@ -32,6 +32,8 @@ bool TestOctree::test(const double testDuration, const TestSelector& selector)
 
 	TestResult testResult("Octree test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("constructor"))
 	{
 		testResult = testConstructor(testDuration);
@@ -63,8 +65,6 @@ bool TestOctree::test(const double testDuration, const TestSelector& selector)
 	{
 		testResult = testEdgeCases(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

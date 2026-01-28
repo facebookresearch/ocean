@@ -191,6 +191,8 @@ bool TestHomography::test(const double testDuration, Worker& /*worker*/, const T
 	if (selector.shouldRun("homographymatrixfrompointsandlinessvd"))
 	{
 		testResult = testHomographyMatrixFromPointsAndLinesSVD(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;

@@ -34,21 +34,23 @@ bool TestNonLinearOptimizationHomography::test(const double testDuration, Worker
 
 	TestResult testResult("Non linear homography optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("nonlinearoptimizationhomography"))
 	{
 		testResult = testNonLinearOptimizationHomography(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationsimilarity"))
 	{
 		testResult = testNonLinearOptimizationSimilarity(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

@@ -33,6 +33,8 @@ bool TestSpatialDistribution::test(const double testDuration, const TestSelector
 
 	TestResult testResult("Spatial distribution test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("idealbins"))
 	{
 		testResult = testIdealBins(testDuration);
@@ -91,8 +93,6 @@ bool TestSpatialDistribution::test(const double testDuration, const TestSelector
 	{
 		testResult = testCopyConstructorWithNeighborhood8(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

@@ -31,12 +31,14 @@ bool TestNonLinearOptimizationLine::test(const double testDuration, Worker* /*wo
 {
 	TestResult testResult("Line non linear optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("nonlinearoptimizationline"))
 	{
 		testResult = testNonLinearOptimizationLine(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

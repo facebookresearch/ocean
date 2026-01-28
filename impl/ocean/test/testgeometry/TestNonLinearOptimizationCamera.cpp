@@ -37,21 +37,23 @@ bool TestNonLinearOptimizationCamera::test(const double testDuration, Worker* /*
 {
 	TestResult testResult("Camera non linear optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("nonlinearoptimizationcamera"))
 	{
 		testResult = testNonLinearOptimizationCamera(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("nonlinearoptimizationcameraposes"))
 	{
 		testResult = testNonLinearOptimizationCameraPoses(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

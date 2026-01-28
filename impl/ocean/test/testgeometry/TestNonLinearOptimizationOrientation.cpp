@@ -33,12 +33,14 @@ bool TestNonLinearOptimizationOrientation::test(const double testDuration, Worke
 {
 	TestResult testResult("Orientation non linear optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("optimizeorientation"))
 	{
 		testResult = testOptimizeOrientation(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

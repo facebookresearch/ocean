@@ -41,6 +41,8 @@ bool TestP3P::test(const double testDuration, const TestSelector& selector)
 
 	TestResult testResult("P3P test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("p3pwithpoints"))
 	{
 		testResult = testP3PWithPoints<float>(testDuration);
@@ -80,8 +82,6 @@ bool TestP3P::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 		testResult = testP3PWithRaysStressTest<double>(testDuration);
 
-		Log::info() << " ";
-		Log::info() << "-";
 		Log::info() << " ";
 	}
 

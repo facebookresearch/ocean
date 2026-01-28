@@ -69,6 +69,8 @@ bool TestJLinkage::testJLinkage(const double testDuration, const TestSelector& s
 	if (selector.shouldRun("faultlesslines"))
 	{
 		testResult = testFaultlessLines<LM_JLINKAGE>(testDuration);
+
+		Log::info() << " ";
 	}
 
 	Log::info() << testResult;

@@ -32,30 +32,32 @@ bool TestNonLinearOptimizationPlane::test(const double testDuration, Worker* /*w
 {
 	TestResult testResult("Plane non linear optimization test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("optimizeplane"))
 	{
 		testResult = testOptimizePlane(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("optimizeoneposeoneplane"))
 	{
 		testResult = testOptimizeOnePoseOnePlane(testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("optimizeposesoneplane"))
 	{
 		testResult = testOptimizePosesOnePlane(testDuration);
-	}
 
-	Log::info() << " ";
+		Log::info() << " ";
+	}
 
 	Log::info() << testResult;
 

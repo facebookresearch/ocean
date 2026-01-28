@@ -39,6 +39,8 @@ bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuratio
 
 	TestResult testResult("Multiple view geometry test");
 
+	Log::info() << " ";
+
 	if (selector.shouldRun("trifocaltensormatrixfalse"))
 	{
 		testResult = testTrifocalTensorMatrix(false, testDuration);
@@ -50,30 +52,30 @@ bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuratio
 	{
 		// trifocal tensor fails (0% success rate) on noised data as expected, but nice to see
 		testTrifocalTensorMatrix(true, testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("projectivereconstructionfrom3viewsfalse"))
 	{
 		testResult = testProjectiveReconstructionFrom3Views(false, testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("projectivereconstructionfrom3viewstrue"))
 	{
 		// projection reconstruction fails (success rate < 30%) on noised data as expected, but nice to see
 		testProjectiveReconstructionFrom3Views(true, testDuration);
-	}
 
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
 
 	if (selector.shouldRun("projectivereconstruction"))
 	{
