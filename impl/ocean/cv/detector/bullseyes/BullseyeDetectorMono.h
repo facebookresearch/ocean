@@ -275,6 +275,22 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		 * @return True, if the sub-pixel location could be determined
 		 */
 		static bool determineAccurateBullseyeLocation(const Frame& yFrame, const unsigned int xBullseye, const unsigned int yBullseye, const unsigned int threshold, Vector2& location);
+
+		/**
+		 * Checks if a pixel is black (dark) based on a threshold.
+		 * @param pixel Pointer to the pixel value to check, must be valid
+		 * @param threshold The threshold separating dark from bright pixels, with range [0, 255]
+		 * @return True if the pixel intensity is below the threshold
+		 */
+		static bool isBlackPixel(const uint8_t* pixel, const uint8_t threshold);
+
+		/**
+		 * Checks if a pixel is white (bright) based on a threshold.
+		 * @param pixel Pointer to the pixel value to check, must be valid
+		 * @param threshold The threshold separating dark from bright pixels, with range [0, 255]
+		 * @return True if the pixel intensity is at or above the threshold
+		 */
+		static bool isWhitePixel(const uint8_t* pixel, const uint8_t threshold);
 };
 
 } // namespace Bullseyes

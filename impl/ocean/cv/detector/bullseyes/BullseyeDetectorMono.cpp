@@ -880,6 +880,18 @@ bool BullseyeDetectorMono::determineAccurateBullseyeLocation(const Frame& yFrame
 	return true;
 }
 
+bool BullseyeDetectorMono::isBlackPixel(const uint8_t* pixel, const uint8_t threshold)
+{
+	ocean_assert(pixel != nullptr);
+	return *pixel < threshold;
+};
+
+bool BullseyeDetectorMono::isWhitePixel(const uint8_t* pixel, const uint8_t threshold)
+{
+	ocean_assert(pixel != nullptr);
+	return *pixel >= threshold;
+}
+
 } // namespace Bullseyes
 
 } // namespace Detector
