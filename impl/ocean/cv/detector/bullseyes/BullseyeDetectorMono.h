@@ -331,6 +331,28 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		 * @return The transition point lying exactly on the ray at the interpolated distance from center
 		 */
 		static Vector2 computeTransitionPointOnRay(const VectorT2<unsigned int>& insidePoint, const VectorT2<unsigned int>& outsidePoint, const uint8_t insideIntensity, const uint8_t outsideIntensity, const unsigned int threshold, const Vector2& center, const Vector2& rayDirection);
+
+		/**
+		 * Computes the arithmetic mean of a vector of scalar values.
+		 * @param values The scalar values, must not be empty
+		 * @return The arithmetic mean
+		 */
+		static Scalar computeMean(const Scalars& values);
+
+		/**
+		 * Computes the standard deviation of a vector of scalar values.
+		 * @param values The scalar values, must not be empty
+		 * @param mean The pre-computed mean of the values
+		 * @return The standard deviation
+		 */
+		static Scalar computeStddev(const Scalars& values, const Scalar mean);
+
+		/**
+		 * Finds the minimum value in a vector of scalar values.
+		 * @param values The scalar values, must not be empty
+		 * @return The minimum value
+		 */
+		static Scalar findMin(const Scalars& values);
 };
 
 } // namespace Bullseyes

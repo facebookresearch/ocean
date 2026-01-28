@@ -955,6 +955,52 @@ Vector2 BullseyeDetectorMono::computeTransitionPointOnRay(const VectorT2<unsigne
 	return center + rayDirection * interpolatedDistance;
 }
 
+Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
+{
+	ocean_assert(!values.empty());
+
+	Scalar sum = Scalar(0);
+
+	for (const Scalar& value : values)
+	{
+		sum += value;
+	}
+
+	return sum / Scalar(values.size());
+}
+
+Scalar BullseyeDetectorMono::computeStddev(const Scalars& values, const Scalar mean)
+{
+	ocean_assert(!values.empty());
+
+	Scalar sumSqDiff = Scalar(0);
+
+	for (const Scalar& value : values)
+	{
+		const Scalar diff = value - mean;
+		sumSqDiff += diff * diff;
+	}
+
+	return Numeric::sqrt(sumSqDiff / Scalar(values.size()));
+}
+
+Scalar BullseyeDetectorMono::findMin(const Scalars& values)
+{
+	ocean_assert(!values.empty());
+
+	Scalar minValue = values[0];
+
+	for (size_t i = 1; i < values.size(); ++i)
+	{
+		if (values[i] < minValue)
+		{
+			minValue = values[i];
+		}
+	}
+
+	return minValue;
+}
+
 } // namespace Bullseyes
 
 } // namespace Detector
