@@ -1351,6 +1351,77 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase4RadialProfileValidation(c
 	return extremaCount <= maxExtrema;
 }
 
+bool BullseyeDetectorMono::checkRadialConsistencyPhase5RingProportionValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Diameters& diameters)
+{
+	ocean_assert(numberDiameters >= 4u);
+
+	constexpr Scalar maxCoeffOfVariation = Scalar(0.25);
+	constexpr Scalar minRingWidth = Scalar(1.0);
+
+	const Vector2 center{Scalar(xCenter), Scalar(yCenter)};
+
+	Scalars widthsRing0;
+	Scalars widthsRing1;
+
+	for (unsigned int i = 0u; i < numberDiameters; ++i)
+	{
+		const Diameter& diameter = diameters[i];
+
+		if (!diameter.isSymmetryValid)
+		{
+			continue;
+		}
+
+		// Collect from positive ray
+		{
+			const HalfRay& ray = diameter.halfRayPositive;
+			const Scalar distance0 = ray.transitionPoints[0].distance(center);
+			const Scalar distance1 = ray.transitionPoints[1].distance(center);
+			const Scalar distance2 = ray.transitionPoints[2].distance(center);
+			const Scalar widthRing0 = distance1 - distance0;
+			const Scalar widthRing1 = distance2 - distance1;
+
+			widthsRing0.push_back(widthRing0);
+			widthsRing1.push_back(widthRing1);
+		}
+
+		// Collect from negative ray
+		{
+			const HalfRay& ray = diameter.halfRayNegative;
+			const Scalar distance0 = ray.transitionPoints[0].distance(center);
+			const Scalar distance1 = ray.transitionPoints[1].distance(center);
+			const Scalar distance2 = ray.transitionPoints[2].distance(center);
+			const Scalar widthRing0 = distance1 - distance0;
+			const Scalar widthRing1 = distance2 - distance1;
+
+			widthsRing0.push_back(widthRing0);
+			widthsRing1.push_back(widthRing1);
+		}
+	}
+
+	if (widthsRing0.size() < 4u)
+	{
+		// Not enough data to validate ring proportions
+		return true;
+	}
+
+	const Scalar meanRing0 = computeMean(widthsRing0);
+	const Scalar meanRing1 = computeMean(widthsRing1);
+
+	const Scalar stddevRing0 = computeStddev(widthsRing0, meanRing0);
+	const Scalar stddevRing1 = computeStddev(widthsRing1, meanRing1);
+
+	const Scalar cvRing0 = meanRing0 > Numeric::eps() ? stddevRing0 / meanRing0 : Scalar(0);
+	const Scalar cvRing1 = meanRing1 > Numeric::eps() ? stddevRing1 / meanRing1 : Scalar(0);
+
+	const Scalar minWidthRing1 = findMin(widthsRing1);
+
+	const bool failedCV = cvRing0 > maxCoeffOfVariation || cvRing1 > maxCoeffOfVariation;
+	const bool failedMinWidth = minWidthRing1 < minRingWidth;
+
+	return !failedCV && !failedMinWidth;
+}
+
 Scalar BullseyeDetectorMono::computeMean(const Scalars& values)
 {
 	ocean_assert(!values.empty());

@@ -411,6 +411,17 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool checkRadialConsistencyPhase4RadialProfileValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Diameters& diameters);
 
 		/**
+		 * Phase 5 of radial consistency check: Ring proportion validation.
+		 * Validates that ring widths are consistent across all diameters.
+		 * @param xCenter Horizontal center coordinate
+		 * @param yCenter Vertical center coordinate
+		 * @param numberDiameters Number of diameters
+		 * @param diameters The diameter data to validate
+		 * @return True if phase passes (ring proportions are consistent)
+		 */
+		static bool checkRadialConsistencyPhase5RingProportionValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Diameters& diameters);
+
+		/**
 		 * Computes the arithmetic mean of a vector of scalar values.
 		 * @param values The scalar values, must not be empty
 		 * @return The arithmetic mean
