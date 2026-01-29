@@ -1514,6 +1514,148 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 	return true;
 }
 
+bool Utilities::displayRefreshRate(JNIEnv* env, jobject activity, float& refreshRateHz)
+{
+	ocean_assert(env != nullptr && activity != nullptr);
+
+	if (env == nullptr || activity == nullptr)
+	{
+		return false;
+	}
+
+	refreshRateHz = 0.0f;
+
+	// Check Android SDK version to determine which API to use
+	unsigned int sdkVersion = 0u;
+	if (!androidSdkVersion(env, sdkVersion))
+	{
+		return false;
+	}
+
+	ScopedJObject jDisplayObject(*env, nullptr);
+
+	if (sdkVersion >= 30u)
+	{
+		// API 30+: Use Activity.getDisplay()
+		const ScopedJClass jActivityClass(*env, env->GetObjectClass(activity));
+
+		if (!jActivityClass.isValid())
+		{
+			return false;
+		}
+
+		jmethodID jGetDisplayMethodId = env->GetMethodID(jActivityClass, "getDisplay", "()Landroid/view/Display;");
+
+		if (jGetDisplayMethodId == nullptr)
+		{
+			return false;
+		}
+
+		jDisplayObject = ScopedJObject(*env, env->CallObjectMethod(activity, jGetDisplayMethodId));
+	}
+	else
+	{
+		// API < 30: Use WindowManager.getDefaultDisplay()
+		const ScopedJClass jContextClass(*env, env->FindClass("android/content/Context"));
+
+		if (!jContextClass.isValid())
+		{
+			return false;
+		}
+
+		jfieldID jWindowServiceFieldId = env->GetStaticFieldID(jContextClass, "WINDOW_SERVICE", "Ljava/lang/String;");
+
+		if (jWindowServiceFieldId == nullptr)
+		{
+			return false;
+		}
+
+		const ScopedJString jWindowServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jWindowServiceFieldId)));
+
+		if (!jWindowServiceString.isValid())
+		{
+			return false;
+		}
+
+		jmethodID jGetSystemServiceMethodId = env->GetMethodID(jContextClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+
+		if (jGetSystemServiceMethodId == nullptr)
+		{
+			return false;
+		}
+
+		const ScopedJObject jWindowManagerObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethodId, *jWindowServiceString));
+
+		if (!jWindowManagerObject.isValid())
+		{
+			return false;
+		}
+
+		const ScopedJClass jWindowManagerClass(*env, env->FindClass("android/view/WindowManager"));
+
+		if (!jWindowManagerClass.isValid())
+		{
+			return false;
+		}
+
+		jmethodID jGetDefaultDisplayMethodId = env->GetMethodID(jWindowManagerClass, "getDefaultDisplay", "()Landroid/view/Display;");
+
+		if (jGetDefaultDisplayMethodId == nullptr)
+		{
+			return false;
+		}
+
+		jDisplayObject = ScopedJObject(*env, env->CallObjectMethod(jWindowManagerObject, jGetDefaultDisplayMethodId));
+	}
+
+	if (!jDisplayObject.isValid())
+	{
+		// Display could not be determined, refreshRateHz is already set to 0
+		return true;
+	}
+
+	// Get the display mode: display.getMode()
+	const ScopedJClass jDisplayClass(*env, env->FindClass("android/view/Display"));
+
+	if (!jDisplayClass.isValid())
+	{
+		return false;
+	}
+
+	jmethodID jGetModeMethodId = env->GetMethodID(jDisplayClass, "getMode", "()Landroid/view/Display$Mode;");
+
+	if (jGetModeMethodId == nullptr)
+	{
+		return false;
+	}
+
+	const ScopedJObject jDisplayModeObject(*env, env->CallObjectMethod(jDisplayObject, jGetModeMethodId));
+
+	if (!jDisplayModeObject.isValid())
+	{
+		return false;
+	}
+
+	// Get the refresh rate: mode.getRefreshRate()
+	const ScopedJClass jDisplayModeClass(*env, env->FindClass("android/view/Display$Mode"));
+
+	if (!jDisplayModeClass.isValid())
+	{
+		return false;
+	}
+
+	jmethodID jGetRefreshRateMethodId = env->GetMethodID(jDisplayModeClass, "getRefreshRate", "()F");
+
+	if (jGetRefreshRateMethodId == nullptr)
+	{
+		return false;
+	}
+
+	refreshRateHz = env->CallFloatMethod(jDisplayModeObject, jGetRefreshRateMethodId);
+
+	return true;
+}
+
 }
 
 }

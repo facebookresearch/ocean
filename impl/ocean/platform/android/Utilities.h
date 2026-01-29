@@ -232,6 +232,17 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		 * @return True, if succeeded
 		 */
 		static bool triggerVibration(JNIEnv* env, jobject activity, unsigned int intensity = 1u, const unsigned int duration = 50u);
+
+		/**
+		 * Returns the refresh rate of the display in Hz.
+		 * On Android 30 (API 30) and above, uses Activity.getDisplay().
+		 * On older versions, uses WindowManager.getDefaultDisplay().
+		 * @param env The Java environment, must be valid
+		 * @param activity The Android main activity, must be valid
+		 * @param refreshRateHz The resulting refresh rate in Hz, will be 0 if the display could not be determined
+		 * @return True, if succeeded
+		 */
+		static bool displayRefreshRate(JNIEnv* env, jobject activity, float& refreshRateHz);
 };
 
 }
