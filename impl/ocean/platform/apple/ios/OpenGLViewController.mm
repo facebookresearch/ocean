@@ -18,7 +18,7 @@
 }
 
 /// The GLES context which is used
-@property (strong, nonatomic) EAGLContext* context;
+@property (strong, nonatomic) EAGLContext* context_;
 
 /**
  * Setup function for OpenGL ES.
@@ -38,15 +38,15 @@
 {
 	[super viewDidLoad];
 
-	self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+	self.context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
 
-	if (!self.context)
+	if (!self.context_)
 	{
 		NSLog(@"Failed to create ES context");
 	}
 
 	GLKView *view = (GLKView *)self.view;
-	view.context = self.context;
+	view.context = self.context_;
 	view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
 
 	[self setupGL];
@@ -54,7 +54,7 @@
 
 - (void)makeOpenGLContextCurrent
 {
-	const bool result = [EAGLContext setCurrentContext:self.context];
+	const bool result = [EAGLContext setCurrentContext:self.context_];
 
 	ocean_assert_and_suppress_unused(result, result);
 }
@@ -63,7 +63,7 @@
 {
 	[self tearDownGL];
 
-	if ([EAGLContext currentContext] == self.context)
+	if ([EAGLContext currentContext] == self.context_)
 	{
 		[EAGLContext setCurrentContext:nil];
 	}
@@ -79,12 +79,12 @@
 
 		[self tearDownGL];
 
-		if ([EAGLContext currentContext] == self.context)
+		if ([EAGLContext currentContext] == self.context_)
 		{
 			[EAGLContext setCurrentContext:nil];
 		}
 
-		self.context = nil;
+		self.context_ = nil;
 	}
 
 	// Dispose of any resources that can be recreated.
@@ -97,12 +97,12 @@
 
 - (void)setupGL
 {
-	[EAGLContext setCurrentContext:self.context];
+	[EAGLContext setCurrentContext:self.context_];
 }
 
 - (void)tearDownGL
 {
-	[EAGLContext setCurrentContext:self.context];
+	[EAGLContext setCurrentContext:self.context_];
 }
 
 @end
