@@ -120,6 +120,13 @@ bool AndroidEventDevice::stop()
 	return true;
 }
 
+bool AndroidEventDevice::isStarted() const
+{
+	const ScopedLock scopedLock(deviceLock);
+
+	return isStarted_;
+}
+
 ASensorManager* AndroidEventDevice::sensorManager()
 {
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 26

@@ -160,6 +160,12 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidEventDevice :
 		bool stop() override;
 
 		/**
+		 * Returns whether this device is active.
+		 * @see Device::isStarted().
+		 */
+		bool isStarted() const override;
+
+		/**
 		 * Returns the instance of the sensor manager.
 		 * @return The sensor manager instance
 		 */

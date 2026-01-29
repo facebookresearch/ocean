@@ -28,6 +28,13 @@ const std::string& IOSDevice::library() const
 	return nameIOSLibrary();
 }
 
+bool IOSDevice::isStarted() const
+{
+	const ScopedLock scopedLock(deviceLock);
+
+	return isStarted_;
+}
+
 TimestampConverter& IOSDevice::timestampConverter()
 {
 	static TimestampConverter timestampConverter(TimestampConverter::TD_UPTIME_RAW, false /*useSlidingWindow*/);

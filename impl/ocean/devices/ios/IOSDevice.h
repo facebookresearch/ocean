@@ -33,7 +33,13 @@ class OCEAN_DEVICES_IOS_EXPORT IOSDevice : virtual public Device
 		 * Returns the name of the owner library.
 		 * @see Device::library().
 		 */
-		virtual const std::string& library() const;
+		const std::string& library() const override;
+
+		/**
+		 * Returns whether this device is active.
+		 * @see Device::isStarted().
+		 */
+		bool isStarted() const override;
 
 	protected:
 
