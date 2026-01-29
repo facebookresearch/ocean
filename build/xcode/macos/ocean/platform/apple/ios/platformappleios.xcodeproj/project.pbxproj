@@ -24,6 +24,10 @@
 		93B184451FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93B184431FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm */; };
 		93B184471FD2145F006F8B9B /* OpenGLFrameMediumViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B184461FD2145F006F8B9B /* OpenGLFrameMediumViewController.h */; };
 		93B184481FD2145F006F8B9B /* OpenGLFrameMediumViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B184461FD2145F006F8B9B /* OpenGLFrameMediumViewController.h */; };
+		93B18449AFD2144F006F8B9B /* OpenGLRendererViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93B18450AFD2144F006F8B9B /* OpenGLRendererViewController.mm */; };
+		93B1844AAFD2144F006F8B9B /* OpenGLRendererViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93B18450AFD2144F006F8B9B /* OpenGLRendererViewController.mm */; };
+		93B1844BAFD2145F006F8B9B /* OpenGLRendererViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B18451AFD2145F006F8B9B /* OpenGLRendererViewController.h */; };
+		93B1844CAFD2145F006F8B9B /* OpenGLRendererViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B18451AFD2145F006F8B9B /* OpenGLRendererViewController.h */; };
 		93C7C90B1FD2045A00C8D59C /* OpenGLViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C7C9081FD2045A00C8D59C /* OpenGLViewController.h */; };
 		93C7C90C1FD2045A00C8D59C /* OpenGLViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C7C9081FD2045A00C8D59C /* OpenGLViewController.h */; };
 		93C7C9101FD2049600C8D59C /* OpenGLViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C7C90D1FD2049600C8D59C /* OpenGLViewController.mm */; };
@@ -41,6 +45,8 @@
 		930EA5CD206EF080003DB1EE /* IOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOS.h; path = ../../../../../../../impl/ocean/platform/apple/ios/IOS.h; sourceTree = "<group>"; };
 		93B184431FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OpenGLFrameMediumViewController.mm; path = ../../../../../../../impl/ocean/platform/apple/ios/OpenGLFrameMediumViewController.mm; sourceTree = "<group>"; };
 		93B184461FD2145F006F8B9B /* OpenGLFrameMediumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLFrameMediumViewController.h; path = ../../../../../../../impl/ocean/platform/apple/ios/OpenGLFrameMediumViewController.h; sourceTree = "<group>"; };
+		93B18450AFD2144F006F8B9B /* OpenGLRendererViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OpenGLRendererViewController.mm; path = ../../../../../../../impl/ocean/platform/apple/ios/OpenGLRendererViewController.mm; sourceTree = "<group>"; };
+		93B18451AFD2145F006F8B9B /* OpenGLRendererViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLRendererViewController.h; path = ../../../../../../../impl/ocean/platform/apple/ios/OpenGLRendererViewController.h; sourceTree = "<group>"; };
 		93C7C9081FD2045A00C8D59C /* OpenGLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLViewController.h; path = ../../../../../../../impl/ocean/platform/apple/ios/OpenGLViewController.h; sourceTree = "<group>"; };
 		93C7C90D1FD2049600C8D59C /* OpenGLViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OpenGLViewController.mm; path = ../../../../../../../impl/ocean/platform/apple/ios/OpenGLViewController.mm; sourceTree = "<group>"; };
 		93D233261F9566AA00F8BCAD /* Utilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Utilities.mm; path = ../../../../../../../impl/ocean/platform/apple/ios/Utilities.mm; sourceTree = "<group>"; };
@@ -88,6 +94,7 @@
 			children = (
 				9309A54326B1D30800E3924A /* MessengerView.mm */,
 				93B184431FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm */,
+				93B18450AFD2144F006F8B9B /* OpenGLRendererViewController.mm */,
 				93C7C90D1FD2049600C8D59C /* OpenGLViewController.mm */,
 				5042A4522CDAF02C0088D9DC /* System.mm */,
 				93D233261F9566AA00F8BCAD /* Utilities.mm */,
@@ -101,6 +108,7 @@
 				930EA5CD206EF080003DB1EE /* IOS.h */,
 				9309A54026B1D2CA00E3924A /* MessengerView.h */,
 				93B184461FD2145F006F8B9B /* OpenGLFrameMediumViewController.h */,
+				93B18451AFD2145F006F8B9B /* OpenGLRendererViewController.h */,
 				93C7C9081FD2045A00C8D59C /* OpenGLViewController.h */,
 				5042A44F2CDAEFE10088D9DC /* System.h */,
 				5DD0BFC71BD1547700ABBC5B /* Utilities.h */,
@@ -120,6 +128,7 @@
 				5DF0BD601D901DA400BE5D21 /* Utilities.h in Headers */,
 				9309A54126B1D2CA00E3924A /* MessengerView.h in Headers */,
 				93B184471FD2145F006F8B9B /* OpenGLFrameMediumViewController.h in Headers */,
+				93B1844BAFD2145F006F8B9B /* OpenGLRendererViewController.h in Headers */,
 				5042A4502CDAEFE10088D9DC /* System.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,6 +142,7 @@
 				C041EC9F1DABEF6E00BF5D76 /* Utilities.h in Headers */,
 				9309A54226B1D2CA00E3924A /* MessengerView.h in Headers */,
 				93B184481FD2145F006F8B9B /* OpenGLFrameMediumViewController.h in Headers */,
+				93B1844CAFD2145F006F8B9B /* OpenGLRendererViewController.h in Headers */,
 				5042A4512CDAEFE10088D9DC /* System.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -243,6 +253,7 @@
 				9360F7951FA15BC000BD37D1 /* Utilities.mm in Sources */,
 				93C7C9101FD2049600C8D59C /* OpenGLViewController.mm in Sources */,
 				93B184441FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm in Sources */,
+				93B18449AFD2144F006F8B9B /* OpenGLRendererViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +266,7 @@
 				9360F7961FA15BC000BD37D1 /* Utilities.mm in Sources */,
 				93C7C9111FD2049600C8D59C /* OpenGLViewController.mm in Sources */,
 				93B184451FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm in Sources */,
+				93B1844AAFD2144F006F8B9B /* OpenGLRendererViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
