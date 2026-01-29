@@ -31,7 +31,7 @@ GLMainView::GLMainView()
 {
 	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 
-	const size_t registeredFonts = CV::Fonts::FontManager::get().registerFonts("/system/fonts");
+	const size_t registeredFonts = CV::Fonts::FontManager::get().registerSystemFonts();
 	Log::debug() << "Registered " << registeredFonts << " fonts";
 }
 

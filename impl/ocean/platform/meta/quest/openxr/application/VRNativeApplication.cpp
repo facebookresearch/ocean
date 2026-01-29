@@ -265,7 +265,7 @@ void VRNativeApplication::registerSystemFonts()
 {
 	const HighPerformanceTimer timer;
 
-	const size_t registeredFonts = CV::Fonts::FontManager::get().registerFonts("/system/fonts");
+	const size_t registeredFonts = CV::Fonts::FontManager::get().registerSystemFonts();
 
 	const double time = timer.seconds();
 
