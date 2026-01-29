@@ -19,7 +19,7 @@
 #include "ocean/media/Manager.h"
 #include "ocean/media/PixelImage.h"
 
-#include "ocean/platform/apple/ios/OpenGLFrameMediumViewController.h"
+#include "ocean/platform/apple/ios/GLFrameMediumViewController.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#include "ocean/rendering/glescenegraph/apple/Apple.h"
@@ -28,7 +28,7 @@
 /**
  * The ViewController adding support for user interaction.
  */
-@interface CustomViewController : OpenGLFrameMediumViewController
+@interface CustomViewController : GLFrameMediumViewController
 {
 	@public
 

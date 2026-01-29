@@ -5,13 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_VIEW_CONTROLLER_H
-#define META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_VIEW_CONTROLLER_H
+#ifndef META_OCEAN_PLATFORM_APPLE_IOS_GL_VIEW_CONTROLLER_H
+#define META_OCEAN_PLATFORM_APPLE_IOS_GL_VIEW_CONTROLLER_H
 
 #include "ocean/platform/apple/ios/IOS.h"
 
 #ifndef __OBJC__
-	#error Platform::Apple::IOS::OpenGLViewController.h needs to be included from an ObjectiveC++ file
+	#error Platform::Apple::IOS::GLViewController.h needs to be included from an ObjectiveC++ file
 #endif
 
 #import <GLKit/GLKit.h>
@@ -21,7 +21,7 @@
  * The implementation is more or less identical to the GameViewController example of Xcode without any specific modifications.
  * @ingroup platformappleios
  */
-@interface OpenGLViewController : GLKViewController
+@interface GLViewController : GLKViewController
 
 /**
  * Makes the OpenGL context of this controller the current context.
@@ -30,4 +30,4 @@
 
 @end
 
-#endif // META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_VIEW_CONTROLLER_H
+#endif // META_OCEAN_PLATFORM_APPLE_IOS_GL_VIEW_CONTROLLER_H

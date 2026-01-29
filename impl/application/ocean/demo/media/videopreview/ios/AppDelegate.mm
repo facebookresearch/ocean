@@ -14,7 +14,7 @@
 #include "ocean/media/FrameMedium.h"
 #include "ocean/media/Manager.h"
 
-#include "ocean/platform/apple/ios/OpenGLFrameMediumViewController.h"
+#include "ocean/platform/apple/ios/GLFrameMediumViewController.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#include "ocean/media/avfoundation/AVFoundation.h"
@@ -60,7 +60,7 @@
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.backgroundColor = [UIColor whiteColor];
 
-	OpenGLFrameMediumViewController* viewController = [[OpenGLFrameMediumViewController alloc] init];
+	GLFrameMediumViewController* viewController = [[GLFrameMediumViewController alloc] init];
 
 	self.window.rootViewController = viewController;
 	[self.window makeKeyAndVisible];

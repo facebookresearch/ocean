@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/platform/apple/ios/OpenGLRendererViewController.h"
+#include "ocean/platform/apple/ios/GLRendererViewController.h"
 
 #include "ocean/base/String.h"
 
@@ -17,13 +17,13 @@
 
 using namespace Ocean;
 
-@implementation OpenGLRendererViewController
+@implementation GLRendererViewController
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 
-	Log::debug() << "OpenGLRendererViewController::viewDidLoad()";
+	Log::debug() << "GLRendererViewController::viewDidLoad()";
 
 	const ScopedLock scopedLock(lock_);
 
@@ -76,7 +76,7 @@ using namespace Ocean;
 
 - (void)dealloc
 {
-	Log::debug() << "OpenGLRendererViewController::dealloc()";
+	Log::debug() << "GLRendererViewController::dealloc()";
 
 	const ScopedLock scopedLock(lock_);
 

@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_FRAME_MEDIUM_VIEW_CONTROLLER_H
-#define META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_FRAME_MEDIUM_VIEW_CONTROLLER_H
+#ifndef META_OCEAN_PLATFORM_APPLE_IOS_GL_FRAME_MEDIUM_VIEW_CONTROLLER_H
+#define META_OCEAN_PLATFORM_APPLE_IOS_GL_FRAME_MEDIUM_VIEW_CONTROLLER_H
 
 #include "ocean/platform/apple/ios/IOS.h"
-#include "ocean/platform/apple/ios/OpenGLRendererViewController.h"
+#include "ocean/platform/apple/ios/GLRendererViewController.h"
 
 #include "ocean/math/Line3.h"
 #include "ocean/math/Quaternion.h"
@@ -19,17 +19,17 @@
 #include "ocean/rendering/UndistortedBackground.h"
 
 #ifndef __OBJC__
-	#error Platform::Apple::IOS::OpenGLFrameMediumViewController.h needs to be included from an ObjectiveC++ file
+	#error Platform::Apple::IOS::GLFrameMediumViewController.h needs to be included from an ObjectiveC++ file
 #endif
 
 /**
- * The OpenGLFrameMediumViewController implements a view controller that is mainly able to display medium objects.
+ * The GLFrameMediumViewController implements a view controller that is mainly able to display medium objects.
  * The view controller is derived from an OpenGLES view controller so that we can ensure the best performance possible.<br>
  * This class can be seen as a FrameMediumView equivalent using OpenGLES.
  * @see Apple::MacOS::FrameMediumView.
  * @ingroup platformappleios
  */
-@interface OpenGLFrameMediumViewController : OpenGLRendererViewController
+@interface GLFrameMediumViewController : GLRendererViewController
 
 /**
  * Sets or changes the frame medium to be displayed.
@@ -74,7 +74,7 @@
 
 @end
 
-@interface OpenGLFrameMediumViewController ()
+@interface GLFrameMediumViewController ()
 {
 	@protected
 
@@ -93,4 +93,4 @@
 
 @end
 
-#endif // META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_FRAME_MEDIUM_VIEW_CONTROLLER_H
+#endif // META_OCEAN_PLATFORM_APPLE_IOS_GL_FRAME_MEDIUM_VIEW_CONTROLLER_H

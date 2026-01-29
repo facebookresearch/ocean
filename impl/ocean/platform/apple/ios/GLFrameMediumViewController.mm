@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/platform/apple/ios/OpenGLFrameMediumViewController.h"
+#include "ocean/platform/apple/ios/GLFrameMediumViewController.h"
 
 #include "ocean/media/Manager.h"
 
@@ -13,13 +13,13 @@
 
 using namespace Ocean;
 
-@implementation OpenGLFrameMediumViewController
+@implementation GLFrameMediumViewController
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 
-	Log::debug() << "OpenGLFrameMediumViewController::viewDidLoad()";
+	Log::debug() << "GLFrameMediumViewController::viewDidLoad()";
 
 	const ScopedLock scopedLock(lock_);
 
@@ -37,7 +37,7 @@ using namespace Ocean;
 
 - (void)dealloc
 {
-	Log::debug() << "OpenGLFrameMediumViewController::dealloc()";
+	Log::debug() << "GLFrameMediumViewController::dealloc()";
 
 	const ScopedLock scopedLock(lock_);
 

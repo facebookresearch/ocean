@@ -26,7 +26,7 @@
 
 #include "ocean/media/avfoundation/AVFoundation.h"
 
-#include "ocean/platform/apple/ios/OpenGLFrameMediumViewController.h"
+#include "ocean/platform/apple/ios/GLFrameMediumViewController.h"
 #include "ocean/platform/apple/ios/Utilities.h"
 
 #include "ocean/rendering/glescenegraph/apple/Apple.h"
@@ -38,7 +38,7 @@ using namespace Ocean;
 /**
  * The ViewController adding support for user interaction.
  */
-@interface CustomViewController : OpenGLFrameMediumViewController
+@interface CustomViewController : GLFrameMediumViewController
 {
 
 }

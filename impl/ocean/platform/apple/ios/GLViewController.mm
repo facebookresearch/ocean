@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/platform/apple/ios/OpenGLViewController.h"
+#include "ocean/platform/apple/ios/GLViewController.h"
 
 #import <OpenGLES/ES2/glext.h>
 
@@ -13,7 +13,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OpenGLViewController ()
+@interface GLViewController ()
 {
 }
 
@@ -32,7 +32,7 @@
 
 @end
 
-@implementation OpenGLViewController
+@implementation GLViewController
 
 - (void)viewDidLoad
 {

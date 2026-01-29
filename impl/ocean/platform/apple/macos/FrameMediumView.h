@@ -36,7 +36,7 @@ namespace MacOS
  * This class implements a view displaying a frame medium.
  * In general, the display performance/efficiency is not very good,<br>
  * use GPU optimized solutions instead whenever performance matters.<br>
- * This class can be seen as a OpenGLFrameMediumViewController equivalent not using OpenGLES.
+ * This class can be seen as a GLFrameMediumViewController equivalent not using OpenGLES.
  * @ingroup platformapplemacos
  */
 class FrameMediumView :

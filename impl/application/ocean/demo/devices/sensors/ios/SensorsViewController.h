@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/platform/apple/ios/OpenGLRendererViewController.h"
+#include "ocean/platform/apple/ios/GLRendererViewController.h"
 
 /**
  * The ViewController implementing the Sensors demo application for iOS.
  * @ingroup applicationdemodevicessensorsios
  */
-@interface SensorsViewController : OpenGLRendererViewController
+@interface SensorsViewController : GLRendererViewController
 
 @end

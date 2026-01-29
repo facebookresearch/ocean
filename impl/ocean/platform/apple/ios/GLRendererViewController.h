@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_RENDERER_VIEW_CONTROLLER_H
-#define META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_RENDERER_VIEW_CONTROLLER_H
+#ifndef META_OCEAN_PLATFORM_APPLE_IOS_GL_RENDERER_VIEW_CONTROLLER_H
+#define META_OCEAN_PLATFORM_APPLE_IOS_GL_RENDERER_VIEW_CONTROLLER_H
 
 #include "ocean/platform/apple/ios/IOS.h"
-#include "ocean/platform/apple/ios/OpenGLViewController.h"
+#include "ocean/platform/apple/ios/GLViewController.h"
 
 #include "ocean/base/Lock.h"
 #include "ocean/base/Timestamp.h"
@@ -21,14 +21,14 @@
 #include "ocean/rendering/PerspectiveView.h"
 
 #ifndef __OBJC__
-	#error Platform::Apple::IOS::OpenGLRendererViewController.h needs to be included from an ObjectiveC++ file
+	#error Platform::Apple::IOS::GLRendererViewController.h needs to be included from an ObjectiveC++ file
 #endif
 
 /**
- * The OpenGLRendererViewController implements a view controller using the OpenGLESceneGraph renderer for iOS platform applications.
+ * The GLRendererViewController implements a view controller using the OpenGLESceneGraph renderer for iOS platform applications.
  * @ingroup platformappleios
  */
-@interface OpenGLRendererViewController : OpenGLViewController
+@interface GLRendererViewController : GLViewController
 
 /**
  * Sets the horizontal field of view for this view.
@@ -57,7 +57,7 @@
 
 @end
 
-@interface OpenGLRendererViewController ()
+@interface GLRendererViewController ()
 {
 	@protected
 
@@ -91,4 +91,4 @@
 
 @end
 
-#endif // META_OCEAN_PLATFORM_APPLE_IOS_OPEN_GL_RENDERER_VIEW_CONTROLLER_H
+#endif // META_OCEAN_PLATFORM_APPLE_IOS_GL_RENDERER_VIEW_CONTROLLER_H
