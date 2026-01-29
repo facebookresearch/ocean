@@ -11,11 +11,6 @@
 #include "ocean/cv/Bresenham.h"
 #include "ocean/cv/FramePyramid.h"
 
-#include <ocean/base/Messenger.h>
-
-#define OCEAN_USE_OLD_RADIAL_CHECK 1
-
-
 namespace Ocean
 {
 
