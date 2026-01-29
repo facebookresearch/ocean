@@ -45,7 +45,8 @@ import android.widget.TextView;
  * <pre>
  * adb shell am start -n com.meta.ocean.app.demo.cv.calibration.picturetaker.android/.PictureTakerActivity --es camera_name '"Back-facing Camera 0"' --es resolution '"1920x1080"' --ef focus 0.75 --ez video_stabilization false
  * </pre>
- * In case the app is started and configured via an intent, any key event is used to trigger the button to take an image.
+ * In case the app is started and configured via an intent, any key event is used to trigger the button to take an image.<br>
+ * A key event can be triggered via: 'adb shell input keyevent KEYCODE_ENTER'
  * @ingroup applicationdemocvcalibrationpicturetakerandroid
  */
 public class PictureTakerActivity extends GLFrameViewActivity
