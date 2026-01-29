@@ -252,20 +252,6 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		static bool checkBullseyeInColumn(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackRingSegmentMin, const unsigned int blackRingSegmentMax, const unsigned int whiteRingSegmentMin, const unsigned int whiteRingSegmentMax, const unsigned int dotSegmentMin, const unsigned int dotSegmentMax);
 
 		/**
-		 * Checks whether the direct neighborhood contains a bullseye at a specified location.
-		 * This function actually samples the neighborhood at sparse locations only instead of applying a dense check for the bullseye pattern.
-		 * @param yFrame The 8-bit grayscale frame in which the bullseyes will be detected, must be valid
-		 * @param xCenter The horizontal location within the frame at which the existence of the bullseye will be checked, in pixels, with range [0, yFrame.width())
-		 * @param yCenter The vertical location within the frame at which the existence of the bullseye will be checked, in pixels, with range [0, yFrame.height())
-		 * @param threshold The grayscale threshold separating a bright pixel from a dark pixel, with range [0, 255]
-		 * @param whiteRingRadius The radius of the white ring (the center of this ring), in pixels, with range [1, infinity)
-		 * @param blackRingRadius The radius of the black ring (the center of this ring), in pixels, with range [whiteRingRadius + 1, infinity)
-		 * @param whiteBorderRadius The radius of the white border (the outer area around the black ring), in pixels, with range [blackRingRadius + 1, infinity)
-		 * @return True, if the neighborhood contains a bullseye at the specified location
-		 */
-		static bool checkBullseyeInNeighborhood(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float whiteRingRadius, const float blackRingRadius, const float whiteBorderRadius);
-
-		/**
 		 * Determines the sub-pixel location of the center dot of a known bullseye.
 		 * @param yFrame The 8-bit grayscale frame in which the bullseye is located, must be valid
 		 * @param xBullseye The horizontal location of the bullseye (the center location), the pixel must be black, with range [0, yFrame.width())

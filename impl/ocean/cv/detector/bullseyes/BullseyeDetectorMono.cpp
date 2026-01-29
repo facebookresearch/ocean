@@ -440,40 +440,6 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 			// let's ensure that the center pixel actually fits with the determined gray threshold
 			if (grayThreshold < 255u && *yFrame.constpixel<uint8_t>(xCenter, y) <= grayThreshold)
 			{
-#if OCEAN_USE_OLD_RADIAL_CHECK
-				// the diameter of the bullseye including the left and right black segment
-				const unsigned int diameter = x - segment_1_start_black;
-				ocean_assert(diameter >= 5u);
-
-				const unsigned int diameter3_4 = (diameter * 3u + 2u) / 4u;
-
-				// now we check whether we can find the same bullseye pattern in vertical direction
-
-				if (xCenter >= diameter3_4 && y >= diameter3_4 && xCenter < width - diameter3_4 && y < height - diameter3_4
-						&& checkBullseyeInColumn(yFrame, xCenter, y, grayThreshold, blackRingSegmentMin, blackRingSegmentMax, whiteRingSegmentMin, whiteRingSegmentMax, dotSegmentMin, dotSegmentMax))
-				{
-					const float whiteRingRadius = float(segment_3_size) * 0.5f + float(segment_2_size + segment_4_size) * 0.25f;
-					const float blackRingRadius = whiteRingRadius + float(segment_2_size + segment_4_size) * 0.25f + float(segment_1_size + segment_5_size) * 0.25f;
-					const float whiteBorderRadius = blackRingRadius * 1.5f;
-
-					if (checkBullseyeInNeighborhood(yFrame, xCenter, y, grayThreshold, whiteRingRadius, blackRingRadius, whiteBorderRadius))
-					{
-						BullseyesDebugElements::get().drawCheckBullseyeInNeighborhood(y, xCenter, scale, diameter);
-
-						Vector2 location;
-						if (determineAccurateBullseyeLocation(yFrame, xCenter, y, grayThreshold, location))
-						{
-							const float radius = float(diameter) * 0.5f;
-
-							ocean_assert(location.x() >= Scalar(radius) && location.y() >= Scalar(radius));
-							ocean_assert(location.x() < Scalar(width) - Scalar(radius) && location.y() < Scalar(height) - Scalar(radius));
-
-							bullseyes.emplace_back(location * scale, Scalar(radius) * scale, grayThreshold, pyramidLayer);
-						}
-					}
-				}
-			}
-#else // OCEAN_USE_OLD_RADIAL_CHECK
 				// the diameter of the bullseye including the left and right black segment
 				const unsigned int horizontalDiameter = x - segment_1_start_black;
 				ocean_assert(horizontalDiameter >= 5u);
@@ -561,7 +527,6 @@ void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsig
 					}
 				}
 			}
-#endif // OCEAN_USE_OLD_RADIAL_CHECK
 		}
 
 		// in any case (either if the last segment does not have the correct size, or if we found a valid segment combination)
@@ -729,133 +694,6 @@ bool BullseyeDetectorMono::checkBullseyeInColumn(const Frame& yFrame, const unsi
 
 	ocean_assert(topRows >= blackRingSegmentMin && topRows <= blackRingSegmentMax + 1u);
 	ocean_assert(bottomRows >= blackRingSegmentMin && bottomRows <= blackRingSegmentMax + 1u);
-
-	return true;
-}
-
-bool BullseyeDetectorMono::checkBullseyeInNeighborhood(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float whiteRingRadius, const float blackRingRadius, const float whiteBorderRadius)
-{
-	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
-	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);
-
-	ocean_assert(float(xCenter) + whiteBorderRadius + 0.5f < float(yFrame.width()));
-	ocean_assert(float(xCenter) - whiteBorderRadius + 0.5f > 0.0f);
-
-	ocean_assert(float(yCenter) + whiteBorderRadius + 0.5f < float(yFrame.height()));
-	ocean_assert(float(yCenter) - whiteBorderRadius + 0.5f > 0.0f);
-
-	ocean_assert(whiteRingRadius >= 1.0f);
-	ocean_assert(whiteRingRadius + 1.0f <= blackRingRadius);
-	ocean_assert(blackRingRadius + 1.0f <= whiteBorderRadius);
-
-	constexpr unsigned int numberLookupLocations = 3u;
-
-	const VectorT2<unsigned int> offsets1024[numberLookupLocations] =
-	{
-		VectorT2<unsigned int>(392u, 946u), // = (0.3826834323, 0.9238795325) * 1024, 22.5 deg
-		VectorT2<unsigned int>(724u, 724u), // = (0.7071067811, 0.7071067811) * 1024, 45.0 deg
-		VectorT2<unsigned int>(946u, 392u), // = (0.9238795325, 0.3826834323) * 1024, 67.5 deg
-	};
-
-	const unsigned int whiteRingRadius1024 = (unsigned int)(whiteRingRadius * 1024.0f + 0.5f);
-	const unsigned int blackRingRadius1024 = (unsigned int)(blackRingRadius * 1024.0f + 0.5f);
-	const unsigned int whiteBorderRadius1024 = (unsigned int)(whiteBorderRadius * 1024.0f + 0.5f);
-
-	// inner white ring
-	for (unsigned int n = 0u; n < numberLookupLocations; ++n)
-	{
-		const unsigned int testY1 = yCenter - (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX1 = xCenter - (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX1, testY1) < threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY2 = yCenter + (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX2 = xCenter - (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX2, testY2) < threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY3 = yCenter - (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX3 = xCenter + (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX3, testY3) < threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY4 = yCenter + (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX4 = xCenter + (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX4, testY4) < threshold)
-		{
-			return false;
-		}
-	}
-
-	// black ring
-	for (unsigned int n = 0u; n < numberLookupLocations; ++n)
-	{
-		const unsigned int testY1 = yCenter - (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX1 = xCenter - (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX1, testY1) > threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY2 = yCenter + (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX2 = xCenter - (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX2, testY2) > threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY3 = yCenter - (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX3 = xCenter + (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX3, testY3) > threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY4 = yCenter + (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX4 = xCenter + (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX4, testY4) > threshold)
-		{
-			return false;
-		}
-	}
-
-	// outer white border
-	for (unsigned int n = 0u; n < numberLookupLocations; ++n)
-	{
-		const unsigned int testY1 = yCenter - (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX1 = xCenter - (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX1, testY1) < threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY2 = yCenter + (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX2 = xCenter - (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX2, testY2) < threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY3 = yCenter - (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX3 = xCenter + (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX3, testY3) < threshold)
-		{
-			return false;
-		}
-
-		const unsigned int testY4 = yCenter + (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u;
-		const unsigned int testX4 = xCenter + (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u;
-		if (*yFrame.constpixel<uint8_t>(testX4, testY4) < threshold)
-		{
-			return false;
-		}
-	}
 
 	return true;
 }
