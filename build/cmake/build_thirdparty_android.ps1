@@ -43,6 +43,12 @@
     Install each library into its own subdirectory. When enabled, libraries will
     be installed to {InstallDir}\library_name\{lib,include,...}. Default: OFF
 
+.PARAMETER ForVisualStudio
+    If specified, automatically enables subdivision and reorganizes the output
+    into a platform-first folder structure suitable for Visual Studio projects.
+    Output will be placed in xplat\ocean\3rdparty\android\h\ and
+    xplat\ocean\3rdparty\android\lib\{config}\.
+
 .PARAMETER Archive
     If specified, create a ZIP archive of the install directory after the build.
 
@@ -83,6 +89,8 @@ param(
     [ValidateSet("ON", "OFF")]
     [string]$Subdivide = "OFF",
 
+    [switch]$ForVisualStudio,
+
     [string]$Archive = "",
 
     [ValidateSet("ERROR", "WARNING", "NOTICE", "STATUS", "VERBOSE", "DEBUG", "TRACE")]
@@ -98,6 +106,13 @@ $Platform = "android"
 # Dot-source common functions
 . (Join-Path $ScriptDir "build_common.ps1")
 
+# Handle -ForVisualStudio flag
+if ($ForVisualStudio) {
+    Write-Host ""
+    Write-Host "ForVisualStudio mode enabled - subdivision will be activated" -ForegroundColor Magenta
+    $Subdivide = "ON"
+}
+
 # Check prerequisites
 if (-not (Test-CMake)) {
     exit 1
@@ -110,6 +125,9 @@ if (-not (Test-Ninja)) {
 if (-not (Test-AndroidPrerequisites)) {
     exit 1
 }
+
+# Check for Long Path support
+Test-LongPathSupport | Out-Null
 
 # Parse ABIs
 $validABIs = @("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
@@ -167,9 +185,10 @@ Write-Host "  ANDROID_NDK:     $env:ANDROID_NDK"
 Write-Host ""
 Write-Host "Builds to run:" -ForegroundColor Yellow
 foreach ($a in $abis) {
+    $arch = Get-AndroidArchFromABI -ABI $a
     foreach ($c in $configs) {
         foreach ($l in $linkTypes) {
-            Write-Host "  - $Platform\${a}_${l}_${c}"
+            Write-Host "  - $Platform\${arch}_${l}_${c}"
         }
     }
 }
@@ -186,14 +205,17 @@ foreach ($a in $abis) {
             $buildType = if ($c -eq "debug") { "Debug" } else { "Release" }
             $buildSharedLibs = if ($l -eq "shared") { "ON" } else { "OFF" }
 
+            # Map ABI to architecture name (arm64-v8a -> arm64, etc.)
+            $arch = Get-AndroidArchFromABI -ABI $a
+
             # Construct directory names
-            $configDirName = "${a}_${l}_${c}"
+            $configDirName = "${arch}_${l}_${c}"
             $buildDir = Join-Path $Build "android\$configDirName"
             $installDir = Join-Path $Install "android\$configDirName"
 
             Write-Host ""
             Write-Host "========================================" -ForegroundColor Cyan
-            Write-Host "Building: android\$configDirName" -ForegroundColor Cyan
+            Write-Host "Building: android\$configDirName (ABI: $a)" -ForegroundColor Cyan
             Write-Host "========================================" -ForegroundColor Cyan
             Write-Host ""
             Write-Host "BUILD_TYPE           $buildType"
@@ -207,6 +229,9 @@ foreach ($a in $abis) {
             $toolchainFile = Join-Path $env:ANDROID_NDK "build\cmake\android.toolchain.cmake"
             $findNinjaAndroidSDK = Join-Path $ScriptDir "FindNinjaAndroidSDK.cmake"
 
+            # Get Ninja path explicitly (Android toolchain may not inherit PATH correctly)
+            $ninjaPath = (Get-Command ninja -ErrorAction SilentlyContinue).Source
+
             $extraCMakeArgs = @(
                 "-DANDROID_ABI=$a",
                 "-DANDROID_PLATFORM=$Sdk",
@@ -215,7 +240,9 @@ foreach ($a in $abis) {
                 "-DCMAKE_ANDROID_NDK=$env:ANDROID_NDK",
                 "-DCMAKE_SYSTEM_NAME=Android",
                 "-DCMAKE_TOOLCHAIN_FILE=$toolchainFile",
-                "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=$findNinjaAndroidSDK"
+                "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=$findNinjaAndroidSDK",
+                "-DCMAKE_MAKE_PROGRAM=$ninjaPath",
+                "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
             )
 
             # Invoke build_deps.ps1
@@ -266,15 +293,46 @@ if ($failedBuilds.Count -eq 0) {
         }
     }
 
+    # Run reorganization script if -ForVisualStudio was specified
+    if ($ForVisualStudio) {
+        Write-Host ""
+        Write-Host "========================================" -ForegroundColor Magenta
+        Write-Host "Reorganizing for Visual Studio" -ForegroundColor Magenta
+        Write-Host "========================================" -ForegroundColor Magenta
+
+        $reorganizeScript = Join-Path $ScriptDir "reorganize_thirdparty.ps1"
+        if (Test-Path $reorganizeScript) {
+            & $reorganizeScript -Source $Install -Config $Config -Link $Link -Platform android -ABI $ABI
+
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "ERROR: Reorganization failed." -ForegroundColor Red
+                exit 1
+            }
+        } else {
+            Write-Host "ERROR: Reorganization script not found: $reorganizeScript" -ForegroundColor Red
+            exit 1
+        }
+    }
+
     Write-Host ""
     Write-Host "Install locations:" -ForegroundColor Yellow
     foreach ($a in $abis) {
+        $arch = Get-AndroidArchFromABI -ABI $a
         foreach ($c in $configs) {
             foreach ($l in $linkTypes) {
-                Write-Host "  - $Install\android\${a}_${l}_${c}"
+                Write-Host "  - $Install\android\${arch}_${l}_${c}"
             }
         }
     }
+
+    if ($ForVisualStudio) {
+        $OceanRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+        $vsTargetDir = Join-Path $OceanRoot "3rdparty"
+        Write-Host ""
+        Write-Host "Visual Studio project directory:" -ForegroundColor Magenta
+        Write-Host "  - $vsTargetDir"
+    }
+
     exit 0
 } else {
     Write-Host "Some builds failed:" -ForegroundColor Red

@@ -42,6 +42,12 @@
     "Visual Studio 17 2022", "Visual Studio 16 2019", etc.
     By default, CMake auto-detects the newest available Visual Studio.
 
+.PARAMETER ForVisualStudio
+    If specified, automatically enables subdivision and reorganizes the output
+    into a platform-first folder structure suitable for Visual Studio projects.
+    Output will be placed in xplat\ocean\3rdparty\win\h\ and
+    xplat\ocean\3rdparty\win\lib\{config}\.
+
 .EXAMPLE
     .\build_thirdparty_windows.ps1
     Build debug and release static libraries
@@ -77,6 +83,8 @@ param(
     [ValidateSet("ON", "OFF")]
     [string]$Subdivide = "OFF",
 
+    [switch]$ForVisualStudio,
+
     [string]$Archive = "",
 
     [ValidateSet("ERROR", "WARNING", "NOTICE", "STATUS", "VERBOSE", "DEBUG", "TRACE")]
@@ -93,6 +101,13 @@ $Platform = "win"
 
 # Dot-source common functions
 . (Join-Path $ScriptDir "build_common.ps1")
+
+# Handle -ForVisualStudio flag
+if ($ForVisualStudio) {
+    Write-Host ""
+    Write-Host "ForVisualStudio mode enabled - subdivision will be activated" -ForegroundColor Magenta
+    $Subdivide = "ON"
+}
 
 # Check prerequisites
 if (-not (Test-CMake)) {
@@ -261,6 +276,27 @@ if ($failedBuilds.Count -eq 0) {
         }
     }
 
+    # Run reorganization script if -ForVisualStudio was specified
+    if ($ForVisualStudio) {
+        Write-Host ""
+        Write-Host "========================================" -ForegroundColor Magenta
+        Write-Host "Reorganizing for Visual Studio" -ForegroundColor Magenta
+        Write-Host "========================================" -ForegroundColor Magenta
+
+        $reorganizeScript = Join-Path $ScriptDir "reorganize_thirdparty.ps1"
+        if (Test-Path $reorganizeScript) {
+            & $reorganizeScript -Source $Install -Config $Config -Link $Link -Platform win
+
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "ERROR: Reorganization failed." -ForegroundColor Red
+                exit 1
+            }
+        } else {
+            Write-Host "ERROR: Reorganization script not found: $reorganizeScript" -ForegroundColor Red
+            exit 1
+        }
+    }
+
     Write-Host ""
     Write-Host "Install locations:" -ForegroundColor Yellow
     foreach ($c in $configs) {
@@ -269,6 +305,15 @@ if ($failedBuilds.Count -eq 0) {
             Write-Host "  - $Install\$Platform\${Arch}${vsToolsetSuffix}_${l}_${c}"
         }
     }
+
+    if ($ForVisualStudio) {
+        $OceanRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+        $vsTargetDir = Join-Path $OceanRoot "3rdparty"
+        Write-Host ""
+        Write-Host "Visual Studio project directory:" -ForegroundColor Magenta
+        Write-Host "  - $vsTargetDir"
+    }
+
     exit 0
 } else {
     Write-Host "Some builds failed:" -ForegroundColor Red
