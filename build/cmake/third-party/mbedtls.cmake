@@ -12,6 +12,10 @@ set(ENABLE_TESTING OFF)
 set(ENABLE_PROGRAMS OFF)
 set(MBEDTLS_FATAL_WARNINGS OFF)
 
+# Enable installation of mbedtls targets when used as subdirectory
+# This is needed when using CPM/FetchContent
+set(MBEDTLS_INSTALL ON CACHE BOOL "" FORCE)
+
 if(BUILD_SHARED_LIBS)
     set(USE_SHARED_MBEDTLS_LIBRARY ON)
     set(USE_STATIC_MBEDTLS_LIBRARY OFF)

@@ -185,10 +185,38 @@ foreach ($dep in $dependencies) {
             "-DINCLUDED_DEP_NAME=$dep",
             "-DCMAKE_INSTALL_PREFIX=$libInstallPrefix",
             "-DCMAKE_BUILD_TYPE=$BuildType",
-            "-DBUILD_SHARED_LIBS=$BuildSharedLibs",
-            "-DCMAKE_FIND_ROOT_PATH=$libFindRootPath",
-            "-DCMAKE_PREFIX_PATH=$libPrefixPath"
+            "-DBUILD_SHARED_LIBS=$BuildSharedLibs"
         )
+
+        # Add find paths - use list syntax for CMake compatibility
+        $pathsList = $libFindRootPath -split ";" | Where-Object { $_ }
+        $cmakePathsList = $pathsList -join ";"
+        $cmakeArgs += "-DCMAKE_FIND_ROOT_PATH=$cmakePathsList"
+        $cmakeArgs += "-DCMAKE_PREFIX_PATH=$cmakePathsList"
+
+        # Add explicit *_ROOT hints for known dependencies that may have trouble being found
+        foreach ($prevPath in $pathsList) {
+            $prevLibName = Split-Path -Leaf $prevPath
+            switch ($prevLibName) {
+                "mbedtls" {
+                    $cmakeArgs += "-DMbedTLS_ROOT=$prevPath"
+                    $cmakeArgs += "-DMBEDTLS_ROOT_DIR=$prevPath"
+                }
+                "zlib" {
+                    $cmakeArgs += "-DZLIB_ROOT=$prevPath"
+                }
+                "libpng" {
+                    $cmakeArgs += "-DPNG_ROOT=$prevPath"
+                }
+                "libjpeg-turbo" {
+                    $cmakeArgs += "-DJPEG_ROOT=$prevPath"
+                }
+                "freetype" {
+                    $cmakeArgs += "-DFREETYPE_ROOT=$prevPath"
+                }
+            }
+        }
+
         $cmakeArgs += $suppressWarningsFlags
         $cmakeArgs += $ExtraCMakeArgs
 
