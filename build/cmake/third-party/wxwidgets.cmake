@@ -44,5 +44,40 @@ CPMAddPackage(
 
 write_library_version("${WXWIDGETS_GIT_TAG}")
 
+# Patch wxWidgetsConfig.cmake to add missing find_package calls for ZLIB and JPEG.
+# These are required because libtiff's CMake config references ZLIB::ZLIB and JPEG::JPEG
+# targets, but wxWidgetsConfig.cmake doesn't call find_package() to create them.
+install(CODE "
+    set(WX_CONFIG_FILE \"\${CMAKE_INSTALL_PREFIX}/lib/cmake/wxWidgets/wxWidgetsConfig.cmake\")
+    if(EXISTS \"\${WX_CONFIG_FILE}\")
+        file(READ \"\${WX_CONFIG_FILE}\" WX_CONFIG_CONTENT)
+
+        # Check if the patch has already been applied
+        if(NOT WX_CONFIG_CONTENT MATCHES \"find_package.ZLIB QUIET.\")
+            # Find the insertion point: after the OpenGL find_package block
+            string(REPLACE
+                \"find_package(Threads QUIET)\"
+                \"# make sure ZLIB and JPEG targets are available
+# (required for libtiff dependencies in wxcore)
+if(TARGET wx::wxcore)
+    find_package(ZLIB QUIET)
+    find_package(JPEG QUIET)
+endif()
+
+find_package(Threads QUIET)\"
+                WX_CONFIG_CONTENT
+                \"\${WX_CONFIG_CONTENT}\"
+            )
+
+            file(WRITE \"\${WX_CONFIG_FILE}\" \"\${WX_CONFIG_CONTENT}\")
+            message(STATUS \"Patched wxWidgetsConfig.cmake to add ZLIB and JPEG find_package calls\")
+        else()
+            message(STATUS \"wxWidgetsConfig.cmake already patched\")
+        endif()
+    else()
+        message(WARNING \"wxWidgetsConfig.cmake not found at \${WX_CONFIG_FILE}\")
+    endif()
+")
+
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")
