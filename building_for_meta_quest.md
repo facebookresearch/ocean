@@ -51,11 +51,20 @@ While this SDK is optional some of the Ocean demo apps for Quest require this se
 
 ## 2 Building the third-party libraries
 
-Please refer to the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest, the default build parameters are sufficient:
+Please refer to the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest, the default build parameters are sufficient.
 
-```
+### Linux/macOS
+
+```bash
 cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh
+```
+
+### Windows (PowerShell)
+
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_thirdparty_android.ps1
 ```
 
 This will build the third-party libraries with the following default settings which are compatible with Quest:
@@ -63,20 +72,29 @@ This will build the third-party libraries with the following default settings wh
 * Linking type: `static`
 * Build config: `debug` and `release`
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64_static_debug` and `.../android/arm64_static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
 
 The build script can be customized if needed. For example, to specify a different Android SDK version:
 
-```
+### Linux/macOS
+
+```bash
 cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a --sdk android-32
 ```
 
-Run `./build/cmake/build_thirdparty_android.sh --help` to see all available options.
+### Windows (PowerShell)
 
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_thirdparty_android.ps1 -Config debug,release -Link static -Build C:\build_ocean_thirdparty -Install C:\install_ocean_thirdparty -ABI arm64-v8a -Sdk android-32
+```
 
-**Note:** on a Windows build host, the binaries and include files the third-party libraries will be installed into `C:\and\...`. This is required due to Windows imposing a maximum path length. Exceeding this limit will result in build errors, for example errors about missing files.
+Run `./build/cmake/build_thirdparty_android.sh --help` (or `Get-Help .\build\cmake\build_thirdparty_android.ps1 -Detailed` on Windows) to see all available options.
+
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (or `-LogLevel STATUS` on Windows) for general progress information, or other levels like `VERBOSE` or `DEBUG`.
+
+**Note:** On a Windows build host, it is advisable to place build and install directories close to the root of a filesystem (e.g., `C:\build_ocean_thirdparty`) due to Windows limitations on path lengths. Exceeding this limit will result in build errors, for example errors about missing files.
 
 ## 2.1 Building Ocean for Quest (Optional)
 

@@ -83,25 +83,49 @@ Configure the environment variables through System Properties:
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh) (on Windows: [`build/cmake/build_thirdparty_android.bat`](build/cmake/build_thirdparty_android.bat)). By default, this will build all third-party libraries in both debug and release configurations with static linking for the `arm64-v8a` ABI.
+The easiest way to build the third-party libraries is by using the provided build script. On Linux/macOS, use [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh). On Windows, use the PowerShell script [`build/cmake/build_thirdparty_android.ps1`](build/cmake/build_thirdparty_android.ps1). By default, this will build all third-party libraries in both debug and release configurations with static linking for the `arm64-v8a` ABI.
 
-```
+### Linux/macOS
+
+```bash
 cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64_static_debug` and `.../android/arm64_static_release`.
+### Windows (PowerShell)
 
-The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `--abi` for Android ABI, `-b` for build directory, and `-i` for installation directory. For example:
-
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_thirdparty_android.ps1
 ```
+
+Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+
+The build script can be customized using command-line parameters. Use `-Config` (or `--config` on bash) to specify build configurations, `-Link` (or `--link`) for linking type, `-ABI` (or `--abi`) for Android ABI, `-Build` (or `-b`) for build directory, and `-Install` (or `-i`) for installation directory. For example:
+
+### Linux/macOS
+
+```bash
 cd /path/to/ocean
 ./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
-Run `./build/cmake/build_thirdparty_android.sh --help` to see all available options.
+### Windows (PowerShell)
 
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_thirdparty_android.ps1 -Config debug,release -Link static -Build C:\build_ocean_thirdparty -Install C:\install_ocean_thirdparty -ABI arm64-v8a
+```
+
+To build for multiple ABIs:
+
+```powershell
+.\build\cmake\build_thirdparty_android.ps1 -ABI "arm64-v8a,armeabi-v7a,x86_64"
+```
+
+Run `./build/cmake/build_thirdparty_android.sh --help` (or `Get-Help .\build\cmake\build_thirdparty_android.ps1 -Detailed` on Windows) to see all available options.
+
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `-LogLevel STATUS` (or `--log-level STATUS` on bash) for general progress information, or other levels like `VERBOSE` or `DEBUG`.
 
 
 ## 3 Using Ocean in external Android projects

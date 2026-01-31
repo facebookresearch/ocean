@@ -14,33 +14,33 @@ This document describes the process to build Ocean for Windows. It covers:
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_windows.bat`](build/cmake/build_thirdparty_windows.bat). By default, this will build all third-party libraries in both debug and release configurations with static linking.
+The easiest way to build the third-party libraries is by using the provided PowerShell build script, [`build/cmake/build_thirdparty_windows.ps1`](build/cmake/build_thirdparty_windows.ps1). By default, this will build all third-party libraries in both debug and release configurations with static linking.
 
-```
-cd /D \path\to\ocean
-.\build\cmake\build_thirdparty_windows.bat
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_thirdparty_windows.ps1
 ```
 
 Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty\windows\x64_vc145_static_debug` and `...\windows\x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version, e.g., `vc143` for VS 2022, `vc145` for VS 2026; or with `arm64_` prefix on ARM64 systems).
 
-The build script can be customized using command-line parameters. Use `-config` to specify build configurations, `-link` for linking type, `-build` for build directory, and `-install` for installation directory. For example:
+The build script can be customized using command-line parameters. Use `-Config` to specify build configurations, `-Link` for linking type, `-Build` for build directory, and `-Install` for installation directory. For example:
 
-```
-cd /D \path\to\ocean
-.\build\cmake\build_thirdparty_windows.bat -config debug,release -link static -build C:\build_oceanTP -install C:\install_oceanTP
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_thirdparty_windows.ps1 -Config debug,release -Link static -Build C:\build_oceanTP -Install C:\install_oceanTP
 ```
 
 It is advisable to place build and install directories as close to the root of a filesystem as possible, due to Windows limitations on path lengths. Build directories in particular can be very deep.
 
-Run `.\build\cmake\build_thirdparty_windows.bat -help` to see all available options.
+Run `Get-Help .\build\cmake\build_thirdparty_windows.ps1 -Detailed` to see all available options.
 
 To use a specific Visual Studio version instead of the auto-detected one:
 
-```
-.\build\cmake\build_thirdparty_windows.bat -generator "Visual Studio 16 2019"
+```powershell
+.\build\cmake\build_thirdparty_windows.ps1 -Generator "Visual Studio 16 2019"
 ```
 
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `-log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `-LogLevel STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
 
 ## 3 Building Ocean
 
