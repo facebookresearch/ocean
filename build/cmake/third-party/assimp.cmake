@@ -31,6 +31,11 @@ if (LINUX)
   endif()
 endif()
 
+if (WIN32)
+  # Enable C++ exception handling (required by newer MSVC versions to avoid C4530 warning)
+  add_compile_options(/EHsc)
+endif()
+
 set(ASSIMP_GIT_TAG "v5.4.2")
 
 CPMAddPackage(
