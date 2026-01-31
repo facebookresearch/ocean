@@ -341,7 +341,7 @@ The camera calibration functionality is implemented in these main classes:
 
 ### CameraCalibrator
 
-The [`CameraCalibrator`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/calibration/CameraCalibrator.h) class performs the actual calibration computation. It:
+The [`CameraCalibrator`](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/cv/calibration/CameraCalibrator.h) class performs the actual calibration computation. It:
 
 - Processes multiple images of a calibration board
 - Automatically determines the initial camera field of view
@@ -370,7 +370,7 @@ SharedAnyCamera camera = calibrator.camera();
 
 ### MetricCalibrationBoard
 
-The [`MetricCalibrationBoard`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/calibration/MetricCalibrationBoard.h) extends the base `CalibrationBoard` with real-world metric measurements. It's defined in the xz-plane with:
+The [`MetricCalibrationBoard`](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/cv/calibration/MetricCalibrationBoard.h) extends the base `CalibrationBoard` with real-world metric measurements. It's defined in the xz-plane with:
 
 - Measured width and height of the calibration board's measurement indication
 - Computed metric size of each marker
@@ -378,7 +378,7 @@ The [`MetricCalibrationBoard`](https://github.com/facebookresearch/ocean/blob/v1
 
 ### CalibrationBoard
 
-The [`CalibrationBoard`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/calibration/CalibrationBoard.h) class defines the logical structure of a calibration board:
+The [`CalibrationBoard`](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/cv/calibration/CalibrationBoard.h) class defines the logical structure of a calibration board:
 
 - Grid dimensions (horizontal and vertical marker count)
 - Marker IDs, signs, and orientations
@@ -388,8 +388,8 @@ The [`CalibrationBoard`](https://github.com/facebookresearch/ocean/blob/v1.0.0/i
 
 ## Resources
 
-- **Calibration Code**: [`ocean/cv/calibration`](https://github.com/facebookresearch/ocean/tree/v1.0.0/impl/ocean/cv/calibration)
-- **Demo Applications**: [`application/ocean/demo/cv/calibration`](https://github.com/facebookresearch/ocean/tree/v1.0.0/impl/application/ocean/demo/cv/calibration)
-- **Pre-made Calibration Boards**: [`res/application/ocean/demo/cv/calibration/creator`](https://github.com/facebookresearch/ocean/tree/v1.0.0/res/application/ocean/demo/cv/calibration/creator)
-- **Example Calibration File**: [`res/ocean/cv/calibration/camera_calibration.json`](https://github.com/facebookresearch/ocean/tree/v1.0.0/res/ocean/cv/calibration/camera_calibration.json)
+- **Calibration Code**: [`ocean/cv/calibration`](https://github.com/facebookresearch/ocean/tree/main/impl/ocean/cv/calibration)
+- **Demo Applications**: [`application/ocean/demo/cv/calibration`](https://github.com/facebookresearch/ocean/tree/main/impl/application/ocean/demo/cv/calibration)
+- **Pre-made Calibration Boards**: [`res/application/ocean/demo/cv/calibration/creator`](https://github.com/facebookresearch/ocean/tree/main/res/application/ocean/demo/cv/calibration/creator)
+- **Example Calibration File**: [`res/ocean/cv/calibration/camera_calibration.json`](https://github.com/facebookresearch/ocean/blob/main/res/ocean/cv/calibration/camera_calibration.json)
 - **CameraCalibrationManager**: [`ocean/io/CameraCalibrationManager.h`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/io/CameraCalibrationManager.h)
