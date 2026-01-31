@@ -13,7 +13,9 @@ set BUILD_DIRECTORY_BASE=%~3
 set EXTRA_BUILD_FLAGS=%~4
 set SUBDIVIDE_INSTALL=%~5
 set LOG_LEVEL=%~6
+set GENERATOR=%~7
 
+shift
 shift
 shift
 shift
@@ -68,6 +70,13 @@ if /I "%LOG_LEVEL%"=="ERROR" (
     set CMAKE_WARN_FLAGS=--no-warn-unused-cli
 )
 
+@REM Set generator flag if specified
+set GENERATOR_FLAG=
+if NOT "%GENERATOR%"=="" (
+    set GENERATOR_FLAG=-G "%GENERATOR%"
+    echo Using CMake generator: %GENERATOR%
+)
+
 @REM Track previously built libraries for CMAKE_FIND_ROOT_PATH
 set PREVIOUS_LIBS_PATH=%BASE_INSTALL_PREFIX%
 
@@ -115,7 +124,7 @@ for /F "eol=# usebackq delims=" %%d in ("%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependen
             set LIB_CMAKE_ARGS=!LIB_CMAKE_ARGS! "-DCMAKE_PREFIX_PATH=!LIB_PREFIX_PATH!"
         )
 
-        cmake --log-level=%LOG_LEVEL% %CMAKE_WARN_FLAGS% -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d %SUPPRESS_WARNINGS_FLAGS% !LIB_CMAKE_ARGS!
+        cmake --log-level=%LOG_LEVEL% %CMAKE_WARN_FLAGS% %GENERATOR_FLAG% -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d %SUPPRESS_WARNINGS_FLAGS% !LIB_CMAKE_ARGS!
         if ERRORLEVEL 1 (
             exit /b 1
         )
@@ -131,7 +140,7 @@ for /F "eol=# usebackq delims=" %%d in ("%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependen
         )
     ) else (
         @REM Flat structure mode (default)
-        cmake --log-level=%LOG_LEVEL% %CMAKE_WARN_FLAGS% -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d %SUPPRESS_WARNINGS_FLAGS% !CMAKE_ARGS!
+        cmake --log-level=%LOG_LEVEL% %CMAKE_WARN_FLAGS% %GENERATOR_FLAG% -S "%OCEAN_THIRD_PARTY_SOURCE_DIR%" -B "%BUILD_DIRECTORY_BASE%\%%d" -DINCLUDED_DEP_NAME=%%d %SUPPRESS_WARNINGS_FLAGS% !CMAKE_ARGS!
         if ERRORLEVEL 1 (
             exit /b 1
         )

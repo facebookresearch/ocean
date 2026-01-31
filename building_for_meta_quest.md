@@ -14,9 +14,11 @@ To build the project, you need to satisfy the following prerequisites:
 
 Please refer to the [main page](README.md) for general build prerequisites.
 
+* CMake 3.25 or higher is required (for CMake preset support)
+
 ### Android Setup
 
-Please refer to the [instructions to build Ocean of Android](building_for_android.md#1-prerequisites) for the Android setup.
+Please refer to the [instructions to build Ocean for Android](building_for_android.md#1-prerequisites) for the Android setup.
 
 ### Quest setup
 
@@ -75,6 +77,32 @@ Run `./build/cmake/build_thirdparty_android.sh --help` to see all available opti
 > **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
 
 **Note:** on a Windows build host, the binaries and include files the third-party libraries will be installed into `C:\and\...`. This is required due to Windows imposing a maximum path length. Exceeding this limit will result in build errors, for example errors about missing files.
+
+## 2.1 Building Ocean for Quest (Optional)
+
+If you want to build Ocean libraries for Quest separately (not via Gradle), you can use the unified build script with the `--quest` flag:
+
+```
+cd /path/to/ocean
+./build/cmake/build_ocean.sh --quest
+```
+
+This will build Ocean using the Quest-specific CMake presets which configure additional Quest extensions.
+
+On Windows, you can use PowerShell:
+
+```powershell
+cd \path\to\ocean
+.\build\cmake\build_ocean.ps1 -Quest
+```
+
+Or using CMake presets directly:
+
+```bash
+cmake --preset android-quest-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/android/arm64_static_release"
+cmake --build --preset android-quest-static-release --target install
+```
+
 ## 3 Building Quest demo apps that come with Ocean
 
 Please refer to the builds steps in the [instructions for Android](building_for_android.md#4-building-the-ocean-android-demo-test-apps) for details about building Ocean Android apps with Gradle.

@@ -5,6 +5,7 @@ This document describes the process to build Ocean on Linux.
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](README.md)
+* CMake 3.25 or higher is required (for CMake preset support)
 * Currently some packages will have to be installed using the package manager of your distributions (example commands and package names given below are for Fedora and Ubuntu, but they should be similar for other distributions):
   ```
   # Fedora
@@ -43,11 +44,11 @@ Run `./build/cmake/build_thirdparty_linuxunix.sh --help` to see all available op
 
 ## 3 Building Ocean
 
-The easiest way to build all Ocean libraries and apps is by using the provided build script. By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+Ocean uses CMake presets for build configuration. The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh). By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
 cd /path/to/ocean
-./build/cmake/build_ocean_linuxunix.sh
+./build/cmake/build_ocean.sh
 ```
 
 Once the build is complete, the compiled binaries can be found in `ocean_install/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
@@ -56,7 +57,20 @@ The build script can be customized using command-line parameters. For example:
 
 ```
 cd /path/to/ocean
-./build/cmake/build_ocean_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
+./build/cmake/build_ocean.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
 ```
 
-Run `./build/cmake/build_ocean_linuxunix.sh --help` to see all available options.
+Run `./build/cmake/build_ocean.sh --help` to see all available options.
+
+### Using CMake Presets Directly
+
+Alternatively, you can use CMake presets directly without the build script:
+
+```bash
+# List all available presets
+cmake --list-presets
+
+# Configure and build using a preset
+cmake --preset linux-x64-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/linux/x64_static_release"
+cmake --build --preset linux-x64-static-release --target install
+```

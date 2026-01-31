@@ -13,7 +13,7 @@ This document describes the general process to build Ocean. Platform-specific in
 Before building Ocean, ensure you have the following:
 
 - **Git**: Required to clone the repository
-- **CMake 3.26 or higher**: Build system generator
+- **CMake 3.25 or higher**: Build system generator (required for CMake preset support)
 - A compatible **C++ compiler** for your target platform
 
 ## Getting the Source Code

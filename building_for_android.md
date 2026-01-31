@@ -1,6 +1,6 @@
 # Building for Android
 
-This document describes the process to build Ocean for Android on Linux or macOS. It covers:
+This document describes the process to build Ocean for Android on Linux, macOS, or Windows. It covers:
 
 1. General requirements
 2. Building required third-party libraries
@@ -14,6 +14,8 @@ To build the project, you need to satisfy the following prerequisites:
 ### General build prerequisites
 
 Please refer to the [main page](README.md) for general build prerequisites.
+
+* CMake 3.25 or higher is required (for CMake preset support)
 
 ### Android Setup
 
@@ -106,25 +108,52 @@ Run `./build/cmake/build_thirdparty_android.sh --help` to see all available opti
 
 This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project. This assumes that the third-party libraries have been built as described above for the required Android ABIs.
 
-After that you have following options:
-
-If you already have a complete setup for an Android project and just need the header files and compiled libraries of Ocean, you can build it as follows. By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for Android from macOS, Linux, or Windows (via Git Bash). By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
 
 ```
 cd /path/to/ocean
-./build/cmake/build_ocean_android.sh
+./build/cmake/build_ocean.sh -p android
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/android/arm64_static_debug` and `.../android/arm64_static_release`.
+Once the build is complete, the compiled binaries can be found in `ocean_install/android/arm64_static_release` (or with `_debug` suffix for debug builds).
 
-The build script can be customized using command-line parameters. For example:
+The build script can be customized using command-line parameters. For example, to build for multiple ABIs:
 
 ```
 cd /path/to/ocean
-./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
+./build/cmake/build_ocean.sh -p android -a arm64,arm32,x64 -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
 ```
 
-Run `./build/cmake/build_ocean_android.sh --help` to see all available options.
+### Windows Users
+
+On Windows, you can use either:
+
+1. **PowerShell** (recommended):
+   ```powershell
+   cd \path\to\ocean
+   .\build\cmake\build_ocean.ps1 -Platform android -Arch arm64
+   ```
+
+2. **Git Bash**:
+   ```bash
+   cd /path/to/ocean
+   ./build/cmake/build_ocean.sh -p android
+   ```
+
+Run `./build/cmake/build_ocean.sh --help` or `.\build\cmake\build_ocean.ps1 -?` to see all available options.
+
+### Using CMake Presets Directly
+
+Alternatively, you can use CMake presets directly without the build script:
+
+```bash
+# List all available presets
+cmake --list-presets
+
+# Configure and build using a preset
+cmake --preset android-arm64-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/android/arm64_static_release"
+cmake --build --preset android-arm64-static-release --target install
+```
 
 For projects that use Gradle as their main build system, they can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
 
