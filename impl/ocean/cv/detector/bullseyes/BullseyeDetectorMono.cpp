@@ -1067,6 +1067,7 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase1CastRays(const uint8_t* y
 	ocean_assert(xCenter < width && yCenter < height);
 	ocean_assert(numberDiameters >= 4u);
 	ocean_assert(minValidRayFraction > Scalar(0) && minValidRayFraction <= Scalar(1));
+	ocean_assert(threshold <= 255u);
 
 	const Scalar angleStep = Numeric::pi() / Scalar(numberDiameters);
 
@@ -1078,13 +1079,13 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase1CastRays(const uint8_t* y
 		const Scalar angle = Scalar(i) * angleStep;
 
 		// Cast positive direction
-		if (!castHalfRay(yData, width, height, strideElements, xCenter, yCenter, angle, Scalar(maxSearchRadius), centerIntensity, threshold, diameter.halfRayPositive) || !diameter.halfRayPositive.isValid())
+		if (!castHalfRay(yData, width, height, strideElements, xCenter, yCenter, angle, Scalar(maxSearchRadius), centerIntensity, uint8_t(threshold), diameter.halfRayPositive) || !diameter.halfRayPositive.isValid())
 		{
 			continue;
 		}
 
 		// Cast negative direction (angle + PI)
-		castHalfRay(yData, width, height, strideElements, xCenter, yCenter, angle + Numeric::pi(), Scalar(maxSearchRadius), centerIntensity, threshold, diameter.halfRayNegative);
+		castHalfRay(yData, width, height, strideElements, xCenter, yCenter, angle + Numeric::pi(), Scalar(maxSearchRadius), centerIntensity, uint8_t(threshold), diameter.halfRayNegative);
 		if (!diameter.halfRayNegative.isValid())
 		{
 			continue;
@@ -1149,6 +1150,7 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(numberDiameters >= 4u);
+	ocean_assert(threshold <= 255u);
 
 	const unsigned int width = yFrame.width();
 	const unsigned int height = yFrame.height();
@@ -1165,7 +1167,7 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const
 			const Vector2 midPoint0 = (ray->transitionPoints[0] + ray->transitionPoints[1]) * Scalar(0.5);
 			if (midPoint0.x() >= Scalar(1) && midPoint0.x() < Scalar(width - 1) && midPoint0.y() >= Scalar(1) && midPoint0.y() < Scalar(height - 1))
 			{
-				if (isWhitePixel(yFrame.constpixel<uint8_t>((unsigned int)midPoint0.x(), (unsigned int)midPoint0.y()), threshold))
+				if (isWhitePixel(yFrame.constpixel<uint8_t>((unsigned int)midPoint0.x(), (unsigned int)midPoint0.y()), uint8_t(threshold)))
 				{
 					ray->isIntensityValid[0] = true;
 					++intensityPassCount;
@@ -1183,7 +1185,7 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const
 			const Vector2 midPoint1 = (ray->transitionPoints[1] + ray->transitionPoints[2]) * Scalar(0.5);
 			if (midPoint1.x() >= Scalar(1) && midPoint1.x() < Scalar(width - 1) && midPoint1.y() >= Scalar(1) && midPoint1.y() < Scalar(height - 1))
 			{
-				if (isBlackPixel(yFrame.constpixel<uint8_t>((unsigned int)midPoint1.x(), (unsigned int)midPoint1.y()), threshold))
+				if (isBlackPixel(yFrame.constpixel<uint8_t>((unsigned int)midPoint1.x(), (unsigned int)midPoint1.y()), uint8_t(threshold)))
 				{
 					ray->isIntensityValid[1] = true;
 					++intensityPassCount;
@@ -1209,7 +1211,7 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const
 
 				if (outsidePoint.x() >= Scalar(1) && outsidePoint.x() < Scalar(width - 1) && outsidePoint.y() >= Scalar(1) && outsidePoint.y() < Scalar(height - 1))
 				{
-					if (isWhitePixel(yFrame.constpixel<uint8_t>((unsigned int)outsidePoint.x(), (unsigned int)outsidePoint.y()), threshold))
+					if (isWhitePixel(yFrame.constpixel<uint8_t>((unsigned int)outsidePoint.x(), (unsigned int)outsidePoint.y()), uint8_t(threshold)))
 					{
 						ray->isIntensityValid[2] = true;
 						++intensityPassCount;
@@ -1238,7 +1240,7 @@ bool BullseyeDetectorMono::checkRadialConsistencyPhase3IntensityValidation(const
 	return passed;
 }
 
-bool BullseyeDetectorMono::checkRadialConsistencyPhase4RadialProfileValidation(const unsigned int xCenter, const unsigned int yCenter, const unsigned int numberDiameters, const Diameters& diameters)
+bool BullseyeDetectorMono::checkRadialConsistencyPhase4RadialProfileValidation(const unsigned int /*xCenter*/, const unsigned int /*yCenter*/, const unsigned int numberDiameters, const Diameters& diameters)
 {
 	ocean_assert(numberDiameters >= 4u);
 
