@@ -12,7 +12,7 @@ if [[ $(uname -s) == "Darwin" ]]; then
 elif [[ $(uname -s) == "Linux" ]]; then
   OCEAN_PLATFORM="linux"
 elif [[ $(uname -s) == *"MINGW"* ]]; then
-  OCEAN_PLATFORM="windows"
+  OCEAN_PLATFORM="win"
 else
   echo "ERROR: Unsupported operating system: $(uname -s)" >&2
   exit 1
@@ -33,8 +33,8 @@ check_build_dependencies "${OCEAN_PLATFORM}"
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
 
-OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
-OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
+OTP_BUILD_DIR="${PWD}/bin/cmake/3rdparty/tmp"
+OTP_INSTALL_DIR="${PWD}/bin/cmake/3rdparty"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
 OTP_BUILD_CONFIG="debug,release"

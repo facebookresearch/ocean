@@ -13,10 +13,10 @@
     (static/shared).
 
 .PARAMETER Install
-    Installation directory. Default: .\ocean_install_thirdparty
+    Installation directory. Default: .\bin\cmake\3rdparty
 
 .PARAMETER Build
-    Build directory. Default: .\ocean_build_thirdparty
+    Build directory. Default: .\bin\cmake\3rdparty\tmp
 
 .PARAMETER Config
     Build configuration(s): debug, release, or both (comma-separated).
@@ -69,8 +69,8 @@
 
 [CmdletBinding()]
 param(
-    [string]$Install = ".\ocean_install_thirdparty",
-    [string]$Build = ".\ocean_build_thirdparty",
+    [string]$Install = ".\bin\cmake\3rdparty",
+    [string]$Build = ".\bin\cmake\3rdparty\tmp",
     [string]$Config = "debug,release",
     [string]$Link = "static",
 
@@ -89,7 +89,7 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ThirdPartySourceDir = Join-Path $ScriptDir "third-party"
-$Platform = "windows"
+$Platform = "win"
 
 # Dot-source common functions
 . (Join-Path $ScriptDir "build_common.ps1")
@@ -98,6 +98,9 @@ $Platform = "windows"
 if (-not (Test-CMake)) {
     exit 1
 }
+
+# Check for Long Path support
+Test-LongPathSupport | Out-Null
 
 # Detect architecture
 $Arch = Get-DefaultArchitecture

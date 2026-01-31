@@ -99,7 +99,7 @@ cd \path\to\ocean
 .\build\cmake\build_thirdparty_android.ps1
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
 
 The build script can be customized using command-line parameters. Use `-Config` (or `--config` on bash) to specify build configurations, `-Link` (or `--link`) for linking type, `-ABI` (or `--abi`) for Android ABI, `-Build` (or `-b`) for build directory, and `-Install` (or `-i`) for installation directory. For example:
 
@@ -132,14 +132,14 @@ Run `./build/cmake/build_thirdparty_android.sh --help` (or `Get-Help .\build\cma
 
 This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project. This assumes that the third-party libraries have been built as described above for the required Android ABIs.
 
-Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for Android from macOS, Linux, or Windows (via Git Bash). By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for Android from macOS, Linux, or Windows (via Git Bash). By default, the script will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
 
 ```
 cd /path/to/ocean
 ./build/cmake/build_ocean.sh -p android
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/android/arm64_static_release` (or with `_debug` suffix for debug builds).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/android/arm64_static_release` (or with `_debug` suffix for debug builds).
 
 The build script can be customized using command-line parameters. For example, to build for multiple ABIs:
 

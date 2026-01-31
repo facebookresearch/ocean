@@ -12,6 +12,25 @@ This document describes the process to build Ocean for Windows. It covers:
 * CMake 3.25 or higher is required (for CMake preset support)
 * Visual Studio 2019 or later is required (2022 recommended). By default, CMake will auto-detect the newest installed version.
 
+### Enabling Long Path Support (Highly Recommended)
+
+Windows traditionally has a 260-character path limit (MAX_PATH). Ocean's build process can generate deeply nested paths that may exceed this limit. It is **highly recommended** to enable Long Path support before building.
+
+To enable Long Path support, run this command in an elevated (Administrator) PowerShell:
+
+```powershell
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1
+```
+
+Alternatively, use the Group Policy Editor:
+1. Open `gpedit.msc`
+2. Navigate to: Computer Configuration > Administrative Templates > System > Filesystem
+3. Enable: "Enable Win32 long paths"
+
+A system restart may be required after enabling this setting.
+
+> **Note:** The build scripts will automatically check for Long Path support and display a warning if it is not enabled.
+
 ## 2 Building the third-party libraries
 
 The easiest way to build the third-party libraries is by using the provided PowerShell build script, [`build/cmake/build_thirdparty_windows.ps1`](build/cmake/build_thirdparty_windows.ps1). By default, this will build all third-party libraries in both debug and release configurations with static linking.
@@ -21,7 +40,7 @@ cd \path\to\ocean
 .\build\cmake\build_thirdparty_windows.ps1
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty\windows\x64_vc145_static_debug` and `...\windows\x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version, e.g., `vc143` for VS 2022, `vc145` for VS 2026; or with `arm64_` prefix on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/win/x64_vc145_static_debug` and `.../win/x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version, e.g., `vc143` for VS 2022, `vc145` for VS 2026; or with `arm64_` prefix on ARM64 systems).
 
 The build script can be customized using command-line parameters. Use `-Config` to specify build configurations, `-Link` for linking type, `-Build` for build directory, and `-Install` for installation directory. For example:
 
@@ -48,14 +67,14 @@ Ocean uses CMake presets for build configuration. There are two options for buil
 
 ### Option A: Using PowerShell (Recommended)
 
-The easiest way to build all Ocean libraries and apps is by using the PowerShell script [`build/cmake/build_ocean.ps1`](build/cmake/build_ocean.ps1). By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+The easiest way to build all Ocean libraries and apps is by using the PowerShell script [`build/cmake/build_ocean.ps1`](build/cmake/build_ocean.ps1). By default, it will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
 
 ```powershell
 cd \path\to\ocean
 .\build\cmake\build_ocean.ps1
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install\windows\x64_vc145_static_debug` and `...\windows\x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version; or with `arm64_` prefix on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/win/x64_vc145_static_debug` and `.../win/x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version; or with `arm64_` prefix on ARM64 systems).
 
 The build script can be customized using command-line parameters. For example:
 
@@ -98,7 +117,7 @@ Alternatively, you can use CMake presets directly without the build scripts:
 cmake --list-presets
 
 # Configure using a preset
-cmake --preset windows-x64-static-release -DCMAKE_PREFIX_PATH="C:\install_oceanTP\windows\x64_static_release"
+cmake --preset windows-x64-static-release -DCMAKE_PREFIX_PATH="C:\install_oceanTP\win\x64_static_release"
 
 # Build and install
 cmake --build --preset windows-x64-static-release --target install
@@ -107,7 +126,7 @@ cmake --build --preset windows-x64-static-release --target install
 To use a specific Visual Studio version with presets, add the `-G` flag:
 
 ```powershell
-cmake --preset windows-x64-static-release -G "Visual Studio 16 2019" -DCMAKE_PREFIX_PATH="C:\install_oceanTP\windows\x64_static_release"
+cmake --preset windows-x64-static-release -G "Visual Studio 16 2019" -DCMAKE_PREFIX_PATH="C:\install_oceanTP\win\x64_static_release"
 ```
 
 ### Building with Visual Studio
@@ -116,10 +135,10 @@ To open the project in Visual Studio after configuration:
 
 ```powershell
 # Configure the project
-cmake --preset windows-x64-static-release -DCMAKE_PREFIX_PATH="C:\install_oceanTP\windows\x64_static_release"
+cmake --preset windows-x64-static-release -DCMAKE_PREFIX_PATH="C:\install_oceanTP\win\x64_static_release"
 
 # Open in Visual Studio
-start ocean_build\windows-x64-static-release\ocean.sln
+start bin\cmake\tmp\win-x64-static-release\ocean.sln
 ```
 
 Then build and run the desired targets from within Visual Studio.

@@ -25,8 +25,8 @@ check_build_dependencies
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
 
-OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
-OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
+OTP_BUILD_DIR="${PWD}/bin/cmake/3rdparty/tmp"
+OTP_INSTALL_DIR="${PWD}/bin/cmake/3rdparty"
 
 OTP_VALID_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
 OTP_ANDROID_ABIS="arm64-v8a"

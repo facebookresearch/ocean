@@ -234,3 +234,37 @@ function Write-BuildSummary {
     Write-Host "BUILD_DIRECTORY      $BuildDir"
     Write-Host "INSTALL_DIRECTORY    $InstallDir"
 }
+
+# Check if Windows Long Path support is enabled
+# Returns $true if enabled, $false otherwise
+# Displays a warning if not enabled, or a confirmation if enabled
+function Test-LongPathSupport {
+    try {
+        $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem"
+        $value = Get-ItemProperty -Path $regPath -Name "LongPathsEnabled" -ErrorAction SilentlyContinue
+
+        if ($value -and $value.LongPathsEnabled -eq 1) {
+            Write-Host "Long Path support is enabled." -ForegroundColor Green
+            return $true
+        }
+    } catch {
+        # Registry access failed, assume not enabled
+    }
+
+    Write-Host ""
+    Write-Host "WARNING: Windows Long Path support is not enabled." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Build paths may exceed the 260 character limit (MAX_PATH), causing failures." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "To enable Long Path support, run this command as Administrator:" -ForegroundColor Cyan
+    Write-Host "  Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1" -ForegroundColor White
+    Write-Host ""
+    Write-Host "Alternatively, use the Group Policy Editor:" -ForegroundColor Cyan
+    Write-Host "  Computer Configuration > Administrative Templates > System > Filesystem" -ForegroundColor White
+    Write-Host "  Enable: 'Enable Win32 long paths'" -ForegroundColor White
+    Write-Host ""
+    Write-Host "A system restart may be required after enabling this setting." -ForegroundColor Yellow
+    Write-Host ""
+
+    return $false
+}

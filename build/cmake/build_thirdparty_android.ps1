@@ -19,10 +19,10 @@
     - Ninja build system must be installed and in PATH
 
 .PARAMETER Install
-    Installation directory. Default: .\ocean_install_thirdparty
+    Installation directory. Default: .\bin\cmake\3rdparty
 
 .PARAMETER Build
-    Build directory. Default: .\ocean_build_thirdparty
+    Build directory. Default: .\bin\cmake\3rdparty\tmp
 
 .PARAMETER ABI
     Android ABI(s) to build: arm64-v8a, armeabi-v7a, x86_64, x86 (comma-separated).
@@ -73,8 +73,8 @@
 
 [CmdletBinding()]
 param(
-    [string]$Install = ".\ocean_install_thirdparty",
-    [string]$Build = ".\ocean_build_thirdparty",
+    [string]$Install = ".\bin\cmake\3rdparty",
+    [string]$Build = ".\bin\cmake\3rdparty\tmp",
     [string]$ABI = "arm64-v8a",
     [string]$Config = "debug,release",
     [string]$Link = "static",

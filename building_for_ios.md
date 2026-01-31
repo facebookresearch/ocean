@@ -33,7 +33,7 @@ cd /path/to/ocean
 ./build/cmake/build_thirdparty_ios.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/ios/arm64_static_debug` and `.../ios/arm64_static_release`.
+Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/ios/arm64_static_debug` and `.../ios/arm64_static_release`.
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -50,14 +50,14 @@ Run `./build/cmake/build_thirdparty_ios.sh --help` to see all available options.
 
 This section provides an example of how to build the Ocean libraries for the case that you plan to integrate them into an existing iOS project.
 
-Make sure that the third-party libraries have been built and installed as described above. Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for iOS from macOS. By default, the script will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+Make sure that the third-party libraries have been built and installed as described above. Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for iOS from macOS. By default, the script will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
 
 ```
 cd /path/to/ocean
 ./build/cmake/build_ocean.sh -p ios
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/ios/arm64_static_release` (or with `_debug` suffix for debug builds).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/ios/arm64_static_release` (or with `_debug` suffix for debug builds).
 
 The build script can be customized using command-line parameters. For example:
 
@@ -101,7 +101,7 @@ cmake --preset ios-arm64-static-debug \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX
 
 # Open in Xcode
-open ocean_build/ios-arm64-static-debug/ocean.xcodeproj
+open bin/cmake/tmp/ios-arm64-static-debug/ocean.xcodeproj
 ```
 
 For release builds:
@@ -112,7 +112,7 @@ cmake --preset ios-arm64-static-release \
     -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/ios/arm64_static_release" \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX
 
-open ocean_build/ios-arm64-static-release/ocean.xcodeproj
+open bin/cmake/tmp/ios-arm64-static-release/ocean.xcodeproj
 ```
 
 Make sure to replace `XXXXXXXXXX` with your Apple Team ID.

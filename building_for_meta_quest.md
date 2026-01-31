@@ -72,7 +72,7 @@ This will build the third-party libraries with the following default settings wh
 * Linking type: `static`
 * Build config: `debug` and `release`
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/android/arm64_static_debug` and `.../android/arm64_static_release`.
 
 The build script can be customized if needed. For example, to specify a different Android SDK version:
 

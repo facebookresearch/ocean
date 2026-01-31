@@ -12,7 +12,7 @@
     Uses CMake presets for configuration management.
 
 .PARAMETER Platform
-    Target platform: windows, android. Default: windows
+    Target platform: win, android. Default: win
 
 .PARAMETER Config
     Build configuration(s): debug, release, or both (comma-separated). Default: release
@@ -25,13 +25,13 @@
     Comma-separated for multiple. Default: auto-detect
 
 .PARAMETER Build
-    Build directory. Default: .\ocean_build
+    Build directory. Default: .\bin\cmake\tmp
 
 .PARAMETER Install
-    Install directory. Default: .\ocean_install
+    Install directory. Default: .\bin\cmake
 
 .PARAMETER ThirdParty
-    Path to third-party libraries. Default: .\ocean_install_thirdparty
+    Path to third-party libraries. Default: .\bin\cmake\3rdparty
 
 .PARAMETER Quest
     Build for Meta Quest (Android ARM64 with Quest extensions)
@@ -94,8 +94,8 @@
 
 [CmdletBinding()]
 param(
-    [ValidateSet("windows", "android")]
-    [string]$Platform = "windows",
+[ValidateSet("win", "android")]
+    [string]$Platform = "win",
 
     [string]$Config = "debug,release",
 
@@ -103,11 +103,11 @@ param(
 
     [string]$Arch = "",
 
-    [string]$Build = ".\ocean_build",
+    [string]$Build = ".\bin\cmake\tmp",
 
-    [string]$Install = ".\ocean_install",
+    [string]$Install = ".\bin\cmake",
 
-    [string]$ThirdParty = ".\ocean_install_thirdparty",
+    [string]$ThirdParty = ".\bin\cmake\3rdparty",
 
     [switch]$Quest,
 
@@ -132,103 +132,8 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $OceanSourceDir = (Resolve-Path (Join-Path $ScriptDir "..\..")).Path
 
-# Detect Visual Studio toolset version (vc142, vc143, vc145, etc.)
-# If a generator is specified (e.g., "Visual Studio 17 2022"), extract version from it
-# Otherwise, use vswhere to detect the latest installed version
-function Get-VSToolsetVersion {
-    param(
-        [string]$GeneratorString = ""
-    )
-
-    # If generator is specified, try to extract VS version from it
-    # Format: "Visual Studio XX YYYY" where XX is the major version
-    if ($GeneratorString -match "Visual Studio (\d+)") {
-        $majorVersion = [int]$Matches[1]
-
-        # Map VS major version to toolset version
-        # VS 2019 (16.x) = vc142, VS 2022 (17.x) = vc143, VS 2026 (18.x) = vc145
-        if ($majorVersion -ge 18) {
-            $toolsetNum = $majorVersion + 127
-        } else {
-            $toolsetNum = $majorVersion + 126
-        }
-        return "vc$toolsetNum"
-    }
-
-    # Fall back to vswhere detection if no generator specified
-    $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-    if (-not (Test-Path $vswhere)) {
-        $vswhere = "${env:ProgramFiles}\Microsoft Visual Studio\Installer\vswhere.exe"
-    }
-    if (-not (Test-Path $vswhere)) {
-        return $null
-    }
-
-    $vsVersion = & $vswhere -latest -property installationVersion 2>$null
-    if (-not $vsVersion) {
-        return $null
-    }
-
-    # Extract major version (16=VS2019, 17=VS2022, 18=VS2026)
-    $majorVersion = [int]($vsVersion.Split(".")[0])
-
-    # Map VS major version to toolset version
-    # VS 2015 (14.x) = vc140, VS 2017 (15.x) = vc141, VS 2019 (16.x) = vc142
-    # VS 2022 (17.x) = vc143, VS 2026 (18.x) = vc145
-    if ($majorVersion -ge 18) {
-        $toolsetNum = $majorVersion + 127
-    } else {
-        $toolsetNum = $majorVersion + 126
-    }
-    return "vc$toolsetNum"
-}
-
-# Check CMake is available
-function Test-CMake {
-    $cmake = Get-Command cmake -ErrorAction SilentlyContinue
-    if (-not $cmake) {
-        Write-Error "ERROR: cmake is not installed or not in your PATH."
-        Write-Host "  Download from: https://cmake.org/download/" -ForegroundColor Yellow
-        exit 1
-    }
-
-    $version = (cmake --version | Select-Object -First 1) -replace "cmake version ", ""
-    $parts = $version.Split(".")
-    $major = [int]$parts[0]
-    $minor = [int]$parts[1]
-
-    if ($major -lt 3 -or ($major -eq 3 -and $minor -lt 25)) {
-        Write-Error "ERROR: CMake 3.25 or later is required for preset support. Current version: $version"
-        exit 1
-    }
-}
-
-# Check Android prerequisites
-function Test-AndroidPrerequisites {
-    if (-not $env:ANDROID_NDK) {
-        Write-Error "ERROR: ANDROID_NDK environment variable is not set."
-        Write-Host "  Set it to the location of your Android NDK installation." -ForegroundColor Yellow
-        Write-Host "  Example: `$env:ANDROID_NDK = 'C:\Android\ndk\25.2.9519653'" -ForegroundColor Yellow
-        exit 1
-    }
-
-    if (-not (Test-Path $env:ANDROID_NDK)) {
-        Write-Error "ERROR: ANDROID_NDK directory does not exist: $env:ANDROID_NDK"
-        exit 1
-    }
-
-    $toolchain = Join-Path $env:ANDROID_NDK "build\cmake\android.toolchain.cmake"
-    if (-not (Test-Path $toolchain)) {
-        Write-Error "ERROR: Android toolchain not found in NDK: $env:ANDROID_NDK"
-        exit 1
-    }
-
-    if (-not $env:JAVA_HOME) {
-        Write-Error "ERROR: JAVA_HOME environment variable is not set."
-        Write-Host "  Set it to the location of your Java installation." -ForegroundColor Yellow
-        exit 1
-    }
-}
+# Dot-source common functions
+. (Join-Path $ScriptDir "build_common.ps1")
 
 # List available presets
 function Show-Presets {
@@ -295,10 +200,13 @@ function Invoke-Build {
     )
 
     # Construct preset name
+    # Map platform name to preset name (presets use 'windows' not 'win')
+    $presetPlatform = if ($TargetPlatform -eq "win") { "windows" } else { $TargetPlatform }
+
     if ($IsQuest -and $TargetPlatform -eq "android") {
         $presetName = "android-quest-$LinkType-$BuildConfig"
     } else {
-        $presetName = "$TargetPlatform-$Architecture-$LinkType-$BuildConfig"
+        $presetName = "$presetPlatform-$Architecture-$LinkType-$BuildConfig"
     }
 
     Write-Host ""
@@ -396,7 +304,14 @@ function Invoke-Build {
 }
 
 # Main script
-Test-CMake
+if (-not (Test-CMake)) {
+    exit 1
+}
+
+# Check for Long Path support on Windows
+if ($Platform -eq "win") {
+    Test-LongPathSupport | Out-Null
+}
 
 if ($ListPresets) {
     Show-Presets
@@ -410,7 +325,11 @@ if ($Quest) {
 
 # Check platform-specific prerequisites
 switch ($Platform) {
-    "android" { Test-AndroidPrerequisites }
+    "android" {
+        if (-not (Test-AndroidPrerequisites)) {
+            exit 1
+        }
+    }
 }
 
 # Set default architecture
@@ -465,8 +384,8 @@ Set-Location $OceanSourceDir
 
 # Detect VS toolset version for Windows builds
 $vsToolset = ""
-if ($Platform -eq "windows") {
-    $vsToolset = Get-VSToolsetVersion -GeneratorString $Generator
+if ($Platform -eq "win") {
+    $vsToolset = Get-VSToolsetVersion -Generator $Generator
     if ($vsToolset) {
         Write-Host "Detected Visual Studio toolset: $vsToolset" -ForegroundColor Green
         $vsToolset = "_$vsToolset"

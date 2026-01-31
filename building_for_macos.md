@@ -22,7 +22,7 @@ cd /path/to/ocean
 ./build/cmake/build_thirdparty_linuxunix.sh
 ```
 
-Once the build is complete, there will be one subdirectory per build config within the installation and build directories. For example, on an Apple Silicon Mac it will be similar to `ocean_install_thirdparty/macos/arm64_static_debug` and `.../macos/arm64_static_release`. On Intel Macs, the folder will use `x64` instead of `arm64`.
+Once the build is complete, there will be one subdirectory per build config within the installation and build directories. For example, on an Apple Silicon Mac it will be similar to `bin/cmake/3rdparty/macos/arm64_static_debug` and `.../macos/arm64_static_release`. On Intel Macs, the folder will use `x64` instead of `arm64`.
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -37,14 +37,14 @@ Run `./build/cmake/build_thirdparty_linuxunix.sh --help` to see all available op
 
 ## 3 Building Ocean
 
-Ocean uses CMake presets for build configuration. The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh). By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+Ocean uses CMake presets for build configuration. The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh). By default, it will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
 
 ```
 cd /path/to/ocean
 ./build/cmake/build_ocean.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/macos/arm64_static_debug` and `.../macos/arm64_static_release` (or `x64_static_*` on Intel Macs).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/macos/arm64_static_debug` and `.../macos/arm64_static_release` (or `x64_static_*` on Intel Macs).
 
 The build script can be customized using command-line parameters. For example:
 
@@ -83,7 +83,7 @@ cmake --preset macos-arm64-static-debug \
     -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_debug"
 
 # Open in Xcode
-open ocean_build/macos-arm64-static-debug/ocean.xcodeproj
+open bin/cmake/tmp/macos-arm64-static-debug/ocean.xcodeproj
 ```
 
 For release builds:
@@ -93,7 +93,7 @@ For release builds:
 cmake --preset macos-arm64-static-release \
     -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_release"
 
-open ocean_build/macos-arm64-static-release/ocean.xcodeproj
+open bin/cmake/tmp/macos-arm64-static-release/ocean.xcodeproj
 ```
 
 ### Option B: Manual CMake Configuration

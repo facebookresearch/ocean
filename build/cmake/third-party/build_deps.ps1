@@ -12,7 +12,7 @@
     It is called by the build_thirdparty_*.ps1 scripts and should not be run directly.
 
 .PARAMETER Platform
-    Target platform: windows, android
+    Target platform: win, android
 
 .PARAMETER SourceDir
     Path to the third-party source directory
@@ -50,8 +50,8 @@
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
-    [ValidateSet("windows", "android")]
+[Parameter(Mandatory = $true)]
+    [ValidateSet("win", "android")]
     [string]$Platform,
 
     [Parameter(Mandatory = $true)]
@@ -140,13 +140,13 @@ if ($Generator) {
 $suppressWarningsFlags = @()
 $cmakeWarnFlags = @()
 if ($LogLevel -eq "ERROR") {
-    if ($Platform -eq "windows" -and $Generator -notmatch "Ninja") {
+    if ($Platform -eq "win" -and $Generator -notmatch "Ninja") {
         $suppressWarningsFlags = @("-DCMAKE_C_FLAGS=/w", "-DCMAKE_CXX_FLAGS=/w")
     }
     $cmakeWarnFlags = @("--no-warn-unused-cli")
 }
 
-# Track previously built libraries for CMAKE_PREFIX_PATH in subdivide mode
+# Track previously built libraries
 $previousLibsPath = $InstallPrefix
 
 # Track build failures

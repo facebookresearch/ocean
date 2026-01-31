@@ -27,8 +27,8 @@ IOS_ARCH="arm64"
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd "${SCRIPT_DIR}/third-party" && pwd )
 
-OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
-OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
+OTP_BUILD_DIR="${PWD}/bin/cmake/3rdparty/tmp"
+OTP_INSTALL_DIR="${PWD}/bin/cmake/3rdparty"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
 OTP_BUILD_CONFIG="debug,release"

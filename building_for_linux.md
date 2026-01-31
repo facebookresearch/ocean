@@ -28,7 +28,7 @@ cd /path/to/ocean
 ./build/cmake/build_thirdparty_linuxunix.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install_thirdparty/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
 
 The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
 
@@ -44,14 +44,14 @@ Run `./build/cmake/build_thirdparty_linuxunix.sh --help` to see all available op
 
 ## 3 Building Ocean
 
-Ocean uses CMake presets for build configuration. The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh). By default, it will look for third-party libraries in `ocean_install_thirdparty` (the default output from the previous step).
+Ocean uses CMake presets for build configuration. The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh). By default, it will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
 
 ```
 cd /path/to/ocean
 ./build/cmake/build_ocean.sh
 ```
 
-Once the build is complete, the compiled binaries can be found in `ocean_install/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `bin/cmake/linux/x64_static_debug` and `.../linux/x64_static_release` (or `arm64_static_*` on ARM64 systems).
 
 The build script can be customized using command-line parameters. For example:
 

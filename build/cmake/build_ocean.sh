@@ -39,9 +39,9 @@ TARGET_PLATFORM=""  # Will be set to host platform if not specified
 OCEAN_CONFIGS="debug,release"
 OCEAN_LINK_TYPES="static"
 OCEAN_ARCH=""  # Will be auto-detected or set based on target
-OCEAN_BUILD_DIR="${PWD}/ocean_build"
-OCEAN_INSTALL_DIR="${PWD}/ocean_install"
-OCEAN_THIRD_PARTY_DIR="${PWD}/ocean_install_thirdparty"
+OCEAN_BUILD_DIR="${PWD}/bin/cmake/tmp"
+OCEAN_INSTALL_DIR="${PWD}/bin/cmake"
+OCEAN_THIRD_PARTY_DIR="${PWD}/bin/cmake/3rdparty"
 OCEAN_PARALLEL="ON"
 OCEAN_INSTALL_TARGET="ON"
 OCEAN_QUEST_MODE="OFF"
@@ -299,7 +299,7 @@ validate_arch() {
                 *) echo "ERROR: Invalid architecture '${arch}' for Android. Use: arm64, arm32, x64" >&2; exit 1 ;;
             esac
             ;;
-        windows)
+        windows|win)
             case "${arch}" in
                 x64|arm64) return 0 ;;
                 *) echo "ERROR: Invalid architecture '${arch}' for Windows. Use: x64, arm64" >&2; exit 1 ;;
@@ -317,10 +317,16 @@ run_build() {
 
     # Construct preset name
     local preset_name
+    # Map platform name to preset name (presets use 'windows' not 'win')
+    local preset_platform="${platform}"
+    if [[ "${platform}" == "win" ]]; then
+        preset_platform="windows"
+    fi
+
     if [[ "${OCEAN_QUEST_MODE}" == "ON" && "${platform}" == "android" ]]; then
         preset_name="android-quest-${link_type}-${build_config}"
     else
-        preset_name="${platform}-${arch}-${link_type}-${build_config}"
+        preset_name="${preset_platform}-${arch}-${link_type}-${build_config}"
     fi
 
     if [[ "${OCEAN_LOG_LEVEL}" != "ERROR" ]]; then
