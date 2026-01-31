@@ -7,8 +7,10 @@
 
 #include "ocean/io/Signature.h"
 
-#include <openssl/md5.h>
-#include <openssl/sha.h>
+#if 0
+	#include <openssl/md5.h>
+	#include <openssl/sha.h>
+#endif
 
 #include <zlib.h>
 
