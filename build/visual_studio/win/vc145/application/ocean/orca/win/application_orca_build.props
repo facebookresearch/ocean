@@ -26,12 +26,12 @@
 
   <ItemDefinitionGroup>
 	  <ResourceCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\orca\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)impl\application\ocean\orca\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 
   <PropertyGroup>
-    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\application\ocean\orca\win\$(OceanConfigFolder)\</OutDir>
-    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\$(ProjectName)\win\$(OceanConfigFolder)\</IntDir>
+    <OutDir>$(OceanRootPath)bin\application\ocean\orca\win\$(OceanConfigFolder)\</OutDir>
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\$(ProjectName)\win\$(OceanConfigFolder)\</IntDir>
   </PropertyGroup>
 </Project>

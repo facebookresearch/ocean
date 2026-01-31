@@ -13,8 +13,8 @@
   </ImportGroup>
 
   <PropertyGroup>
-    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\$(OceanConfigFolder)\</OutDir>
-    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\$(OceanConfigFolder)\</IntDir>
+    <OutDir>$(OceanRootPath)bin\lib\$(OceanConfigFolder)\</OutDir>
+    <IntDir>$(OceanRootPath)bin\tmp\impl\ocean\$(ProjectName)\$(OceanConfigFolder)\</IntDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
@@ -30,8 +30,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
     <PostBuildEvent>
       <Message>Copying libraries to build directory</Message>
-      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\plugins\$(OceanConfigFolder)" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\plugins\$(OceanConfigFolder)"
-copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\plugins\$(OceanConfigFolder)"
+      <Command>if not exist "$(OceanRootPath)bin\plugins\$(OceanConfigFolder)" mkdir "$(OceanRootPath)bin\plugins\$(OceanConfigFolder)"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OceanRootPath)bin\plugins\$(OceanConfigFolder)"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -22,32 +22,32 @@
 
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\fast\2.0\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\fast\2.0\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64' Or '$(Configuration)|$(Platform)'=='Shared Debug|x64'">
     <Link>
       <AdditionalDependencies>fast.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\fast\2.0\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\fast\2.0\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
     <Link>
       <AdditionalDependencies>fast.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\fast\2.0\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\fast\2.0\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
     <Link>
 	    <AdditionalDependencies>fast.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\fast\2.0\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\fast\2.0\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
     <Link>
 	    <AdditionalDependencies>fast.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\fast\2.0\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\fast\2.0\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

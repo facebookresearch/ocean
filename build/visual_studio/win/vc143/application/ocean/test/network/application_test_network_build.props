@@ -13,6 +13,6 @@
   </ImportGroup>
 
   <PropertyGroup>
-    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\application\ocean\test\network\win\$(OceanConfigFolder)\</OutDir>
+    <OutDir>$(OceanRootPath)bin\application\ocean\test\network\win\$(OceanConfigFolder)\</OutDir>
   </PropertyGroup>
 </Project>

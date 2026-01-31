@@ -25,7 +25,7 @@
 
   <ItemDefinitionGroup>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\demo\cv\calibration\picturetaker\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)impl\application\ocean\demo\cv\calibration\picturetaker\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 </Project>

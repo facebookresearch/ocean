@@ -16,31 +16,31 @@
   </ImportGroup>
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\impl\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\h\win;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\impl\h\win;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\jpeglib\h;$(OceanRootPath)3rdparty\libpng\h;$(OceanRootPath)3rdparty\libtiff\h;$(OceanRootPath)3rdparty\libtiff\impl\h;$(OceanRootPath)3rdparty\libtiff\h\win;$(OceanRootPath)3rdparty\libtiff\impl\h\win;$(OceanRootPath)3rdparty\giflib\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64' Or '$(Configuration)|$(Platform)'=='Shared Debug|x64'">
     <Link>
       <AdditionalDependencies>libjpeg.lib;libpng.lib;libtiff.lib;zlib.lib;giflib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x64_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\win_x64_vc143_static_debug;$(OceanRootPath)3rdparty\libpng\lib\win_x64_vc143_static_debug;$(OceanRootPath)3rdparty\libtiff\lib\win_x64_vc143_static_debug;$(OceanRootPath)3rdparty\zlib\lib\win_x64_vc143_static_debug;$(OceanRootPath)3rdparty\giflib\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
     <Link>
       <AdditionalDependencies>libjpeg.lib;libpng.lib;libtiff.lib;zlib.lib;giflib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x86_vc143_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\win_x86_vc143_static_debug;$(OceanRootPath)3rdparty\libpng\lib\win_x86_vc143_static_debug;$(OceanRootPath)3rdparty\libtiff\lib\win_x86_vc143_static_debug;$(OceanRootPath)3rdparty\zlib\lib\win_x86_vc143_static_debug;$(OceanRootPath)3rdparty\giflib\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
     <Link>
 	    <AdditionalDependencies>libjpeg.lib;libpng.lib;libtiff.lib;zlib.lib;giflib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x64_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\win_x64_vc143_static;$(OceanRootPath)3rdparty\libpng\lib\win_x64_vc143_static;$(OceanRootPath)3rdparty\libtiff\lib\win_x64_vc143_static;$(OceanRootPath)3rdparty\zlib\lib\win_x64_vc143_static;$(OceanRootPath)3rdparty\giflib\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
     <Link>
 	    <AdditionalDependencies>libjpeg.lib;libpng.lib;libtiff.lib;zlib.lib;giflib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\win_x86_vc143_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\win_x86_vc143_static;$(OceanRootPath)3rdparty\libpng\lib\win_x86_vc143_static;$(OceanRootPath)3rdparty\libtiff\lib\win_x86_vc143_static;$(OceanRootPath)3rdparty\zlib\lib\win_x86_vc143_static;$(OceanRootPath)3rdparty\giflib\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

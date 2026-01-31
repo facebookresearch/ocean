@@ -23,7 +23,7 @@
   
   <ItemDefinitionGroup>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\demo\cv\detector\linedetector\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)impl\application\ocean\demo\cv\detector\linedetector\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 </Project>

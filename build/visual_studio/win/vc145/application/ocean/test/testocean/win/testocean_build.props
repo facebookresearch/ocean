@@ -24,6 +24,6 @@
   </ImportGroup>
 
   <PropertyGroup>
-    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\application\ocean\test\win\$(OceanConfigFolder)\</OutDir>
+    <OutDir>$(OceanRootPath)bin\application\ocean\test\win\$(OceanConfigFolder)\</OutDir>
   </PropertyGroup>
 </Project>

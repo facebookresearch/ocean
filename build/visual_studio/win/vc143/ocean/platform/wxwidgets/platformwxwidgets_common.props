@@ -21,55 +21,55 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\include;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\include;$(OceanRootPath)3rdparty\wxwidgets\3.1\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
     <Link>
       <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
     <Link>
       <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x64_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
     <Link>
       <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
     <Link>
       <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x86_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64'">
     <Link>
 	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
     <Link>
 	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x64_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x64_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32'">
     <Link>
 	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
     <Link>
 	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\wxwidgets\3.1\lib\win_x86_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\win_x86_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

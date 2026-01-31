@@ -63,8 +63,8 @@ ext
 	{
 		->
 
-		/// The Ocean development path
-		def oceanDir = "$System.env.OCEAN_DEVELOPMENT_PATH"
+		/// The Ocean development path (relative to this file: build/visual_studio/android/vc143/application/ocean -> ocean root)
+		def oceanDir = new File(buildscript.sourceFile.parentFile, "../../../../../..").canonicalPath
 
 		if (oceanDir != null && oceanDir != "")
 		{

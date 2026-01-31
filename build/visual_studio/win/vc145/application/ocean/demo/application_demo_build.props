@@ -13,6 +13,6 @@
   </ImportGroup>
 
   <PropertyGroup>
-    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\win\$(OceanConfigFolder)\</IntDir>
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\$(ProjectName)\win\$(OceanConfigFolder)\</IntDir>
   </PropertyGroup>
 </Project>

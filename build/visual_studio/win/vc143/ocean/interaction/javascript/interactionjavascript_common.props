@@ -16,31 +16,31 @@
   </ImportGroup>
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\v8\8.4\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64' Or '$(Configuration)|$(Platform)'=='Shared Debug|x64'">
     <Link>
       <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\v8\8.4\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
     <Link>
       <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\v8\8.4\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64' Or '$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
     <Link>
 	    <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\v8\8.4\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
     <Link>
 	    <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\v8\8.4\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

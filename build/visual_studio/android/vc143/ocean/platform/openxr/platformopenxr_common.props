@@ -20,7 +20,7 @@
     </ClCompile>
     <Link>
       <LibraryDependencies>openxr_loader;%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\openxr_loader\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\openxr_loader\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

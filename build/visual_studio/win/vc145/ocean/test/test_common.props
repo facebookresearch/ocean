@@ -10,7 +10,7 @@
 
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)bin\test\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 

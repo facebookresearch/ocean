@@ -15,7 +15,7 @@
 
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\eigen\3.4\impl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\eigen\3.4\impl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <LibraryDependencies>m;%(LibraryDependencies)</LibraryDependencies>

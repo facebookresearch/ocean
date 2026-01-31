@@ -8,6 +8,11 @@
     <ocean_common_imported>True</ocean_common_imported>
   </PropertyGroup>
 
+  <!-- Ocean root path (relative to this file: build/visual_studio/win/vc145 -> ocean root) -->
+  <PropertyGroup>
+    <OceanRootPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..\..\..\..'))</OceanRootPath>
+  </PropertyGroup>
+
   <!-- Compiler version identifier (e.g., vc143, vc145) -->
   <PropertyGroup>
     <OceanCompilerVersion>vc145</OceanCompilerVersion>
@@ -39,7 +44,7 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)impl</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
@@ -98,7 +103,7 @@
 
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)bin\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 

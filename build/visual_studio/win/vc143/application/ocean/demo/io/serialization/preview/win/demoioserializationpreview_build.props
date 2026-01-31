@@ -22,7 +22,7 @@
 
   <ItemDefinitionGroup>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\demo\io\serialization\preview\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)impl\application\ocean\demo\io\serialization\preview\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 </Project>

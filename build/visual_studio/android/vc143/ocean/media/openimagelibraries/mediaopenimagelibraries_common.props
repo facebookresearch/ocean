@@ -19,32 +19,32 @@
 
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\impl\h;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\h\android;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\impl\h\android;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\jpeglib\h;$(OceanRootPath)3rdparty\libpng\h;$(OceanRootPath)3rdparty\libtiff\h;$(OceanRootPath)3rdparty\libtiff\impl\h;$(OceanRootPath)3rdparty\libtiff\h\android;$(OceanRootPath)3rdparty\libtiff\impl\h\android;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Debug|ARM64'">
     <Link>
       <LibraryDependencies>libjpeg;png;libtiff;zlib;giflib;%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\android_arm64_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm64_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\android_arm64_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm64_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\android_arm64_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\android_arm64_cl50_static_debug;$(OceanRootPath)3rdparty\libpng\lib\android_arm64_cl50_static_debug;$(OceanRootPath)3rdparty\libtiff\lib\android_arm64_cl50_static_debug;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_cl50_static_debug;$(OceanRootPath)3rdparty\giflib\lib\android_arm64_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM' Or '$(Configuration)|$(Platform)'=='Shared Debug|ARM'">
     <Link>
       <LibraryDependencies>libjpeg;png;libtiff;zlib;giflib;%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\android_arm_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\android_arm_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\android_arm_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\android_arm_cl50_static_debug;$(OceanRootPath)3rdparty\libpng\lib\android_arm_cl50_static_debug;$(OceanRootPath)3rdparty\libtiff\lib\android_arm_cl50_static_debug;$(OceanRootPath)3rdparty\zlib\lib\android_arm_cl50_static_debug;$(OceanRootPath)3rdparty\giflib\lib\android_arm_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Profile|ARM64' Or '$(Configuration)|$(Platform)'=='Static Release|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
     <Link>
 	    <LibraryDependencies>libjpeg;png;libtiff;zlib;giflib;%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\android_arm64_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm64_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\android_arm64_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm64_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\android_arm64_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\android_arm64_cl50_static;$(OceanRootPath)3rdparty\libpng\lib\android_arm64_cl50_static;$(OceanRootPath)3rdparty\libtiff\lib\android_arm64_cl50_static;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_cl50_static;$(OceanRootPath)3rdparty\giflib\lib\android_arm64_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM' Or '$(Configuration)|$(Platform)'=='Shared Profile|ARM' Or '$(Configuration)|$(Platform)'=='Static Release|ARM' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM'">
     <Link>
 	    <LibraryDependencies>libjpeg;png;libtiff;zlib;giflib;%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\jpeglib\lib\android_arm_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libtiff\lib\android_arm_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\giflib\lib\android_arm_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\android_arm_cl50_static;$(OceanRootPath)3rdparty\libpng\lib\android_arm_cl50_static;$(OceanRootPath)3rdparty\libtiff\lib\android_arm_cl50_static;$(OceanRootPath)3rdparty\zlib\lib\android_arm_cl50_static;$(OceanRootPath)3rdparty\giflib\lib\android_arm_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>
