@@ -106,7 +106,7 @@ bool TCPServer::disconnect(const ConnectionId connectionId)
 
 	connectionMap_.erase(iConnection);
 
-	return result == 0;
+	return true;
 }
 
 bool TCPServer::buildSocket()

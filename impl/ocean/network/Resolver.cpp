@@ -135,8 +135,10 @@ Resolver::Addresses4 Resolver::resolveIp4(const std::string& host)
 		{
 			if (nextAddressInfo->ai_family == AF_INET)
 			{
-				ocean_assert(nextAddressInfo->ai_addrlen >= sizeof(Address4));
-				result.push_back(Address4(*(Address4*)nextAddressInfo->ai_addr));
+				ocean_assert(nextAddressInfo->ai_addrlen >= sizeof(sockaddr_in));
+
+				sockaddr_in* sockAddress = (sockaddr_in*)(nextAddressInfo->ai_addr);
+				result.emplace_back(sockAddress->sin_addr.s_addr);
 			}
 
 			nextAddressInfo = nextAddressInfo->ai_next;
