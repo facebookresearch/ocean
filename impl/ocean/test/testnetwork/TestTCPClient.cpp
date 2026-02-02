@@ -139,29 +139,20 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 		if (disconnectClient)
 		{
-			if (!tcpClient.disconnect())
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, tcpClient.disconnect());
 		}
 		else
 		{
-			if (!tcpServer.stop())
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, tcpServer.stop());
 		}
 
 		Thread::sleep(50u);
 
-		if (receiver.numberConnectionRequests_ != 1u)
-		{
-			OCEAN_SET_FAILED(validation);
-		}
+		OCEAN_EXPECT_EQUAL(validation, receiver.numberConnectionRequests_, 1u);
 
-		if (disconnectClient && receiver.numberDisconnections_ != 1u)
+		if (disconnectClient)
 		{
-			OCEAN_SET_FAILED(validation);
+			OCEAN_EXPECT_EQUAL(validation, receiver.numberDisconnections_, 1u);
 		}
 
 		size_t sourceBufferSize = 0;
@@ -202,10 +193,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 			ocean_assert(sourceBuffer.size() == targetBuffer.size());
 
-			if (memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) != 0)
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) == 0);
 		}
 
 #ifdef OCEAN_USE_GTEST

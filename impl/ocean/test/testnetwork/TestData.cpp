@@ -15,6 +15,8 @@
 
 #include "ocean/network/Data.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -60,70 +62,33 @@ bool TestData::testEndian(const double testDuration)
 
 	Log::info() << "Endian conversion test:";
 
-	bool allSucceeded = true;
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		if (!testToBigEndian<int16_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
+		testToBigEndian<int16_t>(validation, randomGenerator);
+		testToBigEndian<uint16_t>(validation, randomGenerator);
+		testToBigEndian<int32_t>(validation, randomGenerator);
+		testToBigEndian<uint32_t>(validation, randomGenerator);
 
-		if (!testToBigEndian<uint16_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
-
-		if (!testToBigEndian<int32_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
-
-		if (!testToBigEndian<uint32_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
-
-
-		if (!testFromBigEndian<int16_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
-
-		if (!testFromBigEndian<uint16_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
-
-		if (!testFromBigEndian<int32_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
-
-		if (!testFromBigEndian<uint32_t>(randomGenerator))
-		{
-			allSucceeded = false;
-		}
+		testFromBigEndian<int16_t>(validation, randomGenerator);
+		testFromBigEndian<uint16_t>(validation, randomGenerator);
+		testFromBigEndian<int32_t>(validation, randomGenerator);
+		testFromBigEndian<uint32_t>(validation, randomGenerator);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
-bool TestData::testToBigEndian(RandomGenerator& randomGenerator)
+void TestData::testToBigEndian(Validation& validation, RandomGenerator& randomGenerator)
 {
 #ifdef OCEAN_LITTLE_ENDIAN
 
@@ -131,12 +96,7 @@ bool TestData::testToBigEndian(RandomGenerator& randomGenerator)
 
 	const T bigEndianValue = Network::Data::toBigEndian(value);
 
-	if (bigEndianValue != flipByteOrder(value))
-	{
-		return false;
-	}
-
-	return true;
+	OCEAN_EXPECT_EQUAL(validation, bigEndianValue, flipByteOrder(value));
 
 #else
 
@@ -144,18 +104,13 @@ bool TestData::testToBigEndian(RandomGenerator& randomGenerator)
 
 	const T bigEndianValue = Network::Data::toBigEndian(value);
 
-	if (bigEndianValue != value)
-	{
-		return false;
-	}
-
-	return true;
+	OCEAN_EXPECT_EQUAL(validation, bigEndianValue, value);
 
 #endif // OCEAN_LITTLE_ENDIAN
 }
 
 template <typename T>
-bool TestData::testFromBigEndian(RandomGenerator& randomGenerator)
+void TestData::testFromBigEndian(Validation& validation, RandomGenerator& randomGenerator)
 {
 #ifdef OCEAN_LITTLE_ENDIAN
 
@@ -163,12 +118,7 @@ bool TestData::testFromBigEndian(RandomGenerator& randomGenerator)
 
 	const T value = Network::Data::fromBigEndian(bigEndianValue);
 
-	if (value != flipByteOrder(bigEndianValue))
-	{
-		return false;
-	}
-
-	return true;
+	OCEAN_EXPECT_EQUAL(validation, value, flipByteOrder(bigEndianValue));
 
 #else
 
@@ -176,12 +126,7 @@ bool TestData::testFromBigEndian(RandomGenerator& randomGenerator)
 
 	const T value = Network::Data::fromBigEndian(value);
 
-	if (value != bigEndianValue)
-	{
-		return false;
-	}
-
-	return true;
+	OCEAN_EXPECT_EQUAL(validation, value, bigEndianValue);
 
 #endif // OCEAN_LITTLE_ENDIAN
 }

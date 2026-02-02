@@ -13,6 +13,7 @@
 #include "ocean/base/RandomGenerator.h"
 
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -50,19 +51,21 @@ class OCEAN_TEST_NETWORK_EXPORT TestData
 
 		/**
 		 * Tests the toBigEndian() function for a specified data type.
+		 * @param validation The validation object
 		 * @param randomGenerator Random generator to be used
 		 * @tparam T The data type to be used
 		 */
 		template <typename T>
-		static bool testToBigEndian(RandomGenerator& randomGenerator);
+		static void testToBigEndian(Validation& validation, RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the fromBigEndian() function for a specified data type.
+		 * @param validation The validation object
 		 * @param randomGenerator Random generator to be used
 		 * @tparam T The data type to be used
 		 */
 		template <typename T>
-		static bool testFromBigEndian(RandomGenerator& randomGenerator);
+		static void testFromBigEndian(Validation& validation, RandomGenerator& randomGenerator);
 
 		/**
 		 * Flips the byte order of a value.

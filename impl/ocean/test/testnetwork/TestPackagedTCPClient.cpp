@@ -180,26 +180,20 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 
 		if (disconnectClient)
 		{
-			if (!tcpClient.disconnect())
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, tcpClient.disconnect());
 		}
 		else
 		{
-			if (!tcpServer.stop())
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_TRUE(validation, tcpServer.stop());
 		}
 
 		Thread::sleep(50u);
 
 		OCEAN_EXPECT_EQUAL(validation, serverReceiver.numberConnectionRequests_, 1u);
 
-		if (disconnectClient && serverReceiver.numberDisconnections_ != 1u)
+		if (disconnectClient)
 		{
-			OCEAN_SET_FAILED(validation);
+			OCEAN_EXPECT_EQUAL(validation, serverReceiver.numberDisconnections_, 1u);
 		}
 
 		OCEAN_EXPECT_EQUAL(validation, clientSendBuffers.size(), serverReceiver.buffers_.size());
@@ -215,10 +209,7 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 
 				if (sourceBuffer.size() == targetBuffer.size())
 				{
-					if (memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) != 0)
-					{
-						OCEAN_SET_FAILED(validation);
-					}
+					OCEAN_EXPECT_TRUE(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) == 0);
 				}
 			}
 		}
@@ -236,10 +227,7 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 
 				if (sourceBuffer.size() == targetBuffer.size())
 				{
-					if (memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) != 0)
-					{
-						OCEAN_SET_FAILED(validation);
-					}
+					OCEAN_EXPECT_TRUE(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) == 0);
 				}
 			}
 		}
