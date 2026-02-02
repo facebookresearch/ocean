@@ -12,7 +12,6 @@
 
 #include "ocean/base/Lock.h"
 
-#include <map>
 #include <queue>
 
 namespace Ocean
@@ -32,7 +31,7 @@ class OCEAN_NETWORK_EXPORT MessageQueue
 		/**
 		 * Definition of a message id.
 		 */
-		using Id = unsigned int;
+		using Id = uint32_t;
 
 		/**
 		 * Returns an invalid message id.
@@ -96,9 +95,10 @@ class OCEAN_NETWORK_EXPORT MessageQueue
 		 * @param id Message id to get the front message for
 		 * @param message Resulting message
 		 * @param value Resulting optional value
+		 * @param popMessage True to pop the message after reading; False to leave it in the queue
 		 * @return True, if succeeded
 		 */
-		bool front(const Id id, std::string& message, std::string& value);
+		bool front(const Id id, std::string& message, std::string& value, const bool popMessage = false);
 
 		/**
 		 * Gets the front message for a given message id and waits a specified time if no message is available.
@@ -106,9 +106,10 @@ class OCEAN_NETWORK_EXPORT MessageQueue
 		 * @param timeout Time to wait in seconds
 		 * @param message Resulting message
 		 * @param value Resulting optional value
+		 * @param popMessage True to pop the message after reading; False to leave it in the queue
 		 * @return True, if a message could be returned within the specified wait time
 		 */
-		bool front(const Id id, const double timeout, std::string& message, std::string& value);
+		bool front(const Id id, const double timeout, std::string& message, std::string& value, const bool popMessage = false);
 
 		/**
 		 * Pops the front message with a specified message id from the queue.

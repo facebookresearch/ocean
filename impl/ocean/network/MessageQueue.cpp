@@ -37,7 +37,7 @@ bool MessageQueue::push(const Id id, const std::string& message, const std::stri
 	const ScopedLock scopedLock(lock_);
 
 	// old messages will be removed
-	for (MessageMap::iterator iMessage = messageMap_.begin(); iMessage != messageMap_.end(); /* noop */)
+	for (MessageMap::iterator iMessage = messageMap_.begin(); iMessage != messageMap_.end(); /*noop*/)
 	{
 		if (iMessage->first + oldMessageAge_ < id)
 		{
@@ -45,7 +45,7 @@ bool MessageQueue::push(const Id id, const std::string& message, const std::stri
 		}
 		else
 		{
-			break;
+			++iMessage;
 		}
 	}
 
@@ -57,11 +57,11 @@ bool MessageQueue::push(const Id id, const std::string& message, const std::stri
 
 	ocean_assert(iMessage != messageMap_.end());
 
-	iMessage->second.push(Message(message, value));
+	iMessage->second.emplace(message, value);
 	return true;
 }
 
-bool MessageQueue::front(const Id id, std::string& message, std::string& value)
+bool MessageQueue::front(const Id id, std::string& message, std::string& value, const bool popMessage)
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -74,12 +74,16 @@ bool MessageQueue::front(const Id id, std::string& message, std::string& value)
 
 	message = iMessage->second.front().first;
 	value = iMessage->second.front().second;
-	iMessage->second.pop();
+
+	if (popMessage)
+	{
+		iMessage->second.pop();
+	}
 
 	return true;
 }
 
-bool MessageQueue::front(const Id id, const double timeout, std::string& message, std::string& value)
+bool MessageQueue::front(const Id id, const double timeout, std::string& message, std::string& value, const bool popMessage)
 {
 	TemporaryScopedLock temporaryScopedLock(lock_);
 
@@ -89,11 +93,11 @@ bool MessageQueue::front(const Id id, const double timeout, std::string& message
 	{
 		temporaryScopedLock.release();
 
-		Timestamp startTimestamp(true);
+		const Timestamp startTimestamp(true);
 
 		while (true)
 		{
-			if (startTimestamp + timeout < Timestamp(true))
+			if (startTimestamp.hasTimePassed(timeout))
 			{
 				Log::warning() << "Timeout in message queue.";
 				return false;
@@ -119,6 +123,11 @@ bool MessageQueue::front(const Id id, const double timeout, std::string& message
 	message = iMessage->second.front().first;
 	value = iMessage->second.front().second;
 
+	if (popMessage)
+	{
+		iMessage->second.pop();
+	}
+
 	return true;
 }
 
@@ -136,23 +145,17 @@ void MessageQueue::pop(const Id id)
 
 std::string MessageQueue::pop(const Id id, const double timeout)
 {
-	std::string message, value;
+	std::string message;
+	std::string value;
 
-	if (front(id, timeout, message, value))
-		pop(id);
+	front(id, timeout, message, value, true);
 
 	return message;
 }
 
 bool MessageQueue::pop(const Id id, const double timeout, std::string& message, std::string& value)
 {
-	if (front(id, timeout, message, value))
-	{
-		pop(id);
-		return true;
-	}
-
-	return false;
+	return front(id, timeout, message, value, true);
 }
 
 void MessageQueue::clear()
