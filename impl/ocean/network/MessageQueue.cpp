@@ -185,6 +185,7 @@ MessageQueue::Id MessageQueue::uniqueId()
 
 MessageQueue::Id MessageQueue::lastUniqueId()
 {
+	const ScopedLock scopedLock(lock_);
 	return idCounter_;
 }
 
@@ -192,6 +193,8 @@ MessageQueue& MessageQueue::operator=(MessageQueue&& messageQueue)
 {
 	if (this != &messageQueue)
 	{
+		const DualScopedLockT<ScopedLock> dualScopedLock(lock_, messageQueue.lock_);
+
 		messageMap_ = std::move(messageQueue.messageMap_);
 
 		oldMessageAge_ = messageQueue.oldMessageAge_;
