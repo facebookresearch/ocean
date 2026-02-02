@@ -54,12 +54,14 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestData.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestNetwork.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestPackagedTCPClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestResolver.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestTCPClient.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestData.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestNetwork.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestPackagedTCPClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestResolver.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testnetwork\TestTCPClient.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

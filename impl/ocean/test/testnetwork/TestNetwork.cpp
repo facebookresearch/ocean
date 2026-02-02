@@ -8,6 +8,7 @@
 #include "ocean/test/testnetwork/TestNetwork.h"
 #include "ocean/test/testnetwork/TestData.h"
 #include "ocean/test/testnetwork/TestPackagedTCPClient.h"
+#include "ocean/test/testnetwork/TestResolver.h"
 #include "ocean/test/testnetwork/TestTCPClient.h"
 
 #include "ocean/test/TestResult.h"
@@ -93,6 +94,15 @@ bool testNetwork(const double testDuration, Worker& /*worker*/, const std::strin
 		Log::info() << " ";
 		Log::info() << " ";
 		testResult = TestPackagedTCPClient::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("resolver"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestResolver::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
