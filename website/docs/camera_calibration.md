@@ -145,7 +145,7 @@ Accurate measurements are critical for obtaining correct metric scale in the cal
 
 ## Camera Calibration Manager
 
-The [`CameraCalibrationManager`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/io/CameraCalibrationManager.h) provides a centralized system for storing and retrieving camera calibrations. It uses a JSON-based format that supports:
+The [`CameraCalibrationManager`](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/io/CameraCalibrationManager.h) provides a centralized system for storing and retrieving camera calibrations. It uses a JSON-based format that supports:
 
 - **Multiple Camera Models**: Pinhole and fisheye camera models with various parameter configurations
 - **Device-Specific Calibrations**: Calibrations can be associated with specific device products, versions, or serial numbers
@@ -392,4 +392,4 @@ The [`CalibrationBoard`](https://github.com/facebookresearch/ocean/blob/main/imp
 - **Demo Applications**: [`application/ocean/demo/cv/calibration`](https://github.com/facebookresearch/ocean/tree/main/impl/application/ocean/demo/cv/calibration)
 - **Pre-made Calibration Boards**: [`res/application/ocean/demo/cv/calibration/creator`](https://github.com/facebookresearch/ocean/tree/main/res/application/ocean/demo/cv/calibration/creator)
 - **Example Calibration File**: [`res/ocean/cv/calibration/camera_calibration.json`](https://github.com/facebookresearch/ocean/blob/main/res/ocean/cv/calibration/camera_calibration.json)
-- **CameraCalibrationManager**: [`ocean/io/CameraCalibrationManager.h`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/io/CameraCalibrationManager.h)
+- **CameraCalibrationManager**: [`ocean/io/CameraCalibrationManager.h`](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/io/CameraCalibrationManager.h)
