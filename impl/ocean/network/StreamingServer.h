@@ -502,6 +502,12 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		bool onTCPConnection(const Address4& address, const Port& port, const TCPServer::ConnectionId connectionId);
 
 		/**
+		 * Callback function for TCP disconnect.
+		 * @param tcpConnectionId TCP server connection id that was disconnected
+		 */
+		void onTCPDisconnect(const TCPServer::ConnectionId tcpConnectionId);
+
+		/**
 		 * New command function.
 		 * @param tcpConnectionId TCP server connection id
 		 * @param command New command to handle

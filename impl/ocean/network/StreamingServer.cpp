@@ -59,7 +59,7 @@ StreamingServer::Channel::StreamId StreamingServer::Channel::addStream(const TCP
 {
 	if (address.isNull() || port.isNull())
 	{
-		return false;
+		return invalidStreamId();
 	}
 
 	ocean_assert(tcpConnectionId != TCPServer::invalidConnectionId());
@@ -251,6 +251,7 @@ bool StreamingServer::Channel::stream(const void* data, const size_t size)
 StreamingServer::StreamingServer()
 {
 	tcpServer_.setConnectionRequestCallback(TCPServer::ConnectionRequestCallback(*this, &StreamingServer::onTCPConnection));
+	tcpServer_.setDisconnectCallback(TCPServer::DisconnectCallback(*this, &StreamingServer::onTCPDisconnect));
 	tcpServer_.setReceiveCallback(TCPServer::ReceiveCallback(*this, &StreamingServer::onTCPReceive));
 }
 
@@ -489,6 +490,27 @@ bool StreamingServer::onTCPConnection(const Address4& /*address*/, const Port& /
 	return true;
 }
 
+void StreamingServer::onTCPDisconnect(const TCPServer::ConnectionId tcpConnectionId)
+{
+	const ScopedLock scopedLock(lock_);
+
+	ConnectionMap::iterator iConnection = connectionMap_.find(tcpConnectionId);
+
+	if (iConnection != connectionMap_.end())
+	{
+		const Connection& streamConnection = iConnection->second;
+
+		ChannelMap::iterator iChannel = channelMap_.find(streamConnection.channelId());
+
+		if (iChannel != channelMap_.end())
+		{
+			iChannel->second.removeStream(streamConnection.channelStreamId());
+		}
+
+		connectionMap_.erase(iConnection);
+	}
+}
+
 void StreamingServer::onCommand(const TCPServer::ConnectionId tcpConnectionId, const std::string& command, const std::string& value, const SessionId sessionId)
 {
 	const ScopedLock scopedLock(lock_);
@@ -576,12 +598,14 @@ void StreamingServer::onDisconnect(const TCPServer::ConnectionId tcpConnectionId
 
 		if (iChannel != channelMap_.end())
 		{
-			iChannel->second.stopStream(streamConnection.channelStreamId());
+			iChannel->second.removeStream(streamConnection.channelStreamId());
 		}
 
 		Log::info() << name_ << " got a disconnection request from " << streamConnection.address().readable() << " and the server accepts it.";
 
 		tcpServer_.send(tcpConnectionId, createResponse(disconnectResponseP(), sessionId));
+
+		connectionMap_.erase(i);
 	}
 }
 

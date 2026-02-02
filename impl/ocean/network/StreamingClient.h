@@ -101,25 +101,25 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		 * Returns the selected channel of the streaming server.
 		 * @return Selected channel
 		 */
-		inline const std::string& channel() const;
+		inline std::string channel() const;
 
 		/**
 		 * Returns the type of the streaming data.
 		 * @return Data type
 		 */
-		inline const std::string& dataType() const;
+		inline std::string dataType() const;
 
 		/**
 		 * Returns the address of the connected streaming server.
 		 * @return Streaming server address
 		 */
-		inline const Address4& serverAddress() const;
+		inline Address4 serverAddress() const;
 
 		/**
 		 * Returns the port of the connected streaming server.
 		 * @return Streaming server port
 		 */
-		inline const Port& serverPort() const;
+		inline Port serverPort() const;
 
 		/**
 		 * (Re-)Starts the streaming.
@@ -256,43 +256,51 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		mutable Lock lock_;
 };
 
-inline const std::string& StreamingClient::channel() const
+inline std::string StreamingClient::channel() const
 {
+	const ScopedLock scopedLock(lock_);
 	return channel_;
 }
 
-inline const std::string& StreamingClient::dataType() const
+inline std::string StreamingClient::dataType() const
 {
+	const ScopedLock scopedLock(lock_);
 	return dataType_;
 }
 
 inline bool StreamingClient::isReceiving()
 {
+	const ScopedLock scopedLock(lock_);
 	return isReceiving_;
 }
 
 inline bool StreamingClient::isPaused()
 {
+	const ScopedLock scopedLock(lock_);
 	return isPaused_;
 }
 
-inline const Address4& StreamingClient::serverAddress() const
+inline Address4 StreamingClient::serverAddress() const
 {
+	const ScopedLock scopedLock(lock_);
 	return serverAddress_;
 }
 
-inline const Port& StreamingClient::serverPort() const
+inline Port StreamingClient::serverPort() const
 {
+	const ScopedLock scopedLock(lock_);
 	return serverPort_;
 }
 
 inline void StreamingClient::setRequestCallback(const RequestCallback& callback)
 {
+	const ScopedLock scopedLock(lock_);
 	requestCallback_ = callback;
 }
 
 inline void StreamingClient::setReceiveCallback(const ReceiveCallback& callback)
 {
+	const ScopedLock scopedLock(lock_);
 	receiveCallback_ = callback;
 }
 

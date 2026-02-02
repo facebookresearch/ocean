@@ -492,6 +492,8 @@ bool StreamingClient::stop()
 
 void StreamingClient::onCommand(const std::string& command, const std::string& value, const SessionId sessionId)
 {
+	const ScopedLock scopedLock(lock_);
+
 	if (command == startCommand())
 	{
 		onStart(value, sessionId);
