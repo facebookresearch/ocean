@@ -15,23 +15,16 @@
     <Import Condition="'$(ocean_system_use_imported)' != 'True'" Project="..\..\system\system_use.props"/>
   </ImportGroup>
 
-    <ItemDefinitionGroup>
+  <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\libusb\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+  <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>libusb-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libusb\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-
-  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
-    <Link>
-      <AdditionalDependencies>libusb-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libusb\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libusb\lib\win_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

@@ -42,6 +42,11 @@
     <OceanConfigFolder>win_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_$(OceanBuildType)$(OceanConfigSuffix)</OceanConfigFolder>
   </PropertyGroup>
 
+  <!-- 3rd-party library configuration folder (always uses static linking) -->
+  <PropertyGroup>
+    <Ocean3rdPartyConfigFolder>win_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_static$(OceanConfigSuffix)</Ocean3rdPartyConfigFolder>
+  </PropertyGroup>
+
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(OceanRootPath)impl</AdditionalIncludeDirectories>
