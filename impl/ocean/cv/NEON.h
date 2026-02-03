@@ -35,30 +35,6 @@ class NEON
 	public:
 
 		/**
-		 * Prefetches a block of temporal memory into all cache levels.
-		 * @param data Data to be prefetched
-		 */
-		static inline void prefetchT0(const void* const data);
-
-		/**
-		 * Prefetches a block of temporal memory in all cache levels except 0th cache level.
-		 * @param data Data to be prefetched
-		 */
-		static inline void prefetchT1(const void* const data);
-
-		/**
-		 * Prefetches a block of temporal memory in all cache levels, except 0th and 1st cache levels.
-		 * @param data Data to be prefetched
-		 */
-		static inline void prefetchT2(const void* const data);
-
-		/**
-		 * Prefetches a block of non-temporal memory into non-temporal cache structure.
-		 * @param data Data to be prefetched
-		 */
-		static inline void prefetchNTA(const void* const data);
-
-		/**
 		 * Sum square differences determination for the last 9 elements of an 16 elements buffer with 8 bit precision.
 		 * @param image0 First 9 elements to determine the ssd for, may be non aligned
 		 * @param image1 Second 9 elements to determine the ssd for, may be non aligned
@@ -509,26 +485,6 @@ class NEON
 		 */
 		static inline unsigned int ssd2Channel16Bit1x1(const uint8_t* const pixel0, const uint8_t* const pixel1, const unsigned int size0, const unsigned int size1, const unsigned int f0x_y_, const unsigned int f0xy_, const unsigned int f0x_y, const unsigned int f0xy, const unsigned int f1x_y_, const unsigned int f1xy_, const unsigned int f1x_y, const unsigned int f1xy);
 };
-
-inline void NEON::prefetchT0(const void* const data)
-{
-	__builtin_prefetch(data, 0, 0);
-}
-
-inline void NEON::prefetchT1(const void* const data)
-{
-	__builtin_prefetch(data, 0, 1);
-}
-
-inline void NEON::prefetchT2(const void* const data)
-{
-	__builtin_prefetch(data, 0, 2);
-}
-
-inline void NEON::prefetchNTA(const void* const data)
-{
-	__builtin_prefetch(data, 0, 3);
-}
 
 inline uint32x4_t NEON::sumSquareDifferences8BitBack9Elements(const uint8_t* const image0, const uint8_t* const image1)
 {
