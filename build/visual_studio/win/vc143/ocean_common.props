@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_PropertySheetDisplayName>Ocean (Common)</_PropertySheetDisplayName>
@@ -18,11 +18,9 @@
     <OceanCompilerVersion>vc143</OceanCompilerVersion>
   </PropertyGroup>
 
-  <!-- Platform suffix: x64 or x86 -->
+  <!-- Platform suffix: x64 -->
   <PropertyGroup>
-    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>
-    <OceanPlatformSuffix Condition="'$(Platform)'=='Win32'">x86</OceanPlatformSuffix>
-  </PropertyGroup>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>  </PropertyGroup>
 
   <!-- Build type: static or shared -->
   <PropertyGroup>
@@ -122,16 +120,7 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32'">
-    <Lib>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Lib>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32'Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
-    <Link>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-  </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
     <Link>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
@@ -200,15 +189,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
-  </ItemDefinitionGroup>
-
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
-    <ClCompile>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-    </ClCompile>
-  </ItemDefinitionGroup>
-
-  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+  </ItemDefinitionGroup>  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
     <ClCompile>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
