@@ -95,7 +95,8 @@ jobs:
       - name: Build and install Ocean
         if: ${{ steps.cache-ocean-build.outputs.cache-hit != 'true' }}
         run: |
-          ${{ github.workspace }}/build/cmake/build_ocean_linuxunix.sh \
+          ${{ github.workspace }}/build/cmake/build_ocean.sh \
+            -p linux \
             -i ${{ env.OCEAN_INSTALL_PATH }} \
             -b ${{ env.OCEAN_BUILD_PATH }} \
             -c ${{ matrix.build_config }} \

@@ -70,10 +70,10 @@ The demo utilizes a platform-independent class called [`PointTrackerWrapper`](ht
     ./build/cmake/build_thirdparty_linuxunix.sh -c release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
 
     # Build and install Ocean
-    ./build/cmake/build_ocean_linuxunix.sh -c release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
+    ./build/cmake/build_ocean.sh -c release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
 
     # Execute the demo app (a bundle)
-    open ${HOME}/install_ocean/macos_static_Release/bin/application_ocean_tracking_pointtracker_osx.app
+    open ${HOME}/install_ocean/macos/arm64_static_release/bin/application_ocean_tracking_pointtracker_osx.app
     ```
 
     Alternatively, [generate a XCode project for Ocean](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_macos.md#4-building-the-ocean-ios-demotest-apps) and search for `application_ocean_tracking_pointtracker_osx` in the schemes at the top. Then hit `CMD-R` to build and run the app.
