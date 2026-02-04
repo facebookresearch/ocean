@@ -298,7 +298,7 @@ Files Directory::findFiles(const std::string& fileType, const bool recursive) co
 
 				if (!filename.empty())
 				{
-					returnFiles.push_back(File(pathValue_ + filename));
+					returnFiles.emplace_back(pathValue_ + filename);
 					ocean_assert(String::toLower(returnFiles.back().extension()) == lowerFileType || fileType == "*");
 				}
 			}
@@ -332,7 +332,7 @@ Files Directory::findFiles(const std::string& fileType, const bool recursive) co
 
 					if (file.extension() == fileType || fileType == "*")
 					{
-						returnFiles.push_back(File(pathValue_ + filename));
+						returnFiles.emplace_back(pathValue_ + filename);
 					}
 				}
 			}
@@ -395,7 +395,7 @@ Directories Directory::findDirectories(const bool recursive) const
 
 				if (!directoryName.empty() && directoryName != std::string(".") && directoryName != std::string(".."))
 				{
-					returnDirectories.push_back(Directory(pathValue_ + directoryName));
+					returnDirectories.emplace_back(pathValue_ + directoryName);
 				}
 			}
 		}
@@ -423,7 +423,7 @@ Directories Directory::findDirectories(const bool recursive) const
 				// Don't add the default files "." and ".." from a directory
 				if (!directoryName.empty() && directoryName != std::string(".") && directoryName != std::string(".."))
 				{
-					returnDirectories.push_back(Directory(pathValue_ + directoryName));
+					returnDirectories.emplace_back(pathValue_ + directoryName);
 				}
 			}
 
