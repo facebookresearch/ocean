@@ -175,6 +175,7 @@ function run_build {
           "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
     if [ "$?" != 0 ]; then
         OTP_FAILED_BUILDS+=("${LINKING_TYPE} + ${BUILD_CONFIG}")
+        return 1
     fi
 
     echo ""
@@ -234,8 +235,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-OTP_BUILD_DIR=$( cd -- "$( dirname -- "${OTP_BUILD_DIR}" )" &> /dev/null && pwd )/"$(basename "${OTP_BUILD_DIR}")"
-OTP_INSTALL_DIR=$( cd -- "$( dirname -- "${OTP_INSTALL_DIR}" )" &> /dev/null && pwd )/"$(basename "${OTP_INSTALL_DIR}")"
+# Create parent directories before resolving to absolute paths
+# (cd fails silently if parent doesn't exist, causing path to become /build or /install)
+mkdir -p "$(dirname "${OTP_BUILD_DIR}")"
+mkdir -p "$(dirname "${OTP_INSTALL_DIR}")"
+OTP_BUILD_DIR=$( cd -- "$( dirname -- "${OTP_BUILD_DIR}" )" && pwd )/"$(basename "${OTP_BUILD_DIR}")"
+OTP_INSTALL_DIR=$( cd -- "$( dirname -- "${OTP_INSTALL_DIR}" )" && pwd )/"$(basename "${OTP_INSTALL_DIR}")"
 
 echo "Building the third-party libraries required for Ocean (${OCEAN_PLATFORM}) ...:"
 echo ""
