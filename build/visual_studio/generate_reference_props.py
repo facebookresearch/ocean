@@ -69,14 +69,14 @@ def get_dependencies(props_path: Path) -> List[Dict[str, str]]:
         use_props_full_path = (directory / use_props_relative_path).resolve()
 
         # The vcxproj is in the same directory as the _use.props, with matching base name
-        use_props_dir = use_props_full_path.parent
+        use_props_directory = use_props_full_path.parent
         use_props_name = use_props_full_path.stem  # filename without extension
 
         # Remove _use suffix to get base name
         base_name = re.sub(r"_use$", "", use_props_name)
 
         # Find the corresponding vcxproj
-        vcxproj_path = use_props_dir / f"{base_name}.vcxproj"
+        vcxproj_path = use_props_directory / f"{base_name}.vcxproj"
 
         if vcxproj_path.exists():
             dependencies.append(
@@ -126,17 +126,18 @@ def generate_reference_props(
 
     # Build project references
     project_references = []
-    output_dir = output_path.parent
+    output_directory = output_path.parent
 
-    for dep in dependencies:
-        guid = get_project_guid(dep["vcxproj_path"])
+    for dependency in dependencies:
+        guid = get_project_guid(dependency["vcxproj_path"])
 
         if guid is None:
-            print(f"  WARNING: Could not find GUID for {dep['vcxproj_path']}")
+            print(f"  WARNING: Could not find GUID for {dependency['vcxproj_path']}")
             continue
 
         # Calculate relative path from the output directory to the vcxproj
-        relative_path = get_relative_path(output_dir, dep["vcxproj_path"])
+        relative_path = get_relative_path(output_directory, dependency["vcxproj_path"])
+
         # Convert to Windows path separators
         relative_path = relative_path.replace("/", "\\")
 
@@ -165,15 +166,15 @@ def generate_reference_props(
         "  <ItemGroup>",
     ]
 
-    for ref in project_references:
+    for reference in project_references:
         # Use $(MSBuildThisFileDirectory) to make the path relative to this props file's location,
         # not the importing vcxproj's location. This is critical because MSBuild evaluates
         # ProjectReference paths from the vcxproj that imports the props file, not from
         # the props file's directory.
         xml_lines.extend(
             [
-                f'    <ProjectReference Include="$(MSBuildThisFileDirectory){ref["path"]}">',
-                f"      <Project>{{{ref['guid']}}}</Project>",
+                f'    <ProjectReference Include="$(MSBuildThisFileDirectory){reference["path"]}">',
+                f"      <Project>{{{reference['guid']}}}</Project>",
                 "      <LinkLibraryDependencies>false</LinkLibraryDependencies>",
                 "    </ProjectReference>",
             ]
@@ -215,9 +216,12 @@ def update_library_build_props(
 
     if match:
         # Insert the reference import directly after the common import
-        insert_pos = match.end()
+        insert_position = match.end()
         new_content = (
-            content[:insert_pos] + "\n" + new_import_line + content[insert_pos:]
+            content[:insert_position]
+            + "\n"
+            + new_import_line
+            + content[insert_position:]
         )
         build_props_path.write_text(new_content, encoding="utf-8")
         print(f"  Updated: {build_props_path}")
@@ -228,9 +232,12 @@ def update_library_build_props(
         match = re.search(pattern, content)
 
         if match:
-            insert_pos = match.start(2)
+            insert_position = match.start(2)
             new_content = (
-                content[:insert_pos] + new_import_line + "\n  " + content[insert_pos:]
+                content[:insert_position]
+                + new_import_line
+                + "\n  "
+                + content[insert_position:]
             )
             build_props_path.write_text(new_content, encoding="utf-8")
             print(f"  Updated: {build_props_path} (fallback - appended to ImportGroup)")
@@ -265,9 +272,12 @@ def update_application_build_props(
     match = re.search(pattern, content)
 
     if match:
-        insert_pos = match.end()
+        insert_position = match.end()
         new_content = (
-            content[:insert_pos] + new_import_line + "\n" + content[insert_pos:]
+            content[:insert_position]
+            + new_import_line
+            + "\n"
+            + content[insert_position:]
         )
         build_props_path.write_text(new_content, encoding="utf-8")
         print(f"  Updated: {build_props_path}")
@@ -282,6 +292,7 @@ def is_application_build_props(build_props_path: Path) -> bool:
     directory = build_props_path.parent
     base_name = re.sub(r"_build$", "", build_props_path.stem)
     common_props_path = directory / f"{base_name}_common.props"
+
     return not common_props_path.exists()
 
 
@@ -291,6 +302,7 @@ def has_direct_dependencies(build_props_path: Path) -> bool:
         return False
 
     content = build_props_path.read_text(encoding="utf-8")
+
     return bool(
         re.search(r'<Import\s+Condition="[^"]*"\s+Project="[^"]*_use\.props"', content)
     )
@@ -317,9 +329,9 @@ def process_directory(
     print()
 
     common_props_files = [
-        p
-        for p in directory_path.rglob("*_common.props")
-        if p.name != "ocean_common.props"
+        props_file
+        for props_file in directory_path.rglob("*_common.props")
+        if props_file.name != "ocean_common.props"
     ]
 
     print(f"Found {len(common_props_files)} *_common.props files")
@@ -346,6 +358,7 @@ def process_directory(
                 updated = update_library_build_props(
                     build_props_path, reference_props_path, base_name
                 )
+
                 if updated:
                     updated_count += 1
 
@@ -355,9 +368,10 @@ def process_directory(
     print()
 
     build_props_files = [
-        p
-        for p in directory_path.rglob("*_build.props")
-        if is_application_build_props(p) and has_direct_dependencies(p)
+        props_file
+        for props_file in directory_path.rglob("*_build.props")
+        if is_application_build_props(props_file)
+        and has_direct_dependencies(props_file)
     ]
 
     print(
@@ -388,6 +402,7 @@ def process_directory(
                 updated = update_application_build_props(
                     build_props, reference_props_path, base_name
                 )
+
                 if updated:
                     updated_count += 1
 
@@ -395,6 +410,7 @@ def process_directory(
 
 
 def main():
+    """Main entry point for the script."""
     parser = argparse.ArgumentParser(
         description="Generate *_reference.props files for Ocean Visual Studio projects.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -434,26 +450,26 @@ Examples:
     total_updated = 0
 
     # Get the script directory
-    script_dir = Path(__file__).parent.resolve()
+    script_directory = Path(__file__).parent.resolve()
 
     if args.root_path is None:
         # No root path specified - process all known directories
         directories = [
-            script_dir / "win" / "vc143",
-            script_dir / "android" / "vc143",
+            script_directory / "win" / "vc143",
+            script_directory / "android" / "vc143",
         ]
 
         print("Processing all platform directories...")
 
-        for dir_path in directories:
-            if dir_path.exists():
+        for directory_path in directories:
+            if directory_path.exists():
                 generated, updated = process_directory(
-                    dir_path, args.update_build_props
+                    directory_path, args.update_build_props
                 )
                 total_generated += generated
                 total_updated += updated
             else:
-                print(f"Skipping (not found): {dir_path}")
+                print(f"Skipping (not found): {directory_path}")
     else:
         # Process only the specified root path
         root_path = Path(args.root_path).resolve()
@@ -466,8 +482,10 @@ Examples:
     print("=" * 48)
     print("Summary:")
     print(f"  Generated {total_generated} *_reference.props files")
+
     if args.update_build_props:
         print(f"  Updated {total_updated} *_build.props files")
+
     print()
     print("Done!")
 
