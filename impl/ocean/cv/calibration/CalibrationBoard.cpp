@@ -9,7 +9,6 @@
 
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
-#include "ocean/base/String.h"
 
 namespace Ocean
 {
@@ -499,16 +498,16 @@ bool CalibrationBoard::createUniqueBoardMarkers(const unsigned int id, const siz
 
 	RandomGenerator randomGenerator(id);
 
-	for (unsigned int n = 1u; n < positiveOptions.size(); ++n)
+	for (unsigned int n = 0u; n < positiveOptions.size(); ++n)
 	{
 		const unsigned int index = RandomI::random(randomGenerator, n, (unsigned int)(positiveOptions.size() - 1u));
-		std::swap(positiveOptions[n - 1u], positiveOptions[index]);
+		std::swap(positiveOptions[n], positiveOptions[index]);
 	}
 
-	for (unsigned int n = 1u; n < negativeOptions.size(); ++n)
+	for (unsigned int n = 0u; n < negativeOptions.size(); ++n)
 	{
 		const unsigned int index = RandomI::random(randomGenerator, n, (unsigned int)(negativeOptions.size() - 1u));
-		std::swap(negativeOptions[n - 1u], negativeOptions[index]);
+		std::swap(negativeOptions[n], negativeOptions[index]);
 	}
 
 	// four directions, 2 signs, 26 layouts
@@ -576,7 +575,7 @@ bool CalibrationBoard::createUniqueBoardMarkers(const unsigned int id, const siz
 					neighborSet.insert(uniqueNeighborValueTop);
 				}
 
-				ocean_assert(orientationValue >= 0 && orientationValue < 4);
+				ocean_assert(orientationValue < 4);
 				const CV::PixelDirection orientation = CV::PixelDirection(orientationValue * 90);
 
 				const MarkerCoordinate coordinate((unsigned int)(xMarker), (unsigned int)(yMarker));

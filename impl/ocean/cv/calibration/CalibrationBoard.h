@@ -110,8 +110,8 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 				/**
 				 * Returns the marker coordinate for a neighbor marker.
 				 * @param neighborDirection The direction to the neighbor marker, in relation to this marker's orientation, must be valid
-				 * @param xMarkers The number of horizontal markers in the calibration board, with range [1, CalibrationBoard::xMarkers() - 1]
-				 * @param yMarkers The number of vertical markers in the calibration board, with range [1, CalibrationBoard::yMarkers() - 1]
+				 * @param xMarkers The number of horizontal markers in the calibration board, with range [1, CalibrationBoard::xMarkers()]
+				 * @param yMarkers The number of vertical markers in the calibration board, with range [1, CalibrationBoard::yMarkers()]
 				 * @return The marker coordinate of the neighbor marker, if the neighbor marker exists, otherwise an invalid marker coordinate
 				 */
 				MarkerCoordinate boardMarkerNeighborCoordinate(const CV::PixelDirection& neighborDirection, const size_t xMarkers, const size_t yMarkers) const;
@@ -569,7 +569,7 @@ inline size_t CalibrationBoard::numberPoints() const
 	return markers() * Marker::numberPoints();
 }
 
-bool CalibrationBoard::isValid() const
+inline bool CalibrationBoard::isValid() const
 {
 	return xMarkers_ >= 1 && yMarkers_ >= 1;
 }
