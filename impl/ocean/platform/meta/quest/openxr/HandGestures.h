@@ -60,14 +60,15 @@ class HandGestures
 		 */
 		static Scalar distanceBetweenFingerJoints(const Vectors3& jointPoints, const Index32 joint0, const Index32 joint1, Vector3* position0 = nullptr, Vector3* position1 = nullptr);
 
-		/**
-		 * Returns whether a hand is pinching (whether thumb and index finger tips are together).
+	/**
+		 * Returns whether a hand is pinching (whether thumb and a finger tip are together).
 		 * @param jointPositions The positions of the joints of a hand, defined in world, either XR_HAND_JOINT_COUNT_EXT positions (or zero to fail)
-		 * @param position Optional resulting pinching position (position between thumb and index finger tip, in world), nullptr of not of interest
+		 * @param position Optional resulting pinching position (position between thumb and finger tip, in world), nullptr if not of interest
 		 * @param maxDistance The maximal distance between both finger tips to count as pinching, in meter, with range [0, infinity)
+		 * @param fingerTipJoint The finger TIP joint to use for pinch detection. Must be one of: XR_HAND_JOINT_INDEX_TIP_EXT (default), XR_HAND_JOINT_MIDDLE_TIP_EXT, XR_HAND_JOINT_RING_TIP_EXT, or XR_HAND_JOINT_LITTLE_TIP_EXT
 		 * @return True, if so
 		 */
-		static bool isHandPinching(const Vectors3& jointPositions, Vector3* position = nullptr, const Scalar maxDistance = Scalar(0.025));
+		static bool isHandPinching(const Vectors3& jointPositions, Vector3* position = nullptr, const Scalar maxDistance = Scalar(0.025), const Index32 fingerTipJoint = XR_HAND_JOINT_INDEX_TIP_EXT);
 
 		/**
 		 * Returns whether a hand is making a 'tunnel' gesture (whether thumb and index finger tips are together and forming a round tunnel with thumb and index finger).

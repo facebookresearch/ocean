@@ -121,7 +121,7 @@ Scalar HandGestures::distanceBetweenFingerJoints(const Vectors3& jointPoints, co
 	return jointPoints[joint0].distance(jointPoints[joint1]);
 }
 
-bool HandGestures::isHandPinching(const Vectors3& jointPositions, Vector3* position, const Scalar maxDistance)
+bool HandGestures::isHandPinching(const Vectors3& jointPositions, Vector3* position, const Scalar maxDistance, const Index32 fingerTipJoint)
 {
 	if (jointPositions.size() != XR_HAND_JOINT_COUNT_EXT)
 	{
@@ -130,13 +130,34 @@ bool HandGestures::isHandPinching(const Vectors3& jointPositions, Vector3* posit
 
 	ocean_assert(maxDistance >= Scalar(0));
 
+	bool isValidFingerTip = false;
+	switch (fingerTipJoint)
+	{
+		case XR_HAND_JOINT_INDEX_TIP_EXT:
+		case XR_HAND_JOINT_MIDDLE_TIP_EXT:
+		case XR_HAND_JOINT_RING_TIP_EXT:
+		case XR_HAND_JOINT_LITTLE_TIP_EXT:
+			isValidFingerTip = true;
+			break;
+		default:
+			isValidFingerTip = false;
+			break;
+	}
+
+	ocean_assert(isValidFingerTip && "fingerTipJoint must be a finger TIP joint (index, middle, ring, or little)");
+
+	if (!isValidFingerTip)
+	{
+		return false;
+	}
+
 	Vector3 thumbPosition;
-	Vector3 indexPosition;
-	const Scalar distance = distanceBetweenFingerJoints(jointPositions, XR_HAND_JOINT_THUMB_TIP_EXT, XR_HAND_JOINT_INDEX_TIP_EXT, &thumbPosition, &indexPosition);
+	Vector3 fingerTipPosition;
+	const Scalar distance = distanceBetweenFingerJoints(jointPositions, XR_HAND_JOINT_THUMB_TIP_EXT, fingerTipJoint, &thumbPosition, &fingerTipPosition);
 
 	if (position != nullptr)
 	{
-		*position = (thumbPosition + indexPosition) * Scalar(0.5);
+		*position = (thumbPosition + fingerTipPosition) * Scalar(0.5);
 	}
 
 	return distance <= maxDistance;
