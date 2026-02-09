@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ocean.meta.com/schemas/dependencies.schema.json",
+  "title": "Ocean Third-Party Dependencies Manifest",
+  "description": "Schema for dependencies.yaml - defines third-party libraries, their sources, and build configurations",
+  "type": "object",
+  "required": ["version", "libraries"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "description": "Schema version number",
+      "minimum": 1,
+      "maximum": 1
+    },
+    "defaults": {
+      "type": "object",
+      "description": "Default settings for all libraries",
+      "properties": {
+        "shallow_clone": {
+          "type": "boolean",
+          "description": "Whether to use shallow git clones by default",
+          "default": true
+        },
+        "configs": {
+          "type": "array",
+          "description": "Default build configurations",
+          "items": {
+            "type": "string",
+            "enum": ["debug", "release"]
+          },
+          "default": ["debug", "release"]
+        },
+        "link_types": {
+          "type": "array",
+          "description": "Default link types",
+          "items": {
+            "type": "string",
+            "enum": ["static", "shared"]
+          },
+          "default": ["static"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "libraries": {
+      "type": "object",
+      "description": "Library definitions",
+      "additionalProperties": {
+        "$ref": "#/definitions/library"
+      },
+      "minProperties": 1
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "library": {
+      "type": "object",
+      "description": "A third-party library definition",
+      "required": ["version", "source", "build"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Library version (semantic version or date-based)",
+          "pattern": "^[0-9a-zA-Z._-]+$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the library"
+        },
+        "source": {
+          "$ref": "#/definitions/source"
+        },
+        "build": {
+          "$ref": "#/definitions/build"
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "List of library names this depends on",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+          },
+          "default": []
+        },
+        "platforms": {
+          "description": "Platforms this library supports",
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "all"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["macos", "ios", "linux", "android", "windows"]
+              },
+              "minItems": 1
+            }
+          ],
+          "default": "all"
+        },
+        "link_types": {
+          "description": "Link types this library supports. If not specified, supports all link types.",
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "all"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["static", "shared"]
+              },
+              "minItems": 1
+            }
+          ],
+          "default": "all"
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "If true, library is not built by default",
+          "default": false
+        },
+        "optional_group": {
+          "type": "string",
+          "description": "Group name for optional libraries (e.g., 'vision', 'ml')",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "description": "Source code location and retrieval method",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Source type",
+          "enum": ["git", "archive", "local"]
+        },
+        "url": {
+          "type": "string",
+          "description": "Git repository URL or archive URL",
+          "format": "uri"
+        },
+        "ref": {
+          "type": "string",
+          "description": "Git tag, branch, or commit hash"
+        },
+        "archive_url": {
+          "type": "string",
+          "description": "URL to download archive (for archive type)",
+          "format": "uri"
+        },
+        "local_path": {
+          "type": "string",
+          "description": "Local filesystem path (for local type)"
+        },
+        "shallow": {
+          "type": "boolean",
+          "description": "Whether to use shallow clone (git only)",
+          "default": true
+        },
+        "patch": {
+          "type": "string",
+          "description": "Path to patch file to apply after checkout (relative to manifest directory)"
+        },
+        "copy_files": {
+          "type": "object",
+          "description": "Files to copy into source after checkout",
+          "additionalProperties": {
+            "type": "string",
+            "description": "Source path (relative to manifest directory) -> destination path (relative to source root)"
+          }
+        },
+        "source_subdir": {
+          "type": "string",
+          "description": "Subdirectory within the source to use as the build root (useful for monorepos)"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "const": "git" } }
+          },
+          "then": {
+            "required": ["url", "ref"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "archive" } }
+          },
+          "then": {
+            "required": ["archive_url"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "local" } }
+          },
+          "then": {
+            "required": ["local_path"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "build": {
+      "type": "object",
+      "description": "Build system configuration",
+      "required": ["system"],
+      "properties": {
+        "system": {
+          "type": "string",
+          "description": "Build system to use",
+          "enum": ["cmake", "header_only", "custom"]
+        },
+        "options": {
+          "$ref": "#/definitions/build_options",
+          "description": "Common build options applied to all configurations"
+        },
+        "options_static": {
+          "$ref": "#/definitions/build_options",
+          "description": "Additional options for static builds (merged with common options)"
+        },
+        "options_shared": {
+          "$ref": "#/definitions/build_options",
+          "description": "Additional options for shared/dynamic builds (merged with common options)"
+        },
+        "options_debug": {
+          "$ref": "#/definitions/build_options",
+          "description": "Additional options for debug builds (merged with common options)"
+        },
+        "options_release": {
+          "$ref": "#/definitions/build_options",
+          "description": "Additional options for release builds (merged with common options)"
+        },
+        "script": {
+          "type": "string",
+          "description": "Path to custom build script (for custom build system)"
+        },
+        "cmake_targets": {
+          "type": "array",
+          "description": "Specific CMake targets to build (if not specified, builds default target)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "build_options": {
+      "type": "object",
+      "description": "Build system options (CMake definitions, etc.)",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "boolean" },
+          { "type": "number" }
+        ]
+      }
+    }
+  }
+}

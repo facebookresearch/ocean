@@ -1,0 +1,423 @@
+# Ocean Third-Party Dependencies Manifest
+# This file defines all third-party libraries, their versions, sources, and dependencies.
+
+version: 1
+
+# Default build settings
+defaults:
+  shallow_clone: true
+  configs:
+    - debug
+    - release
+  link_types:
+    - static
+
+# Library definitions
+libraries:
+  # Level 0: No dependencies (can all build in parallel)
+  zlib:
+    version: "1.3.1"
+    description: "General-purpose compression library"
+    source:
+      type: git
+      url: https://github.com/madler/zlib.git
+      ref: "v1.3.1"
+    build:
+      system: cmake
+      options:
+        ZLIB_BUILD_EXAMPLES: OFF
+    platforms: all
+
+  eigen:
+    version: "3.4.0"
+    description: "C++ template library for linear algebra"
+    source:
+      type: git
+      url: https://gitlab.com/libeigen/eigen.git
+      ref: "3.4.0"
+    build:
+      system: cmake
+      options:
+        BUILD_TESTING: OFF
+        EIGEN_BUILD_DOC: OFF
+        EIGEN_BUILD_BLAS: OFF
+        EIGEN_BUILD_LAPACK: OFF
+        CMAKE_Fortran_COMPILER: NOTFOUND
+    platforms: all
+
+  googletest:
+    version: "1.14.0"
+    description: "Google Testing and Mocking Framework"
+    source:
+      type: git
+      url: https://github.com/google/googletest.git
+      ref: "v1.14.0"
+    build:
+      system: cmake
+      options:
+        BUILD_GMOCK: ON
+        INSTALL_GTEST: ON
+    platforms: all
+
+  tinyxml2:
+    version: "10.0.0"
+    description: "Simple, small, efficient XML parser"
+    source:
+      type: git
+      url: https://github.com/leethomason/tinyxml2.git
+      ref: "10.0.0"
+    build:
+      system: cmake
+      options:
+        tinyxml2_BUILD_TESTING: OFF
+    platforms: all
+
+  mbedtls:
+    version: "3.6.0"
+    description: "Cryptographic library for embedded systems"
+    source:
+      type: git
+      url: https://github.com/Mbed-TLS/mbedtls.git
+      ref: "v3.6.0"
+      patch: patches/mbedtls.patch
+    build:
+      system: cmake
+      options:
+        ENABLE_TESTING: OFF
+        ENABLE_PROGRAMS: OFF
+        MBEDTLS_FATAL_WARNINGS: OFF
+        # mbedtls uses its own options instead of BUILD_SHARED_LIBS
+        USE_STATIC_MBEDTLS_LIBRARY: ON
+        USE_SHARED_MBEDTLS_LIBRARY: OFF
+    platforms: all
+    # mbedtls does not support shared library builds on Windows because it doesn't
+    # use __declspec(dllexport) for symbol visibility. The three DLLs (mbedcrypto,
+    # mbedx509, mbedtls) have inter-dependencies that fail to link without proper
+    # symbol exports. Static linking is the recommended approach for mbedtls.
+    link_types:
+      - static
+
+  protozero:
+    version: "1.7.1"
+    description: "Minimalistic protocol buffer decoder and encoder in C++"
+    source:
+      type: git
+      url: https://github.com/mapbox/protozero.git
+      ref: "v1.7.1"
+    build:
+      system: header_only
+    platforms: all
+
+  libjpeg-turbo:
+    version: "3.0.2"
+    description: "JPEG codec with SIMD acceleration"
+    source:
+      type: git
+      url: https://github.com/libjpeg-turbo/libjpeg-turbo.git
+      ref: "3.0.2"
+      patch: patches/libjpeg-turbo.patch
+    build:
+      system: cmake
+      options:
+        WITH_TURBOJPEG: ON
+      options_static:
+        ENABLE_SHARED: OFF
+        ENABLE_STATIC: ON
+      options_shared:
+        ENABLE_SHARED: ON
+        ENABLE_STATIC: OFF
+    platforms: all
+
+  # Level 1: Depends on Level 0
+  libpng:
+    version: "1.6.43"
+    description: "PNG reference library"
+    source:
+      type: git
+      url: https://github.com/glennrp/libpng.git
+      ref: "v1.6.43"
+    build:
+      system: cmake
+      options:
+        PNG_TESTS: OFF
+        PNG_TOOLS: OFF
+      options_static:
+        PNG_SHARED: OFF
+        PNG_STATIC: ON
+      options_shared:
+        PNG_SHARED: ON
+        PNG_STATIC: OFF
+    dependencies:
+      - zlib
+    platforms: all
+
+  vtzero:
+    version: "1.1.0"
+    description: "Tiny and fast vector tile decoder and encoder"
+    source:
+      type: git
+      url: https://github.com/mapbox/vtzero.git
+      ref: "v1.1.0"
+    build:
+      system: header_only
+    dependencies:
+      - protozero
+    platforms: all
+
+  libtiff:
+    version: "4.6.0"
+    description: "TIFF library and utilities"
+    source:
+      type: git
+      url: https://gitlab.com/libtiff/libtiff.git
+      ref: "v4.6.0"
+    build:
+      system: cmake
+      options:
+        tiff-tools: OFF
+        tiff-tests: OFF
+        tiff-contrib: OFF
+        tiff-docs: OFF
+        # Disable GNU ld version script - not supported by Apple linker
+        HAVE_LD_VERSION_SCRIPT: OFF
+        # Disable C++ wrapper library - fails to link on iOS shared builds
+        cxx: OFF
+    dependencies:
+      - zlib
+    platforms: all
+
+  curl:
+    version: "8.6.0"
+    description: "Command line tool and library for transferring data with URLs"
+    source:
+      type: git
+      url: https://github.com/curl/curl.git
+      ref: "curl-8_6_0"
+    build:
+      system: cmake
+      options:
+        BUILD_CURL_EXE: OFF
+        BUILD_TESTING: OFF
+        CURL_USE_MBEDTLS: OFF
+        CURL_USE_OPENSSL: OFF
+        CURL_DISABLE_LDAP: ON
+        HTTP_ONLY: ON
+        USE_LIBIDN2: OFF
+        # Prevent curl from trying to link against libraries that don't exist on all platforms
+        HAVE_LIBSOCKET: OFF
+    dependencies:
+      - zlib
+    platforms: all
+
+  assimp:
+    version: "5.3.1"
+    description: "Open Asset Import Library"
+    source:
+      type: git
+      url: https://github.com/assimp/assimp.git
+      ref: "v5.3.1"
+    build:
+      system: cmake
+      options:
+        ASSIMP_BUILD_TESTS: OFF
+        ASSIMP_BUILD_SAMPLES: OFF
+        ASSIMP_BUILD_ASSIMP_TOOLS: OFF
+        ASSIMP_NO_EXPORT: ON
+        ASSIMP_BUILD_ZLIB: OFF
+        ASSIMP_INSTALL_PDB: OFF
+    dependencies:
+      - zlib
+    platforms: all
+
+  openxr:
+    version: "1.1.38"
+    description: "OpenXR SDK for VR/AR applications"
+    source:
+      type: git
+      url: https://github.com/KhronosGroup/OpenXR-SDK.git
+      ref: "release-1.1.38"
+    build:
+      system: cmake
+      options:
+        BUILD_TESTS: OFF
+        BUILD_CONFORMANCE_TESTS: OFF
+        # Fix install paths for cross-compilation (especially Android)
+        CMAKE_INSTALL_INCLUDEDIR: include
+        CMAKE_INSTALL_LIBDIR: lib
+      options_static:
+        DYNAMIC_LOADER: OFF
+      options_shared:
+        DYNAMIC_LOADER: ON
+    platforms: all
+
+  # Level 2: Depends on Level 0 and/or 1
+  freetype:
+    version: "2.13.2"
+    description: "Font rendering library"
+    source:
+      type: git
+      url: https://gitlab.freedesktop.org/freetype/freetype.git
+      ref: "VER-2-13-2"
+    build:
+      system: cmake
+      options:
+        CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+        FT_DISABLE_HARFBUZZ: ON
+        FT_DISABLE_BROTLI: ON
+        FT_DISABLE_BZIP2: ON
+    dependencies:
+      - zlib
+      - libpng
+    platforms: all
+
+  # Optional libraries
+  opencv:
+    version: "4.9.0"
+    description: "Open Source Computer Vision Library"
+    optional: true
+    optional_group: "vision"
+    source:
+      type: git
+      url: https://github.com/opencv/opencv.git
+      ref: "4.9.0"
+    build:
+      system: cmake
+      options:
+        BUILD_LIST: "core,imgproc,imgcodecs,features2d,calib3d"
+        BUILD_opencv_apps: OFF
+        BUILD_TESTS: OFF
+        BUILD_PERF_TESTS: OFF
+        BUILD_EXAMPLES: OFF
+        WITH_EIGEN: ON
+    dependencies:
+      - eigen
+      - zlib
+      - libpng
+      - libjpeg-turbo
+      - libtiff
+    platforms: all
+
+  # Additional Level 0 libraries
+  giflib:
+    version: "5.2.2"
+    description: "GIF image format library"
+    source:
+      type: git
+      url: https://git.code.sf.net/p/giflib/code
+      ref: "5.2.2"
+      # giflib doesn't have a CMakeLists.txt, so we copy our own
+      copy_files:
+        patches/giflib_CMakeLists.txt: CMakeLists.txt
+    build:
+      system: cmake
+    platforms:
+      - macos
+      - linux
+      - windows
+      - ios
+
+  gl:
+    version: "local"
+    description: "OpenGL headers for desktop platforms"
+    source:
+      type: local
+      local_path: ../cmake/third-party/gl
+    build:
+      system: cmake
+    platforms:
+      - macos
+      - linux
+      - windows
+
+  libusb:
+    version: "cec1e49"
+    description: "USB device access library"
+    source:
+      type: git
+      url: https://github.com/libusb/libusb-cmake.git
+      ref: "cec1e49eec481a6333c218726ecaba8e4f447a07"
+      patch: patches/libusb.patch
+    build:
+      system: cmake
+      options:
+        LIBUSB_BUILD_EXAMPLES: OFF
+        LIBUSB_BUILD_TESTING: OFF
+        LIBUSB_INSTALL_TARGETS: ON
+      options_static:
+        LIBUSB_BUILD_SHARED_LIBS: OFF
+      options_shared:
+        LIBUSB_BUILD_SHARED_LIBS: ON
+    platforms:
+      - macos
+      - linux
+      - windows
+
+  directshow:
+    version: "adf93f0"
+    description: "DirectShow Base Classes for Windows media capture"
+    source:
+      type: git
+      url: https://github.com/microsoft/Windows-classic-samples.git
+      ref: "adf93f0"
+      source_subdir: Samples/Win7Samples/multimedia/directshow/baseclasses
+      copy_files:
+        patches/directshow_CMakeLists.txt: CMakeLists.txt
+    build:
+      system: cmake
+    platforms:
+      - windows
+    # DirectShow Base Classes MUST be static - it has undefined symbols (g_Templates,
+    # g_cTemplates) that are meant to be provided by the DirectShow filter that links
+    # against it. Cannot be built as a DLL.
+    link_types:
+      - static
+
+  # Additional Level 1 libraries
+  libyuv:
+    version: "ce32eb7"
+    description: "YUV image processing library"
+    source:
+      type: git
+      url: https://github.com/lemenkov/libyuv.git
+      ref: "ce32eb773fd66239b794abee1e1ee53fdbc15bc0"
+      patch: patches/libyuv.patch
+    build:
+      system: cmake
+      options:
+        CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+    dependencies:
+      - libjpeg-turbo
+    platforms: all
+
+  # Additional Level 2 libraries
+  wxwidgets:
+    version: "3.3.1"
+    description: "Cross-platform GUI library"
+    source:
+      type: git
+      url: https://github.com/wxWidgets/wxWidgets.git
+      ref: "v3.3.1"
+    build:
+      system: cmake
+      options:
+        wxUSE_LIBJPEG: sys
+        wxUSE_LIBPNG: sys
+        wxUSE_ZLIB: sys
+        wxUSE_LIBTIFF: sys
+        wxUSE_WEBREQUEST: OFF
+      options_static:
+        wxBUILD_SHARED: OFF
+      options_shared:
+        wxBUILD_SHARED: ON
+    dependencies:
+      - zlib
+      - libpng
+      - libjpeg-turbo
+      - libtiff
+    platforms:
+      - macos
+      - windows
+
+  # Android-specific libraries (require special handling)
+  # TODO: android_native_app_glue - uses NDK sources at ${ANDROID_NDK}/sources/android/native_app_glue
+  # TODO: arcore-android-sdk - downloads AAR from Google Maven

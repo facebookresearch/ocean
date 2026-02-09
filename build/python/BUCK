@@ -1,0 +1,75 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+load("@fbcode_macros//build_defs:python_binary.bzl", "python_binary")
+load("@fbcode_macros//build_defs:python_library.bzl", "python_library")
+
+oncall("ocean")
+
+# Main build script
+python_binary(
+    name = "build_ocean",
+    srcs = ["build_ocean.py"],
+    main_function = "build_ocean.main",
+    deps = [],
+)
+
+# Main build script for third-party libraries
+python_binary(
+    name = "build_ocean_3p",
+    srcs = ["build_ocean_3p.py"],
+    main_function = "build_ocean_3p.main",
+    deps = [
+        ":builders",
+        ":lib",
+        "//third-party/pypi/webptools:webptools",
+    ],
+)
+
+# Validation script
+python_binary(
+    name = "validate_manifest",
+    srcs = ["validate_manifest.py"],
+    main_function = "validate_manifest.main",
+    deps = [
+        "//third-party/pypi/jsonschema:jsonschema",
+        "//third-party/pypi/pyyaml:pyyaml",
+    ],
+)
+
+# Visualization script
+python_binary(
+    name = "visualize_deps",
+    srcs = ["visualize_deps.py"],
+    main_function = "visualize_deps.main",
+    deps = [
+        ":lib",
+    ],
+)
+
+# Core library
+python_library(
+    name = "lib",
+    srcs = glob(["lib/*.py"]),
+    deps = [
+        "//third-party/pypi/pyyaml:pyyaml",
+        "//third-party/pypi/rich:rich",
+    ],
+)
+
+# Builder implementations
+python_library(
+    name = "builders",
+    srcs = glob(["builders/*.py"]),
+    deps = [
+        ":lib",
+    ],
+)
+
+python_library(
+    name = "dependencies",
+    srcs = ["dependencies.yaml"],
+    labels = ["autodeps2_generated"],
+)

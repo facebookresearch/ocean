@@ -1,0 +1,102 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index adb0ca4..c6c8a6c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -699,6 +699,8 @@ if(WITH_TURBOJPEG)
+         LINK_FLAGS "${TJMAPFLAG}${TJMAPFILE}")
+     endif()
+
++    # Skip building test/benchmark executables on iOS - they fail to link
++    if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+     add_executable(tjunittest tjunittest.c tjutil.c md5/md5.c md5/md5hl.c)
+     target_link_libraries(tjunittest turbojpeg)
+
+@@ -713,6 +715,7 @@ if(WITH_TURBOJPEG)
+
+     add_custom_target(tjdoc COMMAND doxygen -s doxygen.config
+       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
++    endif()  # NOT iOS
+   endif()
+
+   if(ENABLE_STATIC)
+@@ -733,6 +736,8 @@ if(WITH_TURBOJPEG)
+       set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
+     endif()
+
++    # Skip building test/benchmark executables on iOS - they fail to link
++    if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+     add_executable(tjunittest-static tjunittest.c tjutil.c md5/md5.c
+       md5/md5hl.c)
+     target_link_libraries(tjunittest-static turbojpeg-static)
+@@ -742,6 +747,7 @@ if(WITH_TURBOJPEG)
+     if(UNIX)
+       target_link_libraries(tjbench-static m)
+     endif()
++    endif()  # NOT iOS
+   endif()
+ endif()
+
+@@ -1721,8 +1727,10 @@ if(WITH_TURBOJPEG)
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+-    install(TARGETS tjbench
+-      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++    if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
++      install(TARGETS tjbench
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++    endif()
+     if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+       CMAKE_C_LINKER_SUPPORTS_PDB)
+       install(FILES "$<TARGET_PDB_FILE:turbojpeg>"
+@@ -1739,8 +1747,10 @@ if(WITH_TURBOJPEG)
+       else()
+         set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+       endif()
+-      install(PROGRAMS ${DIR}/tjbench-static${EXE}
++      if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        install(PROGRAMS ${DIR}/tjbench-static${EXE}
+         DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME tjbench${EXE})
++      endif()  # NOT iOS
+     endif()
+   endif()
+   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg.h
+diff --git a/sharedlib/CMakeLists.txt b/sharedlib/CMakeLists.txt
+index 8e94256..9f5973c 100644
+--- a/sharedlib/CMakeLists.txt
++++ b/sharedlib/CMakeLists.txt
+@@ -68,6 +68,10 @@ endif()
+ set(CDJPEG_COMPILE_FLAGS
+   "-DBMP_SUPPORTED -DGIF_SUPPORTED -DPPM_SUPPORTED -DTARGA_SUPPORTED ${USE_SETMODE}")
+
++# Skip building command-line tools for iOS - they fail to link against
++# shared libraries due to symbol visibility issues on iOS
++if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
++
+ # Compile a separate version of these source files with 12-bit and 16-bit data
+ # precision.
+ add_library(cjpeg12 OBJECT ../rdgif.c ../rdppm.c)
+@@ -106,11 +110,6 @@ target_link_libraries(example jpeg)
+ add_executable(jcstest ../jcstest.c)
+ target_link_libraries(jcstest jpeg)
+
+-install(TARGETS jpeg EXPORT ${CMAKE_PROJECT_NAME}Targets
+-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ install(TARGETS cjpeg djpeg jpegtran
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+@@ -118,3 +117,11 @@ if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
+   install(FILES "$<TARGET_PDB_FILE:jpeg>"
+     DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
+ endif()
++
++endif()  # NOT iOS
++
++install(TARGETS jpeg EXPORT ${CMAKE_PROJECT_NAME}Targets
++  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

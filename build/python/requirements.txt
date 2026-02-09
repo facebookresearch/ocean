@@ -1,0 +1,25 @@
+# Ocean Third-Party Build System - Python Dependencies
+# Install: pip install -r requirements.txt
+# Or with conda: conda create -n ocean-3p python=3.10 && conda activate ocean-3p && pip install -r requirements.txt
+
+# YAML parsing for manifest files
+PyYAML>=6.0
+
+# JSON Schema validation for manifest
+jsonschema>=4.0.0
+
+# Graphviz for dependency graph visualization (optional)
+graphviz>=0.20
+
+# Better argument parsing (optional, but nice for CLI)
+# argparse is built-in, no need to install
+
+# Progress bars for long-running operations (optional)
+tqdm>=4.60.0
+
+# Rich terminal output for TUI progress display (recommended)
+rich>=13.0.0
+
+# Type checking support (development only)
+# mypy>=1.0.0
+# types-PyYAML>=6.0

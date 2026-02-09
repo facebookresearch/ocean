@@ -1,0 +1,37 @@
+diff --git a/3rdparty/everest/CMakeLists.txt b/3rdparty/everest/CMakeLists.txt
+index e0e5adec..cdb6accb 100644
+--- a/3rdparty/everest/CMakeLists.txt
++++ b/3rdparty/everest/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ set(everest_target "${MBEDTLS_TARGET_PREFIX}everest")
+
+-add_library(${everest_target}
++add_library(${everest_target} STATIC
+   library/everest.c
+   library/x25519.c
+   library/Hacl_Curve25519_joined.c)
+diff --git a/3rdparty/p256-m/CMakeLists.txt b/3rdparty/p256-m/CMakeLists.txt
+index 2ef0d48b..54653af6 100644
+--- a/3rdparty/p256-m/CMakeLists.txt
++++ b/3rdparty/p256-m/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ set(p256m_target ${MBEDTLS_TARGET_PREFIX}p256m)
+
+-add_library(${p256m_target}
++add_library(${p256m_target} STATIC
+     p256-m_driver_entrypoints.c
+     p256-m/p256-m.c)
+
+diff --git a/include/mbedtls/mbedtls_config.h b/include/mbedtls/mbedtls_config.h
+index 35921412..9a6d50e9 100644
+--- a/include/mbedtls/mbedtls_config.h
++++ b/include/mbedtls/mbedtls_config.h
+@@ -2249,7 +2249,7 @@
+  *
+  * This modules adds support for the AES-NI instructions on x86.
+  */
+-#define MBEDTLS_AESNI_C
++//#define MBEDTLS_AESNI_C
+
+ /**
+  * \def MBEDTLS_AESCE_C
