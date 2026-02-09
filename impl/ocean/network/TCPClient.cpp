@@ -73,6 +73,11 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 		// sometimes WSAEINVAL is provides although all parameters are valid
 		if (errorValue == WSAEINVAL)
 		{
+			// connection failed - release the tainted socket and rebuild for future attempts
+
+			releaseSocket();
+			buildSocket();
+
 			return false;
 		}
 
@@ -82,6 +87,11 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 
 		if (errorValue == ECONNREFUSED)
 		{
+			// connection failed - release the tainted socket and rebuild for future attempts
+
+			releaseSocket();
+			buildSocket();
+
 			return false;
 		}
 
@@ -93,6 +103,11 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 		// sometimes WSAEINVAL is provides although all parameters are valid
 		if (errorValue == EINVAL)
 		{
+			// connection failed - release the tainted socket and rebuild for future attempts
+
+			releaseSocket();
+			buildSocket();
+
 			return false;
 		}
 
@@ -116,6 +131,11 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 		// check whether the connection has been established successfully
 		if (select(int(socketId_ + 1), nullptr, &writeSockets, nullptr, &timeoutVal) != 1)
 		{
+			// connection failed - release the tainted socket and rebuild for future attempts
+
+			releaseSocket();
+			buildSocket();
+
 			return false;
 		}
 
@@ -126,6 +146,11 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 
 		if (optErrorValue != 0)
 		{
+			// connection failed - release the tainted socket and rebuild for future attempts
+
+			releaseSocket();
+			buildSocket();
+
 			return false;
 		}
 #endif
@@ -177,6 +202,11 @@ bool TCPClient::connect(const unsigned int timeout)
 		// check whether the connection has been established successfully
 		if (select(int(socketId_ + 1), nullptr, &writeSockets, nullptr, &timeoutVal) != 1)
 		{
+			// connection failed - release the tainted socket and rebuild for future attempts
+
+			releaseSocket();
+			buildSocket();
+
 			return false;
 		}
 	}

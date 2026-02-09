@@ -96,6 +96,7 @@ void SocketScheduler::threadRun()
 		firstTemporaryLock.release();
 
 		bool busy = false;
+
 		for (SocketSet::const_iterator i = activeSockets.begin(); i != activeSockets.end(); ++i)
 		{
 			busy = (*i)->onScheduler() || busy;
