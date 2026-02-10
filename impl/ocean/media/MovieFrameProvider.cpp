@@ -432,7 +432,7 @@ FrameRefs MovieFrameProvider::previewFrames(const unsigned int index, const unsi
 		}
 		else
 		{
-			frames.push_back(FrameRef());
+			frames.emplace_back();
 		}
 	}
 
