@@ -24,7 +24,7 @@
 #include "ocean/media/PixelImage.h"
 
 #include "ocean/platform/apple/Resource.h"
-#include "ocean/platform/apple/ios/OpenGLFrameMediumViewController.h"
+#include "ocean/platform/apple/ios/GLFrameViewController.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#include "ocean/rendering/glescenegraph/apple/Apple.h"
@@ -67,7 +67,7 @@
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.backgroundColor = [UIColor whiteColor];
 
-	OpenGLFrameMediumViewController* viewController = [[OpenGLFrameMediumViewController alloc] init];
+	GLFrameViewController* viewController = [[GLFrameViewController alloc] init];
 
 	self.window.rootViewController = viewController;
 	[self.window makeKeyAndVisible];
@@ -97,7 +97,7 @@
 #endif
 
 	isRecording_ = false;
-	
+
 #ifdef ALLOW_RECORDING
 
 	// Create recording button
@@ -112,7 +112,7 @@
 	[recordingButton_ addTarget:self action:@selector(recordingButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 	recordingButton_.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
 	[viewController.view addSubview:recordingButton_];
-	
+
 #endif // ALLOW_RECORDING
 
 	std::wstring resourcePath = Platform::Apple::Resource::resourcePath(L"camera_calibration", L"json");
