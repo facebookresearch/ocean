@@ -69,6 +69,7 @@
     "braces": "^3.0.3",
     "cross-spawn": "^7.0.6",
     "diff": "^8.0.3",
+    "axios": "^1.13.5",
     "dompurify": "^3.2.4",
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23"
