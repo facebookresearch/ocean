@@ -145,8 +145,8 @@ SharedMemory& SharedMemory::operator=(SharedMemory&& sharedMemory) noexcept
 
 bool SharedMemory::requestSharedMemory(const std::wstring& name, size_t& size, void*& handle, void*& data, bool* existedAlready)
 {
-	ocean_assert(!name.empty());
-	ocean_assert(size > 0);
+	ocean_assert_and_suppress_unused(!name.empty(), name);
+	ocean_assert_and_suppress_unused(size > 0, size);
 
 	handle = nullptr;
 	data = nullptr;
@@ -242,6 +242,9 @@ bool SharedMemory::requestSharedMemory(const std::wstring& name, size_t& size, v
 #else
 
 	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(existedAlready);
+
 	return false;
 
 #endif
