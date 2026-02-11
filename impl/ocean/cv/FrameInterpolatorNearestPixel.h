@@ -1305,7 +1305,7 @@ void FrameInterpolatorNearestPixel::affine8BitPerChannelIntegerNEONSubset(const 
 	ocean_assert(affineTransform);
 	ocean_assert(!affineTransform->isNull() && Numeric::isEqualEps((*affineTransform)[2]) && Numeric::isEqualEps((*affineTransform)[5]));
 
-	ocean_assert(firstOutputRow + numberOutputRows <= outputHeight);
+	ocean_assert_and_suppress_unused(firstOutputRow + numberOutputRows <= outputHeight, outputHeight);
 
 	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
@@ -1491,7 +1491,7 @@ void FrameInterpolatorNearestPixel::homographyNEONSubset(const T* input, const u
 	ocean_assert(outputWidth >= 4u && outputHeight > 0u);
 	ocean_assert(input_H_output != nullptr && !input_H_output->isSingular());
 
-	ocean_assert(firstOutputRow + numberOutputRows <= outputHeight);
+	ocean_assert_and_suppress_unused(firstOutputRow + numberOutputRows <= outputHeight, outputHeight);
 
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;

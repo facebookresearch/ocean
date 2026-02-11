@@ -510,8 +510,8 @@ void ContrastLimitedAdaptiveHistogram::bilinearInterpolationNEON7BitPrecisionSub
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(lookupCenter2 != nullptr);
 	ocean_assert(tileLookupTables != nullptr);
-	ocean_assert(leftBins != nullptr && leftFactors_fixed7 != nullptr);
-	ocean_assert(topBins != nullptr && topFactors_fixed7 != nullptr);
+	ocean_assert_and_suppress_unused(leftBins != nullptr && leftFactors_fixed7 != nullptr, leftBins);
+	ocean_assert_and_suppress_unused(topBins != nullptr && topFactors_fixed7 != nullptr, topBins);
 
 	const unsigned int width = (unsigned int)lookupCenter2->sizeX();
 	const unsigned int height = (unsigned int)lookupCenter2->sizeY();

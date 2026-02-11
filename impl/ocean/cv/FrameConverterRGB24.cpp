@@ -68,7 +68,7 @@ void FrameConverterRGB24::changeRGB24ToYUV24Subset(uint8_t* frame, const unsigne
 void FrameConverterRGB24::convertRGB24ToYUV24RowPrecision7BitNEON(const uint8_t* source, uint8_t* target, const size_t size, const void* parameters)
 {
 	ocean_assert(source != nullptr && target != nullptr && size >= 1);
-	ocean_assert(parameters == nullptr);
+	ocean_assert_and_suppress_unused(parameters == nullptr, parameters);
 
 	constexpr size_t blockSize = 16;
 	const size_t blocks = size / blockSize;

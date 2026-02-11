@@ -1556,7 +1556,7 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 	ocean_assert(interpolationLocations != nullptr);
 	ocean_assert(interpolationFactors != nullptr);
 
-	ocean_assert(channels == 1u);
+	ocean_assert_and_suppress_unused(channels == 1u, channels);
 
 	struct LeftRightPixel
 	{
@@ -1655,7 +1655,7 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 	ocean_assert(interpolationLocations != nullptr);
 	ocean_assert(interpolationFactors != nullptr);
 
-	ocean_assert(channels == 2u);
+	ocean_assert_and_suppress_unused(channels == 2u, channels);
 
 	const uint8x8_t mask_left_8x8 = {0, 0, 2, 2, 4, 4, 6, 6};
 	const uint8x8_t mask_right_8x8 = {1, 1, 3, 3, 5, 5, 7, 7};
@@ -1758,7 +1758,7 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 	ocean_assert(interpolationLocations != nullptr);
 	ocean_assert(interpolationFactors != nullptr);
 
-	ocean_assert(channels == 3u);
+	ocean_assert_and_suppress_unused(channels == 3u, channels);
 
 	for (unsigned int x = 0; x < targetWidth; x += 8u)
 	{
@@ -1866,7 +1866,7 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 	ocean_assert(interpolationLocations != nullptr);
 	ocean_assert(interpolationFactors != nullptr);
 
-	ocean_assert(channels == 4u);
+	ocean_assert_and_suppress_unused(channels == 4u, channels);
 
 	const uint8x8_t mask_02_8x8 = {0, 0, 0, 0, 2, 2, 2, 2};
 	const uint8x8_t mask_13_8x8 = {1, 1, 1, 1, 3, 3, 3, 3};

@@ -1663,7 +1663,7 @@ inline void FrameChannels::separateTo1Channel<uint8_t, uint8_t, 2u>(const uint8_
 	ocean_assert(targetFrames != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 2u);
+	ocean_assert_and_suppress_unused(channels == 2u, channels);
 
 	constexpr unsigned int tChannels = 2u;
 
@@ -1757,7 +1757,7 @@ inline void FrameChannels::separateTo1Channel<uint8_t, uint8_t, 3u>(const uint8_
 	ocean_assert(targetFrames != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 3u);
+	ocean_assert_and_suppress_unused(channels == 3u, channels);
 
 	constexpr unsigned int tChannels = 3u;
 
@@ -1860,7 +1860,7 @@ inline void FrameChannels::separateTo1Channel<uint8_t, uint8_t, 4u>(const uint8_
 	ocean_assert(targetFrames != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 4u);
+	ocean_assert_and_suppress_unused(channels == 4u, channels);
 
 	constexpr unsigned int tChannels = 4u;
 
@@ -2080,7 +2080,7 @@ inline void FrameChannels::zipChannels<uint8_t, uint8_t, 2u>(const uint8_t* cons
 	ocean_assert(targetFrame != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 2u);
+	ocean_assert_and_suppress_unused(channels == 2u, channels);
 
 	constexpr unsigned int tChannels = 2u;
 
@@ -2174,7 +2174,7 @@ inline void FrameChannels::zipChannels<uint8_t, uint8_t, 3u>(const uint8_t* cons
 	ocean_assert(targetFrame != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 3u);
+	ocean_assert_and_suppress_unused(channels == 3u, channels);
 
 	constexpr unsigned int tChannels = 3u;
 
@@ -2277,7 +2277,7 @@ inline void FrameChannels::zipChannels<uint8_t, uint8_t, 4u>(const uint8_t* cons
 	ocean_assert(targetFrame != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 4u);
+	ocean_assert_and_suppress_unused(channels == 4u, channels);
 
 	constexpr unsigned int tChannels = 4u;
 
@@ -2389,7 +2389,7 @@ inline void FrameChannels::zipChannels<float, uint8_t, 2u>(const float* const* s
 	ocean_assert(targetFrame != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 2u);
+	ocean_assert_and_suppress_unused(channels == 2u, channels);
 
 	constexpr unsigned int tChannels = 2u;
 
@@ -2489,7 +2489,7 @@ inline void FrameChannels::zipChannels<float, uint8_t, 3u>(const float* const* s
 	ocean_assert(targetFrame != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 3u);
+	ocean_assert_and_suppress_unused(channels == 3u, channels);
 
 	constexpr unsigned int tChannels = 3u;
 
@@ -2601,7 +2601,7 @@ inline void FrameChannels::zipChannels<float, uint8_t, 4u>(const float* const* s
 	ocean_assert(targetFrame != nullptr);
 
 	ocean_assert(width != 0u && height != 0u);
-	ocean_assert(channels == 4u);
+	ocean_assert_and_suppress_unused(channels == 4u, channels);
 
 	constexpr unsigned int tChannels = 4u;
 

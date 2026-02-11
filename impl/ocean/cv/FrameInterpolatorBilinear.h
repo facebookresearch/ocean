@@ -3345,7 +3345,7 @@ void FrameInterpolatorBilinear::affine8BitPerChannelNEONSubset(const uint8_t* so
 
 	ocean_assert(source && target);
 	ocean_assert(sourceWidth > 0u && sourceHeight > 0u);
-	ocean_assert(targetWidth >= 4u && targetHeight > 0u);
+	ocean_assert_and_suppress_unused(targetWidth >= 4u && targetHeight > 0u, targetHeight);
 	ocean_assert(source_A_target);
 	ocean_assert(!source_A_target->isNull() && Numeric::isEqualEps((*source_A_target)[2]) && Numeric::isEqualEps((*source_A_target)[5]));
 
@@ -3595,7 +3595,7 @@ void FrameInterpolatorBilinear::homography8BitPerChannelNEONSubset(const uint8_t
 
 	ocean_assert(input != nullptr && output != nullptr);
 	ocean_assert(inputWidth > 0u && inputHeight > 0u);
-	ocean_assert(outputWidth >= 4u && outputHeight > 0u);
+	ocean_assert_and_suppress_unused(outputWidth >= 4u && outputHeight > 0u, outputHeight);
 	ocean_assert(input_H_output != nullptr);
 
 	ocean_assert(firstOutputRow + numberOutputRows <= outputHeight);
@@ -5393,7 +5393,7 @@ void FrameInterpolatorBilinear::interpolateRowHorizontal(const T* extendedSource
 	ocean_assert(targetWidth >= 1u);
 	ocean_assert(interpolationLocations != nullptr);
 	ocean_assert(interpolationFactorsRight != nullptr);
-	ocean_assert(channels == tChannels);
+	ocean_assert_and_suppress_unused(channels == tChannels, channels);
 
 	using FloatType = typename FloatTyper<T>::Type;
 
@@ -6578,7 +6578,7 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontalNEON<float, 1u>(c
 	ocean_assert(interpolationLocations != nullptr);
 	ocean_assert(interpolationFactorsRight != nullptr);
 
-	ocean_assert(channels == 1u);
+	ocean_assert_and_suppress_unused(channels == 1u, channels);
 
 	// [1.0f, 1.0f, 1.0f, 1.0f]
 	const float32x4_t constant_1_f_32x4 = vdupq_n_f32(1.0f);

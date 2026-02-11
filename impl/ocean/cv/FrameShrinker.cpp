@@ -1224,7 +1224,7 @@ inline void FrameShrinker::downsampleByTwoRowHorizontal8BitPerChannel14641NEON<1
 	ocean_assert(targetRow != nullptr);
 	ocean_assert(targetWidth >= 8u);
 
-	ocean_assert(channels == 1u);
+	ocean_assert_and_suppress_unused(channels == 1u, channels);
 	const unsigned int targetElements = targetWidth * 1u;
 
 	/**
@@ -1362,7 +1362,7 @@ inline void FrameShrinker::downsampleByTwoRowHorizontal8BitPerChannel14641NEON<2
 	ocean_assert(targetRow != nullptr);
 	ocean_assert(targetWidth >= 4u);
 
-	ocean_assert(channels == 2u);
+	ocean_assert_and_suppress_unused(channels == 2u, channels);
 	const unsigned int targetElements = targetWidth * 2u;
 
 	/**
@@ -1446,7 +1446,7 @@ inline void FrameShrinker::downsampleByTwoRowHorizontal8BitPerChannel14641NEON<3
 	ocean_assert(targetRow != nullptr);
 	ocean_assert(targetWidth >= 8u);
 
-	ocean_assert(channels == 3u);
+	ocean_assert_and_suppress_unused(channels == 3u, channels);
 	const unsigned int targetElements = targetWidth * 3u;
 
 	/**
@@ -1606,7 +1606,7 @@ inline void FrameShrinker::downsampleByTwoRowHorizontal8BitPerChannel14641NEON<4
 	ocean_assert(targetRow != nullptr);
 	ocean_assert(targetWidth >= 2u);
 
-	ocean_assert(channels == 4u);
+	ocean_assert_and_suppress_unused(channels == 4u, channels);
 	const unsigned int targetElements = targetWidth * 4u;
 
 	/**
