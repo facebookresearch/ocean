@@ -298,7 +298,7 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 
 			for (size_t y = 0; y < matrixSize; ++y)
 			{
-				if (yMarked[y] == unmarked && yAssignments[y] == static_cast<int>(x))
+				if (yMarked[y] == unmarked && yAssignments[y] == Index32(x))
 				{
 					yMarked[y] = marked;
 					changed = true;
