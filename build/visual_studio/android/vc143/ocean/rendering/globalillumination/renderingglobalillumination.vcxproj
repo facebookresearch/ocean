@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Native Library Project
+  Uses the OceanNDK Application Type for Android NDK cross-compilation.
+-->
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|ARM64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|ARM">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x86">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x86">
+      <Configuration>Static Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x86">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x86">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{a8b9c0d1-e2f3-44a5-b6c7-d8e9f0a1b2c3}</ProjectGuid>
+    <RootNamespace>renderingglobalillumination</RootNamespace>
+    <ProjectName>renderingglobalillumination</ProjectName>
+    <Keyword>Android</Keyword>
+    <ApplicationType>OceanNDK</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <IsAndroidNdkProject>true</IsAndroidNdkProject>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Static Release'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Release'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttributeSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBitmapFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICylinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIEngine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFactory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIIndependentPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GILightSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMaterial.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMediaTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GINode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPerspectiveView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPointLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIRenderable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIScene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISpotLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIStripPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITextures.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangles.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangleStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIVertexSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIWindowFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GlobalIllumination.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Lighting.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingMesh.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingSphere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttributeSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBitmapFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICone.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICylinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIEngine.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFactory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIIndependentPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GILightSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMaterial.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMediaTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GINode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPerspectiveView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPointLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIRenderable.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIScene.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISpotLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIStripPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITextures.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangles.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangleStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIVertexSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIWindowFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GlobalIllumination.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Lighting.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\RayIntersection.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingMesh.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingSphere.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
