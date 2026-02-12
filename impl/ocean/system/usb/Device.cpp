@@ -480,9 +480,9 @@ bool Device::extractPayload(struct libusb_transfer& usbTransfer, BufferPointers&
 	{
 		// bulk mode (for large data, with error correction, but not real-time)
 
-		ocean_assert(usbTransfer.buffer != nullptr && usbTransfer.actual_length > 0u);
+		ocean_assert(usbTransfer.buffer != nullptr && usbTransfer.actual_length > 0);
 
-		if (usbTransfer.buffer != nullptr && usbTransfer.actual_length > 0u)
+		if (usbTransfer.buffer != nullptr && usbTransfer.actual_length > 0)
 		{
 			bufferPointers.emplace_back((const void*)(usbTransfer.buffer), size_t(usbTransfer.actual_length));
 		}
