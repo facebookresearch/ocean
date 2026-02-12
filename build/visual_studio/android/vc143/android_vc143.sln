@@ -65,6 +65,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mediaspecial", "ocean\media
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platformandroid", "ocean\platform\android\platformandroid.vcxproj", "{F1A2B3C4-D5E6-4F78-9A0B-C1D2E3F4A5B6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testgeometry", "ocean\test\testgeometry\testgeometry.vcxproj", "{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Shared Debug|ARM = Shared Debug|ARM
@@ -1013,6 +1015,38 @@ Global
 		{F1A2B3C4-D5E6-4F78-9A0B-C1D2E3F4A5B6}.Static Release|x64.Build.0 = Static Release|x64
 		{F1A2B3C4-D5E6-4F78-9A0B-C1D2E3F4A5B6}.Static Release|x86.ActiveCfg = Static Release|x86
 		{F1A2B3C4-D5E6-4F78-9A0B-C1D2E3F4A5B6}.Static Release|x86.Build.0 = Static Release|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|ARM.ActiveCfg = Shared Debug|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|ARM.Build.0 = Shared Debug|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|ARM64.ActiveCfg = Shared Debug|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|ARM64.Build.0 = Shared Debug|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|x86.ActiveCfg = Shared Debug|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Debug|x86.Build.0 = Shared Debug|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|ARM.ActiveCfg = Shared Release|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|ARM.Build.0 = Shared Release|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|ARM64.ActiveCfg = Shared Release|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|ARM64.Build.0 = Shared Release|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|x64.Build.0 = Shared Release|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|x86.ActiveCfg = Shared Release|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Shared Release|x86.Build.0 = Shared Release|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|ARM.ActiveCfg = Static Debug|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|ARM.Build.0 = Static Debug|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|ARM64.ActiveCfg = Static Debug|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|ARM64.Build.0 = Static Debug|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|x64.Build.0 = Static Debug|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|x86.ActiveCfg = Static Debug|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Debug|x86.Build.0 = Static Debug|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|ARM.ActiveCfg = Static Release|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|ARM.Build.0 = Static Release|ARM
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|ARM64.ActiveCfg = Static Release|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|ARM64.Build.0 = Static Release|ARM64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|x64.ActiveCfg = Static Release|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|x64.Build.0 = Static Release|x64
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|x86.ActiveCfg = Static Release|x86
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D}.Static Release|x86.Build.0 = Static Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1043,6 +1077,7 @@ Global
 		{13795542-AB2E-4CFA-8117-B53D2579B3BD} = {4E915537-67A1-4993-AA14-203F358CE93D}
 		{B4F1C3A7-E2D5-4F8B-9A6C-8D7E3F2B1A05} = {4E915537-67A1-4993-AA14-203F358CE93D}
 		{A3C7D1E5-B8F2-4D96-9E0A-6C5B4F3D2A1E} = {4E915537-67A1-4993-AA14-203F358CE93D}
+		{B2C3D4E5-F6A7-4B89-0C1D-2E3F4A5B6C7D} = {4E915537-67A1-4993-AA14-203F358CE93D}
 		{C8D2E4F6-A7B3-4918-8C5D-9E1F2A3B6C7D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{D4E5F6A7-B8C9-4D12-9E3F-A1B2C3D4E5F6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
