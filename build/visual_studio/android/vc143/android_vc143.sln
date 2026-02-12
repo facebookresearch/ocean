@@ -109,6 +109,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "trackingpattern", "ocean\tr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "trackingoffline", "ocean\tracking\offline\trackingoffline.vcxproj", "{B4C5D6E7-F8A9-40B1-C2D3-E4F5A6B7C8D9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "trackingpoint", "ocean\tracking\point\trackingpoint.vcxproj", "{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Shared Debug|ARM = Shared Debug|ARM
@@ -1761,6 +1763,38 @@ Global
 		{B4C5D6E7-F8A9-40B1-C2D3-E4F5A6B7C8D9}.Static Release|x64.Build.0 = Static Release|x64
 		{B4C5D6E7-F8A9-40B1-C2D3-E4F5A6B7C8D9}.Static Release|x86.ActiveCfg = Static Release|x86
 		{B4C5D6E7-F8A9-40B1-C2D3-E4F5A6B7C8D9}.Static Release|x86.Build.0 = Static Release|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|ARM.ActiveCfg = Shared Debug|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|ARM.Build.0 = Shared Debug|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|ARM64.ActiveCfg = Shared Debug|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|ARM64.Build.0 = Shared Debug|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|x86.ActiveCfg = Shared Debug|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Debug|x86.Build.0 = Shared Debug|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|ARM.ActiveCfg = Shared Release|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|ARM.Build.0 = Shared Release|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|ARM64.ActiveCfg = Shared Release|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|ARM64.Build.0 = Shared Release|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|x64.Build.0 = Shared Release|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|x86.ActiveCfg = Shared Release|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Shared Release|x86.Build.0 = Shared Release|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|ARM.ActiveCfg = Static Debug|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|ARM.Build.0 = Static Debug|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|ARM64.ActiveCfg = Static Debug|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|ARM64.Build.0 = Static Debug|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|x64.Build.0 = Static Debug|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|x86.ActiveCfg = Static Debug|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Debug|x86.Build.0 = Static Debug|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|ARM.ActiveCfg = Static Release|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|ARM.Build.0 = Static Release|ARM
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|ARM64.ActiveCfg = Static Release|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|ARM64.Build.0 = Static Release|ARM64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|x64.ActiveCfg = Static Release|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|x64.Build.0 = Static Release|x64
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|x86.ActiveCfg = Static Release|x86
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0}.Static Release|x86.Build.0 = Static Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1818,6 +1852,7 @@ Global
 		{D6E7F8A9-B0C1-42D3-E4F5-A6B7C8D9E0F1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{A2B3C4D5-E6F7-48A9-B0C1-D2E3F4A5B6C7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B4C5D6E7-F8A9-40B1-C2D3-E4F5A6B7C8D9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C5D6E7F8-A9B0-41C2-D3E4-F5A6B7C8D9E0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2BCADCA3-A709-48C0-B594-0DEBD4182B19}
