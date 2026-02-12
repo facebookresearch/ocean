@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Native Library Project
+  Uses the OceanNDK Application Type for Android NDK cross-compilation.
+-->
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|ARM64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|ARM">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x86">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x86">
+      <Configuration>Static Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x86">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x86">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1a77c0ba-0857-4bce-9fdf-6e31437182be}</ProjectGuid>
+    <RootNamespace>cvdetector</RootNamespace>
+    <ProjectName>cvdetector</ProjectName>
+    <Keyword>Android</Keyword>
+    <ApplicationType>OceanNDK</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <IsAndroidNdkProject>true</IsAndroidNdkProject>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Static Release'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Release'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="cvdetector_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FeatureDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FREAKDescriptor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HemiCube.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorHough.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorULF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\MessengerCodeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureDescriptor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureOrientation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBSamplingPattern.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ShapeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Descriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Detector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Feature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FeatureDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FREAKDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCorner.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HemiCube.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorHough.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorULF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineEvaluator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\MessengerCodeDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureOrientation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBSamplingPattern.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\OrientedPointFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\PointFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ShapeDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
