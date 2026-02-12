@@ -28,8 +28,9 @@ if not exist "%ADB_PATH%" (
     exit /b 1
 )
 
-REM Find the APK
-set "APK_PATH=%PROJECT_DIR%app\build\outputs\apk\debug\app-debug.apk"
+REM Find the APK (third argument, or default location)
+set "APK_PATH=%~3"
+if "%APK_PATH%"=="" set "APK_PATH=%PROJECT_DIR%app\build\outputs\apk\debug\app-debug.apk"
 if not exist "%APK_PATH%" (
     echo Error: APK not found at %APK_PATH%
     echo Please build the project first using Ctrl+Shift+B.

@@ -10,6 +10,13 @@ plugins {
   id("org.jetbrains.kotlin.android")
 }
 
+// Redirect Gradle build output to intermediate directory (keeps source tree clean)
+val gradleBuildDir = project.findProperty("gradleBuildDir") as String?
+
+if (gradleBuildDir != null) {
+  layout.buildDirectory.set(file(gradleBuildDir))
+}
+
 // Read properties from Gradle command line (-P flags), passed by MSBuild
 val androidNamespace: String =
     project.findProperty("androidNamespace") as String?

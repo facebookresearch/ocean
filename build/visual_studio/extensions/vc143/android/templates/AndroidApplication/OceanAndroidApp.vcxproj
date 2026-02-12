@@ -73,7 +73,7 @@
   </PropertyGroup>
 
   <!-- Default output directories - defined BEFORE Microsoft.Cpp.props so they act as defaults -->
-  <!-- These can be overridden by external .props files imported via PropertySheets -->
+  <!-- User .props files imported via PropertySheets can override these unconditionally -->
   <PropertyGroup>
     <IntDir Condition="'$(IntDir)' == ''">$(MSBuildProjectDirectory)\obj\$(Platform)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
@@ -145,8 +145,12 @@
     <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">assembleDebug</GradleTask>
 
+    <!-- Redirect Gradle cache and build output to intermediate directory (keeps source tree clean) -->
+    <GradleCacheDir>$(IntDir)gradle-cache</GradleCacheDir>
+    <GradleBuildDir>$(IntDir)gradle-build</GradleBuildDir>
+
     <!-- Output paths -->
-    <ApkOutputPath>$(MSBuildProjectDirectory)\app\build\outputs\apk</ApkOutputPath>
+    <ApkOutputPath>$(GradleBuildDir)\outputs\apk</ApkOutputPath>
     <OutputPath>$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutputPath>
     <!-- jniLibs output path for native libraries -->
     <JniLibsPath>$(MSBuildProjectDirectory)\app\src\main\jniLibs</JniLibsPath>
@@ -162,7 +166,7 @@
     <AndroidManifestFile Condition="'$(AndroidManifestFile)' == ''">$(MSBuildProjectDirectory)\app\AndroidManifest.xml</AndroidManifestFile>
 
     <!-- Gradle properties to pass -->
-    <GradleProperties>-PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PjavaVersion=$(JavaVersion) -PgradleDependencies="$(GradleDependencies)"</GradleProperties>
+    <GradleProperties>--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PjavaVersion=$(JavaVersion) -PgradleDependencies="$(GradleDependencies)" -PgradleBuildDir="$(GradleBuildDir)"</GradleProperties>
   </PropertyGroup>
 
   <!-- Makefile project build commands -->
@@ -177,7 +181,8 @@
   <!-- Debug/Start settings - F5 runs deploy.bat to install and launch via ADB -->
   <PropertyGroup>
     <LocalDebuggerCommand>$(MSBuildProjectDirectory)\gradle\deploy.bat</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>"$(MSBuildProjectDirectory)" "$(AndroidPackageName)"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments Condition="$(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\release\app-release.apk"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments Condition="!$(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>$(MSBuildProjectDirectory)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
@@ -436,7 +441,7 @@
          AndroidManifestFile value. We must redefine it here so the Build/Rebuild/Clean
          targets pick up the resolved value. -->
     <PropertyGroup>
-      <GradleProperties>-PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PjavaVersion=$(JavaVersion) -PgradleDependencies="$(GradleDependencies)"</GradleProperties>
+      <GradleProperties>--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PjavaVersion=$(JavaVersion) -PgradleDependencies="$(GradleDependencies)" -PgradleBuildDir="$(GradleBuildDir)"</GradleProperties>
     </PropertyGroup>
 
     <Message Text="Using Android manifest: $(AndroidManifestFile)" Importance="high" />
@@ -659,7 +664,7 @@ return true;
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying to device..." Importance="high" />
     <PropertyGroup>
-      <ApkFile Condition="'$(Configuration)' == 'Release'">$(ApkOutputPath)\release\app-release.apk</ApkFile>
+      <ApkFile Condition="$(Configuration.Contains('Release'))">$(ApkOutputPath)\release\app-release.apk</ApkFile>
       <ApkFile Condition="'$(ApkFile)' == ''">$(ApkOutputPath)\debug\app-debug.apk</ApkFile>
     </PropertyGroup>
 

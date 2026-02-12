@@ -74,6 +74,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
 
+  <!-- Default output directories - defined BEFORE Microsoft.Cpp.props so they act as defaults -->
+  <!-- User .props files imported via PropertySheets can override these unconditionally -->
+  <PropertyGroup>
+    <IntDir Condition="'$(IntDir)' == ''">$(MSBuildProjectDirectory)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
   <ImportGroup Label="ExtensionSettings" />
@@ -93,10 +100,6 @@
 
   <!-- Path Configuration -->
   <PropertyGroup>
-    <!-- Output directories -->
-    <IntDir Condition="'$(IntDir)' == ''">$(MSBuildProjectDirectory)\obj\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
-
     <!-- Java source staging directory -->
     <JavaStagingDir>$(IntDir)java-staging</JavaStagingDir>
 
@@ -105,8 +108,9 @@
     <GradleWrapper>$(GradleProjectDir)\gradlew.bat</GradleWrapper>
     <GradleModuleDir>$(MSBuildProjectDirectory)\lib</GradleModuleDir>
 
-    <!-- AAR output path -->
-    <AarOutputDir>$(GradleModuleDir)\build\outputs\aar</AarOutputDir>
+    <!-- AAR output path (Gradle's output location - in intermediate dir) -->
+    <GradleBuildDir>$(IntDir)gradle-build</GradleBuildDir>
+    <AarOutputDir>$(GradleBuildDir)\outputs\aar</AarOutputDir>
     <AarOutputFile Condition="'$(Configuration)' == 'Debug'">$(AarOutputDir)\lib-debug.aar</AarOutputFile>
     <AarOutputFile Condition="'$(Configuration)' == 'Release'">$(AarOutputDir)\lib-release.aar</AarOutputFile>
 
@@ -136,15 +140,17 @@
     <GradleTask Condition="'$(Configuration)' == 'Release'">:lib:assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">:lib:assembleDebug</GradleTask>
 
+    <!-- Gradle cache directory (redirected out of source tree) -->
+    <GradleCacheDir>$(IntDir)gradle-cache</GradleCacheDir>
     <!-- Gradle properties to pass (from VS project settings) -->
-    <GradleProperties>-PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PjavaVersion=$(JavaVersion)</GradleProperties>
+    <GradleProperties>--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PjavaVersion=$(JavaVersion) -PgradleBuildDir="$(GradleBuildDir)"</GradleProperties>
   </PropertyGroup>
 
   <!-- Makefile project commands -->
   <PropertyGroup>
     <NMakeBuildCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" $(GradleTask) $(GradleProperties) --no-daemon</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleTask) $(GradleProperties) --no-daemon</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean --no-daemon</NMakeCleanCommandLine>
+    <NMakeCleanCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleProperties) --no-daemon</NMakeCleanCommandLine>
     <NMakeOutput>$(FinalAarPath)</NMakeOutput>
   </PropertyGroup>
 
@@ -296,7 +302,7 @@ return true;
   <!-- Clean Target -->
   <Target Name="Clean" DependsOnTargets="CleanStagedJavaSources">
     <Message Text="Cleaning with Gradle..." Importance="high" />
-    <Exec Command="&quot;$(GradleWrapper)&quot; clean --no-daemon"
+    <Exec Command="&quot;$(GradleWrapper)&quot; clean $(GradleProperties) --no-daemon"
           WorkingDirectory="$(GradleProjectDir)"
           EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
           ConsoleToMsBuild="true"

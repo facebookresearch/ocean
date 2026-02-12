@@ -82,6 +82,12 @@ android {
               "javaStagingDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
           )
 
+  // Redirect Gradle build output to intermediate directory (keeps source tree clean)
+  val gradleBuildDir = project.findProperty("gradleBuildDir") as String?
+  if (gradleBuildDir != null) {
+    layout.buildDirectory.set(file(gradleBuildDir))
+  }
+
   // JNI libs are staged to intermediate folder by MSBuild
   // The path is passed via -PjniLibsDir property from MSBuild
   val jniLibsDir =
