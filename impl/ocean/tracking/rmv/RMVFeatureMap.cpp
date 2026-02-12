@@ -36,7 +36,7 @@ void RMVFeatureMap::setFeatures(const Vector3* points, const size_t number, cons
 
 	if (number != 0)
 	{
-		memcpy(mapObjectPoints_.data(), points, sizeof(Vector3) * number);
+		std::copy_n(points, number, mapObjectPoints_.data());
 	}
 
 	mapRecentStrongObjectPointIndices_.clear();
@@ -103,7 +103,7 @@ void RMVFeatureMap::setInitializationFeatures(const Vector3* objectPoints, const
 
 	if (number != 0)
 	{
-		memcpy(mapInitializationObjectPoints_.data(), objectPoints, sizeof(Vector3) * number);
+		std::copy_n(objectPoints, number, mapInitializationObjectPoints_.data());
 	}
 
 	mapInitializationBoundingBox_ = Box3(mapInitializationObjectPoints_);
