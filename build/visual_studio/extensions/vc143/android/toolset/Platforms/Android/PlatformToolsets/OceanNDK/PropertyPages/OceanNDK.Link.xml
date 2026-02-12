@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - Linker Property Page Schema
+  Defines the "Linker" property page for Android NDK projects in Visual Studio.
+-->
+<Rule Name="OceanNDK_Link"
+      DisplayName="Linker (Android)"
+      Description="Linker settings for Android NDK shared libraries"
+      PageTemplate="tool"
+      SwitchPrefix="-"
+      Order="30"
+      xmlns="http://schemas.microsoft.com/build/2009/properties"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General linker settings" />
+    <Category Name="Input" DisplayName="Input" Description="Input files and libraries" />
+    <Category Name="Optimization" DisplayName="Optimization" Description="Linker optimization settings" />
+    <Category Name="Debugging" DisplayName="Debugging" Description="Debug symbol settings" />
+    <Category Name="Advanced" DisplayName="Advanced" Description="Advanced linker settings" />
+    <Category Name="CommandLine" DisplayName="Command Line" Description="Additional command line options" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringProperty Name="OutputFile"
+                  DisplayName="Output File"
+                  Description="Specifies the name and location of the output shared library."
+                  Category="General"
+                  Default="$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)"
+                  Subtype="file"
+                  F1Keyword="VC.Project.VCLinkerTool.OutputFile">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <EnumProperty Name="CppStl"
+                DisplayName="C++ Standard Library"
+                Description="C++ STL to link against."
+                Category="General"
+                Default="c++_shared"
+                F1Keyword="VC.Project.VCLinkerTool.CppStl">
+    <EnumValue Name="c++_shared" DisplayName="LLVM libc++ Shared" Description="Link against libc++ shared library" />
+    <EnumValue Name="c++_static" DisplayName="LLVM libc++ Static" Description="Link libc++ statically" />
+    <EnumValue Name="system" DisplayName="System STL" Description="Use system STL" />
+    <EnumValue Name="none" DisplayName="None" Description="No C++ STL" />
+  </EnumProperty>
+
+  <StringProperty Name="SoName"
+                  DisplayName="Shared Object Name (soname)"
+                  Description="The soname embedded in the shared library. Leave empty to use the output filename."
+                  Category="General"
+                  F1Keyword="VC.Project.VCLinkerTool.SoName">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <!-- Input Category -->
+  <StringListProperty Name="AdditionalLibraryDirectories"
+                      DisplayName="Additional Library Directories"
+                      Description="Specifies one or more directories to add to the library search path; separate with semicolons."
+                      Category="Input"
+                      Subtype="folder"
+                      F1Keyword="VC.Project.VCLinkerTool.AdditionalLibraryDirectories">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+
+  <StringListProperty Name="AdditionalDependencies"
+                      DisplayName="Additional Dependencies"
+                      Description="Specifies additional libraries to link (without -l prefix). Separate with semicolons. Default: log, android, m, dl."
+                      Category="Input"
+                      F1Keyword="VC.Project.VCLinkerTool.AdditionalDependencies">
+    <StringListProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringListProperty.DataSource>
+  </StringListProperty>
+
+  <StringProperty Name="VersionScript"
+                  DisplayName="Version Script"
+                  Description="Linker version script for symbol visibility control."
+                  Category="Input"
+                  Subtype="file"
+                  F1Keyword="VC.Project.VCLinkerTool.VersionScript">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <!-- Optimization Category -->
+  <BoolProperty Name="LinkTimeOptimization"
+                DisplayName="Link-Time Optimization"
+                Description="Enable link-time optimization (-flto). Requires LTO-enabled object files."
+                Category="Optimization"
+                Default="false"
+                F1Keyword="VC.Project.VCLinkerTool.LinkTimeCodeGeneration" />
+
+  <BoolProperty Name="GarbageCollectSections"
+                DisplayName="Remove Unreferenced Sections"
+                Description="Remove unused code and data sections (--gc-sections). Reduces output size."
+                Category="Optimization"
+                Default="true"
+                F1Keyword="VC.Project.VCLinkerTool.GarbageCollectSections" />
+
+  <!-- Debugging Category -->
+  <BoolProperty Name="StripSymbols"
+                DisplayName="Strip Symbols"
+                Description="Remove debug symbols from the output library. Recommended for Release builds."
+                Category="Debugging"
+                Default="false"
+                F1Keyword="VC.Project.VCLinkerTool.StripPrivateSymbols" />
+
+  <BoolProperty Name="GenerateMapFile"
+                DisplayName="Generate Map File"
+                Description="Generate a linker map file showing symbol addresses."
+                Category="Debugging"
+                Default="false"
+                F1Keyword="VC.Project.VCLinkerTool.GenerateMapFile" />
+
+  <StringProperty Name="MapFileName"
+                  DisplayName="Map File Name"
+                  Description="Specifies the name and location of the map file."
+                  Category="Debugging"
+                  Default="$(OutDir)$(TargetName).map"
+                  Subtype="file"
+                  F1Keyword="VC.Project.VCLinkerTool.MapFileName">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <!-- Advanced Category -->
+  <StringProperty Name="EntryPointSymbol"
+                  DisplayName="Entry Point"
+                  Description="Custom entry point symbol (rarely needed for shared libraries)."
+                  Category="Advanced"
+                  F1Keyword="VC.Project.VCLinkerTool.EntryPointSymbol">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <!-- Command Line Category -->
+  <StringProperty Name="AdditionalOptions"
+                  DisplayName="Additional Options"
+                  Description="Additional command line options to pass to the linker."
+                  Category="CommandLine"
+                  F1Keyword="VC.Project.VCLinkerTool.AdditionalOptions">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="Link" Label="" HasConfigurationCondition="true" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+</Rule>

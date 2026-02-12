@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK ImportBefore Extension Point
+
+  Files placed in this directory are imported before the main Toolset.props.
+  This allows for customization and extension of the toolset.
+
+  Usage:
+    - Drop .props files here to inject custom properties before toolset defaults
+    - Useful for organization-wide overrides or custom NDK configurations
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Extension point - import all .props files in this directory -->
+</Project>

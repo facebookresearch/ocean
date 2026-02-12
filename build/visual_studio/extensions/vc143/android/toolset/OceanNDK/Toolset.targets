@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - MSBuild Targets
+
+  Provides ClCompile, Link, and Lib target overrides that route to Android NDK
+  clang/llvm-ar with full incremental build support via .tlog files.
+
+  IMPORTANT: This file also defines design-time stub targets required by Visual Studio's
+  IntelliSense and property page system. Without these, VS will fail to load the project.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       Design-Time Support Targets
+
+       These targets are required by Visual Studio's design-time build system
+       for IntelliSense, property pages, and project loading. Without them,
+       VS reports "The target 'X' does not exist in the project" errors.
+       ============================================================ -->
+
+  <!-- ResolveReferences is called by Microsoft.Cpp.DesignTime.targets -->
+  <Target Name="ResolveReferences" Returns="@(ReferencePath)">
+    <!-- For Android NDK projects, we don't have traditional .NET references -->
+    <!-- Return empty to satisfy the design-time build -->
+  </Target>
+
+  <!-- GetCopyToOutputDirectoryItems is called during solution build -->
+  <Target Name="GetCopyToOutputDirectoryItems" Returns="@(AllItemsFullPathWithTargetPath)">
+    <!-- No copy-to-output items for Android NDK libraries -->
+  </Target>
+
+  <!-- GetTargetPath returns the primary output of the project -->
+  <Target Name="GetTargetPath" Returns="$(TargetPath)">
+    <PropertyGroup>
+      <TargetPath Condition="'$(TargetPath)' == ''">$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)</TargetPath>
+    </PropertyGroup>
+  </Target>
+
+  <!-- GetTargetPathWithTargetPlatformMoniker for cross-platform scenarios -->
+  <Target Name="GetTargetPathWithTargetPlatformMoniker" Returns="@(TargetPathWithTargetPlatformMoniker)">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(TargetPath)">
+        <TargetPlatformMoniker>Android</TargetPlatformMoniker>
+        <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      </TargetPathWithTargetPlatformMoniker>
+    </ItemGroup>
+  </Target>
+
+  <!-- GetNativeManifest for manifest support -->
+  <Target Name="GetNativeManifest" Returns="@(NativeManifest)">
+    <!-- Android doesn't use Windows manifests -->
+  </Target>
+
+  <!-- ResolveProjectReferences for project-to-project references -->
+  <Target Name="ResolveProjectReferences" Returns="@(_ResolvedProjectReferencePaths)">
+    <!-- Resolve project references if any -->
+    <ItemGroup Condition="'@(ProjectReference)' != ''">
+      <_ResolvedProjectReferencePaths Include="@(ProjectReference->'%(FullPath)')" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Resolve static libraries from referenced projects for linking -->
+  <Target Name="_ResolveNativeProjectReferences"
+          BeforeTargets="Link"
+          Condition="'@(ProjectReference)' != '' AND '$(ConfigurationType)' == 'DynamicLibrary'">
+
+    <!-- Get output paths from referenced projects -->
+    <MSBuild Projects="@(ProjectReference)"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="_ReferencedProjectOutput" />
+    </MSBuild>
+
+    <!-- Filter to only .a files (static libraries) -->
+    <ItemGroup>
+      <_ReferencedStaticLibs Include="@(_ReferencedProjectOutput)"
+                             Condition="'%(Extension)' == '.a'" />
+    </ItemGroup>
+
+    <Message Text="[OceanNDK] Resolved static libraries from project references:"
+             Importance="Normal"
+             Condition="'@(_ReferencedStaticLibs)' != ''" />
+    <Message Text="[OceanNDK]   %(Identity)"
+             Importance="Normal"
+             Condition="'@(_ReferencedStaticLibs)' != ''" />
+  </Target>
+
+  <!-- PrepareForBuild - called before most build operations -->
+  <Target Name="PrepareForBuild">
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+    <MakeDir Directories="$(IntDir)" Condition="!Exists('$(IntDir)')" />
+  </Target>
+
+  <!-- GetResolvedWinMD for WinRT support (not used, but required) -->
+  <Target Name="GetResolvedWinMD" Returns="@(ResolvedWinMD)">
+    <!-- Android doesn't use WinMD -->
+  </Target>
+
+  <!-- GetProjectReferences for design-time builds -->
+  <Target Name="GetProjectReferences" Returns="@(ProjectReference)">
+    <!-- Return project references -->
+  </Target>
+
+  <!-- GetProjectReferencesInfo for design-time builds -->
+  <Target Name="GetProjectReferencesInfo" Returns="@(_MSBuildProjectReferenceExistent)">
+    <ItemGroup Condition="'@(ProjectReference)' != ''">
+      <_MSBuildProjectReferenceExistent Include="@(ProjectReference)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- ComputeCompileInputsOutputs for incremental builds -->
+  <Target Name="ComputeCompileInputsOutputs" />
+
+  <!-- ComputeLinkInputsOutputs for incremental builds -->
+  <Target Name="ComputeLinkInputsOutputs" />
+
+  <!-- _GetProjectDefaultConfiguration for configuration handling -->
+  <Target Name="_GetProjectDefaultConfiguration" Returns="$(Configuration)|$(Platform)" />
+
+  <!-- GetClCommandLines for IntelliSense -->
+  <Target Name="GetClCommandLines" Returns="@(ClCommandLines)">
+    <!-- Build simplified command lines for IntelliSense -->
+    <ItemGroup>
+      <ClCommandLines Include="@(ClCompile)">
+        <CommandLine>$(AndroidClangPath) -target $(AndroidTargetTriple) --sysroot=$(NdkSysroot) -c "%(FullPath)" -o "$(IntDir)%(Filename).o"</CommandLine>
+      </ClCommandLines>
+    </ItemGroup>
+  </Target>
+
+  <!-- GetClCommandLineForReference for referenced projects -->
+  <Target Name="GetClCommandLineForReference" Returns="@(ClCommandLines)" />
+
+  <!-- GetGeneratedFiles for generated source tracking -->
+  <Target Name="GetGeneratedFiles" Returns="@(GeneratedFiles)" />
+
+  <!-- GetProjectDirectories for project structure -->
+  <Target Name="GetProjectDirectories" Returns="@(ProjectDirectories)">
+    <ItemGroup>
+      <ProjectDirectories Include="$(ProjectDir)" />
+      <ProjectDirectories Include="$(OutDir)" />
+      <ProjectDirectories Include="$(IntDir)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- ============================================================
+       Locate Build Tasks DLL
+       Search order:
+       1. lib\ subfolder (VSIX deployed location)
+       2. Extension root (..\..\)
+       3. One level up (..\)
+       4. Development build output - Debug (net472)
+       5. Development build output - Release (net472)
+       6. Development build output - Debug (netstandard2.0)
+       7. Development build output - Release (netstandard2.0)
+       ============================================================ -->
+  <PropertyGroup>
+    <!-- lib subfolder (deployed by VSIX to each platform toolset) -->
+    <_BuildTasksDll Condition="'$(_BuildTasksDll)' == '' AND Exists('$(MSBuildThisFileDirectory)lib\OceanAndroidExtension.BuildTasks.dll')">$(MSBuildThisFileDirectory)lib\OceanAndroidExtension.BuildTasks.dll</_BuildTasksDll>
+    <!-- Extension root (two levels up from toolset\OceanNDK\) -->
+    <_BuildTasksDll Condition="'$(_BuildTasksDll)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\OceanAndroidExtension.BuildTasks.dll')">$(MSBuildThisFileDirectory)..\..\OceanAndroidExtension.BuildTasks.dll</_BuildTasksDll>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Import Build Tasks
+       ============================================================ -->
+  <UsingTask
+    TaskName="OceanAndroidExtension.BuildTasks.AndroidClCompileTask"
+    AssemblyFile="$(_BuildTasksDll)"
+    Condition="'$(_BuildTasksDll)' != '' AND Exists('$(_BuildTasksDll)')" />
+
+  <UsingTask
+    TaskName="OceanAndroidExtension.BuildTasks.AndroidLinkTask"
+    AssemblyFile="$(_BuildTasksDll)"
+    Condition="'$(_BuildTasksDll)' != '' AND Exists('$(_BuildTasksDll)')" />
+
+  <UsingTask
+    TaskName="OceanAndroidExtension.BuildTasks.AndroidLibTask"
+    AssemblyFile="$(_BuildTasksDll)"
+    Condition="'$(_BuildTasksDll)' != '' AND Exists('$(_BuildTasksDll)')" />
+
+  <!-- ============================================================
+       Computed Properties for Build
+       ============================================================ -->
+
+  <!-- Diagnostic for Build Tasks DLL location -->
+  <Target Name="_DiagBuildTasksDll" BeforeTargets="ClCompile">
+    <Message Text="[OceanNDK] Build Tasks DLL: $(_BuildTasksDll)" Importance="Normal" />
+    <Message Text="[OceanNDK] Build Tasks DLL EXISTS" Importance="Normal" Condition="Exists('$(_BuildTasksDll)')" />
+    <Warning Text="[OceanNDK] Build Tasks DLL NOT FOUND! Searched: lib\, ..\..\, ..\  relative to $(MSBuildThisFileDirectory)" Condition="'$(_BuildTasksDll)' == '' OR !Exists('$(_BuildTasksDll)')" />
+  </Target>
+  <PropertyGroup>
+    <!-- Ensure intermediate directory exists with trailing slash -->
+    <IntDir Condition="!HasTrailingSlash('$(IntDir)')">$(IntDir)\</IntDir>
+    <OutDir Condition="!HasTrailingSlash('$(OutDir)')">$(OutDir)\</OutDir>
+
+    <!-- Tracker log directory for incremental builds -->
+    <TLogLocation Condition="'$(TLogLocation)' == ''">$(IntDir)</TLogLocation>
+
+    <!-- Determine output file based on configuration type -->
+    <_AndroidOutputFile Condition="'$(ConfigurationType)' == 'DynamicLibrary'">$(OutDir)$(TargetPrefix)$(TargetName).so</_AndroidOutputFile>
+    <_AndroidOutputFile Condition="'$(ConfigurationType)' == 'StaticLibrary'">$(OutDir)$(TargetPrefix)$(TargetName).a</_AndroidOutputFile>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       ClCompile Target Override
+       ============================================================ -->
+  <Target
+    Name="ClCompile"
+    Condition="'@(ClCompile)' != ''"
+    Inputs="@(ClCompile)"
+    Outputs="@(ClCompile->'$(IntDir)%(RelativeDir)%(Filename).o')"
+    DependsOnTargets="_PrepareForClCompile">
+
+    <!-- ============================================================
+         SINGLE FILE COMPILE DETECTION (Ctrl+F7)
+         When Visual Studio's "Compile" command (Ctrl+F7) is used,
+         VS sets the SelectedFiles property to the file(s) to compile.
+         We filter @(ClCompile) to only those files to avoid compiling
+         the entire project when only one file was selected.
+         ============================================================ -->
+    <PropertyGroup>
+      <_IsSingleFileCompile Condition="'$(SelectedFiles)' != ''">true</_IsSingleFileCompile>
+      <_IsSingleFileCompile Condition="'$(SelectedFiles)' == ''">false</_IsSingleFileCompile>
+    </PropertyGroup>
+
+    <!-- Diagnostic messages for debugging single-file compile -->
+    <Message Text="[OceanNDK] Single-file compile mode: $(_IsSingleFileCompile)" Importance="Normal" Condition="$(_IsSingleFileCompile)" />
+    <Message Text="[OceanNDK] Selected files: $(SelectedFiles)" Importance="Normal" Condition="$(_IsSingleFileCompile)" />
+
+    <!-- Filter @(ClCompile) to only selected files when SelectedFiles is set -->
+    <ItemGroup Condition="$(_IsSingleFileCompile)">
+      <!-- Create temporary list of files to compile (those matching SelectedFiles)
+           Match against both Identity (relative path) and FullPath (absolute path) -->
+      <_FilesToCompile Include="@(ClCompile)"
+                       Condition="$([System.String]::new('$(SelectedFiles)').Contains('%(Identity)')) OR
+                                  $([System.String]::new('$(SelectedFiles)').Contains('%(FullPath)'))" />
+      <!-- Clear the ClCompile list and replace with filtered files -->
+      <ClCompile Remove="@(ClCompile)" />
+      <ClCompile Include="@(_FilesToCompile)" />
+    </ItemGroup>
+
+    <Message Text="[OceanNDK] Files to compile: @(ClCompile->'%(Filename)%(Extension)', ', ')" Importance="Normal" />
+    <Message Text="[OceanNDK] File count: @(ClCompile->Count())" Importance="Normal" Condition="$(_IsSingleFileCompile)" />
+
+    <!-- Invoke custom compile task - per-file settings are read from ITaskItem
+         metadata inside the task (no %(ClCompile.XXX) here to avoid MSBuild
+         task batching which would defeat parallel compilation) -->
+    <PropertyGroup>
+      <_ClParallelJobs Condition="'$(CL_MPCount)' != ''">$(CL_MPCount)</_ClParallelJobs>
+      <_ClParallelJobs Condition="'$(_ClParallelJobs)' == ''">0</_ClParallelJobs>
+    </PropertyGroup>
+    <AndroidClCompileTask
+      Sources="@(ClCompile)"
+      CompilerPath="$(AndroidClangPath)"
+      Sysroot="$(NdkSysroot)"
+      TargetTriple="$(AndroidTargetTriple)"
+      AndroidAbi="$(AndroidAbi)"
+      ApiLevel="$(AndroidAPILevelNumber)"
+      ArchitectureFlags="$(AndroidArchFlags)"
+      ObjectFileDir="$(IntDir)"
+      TLogDirectory="$(TLogLocation)"
+      TrackerLogDirectory="$(TLogLocation)"
+      MaxParallelJobs="$(_ClParallelJobs)"
+      ToolExe="$(CLToolExe)"
+      ToolPath="$(CLToolPath)">
+      <Output TaskParameter="ObjectFiles" ItemName="AndroidObjectFile" />
+    </AndroidClCompileTask>
+
+    <!-- Store compiled object files for linking -->
+    <ItemGroup>
+      <Link Include="@(AndroidObjectFile)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_PrepareForClCompile" BeforeTargets="ClCompile">
+    <!-- Create output directories -->
+    <MakeDir Directories="$(IntDir)" Condition="!Exists('$(IntDir)')" />
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+    <MakeDir Directories="$(TLogLocation)" Condition="!Exists('$(TLogLocation)')" />
+  </Target>
+
+  <!-- ============================================================
+       Link Target (Dynamic Library)
+       ============================================================ -->
+  <Target
+    Name="Link"
+    Condition="'$(ConfigurationType)' == 'DynamicLibrary' AND '@(Link)' != ''"
+    Inputs="@(Link);@(_ReferencedStaticLibs)"
+    Outputs="$(_AndroidOutputFile)"
+    DependsOnTargets="ClCompile;_PrepareForLink;_ResolveNativeProjectReferences">
+
+    <!-- Combine AdditionalDependencies with resolved project reference libraries -->
+    <PropertyGroup>
+      <_CombinedDependencies>%(Link.AdditionalDependencies)</_CombinedDependencies>
+      <_CombinedDependencies Condition="'@(_ReferencedStaticLibs)' != ''">$(_CombinedDependencies);@(_ReferencedStaticLibs, ';')</_CombinedDependencies>
+    </PropertyGroup>
+
+    <AndroidLinkTask
+      ObjectFiles="@(Link)"
+      LinkerPath="$(AndroidClangPath)"
+      Sysroot="$(NdkSysroot)"
+      TargetTriple="$(AndroidTargetTriple)"
+      AndroidAbi="$(AndroidAbi)"
+      OutputFile="$(_AndroidOutputFile)"
+      CppStl="$(AndroidStl)"
+      ArchitectureFlags="$(AndroidArchFlags)"
+      AdditionalLibraryDirectories="%(Link.AdditionalLibraryDirectories)"
+      AdditionalDependencies="$(_CombinedDependencies)"
+      StripSymbols="%(Link.StripSymbols)"
+      StripToolPath="$(AndroidStripPath)"
+      GenerateMapFile="%(Link.GenerateMapFile)"
+      MapFileName="$(OutDir)$(TargetName).map"
+      AdditionalOptions="%(Link.AdditionalOptions)"
+      TLogDirectory="$(TLogLocation)"
+      TrackerLogDirectory="$(TLogLocation)"
+      ProjectFile="$(MSBuildProjectFullPath)"
+      ToolExe="$(LinkToolExe)"
+      ToolPath="$(LinkToolPath)">
+      <Output TaskParameter="OutputLibrary" PropertyName="TargetPath" />
+    </AndroidLinkTask>
+  </Target>
+
+  <Target Name="_PrepareForLink" BeforeTargets="Link">
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+  </Target>
+
+  <!-- ============================================================
+       Lib Target (Static Library)
+       ============================================================ -->
+  <Target
+    Name="Lib"
+    Condition="'$(ConfigurationType)' == 'StaticLibrary' AND '@(Link)' != ''"
+    Inputs="@(Link)"
+    Outputs="$(_AndroidOutputFile)"
+    DependsOnTargets="ClCompile;_PrepareForLib">
+
+    <AndroidLibTask
+      ObjectFiles="@(Link)"
+      ArchiverPath="$(AndroidArPath)"
+      OutputFile="$(_AndroidOutputFile)"
+      TLogDirectory="$(TLogLocation)"
+      TrackerLogDirectory="$(TLogLocation)"
+      ProjectFile="$(MSBuildProjectFullPath)"
+      ToolExe="$(LibToolExe)"
+      ToolPath="$(LibToolPath)">
+      <Output TaskParameter="OutputLibrary" PropertyName="TargetPath" />
+    </AndroidLibTask>
+  </Target>
+
+  <Target Name="_PrepareForLib" BeforeTargets="Lib">
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+  </Target>
+
+  <!-- ============================================================
+       Build Target Override
+       ============================================================ -->
+  <Target Name="Build" DependsOnTargets="_ValidateOceanNdkToolset;ClCompile;Link;Lib">
+  </Target>
+
+  <!-- Alias for Ocean Android integration compatibility -->
+  <Target Name="AndroidNativeBuild" DependsOnTargets="Build">
+    <Message Text="AndroidNativeBuild complete." Importance="Normal" />
+  </Target>
+
+  <!-- ============================================================
+       BuildAllAbis - Multi-ABI Build Support
+       ============================================================ -->
+  <Target Name="BuildAllAbis" DependsOnTargets="_ValidateOceanNdkToolset">
+    <Message Text="Building for all ABIs..." Importance="High" />
+
+    <ItemGroup>
+      <_AllAbis Include="ARM64" />
+      <_AllAbis Include="ARM" />
+      <_AllAbis Include="x64" />
+      <_AllAbis Include="x86" />
+    </ItemGroup>
+
+    <!-- Build for each ABI by invoking MSBuild with different Platform -->
+    <MSBuild
+      Projects="$(MSBuildProjectFullPath)"
+      Targets="Build"
+      Properties="Platform=%(_AllAbis.Identity);Configuration=$(Configuration)"
+      BuildInParallel="true"
+      StopOnFirstFailure="false" />
+
+    <Message Text="Multi-ABI build complete." Importance="High" />
+  </Target>
+
+  <!-- ============================================================
+       Clean Target
+       ============================================================ -->
+  <Target Name="Clean">
+    <Message Text="Cleaning Android build outputs..." Importance="Normal" />
+
+    <!-- Delete object files (.o) and dependency files (.d) from IntDir -->
+    <ItemGroup>
+      <_ObjectFiles Include="$(IntDir)**\*.o" Condition="Exists('$(IntDir)')" />
+      <_DepFiles Include="$(IntDir)**\*.d" Condition="Exists('$(IntDir)')" />
+    </ItemGroup>
+    <Delete Files="@(_ObjectFiles)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
+    <Delete Files="@(_DepFiles)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
+
+    <!-- Delete .tlog files from IntDir -->
+    <ItemGroup>
+      <_TLogFiles Include="$(IntDir)*.tlog" Condition="Exists('$(IntDir)')" />
+    </ItemGroup>
+    <Delete Files="@(_TLogFiles)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
+
+    <!-- Delete output library/executable -->
+    <Delete Files="$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)" Condition="Exists('$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)')" TreatErrorsAsWarnings="true" ContinueOnError="true" />
+
+    <Message Text="Clean complete." Importance="Normal" />
+  </Target>
+
+  <!-- ============================================================
+       AndroidClean - ABI-specific cleanup
+       ============================================================ -->
+  <Target Name="AndroidClean">
+    <Message Text="Cleaning $(AndroidAbi) build outputs..." Importance="Normal" />
+
+    <PropertyGroup>
+      <_AbiIntDir>$(ProjectDir)obj\$(Configuration)\$(AndroidAbi)\</_AbiIntDir>
+      <_AbiOutDir>$(ProjectDir)$(Configuration)\$(AndroidAbi)\</_AbiOutDir>
+    </PropertyGroup>
+
+    <!-- Delete files first for more graceful error handling -->
+    <ItemGroup>
+      <_AbiIntFiles Include="$(_AbiIntDir)**\*" Condition="Exists('$(_AbiIntDir)')" />
+      <_AbiOutFiles Include="$(_AbiOutDir)**\*" Condition="Exists('$(_AbiOutDir)')" />
+    </ItemGroup>
+    <Delete Files="@(_AbiIntFiles)" ContinueOnError="WarnAndContinue" />
+    <Delete Files="@(_AbiOutFiles)" ContinueOnError="WarnAndContinue" />
+
+    <RemoveDir Directories="$(_AbiIntDir)" Condition="Exists('$(_AbiIntDir)')" ContinueOnError="WarnAndContinue" />
+    <RemoveDir Directories="$(_AbiOutDir)" Condition="Exists('$(_AbiOutDir)')" ContinueOnError="WarnAndContinue" />
+
+    <Message Text="ABI-specific clean complete." Importance="Normal" />
+  </Target>
+
+  <!-- ============================================================
+       Rebuild Target
+       ============================================================ -->
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build">
+    <Message Text="Rebuild complete." Importance="High" />
+  </Target>
+
+  <!-- ============================================================
+       Copy STL to Output (for c++_shared)
+       ============================================================ -->
+  <Target
+    Name="_CopySharedStl"
+    AfterTargets="Link"
+    Condition="'$(AndroidStl)' == 'c++_shared' AND '$(ConfigurationType)' == 'DynamicLibrary'">
+
+    <PropertyGroup>
+      <!-- STL library location varies by ABI -->
+      <_StlLibDir Condition="'$(AndroidAbi)' == 'arm64-v8a'">$(NdkSysroot)\usr\lib\aarch64-linux-android</_StlLibDir>
+      <_StlLibDir Condition="'$(AndroidAbi)' == 'armeabi-v7a'">$(NdkSysroot)\usr\lib\arm-linux-androideabi</_StlLibDir>
+      <_StlLibDir Condition="'$(AndroidAbi)' == 'x86_64'">$(NdkSysroot)\usr\lib\x86_64-linux-android</_StlLibDir>
+      <_StlLibDir Condition="'$(AndroidAbi)' == 'x86'">$(NdkSysroot)\usr\lib\i686-linux-android</_StlLibDir>
+      <_StlLibPath>$(_StlLibDir)\libc++_shared.so</_StlLibPath>
+    </PropertyGroup>
+
+    <Copy
+      SourceFiles="$(_StlLibPath)"
+      DestinationFolder="$(OutDir)"
+      SkipUnchangedFiles="true"
+      Condition="Exists('$(_StlLibPath)')" />
+
+    <Message
+      Text="Copied libc++_shared.so to $(OutDir)"
+      Condition="Exists('$(_StlLibPath)')"
+      Importance="Normal" />
+  </Target>
+
+  <!-- ============================================================
+       Single File Compile (Ctrl+F7)
+       ============================================================ -->
+  <Target Name="CompileSingleFile" Condition="'$(SelectedFiles)' != ''" DependsOnTargets="_PrepareForClCompile">
+    <Message Text="Compiling selected file(s) for $(AndroidAbi)..." Importance="High" />
+
+    <ItemGroup>
+      <_SelectedClCompile Include="@(ClCompile)"
+        Condition="'%(Identity)' == '$(SelectedFiles)' OR '%(FullPath)' == '$(SelectedFiles)'" />
+    </ItemGroup>
+
+    <!-- Per-file settings are read from _SelectedClCompile item metadata inside the task -->
+    <AndroidClCompileTask
+      Sources="@(_SelectedClCompile)"
+      CompilerPath="$(AndroidClangPath)"
+      Sysroot="$(NdkSysroot)"
+      TargetTriple="$(AndroidTargetTriple)"
+      AndroidAbi="$(AndroidAbi)"
+      ApiLevel="$(AndroidAPILevelNumber)"
+      ArchitectureFlags="$(AndroidArchFlags)"
+      ObjectFileDir="$(IntDir)"
+      TLogDirectory="$(TLogLocation)">
+      <Output TaskParameter="ObjectFiles" ItemName="_CompiledObject" />
+    </AndroidClCompileTask>
+
+    <Message Text="Compiled: @(_CompiledObject)" Importance="High" />
+  </Target>
+
+  <!-- ============================================================
+       Compile Single File (Alternative target name for VS compatibility)
+       ============================================================ -->
+  <Target Name="SelectiveCompile" DependsOnTargets="CompileSingleFile" />
+
+</Project>

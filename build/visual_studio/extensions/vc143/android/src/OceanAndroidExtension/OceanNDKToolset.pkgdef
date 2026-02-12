@@ -1,0 +1,73 @@
+; Ocean Android Extension - OceanNDK Platform Toolset Registration
+;
+; This .pkgdef file registers the Android platform and OceanNDK toolset with Visual Studio
+; so they appear in the Platform and Platform Toolset dropdowns in project properties.
+
+; ============================================================
+; Store extension path for MSBuild to find
+; ============================================================
+; VS-private registry location (uses $RootKey$ which includes instance ID)
+; Note: The extension also writes to HKCU\Software\OceanAndroidExtension at runtime
+; via OceanAndroidExtensionPackage.RegisterExtensionPathAsync() for MSBuild access.
+[$RootKey$\MSBuild\OceanAndroidExtension]
+"ExtensionPath"="$PackageFolder$"
+"ToolsetPath"="$PackageFolder$toolset\OceanNDK\"
+
+; ============================================================
+; Register Android as an available platform
+; ============================================================
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\Android]
+@="Android"
+"VCTargetsPath"="$PackageFolder$MSBuild\Microsoft\VC\v170\Platforms\Android\"
+
+; Platform properties for VS UI
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\Android\Properties]
+"PlatformDisplayName"="Android"
+"PlatformDescription"="Android Native Development Platform"
+
+; ============================================================
+; Register OceanNDK as a platform toolset
+; ============================================================
+[$RootKey$\MSBuild\ToolsVersions\17.0\OceanNDK]
+"VCTargetsPath"="$PackageFolder$MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\"
+
+; Register as available toolset for Android platform
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\Android\PlatformToolsets\OceanNDK]
+@="Ocean Android NDK Clang Toolset"
+"VCTargetsPath"="$PackageFolder$MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\"
+
+; Also register for standard platforms so projects using ARM64/x64 etc can use the toolset
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\ARM64\PlatformToolsets\OceanNDK]
+@="Ocean Android NDK Clang Toolset"
+"VCTargetsPath"="$PackageFolder$toolset\OceanNDK\"
+
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\ARM\PlatformToolsets\OceanNDK]
+@="Ocean Android NDK Clang Toolset"
+"VCTargetsPath"="$PackageFolder$toolset\OceanNDK\"
+
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\x64\PlatformToolsets\OceanNDK]
+@="Ocean Android NDK Clang Toolset"
+"VCTargetsPath"="$PackageFolder$toolset\OceanNDK\"
+
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\Win32\PlatformToolsets\OceanNDK]
+@="Ocean Android NDK Clang Toolset"
+"VCTargetsPath"="$PackageFolder$toolset\OceanNDK\"
+
+; Toolset properties for VS UI
+[$RootKey$\MSBuild\ToolsVersions\17.0\VCTargetsPath\Platforms\Android\PlatformToolsets\OceanNDK\Properties]
+"PlatformToolsetDisplayName"="Ocean Android NDK Clang"
+"PlatformToolsetDescription"="Ocean Android NDK Clang/LLVM Toolchain"
+
+; ============================================================
+; Property page schema registration
+; ============================================================
+[$RootKey$\MSBuild\SafePropertyPages\OceanNDK_General]
+@=""
+[$RootKey$\MSBuild\SafePropertyPages\OceanNDK_Clang]
+@=""
+[$RootKey$\MSBuild\SafePropertyPages\OceanNDK_Link]
+@=""
+[$RootKey$\MSBuild\SafePropertyPages\ClCompile]
+@=""
+[$RootKey$\MSBuild\SafePropertyPages\Link]
+@=""

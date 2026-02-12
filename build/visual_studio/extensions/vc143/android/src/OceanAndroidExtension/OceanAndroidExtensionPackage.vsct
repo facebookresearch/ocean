@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidOceanAndroidExtensionPackage">
+
+    <!-- Groups -->
+    <Groups>
+      <Group guid="guidOceanAndroidExtensionCmdSet" id="AndroidMenuGroup" priority="0x0600">
+        <Parent guid="guidOceanAndroidExtensionCmdSet" id="AndroidMenu"/>
+      </Group>
+      <Group guid="guidOceanAndroidExtensionCmdSet" id="AndroidToolWindowsGroup" priority="0x0700">
+        <Parent guid="guidOceanAndroidExtensionCmdSet" id="AndroidMenu"/>
+      </Group>
+    </Groups>
+
+    <!-- Menus -->
+    <Menus>
+      <Menu guid="guidOceanAndroidExtensionCmdSet" id="AndroidMenu" priority="0x700" type="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS"/>
+        <Strings>
+          <ButtonText>Ocean Android</ButtonText>
+          <CommandName>Ocean Android</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <!-- Buttons -->
+    <Buttons>
+      <!-- Deploy to Device -->
+      <Button guid="guidOceanAndroidExtensionCmdSet" id="DeployApkCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidOceanAndroidExtensionCmdSet" id="AndroidMenuGroup"/>
+        <Strings>
+          <ButtonText>Deploy &amp;&amp; Run</ButtonText>
+          <ToolTipText>Deploy APK to connected device and launch the app</ToolTipText>
+        </Strings>
+      </Button>
+
+      <!-- Device Explorer -->
+      <Button guid="guidOceanAndroidExtensionCmdSet" id="DeviceExplorerCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidOceanAndroidExtensionCmdSet" id="AndroidToolWindowsGroup"/>
+        <Strings>
+          <ButtonText>Device Explorer</ButtonText>
+          <ToolTipText>Browse connected Android devices</ToolTipText>
+        </Strings>
+      </Button>
+
+      <!-- Logcat -->
+      <Button guid="guidOceanAndroidExtensionCmdSet" id="LogcatCommandId" priority="0x0200" type="Button">
+        <Parent guid="guidOceanAndroidExtensionCmdSet" id="AndroidToolWindowsGroup"/>
+        <Strings>
+          <ButtonText>Logcat</ButtonText>
+          <ToolTipText>View Android device logs</ToolTipText>
+        </Strings>
+      </Button>
+
+      <!-- SDK Manager -->
+      <Button guid="guidOceanAndroidExtensionCmdSet" id="SdkManagerCommandId" priority="0x0300" type="Button">
+        <Parent guid="guidOceanAndroidExtensionCmdSet" id="AndroidToolWindowsGroup"/>
+        <Strings>
+          <ButtonText>SDK Manager</ButtonText>
+          <ToolTipText>Manage Android SDK components</ToolTipText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+  </Commands>
+
+  <Symbols>
+    <!-- Package GUID - must match OceanAndroidExtensionPackage.cs -->
+    <GuidSymbol name="guidOceanAndroidExtensionPackage" value="{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}" />
+
+    <!-- Command Set GUID - must match OceanAndroidExtensionPackage.cs -->
+    <GuidSymbol name="guidOceanAndroidExtensionCmdSet" value="{B2C3D4E5-F6A7-8901-BCDE-F12345678902}">
+      <!-- Menu IDs -->
+      <IDSymbol name="AndroidMenu" value="0x1000"/>
+      <IDSymbol name="AndroidMenuGroup" value="0x1100"/>
+      <IDSymbol name="AndroidToolWindowsGroup" value="0x1200"/>
+
+      <!-- Command IDs - must match OceanAndroidExtensionPackage.cs -->
+      <IDSymbol name="DeviceExplorerCommandId" value="0x0100"/>
+      <IDSymbol name="LogcatCommandId" value="0x0101"/>
+      <IDSymbol name="SdkManagerCommandId" value="0x0102"/>
+      <IDSymbol name="DeployApkCommandId" value="0x0103"/>
+      <IDSymbol name="AttachDebuggerCommandId" value="0x0104"/>
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

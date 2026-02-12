@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android Platform Definition - MSBuild Properties
+  Defines the "Android" platform for Visual Studio C++ projects.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       Platform Identification
+       ============================================================ -->
+  <PropertyGroup Label="Configuration">
+    <_PlatformName>Android</_PlatformName>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Default Platform Toolset
+       ============================================================ -->
+  <PropertyGroup Label="PlatformToolset">
+    <!-- Default to OceanNDK toolset if not specified -->
+    <PlatformToolset Condition="'$(PlatformToolset)' == ''">OceanNDK</PlatformToolset>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Platform Specific Paths
+       ============================================================ -->
+  <PropertyGroup Label="AndroidPlatformPaths">
+    <!-- Import toolset props based on PlatformToolset selection -->
+    <_AndroidToolsetPropsPath>$(MSBuildThisFileDirectory)PlatformToolsets\$(PlatformToolset)\Toolset.props</_AndroidToolsetPropsPath>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Available Configurations
+       ============================================================ -->
+  <ItemGroup>
+    <_AvailablePlatform Include="Android">
+      <Description>Android Native Platform</Description>
+    </_AvailablePlatform>
+  </ItemGroup>
+
+  <!-- ============================================================
+       Import Toolset Properties
+       ============================================================ -->
+  <Import Project="$(_AndroidToolsetPropsPath)" Condition="Exists('$(_AndroidToolsetPropsPath)')" />
+
+</Project>

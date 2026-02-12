@@ -1,0 +1,24 @@
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Android Native Library (C++)</Name>
+    <Description>A C++ shared library for Android using the NDK. Compiles directly with clang for optimal Visual Studio integration. Can be referenced by Android Application projects.</Description>
+    <Icon>icon.ico</Icon>
+    <ProjectType>VC</ProjectType>
+    <TemplateGroupID>Android</TemplateGroupID>
+    <LanguageTag>C++</LanguageTag>
+    <PlatformTag>Android</PlatformTag>
+    <ProjectTypeTag>Library</ProjectTypeTag>
+    <DefaultName>MyNativeLib</DefaultName>
+    <CreateNewFolder>true</CreateNewFolder>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <SortOrder>1010</SortOrder>
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="AndroidNative.vcxproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="false" TargetFileName="$safeprojectname$.vcxproj.filters">AndroidNative.vcxproj.filters</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="src\NativeLibrary.cpp">NativeLibrary.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="src\NativeLibrary.h">NativeLibrary.h</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

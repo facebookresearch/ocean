@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="app">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\java">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\res\layout">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\res\values">
+      <UniqueIdentifier>{E5B2F8E9-6B4F-4C2D-9E5A-7C8D6F3E2A1B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\res\drawable">
+      <UniqueIdentifier>{A3C4D5E6-7F8A-4B2C-9D0E-1F2A3B4C5D6E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\res\mipmap-anydpi-v26">
+      <UniqueIdentifier>{B4D5E6F7-8A9B-4C3D-0E1F-2A3B4C5D6E7F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gradle">
+      <UniqueIdentifier>{C5E6F7A8-9B0C-4D3E-1F2A-3B4C5D6E7F8A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Gradle build files in gradle subfolder -->
+    <None Include="gradle\build.gradle.kts">
+      <Filter>gradle</Filter>
+    </None>
+    <None Include="gradle\settings.gradle.kts">
+      <Filter>gradle</Filter>
+    </None>
+    <None Include="gradle\gradle.properties">
+      <Filter>gradle</Filter>
+    </None>
+    <None Include="gradle\gradlew">
+      <Filter>gradle</Filter>
+    </None>
+    <None Include="gradle\gradlew.bat">
+      <Filter>gradle</Filter>
+    </None>
+    <!-- App module build file -->
+    <None Include="app\build.gradle.kts">
+      <Filter>app</Filter>
+    </None>
+    <!-- Java sources -->
+    <None Include="app\java\MainActivity.java">
+      <Filter>app\java</Filter>
+    </None>
+    <!-- Android manifest -->
+    <AndroidManifest Include="app\AndroidManifest.xml">
+      <Filter>app</Filter>
+    </AndroidManifest>
+    <!-- Layout resources -->
+    <None Include="app\res\layout\activity_main.xml">
+      <Filter>app\res\layout</Filter>
+    </None>
+    <!-- Values resources -->
+    <None Include="app\res\values\strings.xml">
+      <Filter>app\res\values</Filter>
+    </None>
+    <None Include="app\res\values\colors.xml">
+      <Filter>app\res\values</Filter>
+    </None>
+    <None Include="app\res\values\themes.xml">
+      <Filter>app\res\values</Filter>
+    </None>
+    <!-- Drawable resources -->
+    <None Include="app\res\drawable\ic_launcher_background.xml">
+      <Filter>app\res\drawable</Filter>
+    </None>
+    <None Include="app\res\drawable\ic_launcher_foreground.xml">
+      <Filter>app\res\drawable</Filter>
+    </None>
+    <!-- Mipmap resources -->
+    <None Include="app\res\mipmap-anydpi-v26\ic_launcher.xml">
+      <Filter>app\res\mipmap-anydpi-v26</Filter>
+    </None>
+    <None Include="app\res\mipmap-anydpi-v26\ic_launcher_round.xml">
+      <Filter>app\res\mipmap-anydpi-v26</Filter>
+    </None>
+  </ItemGroup>
+</Project>

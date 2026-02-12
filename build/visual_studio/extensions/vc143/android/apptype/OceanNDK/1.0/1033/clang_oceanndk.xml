@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - C/C++ (Clang) Property Page
+  Defines compiler settings for Android NDK clang++.
+-->
+<Rule Name="ClCompile"
+      DisplayName="C/C++ (Clang)"
+      PageTemplate="tool"
+      Order="20"
+      SwitchPrefix="-"
+      xmlns="http://schemas.microsoft.com/build/2009/properties"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+    <Category Name="Optimization" DisplayName="Optimization" />
+    <Category Name="Preprocessor" DisplayName="Preprocessor" />
+    <Category Name="CodeGeneration" DisplayName="Code Generation" />
+    <Category Name="Language" DisplayName="Language" />
+    <Category Name="Advanced" DisplayName="Advanced" />
+    <Category Name="Command Line" DisplayName="Command Line" Subtype="CommandLine">
+      <Category.DisplayName>
+        <sys:String>Command Line</sys:String>
+      </Category.DisplayName>
+    </Category>
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="ClCompile" Label="" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringListProperty Name="AdditionalIncludeDirectories"
+                      DisplayName="Additional Include Directories"
+                      Description="Specifies one or more directories to add to the include path. Use semicolons to separate multiple paths."
+                      Category="General"
+                      Switch="I"
+                      Subtype="folder"
+                      F1Keyword="VC.Project.VCCLCompilerTool.AdditionalIncludeDirectories" />
+
+  <EnumProperty Name="WarningLevel"
+                DisplayName="Warning Level"
+                Description="Select how strict the compiler should be about code errors."
+                Category="General"
+                F1Keyword="VC.Project.VCCLCompilerTool.WarningLevel">
+    <EnumValue Name="TurnOffAllWarnings" DisplayName="Turn off all warnings (-w)" Switch="w" />
+    <EnumValue Name="Level1" DisplayName="Enable warnings (-Wall)" Switch="Wall" />
+    <EnumValue Name="Level2" DisplayName="Level 2" Switch="Wall" />
+    <EnumValue Name="Level3" DisplayName="Level 3 (-Wall)" Switch="Wall" />
+    <EnumValue Name="Level4" DisplayName="Level 4 (-Wall -Wextra)" Switch="Wall" />
+    <EnumValue Name="EnableAllWarnings" DisplayName="Enable all warnings (-Weverything)" Switch="Weverything" />
+  </EnumProperty>
+
+  <BoolProperty Name="TreatWarningAsError"
+                DisplayName="Treat Warnings As Errors"
+                Description="Treat all warnings as errors."
+                Category="General"
+                Switch="Werror"
+                F1Keyword="VC.Project.VCCLCompilerTool.WarnAsError" />
+
+  <StringListProperty Name="AdditionalOptions"
+                      DisplayName="Additional Options"
+                      Description="Additional compiler command line options."
+                      Category="General"
+                      F1Keyword="VC.Project.VCCLCompilerTool.AdditionalOptions" />
+
+  <!-- Optimization Category -->
+  <EnumProperty Name="Optimization"
+                DisplayName="Optimization"
+                Description="Select the optimization level for the build."
+                Category="Optimization"
+                F1Keyword="VC.Project.VCCLCompilerTool.Optimization">
+    <EnumValue Name="Disabled" DisplayName="Disabled (-O0)" Switch="O0" Description="No optimization." />
+    <EnumValue Name="MinSpace" DisplayName="Minimize Size (-Os)" Switch="Os" Description="Optimize for size." />
+    <EnumValue Name="MaxSpeed" DisplayName="Maximize Speed (-O2)" Switch="O2" Description="Optimize for speed." />
+    <EnumValue Name="Full" DisplayName="Full Optimization (-O3)" Switch="O3" Description="Aggressive optimizations." />
+    <EnumValue Name="Fast" DisplayName="Fast (-Ofast)" Switch="Ofast" Description="Aggressive optimizations that may break standards compliance." />
+  </EnumProperty>
+
+  <BoolProperty Name="OmitFramePointers"
+                DisplayName="Omit Frame Pointer"
+                Description="Suppresses creation of frame pointers on the call stack."
+                Category="Optimization"
+                Switch="fomit-frame-pointer"
+                ReverseSwitch="fno-omit-frame-pointer"
+                F1Keyword="VC.Project.VCCLCompilerTool.OmitFramePointers" />
+
+  <!-- Preprocessor Category -->
+  <StringListProperty Name="PreprocessorDefinitions"
+                      DisplayName="Preprocessor Definitions"
+                      Description="Defines a preprocessing symbol for your source file. Use semicolons to separate multiple definitions."
+                      Category="Preprocessor"
+                      Switch="D"
+                      F1Keyword="VC.Project.VCCLCompilerTool.PreprocessorDefinitions" />
+
+  <StringListProperty Name="UndefinePreprocessorDefinitions"
+                      DisplayName="Undefine Preprocessor Definitions"
+                      Description="Specifies one or more preprocessor undefines."
+                      Category="Preprocessor"
+                      Switch="U"
+                      F1Keyword="VC.Project.VCCLCompilerTool.UndefinePreprocessorDefinitions" />
+
+  <!-- Code Generation Category -->
+  <EnumProperty Name="DebugInformationFormat"
+                DisplayName="Debug Information Format"
+                Description="Specifies the type of debugging information generated by the compiler."
+                Category="CodeGeneration"
+                F1Keyword="VC.Project.VCCLCompilerTool.DebugInformationFormat">
+    <EnumValue Name="None" DisplayName="None" Description="Produces no debugging information." />
+    <EnumValue Name="LineNumber" DisplayName="Line Number Tables (-gline-tables-only)" Switch="gline-tables-only" Description="Line number tables only." />
+    <EnumValue Name="FullDebug" DisplayName="Full Debug Information (-g)" Switch="g" Description="Full DWARF debug information." />
+  </EnumProperty>
+
+  <BoolProperty Name="PositionIndependentCode"
+                DisplayName="Position Independent Code"
+                Description="Generate position-independent code (PIC). Required for shared libraries."
+                Category="CodeGeneration"
+                Switch="fPIC"
+                F1Keyword="VC.Project.VCConfiguration.PositionIndependentCode" />
+
+  <BoolProperty Name="StackProtector"
+                DisplayName="Enable Stack Protector"
+                Description="Enable buffer overflow detection."
+                Category="CodeGeneration"
+                Switch="fstack-protector-strong"
+                F1Keyword="VC.Project.VCCLCompilerTool.BufferSecurityCheck" />
+
+  <!-- Language Category -->
+  <EnumProperty Name="LanguageStandard"
+                DisplayName="C++ Language Standard"
+                Description="Specifies the C++ language standard to use."
+                Category="Language"
+                F1Keyword="VC.Project.VCCLCompilerTool.CppLanguageStandard">
+    <EnumValue Name="c++11" DisplayName="C++11 (-std=c++11)" Switch="std=c++11" Description="ISO C++11 standard." />
+    <EnumValue Name="c++14" DisplayName="C++14 (-std=c++14)" Switch="std=c++14" Description="ISO C++14 standard." />
+    <EnumValue Name="c++17" DisplayName="C++17 (-std=c++17)" Switch="std=c++17" Description="ISO C++17 standard." />
+    <EnumValue Name="c++20" DisplayName="C++20 (-std=c++20)" Switch="std=c++20" Description="ISO C++20 standard." />
+    <EnumValue Name="c++2b" DisplayName="C++23 (Preview) (-std=c++2b)" Switch="std=c++2b" Description="ISO C++23 standard (preview)." />
+    <EnumValue Name="gnu++17" DisplayName="GNU C++17 (-std=gnu++17)" Switch="std=gnu++17" Description="GNU C++17 with extensions." />
+    <EnumValue Name="gnu++20" DisplayName="GNU C++20 (-std=gnu++20)" Switch="std=gnu++20" Description="GNU C++20 with extensions." />
+  </EnumProperty>
+
+  <EnumProperty Name="LanguageStandard_C"
+                DisplayName="C Language Standard"
+                Description="Specifies the C language standard to use."
+                Category="Language"
+                F1Keyword="VC.Project.VCCLCompilerTool.CLanguageStandard">
+    <EnumValue Name="c99" DisplayName="C99 (-std=c99)" Switch="std=c99" Description="ISO C99 standard." />
+    <EnumValue Name="c11" DisplayName="C11 (-std=c11)" Switch="std=c11" Description="ISO C11 standard." />
+    <EnumValue Name="c17" DisplayName="C17 (-std=c17)" Switch="std=c17" Description="ISO C17 standard." />
+    <EnumValue Name="gnu11" DisplayName="GNU C11 (-std=gnu11)" Switch="std=gnu11" Description="GNU C11 with extensions." />
+    <EnumValue Name="gnu17" DisplayName="GNU C17 (-std=gnu17)" Switch="std=gnu17" Description="GNU C17 with extensions." />
+  </EnumProperty>
+
+  <BoolProperty Name="RuntimeTypeInfo"
+                DisplayName="Enable Run-Time Type Information"
+                Description="Generates code to check object types at run time (RTTI)."
+                Category="Language"
+                Switch="frtti"
+                ReverseSwitch="fno-rtti"
+                F1Keyword="VC.Project.VCCLCompilerTool.RuntimeTypeInfo" />
+
+  <BoolProperty Name="ExceptionHandling"
+                DisplayName="Enable C++ Exceptions"
+                Description="Enable C++ exception handling."
+                Category="Language"
+                Switch="fexceptions"
+                ReverseSwitch="fno-exceptions"
+                F1Keyword="VC.Project.VCCLCompilerTool.ExceptionHandling" />
+
+  <!-- Advanced Category -->
+  <StringListProperty Name="ForcedIncludeFiles"
+                      DisplayName="Forced Include Files"
+                      Description="One or more forced include files."
+                      Category="Advanced"
+                      Switch="include"
+                      F1Keyword="VC.Project.VCCLCompilerTool.ForcedIncludeFiles" />
+
+  <StringProperty Name="ObjectFileName"
+                  DisplayName="Object File Name"
+                  Description="Specifies a name to override the default object file name."
+                  Category="Advanced"
+                  Switch="o"
+                  F1Keyword="VC.Project.VCCLCompilerTool.ObjectFile" />
+
+  <BoolProperty Name="ShowIncludes"
+                DisplayName="Show Includes"
+                Description="Show header file inclusion information during compilation."
+                Category="Advanced"
+                Switch="H"
+                F1Keyword="VC.Project.VCCLCompilerTool.ShowIncludes" />
+
+  <!-- Command Line (read-only display) -->
+  <StringProperty Name="CommandLineTemplate"
+                  DisplayName="Command Line"
+                  Category="Command Line"
+                  IncludeInCommandLine="false"
+                  Visible="false" />
+
+  <StringProperty Name="AdditionalOptions"
+                  DisplayName="Additional Options"
+                  Description="Additional options to pass to the compiler."
+                  Category="Command Line" />
+
+</Rule>

@@ -1,0 +1,34 @@
+<Project>
+  <PropertyGroup>
+    <!-- Ocean root path (relative to this file: android -> vc143 -> extensions -> visual_studio -> build -> ocean) -->
+    <OceanRootPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..\..\..\..\..'))</OceanRootPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Lowercase configuration folder (debug/release) -->
+    <ConfigurationLower>$(Configuration.ToLower())</ConfigurationLower>
+
+    <!-- Base paths -->
+    <ExtensionOutputRoot>$(OceanRootPath)bin\extensions\android\</ExtensionOutputRoot>
+    <ExtensionIntermediateRoot>$(OceanRootPath)bin\tmp\extensions\android\oceanandroidextension\</ExtensionIntermediateRoot>
+
+    <!-- Default: All projects output to tmp folder (treated as intermediate) -->
+    <!-- The VSIX project (OceanAndroidExtension) overrides this to the final output location -->
+    <OutputPath>$(ExtensionIntermediateRoot)$(MSBuildProjectName)\$(ConfigurationLower)\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <IntermediateOutputPath>$(ExtensionIntermediateRoot)$(MSBuildProjectName)\$(ConfigurationLower)\</IntermediateOutputPath>
+    <IntDir>$(IntermediateOutputPath)</IntDir>
+    <BaseIntermediateOutputPath>$(IntermediateOutputPath)</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- SDK-style project settings - only apply to non-template projects -->
+  <!-- Template packaging projects use old-style csproj and don't support these properties -->
+  <PropertyGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Android Manifest Item Type Schema
+
+  Defines the AndroidManifest item type for Visual Studio Property Pages.
+  This allows users to change a file's item type to "Android Manifest" via
+  right-click -> Properties -> Item Type dropdown in Solution Explorer.
+
+  No FileExtension mapping is included intentionally - not all .xml files
+  should become AndroidManifest items. Users must explicitly set the item type.
+-->
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <!-- Register AndroidManifest as a known item type in the Item Type dropdown -->
+  <ItemType Name="AndroidManifest" DisplayName="Android Manifest" />
+
+  <!-- Rule definition for AndroidManifest items -->
+  <Rule Name="AndroidManifest"
+        DisplayName="Android Manifest"
+        PageTemplate="generic"
+        Order="200">
+
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile"
+                  ItemType="AndroidManifest"
+                  HasConfigurationCondition="false" />
+    </Rule.DataSource>
+
+    <Rule.Categories>
+      <Category Name="General" DisplayName="General" />
+    </Rule.Categories>
+
+    <!-- Standard hidden properties for file identity tracking -->
+    <StringProperty Name="Identity" Visible="false" />
+    <StringProperty Name="FullPath" Visible="false" />
+    <StringProperty Name="FileNameAndExtension" Visible="false" />
+  </Rule>
+
+</ProjectSchemaDefinitions>

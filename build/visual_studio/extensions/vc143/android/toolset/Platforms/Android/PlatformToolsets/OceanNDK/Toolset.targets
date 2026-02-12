@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - Targets Wrapper
+  Imports the main toolset targets from the canonical location.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Determine base path -->
+  <PropertyGroup>
+    <_OceanExtensionBase Condition="'$(OCEAN_ANDROID_EXTENSION_PATH)' != ''">$(OCEAN_ANDROID_EXTENSION_PATH)</_OceanExtensionBase>
+    <_OceanExtensionBase Condition="'$(_OceanExtensionBase)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\..\..\..</_OceanExtensionBase>
+  </PropertyGroup>
+
+  <!-- Import main toolset targets -->
+  <Import Project="$(_OceanExtensionBase)\toolset\OceanNDK\Toolset.targets"
+          Condition="Exists('$(_OceanExtensionBase)\toolset\OceanNDK\Toolset.targets')" />
+
+  <!-- Fallback: direct import if deployed alongside -->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\..\OceanNDK\Toolset.targets"
+          Condition="!Exists('$(_OceanExtensionBase)\toolset\OceanNDK\Toolset.targets') AND Exists('$(MSBuildThisFileDirectory)..\..\..\..\OceanNDK\Toolset.targets')" />
+
+</Project>

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Ocean Android Extension",
+  "classifications": ["Android", "Mobile", "Library", "Java"],
+  "identity": "OceanAndroidExtension.AndroidJavaLibrary",
+  "name": "Android Java Library",
+  "shortName": "androidjavalib",
+  "tags": {
+    "language": "Java",
+    "type": "project"
+  },
+  "sourceName": "MyJavaLib",
+  "preferNameDirectory": true,
+  "description": "A Java/Kotlin library for Android that can be referenced by other libraries or applications."
+}

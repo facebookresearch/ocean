@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ocean Android Tools Build Configuration -->
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- VS SDK -->
+    <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" />
+    <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
+    <PackageVersion Include="Microsoft.VisualStudio.ProjectSystem" Version="17.0.667-pre" />
+    <PackageVersion Include="Microsoft.VisualStudio.LanguageServer.Client" Version="17.0.5158" />
+
+    <!-- Build -->
+    <PackageVersion Include="Microsoft.Build.Framework" Version="17.0.0" />
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
+
+    <!-- Runtime -->
+    <PackageVersion Include="StreamJsonRpc" Version="2.10.44" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+
+    <!-- Testing -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageVersion Include="xunit" Version="2.6.5" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.6" />
+    <PackageVersion Include="Moq" Version="4.20.70" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,39 @@
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Android Java Library</Name>
+    <Description>A Java/Kotlin library for Android that produces an AAR (Android Archive). Can be referenced by Android Application projects or other libraries. Builds with Gradle to produce a distributable AAR file.</Description>
+    <Icon>icon.ico</Icon>
+    <ProjectType>VC</ProjectType>
+    <TemplateGroupID>Android</TemplateGroupID>
+    <LanguageTag>Java</LanguageTag>
+    <PlatformTag>Android</PlatformTag>
+    <ProjectTypeTag>Library</ProjectTypeTag>
+    <DefaultName>MyJavaLib</DefaultName>
+    <CreateNewFolder>true</CreateNewFolder>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <SortOrder>1020</SortOrder>
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="AndroidLibrary.vcxproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.vcxproj.filters">AndroidLibrary.vcxproj.filters</ProjectItem>
+      <Folder Name="lib" TargetFolderName="lib">
+        <ProjectItem ReplaceParameters="true" TargetFileName="build.gradle.kts">build.gradle.kts</ProjectItem>
+        <Folder Name="src" TargetFolderName="src">
+          <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.java">MyLibrary.java</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="gradle" TargetFolderName="gradle">
+        <ProjectItem ReplaceParameters="true" TargetFileName="build.gradle.kts">build.gradle.kts</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="settings.gradle.kts">settings.gradle.kts</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="gradle.properties">gradle.properties</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="gradlew">gradlew</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="gradlew.bat">gradlew.bat</ProjectItem>
+        <Folder Name="wrapper" TargetFolderName="wrapper">
+          <ProjectItem ReplaceParameters="false" TargetFileName="gradle-wrapper.jar">gradle-wrapper.jar</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="gradle-wrapper.properties">gradle-wrapper.properties</ProjectItem>
+        </Folder>
+      </Folder>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

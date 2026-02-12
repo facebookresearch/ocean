@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - General Property Page Schema
+  Defines the "General" property page for Android NDK projects in Visual Studio.
+-->
+<Rule Name="OceanNDK_General"
+      DisplayName="General"
+      Description="General Android NDK build settings"
+      PageTemplate="generic"
+      Order="10"
+      SwitchPrefix="-"
+      xmlns="http://schemas.microsoft.com/build/2009/properties"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General project settings" />
+    <Category Name="Android" DisplayName="Android" Description="Android-specific settings" />
+    <Category Name="ProjectDefaults" DisplayName="Project Defaults" Description="Default project settings" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringProperty Name="OutDir"
+                  DisplayName="Output Directory"
+                  Description="Specifies the path to the output file directory."
+                  Category="General"
+                  Default="$(ProjectDir)$(Configuration)\$(AndroidAbi)\"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.OutputDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="IntDir"
+                  DisplayName="Intermediate Directory"
+                  Description="Specifies the path to the intermediate file directory."
+                  Category="General"
+                  Default="$(ProjectDir)obj\$(Configuration)\$(AndroidAbi)\"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.IntermediateDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="TargetName"
+                  DisplayName="Target Name"
+                  Description="Specifies the name of the output file (without extension)."
+                  Category="General"
+                  Default="$(ProjectName)"
+                  F1Keyword="VC.Project.VCConfiguration.TargetName">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <EnumProperty Name="ConfigurationType"
+                DisplayName="Configuration Type"
+                Description="Specifies the type of output this configuration generates."
+                Category="General"
+                F1Keyword="VC.Project.VCConfiguration.ConfigurationType">
+    <EnumValue Name="DynamicLibrary" DisplayName="Dynamic Library (.so)" Description="Build a shared library (.so file)" />
+    <EnumValue Name="StaticLibrary" DisplayName="Static Library (.a)" Description="Build a static library (.a file)" />
+  </EnumProperty>
+
+  <!-- Android Category -->
+  <IntProperty Name="AndroidApiLevel"
+               DisplayName="Target API Level"
+               Description="Android API level to target. This sets the minimum Android version. (e.g., 24 = Android 7.0 Nougat)"
+               Category="Android"
+               Default="24"
+               F1Keyword="VC.Project.AndroidApiLevel">
+    <IntProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </IntProperty.DataSource>
+  </IntProperty>
+
+  <EnumProperty Name="AndroidStl"
+                DisplayName="C++ Standard Library"
+                Description="Specifies the C++ STL implementation to use."
+                Category="Android"
+                Default="c++_shared"
+                F1Keyword="VC.Project.AndroidStl">
+    <EnumValue Name="c++_shared" DisplayName="LLVM libc++ Shared (c++_shared)" Description="LLVM's libc++ as a shared library. Recommended for most projects." />
+    <EnumValue Name="c++_static" DisplayName="LLVM libc++ Static (c++_static)" Description="LLVM's libc++ as a static library. Use when building a single shared library." />
+    <EnumValue Name="system" DisplayName="System STL" Description="Minimal system C++ runtime. Limited C++ features." />
+    <EnumValue Name="none" DisplayName="No C++ STL" Description="No C++ standard library support." />
+  </EnumProperty>
+
+  <EnumProperty Name="AndroidCppStandard"
+                DisplayName="C++ Language Standard"
+                Description="The C++ language standard to use for compilation."
+                Category="Android"
+                Default="c++17"
+                F1Keyword="VC.Project.AndroidCppStandard">
+    <EnumValue Name="c++11" DisplayName="C++11" Description="ISO C++11 Standard" />
+    <EnumValue Name="c++14" DisplayName="C++14" Description="ISO C++14 Standard" />
+    <EnumValue Name="c++17" DisplayName="C++17" Description="ISO C++17 Standard" />
+    <EnumValue Name="c++20" DisplayName="C++20" Description="ISO C++20 Standard" />
+    <EnumValue Name="c++23" DisplayName="C++23" Description="ISO C++23 Standard (experimental)" />
+    <EnumValue Name="gnu++17" DisplayName="GNU C++17" Description="GNU dialect of C++17" />
+    <EnumValue Name="gnu++20" DisplayName="GNU C++20" Description="GNU dialect of C++20" />
+  </EnumProperty>
+
+  <EnumProperty Name="AndroidCStandard"
+                DisplayName="C Language Standard"
+                Description="The C language standard to use for compilation."
+                Category="Android"
+                Default="c11"
+                F1Keyword="VC.Project.AndroidCStandard">
+    <EnumValue Name="c99" DisplayName="C99" Description="ISO C99 Standard" />
+    <EnumValue Name="c11" DisplayName="C11" Description="ISO C11 Standard" />
+    <EnumValue Name="c17" DisplayName="C17" Description="ISO C17 Standard" />
+    <EnumValue Name="gnu11" DisplayName="GNU C11" Description="GNU dialect of C11" />
+    <EnumValue Name="gnu17" DisplayName="GNU C17" Description="GNU dialect of C17" />
+  </EnumProperty>
+
+  <BoolProperty Name="AndroidEnableRtti"
+                DisplayName="Enable RTTI"
+                Description="Enable Run-Time Type Information (dynamic_cast, typeid)."
+                Category="Android"
+                Default="true"
+                F1Keyword="VC.Project.AndroidEnableRtti" />
+
+  <BoolProperty Name="AndroidEnableExceptions"
+                DisplayName="Enable C++ Exceptions"
+                Description="Enable C++ exception handling (try/catch/throw)."
+                Category="Android"
+                Default="true"
+                F1Keyword="VC.Project.AndroidEnableExceptions" />
+
+  <BoolProperty Name="AndroidPositionIndependentCode"
+                DisplayName="Position Independent Code"
+                Description="Generate position-independent code (-fPIC). Required for shared libraries."
+                Category="Android"
+                Default="true"
+                F1Keyword="VC.Project.AndroidPositionIndependentCode" />
+
+  <BoolProperty Name="AndroidThumbMode"
+                DisplayName="Thumb Mode (ARM only)"
+                Description="Generate Thumb instructions for ARM targets. Produces smaller code."
+                Category="Android"
+                Default="false"
+                F1Keyword="VC.Project.AndroidThumbMode" />
+
+  <!-- Project Defaults Category -->
+  <StringProperty Name="AndroidNdkPath"
+                  DisplayName="NDK Path"
+                  Description="Path to the Android NDK installation. Leave empty to use environment variables (ANDROID_NDK_HOME, ANDROID_NDK_ROOT)."
+                  Category="ProjectDefaults"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.AndroidNdkPath">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="AndroidSdkPath"
+                  DisplayName="SDK Path"
+                  Description="Path to the Android SDK installation. Leave empty to use environment variables (ANDROID_HOME, ANDROID_SDK_ROOT)."
+                  Category="ProjectDefaults"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.AndroidSdkPath">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="AndroidNdkVersion"
+                  DisplayName="NDK Version"
+                  Description="Specific NDK version to use (e.g., 26.1.10909125). Leave empty to use the latest installed version."
+                  Category="ProjectDefaults"
+                  F1Keyword="VC.Project.AndroidNdkVersion">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+</Rule>

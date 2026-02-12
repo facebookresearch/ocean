@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OceanAndroidExtension</RootNamespace>
+    <AssemblyName>OceanAndroidExtension</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <!-- Suppress NU1603: Transitive dependency version mismatch in VS SDK packages -->
+    <NoWarn>$(NoWarn);NU1603</NoWarn>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
+  </PropertyGroup>
+  <!-- Configuration-specific settings (OutputPath inherited from Directory.Build.props) -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <!-- PackageReference without Version - uses Central Package Management -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client" />
+    <PackageReference Include="StreamJsonRpc" />
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OceanAndroidExtension.BuildTasks\OceanAndroidExtension.BuildTasks.csproj">
+      <Name>OceanAndroidExtension.BuildTasks</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\OceanAndroidExtension.LanguageService\OceanAndroidExtension.LanguageService.csproj">
+      <Name>OceanAndroidExtension.LanguageService</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <!-- Project Templates -->
+    <ProjectReference Include="..\..\templates\AndroidApplication\AndroidApplicationTemplate.csproj">
+      <Project>{B1C2D3E4-F5A6-7890-ABCD-111111111111}</Project>
+      <Name>AndroidApplicationTemplate</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\..\templates\AndroidNativeLibrary\AndroidNativeLibraryTemplate.csproj">
+      <Project>{B1C2D3E4-F5A6-7890-ABCD-222222222222}</Project>
+      <Name>AndroidNativeLibraryTemplate</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\..\templates\AndroidLibrary\AndroidLibraryTemplate.csproj">
+      <Project>{B1C2D3E4-F5A6-7890-ABCD-333333333333}</Project>
+      <Name>AndroidLibraryTemplate</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <!-- VSCT Command Table for menus -->
+  <ItemGroup>
+    <VSCTCompile Include="OceanAndroidExtensionPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\build\*.props" Condition="Exists('..\..\build')">
+      <Link>Build\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\build\*.targets" Condition="Exists('..\..\build')">
+      <Link>Build\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- OceanNDK Application Type Files -->
+  <ItemGroup>
+    <!-- Application Type core files -->
+    <Content Include="..\..\apptype\OceanNDK\1.0\Default.props">
+      <Link>apptype\OceanNDK\1.0\Default.props</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\apptype\OceanNDK\1.0\OceanNDK.Common.props">
+      <Link>apptype\OceanNDK\1.0\OceanNDK.Common.props</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\apptype\OceanNDK\1.0\OceanNDK.Common.targets">
+      <Link>apptype\OceanNDK\1.0\OceanNDK.Common.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- Property pages (1033 locale) -->
+    <Content Include="..\..\apptype\OceanNDK\1.0\1033\*.xml">
+      <Link>apptype\OceanNDK\1.0\1033\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- Platform files -->
+    <Content Include="..\..\apptype\OceanNDK\1.0\Platforms\**\*.*">
+      <Link>apptype\OceanNDK\1.0\Platforms\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- OceanNDK Toolset Files (legacy, kept for compatibility) -->
+  <ItemGroup>
+    <!-- Toolset core files -->
+    <Content Include="..\..\toolset\OceanNDK\Toolset.props">
+      <Link>toolset\OceanNDK\Toolset.props</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\toolset\OceanNDK\Toolset.targets">
+      <Link>toolset\OceanNDK\Toolset.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\toolset\OceanNDK\ImportBefore\*.props" Condition="Exists('..\..\toolset\OceanNDK\ImportBefore')">
+      <Link>toolset\OceanNDK\ImportBefore\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- Property page schemas inside OceanNDK folder -->
+    <Content Include="..\..\toolset\OceanNDK\PropertyPages\*.xml" Condition="Exists('..\..\toolset\OceanNDK\PropertyPages')">
+      <Link>toolset\OceanNDK\PropertyPages\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- Property page schemas at root level (for backwards compatibility) -->
+    <Content Include="..\..\toolset\PropertyPages\*.xml" Condition="Exists('..\..\toolset\PropertyPages')">
+      <Link>toolset\PropertyPages\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- OceanAndroidApp targets - for Android app projects with native library references -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\OceanAndroidApp\OceanAndroidApp.targets">
+      <Link>toolset\OceanAndroidApp\OceanAndroidApp.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- OceanAndroidApp Property Pages (AndroidManifest item type) -->
+    <Content Include="..\..\toolset\OceanAndroidApp\PropertyPages\*.xml" Condition="Exists('..\..\toolset\OceanAndroidApp\PropertyPages')">
+      <Link>toolset\OceanAndroidApp\PropertyPages\%(Filename)%(Extension)</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- OceanJavaLib property pages - for Android Java Library projects -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\OceanJavaLib\OceanJavaLib.General.xml">
+      <Link>toolset\OceanJavaLib\OceanJavaLib.General.xml</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- JavaStaging targets - shared Java source staging logic for app and library projects -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\JavaStaging\JavaStaging.targets">
+      <Link>toolset\JavaStaging\JavaStaging.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\GradleWrapper\gradle-wrapper.jar.sha256">
+      <Link>toolset\GradleWrapper\gradle-wrapper.jar.sha256</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- Additional pkgdef for toolset registration -->
+  <ItemGroup>
+    <Content Include="OceanNDKToolset.pkgdef">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Debug\AndroidDebugEngine.cs" />
+    <Compile Include="Debug\AndroidDebugLaunchProvider.cs" />
+    <Compile Include="Debug\JdwpDebugAdapter.cs" />
+    <Compile Include="Debug\LldbDebugAdapter.cs" />
+    <Compile Include="Debug\NativeDebugEngine.cs" />
+    <Compile Include="Deploy\AdbManager.cs" />
+    <Compile Include="Deploy\EmulatorManager.cs" />
+    <Compile Include="OceanAndroidExtensionPackage.cs" />
+    <Compile Include="Options\AndroidSdkOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProjectSystem\AndroidApplicationProject.cs" />
+    <Compile Include="ProjectSystem\AndroidLibraryProject.cs" />
+    <Compile Include="ProjectSystem\AndroidNativeProject.cs" />
+    <Compile Include="Services\AdbService.cs" />
+    <Compile Include="Services\OutputWindowService.cs" />
+    <Compile Include="Services\SdkLocatorService.cs" />
+    <Compile Include="ToolWindows\DeviceExplorerWindow.cs" />
+    <Compile Include="ToolWindows\LogcatWindow.cs" />
+    <Compile Include="ToolWindows\SdkManagerWindow.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- Required target for Microsoft.VsSDK.targets - defines items to include in VSIX -->
+  <Target Name="IncludeVSIXItems" />
+  <!-- Set VsixOutputDir after VSSDK targets are imported -->
+  <PropertyGroup>
+    <VsixOutputDir>$(ExtensionOutputRoot)$(ConfigurationLower)\</VsixOutputDir>
+  </PropertyGroup>
+  <!-- Copy the VSIX to the clean output folder after build -->
+  <Target Name="CopyVsixToOutputFolder" AfterTargets="CreateVsixContainer" Condition="'$(VsixOutputDir)' != ''">
+    <MakeDir Directories="$(VsixOutputDir)" />
+    <Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(VsixOutputDir)" />
+    <Message Importance="High" Text="VSIX copied to: $(VsixOutputDir)$(TargetName).vsix" />
+  </Target>
+</Project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Toolset - Stub for x64 Platform
+  Imports the main toolset targets using registry path.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Import main toolset targets using registry path set by VSIX extension -->
+  <PropertyGroup>
+    <_OceanNdkToolsetPath Condition="'$(_OceanNdkToolsetPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ToolsetPath', '', RegistryView.Default))</_OceanNdkToolsetPath>
+  </PropertyGroup>
+  <Import Project="$(_OceanNdkToolsetPath)Toolset.targets" Condition="'$(_OceanNdkToolsetPath)' != '' AND Exists('$(_OceanNdkToolsetPath)Toolset.targets')" />
+
+</Project>

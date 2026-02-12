@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Toolset - Stub for ARM64 Platform
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This stub file is required for VS to recognize the toolset under this platform -->
+</Project>

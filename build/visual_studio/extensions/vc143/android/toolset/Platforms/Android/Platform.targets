@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android Platform Definition - MSBuild Targets
+  Provides platform-level build targets for Android projects.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       Platform Specific Target Paths
+       ============================================================ -->
+  <PropertyGroup>
+    <_AndroidToolsetTargetsPath>$(MSBuildThisFileDirectory)PlatformToolsets\$(PlatformToolset)\Toolset.targets</_AndroidToolsetTargetsPath>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Import Toolset Targets
+       ============================================================ -->
+  <Import Project="$(_AndroidToolsetTargetsPath)" Condition="Exists('$(_AndroidToolsetTargetsPath)')" />
+
+  <!-- ============================================================
+       Platform Validation
+       ============================================================ -->
+  <Target Name="_ValidateAndroidPlatform" BeforeTargets="PrepareForBuild">
+    <Error
+      Condition="!Exists('$(_AndroidToolsetTargetsPath)')"
+      Text="Android platform toolset '$(PlatformToolset)' not found. Expected: $(_AndroidToolsetTargetsPath)" />
+
+    <Message
+      Text="Building for Android Platform with $(PlatformToolset) toolset"
+      Importance="Low" />
+  </Target>
+
+</Project>

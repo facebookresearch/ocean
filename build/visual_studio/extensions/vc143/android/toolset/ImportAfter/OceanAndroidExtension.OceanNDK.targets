@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - OceanNDK Toolset Import Hook
+
+  This file is deployed to MSBuild's ImportAfter directory and is automatically
+  imported after Microsoft.Cpp.targets. It detects when OceanNDK toolset is
+  selected and imports the toolset files from the extension directory.
+
+  The toolset path is read from VS registry where the pkgdef registered it.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Only process for OceanNDK toolset -->
+  <PropertyGroup Condition="'$(PlatformToolset)' == 'OceanNDK' AND '$(_OceanNDKToolsetImported)' != 'true'">
+    <!--
+      Read the toolset path from VS registry. The pkgdef registers this under:
+      HKCU\Software\Microsoft\VisualStudio\17.0_<instance>\MSBuild\OceanAndroidExtension
+
+      We try multiple VS version registry keys to find the extension path.
+      The registry read uses the MSBuild registry property functions.
+    -->
+    <_OceanExtensionRegPath>HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\17.0\MSBuild\OceanAndroidExtension</_OceanExtensionRegPath>
+
+    <!-- Try to read from registry - VS writes ToolsetPath during extension installation -->
+    <_OceanNDKToolsetPath Condition="'$(_OceanNDKToolsetPath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(_OceanExtensionRegPath)', 'ToolsetPath', null, RegistryView.Default))</_OceanNDKToolsetPath>
+
+    <!-- Fallback: Try VS 17.0 config-specific registry (for per-user VS instances) -->
+    <_OceanNDKToolsetPath Condition="'$(_OceanNDKToolsetPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\17.0_Config\MSBuild\OceanAndroidExtension', 'ToolsetPath', null, RegistryView.Default))</_OceanNDKToolsetPath>
+
+    <!-- Fallback: Check if VCTargetsPath-based lookup found it -->
+    <_OceanNDKToolsetPath Condition="'$(_OceanNDKToolsetPath)' == '' AND Exists('$(VCTargetsPath)Platforms\$(Platform)\PlatformToolsets\OceanNDK\Toolset.props')">$(VCTargetsPath)Platforms\$(Platform)\PlatformToolsets\OceanNDK\</_OceanNDKToolsetPath>
+  </PropertyGroup>
+
+  <!-- Import toolset props if path was found and not already imported -->
+  <Import
+    Project="$(_OceanNDKToolsetPath)Toolset.props"
+    Condition="'$(PlatformToolset)' == 'OceanNDK' AND '$(_OceanNDKToolsetImported)' != 'true' AND '$(_OceanNDKToolsetPath)' != '' AND Exists('$(_OceanNDKToolsetPath)Toolset.props')" />
+
+  <!-- Import toolset targets if path was found and not already imported -->
+  <Import
+    Project="$(_OceanNDKToolsetPath)Toolset.targets"
+    Condition="'$(PlatformToolset)' == 'OceanNDK' AND '$(_OceanNDKToolsetImported)' != 'true' AND '$(_OceanNDKToolsetPath)' != '' AND Exists('$(_OceanNDKToolsetPath)Toolset.targets')" />
+
+  <!-- Mark as imported to prevent double import -->
+  <PropertyGroup Condition="'$(PlatformToolset)' == 'OceanNDK' AND '$(_OceanNDKToolsetPath)' != ''">
+    <_OceanNDKToolsetImported>true</_OceanNDKToolsetImported>
+  </PropertyGroup>
+
+  <!-- Emit warning if toolset couldn't be found -->
+  <Target Name="_WarnOceanNDKToolsetNotFound" BeforeTargets="Build" Condition="'$(PlatformToolset)' == 'OceanNDK' AND '$(_OceanNDKToolsetPath)' == ''">
+    <Warning Text="OceanNDK toolset path not found. Please ensure Ocean Android Extension is installed correctly." />
+  </Target>
+
+</Project>

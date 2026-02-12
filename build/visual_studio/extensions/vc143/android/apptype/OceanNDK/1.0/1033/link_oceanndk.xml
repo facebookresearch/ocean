@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - Linker Property Page
+  Defines linker settings for Android NDK clang++ linker.
+-->
+<Rule Name="OceanNDKLinker"
+      DisplayName="Linker"
+      PageTemplate="tool"
+      Order="30"
+      SwitchPrefix="-"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+    <Category Name="Input" DisplayName="Input" />
+    <Category Name="Debugging" DisplayName="Debugging" />
+    <Category Name="Advanced" DisplayName="Advanced" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="" Label="" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringProperty Name="OutputFile"
+                  DisplayName="Output File"
+                  Description="The -o option overrides the default name and location of the program that the linker creates."
+                  Category="General"
+                  Switch="o"
+                  F1Keyword="VC.Project.VCLinkerTool.OutputFile" />
+
+  <BoolProperty Name="ShowProgress"
+                DisplayName="Show Progress"
+                Description="Prints linker progress messages."
+                Category="General"
+                Switch="Wl,--verbose"
+                F1Keyword="VC.Project.VCLinkerTool.ShowProgress" />
+
+  <BoolProperty Name="LinkShared"
+                DisplayName="Build Shared Library"
+                Description="Create a shared object (.so) file."
+                Category="General"
+                Switch="shared"
+                F1Keyword="VC.Project.VCLinkerTool.LinkDLL" />
+
+  <!-- Input Category -->
+  <StringListProperty Name="AdditionalDependencies"
+                      DisplayName="Additional Dependencies"
+                      Description="Specifies additional items to add to the link command line (e.g., log;android)."
+                      Category="Input"
+                      F1Keyword="VC.Project.VCLinkerTool.AdditionalDependencies" />
+
+  <StringListProperty Name="AdditionalLibraryDirectories"
+                      DisplayName="Additional Library Directories"
+                      Description="Allows the user to override the environment library path."
+                      Category="Input"
+                      Switch="L"
+                      Subtype="folder"
+                      F1Keyword="VC.Project.VCLinkerTool.AdditionalLibraryDirectories" />
+
+  <!-- Debugging Category -->
+  <BoolProperty Name="GenerateDebugInfo"
+                DisplayName="Generate Debug Info"
+                Description="Creates debugging information."
+                Category="Debugging"
+                Switch="g"
+                F1Keyword="VC.Project.VCLinkerTool.GenerateDebugInformation" />
+
+  <BoolProperty Name="StripSymbols"
+                DisplayName="Strip Symbols"
+                Description="Omit all symbol information from the output file (run llvm-strip)."
+                Category="Debugging"
+                F1Keyword="VC.Project.VCLinkerTool.StripPrivateSymbols" />
+
+  <!-- Advanced Category -->
+  <StringProperty Name="SoName"
+                  DisplayName="SO Name"
+                  Description="Sets the internal DT_SONAME field to the specified name."
+                  Category="Advanced"
+                  Switch="Wl,-soname,"
+                  F1Keyword="VC.Project.VCLinkerTool.SoName" />
+
+  <EnumProperty Name="LinkTimeCodeGeneration"
+                DisplayName="Link Time Optimization"
+                Description="Enables link-time optimization (LTO)."
+                Category="Advanced"
+                F1Keyword="VC.Project.VCLinkerTool.LinkTimeCodeGeneration">
+    <EnumValue Name="Default" DisplayName="Default" Description="No LTO." />
+    <EnumValue Name="ThinLTO" DisplayName="ThinLTO (-flto=thin)" Switch="flto=thin" Description="Faster LTO with ThinLTO." />
+    <EnumValue Name="FullLTO" DisplayName="Full LTO (-flto=full)" Switch="flto=full" Description="Full program LTO." />
+  </EnumProperty>
+
+  <StringListProperty Name="AdditionalOptions"
+                      DisplayName="Additional Options"
+                      Description="Additional linker command line options."
+                      Category="Advanced"
+                      F1Keyword="VC.Project.VCLinkerTool.AdditionalOptions" />
+
+</Rule>

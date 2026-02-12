@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Java Source Staging Targets
+
+  Copies flat Java files to a package-matching directory structure.
+  This allows Java sources to be located anywhere and still compile
+  correctly - the staging process reads each file's 'package X.Y.Z;'
+  declaration and creates the proper folder hierarchy.
+
+  For example, a file with 'package com.example.myapp;' will be
+  copied to: $(JavaStagingDir)\com\example\myapp\FileName.java
+
+  Requirements from the importing project:
+    - $(JavaStagingDir) property: intermediate directory for staged sources
+    - @(JavaSource) items: Java source files to stage
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Inline task for staging Java files based on package declaration -->
+  <UsingTask TaskName="StageJavaFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <SourceFile ParameterType="System.String" Required="true" />
+      <StagingDirectory ParameterType="System.String" Required="true" />
+      <StagedFile ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+#pragma warning disable CS0162 // Unreachable code detected (RoslynCodeTaskFactory generates wrapper code)
+try
+{
+    if (!File.Exists(SourceFile))
+    {
+        Log.LogError($"Java source file not found: {SourceFile}");
+        return false;
+    }
+
+    var content = File.ReadAllText(SourceFile);
+    var match = Regex.Match(content, @"^\s*package\s+([\w.]+)\s*;", RegexOptions.Multiline);
+
+    if (!match.Success)
+    {
+        Log.LogError($"No package declaration found in: {SourceFile}. Java files must have a 'package X.Y.Z;' declaration.");
+        return false;
+    }
+
+    var packageName = match.Groups[1].Value;
+    var fileName = Path.GetFileName(SourceFile);
+    var packagePath = packageName.Replace('.', Path.DirectorySeparatorChar);
+    var targetDir = Path.Combine(StagingDirectory, packagePath);
+    var targetPath = Path.Combine(targetDir, fileName);
+
+    // Check if staging is needed (incremental build support)
+    if (File.Exists(targetPath))
+    {
+        var sourceTime = File.GetLastWriteTimeUtc(SourceFile);
+        var targetTime = File.GetLastWriteTimeUtc(targetPath);
+        if (sourceTime <= targetTime)
+        {
+            Log.LogMessage(MessageImportance.Low, $"Skipping up-to-date: {fileName}");
+            StagedFile = targetPath;
+            return true;
+        }
+    }
+
+    // Ensure target directory exists
+    if (!Directory.Exists(targetDir))
+    {
+        Directory.CreateDirectory(targetDir);
+    }
+
+    // Copy the file
+    File.Copy(SourceFile, targetPath, overwrite: true);
+    Log.LogMessage(MessageImportance.Normal, $"Staged: {fileName} -> {packagePath}/{fileName}");
+    StagedFile = targetPath;
+    return true;
+}
+catch (Exception ex)
+{
+    Log.LogError($"Failed to stage {SourceFile}: {ex.Message}");
+    return false;
+}
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <!-- Stage Java Sources - copies flat Java files to package-matching directory structure -->
+  <Target Name="StageJavaSources"
+          BeforeTargets="Build"
+          Condition="'@(JavaSource)' != ''"
+          Inputs="@(JavaSource)"
+          Outputs="$(JavaStagingDir)\%(JavaSource.RecursiveDir)%(JavaSource.Filename)%(JavaSource.Extension)">
+
+    <Message Text="========================================" Importance="high" />
+    <Message Text="Staging Java sources to $(JavaStagingDir)..." Importance="high" />
+
+    <!-- Create staging directory if needed -->
+    <MakeDir Directories="$(JavaStagingDir)" Condition="!Exists('$(JavaStagingDir)')" />
+
+    <!-- Stage each Java file based on its package declaration -->
+    <StageJavaFile
+      SourceFile="%(JavaSource.FullPath)"
+      StagingDirectory="$(JavaStagingDir)">
+      <Output TaskParameter="StagedFile" ItemName="StagedJavaFiles" />
+    </StageJavaFile>
+
+    <Message Text="  Staged %(StagedJavaFiles.Filename)%(StagedJavaFiles.Extension)"
+             Importance="normal"
+             Condition="'@(StagedJavaFiles)' != ''" />
+    <Message Text="========================================" Importance="high" />
+  </Target>
+
+  <!-- Clean staged Java sources -->
+  <Target Name="CleanStagedJavaSources" BeforeTargets="Clean">
+    <RemoveDir Directories="$(JavaStagingDir)" Condition="Exists('$(JavaStagingDir)')" />
+    <Message Text="Cleaned Java staging directory" Importance="normal" />
+  </Target>
+
+</Project>

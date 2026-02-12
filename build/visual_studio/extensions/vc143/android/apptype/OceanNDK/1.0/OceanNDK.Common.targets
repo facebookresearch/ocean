@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - Common Build Targets
+  Contains shared build targets for all OceanNDK Android builds.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       Clang Toolchain Configuration for VS's ClangCompile Task
+       ============================================================ -->
+  <PropertyGroup>
+    <!-- Configure Clang for VS's built-in ClangCompile task -->
+    <ClangToolExe>clang++$(NdkExeExt)</ClangToolExe>
+    <ClangToolPath>$(NdkToolchainBin)</ClangToolPath>
+    <ClangTarget>$(AndroidTargetTriple)</ClangTarget>
+    <GNUMode>true</GNUMode>
+    <MSVCErrorReport>false</MSVCErrorReport>
+    <ClangEnableExecuteTool>true</ClangEnableExecuteTool>
+
+    <!-- Use VS's MultiToolTask for parallel compilation -->
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Property Page Schemas
+       ============================================================ -->
+  <ItemGroup>
+    <PropertyPageSchema Include="$(OceanNDKCommonTargetsPath)1033\general_oceanndk.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <!-- Include standard folder schema for Solution Explorer file/folder operations -->
+    <PropertyPageSchema Include="$(VCTargetsPath)\$(LangID)\folder.xml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+    <!-- Include ProjectItemsSchema for file extension to item type mapping (e.g., .cpp -> ClCompile) -->
+    <!-- This is required for VS to know which item type to use when adding new files -->
+    <PropertyPageSchema Include="$(VCTargetsPath)\$(LangID)\ProjectItemsSchema.xml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+    <!-- Include clang property page for both Project and File contexts -->
+    <!-- Project context: shows C/C++ options in project properties -->
+    <!-- File context: shows C/C++ options when right-clicking individual source files -->
+    <PropertyPageSchema Include="$(OceanNDKCommonTargetsPath)1033\clang_oceanndk.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(OceanNDKCommonTargetsPath)1033\clang_oceanndk.xml">
+      <Context>File</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(OceanNDKCommonTargetsPath)1033\link_oceanndk.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(OceanNDKCommonTargetsPath)1033\lib_oceanndk.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <!-- ============================================================
+       File Extension to Item Type Mapping
+       Required for VS to recognize source files and enable Compile menu
+       ============================================================ -->
+  <ItemGroup>
+    <ClCompile Include="*.cpp" Exclude="@(ClCompile)" Condition="false" />
+    <ClCompile Include="*.c" Exclude="@(ClCompile)" Condition="false" />
+    <ClCompile Include="*.cc" Exclude="@(ClCompile)" Condition="false" />
+    <ClCompile Include="*.cxx" Exclude="@(ClCompile)" Condition="false" />
+  </ItemGroup>
+
+  <!-- Tell VS that ClCompile items are compilable -->
+  <ItemGroup>
+    <AvailableItemName Include="ClCompile">
+      <Targets>ClCompile</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <!-- ProjectCapabilities for VS integration -->
+  <!-- SingleFileCompile: Enables right-click "Compile" on individual source files -->
+  <!-- OceanNDK: Custom capability that doesn't trigger Microsoft's Android system -->
+  <ItemGroup>
+    <ProjectCapability Include="SingleFileCompile" />
+    <ProjectCapability Include="OceanNDK" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Import VS's built-in Clang Compile targets
+       This provides the ClangCompile task and single-file support
+       ============================================================ -->
+  <PropertyGroup>
+    <ComputeCompileInputsTargets>
+      $(ComputeCompileInputsTargets);
+      FixupCLCompileOptions;
+    </ComputeCompileInputsTargets>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Clang.targets" />
+
+  <!-- ============================================================
+       Design-Time Targets
+       Required for VS IntelliSense and property pages
+       ============================================================ -->
+
+  <Target Name="GetResolvedWinRTTypeInformation" Returns="@(ResolvedWinRTTypeInformation)" />
+  <Target Name="GetResolvedLinkLibs" Returns="@(ResolvedLinkLib)" />
+  <Target Name="GetResolvedTargetPath" Returns="$(TargetPath)" />
+  <Target Name="ResolveLinkLib" />
+  <Target Name="ResolveReferences" />
+  <Target Name="ResolveAssemblyReferences" />
+  <Target Name="ResolveProjectReferences" />
+
+  <!-- GetTargetPath - Required for project-to-project references -->
+  <!-- When another project references this project, MSBuild calls GetTargetPath to determine the output path -->
+  <Target Name="GetTargetPath" Returns="$(TargetPath)">
+    <PropertyGroup>
+      <TargetPath Condition="'$(TargetPath)' == ''">$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)</TargetPath>
+    </PropertyGroup>
+  </Target>
+  <Target Name="PrepareForBuild">
+    <MakeDir Directories="$(IntDir)" Condition="!Exists('$(IntDir)')" />
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+  </Target>
+  <Target Name="GetNativeTargetPath" Returns="$(TargetPath)" />
+  <Target Name="GetNativeManifest" Returns="" />
+  <Target Name="GetProjectDirectories" Returns="" />
+  <Target Name="SetBuildDefaultEnvironmentVariables" />
+  <Target Name="SetUserMacroEnvironmentVariables" />
+  <Target Name="GetTargetFrameworks" Returns="" />
+  <Target Name="GetResolvedAssemblyReferences" Returns="@(ReferencePath)" />
+  <Target Name="GetPackagingOutputs" Returns="" />
+  <Target Name="GetCopyToOutputDirectoryItems" Returns="" />
+  <Target Name="GetReferenceCopyLocalPaths" Returns="@(ReferenceCopyLocalPaths)" />
+  <Target Name="ComputeCopyFilesToOutputDirectory" />
+  <Target Name="CollectResolvedSDKReferences" />
+  <Target Name="GetItemTargetPaths" Returns="@(ItemTargetPath)" />
+  <Target Name="BeforeResolveReferences" />
+  <Target Name="AfterResolveReferences" />
+  <Target Name="_ResolveReferences" />
+
+  <!-- GetClCommandLines for IntelliSense -->
+  <Target Name="GetClCommandLines" Returns="@(ClCommandLines)">
+    <ItemGroup>
+      <ClCommandLines Include="clang++ --target=$(AndroidTargetTriple) --sysroot=$(NdkSysroot) -c %(ClCompile.Identity)">
+        <Source>%(ClCompile.Identity)</Source>
+      </ClCommandLines>
+    </ItemGroup>
+  </Target>
+
+  <!-- ============================================================
+       Import OceanNDK Toolset Targets
+       Contains Build, ClCompile, Link, Lib, Clean, Rebuild targets
+       with parallel compilation support via AndroidClCompileTask
+       Uses registry path set by VSIX extension during installation
+       ============================================================ -->
+  <PropertyGroup>
+    <_OceanNdkToolsetPath Condition="'$(_OceanNdkToolsetPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ToolsetPath', '', RegistryView.Default))</_OceanNdkToolsetPath>
+  </PropertyGroup>
+  <Import Project="$(_OceanNdkToolsetPath)Toolset.targets" Condition="'$(_OceanNdkToolsetPath)' != '' AND Exists('$(_OceanNdkToolsetPath)Toolset.targets')" />
+
+</Project>

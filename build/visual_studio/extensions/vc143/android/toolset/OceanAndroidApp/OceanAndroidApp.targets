@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Application - Shared MSBuild Targets
+
+  This file provides common build targets for Ocean Android Application projects.
+  It handles integration between Android app projects (C# or VC++ Makefile) and
+  native C++ libraries built with the OceanNDK toolset.
+
+  Supports both project types:
+  - C# projects: hooks into CoreBuild/CoreClean
+  - VC++ Makefile projects: hooks into Build/Clean
+
+  To use in your project, add this import after Microsoft.CSharp.targets or Microsoft.Cpp.targets:
+    <Import Project="$(OceanAndroidExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets"
+            Condition="Exists('$(OceanAndroidExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets')" />
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       Default metadata for OceanNativeSharedLibrary items
+
+       Automatically displays native libraries in a "dependencies"
+       virtual folder in Solution Explorer.
+       ============================================================ -->
+  <ItemDefinitionGroup>
+    <OceanNativeSharedLibrary>
+      <Link>dependencies\%(Filename)%(Extension)</Link>
+    </OceanNativeSharedLibrary>
+  </ItemDefinitionGroup>
+
+  <!-- Create None items from OceanNativeSharedLibrary for Solution Explorer display -->
+  <!-- VS doesn't display custom item types with <Link>, so we create matching None items -->
+  <ItemGroup>
+    <None Include="@(OceanNativeSharedLibrary)">
+      <Link>dependencies\%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- ============================================================
+       Property Page Schemas
+
+       Registers the AndroidManifest item type so it appears in the
+       VS Property Pages "Item Type" dropdown when right-clicking files.
+       ============================================================ -->
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)PropertyPages\AndroidManifest.xml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <!-- ============================================================
+       Extension Path Detection
+       ============================================================ -->
+  <PropertyGroup>
+    <!-- Try to locate the extension path from registry (set by VSIX installation) -->
+    <OceanAndroidExtensionPath Condition="'$(OceanAndroidExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\17.0\MSBuild\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</OceanAndroidExtensionPath>
+
+    <!-- Fallback: Relative to this file (for development/testing) -->
+    <OceanAndroidExtensionPath Condition="'$(OceanAndroidExtensionPath)' == ''">$(MSBuildThisFileDirectory)..\..\..</OceanAndroidExtensionPath>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       CopyNativeLibsToJniLibs Target
+
+       Copies .so libraries declared in @(OceanNativeSharedLibrary) to the
+       jniLibs folder before Gradle builds the APK.
+
+       To use this, your Android app project must import the _use.props
+       files from any shared native libraries it depends on. For example:
+
+         <ImportGroup Label="NativeLibraryDependencies">
+           <Import Project="..\MyWrapper\MyWrapper_use.props" />
+         </ImportGroup>
+
+       The _use.props file for shared libraries declares OceanNativeSharedLibrary
+       items which this target picks up and copies to jniLibs/<abi>/.
+
+       Static libraries (.a) don't need to be copied - they're linked into
+       the shared library at compile time.
+       ============================================================ -->
+  <Target Name="CopyNativeLibsToJniLibs"
+          BeforeTargets="CoreBuild;Build"
+          Condition="'@(OceanNativeSharedLibrary)' != ''">
+
+    <!-- Determine jniLibs destination based on ABI -->
+    <!-- Only set if not already defined (allows project-level override) -->
+    <!-- Uses simplified folder structure: app/jniLibs/ instead of app/src/main/jniLibs/ -->
+    <PropertyGroup Condition="'$(JniLibsDir)' == ''">
+      <JniLibsDir>$(MSBuildProjectDirectory)\app\jniLibs\$(AndroidAbi)</JniLibsDir>
+    </PropertyGroup>
+
+    <!-- Create jniLibs directory if needed -->
+    <MakeDir Directories="$(JniLibsDir)" />
+
+    <!-- Copy native libraries -->
+    <Copy SourceFiles="@(OceanNativeSharedLibrary)"
+          DestinationFolder="$(JniLibsDir)"
+          SkipUnchangedFiles="true">
+      <Output TaskParameter="CopiedFiles" ItemName="_CopiedNativeLibs" />
+    </Copy>
+
+    <Message Text="[OceanAndroid] Copied native library to jniLibs: %(_CopiedNativeLibs.Identity)"
+             Importance="high"
+             Condition="'@(_CopiedNativeLibs)' != ''" />
+  </Target>
+
+  <!-- ============================================================
+       CleanNativeLibsFromJniLibs Target
+
+       Removes copied native libraries during clean.
+       ============================================================ -->
+  <Target Name="CleanNativeLibsFromJniLibs"
+          AfterTargets="CoreClean;Clean"
+          Condition="'@(ProjectReference)' != ''">
+
+    <!-- Get the jniLibs directory for the current ABI -->
+    <!-- Only set if not already defined (allows project-level override) -->
+    <!-- Uses simplified folder structure: app/jniLibs/ instead of app/src/main/jniLibs/ -->
+    <PropertyGroup Condition="'$(JniLibsDir)' == ''">
+      <JniLibsDir>$(MSBuildProjectDirectory)\app\jniLibs\$(AndroidAbi)</JniLibsDir>
+    </PropertyGroup>
+
+    <!-- Remove the ABI-specific jniLibs directory -->
+    <RemoveDir Directories="$(JniLibsDir)" Condition="Exists('$(JniLibsDir)')" />
+
+    <Message Text="[OceanAndroid] Cleaned jniLibs for $(AndroidAbi)"
+             Importance="normal"
+             Condition="Exists('$(JniLibsDir)')" />
+  </Target>
+
+</Project>

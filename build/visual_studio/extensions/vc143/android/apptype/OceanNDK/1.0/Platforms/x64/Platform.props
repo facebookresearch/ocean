@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - x64 Platform Properties
+  Note: Default.props is already imported by Microsoft.Cpp.Default.props
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(OceanNDKCommonTargetsPath)OceanNDK.Common.props" />
+</Project>

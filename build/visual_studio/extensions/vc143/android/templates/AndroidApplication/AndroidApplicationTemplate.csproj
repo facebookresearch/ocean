@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Template packaging project for VSIX.
+  This is NOT the project type - it just packages the template files into a .zip for the VSIX.
+  The actual project created from this template is a VC Makefile project (OceanAndroidApp.vcxproj).
+-->
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{B1C2D3E4-F5A6-7890-ABCD-111111111111}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AndroidApplicationTemplate</RootNamespace>
+    <AssemblyName>AndroidApplicationTemplate</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CreateVsixContainer>false</CreateVsixContainer>
+    <DeployExtension>false</DeployExtension>
+    <DeployVSTemplates>false</DeployVSTemplates>
+    <CopyVsixManifestToOutput>false</CopyVsixManifestToOutput>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- VC Project files -->
+    <None Include="OceanAndroidApp.vcxproj" />
+    <None Include="OceanAndroidApp.vcxproj.filters" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- App module files -->
+    <None Include="app\build.gradle.kts" />
+    <None Include="app\AndroidManifest.xml" />
+    <None Include="app\java\MainActivity.java" />
+    <None Include="app\res\layout\activity_main.xml" />
+    <None Include="app\res\values\strings.xml" />
+    <None Include="app\res\values\colors.xml" />
+    <None Include="app\res\values\themes.xml" />
+    <None Include="app\res\drawable\ic_launcher_background.xml" />
+    <None Include="app\res\drawable\ic_launcher_foreground.xml" />
+    <None Include="app\res\mipmap-anydpi-v26\ic_launcher.xml" />
+    <None Include="app\res\mipmap-anydpi-v26\ic_launcher_round.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Gradle build files -->
+    <None Include="gradle\build.gradle.kts" />
+    <None Include="gradle\settings.gradle.kts" />
+    <None Include="gradle\gradle.properties" />
+    <None Include="gradle\gradlew" />
+    <None Include="gradle\gradlew.bat" />
+    <None Include="gradle\deploy.bat" />
+    <None Include="gradle\wrapper\gradle-wrapper.jar" />
+    <None Include="gradle\wrapper\gradle-wrapper.properties" />
+  </ItemGroup>
+  <ItemGroup>
+    <VSTemplate Include="AndroidApp.vstemplate">
+      <SubType>Designer</SubType>
+      <OutputSubPath>Android</OutputSubPath>
+    </VSTemplate>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+
+  <!-- Define IncludeVSIXItems target for VSIX packaging compatibility -->
+  <Target Name="IncludeVSIXItems" />
+</Project>

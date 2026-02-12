@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Ocean Android Extension",
+  "classifications": ["Android", "Mobile"],
+  "identity": "OceanAndroidExtension.AndroidApplication",
+  "name": "Android Application",
+  "shortName": "androidapp",
+  "tags": {
+    "language": "Java",
+    "type": "project"
+  },
+  "sourceName": "MyAndroidApp",
+  "preferNameDirectory": true,
+  "symbols": {
+    "packageName": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "com.example.myapp",
+      "description": "The Android package name"
+    },
+    "minSdk": {
+      "type": "parameter",
+      "datatype": "int",
+      "defaultValue": "24",
+      "description": "Minimum SDK version"
+    },
+    "targetSdk": {
+      "type": "parameter",
+      "datatype": "int",
+      "defaultValue": "34",
+      "description": "Target SDK version"
+    },
+    "useKotlin": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Use Kotlin instead of Java"
+    }
+  }
+}

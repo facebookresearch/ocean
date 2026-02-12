@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Ocean Android Extension",
+  "classifications": ["Android", "Mobile", "C++", "Native"],
+  "identity": "OceanAndroidExtension.AndroidNativeLibrary",
+  "name": "Android Native Library (C++)",
+  "shortName": "androidnative",
+  "tags": {
+    "language": "C++",
+    "type": "project"
+  },
+  "sourceName": "MyNativeLib",
+  "preferNameDirectory": true,
+  "symbols": {
+    "minSdk": {
+      "type": "parameter",
+      "datatype": "int",
+      "defaultValue": "24",
+      "description": "Minimum SDK/API level"
+    },
+    "abis": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "arm64-v8a;armeabi-v7a;x86_64;x86",
+      "description": "Target ABIs (semicolon-separated)"
+    },
+    "stl": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        { "choice": "c++_shared", "description": "Shared C++ STL" },
+        { "choice": "c++_static", "description": "Static C++ STL" },
+        { "choice": "none", "description": "No STL" }
+      ],
+      "defaultValue": "c++_shared",
+      "description": "C++ STL to use"
+    }
+  }
+}

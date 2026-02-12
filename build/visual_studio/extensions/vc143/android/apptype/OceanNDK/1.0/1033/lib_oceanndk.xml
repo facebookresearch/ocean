@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - Librarian Property Page
+  Defines librarian (archiver) settings for Android NDK llvm-ar.
+-->
+<Rule Name="OceanNDKLib"
+      DisplayName="Librarian"
+      PageTemplate="tool"
+      Order="30"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" />
+    <Category Name="Advanced" DisplayName="Advanced" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" ItemType="" Label="" HasConfigurationCondition="true" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringProperty Name="OutputFile"
+                  DisplayName="Output File"
+                  Description="The output file name for the static library (.a file)."
+                  Category="General"
+                  F1Keyword="VC.Project.VCLibrarianTool.OutputFile" />
+
+  <BoolProperty Name="Verbose"
+                DisplayName="Verbose"
+                Description="Print verbose output during archiving."
+                Category="General"
+                F1Keyword="VC.Project.VCLibrarianTool.Verbose" />
+
+  <!-- Advanced Category -->
+  <BoolProperty Name="ThinArchive"
+                DisplayName="Create Thin Archive"
+                Description="Create a thin archive that references object files instead of embedding them."
+                Category="Advanced"
+                F1Keyword="VC.Project.VCLibrarianTool.ThinArchive" />
+
+  <StringListProperty Name="AdditionalOptions"
+                      DisplayName="Additional Options"
+                      Description="Additional command line options for the librarian."
+                      Category="Advanced"
+                      F1Keyword="VC.Project.VCLibrarianTool.AdditionalOptions" />
+
+  <StringListProperty Name="AdditionalDependencies"
+                      DisplayName="Additional Dependencies"
+                      Description="Specifies additional items to add to the library."
+                      Category="Advanced"
+                      F1Keyword="VC.Project.VCLibrarianTool.AdditionalDependencies" />
+
+</Rule>

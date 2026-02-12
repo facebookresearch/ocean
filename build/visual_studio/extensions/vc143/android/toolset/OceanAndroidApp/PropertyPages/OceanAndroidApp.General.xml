@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Android Application Property Page Schema
+  Defines the "Ocean Android" property page for Android Application projects in Visual Studio.
+-->
+<Rule Name="OceanAndroidApp_General"
+      DisplayName="Ocean Android"
+      Description="Android application settings"
+      PageTemplate="generic"
+      Order="20"
+      xmlns="http://schemas.microsoft.com/build/2009/properties"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General project settings" />
+    <Category Name="Android" DisplayName="Android" Description="Android-specific settings" />
+    <Category Name="Dependencies" DisplayName="Dependencies" Description="External library dependencies" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringProperty Name="AndroidPackageName"
+                  DisplayName="Package Name"
+                  Description="The Android application package name (e.g., com.example.myapp). This is used as the application ID in the APK and for launching the app via ADB."
+                  Category="General"
+                  Default="com.example.$(ProjectName)"
+                  F1Keyword="VC.Project.AndroidPackageName">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <!-- Android Category -->
+  <IntProperty Name="AndroidMinSdkVersion"
+               DisplayName="Minimum SDK Version"
+               Description="Minimum Android SDK version required to run the app. (e.g., 24 = Android 7.0 Nougat)"
+               Category="Android"
+               Default="24"
+               F1Keyword="VC.Project.AndroidMinSdkVersion">
+    <IntProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </IntProperty.DataSource>
+  </IntProperty>
+
+  <IntProperty Name="AndroidTargetSdkVersion"
+               DisplayName="Target SDK Version"
+               Description="Target Android SDK version. Should generally be set to the latest stable SDK."
+               Category="Android"
+               Default="34"
+               F1Keyword="VC.Project.AndroidTargetSdkVersion">
+    <IntProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </IntProperty.DataSource>
+  </IntProperty>
+
+  <EnumProperty Name="JavaVersion"
+                DisplayName="Java Version"
+                Description="Java language version for source and target compatibility."
+                Category="Android"
+                Default="VERSION_17"
+                F1Keyword="VC.Project.JavaVersion">
+    <EnumValue Name="VERSION_11" DisplayName="Java 11" Description="Java 11 (LTS)" />
+    <EnumValue Name="VERSION_17" DisplayName="Java 17" Description="Java 17 (LTS) - Recommended" />
+    <EnumValue Name="VERSION_21" DisplayName="Java 21" Description="Java 21 (LTS)" />
+  </EnumProperty>
+
+  <!-- Dependencies Category -->
+  <StringProperty Name="GradleDependencies"
+                  DisplayName="Gradle Dependencies"
+                  Description="External library dependencies in Maven coordinate format. Enter one dependency per line, or separate with semicolons. Format: group:artifact:version (e.g., androidx.core:core-ktx:1.12.0). These are added as 'implementation' dependencies."
+                  Category="Dependencies"
+                  F1Keyword="VC.Project.GradleDependencies"
+                  Subtype="multiline">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+</Rule>

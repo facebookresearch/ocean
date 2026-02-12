@@ -1,0 +1,48 @@
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Ocean Android Application</Name>
+    <Description>An Ocean Android application project with Gradle build support.</Description>
+    <Icon>icon.ico</Icon>
+    <ProjectType>VC</ProjectType>
+    <TemplateGroupID>Android</TemplateGroupID>
+    <LanguageTag>Android</LanguageTag>
+    <PlatformTag>Mobile</PlatformTag>
+    <ProjectTypeTag>Mobile</ProjectTypeTag>
+    <DefaultName>MyAndroidApp</DefaultName>
+    <CreateNewFolder>true</CreateNewFolder>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <SortOrder>1000</SortOrder>
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="OceanAndroidApp.vcxproj" ReplaceParameters="true">
+      <!-- Project filters file for Solution Explorer organization -->
+      <ProjectItem ReplaceParameters="false" TargetFileName="$safeprojectname$.vcxproj.filters">OceanAndroidApp.vcxproj.filters</ProjectItem>
+      <!-- App module files - no TargetFileName, preserve source structure -->
+      <ProjectItem ReplaceParameters="true">app\build.gradle.kts</ProjectItem>
+      <ProjectItem ReplaceParameters="true">app\AndroidManifest.xml</ProjectItem>
+      <ProjectItem ReplaceParameters="true">app\java\MainActivity.java</ProjectItem>
+      <!-- Resources - layout -->
+      <ProjectItem ReplaceParameters="false">app\res\layout\activity_main.xml</ProjectItem>
+      <!-- Resources - values -->
+      <ProjectItem ReplaceParameters="true">app\res\values\strings.xml</ProjectItem>
+      <ProjectItem ReplaceParameters="false">app\res\values\colors.xml</ProjectItem>
+      <ProjectItem ReplaceParameters="false">app\res\values\themes.xml</ProjectItem>
+      <!-- Resources - drawable -->
+      <ProjectItem ReplaceParameters="false">app\res\drawable\ic_launcher_background.xml</ProjectItem>
+      <ProjectItem ReplaceParameters="false">app\res\drawable\ic_launcher_foreground.xml</ProjectItem>
+      <!-- Resources - mipmap -->
+      <ProjectItem ReplaceParameters="false">app\res\mipmap-anydpi-v26\ic_launcher.xml</ProjectItem>
+      <ProjectItem ReplaceParameters="false">app\res\mipmap-anydpi-v26\ic_launcher_round.xml</ProjectItem>
+      <!-- Gradle wrapper and build files - no TargetFileName, preserve source structure -->
+      <ProjectItem ReplaceParameters="false">gradle\wrapper\gradle-wrapper.jar</ProjectItem>
+      <ProjectItem ReplaceParameters="false">gradle\wrapper\gradle-wrapper.properties</ProjectItem>
+      <ProjectItem ReplaceParameters="true">gradle\build.gradle.kts</ProjectItem>
+      <ProjectItem ReplaceParameters="true">gradle\settings.gradle.kts</ProjectItem>
+      <ProjectItem ReplaceParameters="false">gradle\gradle.properties</ProjectItem>
+      <ProjectItem ReplaceParameters="false">gradle\gradlew</ProjectItem>
+      <ProjectItem ReplaceParameters="false">gradle\gradlew.bat</ProjectItem>
+      <ProjectItem ReplaceParameters="false">gradle\deploy.bat</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

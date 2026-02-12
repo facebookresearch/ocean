@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+<Identity Id="OceanAndroidExtension.A1B2C3D4-E5F6-7890-ABCD-EF1234567890" Version="1.0.0" Language="en-US" Publisher="Ocean" />
+    <DisplayName>Ocean Android Extension</DisplayName>
+    <Description xml:space="preserve">Visual Studio 2022 extension for Android application development with first-class native C++ library support. Features include Gradle-based builds, APK packaging, device/emulator deployment, Java/Kotlin and C++ debugging, and full IntelliSense support.</Description>
+    <MoreInfo>https://github.com/facebookresearch/ocean/</MoreInfo>
+    <Tags>android, mobile, ndk, c++, native, gradle, kotlin, java</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.8,)" />
+  </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="OceanAndroidExtension.LanguageService" Path="|OceanAndroidExtension.LanguageService|" />
+    <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" AssemblyName="OceanAndroidExtension.BuildTasks" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="AndroidApplicationTemplate" d:TargetPath="|AndroidApplicationTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="AndroidNativeLibraryTemplate" d:TargetPath="|AndroidNativeLibraryTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="AndroidLibraryTemplate" d:TargetPath="|AndroidLibraryTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+    <!-- MSBuild Extension Files -->
+<Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="Build\OceanAndroidExtension.Android.props" d:VsixSubPath="MSBuild\OceanAndroidExtension\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="Build\OceanAndroidExtension.Android.targets" d:VsixSubPath="MSBuild\OceanAndroidExtension\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="Build\OceanAndroidExtension.Native.props" d:VsixSubPath="Build\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="Build\OceanAndroidExtension.Native.targets" d:VsixSubPath="Build\" />
+
+    <!-- Android Platform Definition Files -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\Platforms\Android\Platform.props" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\Platforms\Android\Platform.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\" />
+
+    <!-- OceanNDK Platform Toolset Files -->
+    <!-- Deploy to Android platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.props" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\" />
+
+    <!-- Deploy to x64 platform (for x86_64 ABI) -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.props" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\OceanNDK\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\OceanNDK\" />
+
+    <!-- Deploy to ARM64 platform (for arm64-v8a ABI) -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.props" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\OceanNDK\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\OceanNDK\" />
+
+    <!-- Deploy to ARM platform (for armeabi-v7a ABI) -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.props" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\OceanNDK\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\OceanNDK\" />
+
+    <!-- Deploy to Win32 platform (for x86 ABI) -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.props" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\OceanNDK\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\OceanNDK\" />
+
+    <!-- Also deploy toolset files to development location -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.props" d:VsixSubPath="toolset\OceanNDK\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanNDK\Toolset.targets" d:VsixSubPath="toolset\OceanNDK\" />
+
+    <!-- Property Pages - deployed inside OceanNDK folder for each platform -->
+    <!-- Android platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.General.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Clang.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Link.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <!-- x64 platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.General.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Clang.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Link.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <!-- ARM64 platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.General.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Clang.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Link.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <!-- ARM platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.General.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Clang.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Link.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <!-- Win32 platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.General.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Clang.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Link.xml" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\OceanNDK\PropertyPages\" />
+    <!-- Development location -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.General.xml" d:VsixSubPath="toolset\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Clang.xml" d:VsixSubPath="toolset\OceanNDK\PropertyPages\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\PropertyPages\OceanNDK.Link.xml" d:VsixSubPath="toolset\OceanNDK\PropertyPages\" />
+
+    <!-- Platform files for development location -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\Platforms\Android\Platform.props" d:VsixSubPath="toolset\Platforms\Android\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\Platforms\Android\Platform.targets" d:VsixSubPath="toolset\Platforms\Android\" />
+
+    <!-- Build Tasks DLL - deployed to lib folder for MSBuild UsingTask -->
+    <!-- Android platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK\lib\" />
+    <!-- x64 platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\OceanNDK\lib\" />
+    <!-- ARM64 platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM64\PlatformToolsets\OceanNDK\lib\" />
+    <!-- ARM platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\ARM\PlatformToolsets\OceanNDK\lib\" />
+    <!-- Win32 platform -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" d:VsixSubPath="MSBuild\Microsoft\VC\v170\Platforms\Win32\PlatformToolsets\OceanNDK\lib\" />
+    <!-- Development location -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.BuildTasks" Path="|OceanAndroidExtension.BuildTasks|" d:VsixSubPath="toolset\OceanNDK\lib\" />
+
+    <!-- ImportAfter hook - automatically imports toolset when OceanNDK is selected -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\ImportAfter\OceanAndroidExtension.OceanNDK.targets" d:VsixSubPath="MSBuild\Microsoft\VC\v170\ImportAfter\Default\" />
+
+    <!-- Ocean Android App shared targets - for Android app projects with native library references -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidApp\OceanAndroidApp.targets" d:VsixSubPath="toolset\OceanAndroidApp\" />
+    <!-- OceanAndroidApp Property Pages - AndroidManifest item type definition -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidApp\PropertyPages\AndroidManifest.xml" d:VsixSubPath="toolset\OceanAndroidApp\PropertyPages\" />
+
+    <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradle-wrapper.jar.sha256" d:VsixSubPath="toolset\GradleWrapper\" />
+  </Assets>
+</PackageManifest>

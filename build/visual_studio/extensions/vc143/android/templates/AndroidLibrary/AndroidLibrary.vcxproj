@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Java Library Project
+  Uses Makefile project type with Gradle build integration.
+  Produces an AAR (Android Archive) library that can be referenced by other libraries or applications.
+-->
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Project configurations - Debug/Release -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <!-- Global project properties -->
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{$guid1$}</ProjectGuid>
+    <RootNamespace>$safeprojectname$</RootNamespace>
+    <ProjectName>$safeprojectname$</ProjectName>
+    <Keyword>AndroidJavaLibrary</Keyword>
+
+    <!-- Use Makefile project type - build is handled by Gradle -->
+    <ConfigurationType>Makefile</ConfigurationType>
+
+    <!-- Mark this as an Android Java Library -->
+    <IsAndroidJavaLibrary>true</IsAndroidJavaLibrary>
+
+    <!-- Gradle module name -->
+    <GradleModuleName>lib</GradleModuleName>
+
+    <!-- Android settings (editable in Project Properties) -->
+    <AndroidNamespace>com.example.$safeprojectname$</AndroidNamespace>
+    <AndroidMinSdk>24</AndroidMinSdk>
+    <AndroidCompileSdk>34</AndroidCompileSdk>
+    <JavaVersion>VERSION_17</JavaVersion>
+  </PropertyGroup>
+
+  <!-- Import VCTargets Default Props -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <!-- Configuration type for all configurations -->
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <PropertyGroup Label="UserMacros" />
+
+  <!-- Project Capabilities for VS extension integration -->
+  <ItemGroup>
+    <ProjectCapability Include="AndroidJavaLibrary" />
+  </ItemGroup>
+
+  <!-- Path Configuration -->
+  <PropertyGroup>
+    <!-- Output directories -->
+    <IntDir Condition="'$(IntDir)' == ''">$(MSBuildProjectDirectory)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
+
+    <!-- Java source staging directory -->
+    <JavaStagingDir>$(IntDir)java-staging</JavaStagingDir>
+
+    <!-- Gradle directories -->
+    <GradleProjectDir>$(MSBuildProjectDirectory)\gradle</GradleProjectDir>
+    <GradleWrapper>$(GradleProjectDir)\gradlew.bat</GradleWrapper>
+    <GradleModuleDir>$(MSBuildProjectDirectory)\lib</GradleModuleDir>
+
+    <!-- AAR output path -->
+    <AarOutputDir>$(GradleModuleDir)\build\outputs\aar</AarOutputDir>
+    <AarOutputFile Condition="'$(Configuration)' == 'Debug'">$(AarOutputDir)\lib-debug.aar</AarOutputFile>
+    <AarOutputFile Condition="'$(Configuration)' == 'Release'">$(AarOutputDir)\lib-release.aar</AarOutputFile>
+
+    <!-- Final output location (copied after Gradle build) -->
+    <FinalAarPath>$(OutDir)$(ProjectName).aar</FinalAarPath>
+  </PropertyGroup>
+
+  <!-- Android SDK Paths -->
+  <PropertyGroup>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_HOME)</AndroidSdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_SDK_ROOT)</AndroidSdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(LOCALAPPDATA)\Android\Sdk</AndroidSdkPath>
+
+    <!-- Java Home detection - requires Java 17+ for AGP 8.x -->
+    <JavaHome Condition="'$(JavaHome)' == ''">$(OCEAN_JAVA_HOME)</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-21')">$(ProgramFiles)\Java\jdk-21</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-17')">$(ProgramFiles)\Java\jdk-17</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-21')">$(ProgramFiles)\Eclipse Adoptium\jdk-21</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-17')">$(ProgramFiles)\Eclipse Adoptium\jdk-17</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-21')">$(ProgramFiles)\Microsoft\jdk-21</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-17')">$(ProgramFiles)\Microsoft\jdk-17</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(LOCALAPPDATA)\Programs\Android Studio\jbr')">$(LOCALAPPDATA)\Programs\Android Studio\jbr</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Android\Android Studio\jbr')">$(ProgramFiles)\Android\Android Studio\jbr</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == ''">$(JAVA_HOME)</JavaHome>
+
+    <!-- Gradle task based on configuration -->
+    <GradleTask Condition="'$(Configuration)' == 'Release'">:lib:assembleRelease</GradleTask>
+    <GradleTask Condition="'$(GradleTask)' == ''">:lib:assembleDebug</GradleTask>
+
+    <!-- Gradle properties to pass (from VS project settings) -->
+    <GradleProperties>-PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PjavaVersion=$(JavaVersion)</GradleProperties>
+  </PropertyGroup>
+
+  <!-- Makefile project commands -->
+  <PropertyGroup>
+    <NMakeBuildCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" $(GradleTask) $(GradleProperties) --no-daemon</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleTask) $(GradleProperties) --no-daemon</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean --no-daemon</NMakeCleanCommandLine>
+    <NMakeOutput>$(FinalAarPath)</NMakeOutput>
+  </PropertyGroup>
+
+  <!-- Java source files -->
+  <ItemGroup>
+    <JavaSource Include="lib\src\*.java" />
+  </ItemGroup>
+
+  <!-- Project Items for Solution Explorer -->
+  <ItemGroup>
+    <!-- Gradle build files -->
+    <None Include="lib\build.gradle.kts" />
+    <None Include="gradle\build.gradle.kts" />
+    <None Include="gradle\settings.gradle.kts" />
+    <None Include="gradle\gradle.properties" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Java sources displayed in Solution Explorer -->
+    <None Include="lib\src\$safeprojectname$.java" />
+  </ItemGroup>
+
+  <!-- GetGradleModulePath - returns the path to this library's Gradle module -->
+  <Target Name="GetGradleModulePath" Returns="$(GradleModuleDir)">
+    <Message Text="[$(ProjectName)] Gradle module path: $(GradleModuleDir)" Importance="low" />
+  </Target>
+
+  <!-- GetJavaStagingPath - returns the path to staged Java sources -->
+  <Target Name="GetJavaStagingPath" DependsOnTargets="StageJavaSources" Returns="$(JavaStagingDir)">
+    <Message Text="[$(ProjectName)] Java staging path: $(JavaStagingDir)" Importance="low" />
+  </Target>
+
+  <!-- GetAarOutputPath - returns the path to the built AAR -->
+  <Target Name="GetAarOutputPath" Returns="$(FinalAarPath)">
+    <Message Text="[$(ProjectName)] AAR output path: $(FinalAarPath)" Importance="low" />
+  </Target>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+  <ImportGroup Label="ExtensionTargets" />
+
+  <!-- ============================================================
+       Property Page Registration
+       ============================================================ -->
+  <PropertyGroup>
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
+    <_OceanJavaLibPropsPath Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.General.xml</_OceanJavaLibPropsPath>
+    <_OceanJavaLibPropsPath Condition="'$(_OceanJavaLibPropsPath)' == '' OR !Exists('$(_OceanJavaLibPropsPath)')">$(MSBuildThisFileDirectory)..\..\toolset\OceanJavaLib\OceanJavaLib.General.xml</_OceanJavaLibPropsPath>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('$(_OceanJavaLibPropsPath)')">
+    <PropertyPageSchema Include="$(_OceanJavaLibPropsPath)" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Java Source Staging (shared targets)
+
+       Import the shared StageJavaFile task, StageJavaSources target,
+       and CleanStagedJavaSources target from the extension toolset.
+       ============================================================ -->
+  <PropertyGroup>
+    <_JavaStagingTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets')"
+      >$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
+    <!-- Development fallback: relative to template location (templates/AndroidLibrary/) -->
+    <_JavaStagingTargetsPath Condition="'$(_JavaStagingTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaStaging\JavaStaging.targets')"
+      >$(MSBuildThisFileDirectory)..\..\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_JavaStagingTargetsPath)"
+          Condition="'$(_JavaStagingTargetsPath)' != '' AND Exists('$(_JavaStagingTargetsPath)')" />
+
+  <!-- ============================================================
+       Custom Build Targets
+       ============================================================ -->
+
+  <!-- Inline task to verify a file's SHA-256 hash against a .sha256 checksum file -->
+  <UsingTask TaskName="VerifyFileHash" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <FilePath ParameterType="System.String" Required="true" />
+      <HashFilePath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Security.Cryptography" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+var expectedHash = File.ReadLines(HashFilePath).First(l => !string.IsNullOrWhiteSpace(l) && !l.TrimStart().StartsWith("#")).Trim();
+using (var sha256 = SHA256.Create())
+using (var stream = File.OpenRead(FilePath))
+{
+    var hashBytes = sha256.ComputeHash(stream);
+    var actualHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+    if (!string.Equals(actualHash, expectedHash, StringComparison.OrdinalIgnoreCase))
+    {
+        Log.LogError($"[OceanAndroid] gradle-wrapper.jar integrity check FAILED.\n  Expected: {expectedHash}\n  Actual:   {actualHash}\n  File:     {FilePath}\nThe JAR may have been tampered with. Replace it with a known-good copy from https://services.gradle.org/distributions/");
+        return false;
+    }
+    Log.LogMessage(MessageImportance.Normal, $"[OceanAndroid] gradle-wrapper.jar integrity verified (SHA-256: {actualHash})");
+}
+return true;
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <!-- Verify gradle-wrapper.jar integrity before building -->
+  <Target Name="VerifyGradleWrapper" BeforeTargets="Build;Rebuild">
+    <PropertyGroup>
+      <_GradleWrapperJar>$(GradleProjectDir)\wrapper\gradle-wrapper.jar</_GradleWrapperJar>
+      <!-- Resolve .sha256 from extension toolset (registry path, then dev fallback) -->
+      <_GradleWrapperJarHash Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\GradleWrapper\gradle-wrapper.jar.sha256</_GradleWrapperJarHash>
+      <_GradleWrapperJarHash Condition="'$(_GradleWrapperJarHash)' == '' OR !Exists('$(_GradleWrapperJarHash)')">$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\gradle-wrapper.jar.sha256</_GradleWrapperJarHash>
+    </PropertyGroup>
+
+    <VerifyFileHash FilePath="$(_GradleWrapperJar)" HashFilePath="$(_GradleWrapperJarHash)"
+                    Condition="Exists('$(_GradleWrapperJar)') AND Exists('$(_GradleWrapperJarHash)')" />
+
+    <Warning Text="[OceanAndroid] gradle-wrapper.jar.sha256 not found. Skipping integrity check."
+             Condition="Exists('$(_GradleWrapperJar)') AND !Exists('$(_GradleWrapperJarHash)')" />
+  </Target>
+
+  <!-- Build Target - stages Java sources, runs Gradle, copies AAR -->
+  <Target Name="Build" DependsOnTargets="VerifyGradleWrapper">
+    <!-- Display Java source files being compiled -->
+    <Message Text="%(JavaSource.Filename)%(JavaSource.Extension)" Importance="high" />
+
+    <!-- Run Gradle build -->
+    <Message Text="Building AAR with Gradle..." Importance="high" />
+    <Exec Command="&quot;$(GradleWrapper)&quot; $(GradleTask) $(GradleProperties) --no-daemon"
+          WorkingDirectory="$(GradleProjectDir)"
+          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
+          ConsoleToMsBuild="true"
+          Condition="Exists('$(GradleWrapper)')" />
+
+    <Warning Text="Gradle wrapper not found at $(GradleWrapper). Please ensure gradlew.bat exists."
+             Condition="!Exists('$(GradleWrapper)')" />
+
+    <!-- Copy AAR to output directory -->
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+    <Copy SourceFiles="$(AarOutputFile)"
+          DestinationFiles="$(FinalAarPath)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(AarOutputFile)')" />
+
+    <!-- Display output path similar to native library -->
+    <Message Text="$(MSBuildProjectFile) -> $([System.IO.Path]::GetFullPath('$(FinalAarPath)'))" Importance="high" />
+  </Target>
+
+  <!-- Clean Target -->
+  <Target Name="Clean" DependsOnTargets="CleanStagedJavaSources">
+    <Message Text="Cleaning with Gradle..." Importance="high" />
+    <Exec Command="&quot;$(GradleWrapper)&quot; clean --no-daemon"
+          WorkingDirectory="$(GradleProjectDir)"
+          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
+          ConsoleToMsBuild="true"
+          IgnoreExitCode="true"
+          Condition="Exists('$(GradleWrapper)')" />
+
+    <!-- Remove output AAR -->
+    <Delete Files="$(FinalAarPath)" Condition="Exists('$(FinalAarPath)')" />
+    <Message Text="[$(ProjectName)] Cleaned" Importance="normal" />
+  </Target>
+
+  <!-- Rebuild Target -->
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+
+</Project>

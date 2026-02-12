@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - Properties Wrapper
+  Imports the main toolset properties from the canonical location.
+
+  IMPORTANT: PropertyPageSchema is NOT defined here to avoid duplicates.
+  The main Toolset.props defines all property page schemas.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Determine base path - handle both VSIX deployment and development -->
+  <PropertyGroup>
+    <!-- In VSIX deployment, files are at MSBuild\Microsoft\VC\v170\Platforms\Android\PlatformToolsets\OceanNDK -->
+    <!-- The main toolset files may be deployed to a separate location or alongside -->
+    <_OceanExtensionBase Condition="'$(OCEAN_ANDROID_EXTENSION_PATH)' != ''">$(OCEAN_ANDROID_EXTENSION_PATH)</_OceanExtensionBase>
+    <_OceanExtensionBase Condition="'$(_OceanExtensionBase)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\..\..\..</_OceanExtensionBase>
+  </PropertyGroup>
+
+  <!-- Import main toolset properties (includes PropertyPageSchema definitions) -->
+  <Import Project="$(_OceanExtensionBase)\toolset\OceanNDK\Toolset.props"
+          Condition="Exists('$(_OceanExtensionBase)\toolset\OceanNDK\Toolset.props')" />
+
+  <!-- Fallback: direct import if deployed alongside -->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\..\OceanNDK\Toolset.props"
+          Condition="!Exists('$(_OceanExtensionBase)\toolset\OceanNDK\Toolset.props') AND Exists('$(MSBuildThisFileDirectory)..\..\..\..\OceanNDK\Toolset.props')" />
+
+</Project>

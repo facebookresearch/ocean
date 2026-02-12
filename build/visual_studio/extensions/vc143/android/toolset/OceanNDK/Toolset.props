@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - MSBuild Properties
+
+  This file provides native Visual Studio integration for Android NDK development,
+  enabling full ClCompile/Link support with property pages and incremental builds.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       DIAGNOSTIC: Toolset.props loaded
+       ============================================================ -->
+  <Target Name="_DiagToolsetPropsLoaded" BeforeTargets="PrepareForBuild">
+    <Message Text="========================================" Importance="Normal" />
+    <Message Text="[OceanNDK] Toolset.props LOADED" Importance="Normal" />
+    <Message Text="========================================" Importance="Normal" />
+    <Message Text="[OceanNDK] MSBuildThisFileDirectory = $(MSBuildThisFileDirectory)" Importance="Normal" />
+    <Message Text="[OceanNDK] MSBuildThisFileFullPath  = $(MSBuildThisFileFullPath)" Importance="Normal" />
+    <Message Text="[OceanNDK] Project File             = $(MSBuildProjectFullPath)" Importance="Normal" />
+    <Message Text="[OceanNDK] Configuration            = $(Configuration)" Importance="Normal" />
+    <Message Text="[OceanNDK] Platform                 = $(Platform)" Importance="Normal" />
+  </Target>
+
+  <!-- ============================================================
+       Toolset Identification
+       ============================================================ -->
+  <PropertyGroup Label="Configuration">
+    <!-- Note: We don't set PlatformToolset here - the project uses v143 as base
+         and we override the tool paths to use Android NDK clang -->
+    <PlatformToolsetVersion>1.0</PlatformToolsetVersion>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+    <!-- Mark this as an Android NDK build -->
+    <IsAndroidNdkBuild>true</IsAndroidNdkBuild>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       NDK Path Resolution
+       ============================================================ -->
+  <PropertyGroup Label="NdkPaths">
+    <!-- Priority 0: Ocean-specific override (for pinning specific NDK version) -->
+    <AndroidNdkPath Condition="'$(AndroidNdkPath)' == ''">$(OCEAN_ANDROID_NDK_HOME)</AndroidNdkPath>
+
+    <!-- Priority 1: Check standard environment variables -->
+    <AndroidNdkPath Condition="'$(AndroidNdkPath)' == ''">$(ANDROID_NDK_HOME)</AndroidNdkPath>
+    <AndroidNdkPath Condition="'$(AndroidNdkPath)' == ''">$(ANDROID_NDK_ROOT)</AndroidNdkPath>
+    <AndroidNdkPath Condition="'$(AndroidNdkPath)' == ''">$(NDK_ROOT)</AndroidNdkPath>
+
+    <!-- Priority 2: Check registry (auto-detected by Ocean Android Extension) -->
+    <!-- The extension enumerates SDK/ndk/ and picks the latest version dynamically -->
+    <_RegistryNdkPath>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'AndroidNdkPath', '', RegistryView.Default))</_RegistryNdkPath>
+    <AndroidNdkPath Condition="'$(AndroidNdkPath)' == '' AND '$(_RegistryNdkPath)' != ''">$(_RegistryNdkPath)</AndroidNdkPath>
+
+    <!-- Priority 3: SDK path detection for diagnostics -->
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_HOME)</AndroidSdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_SDK_ROOT)</AndroidSdkPath>
+        <_RegistrySdkPath>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'AndroidSdkPath', '', RegistryView.Default))</_RegistrySdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == '' AND '$(_RegistrySdkPath)' != ''">$(_RegistrySdkPath)</AndroidSdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == '' AND Exists('$(LOCALAPPDATA)\Android\Sdk')">$(LOCALAPPDATA)\Android\Sdk</AndroidSdkPath>
+
+    <!-- Priority 4: Legacy ndk-bundle folder (for very old SDK installations) -->
+    <AndroidNdkPath Condition="'$(AndroidNdkPath)' == '' AND Exists('$(AndroidSdkPath)\ndk-bundle')">$(AndroidSdkPath)\ndk-bundle</AndroidNdkPath>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Host Platform Detection
+       ============================================================ -->
+  <PropertyGroup Label="HostPlatform">
+    <!-- Detect host OS for prebuilt toolchain selection -->
+    <NdkHostTag Condition="'$(NdkHostTag)' == '' AND '$(OS)' == 'Windows_NT'">windows-x86_64</NdkHostTag>
+    <NdkHostTag Condition="'$(NdkHostTag)' == '' AND Exists('/Applications')">darwin-x86_64</NdkHostTag>
+    <NdkHostTag Condition="'$(NdkHostTag)' == ''">linux-x86_64</NdkHostTag>
+
+    <!-- Executable extension -->
+    <NdkExeExt Condition="'$(OS)' == 'Windows_NT'">.exe</NdkExeExt>
+    <NdkExeExt Condition="'$(OS)' != 'Windows_NT'"></NdkExeExt>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Platform to ABI Mapping
+       Note: AndroidTargetTriple is only set if not already defined by
+       OceanNDK.Common.props (which uses AndroidAPILevelNumber).
+       This avoids overwriting correct values with malformed ones.
+       ============================================================ -->
+  <PropertyGroup Label="AbiMapping">
+    <!-- ARM64 platform -> arm64-v8a ABI -->
+    <AndroidAbi Condition="'$(Platform)' == 'ARM64'">arm64-v8a</AndroidAbi>
+    <AndroidTargetTriple Condition="'$(Platform)' == 'ARM64' AND '$(AndroidTargetTriple)' == ''">aarch64-linux-android$(AndroidApiLevel)</AndroidTargetTriple>
+    <AndroidArchFlags Condition="'$(Platform)' == 'ARM64'"></AndroidArchFlags>
+
+    <!-- ARM platform -> armeabi-v7a ABI -->
+    <AndroidAbi Condition="'$(Platform)' == 'ARM'">armeabi-v7a</AndroidAbi>
+    <AndroidTargetTriple Condition="'$(Platform)' == 'ARM' AND '$(AndroidTargetTriple)' == ''">armv7a-linux-androideabi$(AndroidApiLevel)</AndroidTargetTriple>
+    <AndroidArchFlags Condition="'$(Platform)' == 'ARM'">-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16</AndroidArchFlags>
+
+    <!-- x64 platform -> x86_64 ABI -->
+    <AndroidAbi Condition="'$(Platform)' == 'x64'">x86_64</AndroidAbi>
+    <AndroidTargetTriple Condition="'$(Platform)' == 'x64' AND '$(AndroidTargetTriple)' == ''">x86_64-linux-android$(AndroidApiLevel)</AndroidTargetTriple>
+    <AndroidArchFlags Condition="'$(Platform)' == 'x64'"></AndroidArchFlags>
+
+    <!-- x86/Win32 platform -> x86 ABI -->
+    <AndroidAbi Condition="'$(Platform)' == 'x86' OR '$(Platform)' == 'Win32'">x86</AndroidAbi>
+    <AndroidTargetTriple Condition="('$(Platform)' == 'x86' OR '$(Platform)' == 'Win32') AND '$(AndroidTargetTriple)' == ''">i686-linux-android$(AndroidApiLevel)</AndroidTargetTriple>
+    <AndroidArchFlags Condition="'$(Platform)' == 'x86' OR '$(Platform)' == 'Win32'">-mstackrealign</AndroidArchFlags>
+
+    <!-- Default to ARM64 if platform not recognized -->
+    <AndroidAbi Condition="'$(AndroidAbi)' == ''">arm64-v8a</AndroidAbi>
+    <AndroidTargetTriple Condition="'$(AndroidTargetTriple)' == ''">aarch64-linux-android$(AndroidApiLevel)</AndroidTargetTriple>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Toolchain Paths
+       ============================================================ -->
+  <PropertyGroup Label="ToolchainPaths">
+    <NdkToolchainRoot>$(AndroidNdkPath)\toolchains\llvm\prebuilt\$(NdkHostTag)</NdkToolchainRoot>
+    <NdkToolchainBin>$(NdkToolchainRoot)\bin</NdkToolchainBin>
+    <NdkSysroot>$(NdkToolchainRoot)\sysroot</NdkSysroot>
+
+    <!-- Tool executables -->
+    <CLToolExe>clang++$(NdkExeExt)</CLToolExe>
+    <CLToolPath>$(NdkToolchainBin)</CLToolPath>
+    <LinkToolExe>clang++$(NdkExeExt)</LinkToolExe>
+    <LinkToolPath>$(NdkToolchainBin)</LinkToolPath>
+    <LibToolExe>llvm-ar$(NdkExeExt)</LibToolExe>
+    <LibToolPath>$(NdkToolchainBin)</LibToolPath>
+
+    <!-- Full paths for task usage -->
+    <AndroidClangPath>$(NdkToolchainBin)\$(CLToolExe)</AndroidClangPath>
+    <AndroidArPath>$(NdkToolchainBin)\$(LibToolExe)</AndroidArPath>
+    <AndroidStripPath>$(NdkToolchainBin)\llvm-strip$(NdkExeExt)</AndroidStripPath>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Default Android Settings
+       ============================================================ -->
+  <PropertyGroup Label="AndroidDefaults">
+    <!-- API Level: 24 = Android 7.0 Nougat (widely supported baseline) -->
+    <AndroidApiLevel Condition="'$(AndroidApiLevel)' == ''">24</AndroidApiLevel>
+
+    <!-- C++ Standard: c++17 is well-supported and modern -->
+    <AndroidCppStandard Condition="'$(AndroidCppStandard)' == ''">c++17</AndroidCppStandard>
+
+    <!-- C Standard -->
+    <AndroidCStandard Condition="'$(AndroidCStandard)' == ''">c11</AndroidCStandard>
+
+    <!-- STL: c++_shared recommended for most projects -->
+    <AndroidStl Condition="'$(AndroidStl)' == ''">c++_shared</AndroidStl>
+
+    <!-- RTTI and Exceptions: enabled by default -->
+    <AndroidEnableRtti Condition="'$(AndroidEnableRtti)' == ''">true</AndroidEnableRtti>
+    <AndroidEnableExceptions Condition="'$(AndroidEnableExceptions)' == ''">true</AndroidEnableExceptions>
+
+    <!-- Position Independent Code: required for shared libraries -->
+    <AndroidPositionIndependentCode Condition="'$(AndroidPositionIndependentCode)' == ''">true</AndroidPositionIndependentCode>
+
+    <!-- Thumb mode for ARM (not ARM64) -->
+    <AndroidThumbMode Condition="'$(AndroidThumbMode)' == '' AND '$(Platform)' == 'ARM'">true</AndroidThumbMode>
+    <AndroidThumbMode Condition="'$(AndroidThumbMode)' == ''">false</AndroidThumbMode>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Output Directories
+       ============================================================ -->
+  <PropertyGroup Label="OutputPaths">
+    <OutDir Condition="'$(OutDir)' == ''">$(ProjectDir)$(Configuration)\$(AndroidAbi)\</OutDir>
+    <IntDir Condition="'$(IntDir)' == ''">$(ProjectDir)obj\$(Configuration)\$(AndroidAbi)\</IntDir>
+
+    <!-- Output name with lib prefix for shared/static libraries -->
+    <TargetName Condition="'$(TargetName)' == ''">$(ProjectName)</TargetName>
+    <TargetExt Condition="'$(ConfigurationType)' == 'DynamicLibrary'">.so</TargetExt>
+    <TargetExt Condition="'$(ConfigurationType)' == 'StaticLibrary'">.a</TargetExt>
+    <TargetPrefix Condition="'$(ConfigurationType)' == 'DynamicLibrary' OR '$(ConfigurationType)' == 'StaticLibrary'">lib</TargetPrefix>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       ClCompile Property Defaults
+       ============================================================ -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!-- Compiler executable -->
+      <CompilerPath>$(AndroidClangPath)</CompilerPath>
+
+      <!-- Target configuration -->
+      <TargetTriple>$(AndroidTargetTriple)</TargetTriple>
+      <Sysroot>$(NdkSysroot)</Sysroot>
+      <AndroidAbi>$(AndroidAbi)</AndroidAbi>
+      <AndroidApiLevel>$(AndroidApiLevel)</AndroidApiLevel>
+
+      <!-- Language standards -->
+      <LanguageStandard_C>$(AndroidCStandard)</LanguageStandard_C>
+      <LanguageStandard>$(AndroidCppStandard)</LanguageStandard>
+
+      <!-- Code generation -->
+      <PositionIndependentCode>$(AndroidPositionIndependentCode)</PositionIndependentCode>
+      <RuntimeTypeInfo>$(AndroidEnableRtti)</RuntimeTypeInfo>
+      <ExceptionHandling>$(AndroidEnableExceptions)</ExceptionHandling>
+      <ThumbMode>$(AndroidThumbMode)</ThumbMode>
+
+      <!-- Optimization defaults based on configuration -->
+      <Optimization Condition="'$(Configuration)' == 'Debug'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)' == 'Release'">MaxSpeed</Optimization>
+
+      <!-- Debug information -->
+      <DebugInformationFormat Condition="'$(Configuration)' == 'Debug'">FullDebug</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)' == 'Release'">None</DebugInformationFormat>
+
+      <!-- Preprocessor definitions -->
+      <PreprocessorDefinitions Condition="'$(Configuration)' == 'Debug'">_DEBUG;DEBUG=1;ANDROID;__ANDROID_API__=$(AndroidApiLevel);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)' == 'Release'">NDEBUG;ANDROID;__ANDROID_API__=$(AndroidApiLevel);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+
+      <!-- Warning level -->
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+
+      <!-- Object file output -->
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- ============================================================
+       Link Property Defaults
+       ============================================================ -->
+  <ItemDefinitionGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
+    <Link>
+      <!-- Linker executable (use clang++ for C++ linking) -->
+      <LinkerPath>$(AndroidClangPath)</LinkerPath>
+
+      <!-- Target configuration -->
+      <TargetTriple>$(AndroidTargetTriple)</TargetTriple>
+      <Sysroot>$(NdkSysroot)</Sysroot>
+      <AndroidAbi>$(AndroidAbi)</AndroidAbi>
+
+      <!-- Output -->
+      <OutputFile>$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)</OutputFile>
+
+      <!-- STL -->
+      <CppStl>$(AndroidStl)</CppStl>
+
+      <!-- Clear Windows default libraries and set Android ones -->
+      <!-- Do NOT use %(AdditionalDependencies) as it inherits Windows libs from v143 -->
+      <AdditionalDependencies>log;android</AdditionalDependencies>
+
+      <!-- Strip symbols in Release -->
+      <StripSymbols Condition="'$(Configuration)' == 'Release'">true</StripSymbols>
+      <StripSymbols Condition="'$(Configuration)' == 'Debug'">false</StripSymbols>
+
+      <!-- Generate map file -->
+      <GenerateMapFile>false</GenerateMapFile>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- ============================================================
+       Lib (Static Library) Property Defaults
+       ============================================================ -->
+  <ItemDefinitionGroup Condition="'$(ConfigurationType)' == 'StaticLibrary'">
+    <Lib>
+      <!-- Archiver executable -->
+      <ArchiverPath>$(AndroidArPath)</ArchiverPath>
+
+      <!-- Output -->
+      <OutputFile>$(OutDir)$(TargetPrefix)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+
+  <!-- ============================================================
+       IntelliSense Configuration
+       ============================================================ -->
+  <PropertyGroup Label="IntelliSense">
+    <!-- STL include path based on ABI -->
+    <_StlIncludePath>$(NdkSysroot)\usr\include\c++\v1</_StlIncludePath>
+
+    <!-- Architecture-specific include path -->
+    <_ArchIncludePath Condition="'$(AndroidAbi)' == 'arm64-v8a'">$(NdkSysroot)\usr\include\aarch64-linux-android</_ArchIncludePath>
+    <_ArchIncludePath Condition="'$(AndroidAbi)' == 'armeabi-v7a'">$(NdkSysroot)\usr\include\arm-linux-androideabi</_ArchIncludePath>
+    <_ArchIncludePath Condition="'$(AndroidAbi)' == 'x86_64'">$(NdkSysroot)\usr\include\x86_64-linux-android</_ArchIncludePath>
+    <_ArchIncludePath Condition="'$(AndroidAbi)' == 'x86'">$(NdkSysroot)\usr\include\i686-linux-android</_ArchIncludePath>
+
+    <!-- Combined IntelliSense paths -->
+    <NMakeIncludeSearchPath>$(NdkSysroot)\usr\include;$(_StlIncludePath);$(_ArchIncludePath);%(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+
+    <!-- IntelliSense preprocessor definitions -->
+    <NMakePreprocessorDefinitions>ANDROID;__ANDROID_API__=$(AndroidApiLevel);__clang__;%(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Disable Default VS Property Pages
+
+       These properties tell VS to not load the default Windows C++ property
+       pages, allowing our custom OceanNDK property pages to be shown instead.
+       ============================================================ -->
+  <PropertyGroup>
+    <!-- Hide default General, C/C++, and Linker property pages -->
+    <UseDefaultPropertyPageSchemas>false</UseDefaultPropertyPageSchemas>
+    <UseDefaultGeneralPropertyPageSchema>false</UseDefaultGeneralPropertyPageSchema>
+    <UseDefaultClPropertyPageSchema>false</UseDefaultClPropertyPageSchema>
+    <UseDefaultLinkPropertyPageSchema>false</UseDefaultLinkPropertyPageSchema>
+    <UseDefaultLibPropertyPageSchema>false</UseDefaultLibPropertyPageSchema>
+
+    <!-- Disable Windows-specific property pages that don't apply to Android -->
+    <UseDefaultManifestPropertyPageSchema>false</UseDefaultManifestPropertyPageSchema>
+    <UseDefaultResourceCompilePropertyPageSchema>false</UseDefaultResourceCompilePropertyPageSchema>
+    <UseDefaultMidlPropertyPageSchema>false</UseDefaultMidlPropertyPageSchema>
+    <UseDefaultBrowseInformationPropertyPageSchema>false</UseDefaultBrowseInformationPropertyPageSchema>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Property Page Schema References
+
+       IMPORTANT: These property page schemas use unique rule names
+       (OceanNDK_General, OceanNDK_ClCompile, OceanNDK_Link) to avoid
+       conflicts with Visual Studio's built-in ClCompile and Link rules.
+
+       This is the ONLY place PropertyPageSchema should be set for OceanNDK.
+       The stub files (installed to VS PlatformToolsets folders) intentionally
+       do NOT define PropertyPageSchema to avoid duplicate entries.
+       ============================================================ -->
+  <PropertyGroup>
+    <PropertyPageSchema>
+      $(MSBuildThisFileDirectory)PropertyPages\OceanNDK.General.xml;
+      $(MSBuildThisFileDirectory)PropertyPages\OceanNDK.Clang.xml;
+      $(MSBuildThisFileDirectory)PropertyPages\OceanNDK.Link.xml;
+      %(PropertyPageSchema)
+    </PropertyPageSchema>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Validation
+       ============================================================ -->
+  <Target Name="_ValidateOceanNdkToolset" BeforeTargets="PrepareForBuild">
+    <!-- Extensive diagnostics -->
+    <Message Text="========================================" Importance="Normal" />
+    <Message Text="[OceanNDK] Toolset Validation - START" Importance="Normal" />
+    <Message Text="========================================" Importance="Normal" />
+
+    <!-- NDK Path diagnostics -->
+    <Message Text="[OceanNDK] NDK Path Resolution:" Importance="Normal" />
+    <Message Text="[OceanNDK]   OCEAN_ANDROID_NDK_HOME   = $(OCEAN_ANDROID_NDK_HOME)" Importance="Normal" />
+    <Message Text="[OceanNDK]   ANDROID_NDK_HOME env     = $(ANDROID_NDK_HOME)" Importance="Normal" />
+    <Message Text="[OceanNDK]   ANDROID_NDK_ROOT env     = $(ANDROID_NDK_ROOT)" Importance="Normal" />
+    <Message Text="[OceanNDK]   NDK_ROOT env             = $(NDK_ROOT)" Importance="Normal" />
+    <Message Text="[OceanNDK]   Registry NdkPath         = $(_RegistryNdkPath)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidNdkPath (final)   = $(AndroidNdkPath)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidNdkPath EXISTS" Importance="Normal" Condition="Exists('$(AndroidNdkPath)')" />
+    <Message Text="[OceanNDK]   AndroidNdkPath NOT FOUND" Importance="Normal" Condition="!Exists('$(AndroidNdkPath)')" />
+
+    <!-- SDK Path diagnostics -->
+    <Message Text="[OceanNDK] SDK Path Resolution:" Importance="Normal" />
+    <Message Text="[OceanNDK]   ANDROID_HOME env         = $(ANDROID_HOME)" Importance="Normal" />
+    <Message Text="[OceanNDK]   ANDROID_SDK_ROOT env     = $(ANDROID_SDK_ROOT)" Importance="Normal" />
+    <Message Text="[OceanNDK]   Registry SdkPath         = $(_RegistrySdkPath)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidSdkPath (final)   = $(AndroidSdkPath)" Importance="Normal" />
+
+    <!-- Toolchain diagnostics -->
+    <Message Text="[OceanNDK] Toolchain Paths:" Importance="Normal" />
+    <Message Text="[OceanNDK]   NdkHostTag               = $(NdkHostTag)" Importance="Normal" />
+    <Message Text="[OceanNDK]   NdkToolchainRoot         = $(NdkToolchainRoot)" Importance="Normal" />
+    <Message Text="[OceanNDK]   NdkToolchainBin          = $(NdkToolchainBin)" Importance="Normal" />
+    <Message Text="[OceanNDK]   NdkSysroot               = $(NdkSysroot)" Importance="Normal" />
+
+    <!-- Tool paths -->
+    <Message Text="[OceanNDK] Tool Executables:" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidClangPath         = $(AndroidClangPath)" Importance="Normal" />
+    <Message Text="[OceanNDK]   Clang EXISTS" Importance="Normal" Condition="Exists('$(AndroidClangPath)')" />
+    <Message Text="[OceanNDK]   Clang NOT FOUND" Importance="Normal" Condition="!Exists('$(AndroidClangPath)')" />
+    <Message Text="[OceanNDK]   AndroidArPath            = $(AndroidArPath)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidStripPath         = $(AndroidStripPath)" Importance="Normal" />
+
+    <!-- ABI/Target diagnostics -->
+    <Message Text="[OceanNDK] Target Configuration:" Importance="Normal" />
+    <Message Text="[OceanNDK]   Platform                 = $(Platform)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidAbi               = $(AndroidAbi)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidTargetTriple      = $(AndroidTargetTriple)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidApiLevel          = $(AndroidApiLevel)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidArchFlags         = $(AndroidArchFlags)" Importance="Normal" />
+
+    <!-- Build settings -->
+    <Message Text="[OceanNDK] Build Settings:" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidCppStandard       = $(AndroidCppStandard)" Importance="Normal" />
+    <Message Text="[OceanNDK]   AndroidStl               = $(AndroidStl)" Importance="Normal" />
+    <Message Text="[OceanNDK]   ConfigurationType        = $(ConfigurationType)" Importance="Normal" />
+
+    <!-- Output paths -->
+    <Message Text="[OceanNDK] Output Paths:" Importance="Normal" />
+    <Message Text="[OceanNDK]   OutDir                   = $(OutDir)" Importance="Normal" />
+    <Message Text="[OceanNDK]   IntDir                   = $(IntDir)" Importance="Normal" />
+    <Message Text="[OceanNDK]   TargetName               = $(TargetName)" Importance="Normal" />
+    <Message Text="[OceanNDK]   TargetExt                = $(TargetExt)" Importance="Normal" />
+
+    <!-- VCTargetsPath diagnostic (important for debugging) -->
+    <Message Text="[OceanNDK] VS Paths:" Importance="Normal" />
+    <Message Text="[OceanNDK]   VCTargetsPath            = $(VCTargetsPath)" Importance="Normal" />
+    <Message Text="[OceanNDK]   PlatformToolset          = $(PlatformToolset)" Importance="Normal" />
+
+    <Message Text="========================================" Importance="Normal" />
+
+    <Error
+      Condition="!Exists('$(AndroidNdkPath)')"
+      Text="Android NDK not found. The extension will auto-detect NDK from SDK folder after VS is opened once. Alternatively, set ANDROID_NDK_HOME environment variable, or set OCEAN_ANDROID_NDK_HOME to use a custom NDK folder (useful when ANDROID_NDK_HOME is already in use by another application). Checked: env vars (OCEAN_ANDROID_NDK_HOME, ANDROID_NDK_HOME, ANDROID_NDK_ROOT, NDK_ROOT), registry (HKCU\Software\OceanAndroidExtension\AndroidNdkPath), SDK folder ($(AndroidSdkPath)\ndk\*)." />
+
+    <Error
+      Condition="!Exists('$(AndroidClangPath)')"
+      Text="NDK Clang compiler not found at: $(AndroidClangPath). Ensure NDK is properly installed." />
+
+    <Message Text="[OceanNDK] Validation PASSED - Ready to build" Importance="Normal" />
+    <Message Text="========================================" Importance="Normal" />
+  </Target>
+
+</Project>

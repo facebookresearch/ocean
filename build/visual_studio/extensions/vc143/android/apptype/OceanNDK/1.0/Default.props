@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - Default.props
+  This file is loaded early in project evaluation to set up default properties.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!-- Path to OceanNDK common targets -->
+    <OceanNDKCommonTargetsPath>$(VCTargetsPath)\Application Type\$(ApplicationType)\$(ApplicationTypeRevision)\</OceanNDKCommonTargetsPath>
+
+    <!-- Default PlatformToolset -->
+    <PlatformToolset Condition="'$(PlatformToolset)' == ''">OceanNDK</PlatformToolset>
+    <DefaultPlatformToolset>OceanNDK</DefaultPlatformToolset>
+
+    <!-- Default API Level: 24 = Android 7.0 Nougat -->
+    <AndroidAPILevel Condition="'$(AndroidAPILevel)' == ''">android-24</AndroidAPILevel>
+
+    <!-- Extract numeric API level -->
+    <AndroidAPILevelNumber Condition="'$(AndroidAPILevel)' != ''">$([System.Text.RegularExpressions.Regex]::Match('$(AndroidAPILevel)', '\d+').Value)</AndroidAPILevelNumber>
+    <AndroidAPILevelNumber Condition="'$(AndroidAPILevelNumber)' == ''">24</AndroidAPILevelNumber>
+
+    <!-- Default STL: c++_shared recommended for most projects -->
+    <UseOfStl Condition="'$(UseOfStl)' == ''">c++_shared</UseOfStl>
+
+    <!-- Default configuration type -->
+    <ConfigurationType Condition="'$(ConfigurationType)' == ''">DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+
+</Project>

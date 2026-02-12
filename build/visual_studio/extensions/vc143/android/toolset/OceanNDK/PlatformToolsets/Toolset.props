@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Platform Toolset - Stub File for VS Installation
+
+  This is a minimal stub file that gets copied to:
+    C:\Program Files\Microsoft Visual Studio\2022\<Edition>\MSBuild\Microsoft\VC\v170\Platforms\<Platform>\PlatformToolsets\OceanNDK\
+
+  It redirects to the actual toolset implementation in the VSIX extension folder,
+  which is discovered via registry (written by the extension on VS startup).
+
+  IMPORTANT: PropertyPageSchema is NOT defined here to avoid duplicates.
+  The main Toolset.props defines all property page schemas.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Locate the Ocean Android Extension path from registry -->
+  <PropertyGroup>
+    <!-- Method 1: Environment variable (explicit override for development/testing) -->
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == '' AND '$(OCEAN_ANDROID_EXTENSION_PATH)' != ''">$(OCEAN_ANDROID_EXTENSION_PATH)\toolset\OceanNDK\</_OceanExtensionPath>
+
+    <!-- Method 2: Registry key (set by VSIX extension on VS startup) -->
+    <!-- Note: Registry value may or may not include trailing backslash -->
+    <_OceanExtensionPathRaw Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ToolsetPath', '', RegistryView.Default))</_OceanExtensionPathRaw>
+    <!-- Ensure trailing backslash for proper path concatenation -->
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == '' AND '$(_OceanExtensionPathRaw)' != '' AND !$(_OceanExtensionPathRaw.EndsWith('\'))">$(_OceanExtensionPathRaw)\</_OceanExtensionPath>
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == '' AND '$(_OceanExtensionPathRaw)' != ''">$(_OceanExtensionPathRaw)</_OceanExtensionPath>
+
+    <!-- Validate the path exists -->
+    <_OceanExtensionFound Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)Toolset.props')">true</_OceanExtensionFound>
+  </PropertyGroup>
+
+  <!-- Import the real toolset from the extension folder (includes PropertyPageSchema definitions) -->
+  <Import Project="$(_OceanExtensionPath)Toolset.props" Condition="'$(_OceanExtensionFound)' == 'true'" />
+
+  <!-- Error if extension not found -->
+  <Target Name="_ValidateOceanNDKExtension" BeforeTargets="PrepareForBuild" Condition="'$(_OceanExtensionFound)' != 'true'">
+    <PropertyGroup>
+      <_DiagRegistry>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ToolsetPath', '(not set)', RegistryView.Default))</_DiagRegistry>
+    </PropertyGroup>
+    <Message Text="[OceanNDK] Toolset Discovery Diagnostics:" Importance="High" />
+    <Message Text="[OceanNDK]   OCEAN_ANDROID_EXTENSION_PATH = $(OCEAN_ANDROID_EXTENSION_PATH)" Importance="High" />
+    <Message Text="[OceanNDK]   Registry ToolsetPath = $(_DiagRegistry)" Importance="High" />
+    <Message Text="[OceanNDK]   Resolved Path        = $(_OceanExtensionPath)" Importance="High" />
+    <Error Text="Ocean Android Extension not found. Please install the extension from the VSIX and open Visual Studio at least once to register the toolset path. Registry key: HKCU\Software\OceanAndroidExtension\ToolsetPath" />
+  </Target>
+
+</Project>

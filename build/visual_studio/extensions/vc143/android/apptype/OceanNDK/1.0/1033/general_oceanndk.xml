@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  OceanNDK Application Type - General Property Page
+  This file is loaded from the 1033 locale folder for property page display.
+-->
+<Rule Name="ConfigurationGeneral"
+      DisplayName="General"
+      PageTemplate="generic"
+      Description="General"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General project settings" />
+    <Category Name="ProjectDefaults" DisplayName="Project Defaults" Description="Default project settings" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+
+  <!-- General Category -->
+  <StringProperty Name="OutDir"
+                  DisplayName="Output Directory"
+                  Description="Specifies a relative path to the output file directory."
+                  Category="General"
+                  Default="$(ProjectDir)$(Configuration)\$(AndroidAbi)\"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.OutputDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="IntDir"
+                  DisplayName="Intermediate Directory"
+                  Description="Specifies a relative path to the intermediate file directory."
+                  Category="General"
+                  Default="$(ProjectDir)obj\$(Configuration)\$(AndroidAbi)\"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.IntermediateDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="TargetName"
+                  DisplayName="Target Name"
+                  Description="Specifies a file name that this project will generate."
+                  Category="General"
+                  Default="$(ProjectName)"
+                  F1Keyword="VC.Project.VCConfiguration.TargetName">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="TargetExt"
+                  DisplayName="Target Extension"
+                  Description="Specifies a file extension that this project will generate. (Example: .so or .a)"
+                  Category="General"
+                  F1Keyword="VC.Project.VCConfiguration.TargetExt">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <EnumProperty Name="ConfigurationType"
+                DisplayName="Configuration Type"
+                Description="Specifies the type of output this configuration generates."
+                Category="General"
+                F1Keyword="VC.Project.VCConfiguration.ConfigurationType">
+    <EnumValue Name="DynamicLibrary" DisplayName="Dynamic Library (.so)" Description="Build a shared library (.so file)" />
+    <EnumValue Name="StaticLibrary" DisplayName="Static Library (.a)" Description="Build a static library (.a file)" />
+  </EnumProperty>
+
+  <!-- Project Defaults Category -->
+  <StringProperty Name="AndroidAPILevel"
+                  DisplayName="Target API Level"
+                  Description="Android API level to target (e.g., android-24 for Android 7.0 Nougat)."
+                  Category="ProjectDefaults"
+                  Default="android-24"
+                  F1Keyword="VC.Project.AndroidAPILevel">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <EnumProperty Name="UseOfStl"
+                DisplayName="C++ Standard Library"
+                Description="Specifies the C++ STL implementation to use."
+                Category="ProjectDefaults"
+                Default="c++_shared"
+                F1Keyword="VC.Project.UseOfStl">
+    <EnumValue Name="c++_shared" DisplayName="LLVM libc++ Shared (c++_shared)" Description="LLVM's libc++ as a shared library." />
+    <EnumValue Name="c++_static" DisplayName="LLVM libc++ Static (c++_static)" Description="LLVM's libc++ as a static library." />
+    <EnumValue Name="system" DisplayName="System STL" Description="Minimal system C++ runtime." />
+    <EnumValue Name="none" DisplayName="No C++ STL" Description="No C++ standard library support." />
+  </EnumProperty>
+
+  <StringProperty Name="AndroidNdkPath"
+                  DisplayName="NDK Path"
+                  Description="Path to the Android NDK installation. Leave empty to auto-detect."
+                  Category="ProjectDefaults"
+                  Subtype="folder"
+                  F1Keyword="VC.Project.AndroidNdkPath">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <!-- Minimal hidden properties needed for stable reload + Add Item plumbing -->
+  <StringProperty Name="_ProjectFileVersion" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="False" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="ProjectGuid" Visible="false">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Globals" HasConfigurationCondition="False" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <!-- Used by Add New/Existing Item template selection -->
+  <StringProperty Name="AddItemTemplateGuid" Visible="false" />
+  <!-- Helps choose the default item/content type when adding files -->
+  <StringProperty Name="DefaultContentType" Visible="false" />
+
+</Rule>
