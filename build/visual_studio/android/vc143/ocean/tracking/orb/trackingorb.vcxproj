@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Native Library Project
+  Uses the OceanNDK Application Type for Android NDK cross-compilation.
+-->
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|ARM64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|ARM">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x86">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x86">
+      <Configuration>Static Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x86">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x86">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{d8e9f0a1-b2c3-44d5-e6f7-a8b9c0d1e2f3}</ProjectGuid>
+    <RootNamespace>trackingorb</RootNamespace>
+    <ProjectName>trackingorb</ProjectName>
+    <Keyword>Android</Keyword>
+    <ApplicationType>OceanNDK</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <IsAndroidNdkProject>true</IsAndroidNdkProject>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Static Release'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Release'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="trackingorb_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\Correspondences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\FeatureMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\FeatureTracker6DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\UnidirectionalCorrespondences.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\Correspondences.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\FeatureMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\FeatureTracker6DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\ORB.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\orb\UnidirectionalCorrespondences.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
