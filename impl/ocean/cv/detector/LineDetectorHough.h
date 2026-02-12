@@ -859,7 +859,7 @@ inline Lines2 LineDetectorHough::InfiniteLine::cornerAlignedLines(const Infinite
 	{
 		for (size_t n = 0; n < size; ++n)
 		{
-			result.push_back(Line2(frameCenter + lines[n].point(), lines[n].direction()));
+			result.emplace_back(frameCenter + lines[n].point(), lines[n].direction());
 			strengths[n] = lines[n].strength();
 		}
 	}
@@ -867,7 +867,7 @@ inline Lines2 LineDetectorHough::InfiniteLine::cornerAlignedLines(const Infinite
 	{
 		for (size_t n = 0; n < size; ++n)
 		{
-			result.push_back(Line2(frameCenter + lines[n].point(), lines[n].direction()));
+			result.emplace_back(frameCenter + lines[n].point(), lines[n].direction());
 		}
 	}
 
