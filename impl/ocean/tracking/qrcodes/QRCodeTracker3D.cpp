@@ -32,7 +32,7 @@ namespace Tracking
 namespace QRCodes
 {
 
-void QRCodeTracker3D::ObservationHistory::addObservation(const SharedAnyCamera& sharedAnyCamera, const HomogenousMatrix4& world_T_camera, Geometry::ObjectPoints&& objectPoints, Geometry::ImagePoints&& imagePoints)
+void QRCodeTracker3D::ObservationHistory::addObservation(const SharedAnyCamera& sharedAnyCamera, const HomogenousMatrix4& world_T_camera, Vectors3&& objectPoints, Vectors2&& imagePoints)
 {
 	ocean_assert(sharedAnyCamera != nullptr && sharedAnyCamera->isValid());
 	ocean_assert(world_T_camera.isValid());
@@ -68,8 +68,8 @@ size_t QRCodeTracker3D::ObservationHistory::removeObservations(const SharedAnyCa
 		const HomogenousMatrix4 camera_T_world = world_T_cameras_[iObservation].inverted();
 		const HomogenousMatrix4 camera_T_code = camera_T_world * world_T_code;
 
-		const Geometry::ObjectPoints& objectPoints = objectPointsGroups_[iObservation];
-		const Geometry::ImagePoints& imagePoints = imagePointsGroups_[iObservation];
+		const Vectors3& objectPoints = objectPointsGroups_[iObservation];
+		const Vectors2& imagePoints = imagePointsGroups_[iObservation];
 		ocean_assert(!objectPoints.empty() && objectPoints.size() == imagePoints.size());
 
 		const size_t numberMaxOutliers = size_t(Scalar(objectPoints.size()) * maxOutliersPercent + Scalar(0.5));
@@ -113,14 +113,14 @@ size_t QRCodeTracker3D::ObservationHistory::removeObservations(const SharedAnyCa
 	return numberElementsToRemove;
 }
 
-const Geometry::ObjectPoints& QRCodeTracker3D::ObservationHistory::latestObjectPoints() const
+const Vectors3& QRCodeTracker3D::ObservationHistory::latestObjectPoints() const
 {
 	ocean_assert(!objectPointsGroups_.empty() && objectPointsGroups_.size() == imagePointsGroups_.size());
 
 	return objectPointsGroups_.back();
 }
 
-const Geometry::ImagePoints& QRCodeTracker3D::ObservationHistory::latestImagePoints() const
+const Vectors2& QRCodeTracker3D::ObservationHistory::latestImagePoints() const
 {
 	ocean_assert(!imagePointsGroups_.empty() && objectPointsGroups_.size() == imagePointsGroups_.size());
 
@@ -144,7 +144,7 @@ void QRCodeTracker3D::ObservationHistory::clear()
 	imagePointsGroups_.clear();
 }
 
-QRCodeTracker3D::TrackedQRCode::TrackedQRCode(CV::Detector::QRCodes::QRCode&& code, HomogenousMatrix4&& world_T_code, const Scalar codeSize, Geometry::ObjectPoints&& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp) :
+QRCodeTracker3D::TrackedQRCode::TrackedQRCode(CV::Detector::QRCodes::QRCode&& code, HomogenousMatrix4&& world_T_code, const Scalar codeSize, Vectors3&& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp) :
 	code_(std::move(code)),
 	world_T_code_(std::move(world_T_code)),
 	codeSize_(codeSize),
@@ -155,7 +155,7 @@ QRCodeTracker3D::TrackedQRCode::TrackedQRCode(CV::Detector::QRCodes::QRCode&& co
 	// Nothing else to do.
 }
 
-QRCodeTracker3D::TrackedQRCode::TrackedQRCode(const CV::Detector::QRCodes::QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, const Geometry::ObjectPoints& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp) :
+QRCodeTracker3D::TrackedQRCode::TrackedQRCode(const CV::Detector::QRCodes::QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, const Vectors3& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp) :
 	code_(code),
 	world_T_code_(world_T_code),
 	codeSize_(codeSize),
@@ -356,7 +356,7 @@ const QRCodeTracker3D::TrackedQRCodesMap& QRCodeTracker3D::trackQRCodes(const Sh
 					}
 
 					// Define object points that can be used for tracking, if applicable
-					Geometry::ObjectPoints trackingObjectPoints;
+					Vectors3 trackingObjectPoints;
 
 					if (!is2DCode)
 					{
@@ -496,7 +496,7 @@ bool QRCodeTracker3D::trackQRCode(const SharedAnyCamera& previousSharedAnyCamera
 		const Scalar topCenterY = codeSize_2 - moduleSize * Scalar(3.5);
 		const Scalar bottomCenterY = -codeSize_2 + moduleSize * Scalar(3.5);
 
-		Geometry::ObjectPoints objectPoints =
+		Vectors3 objectPoints =
 		{
 			Vector3(leftCenterX, topCenterY, Scalar(0)), // TL
 			Vector3(leftCenterX, bottomCenterY, Scalar(0)), // BL
@@ -869,7 +869,7 @@ bool QRCodeTracker3D::isAlreadyTracked(const TrackedQRCodesMap& trackedQRCodesMa
 	return true;
 }
 
-Geometry::ObjectPoints QRCodeTracker3D::createTrackingObjectPoints(const CV::Detector::QRCodes::QRCode& code, const Scalar codeSize)
+Vectors3 QRCodeTracker3D::createTrackingObjectPoints(const CV::Detector::QRCodes::QRCode& code, const Scalar codeSize)
 {
 	ocean_assert(code.isValid());
 	ocean_assert(codeSize > Scalar(0));
@@ -880,7 +880,7 @@ Geometry::ObjectPoints QRCodeTracker3D::createTrackingObjectPoints(const CV::Det
 	const Scalar moduleSize = codeSize / Scalar(QRCode::modulesPerSide(code.version()));
 	const Scalar finderPatternWidth = moduleSize * Scalar(7);
 
-	Geometry::ObjectPoints trackingObjectPoints =
+	Vectors3 trackingObjectPoints =
 	{
 		// Top-left finder pattern
 		Vector3(-codeSize_2, codeSize_2, Scalar(0)), // TL
@@ -910,7 +910,7 @@ Geometry::ObjectPoints QRCodeTracker3D::createTrackingObjectPoints(const CV::Det
 	return trackingObjectPoints;
 }
 
-bool QRCodeTracker3D::createTrackingImagePoints(const SharedAnyCamera& sharedAnyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& world_T_code, const bool refineCorners, const Geometry::ObjectPoints& potentialObjectPoints, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints)
+bool QRCodeTracker3D::createTrackingImagePoints(const SharedAnyCamera& sharedAnyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& world_T_code, const bool refineCorners, const Vectors3& potentialObjectPoints, Vectors3& objectPoints, Vectors2& imagePoints)
 {
 	ocean_assert(sharedAnyCamera != nullptr && sharedAnyCamera->isValid());
 	ocean_assert(yFrame.isValid());
@@ -924,8 +924,8 @@ bool QRCodeTracker3D::createTrackingImagePoints(const SharedAnyCamera& sharedAny
 	const HomogenousMatrix4 flippedCamera_T_code = flippedCamera_T_world * world_T_code;
 	ocean_assert(flippedCamera_T_code.isValid());
 
-	Geometry::ObjectPoints internalObjectPoints;
-	Geometry::ImagePoints internalImagePoints;
+	Vectors3 internalObjectPoints;
+	Vectors2 internalImagePoints;
 
 	internalObjectPoints.reserve(potentialObjectPoints.size());
 	internalImagePoints.reserve(potentialObjectPoints.size());

@@ -55,7 +55,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 * @return True, if succeeded
 		 */
 		static bool testTranspose(const double testDuration);
-	
+
 		/**
 		 * Tests the add operator.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
@@ -113,9 +113,9 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 * @return True, if succeeded
 		 */
 		static bool testSolveCholesky(const double testDuration);
-	
+
 	protected:
-	
+
 		/**
 		 * Tests the constructor creating a matrix from a given buffer.
 		 * @return True, if succeeded
@@ -124,7 +124,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testConstructorData();
-	
+
 		/**
 		 * Tests the transpose function.
 		 * @return True, if succeeded
@@ -133,7 +133,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testTranspose();
-	
+
 		/**
 		 * Tests the matrix add operator.
 		 * @return True, if succeeded
@@ -142,7 +142,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testMatrixAdd();
-	
+
 		/**
 		 * Tests the add function for transposed matrices.
 		 * @return True, if succeeded
@@ -151,7 +151,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testMatrixAddTransposed();
-	
+
 		/**
 		 * Tests the scalar multiplication operator.
 		 * @return True, if succeeded
@@ -160,7 +160,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testScalarMultiplication();
-	
+
 		/**
 		 * Tests the vector multiplication operator.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
@@ -170,7 +170,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <typename T, size_t tSize>
 		static bool testVectorMultiplication(const double testDuration);
-	
+
 		/**
 		 * Tests the matrix multiplication operator.
 		 * @return True, if succeeded
@@ -180,7 +180,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns, size_t tColumns2>
 		static bool testMatrixMultiplication();
-	
+
 		/**
 		 * Tests the matrix multiplication between the transposed and non-transposed matrix.
 		 * @return True, if succeeded
@@ -189,7 +189,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testMatrixMultiplicationTransposedLeft();
-	
+
 		/**
 		 * Tests the matrix multiplication between the non-transposed and transposed matrix.
 		 * @return True, if succeeded
@@ -198,7 +198,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <size_t tRows, size_t tColumns>
 		static bool testMatrixMultiplicationTransposedRight();
-	
+
 		/**
 		 * Returns whether the provided matrix is a identity matrix.
 		 * @param matrix The matrix to be checked
@@ -209,7 +209,7 @@ class OCEAN_TEST_MATH_EXPORT TestStaticMatrix
 		 */
 		template <typename T>
 		static bool isIdentityMatrix(const T& matrix, const size_t rows, const size_t columns);
-	
+
 		/**
 		 * Returns whether all elements of the provided matrix are zero.
 		 * @param matrix The matrix to be checked

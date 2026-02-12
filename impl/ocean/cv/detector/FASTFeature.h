@@ -56,7 +56,7 @@ class OCEAN_CV_DETECTOR_EXPORT FASTFeature : public PointFeature
 		 * @param features FAST features to convert
 		 * @return Resulting image points
 		 */
-		static inline Geometry::ImagePoints features2imagePoints(const FASTFeatures& features);
+		static inline Vectors2 features2imagePoints(const FASTFeatures& features);
 
 		/**
 		 * Converts FAST features to simple 2D image positions.
@@ -65,7 +65,7 @@ class OCEAN_CV_DETECTOR_EXPORT FASTFeature : public PointFeature
 		 * @param number Number of features to be converted
 		 * @return Resulting image points
 		 */
-		static inline Geometry::ImagePoints features2imagePoints(const FASTFeatures& features, const unsigned int number);
+		static inline Vectors2 features2imagePoints(const FASTFeatures& features, const unsigned int number);
 
 		/**
 		 * Converts FAST features to point features.
@@ -95,9 +95,9 @@ inline FASTFeature::FASTFeature(const Vector2& observation, const DistortionStat
 	// nothing to do here
 }
 
-inline Geometry::ImagePoints FASTFeature::features2imagePoints(const FASTFeatures& features)
+inline Vectors2 FASTFeature::features2imagePoints(const FASTFeatures& features)
 {
-	Geometry::ImagePoints result;
+	Vectors2 result;
 	result.reserve(features.size());
 
 	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
@@ -108,11 +108,11 @@ inline Geometry::ImagePoints FASTFeature::features2imagePoints(const FASTFeature
 	return result;
 }
 
-inline Geometry::ImagePoints FASTFeature::features2imagePoints(const FASTFeatures& features, const unsigned int number)
+inline Vectors2 FASTFeature::features2imagePoints(const FASTFeatures& features, const unsigned int number)
 {
 	const unsigned int realNumber = min(number, (unsigned int)features.size());
 
-	Geometry::ImagePoints result;
+	Vectors2 result;
 	result.reserve(realNumber);
 
 	for (unsigned int n = 0; n < realNumber; ++n)

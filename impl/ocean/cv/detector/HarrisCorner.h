@@ -55,7 +55,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param corner Harris corner to be converted
 		 * @return Resulting image point
 		 */
-		static inline Geometry::ImagePoint corner2imagePoint(const HarrisCorner& corner);
+		static inline Vector2 corner2imagePoint(const HarrisCorner& corner);
 
 		/**
 		 * Converts Harris corners to simple 2D image positions.
@@ -63,7 +63,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param corners Harris corners to convert
 		 * @return Resulting image points
 		 */
-		static inline Geometry::ImagePoints corners2imagePoints(const HarrisCorners& corners);
+		static inline Vectors2 corners2imagePoints(const HarrisCorners& corners);
 
 		/**
 		 * Converts Harris corners to simple 2D image positions.
@@ -72,7 +72,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param number Number of corners to be converted, with range [0, corners.size()]
 		 * @return Resulting image points
 		 */
-		static inline Geometry::ImagePoints corners2imagePoints(const HarrisCorners& corners, const size_t number);
+		static inline Vectors2 corners2imagePoints(const HarrisCorners& corners, const size_t number);
 
 		/**
 		 * Converts Harris corners to point features.
@@ -102,14 +102,14 @@ inline HarrisCorner::HarrisCorner(const Vector2& observation, const DistortionSt
 	// nothing to do here
 }
 
-inline Geometry::ImagePoint HarrisCorner::corner2imagePoint(const HarrisCorner& corner)
+inline Vector2 HarrisCorner::corner2imagePoint(const HarrisCorner& corner)
 {
 	return corner.observation();
 }
 
-inline Geometry::ImagePoints HarrisCorner::corners2imagePoints(const HarrisCorners& corners)
+inline Vectors2 HarrisCorner::corners2imagePoints(const HarrisCorners& corners)
 {
-	Geometry::ImagePoints result;
+	Vectors2 result;
 	result.reserve(corners.size());
 
 	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i)
@@ -120,12 +120,12 @@ inline Geometry::ImagePoints HarrisCorner::corners2imagePoints(const HarrisCorne
 	return result;
 }
 
-inline Geometry::ImagePoints HarrisCorner::corners2imagePoints(const HarrisCorners& corners, const size_t number)
+inline Vectors2 HarrisCorner::corners2imagePoints(const HarrisCorners& corners, const size_t number)
 {
 	ocean_assert(number < corners.size());
 	const size_t realNumber = min(number, corners.size());
 
-	Geometry::ImagePoints result;
+	Vectors2 result;
 	result.reserve(realNumber);
 
 	for (size_t n = 0; n < realNumber; ++n)

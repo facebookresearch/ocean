@@ -48,7 +48,7 @@ public class HandTrackerActivity extends GLFrameViewActivity
 
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
 
-		setupRecognitionPipeline();		
+		setupRecognitionPipeline();
 	}
 
 	@Override

@@ -61,7 +61,7 @@ MediumRef IIOLibrary::newMedium(const std::string& url, const Medium::Type type,
 	{
 		return newBufferImage(url, useExclusive);
 	}
-	
+
 	if (type == Medium::IMAGE_SEQUENCE)
 	{
 		return newImageSequence(url, useExclusive);
@@ -81,16 +81,16 @@ RecorderRef IIOLibrary::newRecorder(const Recorder::Type type)
 	{
 		case Recorder::BUFFER_IMAGE_RECORDER:
 			return RecorderRef(new IIOBufferImageRecorder());
-			
+
 		case Recorder::FILE_RECORDER:
 		case Recorder::FRAME_RECORDER:
 		case Recorder::IMAGE_RECORDER:
 			return RecorderRef(new IIOImageRecorder());
-			
+
 		default:
 			break;
 	}
-	
+
 	return RecorderRef();
 }
 
@@ -150,23 +150,23 @@ MediumRef IIOLibrary::newImage(const std::string& url, bool useExclusive)
 
 	return MediumRefManager::get().registerMedium(medium);
 }
-	
+
 MediumRef IIOLibrary::newImageSequence(const std::string& url, bool useExclusive)
 {
 	IIOImageSequence* medium = new IIOImageSequence(url);
 	ocean_assert(medium != nullptr);
-	
+
 	if (medium->isValid() == false)
 	{
 		delete medium;
 		return MediumRef();
 	}
-	
+
 	if (useExclusive)
 	{
 		return MediumRef(medium);
 	}
-	
+
 	return MediumRefManager::get().registerMedium(medium);
 }
 

@@ -17,7 +17,7 @@ namespace Ocean
 namespace Tracking
 {
 
-PoseProjection::PoseProjection(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Geometry::ObjectPoint* objectPoints, const size_t number) :
+PoseProjection::PoseProjection(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Vector3* objectPoints, const size_t number) :
 	world_T_camera_(world_T_camera),
 	imagePoints_(number)
 {

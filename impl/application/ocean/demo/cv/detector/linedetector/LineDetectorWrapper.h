@@ -69,7 +69,7 @@ class LineDetectorWrapper
 		 * @return True, if succeeded
 		 */
 		bool detectNewFrame(Frame& frame, double& time);
-	
+
 		/**
 		 * Returns the frame medium providing the visual information for the wrapper.
 		 * @return The wrapper's frame medium

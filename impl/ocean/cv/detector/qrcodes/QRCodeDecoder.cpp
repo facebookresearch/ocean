@@ -391,7 +391,11 @@ struct quirc_version_info {
 //#include "quirc_internal.h"
 
 const struct quirc_version_info quirc_version_db[QUIRC_MAX_VERSION + 1] = {
-	    {0},
+	    {
+			.data_bytes = 0,
+			.apat = {},
+			.ecc = {}
+		},
 	    { /* Version 1 */
 		    .data_bytes = 26,
 		    .apat = {0},

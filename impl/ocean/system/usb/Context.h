@@ -39,7 +39,7 @@ class OCEAN_SYSTEM_USB_EXPORT Context
 {
 	public:
 
-		/** 
+		/**
 		 * Move constructor.
 		 * @param context The context to be moved
 		 */

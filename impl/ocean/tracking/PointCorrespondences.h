@@ -176,7 +176,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @return Number of valid correspondences
 		 * @see determineValidCorrespondencesIF().
 		 */
-		static inline unsigned int determineValidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const Geometry::ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5), Indices32* validCorrespondences = nullptr);
+		static inline unsigned int determineValidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5), Indices32* validCorrespondences = nullptr);
 
 		/**
 		 * Determines valid correspondences for a set of given object and corresponding image points combined with an extrinsic and intrinsic camera matrix.
@@ -191,7 +191,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @return Number of valid correspondences
 		 * @see determineValidCorrespondences().
 		 */
-		static unsigned int determineValidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const Geometry::ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5), Indices32* validCorrespondences = nullptr);
+		static unsigned int determineValidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5), Indices32* validCorrespondences = nullptr);
 
 		/**
 		 * Determines valid correspondences in a set of given object and corresponding image points.
@@ -203,7 +203,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param distortImagePoints True, to force the distortion of the image points using the distortion parameters of this camera object
 		 * @param sqrPixelError Maximal allowed squared pixel error for a correspondence to count as valid
 		 */
-		static inline void removeInvalidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5));
+		static inline void removeInvalidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, Vectors3& objectPoints, Vectors2& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5));
 
 		/**
 		 * Determines valid correspondences in a set of given object and corresponding image points.
@@ -215,7 +215,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param distortImagePoints True, to force the distortion of the image points using the distortion parameters of this camera object
 		 * @param sqrPixelError Maximal allowed squared pixel error for a correspondence to count as valid
 		 */
-		static void removeInvalidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5));
+		static void removeInvalidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, Vectors3& objectPoints, Vectors2& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5));
 
 		/**
 		 * Determines the nearest candidates for all given image points from an extra set of candidate image points.<br>
@@ -227,7 +227,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static RedundantCorrespondences determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
+		static RedundantCorrespondences determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from an extra set of candidate image points.<br>
@@ -242,7 +242,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static RedundantCorrespondences determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
+		static RedundantCorrespondences determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from a set of candidate projected object points (or simply a second set of image points).<br>
@@ -258,7 +258,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static inline RedundantCorrespondences determineNearestCandidates(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ObjectPoint* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
+		static inline RedundantCorrespondences determineNearestCandidates(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Vector2* imagePoints, const size_t numberImagePoints, const Vector3* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from a set of candidate object points.<br>
@@ -274,7 +274,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static RedundantCorrespondences determineNearestCandidatesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ObjectPoint* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
+		static RedundantCorrespondences determineNearestCandidatesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Vector2* imagePoints, const size_t numberImagePoints, const Vector3* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from a set of candidate image points.<br>
@@ -288,7 +288,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static RedundantCorrespondences determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter = nullptr);
+		static RedundantCorrespondences determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from a set of candidate image points.<br>
@@ -306,7 +306,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static RedundantCorrespondences determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, Indices32* candidateUseCounter = nullptr);
+		static RedundantCorrespondences determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from a set of candidate image points.<br>
@@ -323,7 +323,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		static RedundantCorrespondences determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter = nullptr);
+		static RedundantCorrespondences determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Finds the valid correspondences of a set of given 2D point correspondences according to the median distance of the entire set.
@@ -419,17 +419,17 @@ inline bool PointCorrespondences::RedundantCorrespondence::isUniqueAndAccurate(c
 	return correspondenceCandidateSqrDistance <= maxSqrDistance && isUnique(uniquenessSqrFactor);
 }
 
-inline unsigned int PointCorrespondences::determineValidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const Geometry::ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError, Indices32* validCorrespondences)
+inline unsigned int PointCorrespondences::determineValidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError, Indices32* validCorrespondences)
 {
 	return determineValidCorrespondencesIF(PinholeCamera::standard2InvertedFlipped(extrinsic), pinholeCamera, objectPoints, imagePoints, correspondences, distortImagePoints, sqrPixelError, validCorrespondences);
 }
 
-inline void PointCorrespondences::removeInvalidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError)
+inline void PointCorrespondences::removeInvalidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, Vectors3& objectPoints, Vectors2& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError)
 {
 	removeInvalidCorrespondencesIF(PinholeCamera::standard2InvertedFlipped(extrinsic), pinholeCamera, objectPoints, imagePoints, distortImagePoints, sqrPixelError);
 }
 
-inline PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ObjectPoint* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseIndices)
+inline PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Vector2* imagePoints, const size_t numberImagePoints, const Vector3* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseIndices)
 {
 	return determineNearestCandidatesIF(PinholeCamera::standard2InvertedFlipped(extrinsic), pinholeCamera, imagePoints, numberImagePoints, candidatePoints, numberCandidatePoints, distortImagePoints, searchWindowRadius, candidateUseIndices);
 }

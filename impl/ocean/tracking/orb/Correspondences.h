@@ -71,7 +71,7 @@ class OCEAN_TRACKING_ORB_EXPORT Correspondences
 		 * @param imagePoints Resultling image points taken form the forward features
 		 * @param objectPoints Resulting object points taken from the backward features
 		 */
-		static void extractCorrespondingPoints(const CV::Detector::ORBFeatures& forwardFeatures, const CV::Detector::ORBFeatures& backwardFeatures, const CorrespondencePairs& correspondences, Geometry::ImagePoints& imagePoints, Geometry::ObjectPoints& objectPoints);
+		static void extractCorrespondingPoints(const CV::Detector::ORBFeatures& forwardFeatures, const CV::Detector::ORBFeatures& backwardFeatures, const CorrespondencePairs& correspondences, Vectors2& imagePoints, Vectors3& objectPoints);
 
 		/**
 		 * Extracts object and image features by pairs of feature correspondences all correspondences are expected to be valid.

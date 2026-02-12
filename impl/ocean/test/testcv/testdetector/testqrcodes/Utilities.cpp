@@ -234,7 +234,7 @@ const std::string& Utilities::getNumericCharset()
 std::string Utilities::translateQRCodeToString(const CV::Detector::QRCodes::QRCodeBase& qrcode, const bool ignoreModules)
 {
 	std::stringstream stream;
-	
+
 	stream << "isValid: " << qrcode.isValid() << '\n';
 	stream << "version: " << qrcode.versionString() << '\n';
 	stream << "encodingMode: " << QRCode::translateEncodingMode(qrcode.encodingMode()) << '\n';

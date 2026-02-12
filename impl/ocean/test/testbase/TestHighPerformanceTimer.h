@@ -34,7 +34,7 @@ class OCEAN_TEST_BASE_EXPORT TestHighPerformanceTimer
 		 * @return True, if succeeded
 		 */
 		static bool test(const TestSelector& selector = TestSelector());
-	
+
 		/**
 		 * Tests the precision of the high performance timer.
 		 * @return True, if succeeded

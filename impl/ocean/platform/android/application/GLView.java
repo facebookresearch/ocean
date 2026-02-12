@@ -232,7 +232,7 @@ public class GLView extends GLSurfaceView
 				if (r == mRedSize && g == mGreenSize && b == mBlueSize && a == mAlphaSize)
 				{
 					Log.d("Ocean", "GLView: Choosing EGLConfig: " + r + " (red), " + g + " (green), " + b + " (blue), " + a + " (alpha), " + d + " (depth), " + s + " (stencil)");
-					
+
 					return config;
 				}
 			}

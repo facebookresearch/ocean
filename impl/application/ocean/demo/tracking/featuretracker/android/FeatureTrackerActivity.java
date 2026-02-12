@@ -35,7 +35,7 @@ public class FeatureTrackerActivity extends GLFrameViewActivity
 
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
 
-		Assets.copyFiles(getAssets(), getExternalFilesDir(null) + "/", true);		
+		Assets.copyFiles(getAssets(), getExternalFilesDir(null) + "/", true);
 	}
 
 	@Override

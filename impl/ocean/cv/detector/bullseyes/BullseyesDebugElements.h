@@ -10,7 +10,6 @@
 
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
-#include "ocean/cv/detector/bullseyes/Bullseye.h"
 
 #include "ocean/base/DebugElements.h"
 #include "ocean/base/Frame.h"

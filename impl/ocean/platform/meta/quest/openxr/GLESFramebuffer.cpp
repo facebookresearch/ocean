@@ -369,7 +369,7 @@ bool GLESFramebuffer::bind()
 	XrResult xrResult = xrWaitSwapchainImage(xrSwapchain_, &xrSwapchainImageWaitInfo);
 
 	if (xrResult == XR_TIMEOUT_EXPIRED)
-	{			
+	{
 		Log::warning() << "OpenXR: Failed to wait for swapchain (timeout)";
 
 		// the timeout expired, now we skip this frame, and we need to retry waiting for the next frame (with same index) again for the next render call

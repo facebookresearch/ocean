@@ -58,8 +58,8 @@ bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector
 	Vectors2 normalizationLeftPoints(correspondences);
 	Vectors2 normalizationRightPoints(correspondences);
 
-	memcpy(normalizationLeftPoints.data(), leftPoints, sizeof(Vector2) * correspondences);
-	memcpy(normalizationRightPoints.data(), rightPoints, sizeof(Vector2) * correspondences);
+	std::copy_n(leftPoints, correspondences, normalizationLeftPoints.data());
+	std::copy_n(rightPoints, correspondences, normalizationRightPoints.data());
 
 	const SquareMatrix3 normalizationLeft = Normalization::calculateNormalizedPoints(normalizationLeftPoints.data(), correspondences);
 	const SquareMatrix3 normalizationRight = Normalization::calculateNormalizedPoints(normalizationRightPoints.data(), correspondences);
@@ -621,7 +621,7 @@ Vectors3 EpipolarGeometry::triangulateImagePoints(const HomogenousMatrix4& world
 	return objectPoints;
 }
 
-ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const PinholeCamera& camera1, const HomogenousMatrix4& iFlippedPose1, const PinholeCamera& camera2, const HomogenousMatrix4& iFlippedPose2, const Vector2* points1, const Vector2* points2, const size_t correspondences, const Vector3& invalidObjectPoint, Indices32* invalidIndices)
+Vectors3 EpipolarGeometry::triangulateImagePointsIF(const PinholeCamera& camera1, const HomogenousMatrix4& iFlippedPose1, const PinholeCamera& camera2, const HomogenousMatrix4& iFlippedPose2, const Vector2* points1, const Vector2* points2, const size_t correspondences, const Vector3& invalidObjectPoint, Indices32* invalidIndices)
 {
 	ocean_assert(iFlippedPose1.isValid() && iFlippedPose2.isValid());
 	ocean_assert(points1 && points2);
@@ -645,7 +645,7 @@ ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const PinholeCamera& cam
 	const HomogenousMatrix4 p1 = camera1.transformationMatrixIF(iFlippedPose1);
 	const HomogenousMatrix4 p2 = camera2.transformationMatrixIF(iFlippedPose2);
 
-	ObjectPoints objectPoints;
+	Vectors3 objectPoints;
 	objectPoints.reserve(correspondences);
 
 	for (size_t c = 0; c < correspondences; ++c)
@@ -682,7 +682,7 @@ ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const PinholeCamera& cam
 	return objectPoints;
 }
 
-ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, const PinholeCamera* pinholeCamera, const Vector3& invalidObjectPoint, Indices32* invalidIndices)
+Vectors3 EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, const PinholeCamera* pinholeCamera, const Vector3& invalidObjectPoint, Indices32* invalidIndices)
 {
 	/**
 	 * algorithm from multiple view geometry (p.312f)
@@ -722,7 +722,7 @@ ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccess
 		}
 	}
 
-	ObjectPoints objectPoints;
+	Vectors3 objectPoints;
 	objectPoints.reserve(correspondences);
 
 	Matrix u, w, v;

@@ -60,7 +60,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param randomGenerator Random number generator. If is not nullptr, RANSAC is used for homography determination within initial minimum sample set
 		 * @return True, if successfully completed
 		 */
-		static bool homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const ImagePoints& leftPointForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, bool approximatedNeighborSearch = true, Ocean::RandomGenerator* randomGenerator = nullptr);
+		static bool homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const Vectors2& leftPointForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, bool approximatedNeighborSearch = true, Ocean::RandomGenerator* randomGenerator = nullptr);
 
 		/**
 		 * Calculates multiple homographies between two images transforming the projected planar object points between the two images using J-linkage
@@ -80,7 +80,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param randomGenerator Random number generator. If is not nullptr, RANSAC is used for homography determination within initial minimum sample set
 		 * @return True, if successfully completed
 		 */
-		static inline bool homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, bool approximatedNeighborSearch = true, Ocean::RandomGenerator* randomGenerator = nullptr);
+		static inline bool homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, bool approximatedNeighborSearch = true, Ocean::RandomGenerator* randomGenerator = nullptr);
 
 		/**
 		 * Multiple line detector using J-linkage
@@ -96,7 +96,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param approximatedNeighborSearch Defines if speeded up spatial neighbor search is used
 		 * @return True, if successfully completed
 		 */
-		static bool fitLines(const ImagePoint* imagePoints, const size_t pointCount, const unsigned int width, const unsigned int height, Lines2& lines, const unsigned int testCandidates, const ImagePoints& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool approximatedNeighborSearch = true);
+		static bool fitLines(const Vector2* imagePoints, const size_t pointCount, const unsigned int width, const unsigned int height, Lines2& lines, const unsigned int testCandidates, const Vectors2& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool approximatedNeighborSearch = true);
 
 	protected:
 
@@ -109,7 +109,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param distributionImagePoints Spatial distribution for approximate search (if nullptr, brute force methode is used)
 		 * @return List of minimal sample sets (represented by indices)
 		 */
-		static std::vector<Indices32> buildingMinimalSampleSet(const ImagePoint* imagePoints, const size_t pointCount, const ImagePoints& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints = nullptr);
+		static std::vector<Indices32> buildingMinimalSampleSet(const Vector2* imagePoints, const size_t pointCount, const Vectors2& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints = nullptr);
 
 		/**
 		 * Generates a homography per minimal sample set (for J-/T-Linkage)
@@ -122,7 +122,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param randomRansac Random generator object to be used for creating random numbers, RANSAC is used if this is not null
 		 * @return Resulting homographies for each minimal sample set (its count is possibly smaller then the given image points)
 		 */
-		static SquareMatrices3 buildingMinimalSampleSetHomography(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const ImagePoints& leftPointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints = nullptr, RandomGenerator* randomRansac = nullptr);
+		static SquareMatrices3 buildingMinimalSampleSetHomography(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const Vectors2& leftPointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints = nullptr, RandomGenerator* randomRansac = nullptr);
 
 		/**
 		 * Generates a line model per minimal sample set (for J-/T-Linkage)
@@ -133,7 +133,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param distributionImagePoints Spatial distribution for approximate search (if nullptr, brute force methode is used)
 		 * @return Resulting line for each minimal sample set (its count is possibly smaller then the given image points)
 		 */
-		static Lines2 buildingMinimalSampleSetLine(const ImagePoint* imagePoints, const size_t pointCount, const ImagePoints& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints = nullptr);
+		static Lines2 buildingMinimalSampleSetLine(const Vector2* imagePoints, const size_t pointCount, const Vectors2& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints = nullptr);
 
 		/**
 		 * Calculates the jaccard distance
@@ -178,7 +178,7 @@ class OCEAN_GEOMETRY_EXPORT TLinkage : JLinkage
 		 * @param randomGenerator Random number generator. If is not nullptr, RANSAC is used for homography refinement
 		 * @return True, if successfully completed
 		 */
-		static bool homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, SquareMatrices3& homographies, const unsigned int testCandidates, const ImagePoints& leftPointForInitialModels, const Scalar pixelAssignmentRadius, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, Ocean::RandomGenerator* randomGenerator = nullptr);
+		static bool homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, SquareMatrices3& homographies, const unsigned int testCandidates, const Vectors2& leftPointForInitialModels, const Scalar pixelAssignmentRadius, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, Ocean::RandomGenerator* randomGenerator = nullptr);
 
 		/**
 		 * Multiple line detector using T-linkage
@@ -191,7 +191,7 @@ class OCEAN_GEOMETRY_EXPORT TLinkage : JLinkage
 		 * @param usedIndicesPerHomography Optional set of indices which will receive the indices of the used image correspondences per model, if defined
 		 * @return True, if successfully completed
 		 */
-		static bool fitLines(const ImagePoint* imagePoints, const size_t pointCount, Lines2& lines, const unsigned int testCandidates, const ImagePoints& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr);
+		static bool fitLines(const Vector2* imagePoints, const size_t pointCount, Lines2& lines, const unsigned int testCandidates, const Vectors2& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr);
 
 	private:
 
@@ -206,9 +206,9 @@ class OCEAN_GEOMETRY_EXPORT TLinkage : JLinkage
 		static inline Scalar tanimotoDistance(const Matrix& vectorA, const Matrix& vectorB);
 };
 
-inline bool JLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3 & homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography, bool refineHomographies, bool approximatedNeighborSearch, Ocean::RandomGenerator* randomGenerator)
+inline bool JLinkage::homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3 & homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography, bool refineHomographies, bool approximatedNeighborSearch, Ocean::RandomGenerator* randomGenerator)
 {
-	const ImagePoints leftPointForInitialModels(Subset::subset(leftImagePoints, correspondences, leftPointIndicesForInitialModels));
+	const Vectors2 leftPointForInitialModels(Subset::subset(leftImagePoints, correspondences, leftPointIndicesForInitialModels));
 
 	return homographyMatrices(leftImagePoints, rightImagePoints, correspondences, width, height, homographies, testCandidates, leftPointForInitialModels, squarePixelErrorAssignmentThreshold, usedIndicesPerHomography, refineHomographies, approximatedNeighborSearch, randomGenerator);
 }

@@ -389,7 +389,7 @@ class OCEAN_TEST_BASE_EXPORT TestCallback
 		 * @return True, if succeeded
 		 */
 		static bool testCallbackStatics();
-	
+
 	private:
 
 		/**

@@ -57,7 +57,7 @@ class OpenGLMainWindow :
 		/**
 		 * Initializes this window.
 		 */
-		void initalize();
+		void initialize();
 
 		/**
 		 * Renders the frame using OpenGL.

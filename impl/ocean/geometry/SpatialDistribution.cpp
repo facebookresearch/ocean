@@ -171,7 +171,7 @@ void SpatialDistribution::idealBinsNeighborhood9(const unsigned int width, const
 	verticalBins = minmax(minimalVerticalBins, (unsigned int)(scalarVerticalBins + Scalar(0.5)), maximalVerticalBins);
 }
 
-Indices32 SpatialDistribution::filterAccordingDistance(const ImagePoint* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const Scalar distance)
+Indices32 SpatialDistribution::filterAccordingDistance(const Vector2* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const Scalar distance)
 {
 	ocean_assert(imagePoints);
 	ocean_assert(distance > 0);
@@ -186,7 +186,7 @@ Indices32 SpatialDistribution::filterAccordingDistance(const ImagePoint* imagePo
 
 	for (unsigned int n = 0u; n < number; ++n)
 	{
-		const ImagePoint& imagePoint = imagePoints[n];
+		const Vector2& imagePoint = imagePoints[n];
 
 		const unsigned int xBin = distributionArray.horizontalBin(imagePoint.x());
 		const unsigned int yBin = distributionArray.verticalBin(imagePoint.y());
@@ -225,7 +225,7 @@ Indices32 SpatialDistribution::filterAccordingDistance(const ImagePoint* imagePo
 	return pointIndices;
 }
 
-void SpatialDistribution::filterCandidatePoint(const ImagePoint* imagePoints, const size_t numberImagePoints, const ImagePoint* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar filterDistance, const unsigned int filterSize, Indices32* filteredIndices, ImagePoints* filteredCandidates)
+void SpatialDistribution::filterCandidatePoint(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar filterDistance, const unsigned int filterSize, Indices32* filteredIndices, Vectors2* filteredCandidates)
 {
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(filteredIndices || filteredCandidates);
@@ -240,7 +240,7 @@ void SpatialDistribution::filterCandidatePoint(const ImagePoint* imagePoints, co
 
 	for (size_t n = 0; n < numberImagePoints; ++n)
 	{
-		const ImagePoint& imagePoint = imagePoints[n];
+		const Vector2& imagePoint = imagePoints[n];
 
 		const unsigned int xBin = candidateDistributionArray.horizontalBin(imagePoint.x());
 		const unsigned int yBin = candidateDistributionArray.verticalBin(imagePoint.y());
@@ -283,7 +283,7 @@ void SpatialDistribution::filterCandidatePoint(const ImagePoint* imagePoints, co
 	}
 }
 
-SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
+SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
 {
 	ocean_assert(imagePoints || number == 0);
 	ocean_assert(width > 0 && height > 0);
@@ -312,7 +312,7 @@ SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(co
 	return indexArray;
 }
 
-SpatialDistribution::OccupancyArray SpatialDistribution::createOccupancyArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
+SpatialDistribution::OccupancyArray SpatialDistribution::createOccupancyArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
 {
 	ocean_assert(imagePoints || number == 0);
 	ocean_assert(width > 0 && height > 0);
@@ -326,7 +326,7 @@ SpatialDistribution::OccupancyArray SpatialDistribution::createOccupancyArray(co
 	// reserve enough array elements
 	OccupancyArray occupancyArray(left, top, width, height, horizontalBins, verticalBins);
 
-	const ImagePoint* endImagePoints = imagePoints + number;
+	const Vector2* endImagePoints = imagePoints + number;
 	while (imagePoints != endImagePoints)
 	{
 		const unsigned int horizontal = (unsigned int)(occupancyArray.horizontalBin(imagePoints->x()));
@@ -343,7 +343,7 @@ SpatialDistribution::OccupancyArray SpatialDistribution::createOccupancyArray(co
 	return occupancyArray;
 }
 
-SpatialDistribution::DistanceElements SpatialDistribution::sortAccordingDistance(const ImagePoint* imagePoints, const size_t number, const bool minimalDistanceFirst)
+SpatialDistribution::DistanceElements SpatialDistribution::sortAccordingDistance(const Vector2* imagePoints, const size_t number, const bool minimalDistanceFirst)
 {
 	ocean_assert(imagePoints);
 
@@ -397,7 +397,7 @@ SpatialDistribution::DistanceElements SpatialDistribution::sortAccordingDistance
 	return distanceElements;
 }
 
-SpatialDistribution::DistanceElements SpatialDistribution::sortAccordingDistance(const ImagePoint* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const unsigned int bins, const bool minimalDistanceFirst)
+SpatialDistribution::DistanceElements SpatialDistribution::sortAccordingDistance(const Vector2* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const unsigned int bins, const bool minimalDistanceFirst)
 {
 	ocean_assert(imagePoints);
 
@@ -474,7 +474,7 @@ SpatialDistribution::DistanceElements SpatialDistribution::sortAccordingDistance
 	return distanceElements;
 }
 
-Scalar SpatialDistribution::determineMinimalSqrDistance(const ImagePoint* imagePoints, const size_t numberImagePoints, const unsigned int index, const DistributionArray& distributionElements)
+Scalar SpatialDistribution::determineMinimalSqrDistance(const Vector2* imagePoints, const size_t numberImagePoints, const unsigned int index, const DistributionArray& distributionElements)
 {
 	ocean_assert(imagePoints);
 	ocean_assert(distributionElements);
@@ -516,7 +516,7 @@ Scalar SpatialDistribution::determineMinimalSqrDistance(const ImagePoint* imageP
 	return minDistance;
 }
 
-void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances)
+void SpatialDistribution::determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances)
 {
 	ocean_assert(imagePoints && sqrDistances);
 
@@ -568,7 +568,7 @@ void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePo
 	}
 }
 
-void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const ImagePoint* candidates, const size_t numberCandidates, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances)
+void SpatialDistribution::determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidates, const size_t numberCandidates, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances)
 {
 	ocean_assert(imagePoints || numberImagePoints == 0);
 	ocean_assert(candidates || numberCandidates == 0);
@@ -587,7 +587,7 @@ void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePo
 	determineMinimalSqrDistances(imagePoints, numberImagePoints, candidates, numberCandidates, indexArray, sqrDistances);
 }
 
-void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const ImagePoint* candidates, const size_t numberCandidates, const DistributionArray& distributionCandidates, Scalar* sqrDistances, unsigned int* candidateIndices)
+void SpatialDistribution::determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidates, const size_t numberCandidates, const DistributionArray& distributionCandidates, Scalar* sqrDistances, unsigned int* candidateIndices)
 {
 	ocean_assert(imagePoints || numberImagePoints == 0);
 	ocean_assert(candidates || numberCandidates == 0);
@@ -643,7 +643,7 @@ void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePo
 	}
 }
 
-void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const unsigned int* interestIndices, const size_t numberInterestIndices, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances)
+void SpatialDistribution::determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const unsigned int* interestIndices, const size_t numberInterestIndices, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances)
 {
 	ocean_assert(imagePoints && interestIndices && sqrDistances);
 
@@ -700,7 +700,7 @@ void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePo
 	}
 }
 
-Indices32 SpatialDistribution::determineNeighbors(const ImagePoint& point, const ImagePoint* candidatePoints, const size_t numberCandidatePoints, const Scalar radius, const DistributionArray& distributionCandidatePoints)
+Indices32 SpatialDistribution::determineNeighbors(const Vector2& point, const Vector2* candidatePoints, const size_t numberCandidatePoints, const Scalar radius, const DistributionArray& distributionCandidatePoints)
 {
 	ocean_assert(candidatePoints && distributionCandidatePoints);
 
@@ -728,7 +728,7 @@ Indices32 SpatialDistribution::determineNeighbors(const ImagePoint& point, const
 	return result;
 }
 
-Index32 SpatialDistribution::determineNearestNeighbor(const ImagePoint& interestPoint, const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar radius, const DistributionArray& distributionImagePoints, Scalar* sqrDistance)
+Index32 SpatialDistribution::determineNearestNeighbor(const Vector2& interestPoint, const Vector2* imagePoints, const size_t numberImagePoints, const Scalar radius, const DistributionArray& distributionImagePoints, Scalar* sqrDistance)
 {
 	if (numberImagePoints == 0)
 	{
@@ -767,7 +767,7 @@ Index32 SpatialDistribution::determineNearestNeighbor(const ImagePoint& interest
 	return bestIndex;
 }
 
-ImagePoints SpatialDistribution::distributeAndFilter(const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins, const size_t size)
+Vectors2 SpatialDistribution::distributeAndFilter(const Vector2* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins, const size_t size)
 {
 	ocean_assert(imagePoints || numberImagePoints == 0);
 	ocean_assert(width >= 1u && height >= 1u);
@@ -778,13 +778,13 @@ ImagePoints SpatialDistribution::distributeAndFilter(const ImagePoint* imagePoin
 
 	if (numberImagePoints == 0 || size == 0)
 	{
-		return ImagePoints();
+		return Vectors2();
 	}
 
 	// if we are looking for more (or equal) points than we actually have we simply return all
 	if (size >= numberImagePoints)
 	{
-		ImagePoints result(numberImagePoints);
+		Vectors2 result(numberImagePoints);
 
 		for (size_t n = 0; n < numberImagePoints; ++n)
 		{
@@ -796,7 +796,7 @@ ImagePoints SpatialDistribution::distributeAndFilter(const ImagePoint* imagePoin
 
 	const DistributionArray distribution(Geometry::SpatialDistribution::distributeToArray(imagePoints, numberImagePoints, left, top, width, height, horizontalBins, verticalBins));
 
-	ImagePoints results;
+	Vectors2 results;
 	results.reserve(size);
 
 	size_t iteration = 0;

@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/platform/apple/ios/OpenGLViewController.h"
+#include "ocean/platform/apple/ios/GLViewController.h"
 
 /**
  * The ViewController implementing the actual functionality of Shark.
  * @ingroup sharkosx
  */
-@interface SharkViewController : OpenGLViewController
+@interface SharkViewController : GLViewController
 
 @end

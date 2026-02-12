@@ -343,7 +343,7 @@ class StackHeapVector
 		 * @param other The other vector to move
 		 * @return Reference to this vector
 		 */
-		StackHeapVector<T, tStackCapacity>& operator=(StackHeapVector<T, tStackCapacity>&& other) noexcept;		
+		StackHeapVector<T, tStackCapacity>& operator=(StackHeapVector<T, tStackCapacity>&& other) noexcept;
 
 		/**
 		 * Copy assignment operator.

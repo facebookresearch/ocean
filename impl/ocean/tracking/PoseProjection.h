@@ -50,7 +50,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @param objectPoints Object points to be projected
 		 * @param number Number Of object points to be projected
 		 */
-		PoseProjection(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Geometry::ObjectPoint* objectPoints, const size_t number);
+		PoseProjection(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Vector3* objectPoints, const size_t number);
 
 		/**
 		 * Returns the pose of this projection.
@@ -62,7 +62,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * Returns the image points (the projected object points) of this pose projection.
 		 * @return Pose image points
 		 */
-		inline const Geometry::ImagePoints& imagePoints() const;
+		inline const Vectors2& imagePoints() const;
 
 		/**
 		 * Returns the number of stored pose points.
@@ -81,7 +81,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @tparam tEstimator Estimator to be applied
 		 */
 		template <Geometry::Estimator::EstimatorType tEstimator>
-		Scalar minimalAverageSquareError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination);
+		Scalar minimalAverageSquareError(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination);
 
 		/**
 		 * Returns whether this pose projection holds no points.
@@ -102,7 +102,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @param element Element to be converted
 		 * @return Converted object point
 		 */
-		static inline const Vector3& objectPoint2objectPoint(const Geometry::ObjectPoint& element);
+		static inline const Vector3& objectPoint2objectPoint(const Vector3& element);
 
 	private:
 
@@ -243,7 +243,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @tparam tEstimator Estimator to be applied
 		 */
 		template <Geometry::Estimator::EstimatorType tEstimator>
-		inline HomogenousMatrix4 findPoseWithMinimalError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, Scalar* resultingError = nullptr, Worker* worker = nullptr);
+		inline HomogenousMatrix4 findPoseWithMinimalError(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, Scalar* resultingError = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Returns the poses with the minimal distance error.
@@ -260,7 +260,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @tparam tEstimator Estimator to be applied
 		 */
 		template <Geometry::Estimator::EstimatorType tEstimator>
-		unsigned int findPosesWithMinimalError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, const size_t numberPoses, HomogenousMatrix4* poses, Scalar* resultingErrors = nullptr, Worker* worker = nullptr);
+		unsigned int findPosesWithMinimalError(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, const size_t numberPoses, HomogenousMatrix4* poses, Scalar* resultingErrors = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Returns whether this set holds no pose projections.
@@ -288,7 +288,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @tparam tEstimator Estimator to be applied
 		 */
 		template <Geometry::Estimator::EstimatorType tEstimator>
-		void findPoseWithMinimalErrorSubset(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, ErrorObject* errorObjects, const unsigned int firstProjection, const unsigned int numberProjections);
+		void findPoseWithMinimalErrorSubset(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, ErrorObject* errorObjects, const unsigned int firstProjection, const unsigned int numberProjections);
 
 	private:
 
@@ -302,7 +302,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		unsigned int cameraHeight_ = 0u;
 };
 
-inline const Vector3& PoseProjection::objectPoint2objectPoint(const Geometry::ObjectPoint& objectPoint)
+inline const Vector3& PoseProjection::objectPoint2objectPoint(const Vector3& objectPoint)
 {
 	return objectPoint;
 }
@@ -312,7 +312,7 @@ inline const HomogenousMatrix4& PoseProjection::world_T_camera() const
 	return world_T_camera_;
 }
 
-inline const Geometry::ImagePoints& PoseProjection::imagePoints() const
+inline const Vectors2& PoseProjection::imagePoints() const
 {
 	return imagePoints_;
 }
@@ -396,7 +396,7 @@ inline bool PoseProjectionSet::ErrorObject::operator<(const ErrorObject& element
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
-Scalar PoseProjection::minimalAverageSquareError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination)
+Scalar PoseProjection::minimalAverageSquareError(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination)
 {
 	if (isEmpty())
 	{
@@ -410,7 +410,7 @@ Scalar PoseProjection::minimalAverageSquareError(const Geometry::ImagePoint* ima
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
-HomogenousMatrix4 PoseProjectionSet::findPoseWithMinimalError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, Scalar* resultingError, Worker* worker)
+HomogenousMatrix4 PoseProjectionSet::findPoseWithMinimalError(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, Scalar* resultingError, Worker* worker)
 {
 	ocean_assert(!isEmpty());
 
@@ -442,7 +442,7 @@ HomogenousMatrix4 PoseProjectionSet::findPoseWithMinimalError(const Geometry::Im
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
-unsigned int PoseProjectionSet::findPosesWithMinimalError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, const size_t numberPoses, HomogenousMatrix4* poses, Scalar* resultingErrors, Worker* worker)
+unsigned int PoseProjectionSet::findPosesWithMinimalError(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, const size_t numberPoses, HomogenousMatrix4* poses, Scalar* resultingErrors, Worker* worker)
 {
 	ocean_assert(poses);
 
@@ -483,7 +483,7 @@ unsigned int PoseProjectionSet::findPosesWithMinimalError(const Geometry::ImageP
 }
 
 template <Geometry::Estimator::EstimatorType tEstimator>
-void PoseProjectionSet::findPoseWithMinimalErrorSubset(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, ErrorObject* errorObjects, const unsigned int firstProjection, const unsigned int numberProjections)
+void PoseProjectionSet::findPoseWithMinimalErrorSubset(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination, ErrorObject* errorObjects, const unsigned int firstProjection, const unsigned int numberProjections)
 {
 	ocean_assert(imagePoints);
 	ocean_assert(errorObjects);

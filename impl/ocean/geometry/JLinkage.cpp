@@ -18,7 +18,7 @@ namespace Ocean
 namespace Geometry
 {
 
-std::vector<Indices32> JLinkage::buildingMinimalSampleSet(const ImagePoint* imagePoints, const size_t pointCount, const ImagePoints& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints)
+std::vector<Indices32> JLinkage::buildingMinimalSampleSet(const Vector2* imagePoints, const size_t pointCount, const Vectors2& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints)
 {
 	ocean_assert(testCandidates > 0u);
 
@@ -26,7 +26,7 @@ std::vector<Indices32> JLinkage::buildingMinimalSampleSet(const ImagePoint* imag
 
 	for (size_t m = 0; m < pointForInitialModels.size(); ++m)
 	{
-		const Geometry::ImagePoint& firstPointLocation = pointForInitialModels[m];
+		const Vector2& firstPointLocation = pointForInitialModels[m];
 
 		Indices32 minimumSampleSet;
 
@@ -69,7 +69,7 @@ std::vector<Indices32> JLinkage::buildingMinimalSampleSet(const ImagePoint* imag
 	return result;
 }
 
-SquareMatrices3 JLinkage::buildingMinimalSampleSetHomography(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const ImagePoints& leftPointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints, RandomGenerator* randomRansac)
+SquareMatrices3 JLinkage::buildingMinimalSampleSetHomography(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const Vectors2& leftPointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints, RandomGenerator* randomRansac)
 {
 	ocean_assert(leftImagePoints && rightImagePoints);
 	ocean_assert(testCandidates >= 4u && correspondences >= testCandidates);
@@ -89,8 +89,8 @@ SquareMatrices3 JLinkage::buildingMinimalSampleSetHomography(const ImagePoint* l
 			minimumSampleSet.resize(testCandidates);
 
 			// determine homography per minimal sample set
-			const ImagePoints mssLeftImagePoints(Subset::subset(leftImagePoints, correspondences, minimumSampleSet));
-			const ImagePoints mssRightImagePoints(Subset::subset(rightImagePoints, correspondences, minimumSampleSet));
+			const Vectors2 mssLeftImagePoints(Subset::subset(leftImagePoints, correspondences, minimumSampleSet));
+			const Vectors2 mssRightImagePoints(Subset::subset(rightImagePoints, correspondences, minimumSampleSet));
 
 			if (Homography::homographyMatrix(mssLeftImagePoints.data(), mssRightImagePoints.data(), testCandidates, mssHomography))
 			{
@@ -108,8 +108,8 @@ SquareMatrices3 JLinkage::buildingMinimalSampleSetHomography(const ImagePoint* l
 		else
 		{
 			// determine homography per minimal sample set using RANSAC
-			const ImagePoints mssLeftImagePoints(Subset::subset(leftImagePoints, correspondences, minimumSampleSet));
-			const ImagePoints mssRightImagePoints(Subset::subset(rightImagePoints, correspondences, minimumSampleSet));
+			const Vectors2 mssLeftImagePoints(Subset::subset(leftImagePoints, correspondences, minimumSampleSet));
+			const Vectors2 mssRightImagePoints(Subset::subset(rightImagePoints, correspondences, minimumSampleSet));
 
 			if (RANSAC::homographyMatrix(mssLeftImagePoints.data(), mssRightImagePoints.data(), mssLeftImagePoints.size(), *randomRansac, mssHomography, testCandidates, false, (unsigned int)(mssLeftImagePoints.size()) / testCandidates))
 			{
@@ -121,7 +121,7 @@ SquareMatrices3 JLinkage::buildingMinimalSampleSetHomography(const ImagePoint* l
 	return homographies;
 }
 
-Lines2 JLinkage::buildingMinimalSampleSetLine(const ImagePoint* imagePoints, const size_t pointCount, const ImagePoints& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints)
+Lines2 JLinkage::buildingMinimalSampleSetLine(const Vector2* imagePoints, const size_t pointCount, const Vectors2& pointForInitialModels, const unsigned int testCandidates, const SpatialDistribution::DistributionArray* distributionImagePoints)
 {
 	ocean_assert(imagePoints);
 	ocean_assert(testCandidates >= 2u && pointCount >= testCandidates);
@@ -136,7 +136,7 @@ Lines2 JLinkage::buildingMinimalSampleSetLine(const ImagePoint* imagePoints, con
 	{
 		const Indices32& minimumSampleSet = minimumSampleSets[m];
 
-		const ImagePoints mssImagePoints(Subset::subset(imagePoints, pointCount, minimumSampleSet));
+		const Vectors2 mssImagePoints(Subset::subset(imagePoints, pointCount, minimumSampleSet));
 
 		if (Line2::fitLineLeastSquare(mssImagePoints.data(), mssImagePoints.size(), line))
 		{
@@ -147,7 +147,7 @@ Lines2 JLinkage::buildingMinimalSampleSetLine(const ImagePoint* imagePoints, con
 	return lines;
 }
 
-bool JLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const ImagePoints& leftPointForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography,  bool refineHomographies, bool approximatedNeighborSearch, Ocean::RandomGenerator* randomGenerator)
+bool JLinkage::homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const Vectors2& leftPointForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography,  bool refineHomographies, bool approximatedNeighborSearch, Ocean::RandomGenerator* randomGenerator)
 {
 	ocean_assert(squarePixelErrorAssignmentThreshold > 0);
 	ocean_assert(leftImagePoints && rightImagePoints);
@@ -285,8 +285,8 @@ bool JLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const Image
 
 			if (set.size() >= 8)
 			{
-				const ImagePoints setLeftImagePoints(Subset::subset(leftImagePoints, correspondences, set));
-				const ImagePoints setRightImagePoints(Subset::subset(rightImagePoints, correspondences, set));
+				const Vectors2 setLeftImagePoints(Subset::subset(leftImagePoints, correspondences, set));
+				const Vectors2 setRightImagePoints(Subset::subset(rightImagePoints, correspondences, set));
 
 				if (randomGenerator != nullptr)
 				{
@@ -316,7 +316,7 @@ bool JLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const Image
 	return true;
 }
 
-bool JLinkage::fitLines(const ImagePoint* imagePoints, const size_t pointCount, const unsigned int width, const unsigned int height, Lines2& lines, const unsigned int testCandidates, const ImagePoints& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography, bool approximatedNeighborSearch)
+bool JLinkage::fitLines(const Vector2* imagePoints, const size_t pointCount, const unsigned int width, const unsigned int height, Lines2& lines, const unsigned int testCandidates, const Vectors2& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography, bool approximatedNeighborSearch)
 {
 	ocean_assert(pixelErrorAssignmentThreshold > 0);
 	ocean_assert(imagePoints);
@@ -449,7 +449,7 @@ bool JLinkage::fitLines(const ImagePoint* imagePoints, const size_t pointCount, 
 	return true;
 }
 
-bool TLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, SquareMatrices3& homographies, const unsigned int testCandidates, const ImagePoints& leftPointForInitialModels, const Scalar pixelAssignmentRatio, std::vector<IndexSet32>* usedIndicesPerHomography, bool refineHomographies, Ocean::RandomGenerator* randomGenerator)
+bool TLinkage::homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, SquareMatrices3& homographies, const unsigned int testCandidates, const Vectors2& leftPointForInitialModels, const Scalar pixelAssignmentRatio, std::vector<IndexSet32>* usedIndicesPerHomography, bool refineHomographies, Ocean::RandomGenerator* randomGenerator)
 {
 	ocean_assert(pixelAssignmentRatio > 0);
 	ocean_assert(leftImagePoints && rightImagePoints);
@@ -601,8 +601,8 @@ bool TLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const Image
 			ocean_assert(!set.empty());
 			if (set.size() >= 8)
 			{
-				const ImagePoints setLeftImagePoints(Subset::subset(leftImagePoints, correspondences, set));
-				const ImagePoints setRightImagePoints(Subset::subset(rightImagePoints, correspondences, set));
+				const Vectors2 setLeftImagePoints(Subset::subset(leftImagePoints, correspondences, set));
+				const Vectors2 setRightImagePoints(Subset::subset(rightImagePoints, correspondences, set));
 
 				if (randomGenerator != nullptr)
 				{
@@ -634,7 +634,7 @@ bool TLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const Image
 	return true;
 }
 
-bool TLinkage::fitLines(const ImagePoint* imagePoints, const size_t pointCount, Lines2& lines, const unsigned int testCandidates, const ImagePoints& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography)
+bool TLinkage::fitLines(const Vector2* imagePoints, const size_t pointCount, Lines2& lines, const unsigned int testCandidates, const Vectors2& pointForInitialModels, const Scalar pixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography)
 {
 	ocean_assert(pixelErrorAssignmentThreshold > 0);
 	ocean_assert(imagePoints);

@@ -339,6 +339,8 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 #else
 
 	ocean_assert(false && "OCEAN_MEDIA_OIL_SUPPORT_GIF not defined");
+	OCEAN_SUPPRESS_UNUSED_WARNING(maximalImages);
+
 	return Frames();
 
 #endif // OCEAN_MEDIA_OIL_SUPPORT_GIF

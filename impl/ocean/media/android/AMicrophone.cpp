@@ -409,7 +409,7 @@ bool AMicrophone::release()
 
 void AMicrophone::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue)
 {
-	ocean_assert(bufferQueue != nullptr);
+	ocean_assert_and_suppress_unused(bufferQueue != nullptr, bufferQueue);
 
 	Buffer buffer(std::move(bufferQueue_.front()));
 	bufferQueue_.pop();

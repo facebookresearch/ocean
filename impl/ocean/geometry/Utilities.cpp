@@ -19,7 +19,7 @@ namespace Ocean
 namespace Geometry
 {
 
-ObjectPoint Utilities::backProjectImagePoint(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const ImagePoint& imagePoint, const bool useDistortionParameters, bool* frontObjectPoint)
+ObjectPoint Utilities::backProjectImagePoint(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Vector2& imagePoint, const bool useDistortionParameters, bool* frontObjectPoint)
 {
 	ocean_assert(pinholeCamera.isValid() && pose.isValid() && plane.isValid());
 
@@ -42,7 +42,7 @@ ObjectPoint Utilities::backProjectImagePoint(const PinholeCamera& pinholeCamera,
 	return objectPoint;
 }
 
-ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Plane3& plane, const ImagePoint* imagePoints, const size_t numberImagePoints, Indices32* frontObjectPointIndices)
+Vectors3 Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Plane3& plane, const Vector2* imagePoints, const size_t numberImagePoints, Indices32* frontObjectPointIndices)
 {
 	ocean_assert(anyCamera.isValid() && world_T_camera.isValid() && plane.isValid());
 	ocean_assert(imagePoints);
@@ -54,7 +54,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 		frontObjectPointIndices->reserve(numberImagePoints);
 	}
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	const HomogenousMatrix4 camera_T_world = world_T_camera.inverted();
@@ -84,7 +84,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 	return result;
 }
 
-ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices)
+Vectors3 Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices)
 {
 	ocean_assert(pinholeCamera.isValid() && pose.isValid() && plane.isValid());
 	ocean_assert(imagePoints);
@@ -96,7 +96,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 		frontObjectPointIndices->reserve(numberImagePoints);
 	}
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	const HomogenousMatrix4 iPose(pose.inverted());
@@ -129,7 +129,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 	return result;
 }
 
-ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cylinder3& cylinder, const ImagePoint* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices)
+Vectors3 Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cylinder3& cylinder, const Vector2* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices)
 {
 	ocean_assert(anyCamera.isValid() && world_T_camera.isValid() && cylinder.isValid());
 	ocean_assert(imagePoints);
@@ -138,7 +138,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 	intersectingPointIndices.clear();
 	intersectingPointIndices.reserve(numberImagePoints);
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	for (size_t n = 0; n < numberImagePoints; ++n)
@@ -162,7 +162,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 	return result;
 }
 
-ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cylinder3& cylinder, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices)
+Vectors3 Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cylinder3& cylinder, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices)
 {
 	ocean_assert(pinholeCamera.isValid() && pose.isValid() && cylinder.isValid());
 	ocean_assert(imagePoints);
@@ -171,7 +171,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 	intersectingPointIndices.clear();
 	intersectingPointIndices.reserve(numberImagePoints);
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	const bool distortImagePoints = pinholeCamera.hasDistortionParameters() && useDistortionParameters;
@@ -198,7 +198,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 	return result;
 }
 
-ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cone3& cone, const ImagePoint* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices)
+Vectors3 Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cone3& cone, const Vector2* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices)
 {
 	ocean_assert(anyCamera.isValid() && world_T_camera.isValid() && cone.isValid());
 	ocean_assert(imagePoints);
@@ -207,7 +207,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 	intersectingPointIndices.clear();
 	intersectingPointIndices.reserve(numberImagePoints);
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	for (size_t n = 0; n < numberImagePoints; ++n)
@@ -231,7 +231,7 @@ ObjectPoints Utilities::backProjectImagePoints(const AnyCamera& anyCamera, const
 	return result;
 }
 
-ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cone3& cone, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices)
+Vectors3 Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cone3& cone, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices)
 {
 	ocean_assert(pinholeCamera.isValid() && pose.isValid() && cone.isValid());
 	ocean_assert(imagePoints);
@@ -240,7 +240,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 	intersectingPointIndices.clear();
 	intersectingPointIndices.reserve(numberImagePoints);
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	const bool distortImagePoints = pinholeCamera.hasDistortionParameters() && useDistortionParameters;
@@ -267,7 +267,7 @@ ObjectPoints Utilities::backProjectImagePoints(const PinholeCamera& pinholeCamer
 	return result;
 }
 
-ObjectPoints Utilities::backProjectImagePointsDamped(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices)
+Vectors3 Utilities::backProjectImagePointsDamped(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices)
 {
 	ocean_assert(pinholeCamera.isValid() && pose.isValid() && plane.isValid());
 	ocean_assert(imagePoints);
@@ -279,7 +279,7 @@ ObjectPoints Utilities::backProjectImagePointsDamped(const PinholeCamera& pinhol
 		frontObjectPointIndices->reserve(numberImagePoints);
 	}
 
-	ObjectPoints result;
+	Vectors3 result;
 	result.reserve(numberImagePoints);
 
 	const HomogenousMatrix4 iPose(pose.inverted());
@@ -332,7 +332,7 @@ Vectors3 Utilities::createObjectPoints(const AnyCamera& camera, const Homogenous
 	return result;
 }
 
-ObjectPoints Utilities::createObjectPoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool useDistortionParameters, const Scalar distance)
+Vectors3 Utilities::createObjectPoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const ConstIndexedAccessor<Vector2>& imagePoints, const bool useDistortionParameters, const Scalar distance)
 {
 	const AnyCameraPinhole camera(PinholeCamera(pinholeCamera, useDistortionParameters));
 
@@ -445,7 +445,7 @@ size_t Utilities::countFrontObjectPointsIF(const PinholeCamera& pinholeCamera, c
 	return result;
 }
 
-size_t Utilities::countFrontObjectPoints(const PinholeCamera& cameraFirst, const PinholeCamera& cameraSecond, const HomogenousMatrix4& poseFirst, const HomogenousMatrix4& poseSecond, const ImagePoint* imagePointsFirst, const ImagePoint* imagePointsSecond, const size_t correspondences)
+size_t Utilities::countFrontObjectPoints(const PinholeCamera& cameraFirst, const PinholeCamera& cameraSecond, const HomogenousMatrix4& poseFirst, const HomogenousMatrix4& poseSecond, const Vector2* imagePointsFirst, const Vector2* imagePointsSecond, const size_t correspondences)
 {
 	ocean_assert(cameraFirst.isValid() && cameraSecond.isValid());
 	ocean_assert(poseFirst.isValid() && poseSecond.isValid());
@@ -481,17 +481,17 @@ size_t Utilities::countFrontObjectPoints(const PinholeCamera& cameraFirst, const
 	return validPoints;
 }
 
-SquareMatrix2 Utilities::covarianceMatrix(const ImagePoint* imagePoints, const size_t number, const ImagePoint& meanPoint, const Scalar minimalSigma)
+SquareMatrix2 Utilities::covarianceMatrix(const Vector2* imagePoints, const size_t number, const Vector2& meanPoint, const Scalar minimalSigma)
 {
 	ocean_assert(imagePoints && number > 0);
-	ocean_assert(meanPoint == meanImagePoint(ConstTemplateArrayAccessor<ImagePoint>(imagePoints, number)));
+	ocean_assert(meanPoint == meanImagePoint(ConstTemplateArrayAccessor<Vector2>(imagePoints, number)));
 
 	const Scalar minimalSqrSigma = Numeric::sqr(minimalSigma);
 
 	Scalar covXX = 0, covXY = 0, covYY = 0;
 	for (size_t n = 0; n < number; ++n)
 	{
-		const ImagePoint& imagePoint = imagePoints[n];
+		const Vector2& imagePoint = imagePoints[n];
 
 		// (x - ux)^2
 		covXX += max(minimalSqrSigma, Numeric::sqr(imagePoint.x() - meanPoint.x()));
@@ -511,18 +511,18 @@ SquareMatrix2 Utilities::covarianceMatrix(const ImagePoint* imagePoints, const s
 	return SquareMatrix2(covXX, covXY, covXY, covYY);
 }
 
-SquareMatrix2 Utilities::covarianceMatrix(const ImagePoint* imagePoints, const unsigned int* indices, const size_t numberIndices, const Scalar minimalSigma, ImagePoint& meanPoint)
+SquareMatrix2 Utilities::covarianceMatrix(const Vector2* imagePoints, const unsigned int* indices, const size_t numberIndices, const Scalar minimalSigma, Vector2& meanPoint)
 {
 	ocean_assert(imagePoints && numberIndices > 0);
 
 	const Scalar minimalSqrSigma = Numeric::sqr(minimalSigma);
 
-	meanPoint = meanImagePoint(ConstTemplateArraySubsetAccessor<ImagePoint, unsigned int>(imagePoints, indices, numberIndices));
+	meanPoint = meanImagePoint(ConstTemplateArraySubsetAccessor<Vector2, unsigned int>(imagePoints, indices, numberIndices));
 
 	Scalar covXX = 0, covXY = 0, covYY = 0;
 	for (size_t n = 0; n < numberIndices; ++n)
 	{
-		const ImagePoint& imagePoint = imagePoints[indices[n]];
+		const Vector2& imagePoint = imagePoints[indices[n]];
 
 		// (x - ux)^2
 		covXX += max(minimalSqrSigma, Numeric::sqr(imagePoint.x() - meanPoint.x()));

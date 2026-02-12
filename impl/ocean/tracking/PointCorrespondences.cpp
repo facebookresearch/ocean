@@ -16,7 +16,7 @@ namespace Ocean
 namespace Tracking
 {
 
-unsigned int PointCorrespondences::determineValidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const Geometry::ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError, Indices32* validCorrespondences)
+unsigned int PointCorrespondences::determineValidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError, Indices32* validCorrespondences)
 {
 	ocean_assert(objectPoints && imagePoints);
 	ocean_assert(sqrPixelError >= 0);
@@ -49,15 +49,15 @@ unsigned int PointCorrespondences::determineValidCorrespondencesIF(const Homogen
 	return result;
 }
 
-void PointCorrespondences::removeInvalidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError)
+void PointCorrespondences::removeInvalidCorrespondencesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, Vectors3& objectPoints, Vectors2& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError)
 {
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(sqrPixelError >= 0);
 
-	Geometry::ObjectPoints tmpObjectPoints;
+	Vectors3 tmpObjectPoints;
 	tmpObjectPoints.reserve(objectPoints.size());
 
-	Geometry::ImagePoints tmpImagePoints;
+	Vectors2 tmpImagePoints;
 	tmpImagePoints.reserve(imagePoints.size());
 
 	if (distortImagePoints && pinholeCamera.hasDistortionParameters())
@@ -83,7 +83,7 @@ void PointCorrespondences::removeInvalidCorrespondencesIF(const HomogenousMatrix
 	imagePoints = std::move(tmpImagePoints);
 }
 
-PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter)
+PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter)
 {
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(searchWindowRadius > 0);
@@ -98,7 +98,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 
 	for (unsigned int i = 0u; i < numberImagePoints; ++i)
 	{
-		const Geometry::ImagePoint& imagePoint = imagePoints[i];
+		const Vector2& imagePoint = imagePoints[i];
 
 		distance0 = Numeric::maxValue();
 		distance1 = Numeric::maxValue();
@@ -113,7 +113,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 
 		for (unsigned int c = 0; c < numberCandidatePoints; ++c)
 		{
-			const Geometry::ImagePoint& candidatePoint = candidatePoints[c];
+			const Vector2& candidatePoint = candidatePoints[c];
 
 			if (candidatePoint.x() >= left && candidatePoint.x() <= right && candidatePoint.y() >= top && candidatePoint.y() <= bottom)
 			{
@@ -147,7 +147,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 	return result;
 }
 
-PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, Indices32* candidateUseCounter)
+PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, Indices32* candidateUseCounter)
 {
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(searchWindowRadius > 0);
@@ -162,7 +162,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 	return determineNearestCandidates(imagePoints, numberImagePoints, candidatePoints, numberCandidatePoints, searchWindowRadius, distributionArray, candidateUseCounter);
 }
 
-PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidatesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ObjectPoint* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter)
+PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidatesIF(const HomogenousMatrix4& invertedFlippedExtrinsic, const PinholeCamera& pinholeCamera, const Vector2* imagePoints, const size_t numberImagePoints, const Vector3* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter)
 {
 	ocean_assert(imagePoints && candidatePoints);
 
@@ -170,13 +170,13 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 		return RedundantCorrespondences();
 
 	// project all given candidate object points onto the image plane
-	Geometry::ImagePoints candidateImagePoints(numberCandidatePoints);
+	Vectors2 candidateImagePoints(numberCandidatePoints);
 	pinholeCamera.projectToImageIF<true>(invertedFlippedExtrinsic, candidatePoints, numberCandidatePoints, distortImagePoints, candidateImagePoints.data());
 
 	return determineNearestCandidates(imagePoints, numberImagePoints, candidateImagePoints.data(), numberCandidatePoints, searchWindowRadius, candidateUseCounter);
 }
 
-PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter)
+PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter)
 {
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(searchWindowRadius > 0);
@@ -191,7 +191,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 
 	for (unsigned int i = 0u; i < numberImagePoints; ++i)
 	{
-		const Geometry::ImagePoint& imagePoint = imagePoints[i];
+		const Vector2& imagePoint = imagePoints[i];
 
 		const int xBin = distributionCandidatePoints.horizontalBin(imagePoint.x());
 		const int yBin = distributionCandidatePoints.verticalBin(imagePoint.y());
@@ -217,7 +217,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 				{
 					if (*candidateIndex < numberCandidatePoints)
 					{
-						const Geometry::ImagePoint& candidatePoint = candidatePoints[*candidateIndex];
+						const Vector2& candidatePoint = candidatePoints[*candidateIndex];
 
 						if (candidatePoint.x() >= left && candidatePoint.x() <= right && candidatePoint.y() >= top && candidatePoint.y() <= bottom)
 						{
@@ -254,7 +254,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 	return result;
 }
 
-PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, Indices32* candidateUseCounter)
+PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, Indices32* candidateUseCounter)
 {
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(searchWindowRadius > 0);
@@ -269,7 +269,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 	return determineNearestCandidates(imagePoints, numberImagePoints, candidatePoints, candidateLines, numberCandidatePoints, searchWindowRadius, maximalLineSqrDistance, distributionArray, candidateUseCounter);
 }
 
-PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ImagePoint* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter)
+PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNearestCandidates(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const Line2* candidateLines, const size_t numberCandidatePoints, const Scalar searchWindowRadius, const Scalar maximalLineSqrDistance, const Geometry::SpatialDistribution::DistributionArray& distributionCandidatePoints, Indices32* candidateUseCounter)
 {
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(searchWindowRadius > 0);
@@ -284,7 +284,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 
 	for (unsigned int n = 0; n < numberImagePoints; ++n)
 	{
-		const Geometry::ImagePoint& imagePoint = imagePoints[n];
+		const Vector2& imagePoint = imagePoints[n];
 
 		const int xBin = distributionCandidatePoints.horizontalBin(imagePoint.x());
 		const int yBin = distributionCandidatePoints.verticalBin(imagePoint.y());
@@ -308,7 +308,7 @@ PointCorrespondences::RedundantCorrespondences PointCorrespondences::determineNe
 				for (Indices32::const_iterator i = indices.begin(); i != indices.end(); ++i)
 					if (*i < numberCandidatePoints)
 					{
-						const Geometry::ImagePoint& candidatePoint = candidatePoints[*i];
+						const Vector2& candidatePoint = candidatePoints[*i];
 
 						if (candidatePoint.x() >= left && candidatePoint.x() <= right && candidatePoint.y() >= top && candidatePoint.y() <= bottom)
 						{

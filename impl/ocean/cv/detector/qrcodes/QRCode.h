@@ -40,7 +40,7 @@ class QRCode final : public QRCodeBase
 
 		/// Indicates the smallest valid version number of QR codes.
 		static constexpr unsigned int MIN_VERSION = 1u;
-		
+
 		/// Indicates the largest valid version number of QR codes.
 		static constexpr unsigned int MAX_VERSION = 40u;
 
@@ -69,7 +69,7 @@ class QRCode final : public QRCodeBase
 		 * @return The number of modules per side
 		 */
 		static inline unsigned int modulesPerSide(const unsigned int version);
-	
+
 	protected:
 
 		/**

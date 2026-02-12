@@ -1541,7 +1541,7 @@ bool Homography::homographyMatrixPlaneXY(const ObjectPoint* objectPoints, const 
 	ocean_assert(objectPoints && imagePoints);
 	ocean_assert(correspondences >= 10);
 
-	ImagePoints objectPoints2D;
+	Vectors2 objectPoints2D;
 	objectPoints2D.reserve(correspondences);
 
 	for (size_t n = 0; n < correspondences; ++n)
@@ -1558,11 +1558,11 @@ bool Homography::homographyMatrixPlaneXY(const Vector2* objectPoints, const Vect
 	ocean_assert(objectPoints && imagePoints);
 	ocean_assert(correspondences >= 10);
 
-	ImagePoints normalizedObjectPoints(correspondences);
-	ImagePoints normalizedImagePoints(correspondences);
+	Vectors2 normalizedObjectPoints(correspondences);
+	Vectors2 normalizedImagePoints(correspondences);
 
-	memcpy(normalizedObjectPoints.data(), objectPoints, sizeof(ImagePoint) * correspondences);
-	memcpy(normalizedImagePoints.data(), imagePoints, sizeof(ImagePoint) * correspondences);
+	std::copy_n(objectPoints, correspondences, normalizedObjectPoints.data());
+	std::copy_n(imagePoints, correspondences, normalizedImagePoints.data());
 
 	const SquareMatrix3 objectPointsNormalization(Normalization::calculateNormalizedPoints(normalizedObjectPoints.data(), correspondences));
 	const SquareMatrix3 imagePointsNormalization(Normalization::calculateNormalizedPoints(normalizedImagePoints.data(), correspondences));
@@ -1918,8 +1918,8 @@ bool Homography::distortionParameters(const ConstIndexedAccessor<HomogenousMatri
 		const HomogenousMatrix4 wTfc(wTc * PinholeCamera::flipMatrix4());
 		const HomogenousMatrix4 fcTw(wTfc.inverted());
 
-		const ObjectPoints& oPoints = objectPointGroups[n];
-		const ImagePoints& iPoints = imagePointGroups[n];
+		const Vectors3& oPoints = objectPointGroups[n];
+		const Vectors2& iPoints = imagePointGroups[n];
 
 		ocean_assert(oPoints.size() == iPoints.size());
 		if (oPoints.size() != iPoints.size())

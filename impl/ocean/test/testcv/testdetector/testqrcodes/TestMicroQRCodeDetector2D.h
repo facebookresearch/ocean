@@ -33,7 +33,7 @@ namespace TestQRCodes
  * @ingroup testcvdetectorqrcodes
  */
 class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestMicroQRCodeDetector2D : protected CV::Detector::QRCodes::MicroQRCodeDetector2D
-{	
+{
 	protected:
 
 		/**
@@ -53,7 +53,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestMicroQRCodeDetector2D : protecte
 			/// The error correction capacity
 			CV::Detector::QRCodes::MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity = CV::Detector::QRCodes::MicroQRCode::ECC_DETECTION_ONLY;
 		};
-		
+
 	public:
 
 		/**

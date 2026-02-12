@@ -636,7 +636,7 @@ class NonLinearOptimizationCamera::CameraProvider : public NonLinearOptimization
 		 * @param imagePoints 2D observation image points, each point corresponds to one projected object point
 		 * @param numberObservations Number of points observations, with range [1, infinity)
 		 */
-		inline CameraProvider(PinholeCamera& pinholeCamera, const ImagePoint* normalizedObjectPoints, const ImagePoint* imagePoints, const size_t numberObservations) :
+		inline CameraProvider(PinholeCamera& pinholeCamera, const Vector2* normalizedObjectPoints, const Vector2* imagePoints, const size_t numberObservations) :
 			camera_(pinholeCamera),
 			candidateCamera_(pinholeCamera),
 			normalizedObjectPoints_(normalizedObjectPoints),
@@ -728,10 +728,10 @@ class NonLinearOptimizationCamera::CameraProvider : public NonLinearOptimization
 		PinholeCamera candidateCamera_;
 
 		/// The normalized and projected 2D object points.
-		const ImagePoint* normalizedObjectPoints_;
+		const Vector2* normalizedObjectPoints_;
 
 		/// The observed 2D image points.
-		const ImagePoint* imagePoints_;
+		const Vector2* imagePoints_;
 
 		/// Number of point observations.
 		const size_t numberObservations_;

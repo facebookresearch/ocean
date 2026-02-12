@@ -130,7 +130,7 @@ class OCEAN_CV_DETECTOR_EXPORT PointFeature : public Feature
 		 * @param feature The point feature to convert
 		 * @return Resulting image point
 		 */
-		static inline const Geometry::ImagePoint& feature2imagePoint(const PointFeature& feature);
+		static inline const Vector2& feature2imagePoint(const PointFeature& feature);
 
 		/**
 		 * Returns whether two feature objects are equal.
@@ -233,7 +233,7 @@ inline void PointFeature::setStrength(const Scalar strength)
 	featureStrength = strength;
 }
 
-inline const Geometry::ImagePoint& PointFeature::feature2imagePoint(const PointFeature& feature)
+inline const Vector2& PointFeature::feature2imagePoint(const PointFeature& feature)
 {
 	return feature.observation();
 }

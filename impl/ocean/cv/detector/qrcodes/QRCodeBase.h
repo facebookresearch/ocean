@@ -426,10 +426,10 @@ inline std::string QRCodeBase::translateErrorCorrectionCapacity(const QRCodeBase
 
 		case ECC_30:
 			return "30";
-		
+
 		case ECC_DETECTION_ONLY:
 			return "DETECTION_ONLY";
-		
+
 		case ECC_INVALID:
 			return "INVALID";
 	}

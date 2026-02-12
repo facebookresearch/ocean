@@ -323,6 +323,13 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 		inline bool isValid() const;
 
 		/**
+		 * Default copy assignment operator.
+		 * @param calibrationBoard The calibration board to assign
+		 * @return Reference to this object
+		 */
+		CalibrationBoard& operator=(const CalibrationBoard& calibrationBoard) = default;
+
+		/**
 		 * Creates a unique calibration board based on a unique seed value and the number of markers the board has.
 		 * In case the underlying random generator implementation is changing, the resulting calibration board may change as well.
 		 * @param seed The seed value which is used for the random number generator to create a unique board, with range [0, infinity)

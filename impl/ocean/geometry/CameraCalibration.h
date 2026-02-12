@@ -191,7 +191,7 @@ class OCEAN_GEOMETRY_EXPORT CameraCalibration
 		 * @param imagePoints Resulting image points
 		 * @return True, if succeeded
 		 */
-		static bool createCorrespondences(const Pattern& pattern, const Vector2& boxSize, ObjectPoints& objectPoints, ImagePoints& imagePoints);
+		static bool createCorrespondences(const Pattern& pattern, const Vector2& boxSize, Vectors3& objectPoints, Vectors2& imagePoints);
 
 		/**
 		 * Determines the horizontal field of view that matches best to a set of poses, object point and image points.

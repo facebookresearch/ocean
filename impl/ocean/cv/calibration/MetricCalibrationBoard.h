@@ -151,6 +151,13 @@ class OCEAN_CV_CALIBRATION_EXPORT MetricCalibrationBoard : public CalibrationBoa
 		inline bool isValid() const;
 
 		/**
+		 * Default copy assignment operator.
+		 * @param calibrationBoard The calibration board to assign
+		 * @return Reference to this object
+		 */
+		MetricCalibrationBoard& operator=(const MetricCalibrationBoard& calibrationBoard) = default;
+
+		/**
 		 * Creates a unique metric calibration board based on a unique board id (the seed) and the number of markers the board has.
 		 * @param id The unique board id defining the seed for the random number generator, with range [0, infinity)
 		 * @param xMarkers The number of horizontal markers the calibration board will have, with range [1, infinity)

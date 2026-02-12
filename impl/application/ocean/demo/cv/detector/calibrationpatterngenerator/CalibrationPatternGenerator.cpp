@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 
 	Frame unscaledFrame(FrameType(horizontalBoxes * 2u + 1u, verticalBoxes * 2u + 1, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	unscaledFrame.setValue(0xFFu);
-	
+
 	for (unsigned int y = 0u; y < verticalBoxes; ++y)
 	{
 		for (unsigned int x = 0u; x < horizontalBoxes; ++x)

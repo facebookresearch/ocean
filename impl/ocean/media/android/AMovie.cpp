@@ -242,13 +242,13 @@ bool AMovie::soundMute() const
 	return false;
 }
 
-bool AMovie::setSoundVolume(const float volume)
+bool AMovie::setSoundVolume(const float /*volume*/)
 {
 	ocean_assert(false && "Missing implementation!");
 	return false;
 }
 
-bool AMovie::setSoundMute(const bool mute)
+bool AMovie::setSoundMute(const bool /*mute*/)
 {
 	ocean_assert(false && "Missing implementation!");
 	return false;

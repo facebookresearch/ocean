@@ -13,6 +13,9 @@
 
 #include "ocean/math/Vector2.h"
 
+#include <algorithm>
+#include <memory>
+
 namespace Ocean
 {
 
@@ -155,7 +158,7 @@ inline MappingF::MappingF(const MappingF& mappingObject) :
 		mappingF_ = (Vector2*)malloc(size * sizeof(Vector2));
 		ocean_assert(mappingF_ != nullptr);
 
-		memcpy(mappingF_, mappingObject.mappingF_, size * sizeof(Vector2));
+		std::uninitialized_copy(mappingObject.mappingF_, mappingObject.mappingF_ + size, mappingF_);
 	}
 }
 
@@ -176,7 +179,7 @@ inline MappingF::MappingF(const unsigned int width, const unsigned int height) :
 		ocean_assert(mappingF_ != nullptr);
 
 //#ifdef OCEAN_DEBUG // **TODO** currently, we set the entire mapping information to zero to ensure that we really overwrite the information layer, however that needs to be checked before removing the memset execution
-		memset(mappingF_, 0, size * sizeof(Vector2));
+		std::uninitialized_fill(mappingF_, mappingF_ + size, Vector2(0, 0));
 //#endif
 	}
 }
@@ -224,7 +227,7 @@ inline Vector2* MappingF::row(const unsigned int y)
 inline void MappingF::reset()
 {
 	ocean_assert(mappingF_);
-	memset(mappingF_, 0, sizeof(Vector2) * width_ * height_);
+	std::fill(mappingF_, mappingF_ + width_ * height_, Vector2(0, 0));
 }
 
 inline const Vector2* MappingF::operator()() const
@@ -256,7 +259,7 @@ inline MappingF& MappingF::operator=(const MappingF& mappingObject)
 			mappingF_ = (Vector2*)malloc(size * sizeof(Vector2));
 			ocean_assert(mappingF_ != nullptr);
 
-			memcpy(mappingF_, mappingObject.mappingF_, size * sizeof(Vector2));
+			std::uninitialized_copy(mappingObject.mappingF_, mappingObject.mappingF_ + size, mappingF_);
 		}
 	}
 

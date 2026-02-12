@@ -171,8 +171,8 @@ bool FeatureTracker6DOF::determinePoseWithoutKnowledge(ORBFeatures& features, co
 
 	if (correspondenceCandidates.size() >= 12)
 	{
-		Geometry::ImagePoints imagePoints;
-		Geometry::ObjectPoints objectPoints;
+		Vectors2 imagePoints;
+		Vectors3 objectPoints;
 		Correspondences::extractCorrespondingPoints(features, featureMap_.features(), correspondenceCandidates, imagePoints, objectPoints);
 		ocean_assert(objectPoints.size() == imagePoints.size());
 
@@ -234,8 +234,8 @@ bool FeatureTracker6DOF::determinePoseWithPreviousPose(ORBFeatures& features, co
 
 	if (correspondenceCandidates.size() >= 12)
 	{
-		Geometry::ImagePoints imagePoints;
-		Geometry::ObjectPoints objectPoints;
+		Vectors2 imagePoints;
+		Vectors3 objectPoints;
 		Correspondences::extractCorrespondingPoints(features, referenceFeaturePoints, correspondenceCandidates, imagePoints, objectPoints);
 		ocean_assert(objectPoints.size() == imagePoints.size());
 

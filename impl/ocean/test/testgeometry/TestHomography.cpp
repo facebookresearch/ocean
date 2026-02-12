@@ -1160,8 +1160,8 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 
 			const HomogenousMatrix4 extrinsic(translation, quaternion);
 
-			Geometry::ImagePoints imagePoints;
-			Geometry::ObjectPoints objectPoints;
+			Vectors2 imagePoints;
+			Vectors3 objectPoints;
 
 			for (unsigned int n = 0u; n < correspondences; ++n)
 			{
@@ -1267,8 +1267,8 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 
 			const HomogenousMatrix4 extrinsic(translation, quaternion);
 
-			Geometry::ImagePoints imagePoints;
-			Geometry::ObjectPoints objectPoints;
+			Vectors2 imagePoints;
+			Vectors3 objectPoints;
 
 			for (unsigned int n = 0; n < correspondences; ++n)
 			{
@@ -1385,8 +1385,8 @@ bool TestHomography::testIntrinsic(const double testDuration)
 
 				const HomogenousMatrix4 extrinsic(translation, quaternion);
 
-				Geometry::ImagePoints imagePoints;
-				Geometry::ObjectPoints objectPoints;
+				Vectors2 imagePoints;
+				Vectors3 objectPoints;
 
 				for (unsigned int n = 0u; n < correspondences; ++n)
 				{
@@ -1445,8 +1445,8 @@ bool TestHomography::testIntrinsic(const double testDuration)
 							const Vector3 translationDifference(extrinsic.translation() - t.translation());
 							OCEAN_SUPPRESS_UNUSED_WARNING(translationDifference);
 
-							const Geometry::ObjectPoints& objectPoints = objectPointGroups[n];
-							const Geometry::ImagePoints& imagePoints = imagePointGroups[n];
+							const Vectors3& objectPoints = objectPointGroups[n];
+							const Vectors2& imagePoints = imagePointGroups[n];
 
 							for (size_t i = 0; i < objectPoints.size(); ++i)
 							{

@@ -123,7 +123,7 @@ ConnectionOrientedClient::SocketResult ConnectionOrientedClient::send(const void
 		}
 	}
 #else
-	if (result == -1)
+	if (result == size_t(-1))
 	{
 		if (errno == EWOULDBLOCK)
 		{

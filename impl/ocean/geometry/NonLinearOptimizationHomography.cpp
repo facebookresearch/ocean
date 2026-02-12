@@ -34,7 +34,7 @@ class NonLinearOptimizationHomography::HomographyData
 		 * @param imagePointsLeft The left image points, must be valid
 		 * @param imagePointsRight The right image points, one point for each left point, must be valid
 		 */
-		HomographyData(const ImagePoint* imagePointsLeft, const ImagePoint* imagePointsRight) :
+		HomographyData(const Vector2* imagePointsLeft, const Vector2* imagePointsRight) :
 			imagePointsLeft_(imagePointsLeft),
 			imagePointsRight_(imagePointsRight)
 		{
@@ -92,10 +92,10 @@ class NonLinearOptimizationHomography::HomographyData
 	protected:
 
 		/// The left image points.
-		const ImagePoint* imagePointsLeft_ = nullptr;
+		const Vector2* imagePointsLeft_ = nullptr;
 
 		/// The right image points, one for each left point.
-		const ImagePoint* imagePointsRight_ = nullptr;
+		const Vector2* imagePointsRight_ = nullptr;
 };
 
 bool NonLinearOptimizationHomography::optimizeHomography(const SquareMatrix3& homography, const Vector2* imagePointsLeft, const Vector2* imagePointsRight, const size_t correspondences, const unsigned int modelParameters, SquareMatrix3& optimizedHomography, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
@@ -137,7 +137,7 @@ class NonLinearOptimizationHomography::HomographyOptimizationProvider : public N
 		 * @param homographyMatrix The initial homography which will be optimized, must be normalized
 		 * @param modelParameters The number of parameters defining the model (of the homography) to be optimize, with range [8, 9]
 		 */
-		inline HomographyOptimizationProvider(const ImagePoint* imagePointsLeft, const ImagePoint* imagePointsRight, const size_t correspondences, SquareMatrix3& homographyMatrix, const unsigned int modelParameters) :
+		inline HomographyOptimizationProvider(const Vector2* imagePointsLeft, const Vector2* imagePointsRight, const size_t correspondences, SquareMatrix3& homographyMatrix, const unsigned int modelParameters) :
 			imagePointsLeft_(imagePointsLeft),
 			imagePointsRight_(imagePointsRight),
 			homographyMatrix_(homographyMatrix),
@@ -271,10 +271,10 @@ class NonLinearOptimizationHomography::HomographyOptimizationProvider : public N
 	protected:
 
 		/// The image points in the left/first camera frame.
-		const ImagePoint* imagePointsLeft_;
+		const Vector2* imagePointsLeft_;
 
 		/// The image points in the right/second camera frame, one for each left point.
-		const ImagePoint* imagePointsRight_;
+		const Vector2* imagePointsRight_;
 
 		/// The initial or (currently best) optimized homography.
 		SquareMatrix3& homographyMatrix_;
@@ -353,7 +353,7 @@ class NonLinearOptimizationHomography::SimilarityOptimizationProvider : public N
 		 * @param correspondences Number of point correspondences, with range [4, infinity)
 		 * @param similarityMatrix The initial similarity transformation which will be optimized, must be normalized
 		 */
-		inline SimilarityOptimizationProvider(const ImagePoint* imagePointsLeft, const ImagePoint* imagePointsRight, const size_t correspondences, SquareMatrix3& similarityMatrix) :
+		inline SimilarityOptimizationProvider(const Vector2* imagePointsLeft, const Vector2* imagePointsRight, const size_t correspondences, SquareMatrix3& similarityMatrix) :
 			imagePointsLeft_(imagePointsLeft),
 			imagePointsRight_(imagePointsRight),
 			similarityMatrix_(similarityMatrix),
@@ -504,10 +504,10 @@ class NonLinearOptimizationHomography::SimilarityOptimizationProvider : public N
 	protected:
 
 		/// The image points in the left/first camera frame.
-		const ImagePoint* imagePointsLeft_;
+		const Vector2* imagePointsLeft_;
 
 		/// The image points in the right/second camera frame, one for each left point.
-		const ImagePoint* imagePointsRight_;
+		const Vector2* imagePointsRight_;
 
 		/// The initial or (currently best) optimized similarity.
 		SquareMatrix3& similarityMatrix_;
@@ -600,7 +600,7 @@ class NonLinearOptimizationHomography::NormalizedHomographyData
 		 * @param imagePointsLeft The left image points, must be valid
 		 * @param imagePointsRight The right image points, one point for each left point, must be valid
 		 */
-		NormalizedHomographyData(const PinholeCamera& pinholeCamera, const ImagePoint* imagePointsLeft, const ImagePoint* imagePointsRight) :
+		NormalizedHomographyData(const PinholeCamera& pinholeCamera, const Vector2* imagePointsLeft, const Vector2* imagePointsRight) :
 			camera_(pinholeCamera),
 			imagePointsLeft_(imagePointsLeft),
 			imagePointsRight_(imagePointsRight)
@@ -683,10 +683,10 @@ class NonLinearOptimizationHomography::NormalizedHomographyData
 		const PinholeCamera& camera_;
 
 		/// The left image points.
-		const ImagePoint* imagePointsLeft_ = nullptr;
+		const Vector2* imagePointsLeft_ = nullptr;
 
 		/// The right image points, one for each left point.
-		const ImagePoint* imagePointsRight_ = nullptr;
+		const Vector2* imagePointsRight_ = nullptr;
 };
 
 bool NonLinearOptimizationHomography::optimizeHomography(const PinholeCamera& pinholeCamera, const SquareMatrix3& homography, const Vector2* imagePointsLeft, const Vector2* imagePointsRight, const size_t correspondences, SquareMatrix3& optimizedHomography, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError)
@@ -740,7 +740,7 @@ class NonLinearOptimizationHomography::HomographyCameraData
 		 * @param imagePointsLeft The left image points, must be valid
 		 * @param imagePointsRight The right image points, one point for each left point, must be valid
 		 */
-		HomographyCameraData(const unsigned int cameraWidth, const unsigned int cameraHeight, const ImagePoint* imagePointsLeft, const ImagePoint* imagePointsRight) :
+		HomographyCameraData(const unsigned int cameraWidth, const unsigned int cameraHeight, const Vector2* imagePointsLeft, const Vector2* imagePointsRight) :
 			cameraWidth_(cameraWidth),
 			cameraHeight_(cameraHeight),
 			imagePointsLeft_(imagePointsLeft),
@@ -829,10 +829,10 @@ class NonLinearOptimizationHomography::HomographyCameraData
 		const unsigned int cameraHeight_ = 0u;
 
 		/// The left image points.
-		const ImagePoint* imagePointsLeft_ = nullptr;
+		const Vector2* imagePointsLeft_ = nullptr;
 
 		/// The right image points, one for each left point.
-		const ImagePoint* imagePointsRight_ = nullptr;
+		const Vector2* imagePointsRight_ = nullptr;
 };
 
 bool NonLinearOptimizationHomography::optimizeCameraHomography(const PinholeCamera& pinholeCamera, const SquareMatrix3& homography, const Vector2* imagePointsLeft, const Vector2* imagePointsRight, const size_t correspondences, PinholeCamera& optimizedCamera, SquareMatrix3& optimizedHomography, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError)

@@ -37,7 +37,7 @@ class OCEAN_TEST_CV_LIBYUV_EXPORT TestFrameShrinker
 		static void test(const double testDuration);
 
 	private:
-	
+
 		/**
 		 * Benchmarks the shrinking of frames by a factor of two.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)

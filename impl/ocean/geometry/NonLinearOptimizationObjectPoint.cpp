@@ -37,7 +37,7 @@ class NonLinearOptimizationObjectPoint::CameraObjectPointProvider : public NonLi
 		 * @param imagePointAccessor 2D observation image points, each point corresponds to one camera pose
 		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
 		 */
-		inline CameraObjectPointProvider(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, Vector3& objectPoint, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool onlyFrontObjectPoints) :
+		inline CameraObjectPointProvider(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, Vector3& objectPoint, const ConstIndexedAccessor<Vector2>& imagePoints, const bool onlyFrontObjectPoints) :
 			camera_(camera),
 			flippedCameras_T_world_(flippedCameras_T_world),
 			objectPoint_(objectPoint),
@@ -118,8 +118,8 @@ class NonLinearOptimizationObjectPoint::CameraObjectPointProvider : public NonLi
 			// determine projective errors
 			for (size_t n = 0u; n < flippedCameras_T_world_.size(); ++n)
 			{
-				const ImagePoint imagePoint(camera_.projectToImageIF(flippedCameras_T_world_[n], candidateObjectPoint_));
-				const ImagePoint& realImagePoint = imagePoints_[n];
+				const Vector2 imagePoint(camera_.projectToImageIF(flippedCameras_T_world_[n], candidateObjectPoint_));
+				const Vector2& realImagePoint = imagePoints_[n];
 
 				const Vector2 difference(imagePoint - realImagePoint);
 
@@ -228,7 +228,7 @@ class NonLinearOptimizationObjectPoint::CamerasObjectPointProvider : public NonL
 		 * @param imagePointAccessor 2D observation image points, each point corresponds to one camera pose
 		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
 		 */
-		inline CamerasObjectPointProvider(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, Vector3& objectPoint, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool onlyFrontObjectPoints) :
+		inline CamerasObjectPointProvider(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, Vector3& objectPoint, const ConstIndexedAccessor<Vector2>& imagePoints, const bool onlyFrontObjectPoints) :
 			cameras_(cameras),
 			flippedCameras_T_world_(flippedCameras_T_world),
 			objectPoint_(objectPoint),
@@ -310,8 +310,8 @@ class NonLinearOptimizationObjectPoint::CamerasObjectPointProvider : public NonL
 			// determine projective errors
 			for (size_t n = 0u; n < flippedCameras_T_world_.size(); ++n)
 			{
-				const ImagePoint imagePoint(cameras_[n]->projectToImageIF(flippedCameras_T_world_[n], candidateObjectPoint_));
-				const ImagePoint& realImagePoint = imagePoints_[n];
+				const Vector2 imagePoint(cameras_[n]->projectToImageIF(flippedCameras_T_world_[n], candidateObjectPoint_));
+				const Vector2& realImagePoint = imagePoints_[n];
 
 				const Vector2 difference(imagePoint - realImagePoint);
 
@@ -423,7 +423,7 @@ class NonLinearOptimizationObjectPoint::StereoCameraObjectPointProvider : public
 		 * @param imagePointAccessorB 2D observation image points in the second stereo images, each point corresponds to one camera pose of the second (e.g., right) stereo camera
 		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
 		 */
-		inline StereoCameraObjectPointProvider(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCamerasA_T_world, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCamerasB_T_world, Vector3& objectPoint, const ConstIndexedAccessor<ImagePoint>& imagePointAccessorA, const ConstIndexedAccessor<ImagePoint>& imagePointAccessorB, const bool onlyFrontObjectPoints) :
+		inline StereoCameraObjectPointProvider(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCamerasA_T_world, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCamerasB_T_world, Vector3& objectPoint, const ConstIndexedAccessor<Vector2>& imagePointAccessorA, const ConstIndexedAccessor<Vector2>& imagePointAccessorB, const bool onlyFrontObjectPoints) :
 			anyCameraA_(anyCameraA),
 			anyCameraB_(anyCameraB),
 			flippedCamerasA_T_world_(flippedCamerasA_T_world),
@@ -524,8 +524,8 @@ class NonLinearOptimizationObjectPoint::StereoCameraObjectPointProvider : public
 			// determine projective errors for the first stereo cameras
 			for (size_t n = 0u; n < flippedCamerasA_T_world_.size(); ++n)
 			{
-				const ImagePoint imagePoint(anyCameraA_.projectToImageIF(flippedCamerasA_T_world_[n], candidateObjectPoint_));
-				const ImagePoint& realImagePoint = imagePointAccessorA_[n];
+				const Vector2 imagePoint(anyCameraA_.projectToImageIF(flippedCamerasA_T_world_[n], candidateObjectPoint_));
+				const Vector2& realImagePoint = imagePointAccessorA_[n];
 
 				const Vector2 difference(imagePoint - realImagePoint);
 
@@ -545,8 +545,8 @@ class NonLinearOptimizationObjectPoint::StereoCameraObjectPointProvider : public
 			// determine projective errors for the second stereo cameras
 			for (size_t n = 0u; n < flippedCamerasB_T_world_.size(); ++n)
 			{
-				const ImagePoint imagePoint(anyCameraB_.projectToImageIF(flippedCamerasB_T_world_[n], candidateObjectPoint_));
-				const ImagePoint& realImagePoint = imagePointAccessorB_[n];
+				const Vector2 imagePoint(anyCameraB_.projectToImageIF(flippedCamerasB_T_world_[n], candidateObjectPoint_));
+				const Vector2& realImagePoint = imagePointAccessorB_[n];
 
 				const Vector2 difference(imagePoint - realImagePoint);
 
@@ -698,7 +698,7 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 		 * @param distortImagePoints True, to apply the distortion parameters of the camera
 		 * @param onlyFrontObjectPoint True, to avoid that the optimized 3D position lies behind any camera
 		 */
-		inline SphericalObjectPointProvider(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& flippedCameras_R_world, const ConstIndexedAccessor<ImagePoint>& imagePoints, ExponentialMap& objectPoint, const Scalar objectPointDistance, const bool onlyFrontObjectPoint) :
+		inline SphericalObjectPointProvider(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& flippedCameras_R_world, const ConstIndexedAccessor<Vector2>& imagePoints, ExponentialMap& objectPoint, const Scalar objectPointDistance, const bool onlyFrontObjectPoint) :
 			camera_(camera),
 			flippedCamera_R_world_(flippedCameras_R_world),
 			providerImagePoints(imagePoints),
@@ -770,8 +770,8 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 			// determine projective errors
 			for (size_t n = 0u; n < flippedCamera_R_world_.size(); ++n)
 			{
-				const ImagePoint imagePoint(camera_.projectToImageIF(HomogenousMatrix4(flippedCamera_R_world_[n]), candidateObjectPoint));
-				const ImagePoint& realImagePoint = providerImagePoints[n];
+				const Vector2 imagePoint(camera_.projectToImageIF(HomogenousMatrix4(flippedCamera_R_world_[n]), candidateObjectPoint));
+				const Vector2& realImagePoint = providerImagePoints[n];
 
 				const Vector2 difference(imagePoint - realImagePoint);
 
@@ -841,7 +841,7 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 		const ConstIndexedAccessor<SquareMatrix3>& flippedCamera_R_world_;
 
 		/// The 2D observation positions in the individual camera frames.
-		const ConstIndexedAccessor<ImagePoint>& providerImagePoints;
+		const ConstIndexedAccessor<Vector2>& providerImagePoints;
 
 		/// Object point that will be optimized.
 		ExponentialMap& objectPoint_;
@@ -1214,7 +1214,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			gravityConstraints_(gravityConstraints)
 		{
 			ocean_assert(correspondences >= 5);
-			memcpy(objectPointCandidates_.data(), objectPoints, sizeof(Vector3) * correspondences);
+			std::copy_n(objectPoints, correspondences, objectPointCandidates_.data());
 
 			if (gravityConstraints_ != nullptr)
 			{
@@ -1702,7 +1702,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			secondFlippedCamera_T_world_ = candidateSecondFlippedCamera_T_world_;
 
 			ocean_assert(objectPointCandidates_.size() == correspondences_);
-			memcpy(objectPoints_, objectPointCandidates_.data(), sizeof(Vector3) * correspondences_);
+			std::copy_n(objectPointCandidates_.data(), correspondences_, objectPoints_);
 		}
 
 		/**
@@ -2166,7 +2166,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsTwoPosesProvider : public No
 			onlyFrontObjectPoints_(onlyFrontObjectPoints)
 		{
 			ocean_assert(correspondences >= 5);
-			memcpy(objectPointCandidates_.data(), objectPoints, sizeof(Vector3) * correspondences);
+			std::copy_n(objectPoints, correspondences, objectPointCandidates_.data());
 		}
 
 		/**
@@ -2443,7 +2443,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsTwoPosesProvider : public No
 			firstFlippedCamera_T_world_ = providerFirstPoseCandidateIF;
 			secondFlippedCamera_T_world_ = secondCandidateFlippedCamera_T_world_;
 
-			memcpy(objectPoints_, objectPointCandidates_.data(), sizeof(Vector3) * correspondences_);
+			std::copy_n(objectPointCandidates_.data(), correspondences_, objectPoints_);
 		}
 
 	protected:
@@ -3248,10 +3248,10 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 		inline void acceptCorrection()
 		{
 			ocean_assert(candidateFlippedCameras_T_world_.size() == flippedCameras_T_world_.size());
-			memcpy(flippedCameras_T_world_.data(), candidateFlippedCameras_T_world_.data(), sizeof(HomogenousMatrix4) * flippedCameras_T_world_.size());
+			std::copy_n(candidateFlippedCameras_T_world_.data(), flippedCameras_T_world_.size(), flippedCameras_T_world_.data());
 
 			ocean_assert(objectPointCandidates_.size() == correspondenceGroups_.groups());
-			memcpy(objectPoints_.data(), objectPointCandidates_.data(), sizeof(Vector3) * correspondenceGroups_.groups());
+			std::copy_n(objectPointCandidates_.data(), correspondenceGroups_.groups(), objectPoints_.data());
 		}
 
 		/**
@@ -4465,10 +4465,10 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 		inline void acceptCorrection()
 		{
 			ocean_assert(candidateFlippedCameras_T_world_.size() == flippedCameras_T_world_.size());
-			memcpy(flippedCameras_T_world_.data(), candidateFlippedCameras_T_world_.data(), sizeof(HomogenousMatrix4) * flippedCameras_T_world_.size());
+			std::copy_n(candidateFlippedCameras_T_world_.data(), flippedCameras_T_world_.size(), flippedCameras_T_world_.data());
 
 			ocean_assert(objectPointCandidates_.size() == correspondenceGroups_.groups());
-			memcpy(objectPoints_.data(), objectPointCandidates_.data(), sizeof(Vector3) * correspondenceGroups_.groups());
+			std::copy_n(objectPointCandidates_.data(), correspondenceGroups_.groups(), objectPoints_.data());
 		}
 
 		/**
@@ -5382,7 +5382,7 @@ class NonLinearOptimizationObjectPoint::SlowObjectPointsPosesProvider : public N
 		HomogenousMatrices4  candidateFlippedCameras_T_world_;
 
 		/// The candidates of new object points.
-		ObjectPoints candidateObjectPoints_;
+		Vectors3 candidateObjectPoints_;
 
 		/// The groups of correspondences between pose indices and image points, one group for each object point
 		const NonLinearOptimization::ObjectPointGroupsAccessor& correspondenceGroups_;
@@ -5519,7 +5519,7 @@ void NonLinearOptimizationObjectPoint::optimizeObjectPointsForFixedPosesIFSubset
 	Vector2 imagePoint;
 
 	Indices32 poseIndices;
-	ImagePoints imagePoints;
+	Vectors2 imagePoints;
 
 	const AnyCameraPinhole anyCamera = AnyCameraPinhole(PinholeCamera(*camera, distortImagePoints));
 
@@ -5542,7 +5542,7 @@ void NonLinearOptimizationObjectPoint::optimizeObjectPointsForFixedPosesIFSubset
 		}
 
 		ObjectPoint optimizedObjectPoint;
-		if (optimizeObjectPointForFixedPosesIF(anyCamera, ConstArrayAccessor<HomogenousMatrix4>(Accessor::accessor2subsetElements(*invertedFlippedPoses, poseIndices)), (*objectPoints)[n], ConstArrayAccessor<ImagePoint>(imagePoints), optimizedObjectPoint, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints))
+		if (optimizeObjectPointForFixedPosesIF(anyCamera, ConstArrayAccessor<HomogenousMatrix4>(Accessor::accessor2subsetElements(*invertedFlippedPoses, poseIndices)), (*objectPoints)[n], ConstArrayAccessor<Vector2>(imagePoints), optimizedObjectPoint, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints))
 		{
 			(*optimizedObjectPoints)[n] = optimizedObjectPoint;
 			continue;

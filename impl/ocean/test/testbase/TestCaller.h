@@ -606,7 +606,7 @@ class OCEAN_TEST_BASE_EXPORT TestCaller
 		 * @return True, if succeeded
 		 */
 		static bool testCallerParameters();
-	
+
 	private:
 
 		/**

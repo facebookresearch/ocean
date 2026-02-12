@@ -20,7 +20,7 @@ public class BaseJni
 	public enum MessageOutput
 	{
 		/// All messages will be discarded.
-		OUTPUT_DISCARDED(0),		
+		OUTPUT_DISCARDED(0),
 		/// All messages are directed to the standard output immediately.
 		OUTPUT_STANDARD(1 << 0),
 		/// All messages are queued and must be popped from the message stack explicitly.

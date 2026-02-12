@@ -35,14 +35,14 @@ class OCEAN_TEST_BASE_EXPORT TestSubset
 		 * @return True, if succeeded
 		 */
 		static bool test(const double testDuration, const TestSelector& selector = TestSelector());
-	
+
 		/**
 		 * Tests the normal subset function.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testSubset(const double testDuration);
-	
+
 		/**
 		 * Tests the inverted subset function.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
@@ -56,7 +56,7 @@ class OCEAN_TEST_BASE_EXPORT TestSubset
 		 * @return True, if succeeded
 		 */
 		static bool hasIntersectingElement(const double testDuration);
-	
+
 	protected:
 
 		/**

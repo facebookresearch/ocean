@@ -22,11 +22,11 @@ if (IOS)
 
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
 
-    target_compile_definitions(${OCEAN_TARGET_NAME} 
-        PUBLIC 
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PUBLIC
             ${OCEAN_PREPROCESSOR_FLAGS}
 
-        PRIVATE 
+        PRIVATE
             "-DGLES_SILENCE_DEPRECATION"
     )
 

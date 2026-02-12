@@ -217,6 +217,8 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 		return false;
 	}
 
+	OCEAN_SUPPRESS_UNUSED_WARNING(properties);
+
 	return false;
 }
 

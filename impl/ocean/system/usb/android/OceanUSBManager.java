@@ -73,7 +73,7 @@ public class OceanUSBManager
 		{
 			IntentFilter filter = new IntentFilter(intentUSBPermissionAction_);
 			context.registerReceiver(usbReciever_, filter);
-			
+
 			context_ = context;
 
 			staticManager_ = this;
@@ -225,7 +225,7 @@ public class OceanUSBManager
 		{
 			Log.e("Ocean", "OceanUSBManager: Invalid device name");
 			return result;
-		}		
+		}
 
 		if (staticManager_ == null)
 		{
@@ -270,14 +270,14 @@ public class OceanUSBManager
 			Log.e("Ocean", "OceanUSBManager: No instance of OceanUSBManager available");
 			return false;
 		}
-		
+
 		UsbDevice usbDevice  = getDevice(deviceName);
 
 		if (usbDevice == null)
 		{
 			return false;
 		}
-		
+
 		PendingIntent permissionIntent = PendingIntent.getBroadcast(staticManager_.context_, 0, new Intent(staticManager_.intentUSBPermissionAction_), PendingIntent.FLAG_MUTABLE);
 
 		staticManager_.usbManager_.requestPermission(usbDevice, permissionIntent);
@@ -315,7 +315,7 @@ public class OceanUSBManager
 		{
 			return 1;
 		}
-		
+
 		return 0;
 	}
 
@@ -449,7 +449,7 @@ public class OceanUSBManager
 	/// The Android USB manager.
 	private UsbManager usbManager_ = null;
 
-	/// The receiver for USB permission request intents sent by Context.sendBroadcast(Intent). 
+	/// The receiver for USB permission request intents sent by Context.sendBroadcast(Intent).
 	private final BroadcastReceiver usbReciever_ = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent)

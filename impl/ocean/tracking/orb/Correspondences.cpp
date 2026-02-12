@@ -21,7 +21,7 @@ namespace ORB
 using namespace CV;
 using namespace CV::Detector;
 
-void Correspondences::extractCorrespondingPoints(const ORBFeatures& forwardFeatures, const ORBFeatures& backwardFeatures, const CorrespondencePairs& correspondences, Geometry::ImagePoints& imagePoints, Geometry::ObjectPoints& objectPoints)
+void Correspondences::extractCorrespondingPoints(const ORBFeatures& forwardFeatures, const ORBFeatures& backwardFeatures, const CorrespondencePairs& correspondences, Vectors2& imagePoints, Vectors3& objectPoints)
 {
 	ocean_assert(objectPoints.empty());
 	ocean_assert(imagePoints.empty());

@@ -11,7 +11,7 @@
 #include "ocean/base/Base.h"
 
 #include <UIKit/UIKit.h>
- 
+
 /**
  * @ingroup applicationdemocvdetectorlinedetector
  * @defgroup applicationdemocvdetectorlinedetectorios Line Detector (iOS)

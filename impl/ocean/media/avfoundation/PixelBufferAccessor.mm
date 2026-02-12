@@ -122,7 +122,7 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 			{
 				planeInitializers.emplace_back((uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
 			}
-			
+
 			const FrameType::PixelFormat pixelFormatY8 = FrameType::formatGrayscalePixelFormat(pixelFormat); // will be either FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE
 
 			frameType = FrameType(frameType, pixelFormatY8);
@@ -182,7 +182,7 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 			{
 				planeInitializers.emplace_back((uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
 			}
-			
+
 			const FrameType::PixelFormat pixelFormatY8 = FrameType::formatGrayscalePixelFormat(pixelFormat);
 
 			frameType = FrameType(frameType, pixelFormatY8); // will be either FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE

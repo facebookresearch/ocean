@@ -266,7 +266,7 @@ class AVFLiveVideo :
 
 		/// The approximated camera profile of this live video.
 		SharedAnyCamera approximatedCamera_;
-	
+
 		/// True, if the medium waits for the first frame; False, if several frames have been received already.
 		bool waitingForFirstFrame_ = true;
 

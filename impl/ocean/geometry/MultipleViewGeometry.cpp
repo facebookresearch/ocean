@@ -58,7 +58,7 @@ Vector4 composeMatrixDet0(const SquareMatrix3 matrix1, const SquareMatrix3 matri
 }
 #endif
 
-bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, TrifocalTensor& trifocal)
+bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, TrifocalTensor& trifocal)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences >= 7);
@@ -90,7 +90,7 @@ bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const ImagePoint* poin
 	return true;
 }
 
-bool MultipleViewGeometry::trifocalTensorMinimizingError(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, TrifocalTensor& trifocal)
+bool MultipleViewGeometry::trifocalTensorMinimizingError(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, TrifocalTensor& trifocal)
 {
 	// todo: resulting trifocal tensor is not valid
 	ocean_assert(points1 && points2 && points3);
@@ -211,7 +211,7 @@ bool MultipleViewGeometry::trifocalTensorMinimizingError(const ImagePoint* point
 	return true;
 }
 
-bool MultipleViewGeometry::trifocalTensorIF(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, TrifocalTensor* trifocalTensor)
+bool MultipleViewGeometry::trifocalTensorIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, TrifocalTensor* trifocalTensor)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences >= 7);
@@ -329,13 +329,13 @@ bool MultipleViewGeometry::calibrateFromProjectionsMatricesIF(const HomogenousMa
 	return true;
 }
 
-bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
+bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences >= 6);
 
 	RandomGenerator generator;
-	const ImagePoint* points[3] = {points1, points2, points3};
+	const Vector2* points[3] = {points1, points2, points3};
 
 	/**
 	 * algorithm 20.1 from multiple view geometry (p.511)
@@ -361,7 +361,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 		bool allValid = true;
 		for (unsigned int v = 0u; v < 3u; ++v)
 		{
-			const ImagePoints permutationImagePoints = Subset::subset(points[v], correspondences, indexSet4NonCollinear);
+			const Vectors2 permutationImagePoints = Subset::subset(points[v], correspondences, indexSet4NonCollinear);
 			triangleInView[v] = Triangle2(permutationImagePoints[0], permutationImagePoints[1], permutationImagePoints[2]);
 			allValid = allValid && triangleInView[v].isValid();
 		}
@@ -428,7 +428,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 
 	for (unsigned int iView = 0; iView < 3u; ++iView)
 	{
-		const ImagePoints nonCollinearPoints = Subset::subset(points[iView], correspondences, indexSet4NonCollinear);
+		const Vectors2 nonCollinearPoints = Subset::subset(points[iView], correspondences, indexSet4NonCollinear);
 		if (!calculateProjectiveBasisTransform(nonCollinearPoints[0], nonCollinearPoints[1], nonCollinearPoints[2], nonCollinearPoints[3], projectiveTransforms[iView]))
 			return false;
 
@@ -453,7 +453,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 			const Vector3 debugTransformatedPoint = projectiveTransforms[iView] * debugPoint;
 			debugSqrDistanceProjBasis += debugTransformatedPoint.sqrDistance(standardProjectiveBasis[iPoint]);
 			const Vector3 debugImagePoint3 = projectiveTransformsInv[iView] * standardProjectiveBasis[iPoint];
-			const ImagePoint debugImagePoint(debugImagePoint3[0] / debugImagePoint3[2], debugImagePoint3[1] / debugImagePoint3[2]);
+			const Vector2 debugImagePoint(debugImagePoint3[0] / debugImagePoint3[2], debugImagePoint3[1] / debugImagePoint3[2]);
 			debugSqrDistanceOriginal += debugImagePoint.sqrDistance(nonCollinearPoints[iPoint]);
 		}
 		ocean_assert(Numeric::isEqualEps(debugSqrDistanceOriginal));
@@ -756,7 +756,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 			currentParams(2, 3) = _v(3, 3);
 #endif // _THIS_AN_ALTERNATIVE_SOLVING_OF_CAMERA_PROJECTION_MATRIX_IN_DUALITY_SPACE
 #ifdef _THIS_AN_ALTERNATIVE_SOLVING_OF_CAMERA_PROJECTION_MATRIX
-			const ImagePoint* currentPoints = points[iView];
+			const Vector2* currentPoints = points[iView];
 
 			Matrix matrixProjection(18, 12, false);
 			Matrix matrixImagePoints(18, 1);
@@ -796,7 +796,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 			currentParams(3, 3) = 1;
 #endif // _THIS_AN_ALTERNATIVE_SOLVING_OF_CAMERA_PROJECTION_MATRIX
 
-			const ImagePoint* currentPoints = points[iView];
+			const Vector2* currentPoints = points[iView];
 
 			Matrix matrixProjection(12, 12, false);
 
@@ -864,7 +864,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 				candidatesProjectionMatrix[iView] = HomogenousMatrix4(projectiveTransformsInv[iView]) * candidatesProjectionMatrix[iView];
 #endif// _THIS_AN_ALTERNATIVE_SOLVING_OF_CAMERA_PROJECTION_MATRIX_IN_DUALITY_SPACE
 
-				const ImagePoint* currentPoints = points[iView];
+				const Vector2* currentPoints = points[iView];
 
 				// calculate back-projection error
 				for (unsigned int iPoints = 0; iPoints < 6; ++iPoints)
@@ -875,7 +875,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 						backProjectionError = Numeric::maxValue();
 						continue;
 					}
-					const ImagePoint backProjectedPoint(projPoint[0] / projPoint[2], projPoint[1] / projPoint[2]);
+					const Vector2 backProjectedPoint(projPoint[0] / projPoint[2], projPoint[1] / projPoint[2]);
 					backProjectionError += currentPoints[index6Points[iPoints]].sqrDistance(backProjectedPoint);
 				}
 			}
@@ -902,7 +902,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ImagePoin
 	return success;
 }
 
-bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<ImagePoints>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
+bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squaredSuccessThreshold, Scalar* squaredProjectionError)
 {
 	const size_t views = imagePointsPerPose.size();
 
@@ -953,7 +953,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 		bool allValid = true;
 		for (unsigned int v = 0u; v < views; ++v)
 		{
-			const ImagePoints permutationImagePoints = Subset::subset(imagePointsPerPose[v], indexSet4NonCollinear);
+			const Vectors2 permutationImagePoints = Subset::subset(imagePointsPerPose[v], indexSet4NonCollinear);
 			triangleInView[v] = Triangle2(permutationImagePoints[0], permutationImagePoints[1], permutationImagePoints[2]);
 			allValid = allValid && triangleInView[v].isValid();
 		}
@@ -1027,7 +1027,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 
 	for (unsigned int iView = 0; iView < views; ++iView)
 	{
-		const ImagePoints nonCollinearPoints = Subset::subset(imagePointsPerPose[iView], indexSet4NonCollinear);
+		const Vectors2 nonCollinearPoints = Subset::subset(imagePointsPerPose[iView], indexSet4NonCollinear);
 
 		/*
 		 * e_k = projectiveTransforms * imagePoint_k
@@ -1053,7 +1053,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 			const Vector3 debugTransformatedPoint = projectiveTransforms[iView] * debugPoint;
 			debugSqrDistanceProjBasis += debugTransformatedPoint.sqrDistance(standardProjectiveBasis[iPoint]);
 			const Vector3 debugImagePoint3 = projectiveTransforms[iView].inverted() * standardProjectiveBasis[iPoint];
-			const ImagePoint debugImagePoint(debugImagePoint3[0] / debugImagePoint3[2], debugImagePoint3[1] / debugImagePoint3[2]);
+			const Vector2 debugImagePoint(debugImagePoint3[0] / debugImagePoint3[2], debugImagePoint3[1] / debugImagePoint3[2]);
 			debugSqrDistanceOriginal += debugImagePoint.sqrDistance(nonCollinearPoints[iPoint]);
 		}
 		ocean_assert(Numeric::isEqualEps(debugSqrDistanceOriginal));
@@ -1249,7 +1249,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 
 	for (unsigned int iView = 0; iView < views; ++iView)
 	{
-		const ImagePoints currentPoints = imagePointsPerPose[iView];
+		const Vectors2 currentPoints = imagePointsPerPose[iView];
 
 		Matrix matrixProjection(12, 12, false);
 
@@ -1295,7 +1295,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 		Scalar backProjectionError(0);
 		for (unsigned int iView = 0; iView < views; ++iView)
 		{
-			const ImagePoints currentPoints = imagePointsPerPose[iView];
+			const Vectors2 currentPoints = imagePointsPerPose[iView];
 
 			// calculate back-projection error
 			for (unsigned int iPoints = 0; iPoints < 6; ++iPoints)
@@ -1306,7 +1306,7 @@ bool MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(const ConstInde
 					backProjectionError = Numeric::maxValue();
 					continue;
 				}
-				const ImagePoint backProjectedPoint(projPoint[0] / projPoint[2], projPoint[1] / projPoint[2]);
+				const Vector2 backProjectedPoint(projPoint[0] / projPoint[2], projPoint[1] / projPoint[2]);
 				backProjectionError += currentPoints[index6Points[iPoints]].sqrDistance(backProjectedPoint);
 			}
 		}
@@ -1617,7 +1617,7 @@ bool MultipleViewGeometry::cameraProjectionMatricesIF(const TrifocalTensor& trif
 	return true;
 }
 
-bool MultipleViewGeometry::trifocalTensorLinear(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA)
+bool MultipleViewGeometry::trifocalTensorLinear(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences >= 7);
@@ -1635,9 +1635,9 @@ bool MultipleViewGeometry::trifocalTensorLinear(const ImagePoint* points1, const
 
 	for (unsigned int c = 0; c < (unsigned int)(correspondences); ++c)
 	{
-		const ImagePoint& point1 = points1[c];
-		const ImagePoint& point2 = points2[c];
-		const ImagePoint& point3 = points3[c];
+		const Vector2& point1 = points1[c];
+		const Vector2& point2 = points2[c];
+		const Vector2& point3 = points3[c];
 
 		for (unsigned int k = 0; k < 2; ++k)
 		{
@@ -1720,7 +1720,7 @@ bool MultipleViewGeometry::trifocalTensorLinear(const ImagePoint* points1, const
 	return true;
 }
 
-bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA)
+bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(trifocal3x9);
@@ -1734,23 +1734,23 @@ bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const ImagePoint* poin
 	 * I. & II. Points normalization:
 	 */
 
-	ImagePoints normalizationPoints1(correspondences);
-	ImagePoints normalizationPoints2(correspondences);
-	ImagePoints normalizationPoints3(correspondences);
+	Vectors2 normalizationPoints1(correspondences);
+	Vectors2 normalizationPoints2(correspondences);
+	Vectors2 normalizationPoints3(correspondences);
 
-	memcpy(normalizationPoints1.data(), points1, sizeof(ImagePoint) * correspondences);
-	memcpy(normalizationPoints2.data(), points2, sizeof(ImagePoint) * correspondences);
-	memcpy(normalizationPoints3.data(), points3, sizeof(ImagePoint) * correspondences);
+	std::copy_n(points1, correspondences, normalizationPoints1.data());
+	std::copy_n(points2, correspondences, normalizationPoints2.data());
+	std::copy_n(points3, correspondences, normalizationPoints3.data());
 
 	const SquareMatrix3 normalization1 = Normalization::calculateNormalizedPoints(normalizationPoints1.data(), correspondences);
 	const SquareMatrix3 normalization2 = Normalization::calculateNormalizedPoints(normalizationPoints2.data(), correspondences);
 	const SquareMatrix3 normalization3 = Normalization::calculateNormalizedPoints(normalizationPoints3.data(), correspondences);
 
 #ifdef OCEAN_INTENSIVE_DEBUG
-	ImagePoint check1(normalization1(0, 0) * points1[0][0] + normalization1(0, 1) * points1[0][1] + normalization1(0, 2), normalization1(1, 0) * points1[0][0] + normalization1(1, 1) * points1[0][1] + normalization1(1, 2));
+	Vector2 check1(normalization1(0, 0) * points1[0][0] + normalization1(0, 1) * points1[0][1] + normalization1(0, 2), normalization1(1, 0) * points1[0][0] + normalization1(1, 1) * points1[0][1] + normalization1(1, 2));
 	ocean_assert(check1.isEqual(normalizationPoints1[0], Numeric::eps()));
 
-	ImagePoint check2 = normalization2 *  points2[0];
+	Vector2 check2 = normalization2 *  points2[0];
 	ocean_assert(check2.isEqual(normalizationPoints2[0], Numeric::eps()));
 #endif //OCEAN_INTENSIVE_DEBUG
 
@@ -1801,7 +1801,7 @@ bool MultipleViewGeometry::trifocalTensorNormalizedLinear(const ImagePoint* poin
 	return true;
 }
 
-Scalar MultipleViewGeometry::errorMatrix(const TrifocalTensor& trifocal, const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, SquareMatrix3* error)
+Scalar MultipleViewGeometry::errorMatrix(const TrifocalTensor& trifocal, const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, SquareMatrix3* error)
 {
 	ocean_assert(points1 && points2 && points3);
 	ocean_assert(correspondences > 0u);
@@ -1815,9 +1815,9 @@ Scalar MultipleViewGeometry::errorMatrix(const TrifocalTensor& trifocal, const I
 
 	for (unsigned int p = 0; p < correspondences; ++p)
 	{
-		const ImagePoint& point1 = points1[p];
-		const ImagePoint& point2 = points2[p];
-		const ImagePoint& point3 = points3[p];
+		const Vector2& point1 = points1[p];
+		const Vector2& point2 = points2[p];
+		const Vector2& point3 = points3[p];
 
 		SquareMatrix3 matrix1;
 		for (unsigned int c = 0; c < 3; ++c)

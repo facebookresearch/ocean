@@ -47,7 +47,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationLine : protected NonLinearOptim
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, w.r.t. the defined estimator
 		 * @return Result of the optimization
 		 */
-		static bool optimizeLine(const Line2& line, const ConstIndexedAccessor<ImagePoint>& pointAccessor, Line2& optimizedLine, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static bool optimizeLine(const Line2& line, const ConstIndexedAccessor<Vector2>& pointAccessor, Line2& optimizedLine, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 };
 
 }

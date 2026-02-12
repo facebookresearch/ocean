@@ -108,7 +108,7 @@ class OCEAN_TEST_MATH_EXPORT TestRandom
 		 * @return True, if succeeded
 		 */
 		static bool testOceanRandomEuler(const double testDuration);
-	
+
 	private:
 
 		/**

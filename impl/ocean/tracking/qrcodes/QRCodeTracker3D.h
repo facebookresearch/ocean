@@ -106,7 +106,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 				 * @param trackingState The tracking state that this tracked code will be initialized with, must not be `TS_UNKNOWN_STATE`.
 				 * @param trackingTimestamp The time at which the code was tracked, must be valid.
 				 */
-				TrackedQRCode(CV::Detector::QRCodes::QRCode&& code, HomogenousMatrix4&& world_T_code, const Scalar codeSize, Geometry::ObjectPoints&& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp);
+				TrackedQRCode(CV::Detector::QRCodes::QRCode&& code, HomogenousMatrix4&& world_T_code, const Scalar codeSize, Vectors3&& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp);
 
 				/**
 				 * Constructs a tracked code.
@@ -117,7 +117,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 				 * @param trackingState The tracking state that this tracked code will be initialized with, must not be `TS_UNKNOWN_STATE`.
 				 * @param trackingTimestamp The time at which the code was tracked, must be valid.
 				 */
-				TrackedQRCode(const CV::Detector::QRCodes::QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, const Geometry::ObjectPoints& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp);
+				TrackedQRCode(const CV::Detector::QRCodes::QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, const Vectors3& trackingObjectPoints, const TrackingState trackingState, const Timestamp trackingTimestamp);
 
 				/**
 				 * Returns the tracked code.
@@ -159,7 +159,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 				 * Returns the object points that are used to track this code
 				 * @return The object points
 				 */
-				inline const Geometry::ObjectPoints& trackingObjectPoints() const;
+				inline const Vectors3& trackingObjectPoints() const;
 
 			protected:
 
@@ -203,7 +203,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 				ObservationHistories observationHistories_;
 
 				/// The object points that this code can be tracked with.
-				Geometry::ObjectPoints trackingObjectPoints_;
+				Vectors3 trackingObjectPoints_;
 		};
 
 		/// The definition of map of tracked QR codes.
@@ -230,7 +230,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 				 * @param objectPoints The object points of the tracked QR code, must have at least 3 elements and the same size as `imagePoints`.
 				 * @param imagePoints The image points of the tracked QR code, must have at least 3 elements and the size as `objectPoints`.
 				 */
-				void addObservation(const SharedAnyCamera& sharedAnyCamera, const HomogenousMatrix4& world_T_camera, Geometry::ObjectPoints&& objectPoints, Geometry::ImagePoints&& imagePoints);
+				void addObservation(const SharedAnyCamera& sharedAnyCamera, const HomogenousMatrix4& world_T_camera, Vectors3&& objectPoints, Vectors2&& imagePoints);
 
 				/**
 				 * Removes all previous observations that are taken from a different pose than the specified one.
@@ -246,14 +246,14 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 				 * @note Do not call this function if no observation history exists.
 				 * @return The latest object points.
 				 */
-				const Geometry::ObjectPoints& latestObjectPoints() const;
+				const Vectors3& latestObjectPoints() const;
 
 				/**
 				 * Returns the latest group of image points
 				 * @note Do not call this function if no observation history exists.
 				 * @return The latest image points.
 				 */
-				const Geometry::ImagePoints& latestImagePoints() const;
+				const Vectors2& latestImagePoints() const;
 
 				/**
 				 * Return the number of observations stored in this history.
@@ -364,7 +364,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		 * @param codeSize The (display) size of the code in the real world (in meters), range: (0, infinity)
 		 * @return The object points, will be empty on failure
 		 */
-		static Geometry::ObjectPoints createTrackingObjectPoints(const CV::Detector::QRCodes::QRCode& code, const Scalar codeSize);
+		static Vectors3 createTrackingObjectPoints(const CV::Detector::QRCodes::QRCode& code, const Scalar codeSize);
 
 		/**
 		 * Creates the object-image point pairs that can be used for tracking
@@ -379,7 +379,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		 * @return True if the point pairs have been created, otherwise false
 		 * @sa createTrackingObjectPoints()
 		 */
-		static bool createTrackingImagePoints(const SharedAnyCamera& sharedAnyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& world_T_code, const bool refineCorners, const Geometry::ObjectPoints& potentialObjectPoints, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints);
+		static bool createTrackingImagePoints(const SharedAnyCamera& sharedAnyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& world_T_code, const bool refineCorners, const Vectors3& potentialObjectPoints, Vectors3& objectPoints, Vectors2& imagePoints);
 
 		/**
 		 * Returns an invalid map for tracked code
@@ -464,7 +464,7 @@ inline bool QRCodeTracker3D::TrackedQRCode::isValid() const
 	return code_.isValid() && world_T_code_.isValid() && codeSize_ > Scalar(0) && trackingState_ != TS_UNKNOWN_STATE && trackingTimestamp_.isValid() && trackingObjectPoints_.size() >= 3;
 }
 
-inline const Geometry::ObjectPoints& QRCodeTracker3D::TrackedQRCode::trackingObjectPoints() const
+inline const Vectors3& QRCodeTracker3D::TrackedQRCode::trackingObjectPoints() const
 {
 	return trackingObjectPoints_;
 }

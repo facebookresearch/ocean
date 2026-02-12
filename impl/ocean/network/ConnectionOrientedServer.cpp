@@ -77,7 +77,7 @@ ConnectionOrientedServer::SocketResult ConnectionOrientedServer::send(const Conn
 		}
 	}
 #else
-	if (result == -1)
+	if (result == size_t(-1))
 	{
 		if (errno == EWOULDBLOCK)
 		{

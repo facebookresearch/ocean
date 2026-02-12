@@ -182,7 +182,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 	Vectors2 currentContour;
 	currentContour.reserve(previousDenseContourSubPixel_.size());
 
-	for (Geometry::ImagePoints::const_iterator i = previousDenseContourSubPixel_.begin(); i != previousDenseContourSubPixel_.end(); ++i)
+	for (Vectors2::const_iterator i = previousDenseContourSubPixel_.begin(); i != previousDenseContourSubPixel_.end(); ++i)
 	{
 		currentContour.push_back(currentHomography * *i);
 	}

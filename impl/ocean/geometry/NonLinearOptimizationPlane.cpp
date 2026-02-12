@@ -152,7 +152,7 @@ class NonLinearOptimizationPlane::OnePoseOnePlaneData
 		 * @param planeDistance The distance between plane and the origin, with range (-infinity, infinity).
 		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
 		 */
-		OnePoseOnePlaneData(const PinholeCamera& camera, const Line3* raysFirst, const Scalar planeDistance, const ImagePoint* imagePointsSecond, const size_t numberImagePoints, const bool distortImagePoints, const bool onlyFrontObjectPoints) :
+		OnePoseOnePlaneData(const PinholeCamera& camera, const Line3* raysFirst, const Scalar planeDistance, const Vector2* imagePointsSecond, const size_t numberImagePoints, const bool distortImagePoints, const bool onlyFrontObjectPoints) :
 			camera_(camera),
 			raysFirst_(raysFirst),
 			planeDistance_(planeDistance),
@@ -263,7 +263,7 @@ class NonLinearOptimizationPlane::OnePoseOnePlaneData
 		const Scalar planeDistance_;
 
 		/// Image points in the second frame, each point corresponds to one ray in the first frame (by index).
-		const ImagePoint* imagePointsSecond_;
+		const Vector2* imagePointsSecond_;
 
 		/// Number of given image points.
 		const size_t numberImagePoints_;
@@ -481,7 +481,7 @@ class NonLinearOptimizationPlane::PosesPlaneData
 		const bool onlyFrontObjectPoints_;
 };
 
-bool NonLinearOptimizationPlane::optimizePosesPlaneIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCameraFirst_T_world, const ImagePoints& imagePointsFirst, const HomogenousMatrices4& invertedFlippedPoses, const Plane3& plane, const ImagePointGroups& imagePointGroups, const bool distortImagePoints, HomogenousMatrices4& optimizedInvertedFlippedPoses, Plane3& optimizedPlane, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError)
+bool NonLinearOptimizationPlane::optimizePosesPlaneIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCameraFirst_T_world, const Vectors2& imagePointsFirst, const HomogenousMatrices4& invertedFlippedPoses, const Plane3& plane, const ImagePointGroups& imagePointGroups, const bool distortImagePoints, HomogenousMatrices4& optimizedInvertedFlippedPoses, Plane3& optimizedPlane, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError)
 {
 	using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<2, 6, 2, 4, 16>;
 

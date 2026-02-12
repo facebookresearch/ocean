@@ -697,7 +697,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param verticalBins Resulting vertical bins, with range [1, infinity)
 		 * @return Resulting array holding the indices of the distributed image points, will be cleared before usage
 		 */
-		static inline DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int averagePointsPerBin, const unsigned int maxHorizontalBins, const unsigned int maxVerticalBins, unsigned int& horizontalBins, unsigned int& verticalBins);
+		static inline DistributionArray distributeToArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int averagePointsPerBin, const unsigned int maxHorizontalBins, const unsigned int maxVerticalBins, unsigned int& horizontalBins, unsigned int& verticalBins);
 
 		/**
 		 * Distributes a set of given 2D image points into a spatial array.
@@ -712,7 +712,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param verticalBins Number of vertical bins to distribute the image points into, with range [1, infinity)
 		 * @return Resulting array holding the indices of the distributed image points
 		 */
-		static DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
+		static DistributionArray distributeToArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
 
 		/**
 		 * Distributes the given elements into a spatial array.
@@ -747,7 +747,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @tparam tMaximalBins Number of maximal bins in each direction (horizontal and vertical), width range [1, infinity)
 		 */
 		template <unsigned int tMaximalBins>
-		static inline DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const Scalar searchDistance);
+		static inline DistributionArray distributeToArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const Scalar searchDistance);
 
 		/**
 		 * Distributes the given 2D image points into a spatial array.
@@ -763,7 +763,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param verticalBins Number of vertical bins to distribute the image points into, with range [1, height]
 		 * @return Resulting array holding the indices of the distributed image points
 		 */
-		static OccupancyArray createOccupancyArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
+		static OccupancyArray createOccupancyArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
 
 		/**
 		 * Filters the given 2D image points according to their distance to neighboring image points.
@@ -774,7 +774,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param distance The distance threshold to be used for filtering
 		 * @return Resulting vector holding the indices of the found image points
 		 */
-		static Indices32 filterAccordingDistance(const ImagePoint* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const Scalar distance);
+		static Indices32 filterAccordingDistance(const Vector2* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const Scalar distance);
 
 		/**
 		 * Filters the given 2D candidate points according to the distance to the given image points.
@@ -789,7 +789,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param filteredIndices Resulting indices of the filtered candidate points, if defined
 		 * @param filteredCandidates Resulting filtered candidate points, if defined
 		 */
-		static void filterCandidatePoint(const ImagePoint* imagePoints, const size_t numberImagePoints, const ImagePoint* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar filterDistance, const unsigned int filterSize, Indices32* filteredIndices = nullptr, ImagePoints* filteredCandidates = nullptr);
+		static void filterCandidatePoint(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, const unsigned int width, const unsigned int height, const Scalar filterDistance, const unsigned int filterSize, Indices32* filteredIndices = nullptr, Vectors2* filteredCandidates = nullptr);
 
 		/**
 		 * Sorts the given 2D image points according to their minimal distance to neighboring image points.
@@ -799,7 +799,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param minimalDistanceFirst True, to sort minimal distance to the front
 		 * @return Resulting vector holding the indices and distances of the sorted image points
 		 */
-		static DistanceElements sortAccordingDistance(const ImagePoint* imagePoints, const size_t number, const bool minimalDistanceFirst);
+		static DistanceElements sortAccordingDistance(const Vector2* imagePoints, const size_t number, const bool minimalDistanceFirst);
 
 		/**
 		 * Sorts the given 2D image points according to their minimal distance to neighboring image points.
@@ -813,7 +813,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param minimalDistanceFirst True, to sort minimal distance to the front
 		 * @return Resulting vector holding the indices and distances of the sorted image points
 		 */
-		static DistanceElements sortAccordingDistance(const ImagePoint* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const unsigned int bins, const bool minimalDistanceFirst);
+		static DistanceElements sortAccordingDistance(const Vector2* imagePoints, const size_t number, const unsigned int width, const unsigned int height, const unsigned int bins, const bool minimalDistanceFirst);
 
 		/**
 		 * Determines the minimal square distance for one given 2D image point to all other points in the same set.
@@ -825,7 +825,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param distributionImagePoints Already created distribution array of the image points
 		 * @return Resulting square distances calculated for the given image point
 		 */
-		static Scalar determineMinimalSqrDistance(const ImagePoint* imagePoints, const size_t numberImagePoints, const unsigned int index, const DistributionArray& distributionImagePoints);
+		static Scalar determineMinimalSqrDistance(const Vector2* imagePoints, const size_t numberImagePoints, const unsigned int index, const DistributionArray& distributionImagePoints);
 
 		/**
 		 * Determines the minimal square distances for each given 2D image point to all other points in the same set.
@@ -838,7 +838,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param bins Number of bins in each direction used for image point distribution, with range [1, infinity)
 		 * @param sqrDistances Resulting square distances calculated for each given image point, make sure that this buffer holds enough space
 		 */
-		static void determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances);
+		static void determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances);
 
 		/**
 		 * Determines the minimal square distances for each given 2D image point to another given set of 2D image points.
@@ -853,7 +853,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param bins Number of bins in each direction used for image point distribution
 		 * @param sqrDistances Resulting square distances calculated for each given image point, make sure that this buffer holds enough space
 		 */
-		static void determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const ImagePoint* candidates, const size_t numberCandidates, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances);
+		static void determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidates, const size_t numberCandidates, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances);
 
 		/**
 		 * Determines the minimal square distances for each given image point to another given set of image points.
@@ -866,7 +866,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param sqrDistances Resulting square distances calculated for each given element, make sure that this buffer holds enough space
 		 * @param candidateIndices Optional resulting indices of the candidate with minimal distance, make sure that this buffer holds enough space (if defined)
 		 */
-		static void determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const ImagePoint* candidates, const size_t numberCandidates, const DistributionArray& distributionCandidates, Scalar* sqrDistances, unsigned int* candidateIndices = nullptr);
+		static void determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const Vector2* candidates, const size_t numberCandidates, const DistributionArray& distributionCandidates, Scalar* sqrDistances, unsigned int* candidateIndices = nullptr);
 
 		/**
 		 * Determines the minimal square distances for each specified image point inside their neighborhood.
@@ -881,7 +881,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param bins Number of bins in each direction used for element distribution
 		 * @param sqrDistances Resulting square distances calculated for each given interest index, make sure that this buffer holds enough space
 		 */
-		static void determineMinimalSqrDistances(const ImagePoint* imagePoints, const size_t numberImagePoints, const unsigned int* interestIndices, const size_t numberInterestIndices, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances);
+		static void determineMinimalSqrDistances(const Vector2* imagePoints, const size_t numberImagePoints, const unsigned int* interestIndices, const size_t numberInterestIndices, const unsigned int width, const unsigned int height, const unsigned int bins, Scalar* sqrDistances);
 
 		/**
 		 * Determines all candidate points for a given image point (interest point) lying inside a specified circle around the interest point.
@@ -892,7 +892,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param distributionCandidatePoints Already created distribution array of the candidate points
 		 * @return Resulting indices of all neighbors out the candidate set lying within the specified circle.
 		 */
-		static Indices32 determineNeighbors(const ImagePoint& imagePoint, const ImagePoint* candidatePoints, const size_t numberCandidatePoints, const Scalar radius, const DistributionArray& distributionCandidatePoints);
+		static Indices32 determineNeighbors(const Vector2& imagePoint, const Vector2* candidatePoints, const size_t numberCandidatePoints, const Scalar radius, const DistributionArray& distributionCandidatePoints);
 
 		/**
 		 * Determines the nearest image point between an interest point and a set of given image point lying inside a specified circle around the interest point.
@@ -904,7 +904,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param sqrDistance Optional resulting square distance of the nearest image point, if any
 		 * @return Resulting index of the nearest neighbor image point, -1 if no image point lies within the specified radius
 		 */
-		static Index32 determineNearestNeighbor(const ImagePoint& interestPoint, const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar radius, const DistributionArray& distributionImagePoints, Scalar* sqrDistance = nullptr);
+		static Index32 determineNearestNeighbor(const Vector2& interestPoint, const Vector2* imagePoints, const size_t numberImagePoints, const Scalar radius, const DistributionArray& distributionImagePoints, Scalar* sqrDistance = nullptr);
 
 		/**
 		 * Distributes the given image points into an array of specified size and returns (at most) one point from each bin.
@@ -918,7 +918,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param verticalBins Number of vertical bins to be used for distribution, with range [1, infinity)
 		 * @return Resulting filtered elements
 		 */
-		static inline ImagePoints distributeAndFilter(const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
+		static inline Vectors2 distributeAndFilter(const Vector2* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
 
 		/**
 		 * Distributes the given image points into an array of specified size and returns as much points as requested by first selecting the first point from each bin, then the second point from each bin, and so on.
@@ -933,7 +933,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param size The number of requested feature points, with range [0, numberImagePoints]
 		 * @return Resulting filtered elements
 		 */
-		static ImagePoints distributeAndFilter(const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins, const size_t size);
+		static Vectors2 distributeAndFilter(const Vector2* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins, const size_t size);
 
 		/**
 		 * Distributes the given image points into an array of specified size and returns (at most) one point index from each bin.
@@ -950,7 +950,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @tparam TIndex The data type of the indices (e.g., may be Index32 or Index64)
 		 */
 		template <typename TIndex>
-		static inline std::vector<TIndex> distributeAndFilterIndices(const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
+		static inline std::vector<TIndex> distributeAndFilterIndices(const Vector2* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins);
 
 		/**
 		 * Distributes the given elements into an array of specified size and returns (at most) one element from each bin.
@@ -1638,7 +1638,7 @@ inline bool SpatialDistribution::DistanceElement::operator<(const DistanceElemen
 }
 
 template <unsigned int tMaximalBins>
-inline SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const Scalar searchDistance)
+inline SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const Scalar searchDistance)
 {
 	static_assert(tMaximalBins > 0u, "Invalid maximal bin parameter!");
 
@@ -1682,7 +1682,7 @@ SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(co
 	return indexArray;
 }
 
-inline SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int averagePointsPerBin, const unsigned int maxHorizontalBins, const unsigned int maxVerticalBins, unsigned int& horizontalBins, unsigned int& verticalBins)
+inline SpatialDistribution::DistributionArray SpatialDistribution::distributeToArray(const Vector2* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int averagePointsPerBin, const unsigned int maxHorizontalBins, const unsigned int maxVerticalBins, unsigned int& horizontalBins, unsigned int& verticalBins)
 {
 	ocean_assert(imagePoints || number == 0);
 
@@ -1710,15 +1710,15 @@ inline SpatialDistribution::DistributionArray SpatialDistribution::distributeToA
 	return distributeToArray(imagePoints, number, left, top, width, height, horizontalBins, verticalBins);
 }
 
-inline ImagePoints SpatialDistribution::distributeAndFilter(const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
+inline Vectors2 SpatialDistribution::distributeAndFilter(const Vector2* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
 {
-	return distributeAndFilter<ImagePoint, &SpatialDistribution::identity>(imagePoints, numberImagePoints, left, top, width, height, horizontalBins, verticalBins);
+	return distributeAndFilter<Vector2, &SpatialDistribution::identity>(imagePoints, numberImagePoints, left, top, width, height, horizontalBins, verticalBins);
 }
 
 template <typename TIndex>
-inline std::vector<TIndex> SpatialDistribution::distributeAndFilterIndices(const ImagePoint* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
+inline std::vector<TIndex> SpatialDistribution::distributeAndFilterIndices(const Vector2* imagePoints, const size_t numberImagePoints, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins)
 {
-	return distributeAndFilterIndices<ImagePoint, TIndex, &SpatialDistribution::identity>(imagePoints, numberImagePoints, left, top, width, height, horizontalBins, verticalBins);
+	return distributeAndFilterIndices<Vector2, TIndex, &SpatialDistribution::identity>(imagePoints, numberImagePoints, left, top, width, height, horizontalBins, verticalBins);
 }
 
 template <typename T, Vector2 (*tFunction)(const T&)>

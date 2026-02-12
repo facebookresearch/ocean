@@ -140,7 +140,7 @@ class AVFLibrary : public Library
 		 * @return Reference of the new medium
 		 */
 		static MediumRef newLiveVideo(const std::string& url, bool useExclusive);
-	
+
 		/**
 		 * Creates a new microphone medium.
 		 * @param url The URL of the audio medium to create

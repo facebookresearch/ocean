@@ -353,7 +353,14 @@ inline bool FiniteLineT3<T>::intersection(const FiniteLineT3<T>& right, VectorT3
 		return false;
 	}
 
-	return isOnLine(intersectionPoint) && right.isOnLine(intersectionPoint);
+	if (!isOnLine(intersectionPoint) || !right.isOnLine(intersectionPoint))
+	{
+		return false;
+	}
+
+	point = intersectionPoint;
+
+	return true;
 }
 
 template <typename T>

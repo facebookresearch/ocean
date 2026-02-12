@@ -69,7 +69,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJLinkage
 
 		/**
 		 * Tests the 3D planar 2D-2D homography.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)		 
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 * @tparam tLinkageType Defines the linkage method
 		 */
@@ -78,7 +78,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJLinkage
 
 		/**
 		 * Tests multiple faultless homographies.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)		 
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 * @tparam tLinkageType Defines the linkage method
 		 */
@@ -87,7 +87,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJLinkage
 
 		/**
 		 * Tests multiple faultless lines.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)		 
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 * @tparam tLinkageType Defines the linkage method
 		 */

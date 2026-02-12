@@ -357,7 +357,7 @@ inline bool MicroQRCodeEncoder::decodeFormatBits(const uint32_t formatBits, unsi
 
 	ocean_assert(minDistance != uint32_t(-1) && minDistanceFormat != uint32_t(-1));
 	ocean_assert(minDistanceFormat >> 5u == 0u);
-	
+
 	switch (minDistanceFormat >> 2u)
 	{
 		case 0u:

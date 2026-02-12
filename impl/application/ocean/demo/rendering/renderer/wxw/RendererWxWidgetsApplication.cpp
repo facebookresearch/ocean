@@ -44,7 +44,7 @@ bool RendererWxWidgetsApplication::OnInit()
 	mainWindow->Show(true);
 	SetTopWindow(mainWindow);
 
-	mainWindow->initalize();
+	mainWindow->initialize();
 
 	return true;
 }

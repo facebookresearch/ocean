@@ -483,7 +483,7 @@ void AAudio::callbackFunction(SLPlayItf slCaller, SLuint32 slEvent)
 {
 	const ScopedLock scopedLock(lock_);
 
-	ocean_assert(slPlayInterface_ == slCaller);
+	ocean_assert_and_suppress_unused(slPlayInterface_ == slCaller, slCaller);
 
 	switch (slEvent)
 	{

@@ -254,7 +254,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param invalidIndices Optional resulting indices of the resulting object points with invalid location
 		 * @return objectPoints Resulting object points in inverted flipped coordinate space
 		 */
-		static ObjectPoints triangulateImagePointsIF(const PinholeCamera& camera1, const HomogenousMatrix4& iFlippedPose1, const PinholeCamera& camera2, const HomogenousMatrix4& iFlippedPose2, const Vector2* points1, const Vector2* points2, const size_t correspondences, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
+		static Vectors3 triangulateImagePointsIF(const PinholeCamera& camera1, const HomogenousMatrix4& iFlippedPose1, const PinholeCamera& camera2, const HomogenousMatrix4& iFlippedPose2, const Vector2* points1, const Vector2* points2, const size_t correspondences, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
 
 		/**
 		 * Calculates the 3D positions for a set of image point correspondences in multiple views with corresponding camera projection matrices (K * Rt) or poses (Rt) in inverted flipped camera system.
@@ -266,7 +266,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param invalidIndices Optional resulting indices of the resulting object points with invalid location
 		 * @return objectPoints Resulting object points in inverted flipped coordinates
 		 */
-		static ObjectPoints triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, const PinholeCamera* pinholeCamera = nullptr, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
+		static Vectors3 triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, const PinholeCamera* pinholeCamera = nullptr, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
 
 	protected:
 

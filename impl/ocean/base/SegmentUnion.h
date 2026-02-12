@@ -155,7 +155,7 @@ void SegmentUnion<T>::addSegment(const T& startPosition, const T& stopPosition)
 
 		ocean_assert(startPosition > lastSegment->first);
 		ocean_assert(startPosition < lastSegment->second);
-		
+
 		if (stopPosition <= lastSegment->second)
 		{
 			//   existing segments:  X---X    X------------X
@@ -204,7 +204,7 @@ void SegmentUnion<T>::addSegment(const T& startPosition, const T& stopPosition)
 
 			ocean_assert(isCorrect());
 
-			return;		
+			return;
 		}
 
 		ocean_assert(stopPosition > i->first);
@@ -489,7 +489,7 @@ SegmentUnion<T> SegmentUnion<T>::intersection(const T& startPosition, const T& s
 
 		return SegmentUnion<T>();
 	}
-	
+
 	typename SegmentMap::const_iterator iEnd = i;
 
 	while (++iEnd != segmentMap_.end())
@@ -515,7 +515,7 @@ SegmentUnion<T> SegmentUnion<T>::intersection(const T& startPosition, const T& s
 	}
 
 	SegmentUnion<T> result;
-			
+
 	const T newStartPosition = std::max(startPosition, i->first);
 	result.segmentMap_.insert(std::make_pair(newStartPosition, i->second));
 

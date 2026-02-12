@@ -113,7 +113,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @see projectiveReconstructionFrom6PointsIF()
 		 * @see calibrateFromProjectionsMatricesIF()
 		 */
-		static bool projectiveReconstructionFrom6PointsIF(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, const Scalar squaredSuccessThreshold = (2.5 * 2.5), Scalar* squaredProjectionError = nullptr);
+		static bool projectiveReconstructionFrom6PointsIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, const Scalar squaredSuccessThreshold = (2.5 * 2.5), Scalar* squaredProjectionError = nullptr);
 
 		/**
 		 * Computes geometric valid camera projection matrices which are determined up to a common 3d projection transformation.
@@ -128,7 +128,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @see projectiveReconstructionFrom6PointsIF()
 		 * @see calibrateFromProjectionsMatricesIF()
 		 */
-		static bool projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<ImagePoints>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squaredSuccessThreshold = Scalar(2.5 * 2.5), Scalar* squaredProjectionError = nullptr);
+		static bool projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squaredSuccessThreshold = Scalar(2.5 * 2.5), Scalar* squaredProjectionError = nullptr);
 
 		/**
 		 * The normalized linear algorithm of computation of trifocal tensor.
@@ -146,7 +146,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @return True, if succeeded
 		 * @see calibrateFromProjectionsMatricesIF()
 		 */
-		static bool trifocalTensorIF(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, TrifocalTensor* trifocalTensor = nullptr);
+		static bool trifocalTensorIF(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, HomogenousMatrix4& iFlippedProjectionMatrix1, HomogenousMatrix4& iFlippedProjectionMatrix2, HomogenousMatrix4& iFlippedProjectionMatrix3, TrifocalTensor* trifocalTensor = nullptr);
 
 		/**
 		 * Calibrate multiple projection matrices from a single camera.
@@ -198,7 +198,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @param trifocal Resulting trifocal tensor matrices
 		 * @return True, if succeeded
 		 */
-		static bool trifocalTensorNormalizedLinear(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, TrifocalTensor& trifocal);
+		static bool trifocalTensorNormalizedLinear(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, TrifocalTensor& trifocal);
 
 		/**
 		 * Computing a geometric valid trifocal tensor minimizing algebraic error.
@@ -210,7 +210,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @param trifocal Resulting trifocal tensor matrices
 		 * @return True, if succeeded
 		 */
-		static bool trifocalTensorMinimizingError(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, TrifocalTensor& trifocal);
+		static bool trifocalTensorMinimizingError(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, TrifocalTensor& trifocal);
 
 		/**
 		 * Calculates the trifocal tensor by two projection matrix given:
@@ -300,7 +300,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @param matrixA Pointer to constructed linear system, if needed
 		 * @return True, if succeeded
 		 */
-		static bool trifocalTensorLinear(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA = nullptr);
+		static bool trifocalTensorLinear(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA = nullptr);
 
 		/**
 		 * The normalized linear algorithm of computation of trifocal tensor.
@@ -313,7 +313,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @param matrixA Pointer to constructed linear system, if needed
 		 * @return True, if succeeded
 		 */
-		static bool trifocalTensorNormalizedLinear(const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA = nullptr);
+		static bool trifocalTensorNormalizedLinear(const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, Scalar* trifocal3x9, Matrix* matrixA = nullptr);
 
 		/**
 		 * Calculates the trifocal tensor error in point–point–point correspondence equation:
@@ -326,7 +326,7 @@ class OCEAN_GEOMETRY_EXPORT MultipleViewGeometry
 		 * @param errorMatrix Resulting 3x3 error matrix is needed
 		 * @return The absolute sum of 3x3 error matrix
 		 */
-		static Scalar errorMatrix(const TrifocalTensor& trifocal, const ImagePoint* points1, const ImagePoint* points2, const ImagePoint* points3, const size_t correspondences, SquareMatrix3* errorMatrix = nullptr);
+		static Scalar errorMatrix(const TrifocalTensor& trifocal, const Vector2* points1, const Vector2* points2, const Vector2* points3, const size_t correspondences, SquareMatrix3* errorMatrix = nullptr);
 
 		/**
 		 * Calculates a transformation for a projective basis defined by four individual (image) target points each corresponding to a specific (projective/3D) reference points.<br>

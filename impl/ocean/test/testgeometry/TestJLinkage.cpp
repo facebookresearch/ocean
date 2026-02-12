@@ -198,7 +198,7 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 					indexSet.insert(index);
 				}
 
-				const Geometry::ImagePoints permutationLeftImagePoints(Subset::subset(leftImagePoints, indexSet));
+				const Vectors2 permutationLeftImagePoints(Subset::subset(leftImagePoints, indexSet));
 
 				performance.start();
 
@@ -354,7 +354,7 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 					indexSet.insert(index);
 				}
 
-				const Geometry::ImagePoints permutationLeftImagePoints(Subset::subset(leftImagePoints, indexSet));
+				const Vectors2 permutationLeftImagePoints(Subset::subset(leftImagePoints, indexSet));
 
 				performance.start();
 
@@ -493,7 +493,7 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 
 				SquareMatrices3 homographies;
 
-				Geometry::ImagePoints initialLeftImagePoints;
+				Vectors2 initialLeftImagePoints;
 
 				for (unsigned int i = 0u; i < h; i++)
 				{
@@ -610,7 +610,7 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 			do
 			{
-				Geometry::ImagePoints imagePoints;
+				Vectors2 imagePoints;
 
 				Lines2 randomLines;
 
@@ -667,7 +667,7 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 					indexSet.insert(index);
 				}
 
-				const Geometry::ImagePoints initialImagePoints(Subset::subset(imagePoints, indexSet));
+				const Vectors2 initialImagePoints(Subset::subset(imagePoints, indexSet));
 
 				performance.start();
 

@@ -28,7 +28,7 @@ class NonLinearOptimizationLine::LineData
 		 * Creates a new line data object.
 		 * @param imagePoints The accessor for the image points
 		 */
-		explicit LineData(const ConstIndexedAccessor<ImagePoint>& imagePoints) :
+		explicit LineData(const ConstIndexedAccessor<Vector2>& imagePoints) :
 			imagePoints_(imagePoints)
 		{
 			// nothing to do here
@@ -100,10 +100,10 @@ class NonLinearOptimizationLine::LineData
 	protected:
 
 		/// The 2D image points defining the 2D line.
-		const ConstIndexedAccessor<ImagePoint>& imagePoints_;
+		const ConstIndexedAccessor<Vector2>& imagePoints_;
 };
 
-bool NonLinearOptimizationLine::optimizeLine(const Line2& line, const ConstIndexedAccessor<ImagePoint>& pointAccessor, Line2& optimizedLine, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError)
+bool NonLinearOptimizationLine::optimizeLine(const Line2& line, const ConstIndexedAccessor<Vector2>& pointAccessor, Line2& optimizedLine, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError)
 {
 	ocean_assert(line.isValid() && pointAccessor.size() >= 2);
 

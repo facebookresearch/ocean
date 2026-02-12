@@ -49,7 +49,7 @@ class OCEAN_TEST_BASE_EXPORT TestHashSet
 		 * @return True, if succeeded
 		 */
 		static bool testMultipleIntegers(const double testDuration);
-	
+
 	protected:
 
 		/**

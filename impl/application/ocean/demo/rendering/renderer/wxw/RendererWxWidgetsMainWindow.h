@@ -46,7 +46,7 @@ class RendererWxWidgetsMainWindow : public wxFrame
 		/**
 		 * Initializes this window.
 		 */
-		void initalize();
+		void initialize();
 
 		/**
 		 * Renders the scene.

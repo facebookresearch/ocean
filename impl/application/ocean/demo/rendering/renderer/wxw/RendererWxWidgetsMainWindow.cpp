@@ -41,7 +41,7 @@ RendererWxWidgetsMainWindow::RendererWxWidgetsMainWindow(const wxString& title, 
 	SetBackgroundColour(wxColour(0x808080));
 }
 
-void RendererWxWidgetsMainWindow::initalize()
+void RendererWxWidgetsMainWindow::initialize()
 {
 	try
 	{

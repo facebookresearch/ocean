@@ -13,6 +13,9 @@
 
 #include "ocean/cv/PixelPosition.h"
 
+#include <algorithm>
+#include <memory>
+
 namespace Ocean
 {
 
@@ -182,7 +185,7 @@ inline MappingI::MappingI(const MappingI& pixelMapping) :
 		mappingI_ = (PixelPosition*)malloc(size * sizeof(PixelPosition));
 		ocean_assert(mappingI_ != nullptr);
 
-		memcpy(mappingI_, pixelMapping.mappingI_, size * sizeof(PixelPosition));
+		std::uninitialized_copy(pixelMapping.mappingI_, pixelMapping.mappingI_ + size, mappingI_);
 	}
 }
 
@@ -257,7 +260,7 @@ inline PixelPosition* MappingI::row(const unsigned int y)
 inline void MappingI::reset()
 {
 	ocean_assert(mappingI_);
-	memset(mappingI_, 0xFF, sizeof(PixelPosition) * width_ * height_);
+	std::fill(mappingI_, mappingI_ + width_ * height_, PixelPosition());
 }
 
 inline const PixelPosition* MappingI::operator()() const
@@ -337,7 +340,7 @@ inline MappingI& MappingI::operator=(const MappingI& pixelMapping)
 			mappingI_ = (PixelPosition*)malloc(size * sizeof(PixelPosition));
 			ocean_assert(mappingI_ != nullptr);
 
-			memcpy(mappingI_, pixelMapping.mappingI_, size * sizeof(PixelPosition));
+			std::uninitialized_copy(pixelMapping.mappingI_, pixelMapping.mappingI_ + size, mappingI_);
 		}
 	}
 

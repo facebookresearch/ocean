@@ -55,7 +55,7 @@ OpenGLMainWindow::OpenGLMainWindow(const wxString& title, const wxPoint& pos, co
 #endif
 }
 
-void OpenGLMainWindow::initalize()
+void OpenGLMainWindow::initialize()
 {
 	ocean_assert(windowContext_ != nullptr);
 

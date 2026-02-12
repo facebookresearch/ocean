@@ -173,12 +173,12 @@ void VRTextVisualizer::visualizeText(const unsigned int id, const HomogenousMatr
 	const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_RGBA32;
 
 	Frame frame(FrameType(textWidth, textHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
-	
+
 	const uint8_t r = uint8_t(std::clamp(backgroundColor.red() * 255.0f, 0.0f, 255.0f));
 	const uint8_t g = uint8_t(std::clamp(backgroundColor.green() * 255.0f, 0.0f, 255.0f));
 	const uint8_t b = uint8_t(std::clamp(backgroundColor.blue() * 255.0f, 0.0f, 255.0f));
 	const uint8_t a = uint8_t(std::clamp(backgroundColor.alpha() * 255.0f, 0.0f, 255.0f));
-	
+
 	const Frame::PixelType<uint8_t, 4u> rgbaPixel({r, g, b, a});
 	frame.setValue<uint8_t, 4u>(rgbaPixel);
 

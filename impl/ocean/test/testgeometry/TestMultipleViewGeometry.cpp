@@ -244,9 +244,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 
 	do
 	{
-		std::vector<Geometry::ImagePoints> imagePointsPerPose;
+		std::vector<Vectors2> imagePointsPerPose;
 		imagePointsPerPose.reserve(3);
-		Geometry::ObjectPoints centerObjectPoints;
+		Vectors3 centerObjectPoints;
 		centerObjectPoints.reserve(points);
 
 		const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
@@ -341,9 +341,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 
 	do
 	{
-		std::vector<Geometry::ImagePoints> imagePointsPerPose;
+		std::vector<Vectors2> imagePointsPerPose;
 		imagePointsPerPose.reserve(views);
-		Geometry::ObjectPoints centerObjectPoints;
+		Vectors3 centerObjectPoints;
 		centerObjectPoints.reserve(points);
 
 		const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
@@ -359,7 +359,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 		bool success;
 		{
 			HighPerformanceStatistic::ScopedStatistic scoped(performance);
-			success = Geometry::MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<Geometry::ImagePoints>(imagePointsPerPose), projAccessor.pointer(), 2);
+			success = Geometry::MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<Vectors2>(imagePointsPerPose), projAccessor.pointer(), 2);
 		}
 
 		if (success)
@@ -425,9 +425,9 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 		do
 		{
-			std::vector<Geometry::ImagePoints> imagePointsPerPose;
+			std::vector<Vectors2> imagePointsPerPose;
 			imagePointsPerPose.reserve(views);
-			Geometry::ObjectPoints centerObjectPoints;
+			Vectors3 centerObjectPoints;
 			centerObjectPoints.reserve(points);
 
 			const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
@@ -438,7 +438,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 			}
 
 			// randomly select some image points to disturb
-			std::vector<Geometry::ImagePoints> distortedImagePointsPerPose(views);
+			std::vector<Vectors2> distortedImagePointsPerPose(views);
 			for (size_t i = 0; i < views; i++)
 			{
 				distortedImagePointsPerPose[i] = imagePointsPerPose[i];
@@ -460,7 +460,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 				for (size_t iView = 0; iView < views; iView++)
 				{
-					Geometry::ImagePoint& imagePoint = distortedImagePointsPerPose[iView][*i];
+					Vector2& imagePoint = distortedImagePointsPerPose[iView][*i];
 					imagePoint += Vector2(Random::scalar(-15, 15), Random::scalar(-15, 15));
 					imagePoint.x() = max(Scalar(0), min(Scalar(pinholeCamera.width() - 1u), imagePoint.x()));
 					imagePoint.y() = max(Scalar(0), min(Scalar(pinholeCamera.height() - 1u), imagePoint.y()));
@@ -473,7 +473,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 			bool success;
 			{
 				HighPerformanceStatistic::ScopedStatistic scoped(performance);
-				success = Geometry::RANSAC::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<Geometry::ImagePoints>(distortedImagePointsPerPose), projAccessor.pointer());
+				success = Geometry::RANSAC::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<Vectors2>(distortedImagePointsPerPose), projAccessor.pointer());
 			}
 
 			if (success)
@@ -536,7 +536,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 	const Quaternion orientation0(Random::quaternion());
 	const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
-	const Geometry::ObjectPoints perfectObjectPoints(Utilities::objectPoints(objectPointsArea, points));
+	const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, points));
 
 	HomogenousMatrices4 poses;
 	poses.reserve(views);
@@ -557,7 +557,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 	for (unsigned int p = 0u; p < views; ++p)
 	{
-		Geometry::ImagePoints& imagePoints = imagePointsPerPose[p];
+		Vectors2& imagePoints = imagePointsPerPose[p];
 		const HomogenousMatrix4& pose = poses[p];
 
 		for (unsigned int n = 0; n < points; ++n)
@@ -580,7 +580,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 #else
 
-	Geometry::ObjectPoints centerObjectPoints;
+	Vectors3 centerObjectPoints;
 	centerObjectPoints.reserve(points);
 
 	HomogenousMatrices4 poses;
@@ -599,14 +599,14 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 	for (size_t iterations = 0; iterations < points; ++iterations)
 	{
-		const Geometry::ImagePoint imagePoint(Random::scalar(0, Scalar(pinholeCamera.width())), Random::scalar(0, Scalar(pinholeCamera.height())));
-		const Geometry::ObjectPoint objectPoint(pinholeCamera.vector(imagePoint) * Random::scalar(1, 3));
+		const Vector2 imagePoint(Random::scalar(0, Scalar(pinholeCamera.width())), Random::scalar(0, Scalar(pinholeCamera.height())));
+		const Vector3 objectPoint(pinholeCamera.vector(imagePoint) * Random::scalar(1, 3));
 
-		Geometry::ImagePoints candidates;
+		Vectors2 candidates;
 		candidates.reserve(views);
 		for (size_t iView = 0; iView < views - 1; iView++)
 		{
-			Geometry::ImagePoint imagePointView(pinholeCamera.projectToImage<false>(poses[iView], objectPoint, false));
+			Vector2 imagePointView(pinholeCamera.projectToImage<false>(poses[iView], objectPoint, false));
 
 			if (gaussSigma > 0)
 			{
@@ -669,7 +669,7 @@ Scalar TestMultipleViewGeometry::evaluateReprojectionError(const std::vector<Vec
 
 	const size_t points = imagePointsPerPose[0].size();
 
-	const Geometry::ObjectPoints points3dMetric = Geometry::EpipolarGeometry::triangulateImagePointsIF(ConstArrayAccessor<HomogenousMatrix4>(posesIF), ConstArrayAccessor<Geometry::ImagePoints>(imagePointsPerPose), &pinholeCamera);
+	const Vectors3 points3dMetric = Geometry::EpipolarGeometry::triangulateImagePointsIF(ConstArrayAccessor<HomogenousMatrix4>(posesIF), ConstArrayAccessor<Vectors2>(imagePointsPerPose), &pinholeCamera);
 
 	Scalar maxSquaredMetricError(0);
 
@@ -677,7 +677,7 @@ Scalar TestMultipleViewGeometry::evaluateReprojectionError(const std::vector<Vec
 	{
 		for (size_t iView = 0; iView < views; iView++)
 		{
-			const Geometry::ImagePoint imagePoint = pinholeCamera.projectToImageIF<true>(posesIF[iView], points3dMetric[i], false);
+			const Vector2 imagePoint = pinholeCamera.projectToImageIF<true>(posesIF[iView], points3dMetric[i], false);
 			const Scalar sqrMetricDistance(imagePoint.sqrDistance(imagePointsPerPose[iView][i]));
 
 			maxSquaredMetricError = sqrMetricDistance > maxSquaredMetricError ? sqrMetricDistance : maxSquaredMetricError;

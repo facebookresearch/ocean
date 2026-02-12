@@ -237,7 +237,7 @@ static bool onConnection(const Network::Address4& /*address*/, const Network::Po
 	networkServer_ = nullptr;
 
 	pixelImage_.release();
-	
+
 	frameMediumView_ = Platform::Apple::MacOS::FrameMediumView();
 }
 

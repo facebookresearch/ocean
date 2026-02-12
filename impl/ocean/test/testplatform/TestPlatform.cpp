@@ -41,7 +41,7 @@ namespace TestPlatform
 
 bool testPlatform(const double testDuration, Worker& /*worker*/, const std::string& testFunctions)
 {
-	ocean_assert(testDuration > 0.0);
+	ocean_assert_and_suppress_unused(testDuration > 0.0, testDuration);
 
 	TestResult testResult("Ocean Platform Library test");
 

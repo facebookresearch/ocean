@@ -31,7 +31,7 @@ namespace ARKit
 class OCEAN_DEVICES_ARKIT_EXPORT AKFactory : public Factory
 {
 	friend class GeoAnchorAvailabilityChecker;
-	
+
 	protected:
 
 		/**

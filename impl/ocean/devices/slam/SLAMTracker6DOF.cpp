@@ -195,7 +195,7 @@ void SLAMTracker6DOF::threadRun()
 			ocean_assert(false && "This should never happen!");
 			continue;
 		}
-		
+
 		if (preferredCameraWidth_ != 0u && preferredCameraHeight_ != 0u)
 		{
 			if (yFrame.width() != preferredCameraWidth_ || yFrame.height() != preferredCameraHeight_)
@@ -206,11 +206,11 @@ void SLAMTracker6DOF::threadRun()
 				}
 			}
 		}
-		
+
 		if (camera->width() != yFrame.width() || camera->height() != yFrame.height())
 		{
 			camera = camera->clone(yFrame.width(), yFrame.height());
-			
+
 			if (!camera)
 			{
 				Log::error() << "Failed to adjust the camera profile to the frame resolution";
@@ -273,7 +273,7 @@ void SLAMTracker6DOF::threadRun()
 
 			isObjectTracked_ = false;
 		}
-		
+
 		if (world_T_camera.isValid())
 		{
 			postPose(world_T_camera, frameTimestamp);

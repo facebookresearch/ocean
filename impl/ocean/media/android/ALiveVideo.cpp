@@ -272,7 +272,7 @@ float ALiveVideo::focus(ControlMode* focusMode) const
 	return focusPosition_;
 }
 
-bool ALiveVideo::setPreferredStreamType(const StreamType streamType)
+bool ALiveVideo::setPreferredStreamType(const StreamType /*streamType*/)
 {
 	return false;
 }
@@ -964,7 +964,7 @@ void ALiveVideo::onCameraDisconnected(ACameraDevice* /*cameraDevice*/)
 
 void ALiveVideo::onCameraError(ACameraDevice* cameraDevice, int error)
 {
-	ocean_assert(cameraDevice != nullptr);
+	ocean_assert_and_suppress_unused(cameraDevice != nullptr, cameraDevice);
 
 	switch (error)
 	{
@@ -1004,7 +1004,7 @@ void ALiveVideo::onCameraError(ACameraDevice* cameraDevice, int error)
 
 void ALiveVideo::onSessionActive(ACameraCaptureSession* session)
 {
-	ocean_assert(session != nullptr);
+	ocean_assert_and_suppress_unused(session != nullptr, session);
 
 	const ScopedLock scopedLock(lock_);
 
@@ -1014,7 +1014,7 @@ void ALiveVideo::onSessionActive(ACameraCaptureSession* session)
 
 void ALiveVideo::onSessionClosed(ACameraCaptureSession* session)
 {
-	ocean_assert(session != nullptr);
+	ocean_assert_and_suppress_unused(session != nullptr, session);
 
 	const ScopedLock scopedLock(lock_);
 
@@ -1031,8 +1031,8 @@ void ALiveVideo::onCaptureStarted(ACameraCaptureSession* /*session*/, const ACap
 
 void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequest* request, const ACameraMetadata* result)
 {
-	ocean_assert(session != nullptr);
-	ocean_assert(request != nullptr);
+	ocean_assert_and_suppress_unused(session != nullptr, session);
+	ocean_assert_and_suppress_unused(request != nullptr, request);
 	ocean_assert(result != nullptr);
 
 	ControlMode exposureMode = CM_INVALID;
@@ -2012,7 +2012,7 @@ std::string ALiveVideo::cameraIdForMedium(ACameraIdList* cameraIdList, const std
 		int oceanLiveVideoId = -1;
 		if (String::isInteger32(url.substr(12), &oceanLiveVideoId) && oceanLiveVideoId >= 0)
 		{
-			if (size_t(oceanLiveVideoId) < cameraIdList->numCameras)
+			if (oceanLiveVideoId < cameraIdList->numCameras)
 			{
 				const char* cameraId = cameraIdList->cameraIds[oceanLiveVideoId];
 				ocean_assert(cameraId != nullptr);

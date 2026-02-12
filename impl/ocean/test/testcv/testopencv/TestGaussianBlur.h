@@ -29,7 +29,7 @@ namespace TestOpenCV
 class OCEAN_TEST_CV_OPENCV_EXPORT TestGaussianBlur
 {
 	public:
-	
+
 		/**
 		 * Tests the Gaussian blur functions with random images
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)

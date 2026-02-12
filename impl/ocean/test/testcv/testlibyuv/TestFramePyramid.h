@@ -37,7 +37,7 @@ class OCEAN_TEST_CV_LIBYUV_EXPORT TestFramePyramid
 		static void test(const double testDuration);
 
 	private:
-	
+
 		/**
 		 * Benchmarks the creation of a frame pyramid.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)

@@ -165,7 +165,7 @@ AMovieRecorder::Encoders AMovieRecorder::frameEncoders() const
 
 bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFrameFrequency)
 {
-	ocean_assert(respectFrameFrequency == false && "currently not supported!");
+	ocean_assert_and_suppress_unused(respectFrameFrequency == false && "currently not supported!", respectFrameFrequency);
 
 	const ScopedLock scopedLock(recorderLock);
 

@@ -48,7 +48,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param frontObjectPoint Optional resulting statement whether the resulting object point is located in front of the camera; True, if so
 		 * @return Resulting 3D object point
 		 */
-		static ObjectPoint backProjectImagePoint(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const ImagePoint& imagePoint, const bool useDistortionParameters, bool* frontObjectPoint = nullptr);
+		static ObjectPoint backProjectImagePoint(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Vector2& imagePoint, const bool useDistortionParameters, bool* frontObjectPoint = nullptr);
 
 		/**
 		 * Projects a set of given image points onto a 3D plane and returns the resulting 3D object points.
@@ -63,7 +63,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @return Resulting 3D object points
 		 * @see backProjectImagePointsDamped().
 		 */
-		static ObjectPoints backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Plane3& plane, const ImagePoint* imagePoints, const size_t numberImagePoints, Indices32* frontObjectPointIndices = nullptr);
+		static Vectors3 backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Plane3& plane, const Vector2* imagePoints, const size_t numberImagePoints, Indices32* frontObjectPointIndices = nullptr);
 
 		/**
 		 * Deprecated.
@@ -82,7 +82,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @return Resulting 3D object points
 		 * @see backProjectImagePointsDamped().
 		 */
-		static ObjectPoints backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices = nullptr);
+		static Vectors3 backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices = nullptr);
 
 		/**
 		 * Projects a set of given image points onto a 3D cylinder and returns *only* the resulting 3D object points for rays that intersect the cylinder.
@@ -94,7 +94,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param intersectingPointIndices Output indices of all 2D points whose rays actually intersect with the cylinder
 		 * @return Resulting 3D object points
 		 */
-		static ObjectPoints backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cylinder3& cylinder, const ImagePoint* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices);
+		static Vectors3 backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cylinder3& cylinder, const Vector2* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices);
 
 		/**
 		 * Deprecated.
@@ -110,7 +110,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param intersectingPointIndices Output indices of all 2D points whose rays actually intersect with the cylinder
 		 * @return Resulting 3D object points
 		 */
-		static ObjectPoints backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cylinder3& cylinder, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices);
+		static Vectors3 backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cylinder3& cylinder, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices);
 
 		/**
 		 * Projects a set of given image points onto a 3D cone and returns *only* the resulting 3D object points for rays that intersect the cone.
@@ -122,7 +122,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param intersectingPointIndices Output indices of all 2D points whose rays actually intersect with the cone
 		 * @return Resulting 3D object points
 		 */
-		static ObjectPoints backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cone3& cone, const ImagePoint* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices);
+		static Vectors3 backProjectImagePoints(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Cone3& cone, const Vector2* imagePoints, const size_t numberImagePoints, Indices32& intersectingPointIndices);
 
 		/**
 		 * Deprecated.
@@ -138,7 +138,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param intersectingPointIndices Output indices of all 2D points whose rays actually intersect with the cone
 		 * @return Resulting 3D object points
 		 */
-		static ObjectPoints backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cone3& cone, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices);
+		static Vectors3 backProjectImagePoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Cone3& cone, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32& intersectingPointIndices);
 
 		/**
 		 * Projects a set of given image points onto a 3D plane and returns the resulting 3D object points.
@@ -155,7 +155,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @return Resulting 3D object points
 		 * @see backProjectImagePoints().
 		 */
-		static ObjectPoints backProjectImagePointsDamped(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const ImagePoint* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices = nullptr);
+		static Vectors3 backProjectImagePointsDamped(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Vector2* imagePoints, const size_t numberImagePoints, const bool useDistortionParameters, Indices32* frontObjectPointIndices = nullptr);
 
 		/**
 		 * Creates a set of 3D object points for a set of given 2D image points.
@@ -182,7 +182,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param distance The distance between the camera's center of project and the resulting object points, should be in range (0, infinity)
 		 * @return Resulting 3D object points
 		 */
-		static ObjectPoints createObjectPoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool useDistortionParameters, const Scalar distance);
+		static Vectors3 createObjectPoints(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const ConstIndexedAccessor<Vector2>& imagePoints, const bool useDistortionParameters, const Scalar distance);
 
 		/**
 		 * Determines 3D object points by triangulating two sets of 2D image points from different camera poses.
@@ -244,7 +244,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param correspondences Number of given image point correspondences
 		 * @return Number of image points located in front of both camera
 		 */
-		static size_t countFrontObjectPoints(const PinholeCamera& cameraFirst, const PinholeCamera& cameraSecond, const HomogenousMatrix4& poseFirst, const HomogenousMatrix4& poseSecond, const ImagePoint* imagePointsFirst, const ImagePoint* imagePointsSecond, const size_t correspondences);
+		static size_t countFrontObjectPoints(const PinholeCamera& cameraFirst, const PinholeCamera& cameraSecond, const HomogenousMatrix4& poseFirst, const HomogenousMatrix4& poseSecond, const Vector2* imagePointsFirst, const Vector2* imagePointsSecond, const size_t correspondences);
 
 		/**
 		 * Creates the covariance matrix for a given set of image points.
@@ -253,7 +253,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param minimalSigma Defining the minimal sigma that is applied, with range [0, infinity)
 		 * @return Resulting covariance matrix
 		 */
-		static inline SquareMatrix2 covarianceMatrix(const ImagePoint* imagePoints, const size_t number, const Scalar minimalSigma = 0);
+		static inline SquareMatrix2 covarianceMatrix(const Vector2* imagePoints, const size_t number, const Scalar minimalSigma = 0);
 
 		/**
 		 * Creates the covariance matrix for a given set of image points.
@@ -263,7 +263,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param minimalSigma Defining the minimal sigma that is applied, with range [0, infinity)
 		 * @return Resulting covariance matrix
 		 */
-		static SquareMatrix2 covarianceMatrix(const ImagePoint* imagePoints, const size_t number, const ImagePoint& meanPoint, const Scalar minimalSigma = 0);
+		static SquareMatrix2 covarianceMatrix(const Vector2* imagePoints, const size_t number, const Vector2& meanPoint, const Scalar minimalSigma = 0);
 
 		/**
 		 * Creates the covariance matrix for a given set of image points.
@@ -274,7 +274,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @param meanPoint Resulting mean point of the filtered image points
 		 * @return Resulting covariance matrix
 		 */
-		static SquareMatrix2 covarianceMatrix(const ImagePoint* imagePoints, const unsigned int* indices, const size_t numberIndices, const Scalar minimalSigma, ImagePoint& meanPoint);
+		static SquareMatrix2 covarianceMatrix(const Vector2* imagePoints, const unsigned int* indices, const size_t numberIndices, const Scalar minimalSigma, Vector2& meanPoint);
 
 		/**
 		 * Creates a covariance matrix by two given orthogonal vectors.
@@ -404,7 +404,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @tparam TAccessor The data type of the accessor providing the image points
 		 */
 		template <typename TAccessor>
-		static inline ImagePoint meanImagePoint(const TAccessor& imagePointAccessor);
+		static inline Vector2 meanImagePoint(const TAccessor& imagePointAccessor);
 
 		/**
 		 * Returns the mean position of a set of given 3D points.
@@ -423,7 +423,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @tparam TAccessor The data type of the accessor providing the object points
 		 */
 		template <typename TAccessor>
-		static inline ImagePoint medianImagePoint(const TAccessor& imagePointAccessor);
+		static inline Vector2 medianImagePoint(const TAccessor& imagePointAccessor);
 
 		/**
 		 * Returns the median position of a set of given 3D points.
@@ -443,7 +443,7 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		 * @tparam TAccessor The data type of the accessor providing the image points
 		 */
 		template <typename TAccessor>
-		static inline Scalar medianDistance(const ImagePoint& imagePoint, const TAccessor& imagePointAccessor);
+		static inline Scalar medianDistance(const Vector2& imagePoint, const TAccessor& imagePointAccessor);
 
 		/**
 		 * Returns the median distance between a given 3D object point and a set of given 3D points.
@@ -507,9 +507,9 @@ inline size_t Utilities::countFrontObjectPoints(const PinholeCamera& pinholeCame
 	return countFrontObjectPointsIF(pinholeCamera, PinholeCamera::standard2InvertedFlipped(pose), objectPoints, numberObjectPoints);
 }
 
-inline SquareMatrix2 Utilities::covarianceMatrix(const ImagePoint* imagePoints, const size_t number, const Scalar minimalSigma)
+inline SquareMatrix2 Utilities::covarianceMatrix(const Vector2* imagePoints, const size_t number, const Scalar minimalSigma)
 {
-	return covarianceMatrix(imagePoints, number, meanImagePoint(ConstTemplateArrayAccessor<ImagePoint>(imagePoints, number)), minimalSigma);
+	return covarianceMatrix(imagePoints, number, meanImagePoint(ConstTemplateArrayAccessor<Vector2>(imagePoints, number)), minimalSigma);
 }
 
 inline Scalar Utilities::computePolygonArea(const Vector2* vertices, size_t size)
@@ -538,11 +538,11 @@ inline bool Utilities::intersectConvexPolygons(const Vectors2& vertices0, const 
 }
 
 template <typename TAccessor>
-inline ImagePoint Utilities::meanImagePoint(const TAccessor& imagePointAccessor)
+inline Vector2 Utilities::meanImagePoint(const TAccessor& imagePointAccessor)
 {
 	ocean_assert(imagePointAccessor.size() > 0);
 
-	ImagePoint meanPosition(0, 0);
+	Vector2 meanPosition(0, 0);
 	for (size_t n = 0; n < imagePointAccessor.size(); ++n)
 	{
 		meanPosition += imagePointAccessor[n];
@@ -566,7 +566,7 @@ inline ObjectPoint Utilities::meanObjectPoint(const TAccessor& objectPointAccess
 }
 
 template <typename TAccessor>
-inline ImagePoint Utilities::medianImagePoint(const TAccessor& imagePointAccessor)
+inline Vector2 Utilities::medianImagePoint(const TAccessor& imagePointAccessor)
 {
 	ocean_assert(!imagePointAccessor.isEmpty());
 
@@ -580,7 +580,7 @@ inline ImagePoint Utilities::medianImagePoint(const TAccessor& imagePointAccesso
 
 	for (size_t n = 0; n < imagePointAccessor.size(); ++n)
 	{
-		const ImagePoint& imagePoint = imagePointAccessor[n];
+		const Vector2& imagePoint = imagePointAccessor[n];
 
 		xValues[n] = imagePoint.x();
 		yValues[n] = imagePoint.y();
@@ -589,7 +589,7 @@ inline ImagePoint Utilities::medianImagePoint(const TAccessor& imagePointAccesso
 	const Scalar xMedian = Median::median(xValues.data(), xValues.size());
 	const Scalar yMedian = Median::median(yValues.data(), yValues.size());
 
-	return ImagePoint(xMedian, yMedian);
+	return Vector2(xMedian, yMedian);
 }
 
 template <typename TAccessor>
@@ -623,7 +623,7 @@ inline ObjectPoint Utilities::medianObjectPoint(const TAccessor& objectPointAcce
 }
 
 template <typename TAccessor>
-inline Scalar Utilities::medianDistance(const ImagePoint& imagePoint, const TAccessor& imagePointAccessor)
+inline Scalar Utilities::medianDistance(const Vector2& imagePoint, const TAccessor& imagePointAccessor)
 {
 	Scalars sqrDistances;
 	sqrDistances.reserve(imagePointAccessor.size());

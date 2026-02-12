@@ -45,7 +45,7 @@ class OCEAN_TEST_CV_OPENCV_EXPORT TestFrameConverter
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 */
 		static void testCast(const double testDuration);
-	
+
 		/**
 		 * Benchmarks the performance of cast of a frame.
 		 * @param width The width of the frame to cast, with range [1, infinity)

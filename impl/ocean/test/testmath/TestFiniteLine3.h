@@ -50,6 +50,13 @@ class OCEAN_TEST_MATH_EXPORT TestFiniteLine3
 		 * @return True, if succeeded
 		 */
 		static bool testDistance(const double testDuration);
+
+		/**
+		 * Intersection test.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIntersection(const double testDuration);
 };
 
 }

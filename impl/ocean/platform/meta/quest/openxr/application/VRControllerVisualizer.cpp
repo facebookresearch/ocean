@@ -83,7 +83,7 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 
 			// previously this used the aim pose for the controller position
 			// this was changed to use the grip pose instead,
-			// but to place the model at the correct location 
+			// but to place the model at the correct location
 			// we have to offset the grip pose to make it match the old aim pose
 			baseSpace_T_controllerGrip *= HomogenousMatrix4(
 				Vector3(0.000000, -0.019641, -0.100981),

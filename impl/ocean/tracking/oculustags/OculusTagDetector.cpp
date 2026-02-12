@@ -775,8 +775,8 @@ bool OculusTagDetector::optimizePose(const AnyCamera& anyCameraA, const AnyCamer
 	const HomogenousMatrices4 world_T_camerasA = { world_T_cameraA };
 	const HomogenousMatrices4 world_T_camerasB = { world_T_cameraB };
 
-	static_assert(std::is_same<Geometry::ImagePoints, Vectors2>::value, "ImagePoints != Vectors2");
-	static_assert(std::is_same<Geometry::ObjectPoints, Vectors3>::value, "ObjectPoints != Vectors3");
+	static_assert(std::is_same<Vectors2, Vectors2>::value, "ImagePoints != Vectors2");
+	static_assert(std::is_same<Vectors3, Vectors3>::value, "ObjectPoints != Vectors3");
 
 	const Geometry::ObjectPointGroups objectPointGroupsA(1, std::move(objectPointsA));
 	const Geometry::ObjectPointGroups objectPointGroupsB(1, std::move(objectPointsB));
