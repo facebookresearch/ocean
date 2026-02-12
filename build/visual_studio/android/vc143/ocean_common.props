@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Android (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_common_imported>True</ocean_common_imported>
+  </PropertyGroup>
+
+  <!-- Ocean root path (relative to this file: build/visual_studio/android/vc143 -> ocean root) -->
+  <PropertyGroup>
+    <OceanRootPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..\..\..\..'))</OceanRootPath>
+  </PropertyGroup>
+
+  <!-- Compiler version identifier (e.g., vc143, vc145) -->
+  <PropertyGroup>
+    <OceanCompilerVersion>vc143</OceanCompilerVersion>
+  </PropertyGroup>
+
+  <!-- Platform suffix based on target ABI -->
+  <PropertyGroup>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='ARM64'">arm64</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='ARM'">arm</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='x86'">x86</OceanPlatformSuffix>
+  </PropertyGroup>
+
+  <!-- Build type: static or shared -->
+  <PropertyGroup>
+    <OceanBuildType Condition="$(Configuration.StartsWith('Static'))">static</OceanBuildType>
+    <OceanBuildType Condition="$(Configuration.StartsWith('Shared'))">shared</OceanBuildType>
+  </PropertyGroup>
+
+  <!-- Configuration suffix: _debug or empty for release -->
+  <PropertyGroup>
+    <OceanConfigSuffix Condition="$(Configuration.EndsWith('Debug'))">_debug</OceanConfigSuffix>
+    <OceanConfigSuffix Condition="$(Configuration.EndsWith('Release'))"></OceanConfigSuffix>
+  </PropertyGroup>
+
+  <!-- Combined configuration folder name (e.g., android_arm64_vc143_static_debug) -->
+  <PropertyGroup>
+    <OceanConfigFolder>android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_$(OceanBuildType)$(OceanConfigSuffix)</OceanConfigFolder>
+  </PropertyGroup>
+
+  <!-- 3rd-party library configuration folder (always uses static linking) -->
+  <PropertyGroup>
+    <Ocean3rdPartyConfigFolder>android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_static$(OceanConfigSuffix)</Ocean3rdPartyConfigFolder>
+  </PropertyGroup>
+
+  <!-- Common compiler settings for all configurations -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OceanRootPath)impl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>c++20</LanguageStandard>
+      <CppLanguageStandard>c++20</CppLanguageStandard>
+      <CLanguageStandard>c17</CLanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+      <!-- Force 'char' to be signed for consistency across architectures (ARM64 uses unsigned char by default) -->
+      <AdditionalOptions>-fsigned-char %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- Debug configuration preprocessor definitions -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_STATIC;_DEBUG;EXTENDED_DEBUG;ENABLE_LOGGING=1;__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_STATIC;NDEBUG;ENABLE_LOGGING=1;__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_SHARED;_DEBUG;EXTENDED_DEBUG;ENABLE_LOGGING=1;__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_SHARED;NDEBUG;ENABLE_LOGGING=1;__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- Library search paths -->
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)bin\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+</Project>

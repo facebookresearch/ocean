@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36811.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "ocean\base\base.vcxproj", "{516A48C6-7710-46A4-85B9-130622ADB9DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ocean", "ocean", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "math", "ocean\math\math.vcxproj", "{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Shared Debug|ARM = Shared Debug|ARM
+		Shared Debug|ARM64 = Shared Debug|ARM64
+		Shared Debug|x64 = Shared Debug|x64
+		Shared Debug|x86 = Shared Debug|x86
+		Shared Release|ARM = Shared Release|ARM
+		Shared Release|ARM64 = Shared Release|ARM64
+		Shared Release|x64 = Shared Release|x64
+		Shared Release|x86 = Shared Release|x86
+		Static Debug|ARM = Static Debug|ARM
+		Static Debug|ARM64 = Static Debug|ARM64
+		Static Debug|x64 = Static Debug|x64
+		Static Debug|x86 = Static Debug|x86
+		Static Release|ARM = Static Release|ARM
+		Static Release|ARM64 = Static Release|ARM64
+		Static Release|x64 = Static Release|x64
+		Static Release|x86 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|ARM.ActiveCfg = Shared Debug|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|ARM.Build.0 = Shared Debug|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|ARM64.ActiveCfg = Shared Debug|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|ARM64.Build.0 = Shared Debug|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|x86.ActiveCfg = Shared Debug|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Debug|x86.Build.0 = Shared Debug|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|ARM.ActiveCfg = Shared Release|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|ARM.Build.0 = Shared Release|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|ARM64.ActiveCfg = Shared Release|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|ARM64.Build.0 = Shared Release|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|x64.Build.0 = Shared Release|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|x86.ActiveCfg = Shared Release|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Shared Release|x86.Build.0 = Shared Release|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|ARM.ActiveCfg = Static Debug|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|ARM.Build.0 = Static Debug|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|ARM64.ActiveCfg = Static Debug|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|ARM64.Build.0 = Static Debug|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|x64.Build.0 = Static Debug|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|x86.ActiveCfg = Static Debug|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Debug|x86.Build.0 = Static Debug|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|ARM.ActiveCfg = Static Release|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|ARM.Build.0 = Static Release|ARM
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|ARM64.ActiveCfg = Static Release|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|ARM64.Build.0 = Static Release|ARM64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|x64.ActiveCfg = Static Release|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|x64.Build.0 = Static Release|x64
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|x86.ActiveCfg = Static Release|x86
+		{516A48C6-7710-46A4-85B9-130622ADB9DC}.Static Release|x86.Build.0 = Static Release|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|ARM.ActiveCfg = Shared Debug|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|ARM.Build.0 = Shared Debug|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|ARM64.ActiveCfg = Shared Debug|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|ARM64.Build.0 = Shared Debug|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|x86.ActiveCfg = Shared Debug|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Debug|x86.Build.0 = Shared Debug|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|ARM.ActiveCfg = Shared Release|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|ARM.Build.0 = Shared Release|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|ARM64.ActiveCfg = Shared Release|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|ARM64.Build.0 = Shared Release|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|x64.Build.0 = Shared Release|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|x86.ActiveCfg = Shared Release|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Shared Release|x86.Build.0 = Shared Release|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|ARM.ActiveCfg = Static Debug|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|ARM.Build.0 = Static Debug|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|ARM64.ActiveCfg = Static Debug|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|ARM64.Build.0 = Static Debug|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|x64.Build.0 = Static Debug|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|x86.ActiveCfg = Static Debug|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Debug|x86.Build.0 = Static Debug|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|ARM.ActiveCfg = Static Release|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|ARM.Build.0 = Static Release|ARM
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|ARM64.ActiveCfg = Static Release|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|ARM64.Build.0 = Static Release|ARM64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|x64.ActiveCfg = Static Release|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|x64.Build.0 = Static Release|x64
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|x86.ActiveCfg = Static Release|x86
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4}.Static Release|x86.Build.0 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{516A48C6-7710-46A4-85B9-130622ADB9DC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{44AF0DD7-7166-46C8-8C7A-1491A048C1E4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2BCADCA3-A709-48C0-B594-0DEBD4182B19}
+	EndGlobalSection
+EndGlobal

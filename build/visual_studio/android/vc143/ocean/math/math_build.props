@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Math (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_math_build_imported>True</ocean_math_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_math_common_imported)' != 'True'" Project="math_common.props"/>
+    <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <!-- Target name for Debug configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>OceanMathD</TargetName>
+  </PropertyGroup>
+
+  <!-- Target name for Release configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>OceanMath</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalOptions>-Wno-unused-but-set-variable %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

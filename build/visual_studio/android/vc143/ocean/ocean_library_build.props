@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Libraries (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_library_build_imported>True</ocean_library_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\ocean_common.props"/>
+  </ImportGroup>
+
+  <!-- Output and intermediate directories -->
+  <PropertyGroup>
+    <OutDir>$(OceanRootPath)bin\lib\$(OceanConfigFolder)\</OutDir>
+    <IntDir>$(OceanRootPath)bin\tmp\impl\ocean\$(ProjectName)\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+
+  <!-- Static library output settings -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Static Release'">
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+
+  <!-- Shared library output settings -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
