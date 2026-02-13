@@ -421,6 +421,22 @@
   <Import Project="$(_JavaStagingTargetsPath)"
           Condition="'$(_JavaStagingTargetsPath)' != '' AND Exists('$(_JavaStagingTargetsPath)')" />
 
+  <!-- ============================================================
+       Gradle Wrapper Verification (shared targets)
+
+       Import the shared VerifyFileHash task and VerifyGradleWrapper target
+       from the extension toolset.
+       ============================================================ -->
+  <PropertyGroup>
+    <_GradleWrapperTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets')"
+      >$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
+    <!-- Development fallback: relative to template location (templates/AndroidApplication/) -->
+    <_GradleWrapperTargetsPath Condition="'$(_GradleWrapperTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\GradleWrapper.targets')"
+      >$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_GradleWrapperTargetsPath)"
+          Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
+
   <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
 
   <!-- Resolve AndroidManifest items into the AndroidManifestFile property -->
@@ -563,53 +579,6 @@ catch (Exception ex)
     <Warning Text="[OceanAndroid] JDK $(_DetectedJavaVersion) detected. JDK 25+ is NOT supported by Gradle yet. Supported range is JDK 17-24."
              Condition="'$(_DetectedJavaVersion)' != '' AND $([System.Int32]::Parse('$(_DetectedJavaVersion)')) &gt; 24" />
 
-  </Target>
-
-  <!-- Inline task to verify a file's SHA-256 hash against a .sha256 checksum file -->
-  <UsingTask TaskName="VerifyFileHash" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup>
-      <FilePath ParameterType="System.String" Required="true" />
-      <HashFilePath ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Using Namespace="System.Security.Cryptography" />
-      <Code Type="Fragment" Language="cs">
-<![CDATA[
-var expectedHash = File.ReadLines(HashFilePath).First(l => !string.IsNullOrWhiteSpace(l) && !l.TrimStart().StartsWith("#")).Trim();
-using (var sha256 = SHA256.Create())
-using (var stream = File.OpenRead(FilePath))
-{
-    var hashBytes = sha256.ComputeHash(stream);
-    var actualHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-    if (!string.Equals(actualHash, expectedHash, StringComparison.OrdinalIgnoreCase))
-    {
-        Log.LogError($"[OceanAndroid] gradle-wrapper.jar integrity check FAILED.\n  Expected: {expectedHash}\n  Actual:   {actualHash}\n  File:     {FilePath}\nThe JAR may have been tampered with. Replace it with a known-good copy from https://services.gradle.org/distributions/");
-        return false;
-    }
-    Log.LogMessage(MessageImportance.Normal, $"[OceanAndroid] gradle-wrapper.jar integrity verified (SHA-256: {actualHash})");
-}
-return true;
-]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
-  <!-- Verify gradle-wrapper.jar integrity before building -->
-  <Target Name="VerifyGradleWrapper" BeforeTargets="Build;Rebuild">
-    <PropertyGroup>
-      <_GradleWrapperJar>$(GradleProjectDir)\wrapper\gradle-wrapper.jar</_GradleWrapperJar>
-      <!-- Resolve .sha256 from extension toolset (registry path, then dev fallback) -->
-      <_GradleWrapperJarHash Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\GradleWrapper\gradle-wrapper.jar.sha256</_GradleWrapperJarHash>
-      <_GradleWrapperJarHash Condition="'$(_GradleWrapperJarHash)' == '' OR !Exists('$(_GradleWrapperJarHash)')">$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\gradle-wrapper.jar.sha256</_GradleWrapperJarHash>
-    </PropertyGroup>
-
-    <VerifyFileHash FilePath="$(_GradleWrapperJar)" HashFilePath="$(_GradleWrapperJarHash)"
-                    Condition="Exists('$(_GradleWrapperJar)') AND Exists('$(_GradleWrapperJarHash)')" />
-
-    <Warning Text="[OceanAndroid] gradle-wrapper.jar.sha256 not found. Skipping integrity check."
-             Condition="Exists('$(_GradleWrapperJar)') AND !Exists('$(_GradleWrapperJarHash)')" />
   </Target>
 
   <!-- Build Target - invokes Gradle -->

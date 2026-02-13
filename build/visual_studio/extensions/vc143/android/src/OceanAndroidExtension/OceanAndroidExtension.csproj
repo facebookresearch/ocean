@@ -214,8 +214,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
+  <!-- GradleWrapper targets and checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
   <ItemGroup>
+    <Content Include="..\..\toolset\GradleWrapper\GradleWrapper.targets">
+      <Link>toolset\GradleWrapper\GradleWrapper.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\toolset\GradleWrapper\gradle-wrapper.jar.sha256">
       <Link>toolset\GradleWrapper\gradle-wrapper.jar.sha256</Link>
       <IncludeInVSIX>true</IncludeInVSIX>

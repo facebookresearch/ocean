@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Gradle Wrapper Verification Targets
+
+  Provides security verification for gradle-wrapper.jar files.
+  Verifies the SHA-256 hash of the Gradle wrapper JAR against a known-good
+  checksum to detect tampering or corruption.
+
+  Requirements from the importing project:
+    - $(GradleProjectDir) property: path to the Gradle project directory
+      containing the wrapper/ subdirectory
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Inline task to verify a file's SHA-256 hash against a .sha256 checksum file -->
+  <UsingTask TaskName="VerifyFileHash" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <FilePath ParameterType="System.String" Required="true" />
+      <HashFilePath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Security.Cryptography" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+#pragma warning disable CS0162 // Unreachable code detected (RoslynCodeTaskFactory generates wrapper code)
+bool success = true;
+try
+{
+    var expectedHash = File.ReadLines(HashFilePath).First(l => !string.IsNullOrWhiteSpace(l) && !l.TrimStart().StartsWith("#")).Trim();
+    using (var sha256 = SHA256.Create())
+    using (var stream = File.OpenRead(FilePath))
+    {
+        var hashBytes = sha256.ComputeHash(stream);
+        var actualHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+        if (!string.Equals(actualHash, expectedHash, StringComparison.OrdinalIgnoreCase))
+        {
+            Log.LogError($"[OceanAndroid] gradle-wrapper.jar integrity check FAILED.\n  Expected: {expectedHash}\n  Actual:   {actualHash}\n  File:     {FilePath}\nThe JAR may have been tampered with. Replace it with a known-good copy from https://services.gradle.org/distributions/");
+            success = false;
+        }
+        else
+        {
+            Log.LogMessage(MessageImportance.Normal, $"[OceanAndroid] gradle-wrapper.jar integrity verified (SHA-256: {actualHash})");
+        }
+    }
+}
+catch (Exception ex)
+{
+    Log.LogError($"[OceanAndroid] Failed to verify gradle-wrapper.jar: {ex.Message}");
+    success = false;
+}
+return success;
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <!-- Resolve path to the .sha256 checksum file -->
+  <PropertyGroup>
+    <_GradleWrapperHashFile Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\GradleWrapper\gradle-wrapper.jar.sha256</_GradleWrapperHashFile>
+    <_GradleWrapperHashFile Condition="'$(_GradleWrapperHashFile)' == '' OR !Exists('$(_GradleWrapperHashFile)')">$(MSBuildThisFileDirectory)gradle-wrapper.jar.sha256</_GradleWrapperHashFile>
+  </PropertyGroup>
+
+  <!-- Verify gradle-wrapper.jar integrity before building -->
+  <Target Name="VerifyGradleWrapper" BeforeTargets="Build;Rebuild">
+    <PropertyGroup>
+      <_GradleWrapperJar>$(GradleProjectDir)\wrapper\gradle-wrapper.jar</_GradleWrapperJar>
+    </PropertyGroup>
+
+    <VerifyFileHash
+      FilePath="$(_GradleWrapperJar)"
+      HashFilePath="$(_GradleWrapperHashFile)"
+      Condition="Exists('$(_GradleWrapperJar)') AND Exists('$(_GradleWrapperHashFile)')" />
+
+    <Warning
+      Text="[OceanAndroid] gradle-wrapper.jar.sha256 not found at $(_GradleWrapperHashFile). Skipping integrity check."
+      Condition="Exists('$(_GradleWrapperJar)') AND !Exists('$(_GradleWrapperHashFile)')" />
+  </Target>
+
+</Project>
