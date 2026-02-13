@@ -139,6 +139,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testcvsegmentation", "ocean
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testcvsynthesis", "ocean\test\testcv\testsynthesis\testcvsynthesis.vcxproj", "{D7E8F9A0-B1C2-43D4-E5F6-A7B8C9D0E1F2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testcvdetectorqrcodes", "ocean\test\testcv\testdetector\testqrcodes\testcvdetectorqrcodes.vcxproj", "{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Shared Debug|ARM = Shared Debug|ARM
@@ -2271,6 +2273,38 @@ Global
 		{D7E8F9A0-B1C2-43D4-E5F6-A7B8C9D0E1F2}.Static Release|x64.Build.0 = Static Release|x64
 		{D7E8F9A0-B1C2-43D4-E5F6-A7B8C9D0E1F2}.Static Release|x86.ActiveCfg = Static Release|x86
 		{D7E8F9A0-B1C2-43D4-E5F6-A7B8C9D0E1F2}.Static Release|x86.Build.0 = Static Release|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|ARM.ActiveCfg = Shared Debug|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|ARM.Build.0 = Shared Debug|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|ARM64.ActiveCfg = Shared Debug|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|ARM64.Build.0 = Shared Debug|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|x86.ActiveCfg = Shared Debug|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Debug|x86.Build.0 = Shared Debug|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|ARM.ActiveCfg = Shared Release|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|ARM.Build.0 = Shared Release|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|ARM64.ActiveCfg = Shared Release|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|ARM64.Build.0 = Shared Release|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|x64.Build.0 = Shared Release|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|x86.ActiveCfg = Shared Release|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Shared Release|x86.Build.0 = Shared Release|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|ARM.ActiveCfg = Static Debug|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|ARM.Build.0 = Static Debug|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|ARM64.ActiveCfg = Static Debug|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|ARM64.Build.0 = Static Debug|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|x64.Build.0 = Static Debug|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|x86.ActiveCfg = Static Debug|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Debug|x86.Build.0 = Static Debug|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|ARM.ActiveCfg = Static Release|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|ARM.Build.0 = Static Release|ARM
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|ARM64.ActiveCfg = Static Release|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|ARM64.Build.0 = Static Release|ARM64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|x64.ActiveCfg = Static Release|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|x64.Build.0 = Static Release|x64
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|x86.ActiveCfg = Static Release|x86
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4}.Static Release|x86.Build.0 = Static Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2343,6 +2377,7 @@ Global
 		{B1C2D3E4-F5A6-47B8-C9D0-E1F2A3B4C5D6} = {4E915537-67A1-4993-AA14-203F358CE93D}
 		{C4D5E6F7-A8B9-40C1-D2E3-F4A5B6C7D8E9} = {4E915537-67A1-4993-AA14-203F358CE93D}
 		{D7E8F9A0-B1C2-43D4-E5F6-A7B8C9D0E1F2} = {4E915537-67A1-4993-AA14-203F358CE93D}
+		{E9F0A1B2-C3D4-45E6-F7A8-B9C0D1E2F3A4} = {4E915537-67A1-4993-AA14-203F358CE93D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2BCADCA3-A709-48C0-B594-0DEBD4182B19}
