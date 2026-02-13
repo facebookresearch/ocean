@@ -227,6 +227,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <!-- JavaValidation targets - Java Home validation and version detection -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\JavaValidation\JavaValidation.targets">
+      <Link>toolset\JavaValidation\JavaValidation.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <!-- Additional pkgdef for toolset registration -->
   <ItemGroup>
     <Content Include="OceanNDKToolset.pkgdef">

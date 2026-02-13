@@ -238,6 +238,22 @@
           Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
 
   <!-- ============================================================
+       Java Validation (shared targets)
+
+       Import the shared DetectJavaVersion task and _ValidateJavaHome target
+       from the extension toolset.
+       ============================================================ -->
+  <PropertyGroup>
+    <_JavaValidationTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets')"
+      >$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
+    <!-- Development fallback: relative to template location (templates/AndroidLibrary/) -->
+    <_JavaValidationTargetsPath Condition="'$(_JavaValidationTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets')"
+      >$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_JavaValidationTargetsPath)"
+          Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
+
+  <!-- ============================================================
        Custom Build Targets
        ============================================================ -->
 

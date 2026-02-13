@@ -437,6 +437,22 @@
   <Import Project="$(_GradleWrapperTargetsPath)"
           Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
 
+  <!-- ============================================================
+       Java Validation (shared targets)
+
+       Import the shared DetectJavaVersion task and _ValidateJavaHome target
+       from the extension toolset.
+       ============================================================ -->
+  <PropertyGroup>
+    <_JavaValidationTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets')"
+      >$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
+    <!-- Development fallback: relative to template location (templates/AndroidApplication/) -->
+    <_JavaValidationTargetsPath Condition="'$(_JavaValidationTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets')"
+      >$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_JavaValidationTargetsPath)"
+          Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
+
   <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
 
   <!-- Resolve AndroidManifest items into the AndroidManifestFile property -->
@@ -464,121 +480,6 @@
 
     <Error Text="Android manifest file not found: $(AndroidManifestFile). Ensure the file exists or update the AndroidManifest item."
            Condition="!Exists('$(AndroidManifestFile)')" />
-  </Target>
-
-  <!-- Inline task to detect Java version by running java -version -->
-  <UsingTask TaskName="DetectJavaVersion" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup>
-      <JavaExePath ParameterType="System.String" Required="true" />
-      <JavaVersion ParameterType="System.String" Output="true" />
-      <JavaVersionFull ParameterType="System.String" Output="true" />
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System" />
-      <Using Namespace="System.Diagnostics" />
-      <Using Namespace="System.Text.RegularExpressions" />
-      <Code Type="Fragment" Language="cs">
-<![CDATA[
-#pragma warning disable CS0162 // Unreachable code detected (RoslynCodeTaskFactory generates wrapper code)
-try
-{
-    var psi = new ProcessStartInfo
-    {
-        FileName = JavaExePath,
-        Arguments = "-version",
-        UseShellExecute = false,
-        RedirectStandardError = true,
-        RedirectStandardOutput = true,
-        CreateNoWindow = true
-    };
-
-    using (var process = Process.Start(psi))
-    {
-        // Java outputs version info to stderr
-        var stderr = process.StandardError.ReadToEnd();
-        var stdout = process.StandardOutput.ReadToEnd();
-        process.WaitForExit(10000);
-
-        var output = !string.IsNullOrEmpty(stderr) ? stderr : stdout;
-
-        // Match patterns like: version "17.0.11", version "21.0.2", version "1.8.0_392"
-        var match = Regex.Match(output, @"version\s+""(\d+)([^""]*)""");
-        if (match.Success)
-        {
-            var majorStr = match.Groups[1].Value;
-            var rest = match.Groups[2].Value;
-
-            // Handle legacy 1.x versioning (e.g., "1.8.0_392" -> major = 8)
-            if (majorStr == "1" && rest.StartsWith("."))
-            {
-                var legacyMatch = Regex.Match(rest, @"^\.(\d+)");
-                if (legacyMatch.Success)
-                {
-                    JavaVersion = legacyMatch.Groups[1].Value;
-                    JavaVersionFull = "1" + rest.TrimEnd('"');
-                    return true;
-                }
-            }
-
-            JavaVersion = majorStr;
-            // Full version: e.g., "17.0.11"
-            JavaVersionFull = majorStr + rest.TrimEnd('"');
-            // Clean up: remove leading dot if present for full version
-            if (JavaVersionFull.EndsWith("."))
-                JavaVersionFull = JavaVersionFull.TrimEnd('.');
-            return true;
-        }
-
-        Log.LogWarning($"[OceanAndroid] Could not parse Java version from output: {output.Trim()}");
-        JavaVersion = "";
-        JavaVersionFull = "";
-        return true;
-    }
-}
-catch (Exception ex)
-{
-    Log.LogWarning($"[OceanAndroid] Failed to detect Java version: {ex.Message}");
-    JavaVersion = "";
-    JavaVersionFull = "";
-    return true;
-}
-]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
-  <!-- Validate Java Home and detect version before building -->
-  <Target Name="_ValidateJavaHome" BeforeTargets="Build;Rebuild">
-
-    <!-- Error if Java Home is not configured -->
-    <Error Text="[OceanAndroid] Java Home is not configured. Set OCEAN_JAVA_HOME or JAVA_HOME environment variable, or install JDK 17-21 to a standard location."
-           Condition="'$(JavaHome)' == ''" />
-
-    <!-- Error if java.exe doesn't exist at the configured path -->
-    <Error Text="[OceanAndroid] Java executable not found at $(JavaHome)\bin\java.exe. Verify that JavaHome points to a valid JDK installation."
-           Condition="'$(JavaHome)' != '' AND !Exists('$(JavaHome)\bin\java.exe')" />
-
-    <!-- Detect Java version -->
-    <DetectJavaVersion JavaExePath="$(JavaHome)\bin\java.exe"
-                       Condition="'$(JavaHome)' != '' AND Exists('$(JavaHome)\bin\java.exe')">
-      <Output TaskParameter="JavaVersion" PropertyName="_DetectedJavaVersion" />
-      <Output TaskParameter="JavaVersionFull" PropertyName="_DetectedJavaVersionFull" />
-    </DetectJavaVersion>
-
-    <!-- Log Java Home and version -->
-    <Message Text="[OceanAndroid] Java Home: $(JavaHome)" Importance="high" />
-    <Message Text="[OceanAndroid] Java Version: $(_DetectedJavaVersionFull) (JDK $(_DetectedJavaVersion))"
-             Importance="high"
-             Condition="'$(_DetectedJavaVersion)' != ''" />
-
-    <!-- Warn if version is too old (below JDK 17) -->
-    <Warning Text="[OceanAndroid] JDK $(_DetectedJavaVersion) detected. Supported range is JDK 17-24 for AGP 8.x / Gradle compatibility. Build may fail."
-             Condition="'$(_DetectedJavaVersion)' != '' AND $([System.Int32]::Parse('$(_DetectedJavaVersion)')) &lt; 17" />
-
-    <!-- Warn if version is too new (above JDK 24) -->
-    <Warning Text="[OceanAndroid] JDK $(_DetectedJavaVersion) detected. JDK 25+ is NOT supported by Gradle yet. Supported range is JDK 17-24."
-             Condition="'$(_DetectedJavaVersion)' != '' AND $([System.Int32]::Parse('$(_DetectedJavaVersion)')) &gt; 24" />
-
   </Target>
 
   <!-- Build Target - invokes Gradle -->
