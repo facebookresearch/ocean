@@ -16,6 +16,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -116,7 +117,8 @@ bool TestKdTree::testNearestNeighborInteger(const double testDuration)
 	const std::vector<unsigned int> dimensions = {2u, 3u, 5u, 10u, 32u, 64u};
 #endif
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int e = 0u; e < static_cast<unsigned int>(elements.size()); ++e)
 	{
@@ -129,22 +131,15 @@ bool TestKdTree::testNearestNeighborInteger(const double testDuration)
 		for (unsigned int d = 0u; d < static_cast<unsigned int>(dimensions.size()); ++d)
 		{
 			Log::info().newLine(d != 0u);
-			allSucceeded = testNearestNeighborInteger<T>(elements[e], dimensions[d], testDuration) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testNearestNeighborInteger<T>(elements[e], dimensions[d], testDuration));
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template<typename T>
@@ -175,7 +170,8 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 		pointers.push_back(elements.data() + n * dimension);
 	}
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
+
 	std::vector<std::vector<T>> randomsSet(iterations, std::vector<T>(dimension));
 
 	T dummyValue = 0.0;
@@ -263,17 +259,11 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 
 			ocean_assert(nearest);
 
-			if (distance != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, distance, T(0));
 
 			for (unsigned int d = 0u; d < dimension; ++d)
 			{
-				if (nearest[d] != value[d])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, nearest[d], value[d]);
 			}
 		}
 
@@ -314,7 +304,7 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 			{
 				if (std::fabs(ssdBest - distance) > 1e-12f)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -333,7 +323,7 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 
 					if (std::fabs(ssdTest - ssdBest) > 1e-12f)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					break;
@@ -360,7 +350,7 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 		Log::info() << "KD boost factor: Average: " << String::toAString(ssdPerformanceNearestNeighbor.averageMseconds() / performanceNearestNeighbor.averageMseconds(), 2u) << "x";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template<typename T>
@@ -380,7 +370,8 @@ bool TestKdTree::testRadiusSearchInteger(const double testDuration)
 	const std::vector<unsigned int> dimensions = {2u, 3u, 5u, 10u, 32u, 64u};
 #endif
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int e = 0u; e < static_cast<unsigned int>(elements.size()); ++e)
 	{
@@ -393,22 +384,15 @@ bool TestKdTree::testRadiusSearchInteger(const double testDuration)
 		for (unsigned int d = 0u; d < static_cast<unsigned int>(dimensions.size()); ++d)
 		{
 			Log::info().newLine(d != 0u);
-			allSucceeded = testRadiusSearchInteger<T>(elements[e], dimensions[d], testDuration) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testRadiusSearchInteger<T>(elements[e], dimensions[d], testDuration));
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -439,7 +423,8 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 		pointers.push_back(elements.data() + n * dimension);
 	}
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
+
 	std::vector<std::vector<T>> randomsSet(iterations, std::vector<T>(dimension));
 
 	T dummyValue = 0.0;
@@ -535,7 +520,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 			}
 			if (!foundSelf)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -549,7 +534,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 			const T* value = randoms.data();
 
-			const T* randomValue = pointers[RandomI::random(number - 1)];
+			const T* randomValue = pointers[RandomI::random(randomGenerator, number - 1)];
 
 			T radius = 0.0;
 			for (unsigned int d = 0u; d < dimension; ++d)
@@ -568,7 +553,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				// make sure all pointers are valid
 				if (neighborValue < elements.data() || neighborValue >= elements.data() + number * dimension || ((neighborValue - elements.data()) % dimension) != 0)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				// make sure no pointer is returned twice
@@ -578,7 +563,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				T ssd = 0;
@@ -588,7 +573,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				}
 				if (!NumericT<T>::isBelow(ssd, radius))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -609,7 +594,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				}
 				if (!NumericT<T>::isAbove(ssd, radius))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -624,7 +609,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 			const T* value = randoms.data();
 
-			const T* randomValue = pointers[RandomI::random(number - 1)];
+			const T* randomValue = pointers[RandomI::random(randomGenerator, number - 1)];
 
 			T radius = 0.0;
 			for (unsigned int d = 0u; d < dimension; ++d)
@@ -632,13 +617,10 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				radius += sqr(value[d] - randomValue[d]);
 			}
 
-			const size_t maxNeighbors = RandomI::random((unsigned int)(neighbors.size()) - 1u);
+			const size_t maxNeighbors = RandomI::random(randomGenerator, (unsigned int)(neighbors.size()) - 1u);
 			const size_t foundNeighbors = kdTree.radiusSearch(value, radius, neighbors.data(), maxNeighbors);
 
-			if (foundNeighbors > maxNeighbors)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, foundNeighbors, maxNeighbors);
 
 			for (unsigned int n = 0u; n < foundNeighbors; ++n)
 			{
@@ -647,7 +629,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				// make sure all pointers are valid
 				if (neighborValue < elements.data() || neighborValue >= elements.data() + number * dimension || ((neighborValue - elements.data()) % dimension) != 0)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				T ssd = 0;
@@ -657,7 +639,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				}
 				if (!NumericT<T>::isBelow(ssd, radius))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -672,7 +654,7 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 		Log::info() << "KD boost factor: Average: " << String::toAString(ssdPerformanceRadiusSearch.averageMseconds() / performanceRadiusSearch.averageMseconds(), 2u) << "x";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

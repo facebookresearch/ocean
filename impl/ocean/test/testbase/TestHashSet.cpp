@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <set>
 #include <unordered_set>
@@ -74,72 +75,72 @@ TEST(TestHashSet, MultipleIntegers)
 
 bool TestHashSet::testSingleIntegers(const double testDuration)
 {
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testPerformanceSingleIntegers(100u, 10u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100u, 10u, testDuration));
 	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(100u, 30u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100u, 30u, testDuration));
 	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(100u, 50u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100u, 50u, testDuration));
 	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(100u, 80u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPerformanceSingleIntegers(1000u, 10u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(1000u, 30u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(1000u, 50u, testDuration) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(1000u, 80u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100u, 80u, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPerformanceSingleIntegers(100000u, 10u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(1000u, 10u, testDuration));
 	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(100000u, 30u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(1000u, 30u, testDuration));
 	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(100000u, 50u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(1000u, 50u, testDuration));
 	Log::info() << " ";
-	allSucceeded = testPerformanceSingleIntegers(100000u, 80u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(1000u, 80u, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = validationStaticCapacitySingleIntegers(100u, 10u, testDuration) && allSucceeded;
-	allSucceeded = validationStaticCapacitySingleIntegers(100u, 30u, testDuration) && allSucceeded;
-	allSucceeded = validationStaticCapacitySingleIntegers(100u, 50u, testDuration) && allSucceeded;
-	allSucceeded = validationStaticCapacitySingleIntegers(100u, 70u, testDuration) && allSucceeded;
-	allSucceeded = validationStaticCapacitySingleIntegers(100u, 90u, testDuration) && allSucceeded;
-	allSucceeded = validationStaticCapacitySingleIntegers(100u, 100u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100000u, 10u, testDuration));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100000u, 30u, testDuration));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100000u, 50u, testDuration));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testPerformanceSingleIntegers(100000u, 80u, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = validationDynamicCapacitySingleIntegers(100u, 200u, testDuration) && allSucceeded;
-	allSucceeded = validationDynamicCapacitySingleIntegers(100u, 100u, testDuration) && allSucceeded;
-	allSucceeded = validationDynamicCapacitySingleIntegers(100u, 50u, testDuration) && allSucceeded;
-	allSucceeded = validationDynamicCapacitySingleIntegers(100u, 10u, testDuration) && allSucceeded;
-	allSucceeded = validationDynamicCapacitySingleIntegers(100u, 0u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, validationStaticCapacitySingleIntegers(100u, 10u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationStaticCapacitySingleIntegers(100u, 30u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationStaticCapacitySingleIntegers(100u, 50u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationStaticCapacitySingleIntegers(100u, 70u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationStaticCapacitySingleIntegers(100u, 90u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationStaticCapacitySingleIntegers(100u, 100u, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, validationDynamicCapacitySingleIntegers(100u, 200u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationDynamicCapacitySingleIntegers(100u, 100u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationDynamicCapacitySingleIntegers(100u, 50u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationDynamicCapacitySingleIntegers(100u, 10u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationDynamicCapacitySingleIntegers(100u, 0u, testDuration));
+
+	return validation.succeeded();
 }
 
 bool TestHashSet::testMultipleIntegers(const double testDuration)
 {
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = validationMultipleIntegers(100u, 10u, testDuration) && allSucceeded;
-	allSucceeded = validationMultipleIntegers(100u, 30u, testDuration) && allSucceeded;
-	allSucceeded = validationMultipleIntegers(100u, 50u, testDuration) && allSucceeded;
-	allSucceeded = validationMultipleIntegers(100u, 70u, testDuration) && allSucceeded;
-	allSucceeded = validationMultipleIntegers(100u, 90u, testDuration) && allSucceeded;
-	allSucceeded = validationMultipleIntegers(100u, 100u, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, validationMultipleIntegers(100u, 10u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationMultipleIntegers(100u, 30u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationMultipleIntegers(100u, 50u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationMultipleIntegers(100u, 70u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationMultipleIntegers(100u, 90u, testDuration));
+	OCEAN_EXPECT_TRUE(validation, validationMultipleIntegers(100u, 100u, testDuration));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const unsigned int occupancy, const double testDuration)
@@ -149,7 +150,8 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 
 	Log::info() << "Test performance " << String::insertCharacter(String::toAString(number), ',', 3, false) << " (single) elements with " << occupancy << "% occupancy:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using Table = HashSet<unsigned int>;
 	using ElementSet = std::set<unsigned int>;
@@ -164,7 +166,7 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 	const unsigned int numberElements = number * occupancy / 100;
 	while (addElements.size() < numberElements)
 	{
-		const unsigned int randomNumber = RandomI::random(10u * number);
+		const unsigned int randomNumber = RandomI::random(randomGenerator, 10u * number);
 
 		if (tmpElementSet.find(randomNumber) == tmpElementSet.end())
 		{
@@ -178,7 +180,7 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 
 	while (removeElements.size() < addElements.size() / 10)
 	{
-		const unsigned int randomIndex = RandomI::random((unsigned int)(addElements.size()) - 1u);
+		const unsigned int randomIndex = RandomI::random(randomGenerator, (unsigned int)(addElements.size()) - 1u);
 		const unsigned int randomNumber = addElements[randomIndex];
 
 		if (tmpElementSet.find(randomNumber) == tmpElementSet.end())
@@ -205,7 +207,7 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 
 			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i)
 				if (elementSet.find(*i) == elementSet.end())
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i)
 				elementSet.erase(*i);
@@ -221,7 +223,7 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 
 			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i)
 				if (!table.find(*i))
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i)
 				table.remove(*i);
@@ -238,7 +240,7 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 
 			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i)
 				if (elementSet.find(*i) == elementSet.end())
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i)
 				elementSet.erase(*i);
@@ -263,12 +265,9 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 		Log::info() << "Boost factor: Best: " << String::toAString(unorderedBoostBest, 1u) << "x, worst: " << String::toAString(unorderedBoostWorst, 1u) << "x, average: " << String::toAString(unorderedBoostAverage, 1u) << "x";
 	}
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int number, const unsigned int occupancy, const double testDuration)
@@ -279,6 +278,7 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 	Log::info() << "Test validation " << number << " (single) elements with " << occupancy << "% occupancy:";
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using Table = HashSet<unsigned int>;
 	using Elements = std::vector<unsigned int>;
@@ -292,15 +292,13 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 	unsigned int tableSize = 0u;
 	unsigned int tableCapacity = number;
 
-	bool succeeded = true;
-
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		if (!table.isEmpty())
 		{
-			succeeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -308,13 +306,13 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 		{
 			if (tableSize != table.size())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			if (tableCapacity != table.capacity())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -326,7 +324,7 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 			const bool insertResult = table.insert(randomValue, true, false);
 			if (!insertResult)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -336,7 +334,7 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
 				if (!table.find(*i))
 				{
-					succeeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -347,13 +345,13 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 		{
 			if (tableSize != table.size())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			if (tableCapacity != table.capacity())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -365,21 +363,21 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 			const bool findResultBefore = table.find(randomValue);
 			if (!findResultBefore)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			const bool removeResult = table.remove(randomValue);
 			if (!removeResult)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			const bool findResultAfter = table.find(randomValue);
 			if (findResultAfter)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -389,7 +387,7 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
 				if (!table.find(*i))
 				{
-					succeeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -397,14 +395,11 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 			--tableSize;
 		}
 	}
-	while (succeeded && !startTimestamp.hasTimePassed(testDuration));
+	while (validation.succeededSoFar() && !startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int number, const unsigned int capacity, const double testDuration)
@@ -414,6 +409,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 	Log::info() << "Test validation " << number << " (single) elements with " << capacity << " initial capacity:";
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using Table = HashSet<unsigned int>;
 	using Elements = std::vector<unsigned int>;
@@ -426,15 +422,13 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 
 	unsigned int tableSize = 0u;
 
-	bool succeeded = true;
-
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		if (!table.isEmpty())
 		{
-			succeeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -444,7 +438,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 		{
 			if (tableSize != table.size())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -456,7 +450,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 			const bool insertResult = table.insert(randomValue, true, true);
 			if (!insertResult)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -466,7 +460,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
 				if (!table.find(*i))
 				{
-					succeeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -477,7 +471,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 		{
 			if (tableSize != table.size())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -489,21 +483,21 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 			const bool findResultBefore = table.find(randomValue);
 			if (!findResultBefore)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			const bool removeResult = table.remove(randomValue);
 			if (!removeResult)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			const bool findResultAfter = table.find(randomValue);
 			if (findResultAfter)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -513,7 +507,7 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
 				if (!table.find(*i))
 				{
-					succeeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -521,14 +515,11 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 			--tableSize;
 		}
 	}
-	while (succeeded && !startTimestamp.hasTimePassed(testDuration));
+	while (validation.succeededSoFar() && !startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestHashSet::validationMultipleIntegers(const unsigned int number, const unsigned int occupancy, const double testDuration)
@@ -539,6 +530,7 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 	Log::info() << "Test validation " << number << " (multiple) elements with " << occupancy << "% occupancy:";
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using Table = HashSet<unsigned int>;
 	using Elements = std::vector<unsigned int>;
@@ -552,15 +544,13 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 	unsigned int tableSize = 0u;
 	unsigned int tableCapacity = number;
 
-	bool succeeded = true;
-
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		if (!table.isEmpty())
 		{
-			succeeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -568,13 +558,13 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 		{
 			if (tableSize != table.size())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			if (tableCapacity != table.capacity())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -583,7 +573,7 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 			const bool insertResult = table.insert(randomValue, false, false);
 			if (!insertResult)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -593,7 +583,7 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
 				if (!table.find(*i))
 				{
-					succeeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -604,13 +594,13 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 		{
 			if (tableSize != table.size())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			if (tableCapacity != table.capacity())
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -622,14 +612,14 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 			const bool findResultBefore = table.find(randomValue);
 			if (!findResultBefore)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			const bool removeResult = table.remove(randomValue);
 			if (!removeResult)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -639,14 +629,14 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 			const bool findResultAfter = table.find(randomValue) == (elementSet.find(randomValue) != elementSet.end());
 			if (!findResultAfter)
 			{
-				succeeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
 				if (!table.find(*i))
 				{
-					succeeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -654,14 +644,11 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 			--tableSize;
 		}
 	}
-	while (succeeded && !startTimestamp.hasTimePassed(testDuration));
+	while (validation.succeededSoFar() && !startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 }

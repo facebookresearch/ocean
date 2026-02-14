@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -64,20 +65,22 @@ bool TestDateTime::testConversion(const double testDuration)
 
 	Log::info() << "DateTime to Timestamp conversion test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	double dummyValue0 = 0;
 	unsigned int dummyValue1 = 0u;
 
 	HighPerformanceStatistic performanceForward, performanceBackward;
 
-	if (DateTime::date2timestamp(2014u, 2u, 28u, 0u, 0u, 0u) == -1.0 || DateTime::date2timestamp(2014u, 2u, 29u, 0u, 0u, 0u) != -1.0
-		|| DateTime::date2timestamp(2012u, 2u, 28u, 0u, 0u, 0u) == -1.0 || DateTime::date2timestamp(2012u, 2u, 29u, 0u, 0u, 0u) == -1.0
-		|| DateTime::date2timestamp(2012u, 2u, 30u, 0u, 0u, 0u) != -1.0 || DateTime::date2timestamp(2012u, 2u, 31u, 0u, 0u, 0u) != -1.0
-		|| DateTime::date2timestamp(2014u, 11u, 30u, 0u, 0u, 0u) == -1.0 || DateTime::date2timestamp(2014u, 11u, 31u, 0u, 0u, 0u) != -1.0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_NOT_EQUAL(validation, DateTime::date2timestamp(2014u, 2u, 28u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_EQUAL(validation, DateTime::date2timestamp(2014u, 2u, 29u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_NOT_EQUAL(validation, DateTime::date2timestamp(2012u, 2u, 28u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_NOT_EQUAL(validation, DateTime::date2timestamp(2012u, 2u, 29u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_EQUAL(validation, DateTime::date2timestamp(2012u, 2u, 30u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_EQUAL(validation, DateTime::date2timestamp(2012u, 2u, 31u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_NOT_EQUAL(validation, DateTime::date2timestamp(2014u, 11u, 30u, 0u, 0u, 0u), -1.0);
+	OCEAN_EXPECT_EQUAL(validation, DateTime::date2timestamp(2014u, 11u, 31u, 0u, 0u, 0u), -1.0);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -101,22 +104,19 @@ bool TestDateTime::testConversion(const double testDuration)
 			localSucceeded = timeString == _timeString && dateString == _dateString;
 		}
 
-		if (!localSucceeded)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, localSucceeded);
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			year = RandomI::random(1970u, 2037u);
-			month = RandomI::random(1u, 12u);
-			day = RandomI::random(1u, 28u);
+			year = RandomI::random(randomGenerator, 1970u, 2037u);
+			month = RandomI::random(randomGenerator, 1u, 12u);
+			day = RandomI::random(randomGenerator, 1u, 28u);
 
-			hour = RandomI::random(0u, 23u);
-			minute = RandomI::random(0u, 59u);
-			second = RandomI::random(0u, 59u);
+			hour = RandomI::random(randomGenerator, 0u, 23u);
+			minute = RandomI::random(randomGenerator, 0u, 59u);
+			second = RandomI::random(randomGenerator, 0u, 59u);
 
-			millisecond = RandomI::random(0u, 999u);
+			millisecond = RandomI::random(randomGenerator, 0u, 999u);
 
 			unsigned int _year, _month, _day, _hour, _minute, _second, _millisecond;
 
@@ -126,21 +126,24 @@ bool TestDateTime::testConversion(const double testDuration)
 			ocean_assert(year == _year && month == _month && day == _day);
 			ocean_assert(hour == _hour && minute == _minute && second == _second && millisecond == _millisecond);
 
-			if (year != _year || month != _month || day != _day || hour != _hour || minute != _minute || second != _second || millisecond != _millisecond)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, year, _year);
+			OCEAN_EXPECT_EQUAL(validation, month, _month);
+			OCEAN_EXPECT_EQUAL(validation, day, _day);
+			OCEAN_EXPECT_EQUAL(validation, hour, _hour);
+			OCEAN_EXPECT_EQUAL(validation, minute, _minute);
+			OCEAN_EXPECT_EQUAL(validation, second, _second);
+			OCEAN_EXPECT_EQUAL(validation, millisecond, _millisecond);
 		}
 
-		year = RandomI::random(1970u, 2037u);
-		month = RandomI::random(1u, 12u);
-		day = RandomI::random(1u, 28u);
+		year = RandomI::random(randomGenerator, 1970u, 2037u);
+		month = RandomI::random(randomGenerator, 1u, 12u);
+		day = RandomI::random(randomGenerator, 1u, 28u);
 
-		hour = RandomI::random(0u, 23u);
-		minute = RandomI::random(0u, 59u);
-		second = RandomI::random(0u, 59u);
+		hour = RandomI::random(randomGenerator, 0u, 23u);
+		minute = RandomI::random(randomGenerator, 0u, 59u);
+		second = RandomI::random(randomGenerator, 0u, 59u);
 
-		millisecond = RandomI::random(0u, 999u);
+		millisecond = RandomI::random(randomGenerator, 0u, 999u);
 
 		performanceForward.start();
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -162,23 +165,16 @@ bool TestDateTime::testConversion(const double testDuration)
 	Log::info() << "Forward performance: " << performanceForward.averageMseconds() << "mys";
 	Log::info() << "Backward performance: " << performanceBackward.averageMseconds() << "mys";
 
-	if (allSucceeded)
+	if (dummyValue0 >= 1.0 && dummyValue1 >= 1u) // ensuring that dummy values are used
 	{
-		if (dummyValue0 >= 1.0 && dummyValue1 >= 1u) // ensuring that dummy values are used
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: succeeded.";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

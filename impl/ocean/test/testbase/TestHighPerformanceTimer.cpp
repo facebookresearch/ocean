@@ -13,6 +13,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <cmath>
 
@@ -84,7 +85,7 @@ bool TestHighPerformanceTimer::testPrecision()
 
 	Log::info() << "The timer has " << String::insertCharacter(String::toAString(HighPerformanceTimer::precision()), ',', 3, false) << " ticks per second";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// we determine how long a thread actually sleeps if 1ms is intended (some platforms sleep significantly longer e.g., 10ms)
 
@@ -112,10 +113,7 @@ bool TestHighPerformanceTimer::testPrecision()
 
 		Log::info() << "Difference high performance timer to timestamp: " << (fabs(2.0 - double(stopTimestamp - startTimestamp))) * 100.0 / 2.0 << "%";
 
-		if (fabs(2.0 - double(stopTimestamp - startTimestamp)) > 0.2)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, fabs(2.0 - double(stopTimestamp - startTimestamp)), 0.2);
 	}
 
 	{
@@ -135,16 +133,9 @@ bool TestHighPerformanceTimer::testPrecision()
 		Log::info() << "Performance statistic for 10 iterations for 1.5 seconds: " << performance.average() << "s";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHighPerformanceStatistic::testReset()
@@ -152,40 +143,24 @@ bool TestHighPerformanceStatistic::testReset()
 	Log::info() << "Test Reset:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	HighPerformanceStatistic highPerformanceStatistic;
 
-	if (highPerformanceStatistic.measurements() != 0u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, highPerformanceStatistic.measurements(), size_t(0));
 
 	highPerformanceStatistic.start();
 	highPerformanceStatistic.stop();
 
-	if (highPerformanceStatistic.measurements() != 1u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, highPerformanceStatistic.measurements(), size_t(1));
 
 	highPerformanceStatistic.reset();
 
-	if (highPerformanceStatistic.measurements() != 0u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, highPerformanceStatistic.measurements(), size_t(0));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
