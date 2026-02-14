@@ -1826,7 +1826,7 @@ bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 {
 	Log::info() << "One random parameter test:";
 
-	Validation validation(randomGenerator);;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 1000000u;
 
@@ -2403,8 +2403,8 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 	{
 		for (unsigned int i = 0u; i < 10u; ++i)
 		{
-			const int start = RandomI::random(-500, 500);
-			const int number = RandomI::random(120, 1000);
+			const int start = RandomI::random(randomGenerator, -500, 500);
+			const int number = RandomI::random(randomGenerator, 120, 1000);
 
 			const int stop = start + number - 1;
 
@@ -2448,8 +2448,8 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 	{
 		for (unsigned int i = 0u; i < 10u; ++i)
 		{
-			const unsigned int start = RandomI::random(0u, 500u);
-			const unsigned int number = RandomI::random(120u, 1000u);
+			const unsigned int start = RandomI::random(randomGenerator, 0u, 500u);
+			const unsigned int number = RandomI::random(randomGenerator, 120u, 1000u);
 
 			const unsigned int stop = start + number - 1u;
 
@@ -2578,7 +2578,8 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 
 		// now, we check a random maximal value:
 
-		const unsigned int maxValue = RandomI::random(1u, std::max(1u, RandomI::random32()));
+		const unsigned int randomMax = std::max(1u, RandomI::random32(randomGenerator));
+		const unsigned int maxValue = RandomI::random(randomGenerator, 1u, randomMax);
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
@@ -2653,7 +2654,8 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 
 		// now, we check a random maximal value:
 
-		const unsigned int maxValue = RandomI::random(2u, std::max(2u, RandomI::random32(randomGenerator)));
+		const unsigned int randomMax = std::max(2u, RandomI::random32(randomGenerator));
+		const unsigned int maxValue = RandomI::random(randomGenerator, 2u, randomMax);
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{

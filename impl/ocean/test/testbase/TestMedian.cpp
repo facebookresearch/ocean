@@ -428,25 +428,18 @@ bool TestMedian::testMedian(const double testDuration)
 	Log::info() << "Median test with \"" << TypeNamer::name<T>() << "\":";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const unsigned number : {1u, 10u, 101u, 1000u, 10001u, 100000u})
 	{
-		allSucceeded = testMedian<T>(number, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testMedian<T>(number, testDuration));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

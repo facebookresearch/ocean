@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <thread>
 
@@ -151,7 +152,7 @@ bool TestLock::testTemplatedLock()
 {
 	Log::info() << "Testing templated lock:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	static_assert(sizeof(Empty) == 1, "Invalid data type!"); // empty classes always have 1 byte
 
@@ -160,12 +161,12 @@ bool TestLock::testTemplatedLock()
 
 	if constexpr (sizeof(TemplatedLock<true>) <= 1)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if constexpr (sizeof(TemplatedLock<false>) != 1)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	static_assert(sizeof(Object<true>) > 1, "Invalid data type!");
@@ -173,24 +174,17 @@ bool TestLock::testTemplatedLock()
 
 	if constexpr (sizeof(Object<true>) <= 1)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if constexpr (sizeof(Object<false>) != 1)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 void TestLock::threadFunction(Lock& firstLock, Lock& secondLock, unsigned int& counter, const unsigned int iterations)
@@ -206,6 +200,8 @@ void TestLock::threadFunction(Lock& firstLock, Lock& secondLock, unsigned int& c
 bool TestLock::testDualScopedLock()
 {
 	Log::info() << "Testing dual scoped lock object:";
+
+	Validation validation;
 
 	Lock lockA;
 	Lock lockB;
@@ -236,14 +232,11 @@ bool TestLock::testDualScopedLock()
 
 	const unsigned int expectedCount = numberThreads * iterationsPerThread;
 
-	if (counter != expectedCount)
-	{
-		Log::info() << "Validation: FAILED! Expected " << expectedCount << " but got " << counter;
-		return false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, counter, expectedCount);
 
-	Log::info() << "Validation: succeeded.";
-	return true;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }

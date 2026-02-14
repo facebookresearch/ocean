@@ -7,11 +7,13 @@
 
 #include "ocean/test/testbase/TestMoveBehavior.h"
 
-#include "ocean/base/Timestamp.h"
+#include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
+#include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -243,26 +245,24 @@ bool TestMoveBehavior::testDefaultObject(const double testDuration)
 
 	OperationCounter::get().reset();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int numberObjects = RandomI::random(10u, 1000u);
+		const unsigned int numberObjects = RandomI::random(randomGenerator, 10u, 1000u);
 
 		{
 			Objects objects;
 
 			for (unsigned int n = 0u; n < numberObjects; ++n)
 			{
-				objects.emplace_back(RandomI::random(-100, 100));
+				objects.emplace_back(RandomI::random(randomGenerator, -100, 100));
 			}
 
-			if (objects.size() != numberObjects)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, objects.size(), size_t(numberObjects));
 		}
 
 		{
@@ -270,13 +270,10 @@ bool TestMoveBehavior::testDefaultObject(const double testDuration)
 
 			for (unsigned int n = 0u; n < numberObjects; ++n)
 			{
-				objects.push_back(Object(RandomI::random(-100, 100)));
+				objects.push_back(Object(RandomI::random(randomGenerator, -100, 100)));
 			}
 
-			if (objects.size() != numberObjects)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, objects.size(), size_t(numberObjects));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -289,16 +286,9 @@ bool TestMoveBehavior::testDefaultObject(const double testDuration)
 
 	OperationCounter::get().reset();
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (or expected due to the std standard).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMoveBehavior::testNonExceptObject(const double testDuration)
@@ -307,26 +297,24 @@ bool TestMoveBehavior::testNonExceptObject(const double testDuration)
 
 	OperationCounter::get().reset();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int numberObjects = RandomI::random(10u, 1000u);
+		const unsigned int numberObjects = RandomI::random(randomGenerator, 10u, 1000u);
 
 		{
 			NonExceptObjects nonExceptObjects;
 
 			for (unsigned int n = 0u; n < numberObjects; ++n)
 			{
-				nonExceptObjects.emplace_back(RandomI::random(-100, 100));
+				nonExceptObjects.emplace_back(RandomI::random(randomGenerator, -100, 100));
 			}
 
-			if (nonExceptObjects.size() != numberObjects)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, nonExceptObjects.size(), size_t(numberObjects));
 		}
 
 		{
@@ -334,13 +322,10 @@ bool TestMoveBehavior::testNonExceptObject(const double testDuration)
 
 			for (unsigned int n = 0u; n < numberObjects; ++n)
 			{
-				nonExceptObjects.push_back(NonExceptObject(RandomI::random(-100, 100)));
+				nonExceptObjects.push_back(NonExceptObject(RandomI::random(randomGenerator, -100, 100)));
 			}
 
-			if (nonExceptObjects.size() != numberObjects)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, nonExceptObjects.size(), size_t(numberObjects));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -351,28 +336,15 @@ bool TestMoveBehavior::testNonExceptObject(const double testDuration)
 	Log::info() << "Assign operator calls: " << OperationCounter::get().assignOperator();
 	Log::info() << "Move operator calls: " << OperationCounter::get().moveOperator();
 
-	if (OperationCounter::get().copyConstructor() != 0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, OperationCounter::get().copyConstructor(), size_t(0));
 
-	if (OperationCounter::get().assignOperator() != 0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, OperationCounter::get().assignOperator(), size_t(0));
 
 	OperationCounter::get().reset();
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
