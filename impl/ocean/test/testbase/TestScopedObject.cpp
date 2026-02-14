@@ -13,6 +13,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <functional>
 
@@ -128,7 +129,8 @@ bool TestScopedObject::testRuntime(const double testDuration)
 
 	const uint64_t uniqueId = Manager::get().uniqueId();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// testing the default release function
@@ -143,7 +145,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 
 		do
 		{
-			const unsigned int createObjects = RandomI::random(1u, 10u);
+			const unsigned int createObjects = RandomI::random(randomGenerator, 1u, 10u);
 
 			for (unsigned int n = 0u; n < createObjects; ++n)
 			{
@@ -157,7 +159,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 				}
 			}
 
-			const unsigned int releaseObjects = RandomI::random((unsigned int)(scopedObjects.size()));
+			const unsigned int releaseObjects = RandomI::random(randomGenerator, (unsigned int)(scopedObjects.size()));
 
 			for (unsigned int n = 0u; n < releaseObjects; ++n)
 			{
@@ -168,10 +170,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 
 		scopedObjects.clear();
 
-		if (Manager::get().hasObject(uniqueId))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Manager::get().hasObject(uniqueId));
 	}
 
 	{
@@ -187,7 +186,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 
 		do
 		{
-			const unsigned int createObjects = RandomI::random(1u, 10u);
+			const unsigned int createObjects = RandomI::random(randomGenerator, 1u, 10u);
 
 			for (unsigned int n = 0u; n < createObjects; ++n)
 			{
@@ -201,7 +200,7 @@ bool TestScopedObject::testRuntime(const double testDuration)
 				}
 			}
 
-			const unsigned int releaseObjects = RandomI::random((unsigned int)(scopedObjects.size()));
+			const unsigned int releaseObjects = RandomI::random(randomGenerator, (unsigned int)(scopedObjects.size()));
 
 			for (unsigned int n = 0u; n < releaseObjects; ++n)
 			{
@@ -212,22 +211,12 @@ bool TestScopedObject::testRuntime(const double testDuration)
 
 		scopedObjects.clear();
 
-		if (Manager::get().hasObject(uniqueId))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Manager::get().hasObject(uniqueId));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestScopedObject::testCompileTime(const double testDuration)
@@ -236,7 +225,8 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 	Log::info() << "Testing ScopedObject with compile time release function:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// testing object which needs to be released
@@ -253,7 +243,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		do
 		{
-			const unsigned int createObjects = RandomI::random(1u, 10u);
+			const unsigned int createObjects = RandomI::random(randomGenerator, 1u, 10u);
 
 			for (unsigned int n = 0u; n < createObjects; ++n)
 			{
@@ -267,7 +257,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 				}
 			}
 
-			const unsigned int releaseObjects = RandomI::random((unsigned int)(scopedObjects.size()));
+			const unsigned int releaseObjects = RandomI::random(randomGenerator, (unsigned int)(scopedObjects.size()));
 
 			for (unsigned int n = 0u; n < releaseObjects; ++n)
 			{
@@ -278,10 +268,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		scopedObjects.clear();
 
-		if (Manager::get().hasObject(uniqueId))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Manager::get().hasObject(uniqueId));
 	}
 
 	{
@@ -305,7 +292,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		do
 		{
-			const unsigned int createObjects = RandomI::random(1u, 10u);
+			const unsigned int createObjects = RandomI::random(randomGenerator, 1u, 10u);
 
 			for (unsigned int n = 0u; n < createObjects; ++n)
 			{
@@ -325,7 +312,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 			createdObjects += uint64_t(createObjects);
 
-			const unsigned int releaseObjects = RandomI::random((unsigned int)(scopedObjects.size()));
+			const unsigned int releaseObjects = RandomI::random(randomGenerator, (unsigned int)(scopedObjects.size()));
 
 			for (unsigned int n = 0u; n < releaseObjects; ++n)
 			{
@@ -336,10 +323,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		scopedObjects.clear();
 
-		if (Manager::get().numberObjects(uniqueId) != createdObjects)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, Manager::get().numberObjects(uniqueId), createdObjects);
 
 		for (Object* objectPointer : objectPoints)
 		{
@@ -359,7 +343,7 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		do
 		{
-			const size_t numberInvalidObjects = size_t(RandomI::random(10u));
+			const size_t numberInvalidObjects = size_t(RandomI::random(randomGenerator, 10u));
 
 			ScopedObjects scopedObjects;
 
@@ -367,63 +351,38 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 			{
 				scopedObjects.emplace_back(invalidValue);
 
-				if (scopedObjects.back().isValid())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, scopedObjects.back().isValid());
 			}
 
-			if (counterMap()[invalidValue] != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, counterMap()[invalidValue], size_t(0));
 
-			if (!scopedObjects.empty() && RandomI::random(1u) == 0u)
+			if (!scopedObjects.empty() && RandomI::boolean(randomGenerator))
 			{
 				scopedObjects.pop_back();
 			}
 
-			if (counterMap()[invalidValue] != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, counterMap()[invalidValue], size_t(0));
 
-			const int32_t validId = int32_t(RandomI::random(10u));
+			const int32_t validId = int32_t(RandomI::random(randomGenerator, 10u));
 
 			scopedObjects.emplace_back(validId);
 
-			if (!scopedObjects.back().isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, scopedObjects.back().isValid());
 
 			scopedObjects.clear();
 
-			if (counterMap()[int32_t(validId)] != 1)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, counterMap()[int32_t(validId)], size_t(1));
 
-			if (counterMap()[invalidValue] != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, counterMap()[invalidValue], size_t(0));
 
 			counterMap().clear();
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 TestScopedObject::Object* TestScopedObject::createObject(const uint64_t id)

@@ -12,6 +12,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <functional>
 
@@ -56,7 +57,7 @@ bool TestScopedFunction::testRelease()
 {
 	Log::info() << "Testing release functionality:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		// testing object
@@ -65,10 +66,7 @@ bool TestScopedFunction::testRelease()
 
 		for (size_t n = 0; n < 5; ++n)
 		{
-			if (object.number() != n)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, object.number(), n);
 
 			object.invokeFunction();
 		}
@@ -80,16 +78,10 @@ bool TestScopedFunction::testRelease()
 		{
 			const ScopedFunctionVoid scopedFunction(std::bind(&Object::invokeFunction, &object));
 
-			if (object.number() != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(0));
 		}
 
-		if (object.number() != 1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(1));
 	}
 
 	{
@@ -98,23 +90,14 @@ bool TestScopedFunction::testRelease()
 		{
 			ScopedFunctionVoid scopedFunction(std::bind(&Object::invokeFunction, &object));
 
-			if (object.number() != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(0));
 
 			scopedFunction.release();
 
-			if (object.number() != 1)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(1));
 		}
 
-		if (object.number() != 1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(1));
 	}
 
 	{
@@ -123,35 +106,19 @@ bool TestScopedFunction::testRelease()
 		{
 			ScopedFunctionVoid scopedFunction(std::bind(&Object::invokeFunction, &object));
 
-			if (object.number() != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(0));
 
 			scopedFunction.revoke();
 
-			if (object.number() != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(0));
 		}
 
-		if (object.number() != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, object.number(), size_t(0));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

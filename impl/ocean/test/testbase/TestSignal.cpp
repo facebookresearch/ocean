@@ -7,11 +7,13 @@
 
 #include "ocean/test/testbase/TestSignal.h"
 
+#include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <cmath>
 
@@ -234,39 +236,31 @@ TEST(TestSignal, SubsetSignalsTimeout)
 
 bool TestSignal::testSignalBasics()
 {
-	bool allSucceeded = true;
-
 	Log::info() << "Test signal basics:";
 	Log::info() << " ";
+
+	Validation validation;
 
 	Log::info() << "...resizing signals";
 	Signals signals;
 	signals.setSize(2u);
 
-	if (signals.size() == 2u)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, signals.size(), 2u);
 
 	Log::info() << "...releasing signals";
 
 	signals[0].release();
 	signals[1].release();
-	Log::info() << "Validation: succeeded.";
 
 	Log::info() << "...simple signal";
 
 	Signal signal;
 	signal.pulse();
 	signal.wait();
-	Log::info() << "Validation: succeeded.";
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSignal::testSingleSignalStandard()
@@ -274,7 +268,7 @@ bool TestSignal::testSingleSignalStandard()
 	Log::info() << "Test single signal (standard):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	Signal signal;
 	HighPerformanceTimer timer;
@@ -297,21 +291,11 @@ bool TestSignal::testSingleSignalStandard()
 
 	constexpr double threshold = 0.1;
 
-	if (error > threshold)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS_EQUAL(validation, error, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded with error " << error << "s.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED with error " << error << "s!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSignal::testSingleSignalTimeout()
@@ -319,7 +303,7 @@ bool TestSignal::testSingleSignalTimeout()
 	Log::info() << "Test single signal with timeout:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	Signal signal;
 	HighPerformanceTimer timer;
@@ -338,10 +322,7 @@ bool TestSignal::testSingleSignalTimeout()
 		const bool waitResult = signal.wait(timeoutMs);
 	const Timestamp stopTimestamp(true);
 
-	if (waitResult)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, waitResult);
 
 	const double actualInterval = double(stopTimestamp - startTimestamp);
 	ocean_assert(actualInterval >= 0.0);
@@ -354,21 +335,11 @@ bool TestSignal::testSingleSignalTimeout()
 	constexpr double threshold = 0.1;
 #endif
 
-	if (error > threshold)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS_EQUAL(validation, error, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded with error " << error << "s.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED with error " << error << "s!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSignal::testSingleSignalLoop()
@@ -376,7 +347,7 @@ bool TestSignal::testSingleSignalLoop()
 	Log::info() << "Test single signal with loop:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	Signal signal;
 	HighPerformanceTimer timer;
@@ -412,21 +383,11 @@ bool TestSignal::testSingleSignalLoop()
 	constexpr double threshold = 0.5;
 #endif
 
-	if (error > threshold)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS_EQUAL(validation, error, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded with error " << error << "s.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED with error " << error << "s!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSignal::testAsyncFunction(const double testDuration)
@@ -435,7 +396,8 @@ bool TestSignal::testAsyncFunction(const double testDuration)
 
 	Log::info() << "Test async function (pulse, wait, release):";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -446,18 +408,18 @@ bool TestSignal::testAsyncFunction(const double testDuration)
 			AsyncFunctionThread thread;
 
 			// let's sleep for a random time
-			unsigned int sleepTime = RandomI::random(20u);
+			unsigned int sleepTime = RandomI::random(randomGenerator, 20u);
 			if (sleepTime != 0u)
 			{
 				Thread::sleep(sleepTime);
 			}
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				thread.startAsyncFunction();
 
 				// let's sleep for a random time
-				sleepTime = RandomI::random(20u);
+				sleepTime = RandomI::random(randomGenerator, 20u);
 				if (sleepTime != 0u)
 				{
 					Thread::sleep(sleepTime);
@@ -470,24 +432,17 @@ bool TestSignal::testAsyncFunction(const double testDuration)
 	}
 	while (Timestamp(true) < startTimestamp + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSignal::testMultipleSignals()
 {
-	bool allSucceeded = true;
-
 	Log::info() << "Test multiple signals:";
 	Log::info() << " ";
+
+	Validation validation;
 
 	Signals signals(4);
 
@@ -518,15 +473,7 @@ bool TestSignal::testMultipleSignals()
 	signals.wait();
 	Timestamp stopTimestamp(true);
 
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.5) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS(validation, fabs(double(stopTimestamp - startTimestamp) - 2.5), 0.1);
 
 
 	Log::info() << "...with timeout";
@@ -543,19 +490,20 @@ bool TestSignal::testMultipleSignals()
 
 	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < 0.1)
 	{
-		Log::info() << "Validation: succeeded.";
+		// success, nothing to do
 	}
 	else
 	{
 #ifdef _ANDROID
 		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
 #else
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 #endif
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSignal::testSubsetSignalsStandard()
@@ -563,7 +511,7 @@ bool TestSignal::testSubsetSignalsStandard()
 	Log::info() << "Test subset signals (standard):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	HighPerformanceTimer timer;
 
@@ -627,23 +575,12 @@ bool TestSignal::testSubsetSignalsStandard()
 		}
 	}
 
-	if (error > threshold)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS_EQUAL(validation, error, threshold);
 
 	Log::info() << " ";
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded with error " << error << "s.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED with error " << error << "s!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSignal::testSubsetSignalsTimeout()
@@ -651,7 +588,7 @@ bool TestSignal::testSubsetSignalsTimeout()
 	Log::info() << "Test subset signals with timeout:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	HighPerformanceTimer timer;
 
@@ -723,23 +660,12 @@ bool TestSignal::testSubsetSignalsTimeout()
 		}
 	}
 
-	if (error > threshold)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS_EQUAL(validation, error, threshold);
 
 	Log::info() << " ";
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded with error " << error << "s.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED with error " << error << "s!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

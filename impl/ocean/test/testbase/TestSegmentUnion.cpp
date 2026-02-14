@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <stddef.h>
 
@@ -138,7 +139,8 @@ bool TestSegmentUnion::testUnionSize(const double testDuration)
 	// thus, we can simply use an array and set elements of an array to 1 if they are covered by a segment
 	// finally, we count the elements with 1 and have the length
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -148,14 +150,14 @@ bool TestSegmentUnion::testUnionSize(const double testDuration)
 		SegmentUnion<T> segmentUnion;
 
 		// we select a random amount of segments
-		const unsigned int segments = RandomI::random(25u);
+		const unsigned int segments = RandomI::random(randomGenerator, 25u);
 
 		for (unsigned int n = 0u; n < segments; ++n)
 		{
 			// we select a random segment [startPosition, stopPosition] and we fill the corresponding elements
 
-			const int startPosition = RandomI::random(-1000, 999);
-			const int stopPosition = RandomI::random(startPosition + 1, 1000);
+			const int startPosition = RandomI::random(randomGenerator, -1000, 999);
+			const int stopPosition = RandomI::random(randomGenerator, startPosition + 1, 1000);
 
 			if (testElements.isEmpty())
 			{
@@ -187,23 +189,13 @@ bool TestSegmentUnion::testUnionSize(const double testDuration)
 
 		const T unionSize = segmentUnion.unionSize();
 
-		if (unionSize != T(activeElements))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, unionSize, T(activeElements));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -217,7 +209,8 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 	// thus, we can simply use an array and set elements of an array to 1 if they are covered by a segment
 	// finally, we count the elements with 1 and have the length
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -227,14 +220,14 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 		SegmentUnion<T> segmentUnion;
 
 		// we select a random amount of segments
-		const unsigned int segments = RandomI::random(25u);
+		const unsigned int segments = RandomI::random(randomGenerator, 25u);
 
 		for (unsigned int n = 0u; n < segments; ++n)
 		{
 			// we select a random segment [startPosition, stopPosition] and we fill the corresponding elements
 
-			const int startPosition = RandomI::random(-1000, 999);
-			const int stopPosition = RandomI::random(startPosition + 1, 1000);
+			const int startPosition = RandomI::random(randomGenerator, -1000, 999);
+			const int stopPosition = RandomI::random(randomGenerator, startPosition + 1, 1000);
 
 			if (testElements.isEmpty())
 			{
@@ -251,8 +244,8 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 
 		// now we select a range randomly
 
-		const int rangeStartPosition = RandomI::random(-1000, 999);
-		const int rangeStopPosition = RandomI::random(rangeStartPosition + 1, 1000);
+		const int rangeStartPosition = RandomI::random(randomGenerator, -1000, 999);
+		const int rangeStopPosition = RandomI::random(randomGenerator, rangeStartPosition + 1, 1000);
 
 		// we invalidate every pixel outside the range
 
@@ -288,7 +281,7 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 
 				if (segmentStart == testElements.endIndex())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -300,7 +293,7 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 
 				if (i->first != T(segmentStart) || i->second != T(segmentStop))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -311,30 +304,20 @@ bool TestSegmentUnion::testIntersection(const double testDuration)
 			{
 				if (testElements[i] != 0u)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 		else
 		{
-			if (intersectionUnion)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !intersectionUnion);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -348,7 +331,8 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 	// thus, we can simply use an array and set elements of an array to 1 if they are covered by a segment
 	// finally, we count the elements with 1 and have the length
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -358,14 +342,14 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 		SegmentUnion<T> segmentUnion;
 
 		// we select a random amount of segments
-		const unsigned int segments = RandomI::random(25u);
+		const unsigned int segments = RandomI::random(randomGenerator, 25u);
 
 		for (unsigned int n = 0u; n < segments; ++n)
 		{
 			// we select a random segment [startPosition, stopPosition] and we fill the corresponding elements
 
-			const int startPosition = RandomI::random(-1000, 999);
-			const int stopPosition = RandomI::random(startPosition + 1, 1000);
+			const int startPosition = RandomI::random(randomGenerator, -1000, 999);
+			const int stopPosition = RandomI::random(randomGenerator, startPosition + 1, 1000);
 
 			if (testElements.isEmpty())
 			{
@@ -418,23 +402,13 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 
 		const T maximalGap = segmentUnion.maximalGap();
 
-		if (T(maximalNonActiveElements) != maximalGap)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, T(maximalNonActiveElements), maximalGap);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -442,32 +416,19 @@ bool TestSegmentUnion::testBoolCastOperator()
 {
 	Log::info() << "Bool cast operator '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	SegmentUnion<T> segmentUnion;
 
-	if (segmentUnion)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, !segmentUnion);
 
 	segmentUnion.addSegment(T(5), T(10));
 
-	if (!segmentUnion)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, bool(segmentUnion));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

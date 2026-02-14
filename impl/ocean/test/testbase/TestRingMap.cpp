@@ -13,6 +13,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -99,27 +100,26 @@ bool TestRingMap::testInsert(const double testDuration)
 {
 	Log::info() << "Insert test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int capacity = RandomI::random(20, 2000);
+		const unsigned int capacity = RandomI::random(randomGenerator, 20, 2000);
 
 		StringMap stringMap(capacity);
 
 		for (unsigned int n = 0u; n < capacity; ++n)
 		{
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// moving the element
 
 				std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, std::move(element), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, std::move(element), false));
 			}
 			else
 			{
@@ -127,46 +127,32 @@ bool TestRingMap::testInsert(const double testDuration)
 
 				const std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, element, false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, element, false));
 			}
 
-			if (!stringMap.hasElement(n))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, stringMap.hasElement(n));
 		}
 
-		if (stringMap.size() != capacity || stringMap.isEmpty())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, stringMap.size(), size_t(capacity));
+		OCEAN_EXPECT_FALSE(validation, stringMap.isEmpty());
 
 		for (unsigned int n = 0u; n < capacity; ++n)
 		{
 			std::string element;
-			if (!stringMap.element(n, element) || element != String::toAString(n))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, stringMap.element(n, element) && element == String::toAString(n));
 		}
 
 		// now, we add more elements
 
 		for (unsigned int n = capacity; n < capacity * 2u; ++n)
 		{
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// moving the element
 
 				std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, std::move(element), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, std::move(element), false));
 			}
 			else
 			{
@@ -174,84 +160,58 @@ bool TestRingMap::testInsert(const double testDuration)
 
 				const std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, element, false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, element, false));
 			}
 
 			std::string element;
-			if (stringMap.element(n - capacity, element))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, stringMap.element(n - capacity, element));
 
-			if (!stringMap.element(n, element) || element != String::toAString(n))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, stringMap.element(n, element) && element == String::toAString(n));
 		}
 
 		for (unsigned int n = capacity; n < capacity * 2u; ++n)
 		{
 			std::string element;
-			if (!stringMap.element(n, element) || element != String::toAString(n))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, stringMap.element(n, element) && element == String::toAString(n));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRingMap::testChangeCapacity(const double testDuration)
 {
 	Log::info() << "Change capacity test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int capacity = RandomI::random(20u, 2000u);
+		const unsigned int capacity = RandomI::random(randomGenerator, 20u, 2000u);
 
 		StringMap stringMap;
 
-		if (stringMap.capacity() != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, stringMap.capacity(), size_t(0));
 
 		stringMap.setCapacity(capacity);
 
-		if (stringMap.capacity() != capacity)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, stringMap.capacity(), size_t(capacity));
 
 		for (unsigned int n = 0u; n < capacity; ++n)
 		{
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// moving the element
 
 				std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, std::move(element), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, std::move(element), false));
 			}
 			else
 			{
@@ -259,14 +219,11 @@ bool TestRingMap::testChangeCapacity(const double testDuration)
 
 				const std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, element, false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, element, false));
 			}
 		}
 
-		const unsigned int smallCapacity = RandomI::random(5u, capacity - 1u);
+		const unsigned int smallCapacity = RandomI::random(randomGenerator, 5u, capacity - 1u);
 		stringMap.setCapacity(smallCapacity);
 
 		for (unsigned int n = 0u; n < capacity; ++n)
@@ -275,22 +232,19 @@ bool TestRingMap::testChangeCapacity(const double testDuration)
 
 			if (hasElement && n < capacity - smallCapacity)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!hasElement && n >= capacity - smallCapacity)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
-		const unsigned int bigCapacity = RandomI::random(smallCapacity + 10u, 4000u);
+		const unsigned int bigCapacity = RandomI::random(randomGenerator, smallCapacity + 10u, 4000u);
 		stringMap.setCapacity(bigCapacity);
 
-		if (!stringMap.insertElement(capacity + 1u, String::toAString(capacity + 1u), false))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(capacity + 1u, String::toAString(capacity + 1u), false));
 
 		for (unsigned int n = 0u; n < capacity; ++n)
 		{
@@ -298,39 +252,34 @@ bool TestRingMap::testChangeCapacity(const double testDuration)
 
 			if (hasElement && n < capacity - smallCapacity)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!hasElement && n >= capacity - smallCapacity)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRingMap::testCheckout(const double testDuration)
 {
 	Log::info() << "Checkout test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int capacity = RandomI::random(20, 2000);
+		const unsigned int capacity = RandomI::random(randomGenerator, 20, 2000);
 
 		StringMap stringMap(capacity);
 
@@ -338,16 +287,13 @@ bool TestRingMap::testCheckout(const double testDuration)
 
 		for (unsigned int n = 0u; n < capacity; ++n)
 		{
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// moving the element
 
 				std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, std::move(element), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, std::move(element), false));
 			}
 			else
 			{
@@ -355,25 +301,19 @@ bool TestRingMap::testCheckout(const double testDuration)
 
 				const std::string element = String::toAString(n);
 
-				if (!stringMap.insertElement(n, element, false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, element, false));
 			}
 
 			for (unsigned int i = 0u; i <= n; ++i)
 			{
 				const bool hasBeenCheckedOut = checkedOut.find(i) != checkedOut.cend();
 
-				if (hasBeenCheckedOut == stringMap.hasElement(i))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, hasBeenCheckedOut, stringMap.hasElement(i));
 			}
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
-				const unsigned int index = RandomI::random(0u, capacity + 10u);
+				const unsigned int index = RandomI::random(randomGenerator, 0u, capacity + 10u);
 
 				const bool hasBeenCheckedOutBefore = checkedOut.find(index) != checkedOut.cend();
 				const bool couldBeInMap = index <= n;
@@ -385,41 +325,26 @@ bool TestRingMap::testCheckout(const double testDuration)
 
 				if (checkoutResult)
 				{
-					if (element != String::toAString(index))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, element, String::toAString(index));
 
-					if (stringMap.hasElement(index))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, stringMap.hasElement(index));
 				}
 
-				if (checkoutResult != expectedResult)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, checkoutResult, expectedResult);
 
 				if (expectedResult)
 				{
 					checkedOut.emplace(index);
 				}
 
-				if (stringMap.size() != size_t(n + 1u) - checkedOut.size())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, stringMap.size(), size_t(n + 1u) - checkedOut.size());
 			}
 
 			for (unsigned int i = 0u; i <= n; ++i)
 			{
 				const bool hasBeenCheckedOut = checkedOut.find(i) != checkedOut.cend();
 
-				if (hasBeenCheckedOut == stringMap.hasElement(i))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, hasBeenCheckedOut, stringMap.hasElement(i));
 			}
 		}
 
@@ -428,44 +353,31 @@ bool TestRingMap::testCheckout(const double testDuration)
 			if (checkedOut.find(n) == checkedOut.cend())
 			{
 				std::string element;
-				if (!stringMap.checkoutElement(n, element) || element != String::toAString(n))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.checkoutElement(n, element) && element == String::toAString(n));
 
 				checkedOut.emplace(n);
 			}
 		}
 
-		if (stringMap.size() != 0 || !stringMap.isEmpty())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, stringMap.size(), size_t(0));
+		OCEAN_EXPECT_TRUE(validation, stringMap.isEmpty());
 
-		if (checkedOut.size() != capacity)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, checkedOut.size(), size_t(capacity));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRingMap::testRefresh(const double testDuration)
 {
 	Log::info() << "Refresh test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	const Timestamp startTimestamp(true);
 
 	do
@@ -473,47 +385,35 @@ bool TestRingMap::testRefresh(const double testDuration)
 		{
 			// refreshing one element
 
-			const unsigned int capacity = RandomI::random(20, 2000);
+			const unsigned int capacity = RandomI::random(randomGenerator, 20, 2000);
 
 			StringMap stringMap(capacity);
 
 			for (unsigned int n = 0u; n < capacity; ++n)
 			{
-				if (!stringMap.insertElement(n, String::toAString(n), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, String::toAString(n), false));
 			}
 
 			// now, we add more elements
 
-			const unsigned int lastRemainingElement = RandomI::random(capacity - 1u);
+			const unsigned int lastRemainingElement = RandomI::random(randomGenerator, capacity - 1u);
 
-			if (!stringMap.refreshElement(lastRemainingElement))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, stringMap.refreshElement(lastRemainingElement));
 
 			for (unsigned int n = capacity; n < capacity * 2u; ++n)
 			{
-				if (!stringMap.insertElement(n, String::toAString(n), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, String::toAString(n), false));
 
 				const bool lastIteration = n + 1u == capacity * 2u;
 
-				if (stringMap.hasElement(lastRemainingElement) == lastIteration)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, stringMap.hasElement(lastRemainingElement), lastIteration);
 			}
 		}
 
 		{
 			// refreshing all elements
 
-			const unsigned int capacity = RandomI::random(20, 2000);
+			const unsigned int capacity = RandomI::random(randomGenerator, 20, 2000);
 
 			StringMap stringMap(capacity);
 
@@ -521,60 +421,38 @@ bool TestRingMap::testRefresh(const double testDuration)
 
 			for (unsigned int n = 0u; n < capacity; ++n)
 			{
-				if (!stringMap.insertElement(n, String::toAString(n), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, String::toAString(n), false));
 
 				refreshOrder.emplace_back(n);
 			}
 
 			for (unsigned int n = 0u; n < capacity; ++n)
 			{
-				std::swap(refreshOrder[RandomI::random(capacity - 1u)], refreshOrder.back());
+				std::swap(refreshOrder[RandomI::random(randomGenerator, capacity - 1u)], refreshOrder.back());
 			}
 
 			for (const Index32& index : refreshOrder)
 			{
-				if (!stringMap.refreshElement(index))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.refreshElement(index));
 			}
 
 			// now, we add more elements
 
 			for (unsigned int n = capacity; n < capacity * 2u; ++n)
 			{
-				if (!stringMap.hasElement(refreshOrder[n - capacity]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.hasElement(refreshOrder[n - capacity]));
 
-				if (!stringMap.insertElement(n, String::toAString(n), false))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, stringMap.insertElement(n, String::toAString(n), false));
 
-				if (stringMap.hasElement(refreshOrder[n - capacity]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, stringMap.hasElement(refreshOrder[n - capacity]));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
