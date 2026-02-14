@@ -602,23 +602,13 @@ bool TestFrame::testDefinedDataTypes()
 
 	const FrameType::DataTypes& dataTypes = FrameType::definedDataTypes();
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (dataTypes.size() + 1 != size_t(FrameType::DT_END))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, dataTypes.size() + 1, size_t(FrameType::DT_END));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testDefinedPixelFormats()
@@ -627,12 +617,9 @@ bool TestFrame::testDefinedPixelFormats()
 
 	const FrameType::PixelFormats pixelFormats = definedPixelFormats();
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (pixelFormats.size() + 1 != size_t(FrameType::FORMAT_END))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, pixelFormats.size() + 1, size_t(FrameType::FORMAT_END));
 
 	UnorderedIndexSet32 uniquenessSet;
 
@@ -646,21 +633,11 @@ bool TestFrame::testDefinedPixelFormats()
 		uniquenessSet.emplace(value32);
 	}
 
-	if (uniquenessSet.size() != pixelFormats.size())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, uniquenessSet.size(), pixelFormats.size());
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testIsSumInsideValueRange(const double testDuration)
@@ -670,7 +647,6 @@ bool TestFrame::testIsSumInsideValueRange(const double testDuration)
 	Log::info() << "Testing Sum Inside Value range:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -735,7 +711,6 @@ bool TestFrame::testIsProductInsideValueRange(const double testDuration)
 	Log::info() << "Testing Product Inside Value range:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -782,41 +757,36 @@ bool TestFrame::testPlaneContructors(const double testDuration)
 
 	Log::info() << "Testing Plane constructors:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int height = RandomI::random(1u, 1080u);
-		const unsigned int channels = RandomI::random(1u, 5u);
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(0u, 1u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
-		allSucceeded = testPlaneContructors<int8_t>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneContructors<uint8_t>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<int8_t>(width, height, channels, paddingElements, randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<uint8_t>(width, height, channels, paddingElements, randomGenerator));
 
-		allSucceeded = testPlaneContructors<int16_t>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneContructors<uint16_t>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<int16_t>(width, height, channels, paddingElements, randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<uint16_t>(width, height, channels, paddingElements, randomGenerator));
 
-		allSucceeded = testPlaneContructors<int32_t>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneContructors<uint32_t>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<int32_t>(width, height, channels, paddingElements, randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<uint32_t>(width, height, channels, paddingElements, randomGenerator));
 
-		allSucceeded = testPlaneContructors<float>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneContructors<double>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<float>(width, height, channels, paddingElements, randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPlaneContructors<double>(width, height, channels, paddingElements, randomGenerator));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testPlaneCopyContructors(const double testDuration)
@@ -825,123 +795,88 @@ bool TestFrame::testPlaneCopyContructors(const double testDuration)
 
 	Log::info() << "Testing Plane copy constructors:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	Frame::Plane defaultPlane;
 
-	if (defaultPlane.isValid())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, defaultPlane.isValid());
 
 	Frame::Plane movedDefaultPlane(std::move(defaultPlane));
 
-	if (movedDefaultPlane.isValid())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, movedDefaultPlane.isValid());
 
-	if (defaultPlane.isValid()) // NOLINT(bugprone-use-after-move)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, defaultPlane.isValid()); // NOLINT(bugprone-use-after-move)
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane, Frame::ACM_USE_KEEP_LAYOUT);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane, Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane, Frame::ACM_USE_OR_COPY);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	{
 		const Frame::Plane copyInvalidPlane(movedDefaultPlane, Frame::ACM_USE_OR_COPY_KEEP_LAYOUT);
 
-		if (copyInvalidPlane.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, copyInvalidPlane.isValid());
 	}
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int height = RandomI::random(1u, 1080u);
-		const unsigned int channels = RandomI::random(1u, 5u);
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(0u, 1u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
-		allSucceeded = testPlaneCopyContructors<int8_t>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneCopyContructors<uint8_t>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<int8_t>(width, height, channels, paddingElements));
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<uint8_t>(width, height, channels, paddingElements));
 
-		allSucceeded = testPlaneCopyContructors<int16_t>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneCopyContructors<uint16_t>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<int16_t>(width, height, channels, paddingElements));
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<uint16_t>(width, height, channels, paddingElements));
 
-		allSucceeded = testPlaneCopyContructors<int32_t>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneCopyContructors<uint32_t>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<int32_t>(width, height, channels, paddingElements));
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<uint32_t>(width, height, channels, paddingElements));
 
-		allSucceeded = testPlaneCopyContructors<float>(width, height, channels, paddingElements) && allSucceeded;
-		allSucceeded = testPlaneCopyContructors<double>(width, height, channels, paddingElements) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<float>(width, height, channels, paddingElements));
+		OCEAN_EXPECT_TRUE(validation, testPlaneCopyContructors<double>(width, height, channels, paddingElements));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 
 }
 
@@ -951,7 +886,8 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 
 	Log::info() << "Testing frame specification for generic pixel formats:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::DataTypes& dataTypes = FrameType::definedDataTypes();
 
@@ -970,93 +906,62 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int height = RandomI::random(1u, 1080u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const unsigned int dataTypeIndex = RandomI::random(0u, (unsigned int)(dataTypes.size()) - 1u);
+		const unsigned int dataTypeIndex = RandomI::random(randomGenerator, 0u, (unsigned int)(dataTypes.size()) - 1u);
 
 		const FrameType::DataType dataType = dataTypes[dataTypeIndex];
-		const unsigned int channels = RandomI::random(1u, 5u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const unsigned int framePaddingElements = RandomI::random(0u, 100u);
+		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 		Frame frame(frameType, framePaddingElements);
 
 		// just checking whether 'frame' has the correct specification
-		if (!validateFrameSpecification(frame, frameType, framePaddingElements, bytesPerElements[dataTypeIndex], true, false))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(frame, frameType, framePaddingElements, bytesPerElements[dataTypeIndex], true, false));
 
 		const Frame frameCopyWithOwnership(frame);
 
 		// 'frameCopyWithOwnership' is just an entire copy of 'frame' with own memory (and continuous memory layout)
-		if (!validateFrameSpecification(frameCopyWithOwnership, frameType, 0u, bytesPerElements[dataTypeIndex], true, false))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(frameCopyWithOwnership, frameType, 0u, bytesPerElements[dataTypeIndex], true, false));
 
 		const Frame frameCopyWithoutOwnership(frame, Frame::ACM_USE_KEEP_LAYOUT);
 
 		// 'frameCopyWithoutOwnership' a copy without own memory
-		if (!validateFrameSpecification(frameCopyWithoutOwnership, frameType, framePaddingElements, bytesPerElements[dataTypeIndex], false, false))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(frameCopyWithoutOwnership, frameType, framePaddingElements, bytesPerElements[dataTypeIndex], false, false));
 
 		const Frame frameCopyWithOwnership2(frameCopyWithoutOwnership, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 		// 'frameCopyWithOwnership2' is a copy of a frame (which does not own the memory) but will own the memory now (and continuous memory layout)
-		if (!validateFrameSpecification(frameCopyWithOwnership2, frameType, 0u, bytesPerElements[dataTypeIndex], true, false))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(frameCopyWithOwnership2, frameType, 0u, bytesPerElements[dataTypeIndex], true, false));
 
 		Frame movedFrame = std::move(frame);
 
 		// 'movedFrame' must be equivalent to the previous 'frame'
-		if (!validateFrameSpecification(movedFrame, frameType, framePaddingElements, bytesPerElements[dataTypeIndex], true, false))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(movedFrame, frameType, framePaddingElements, bytesPerElements[dataTypeIndex], true, false));
 
-		if (frame.isValid()) // NOLINT(bugprone-use-after-move)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, frame.isValid()); // NOLINT(bugprone-use-after-move)
 
 		// we release the memory sometimes explicitly
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			frame.release();
 
-			if (frame.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frame.isValid());
 
-			if (frame)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, bool(frame));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testFrameSpecificationNonGenericPixelFormats(const double testDuration)
@@ -1065,7 +970,8 @@ bool TestFrame::testFrameSpecificationNonGenericPixelFormats(const double testDu
 
 	Log::info() << "Testing frame specification for non-generic pixel formats:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats =
 	{
@@ -1095,59 +1001,44 @@ bool TestFrame::testFrameSpecificationNonGenericPixelFormats(const double testDu
 
 	do
 	{
-		const unsigned int width = RandomI::random(2u, 1920u) & 0xFFFFFFFEu; // multiple of two
-		const unsigned int height = RandomI::random(2u, 1080u) & 0xFFFFFFFEu;
+		const unsigned int width = RandomI::random(randomGenerator, 2u, 1920u) & 0xFFFFFFFEu; // multiple of two
+		const unsigned int height = RandomI::random(randomGenerator, 2u, 1080u) & 0xFFFFFFFEu;
 
-		const FrameType::PixelFormat pixelFormat = RandomI::random(pixelFormats);
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int n = 0u; n < frameType.numberPlanes(); ++n)
 			{
-				paddingElementsPerPlane.emplace_back(RandomI::random(1u, 100u) * RandomI::random(1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
 		Frame frame(frameType, paddingElementsPerPlane);
 
-		if (frame.frameType() != frameType)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
 
 		// we release the memory sometimes explicitly
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			frame.release();
 
-			if (frame.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frame.isValid());
 
-			if (frame)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, bool(frame));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testConstructor(const double testDuration)
@@ -1156,9 +1047,8 @@ bool TestFrame::testConstructor(const double testDuration)
 
 	Log::info() << "Testing constructors:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1190,11 +1080,12 @@ bool TestFrame::testConstructor(const double testDuration)
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int n = 0u; n < frameType.numberPlanes(); ++n)
 			{
-				paddingElementsPerPlane.emplace_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
@@ -1214,15 +1105,9 @@ bool TestFrame::testConstructor(const double testDuration)
 
 				const Frame usedOrCopiedFrame(sourceFrame.frameType(), planeInitializers);
 
-				if (!usedOrCopiedFrame.isValid())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, usedOrCopiedFrame.isValid());
 
-				if (usedOrCopiedFrame.frameType() != sourceFrame.frameType())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.frameType(), sourceFrame.frameType());
 
 				for (unsigned int planeIndex = 0u; planeIndex < sourceFrame.numberPlanes(); ++planeIndex)
 				{
@@ -1259,34 +1144,19 @@ bool TestFrame::testConstructor(const double testDuration)
 
 					ocean_assert(expectedPaddingElements != (unsigned int)(-1));
 
-					if (usedOrCopiedFrame.paddingElements(planeIndex) != expectedPaddingElements)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.paddingElements(planeIndex), expectedPaddingElements);
 
-					if (usedOrCopiedFrame.isOwner() != expectedIsOwner)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.isOwner(), expectedIsOwner);
 
-					if (usedOrCopiedFrame.isReadOnly() != expectedIsReadOnly)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.isReadOnly(), expectedIsReadOnly);
 
 					if (expectedIsOwner)
 					{
-						if (usedOrCopiedFrame.constdata<void>(planeIndex) == sourceFrame.constdata<void>(planeIndex))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_NOT_EQUAL(validation, usedOrCopiedFrame.constdata<void>(planeIndex), sourceFrame.constdata<void>(planeIndex));
 					}
 					else
 					{
-						if (usedOrCopiedFrame.constdata<void>(planeIndex) != sourceFrame.constdata<void>(planeIndex))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.constdata<void>(planeIndex), sourceFrame.constdata<void>(planeIndex));
 					}
 				}
 			}
@@ -1306,15 +1176,9 @@ bool TestFrame::testConstructor(const double testDuration)
 
 				const Frame usedOrCopiedFrame(sourceFrame.frameType(), planeInitializers);
 
-				if (!usedOrCopiedFrame.isValid())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, usedOrCopiedFrame.isValid());
 
-				if (usedOrCopiedFrame.frameType() != sourceFrame.frameType())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.frameType(), sourceFrame.frameType());
 
 				for (unsigned int planeIndex = 0u; planeIndex < sourceFrame.numberPlanes(); ++planeIndex)
 				{
@@ -1351,34 +1215,19 @@ bool TestFrame::testConstructor(const double testDuration)
 
 					ocean_assert(expectedPaddingElements != (unsigned int)(-1));
 
-					if (usedOrCopiedFrame.paddingElements(planeIndex) != expectedPaddingElements)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.paddingElements(planeIndex), expectedPaddingElements);
 
-					if (usedOrCopiedFrame.isOwner() != expectedIsOwner)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.isOwner(), expectedIsOwner);
 
-					if (usedOrCopiedFrame.isReadOnly() != expectedIsReadOnly)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.isReadOnly(), expectedIsReadOnly);
 
 					if (expectedIsOwner)
 					{
-						if (usedOrCopiedFrame.constdata<void>(planeIndex) == sourceFrame.constdata<void>(planeIndex))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_NOT_EQUAL(validation, usedOrCopiedFrame.constdata<void>(planeIndex), sourceFrame.constdata<void>(planeIndex));
 					}
 					else
 					{
-						if (usedOrCopiedFrame.constdata<void>(planeIndex) != sourceFrame.constdata<void>(planeIndex))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, usedOrCopiedFrame.constdata<void>(planeIndex), sourceFrame.constdata<void>(planeIndex));
 					}
 				}
 			}
@@ -1386,16 +1235,9 @@ bool TestFrame::testConstructor(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testCopyConstructor(const double testDuration)
@@ -1404,9 +1246,8 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 	Log::info() << "Testing copy constructor:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1443,10 +1284,7 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 		const Frame invalidFrameCopy(invalidFrame, advancedCopyMode);
 
-		if (invalidFrameCopy.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, invalidFrameCopy.isValid());
 	}
 
 	do
@@ -1455,11 +1293,12 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				paddingElementsPerPlane.emplace_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
@@ -1470,37 +1309,19 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 			const Frame frameCopy(sourceFrameOwner);
 
-			if (!frameCopy.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-			if (frameCopy.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
-			if (!frameCopy.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isOwner());
 
-			if (frameCopy.isReadOnly())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frameCopy.isReadOnly());
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				if (frameCopy.paddingElements(planeIndex) != 0u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), 0u);
 
-				if (frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, frameCopy.constdata<void>(planeIndex), sourceFrameOwner.constdata<void>(planeIndex));
 			}
 		}
 
@@ -1511,37 +1332,19 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 			const Frame frameCopy(constSourceFrameOwner);
 
-			if (!frameCopy.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-			if (frameCopy.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
-			if (!frameCopy.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isOwner());
 
-			if (frameCopy.isReadOnly())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frameCopy.isReadOnly());
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				if (frameCopy.paddingElements(planeIndex) != 0u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), 0u);
 
-				if (frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, frameCopy.constdata<void>(planeIndex), sourceFrameOwner.constdata<void>(planeIndex));
 			}
 		}
 
@@ -1552,15 +1355,9 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 			{
 				const Frame frameCopy(sourceFrameOwner, advancedCopyMode);
 
-				if (!frameCopy.isValid())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-				if (frameCopy.frameType() != sourceFrameOwner.frameType())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
 				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 				{
@@ -1602,25 +1399,13 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 					ocean_assert(expectedPaddingElements != (unsigned int)(-1));
 
-					if (frameCopy.paddingElements(planeIndex) != expectedPaddingElements)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), expectedPaddingElements);
 
-					if (frameCopy.isOwner() != expectedIsOwner)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.isOwner(), expectedIsOwner);
 
-					if (frameCopy.isReadOnly())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, frameCopy.isReadOnly());
 
-					if ((expectedIsOwner && frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex)) || (!expectedIsOwner && frameCopy.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, (expectedIsOwner && frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex)) || (!expectedIsOwner && frameCopy.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex)));
 				}
 			}
 		}
@@ -1641,15 +1426,9 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 			{
 				const Frame frameCopy(constNotOwnerFrame, advancedCopyMode);
 
-				if (!frameCopy.isValid())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-				if (frameCopy.frameType() != sourceFrameOwner.frameType())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
 				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 				{
@@ -1691,25 +1470,13 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 					ocean_assert(expectedPaddingElements != (unsigned int)(-1));
 
-					if (frameCopy.paddingElements(planeIndex) != expectedPaddingElements)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), expectedPaddingElements);
 
-					if (frameCopy.isOwner() != expectedIsOwner)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.isOwner(), expectedIsOwner);
 
-					if (frameCopy.isReadOnly())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, frameCopy.isReadOnly());
 
-					if ((expectedIsOwner && frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex)) || (!expectedIsOwner && frameCopy.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, (expectedIsOwner && frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex)) || (!expectedIsOwner && frameCopy.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex)));
 				}
 			}
 		}
@@ -1730,15 +1497,9 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 			{
 				const Frame frameCopy(constNotOwnerFrame, advancedCopyMode);
 
-				if (!frameCopy.isValid())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-				if (frameCopy.frameType() != sourceFrameOwner.frameType())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
 				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 				{
@@ -1787,41 +1548,22 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 
 					ocean_assert(expectedPaddingElements != (unsigned int)(-1));
 
-					if (frameCopy.paddingElements(planeIndex) != expectedPaddingElements)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), expectedPaddingElements);
 
-					if (frameCopy.isOwner() != expectedIsOwner)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.isOwner(), expectedIsOwner);
 
-					if (frameCopy.isReadOnly() != expectedIsReadOnly)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frameCopy.isReadOnly(), expectedIsReadOnly);
 
-					if ((expectedIsOwner && frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex)) || (!expectedIsOwner && frameCopy.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, (expectedIsOwner && frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex)) || (!expectedIsOwner && frameCopy.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex)));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testMoveConstructor(const double testDuration)
@@ -1830,9 +1572,8 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 
 	Log::info() << "Testing move constructor:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1879,20 +1620,11 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 
 				Frame targetFrame(std::move(sourceFrame));
 
-				if (sourceFrame.isValid()) // NOLINT(bugprone-use-after-move)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, sourceFrame.isValid()); // NOLINT(bugprone-use-after-move)
 
-				if (targetFrame.frameType() != frameType)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetFrame.frameType(), frameType);
 
-				if (targetFrame.timestamp() != timestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetFrame.timestamp(), timestamp);
 
 				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 				{
@@ -1904,47 +1636,26 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 					{
 						const Frame::Plane& plane = targetFrame.planes()[planeIndex];
 
-						if (plane.height() != planeHeight)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.height(), planeHeight);
 
 						const unsigned int planeWidthBytes = planeWidth * planeChannels * bytesPerDataType;
 
-						if (plane.widthBytes() != planeWidthBytes)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.widthBytes(), planeWidthBytes);
 
-						if (plane.strideBytes() != planeWidthBytes)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.strideBytes(), planeWidthBytes);
 
-						if (plane.paddingBytes() != 0u || plane.paddingElements() != 0u)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_FALSE(validation, plane.paddingBytes() != 0u || plane.paddingElements() != 0u);
 
-						if (plane.elementTypeSize() != bytesPerDataType)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.elementTypeSize(), bytesPerDataType);
 
-						if (plane.constdata<void>() != sourceFrameDatas[planeIndex])
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.constdata<void>(), sourceFrameDatas[planeIndex]);
 
-						if (plane.isOwner() != sourceIsOwner)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.isOwner(), sourceIsOwner);
 					}
 					else
 					{
 						ocean_assert(false && "Invalid plane layout!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -1971,11 +1682,12 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 
 				Indices32 paddingElementsPerPlane;
 
-				if (RandomI::random(1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 					{
-						paddingElementsPerPlane.push_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(1u));
+						const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+						paddingElementsPerPlane.push_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 					}
 				}
 
@@ -1983,20 +1695,11 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 
 				targetFrame = std::move(sourceFrame);
 
-				if (sourceFrame.isValid()) // NOLINT(bugprone-use-after-move)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, sourceFrame.isValid()); // NOLINT(bugprone-use-after-move)
 
-				if (targetFrame.frameType() != frameType)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetFrame.frameType(), frameType);
 
-				if (targetFrame.timestamp() != timestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetFrame.timestamp(), timestamp);
 
 				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 				{
@@ -2008,47 +1711,26 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 					{
 						const Frame::Plane& plane = targetFrame.planes()[planeIndex];
 
-						if (plane.height() != planeHeight)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.height(), planeHeight);
 
 						const unsigned int planeWidthBytes = planeWidth * planeChannels * bytesPerDataType;
 
-						if (plane.widthBytes() != planeWidthBytes)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.widthBytes(), planeWidthBytes);
 
-						if (plane.strideBytes() != planeWidthBytes)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.strideBytes(), planeWidthBytes);
 
-						if (plane.paddingBytes() != 0u || plane.paddingElements() != 0u)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_FALSE(validation, plane.paddingBytes() != 0u || plane.paddingElements() != 0u);
 
-						if (plane.elementTypeSize() != bytesPerDataType)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.elementTypeSize(), bytesPerDataType);
 
-						if (plane.constdata<void>() != sourceFrameDatas[planeIndex])
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.constdata<void>(), sourceFrameDatas[planeIndex]);
 
-						if (plane.isOwner() != sourceIsOwner)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, plane.isOwner(), sourceIsOwner);
 					}
 					else
 					{
 						ocean_assert(false && "Invalid plane layout!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -2056,16 +1738,9 @@ bool TestFrame::testMoveConstructor(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testCopyOperator(const double testDuration)
@@ -2074,9 +1749,8 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 	Log::info() << "Testing copy operators:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -2100,11 +1774,12 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				paddingElementsPerPlane.push_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElementsPerPlane.push_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
@@ -2112,7 +1787,7 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 		FrameType intermediateFrameType;
 
-		if (RandomI::random(randomGenerator, 1u) == 1u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			intermediateFrameType = randomizedFrameType(pixelFormats, &randomGenerator);
 		}
@@ -2124,37 +1799,19 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 			frameCopy = sourceFrameOwner;
 
-			if (!frameCopy.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-			if (frameCopy.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
-			if (!frameCopy.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isOwner());
 
-			if (frameCopy.isReadOnly())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frameCopy.isReadOnly());
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				if (frameCopy.paddingElements(planeIndex) != 0u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), 0u);
 
-				if (frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, frameCopy.constdata<void>(planeIndex), sourceFrameOwner.constdata<void>(planeIndex));
 			}
 		}
 
@@ -2167,37 +1824,19 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 			frameCopy = constSourceFrameOwner;
 
-			if (!frameCopy.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isValid());
 
-			if (frameCopy.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frameCopy.frameType(), sourceFrameOwner.frameType());
 
-			if (!frameCopy.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameCopy.isOwner());
 
-			if (frameCopy.isReadOnly())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frameCopy.isReadOnly());
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				if (frameCopy.paddingElements(planeIndex) != 0u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frameCopy.paddingElements(planeIndex), 0u);
 
-				if (frameCopy.constdata<void>(planeIndex) == sourceFrameOwner.constdata<void>(planeIndex))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, frameCopy.constdata<void>(planeIndex), sourceFrameOwner.constdata<void>(planeIndex));
 			}
 		}
 
@@ -2217,39 +1856,21 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 			usedFrame = constNotOwnerFrame;
 
-			if (!usedFrame.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, usedFrame.isValid());
 
-			if (usedFrame.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, usedFrame.frameType(), sourceFrameOwner.frameType());
 
-			if (usedFrame.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, usedFrame.isOwner());
 
-			if (!usedFrame.isReadOnly())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, usedFrame.isReadOnly());
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
 				const unsigned int paddingElements = paddingElementsPerPlane.empty() ? 0u : paddingElementsPerPlane[planeIndex];
 
-				if (usedFrame.paddingElements(planeIndex) != paddingElements)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, usedFrame.paddingElements(planeIndex), paddingElements);
 
-				if (usedFrame.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, usedFrame.constdata<void>(planeIndex), sourceFrameOwner.constdata<void>(planeIndex));
 			}
 		}
 
@@ -2269,54 +1890,29 @@ bool TestFrame::testCopyOperator(const double testDuration)
 
 			usedFrame = nonconstNotOwnerFrame;
 
-			if (!usedFrame.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, usedFrame.isValid());
 
-			if (usedFrame.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, usedFrame.frameType(), sourceFrameOwner.frameType());
 
-			if (usedFrame.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, usedFrame.isOwner());
 
-			if (usedFrame.isReadOnly())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, usedFrame.isReadOnly());
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
 				const unsigned int paddingElements = paddingElementsPerPlane.empty() ? 0u : paddingElementsPerPlane[planeIndex];
 
-				if (usedFrame.paddingElements(planeIndex) != paddingElements)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, usedFrame.paddingElements(planeIndex), paddingElements);
 
-				if (usedFrame.constdata<void>(planeIndex) != sourceFrameOwner.constdata<void>(planeIndex))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, usedFrame.constdata<void>(planeIndex), sourceFrameOwner.constdata<void>(planeIndex));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testPlaneInitializer(const double testDuration)
@@ -2326,8 +1922,7 @@ bool TestFrame::testPlaneInitializer(const double testDuration)
 	Log::info() << "Testing plane initializer:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -2368,83 +1963,58 @@ bool TestFrame::testPlaneInitializer(const double testDuration)
 			{
 				case FrameType::DT_UNSIGNED_INTEGER_8:
 				{
-					if (!validatePlaneInitializer<uint8_t>(frameType, randomGenerator))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validatePlaneInitializer<uint8_t>(frameType, randomGenerator));
 
 					break;
 				}
 
 				case FrameType::DT_UNSIGNED_INTEGER_16:
 				{
-					if (!validatePlaneInitializer<uint16_t>(frameType, randomGenerator))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validatePlaneInitializer<uint16_t>(frameType, randomGenerator));
 
 					break;
 				}
 
 				case FrameType::DT_SIGNED_INTEGER_16:
 				{
-					if (!validatePlaneInitializer<int16_t>(frameType, randomGenerator))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validatePlaneInitializer<int16_t>(frameType, randomGenerator));
 
 					break;
 				}
 
 				case FrameType::DT_UNSIGNED_INTEGER_32:
 				{
-					if (!validatePlaneInitializer<uint32_t>(frameType, randomGenerator))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validatePlaneInitializer<uint32_t>(frameType, randomGenerator));
 
 					break;
 				}
 
 				case FrameType::DT_SIGNED_FLOAT_32:
 				{
-					if (!validatePlaneInitializer<float>(frameType, randomGenerator))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validatePlaneInitializer<float>(frameType, randomGenerator));
 
 					break;
 				}
 
 				case FrameType::DT_SIGNED_FLOAT_64:
 				{
-					if (!validatePlaneInitializer<double>(frameType, randomGenerator))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validatePlaneInitializer<double>(frameType, randomGenerator));
 
 					break;
 				}
 
 				default:
 					ocean_assert(false && "Invalid data type!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testPlaneLayout(const double testDuration)
@@ -2453,7 +2023,8 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 
 	Log::info() << "Testing plane layout:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -2472,16 +2043,23 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 	{
 		for (const FrameType::PixelFormat pixelFormat : pixelFormats)
 		{
-			const unsigned int width = RandomI::random(1u, 1920u) * FrameType::widthMultiple(pixelFormat);
-			const unsigned int height = RandomI::random(1u, 1080u) * FrameType::heightMultiple(pixelFormat);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
 
 			Indices32 paddingElementsPerPlane;
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				for (unsigned int n = 0u; n < FrameType::numberPlanes(pixelFormat); ++n)
 				{
-					paddingElementsPerPlane.emplace_back(RandomI::random(1u, 100u) * RandomI::random(1u));
+					unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u);
+
+					if (RandomI::boolean(randomGenerator))
+					{
+						paddingElements = 0u;
+					}
+
+					paddingElementsPerPlane.emplace_back(paddingElements);
 				}
 			}
 
@@ -2610,52 +2188,30 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 							break;
 					}
 
-					if (planeWidth != expectedPlaneWidth)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, planeWidth, expectedPlaneWidth);
 
-					if (planeHeight != expectedPlaneHeight)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, planeHeight, expectedPlaneHeight);
 
-					if (planeChannels != expectedPlaneChannels)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, planeChannels, expectedPlaneChannels);
 
-					if (planeWidthMultiple != expectedPlaneWidthMultiple)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, planeWidthMultiple, expectedPlaneWidthMultiple);
 
-					if (planeHeightMultiple != expectedPlaneHeightMultiple)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, planeHeightMultiple, expectedPlaneHeightMultiple);
 				}
 				else
 				{
 					ocean_assert(!Frame::Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, 0u));
 
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testRelease(const double testDuration)
@@ -2665,7 +2221,6 @@ bool TestFrame::testRelease(const double testDuration)
 	Log::info() << "Testing release:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
@@ -2704,8 +2259,8 @@ bool TestFrame::testRelease(const double testDuration)
 			OCEAN_SET_FAILED(validation);
 		}
 
-		const bool forceOwner = RandomI::random(randomGenerator, 1u) == 0u;
-		const bool forceWritable = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool forceOwner = RandomI::boolean(randomGenerator);
+		const bool forceWritable = RandomI::boolean(randomGenerator);
 
 		const bool setResult = frame.set(randomizedFrameType(pixelFormats, &randomGenerator), forceOwner, forceWritable);
 
@@ -2751,7 +2306,8 @@ bool TestFrame::testSubFrame(const double testDuration)
 
 	Log::info() << "Testing sub-frame extraction:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -2776,32 +2332,33 @@ bool TestFrame::testSubFrame(const double testDuration)
 
 	do
 	{
-		const FrameType::PixelFormat pixelFormat = RandomI::random(pixelFormats);
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 		const unsigned int bytesPerElement = FrameType::bytesPerDataType(FrameType::dataType(pixelFormat));
 
 		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
 
-		const unsigned int width = RandomI::random(1u, 1920u) * widthMultiple;
-		const unsigned int height = RandomI::random(1u, 1080u) * heightMultiple;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * widthMultiple;
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * heightMultiple;
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 
 		Frame frame;
 
-		const Timestamp frameTimestamp(double(RandomI::random(1000u)));
+		const Timestamp frameTimestamp(double(RandomI::random(randomGenerator, 1000u)));
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			Frame::PlaneInitializers<void> planeInitializers;
 
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				const unsigned int paddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+				const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 				paddingElementsPerPlane.emplace_back(paddingElements);
 				planeInitializers.emplace_back(paddingElements);
@@ -2823,11 +2380,11 @@ bool TestFrame::testSubFrame(const double testDuration)
 		ocean_assert(frame.width() % widthMultiple == 0u);
 		ocean_assert(frame.height() % heightMultiple == 0u);
 
-		const unsigned int subFrameWidth = RandomI::random(1u, width / widthMultiple) * widthMultiple;
-		const unsigned int subFrameHeight = RandomI::random(1u, height / heightMultiple) * heightMultiple;
+		const unsigned int subFrameWidth = RandomI::random(randomGenerator, 1u, width / widthMultiple) * widthMultiple;
+		const unsigned int subFrameHeight = RandomI::random(randomGenerator, 1u, height / heightMultiple) * heightMultiple;
 
-		const unsigned int subFrameLeft = FrameType::formatIsPacked(pixelFormat) ? 0u : RandomI::random(0u, (width - subFrameWidth) / widthMultiple) * widthMultiple;
-		const unsigned int subFrameTop = RandomI::random(0u, (height - subFrameHeight) / heightMultiple) * heightMultiple;
+		const unsigned int subFrameLeft = FrameType::formatIsPacked(pixelFormat) ? 0u : RandomI::random(randomGenerator, 0u, (width - subFrameWidth) / widthMultiple) * widthMultiple;
+		const unsigned int subFrameTop = RandomI::random(randomGenerator, 0u, (height - subFrameHeight) / heightMultiple) * heightMultiple;
 
 		ocean_assert(subFrameLeft + subFrameWidth <= width);
 		ocean_assert(subFrameTop + subFrameHeight <= height);
@@ -2839,10 +2396,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 			Frame subFrame = frame.subFrame(subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, copyMode);
 
 			// just checking whether 'frame' still has the correct specification
-			if (!validateFrameSpecification(frame, frameType, paddingElementsPerPlane, bytesPerElement, true, false))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(frame, frameType, paddingElementsPerPlane, bytesPerElement, true, false));
 
 			Indices32 expectedSubFramePaddingElementsPerPlane;
 
@@ -2857,7 +2411,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 				if (!FrameType::planeLayout(pixelFormat, widthMultiple, heightMultiple, planeIndex, planeWidthMultipleOffset, planeHeightMultipleOffset, planeChannelsDummy))
 				{
 					ocean_assert(false && "Invalid parameter!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					break;
 				}
@@ -2868,7 +2422,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 				if (!FrameType::planeLayout(pixelFormat, widthMultiple + subFrameLeft, heightMultiple + subFrameTop, planeIndex, planeSubFrameLeft, planeSubFrameTop, planeChannelsDummy)) // planeLayout() cannot be called with subFrameLeft == 0 or subFrameTop == 0
 				{
 					ocean_assert(false && "Invalid parameter!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					break;
 				}
@@ -2884,7 +2438,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 				if (!FrameType::planeLayout(pixelFormat, subFrameWidth, subFrameHeight, planeIndex, planeSubFrameWidth, planeSubFrameHeight, planeChannelsDummy))
 				{
 					ocean_assert(false && "Invalid parameter!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					break;
 				}
@@ -2913,7 +2467,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 
 					case Frame::CM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA:
 						ocean_assert(false && "Invalid copy mode!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 				}
 
@@ -2930,10 +2484,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 
 				if (expectedIsOwner == false)
 				{
-					if (expectedPlaneSubFrameStartPointer != planeSubFrameStartPointer)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, expectedPlaneSubFrameStartPointer, planeSubFrameStartPointer);
 				}
 				else
 				{
@@ -2942,7 +2493,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 						if (planeSubFrameStartPointer >= (const uint8_t*)(frame.constdata<void>(planeIndex)) && planeSubFrameStartPointer < (const uint8_t*)(frame.constdata<void>(planeIndex)) + frame.planes()[planeIndex].size())
 						{
 							// overlapping memory
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -2954,15 +2505,9 @@ bool TestFrame::testSubFrame(const double testDuration)
 					const void* rowPointerLargeFrame = expectedPlaneSubFrameStartPointer + y * (currentPlane.width() * currentPlane.channels() + planePaddingElements) * bytesPerElement;
 					const void* rowPointerSubFrame = (const uint8_t*)(subFrame.constdata<void>(planeIndex)) + y * expectedSubFrameStrideElements * bytesPerElement;
 
-					if (rowPointerSubFrame != subFrame.constrow<void>(y, planeIndex))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, rowPointerSubFrame, subFrame.constrow<void>(y, planeIndex));
 
-					if (memcmp(rowPointerLargeFrame, rowPointerSubFrame, (planeSubFrameWidth * currentPlane.channels()) * bytesPerElement) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(rowPointerLargeFrame, rowPointerSubFrame, (planeSubFrameWidth * currentPlane.channels()) * bytesPerElement), 0);
 				}
 			}
 
@@ -2970,24 +2515,14 @@ bool TestFrame::testSubFrame(const double testDuration)
 			constexpr bool expectedIsReadOnly = false;
 
 			// just checking whether 'subFrame' has the correct specification
-			if (!validateFrameSpecification(subFrame, subFrameType, expectedSubFramePaddingElementsPerPlane, bytesPerElement, expectedIsOwner, expectedIsReadOnly))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateFrameSpecification(subFrame, subFrameType, expectedSubFramePaddingElementsPerPlane, bytesPerElement, expectedIsOwner, expectedIsReadOnly));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testTimestamp(const double testDuration)
@@ -2996,87 +2531,58 @@ bool TestFrame::testTimestamp(const double testDuration)
 
 	Log::info() << "Testing timestamp:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	const Frame invalidFrame;
 
-	if (invalidFrame.timestamp().isValid())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, invalidFrame.timestamp().isValid());
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int height = RandomI::random(1u, 1080u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
 		const FrameType frameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
-		const Timestamp timestamp(double(RandomI::random(-100, 100)));
+		const Timestamp timestamp(double(RandomI::random(randomGenerator, -100, 100)));
 
 		Frame frame(frameType, paddingElements, timestamp);
 
-		if (frame.timestamp() != timestamp)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, frame.timestamp(), timestamp);
 
 		const Frame copiedFrame(frame);
 
-		if (copiedFrame.timestamp() != timestamp)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, copiedFrame.timestamp(), timestamp);
 
 		Frame movedFrame(std::move(frame));
 
-		if (movedFrame.timestamp() != timestamp)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, movedFrame.timestamp(), timestamp);
 
-		if (frame.isValid() || frame.timestamp().isValid()) // NOLINT(bugprone-use-after-move)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, frame.isValid() || frame.timestamp().isValid()); // NOLINT(bugprone-use-after-move)
 
 		movedFrame.release();
 
-		if (movedFrame.timestamp().isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, movedFrame.timestamp().isValid());
 
 		Frame assignedFrame(frameType, paddingElements);
 
-		if (assignedFrame.timestamp().isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, assignedFrame.timestamp().isValid());
 
 		assignedFrame = copiedFrame;
 
-		if (assignedFrame.timestamp() != timestamp)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, assignedFrame.timestamp(), timestamp);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testAccessorsDataTypes(const double testDuration)
@@ -3085,23 +2591,24 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 
 	Log::info() << "Testing row and pixel accessors with data types:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int height = RandomI::random(1u, 1080u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const FrameType::DataType dataType = RandomI::random(FrameType::definedDataTypes());
-		const unsigned int channels = RandomI::random(1u, 5u);
+		const FrameType::DataType dataType = RandomI::random(randomGenerator, FrameType::definedDataTypes());
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
 		const unsigned int bytesPerElement = FrameType::bytesPerDataType(dataType);
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const unsigned int framePaddingElements = RandomI::random(0u, 100u);
+		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 		Frame frame(frameType, framePaddingElements);
@@ -3112,7 +2619,7 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int y = RandomI::random(0u, height - 1u);
+			const unsigned int y = RandomI::random(randomGenerator, 0u, height - 1u);
 
 			const uint8_t* const constRowPointer = frame.constrow<uint8_t>(y);
 			uint8_t* const rowPointer = frame.row<uint8_t>(y);
@@ -3130,65 +2637,29 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 
 			const uint8_t* const testPointer = frame.constdata<uint8_t>() + frameStrideBytes * y;
 
-			if (testPointer != constRowPointer)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, testPointer, constRowPointer);
 
-			if ((uint8_t*)(testPointer) != rowPointer)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (uint8_t*)(testPointer) == rowPointer);
 
-			if ((const int8_t*)(testPointer) != constRowPointerInt8)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const int8_t*)(testPointer) == constRowPointerInt8);
 
-			if (testPointer != constRowPointerUint8)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, testPointer, constRowPointerUint8);
 
-			if ((const int16_t*)(testPointer) != constRowPointerInt16)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const int16_t*)(testPointer) == constRowPointerInt16);
 
-			if ((const uint16_t*)(testPointer) != constRowPointerUint16)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const uint16_t*)(testPointer) == constRowPointerUint16);
 
-			if ((const int32_t*)(testPointer) != constRowPointerInt32)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const int32_t*)(testPointer) == constRowPointerInt32);
 
-			if ((const uint32_t*)(testPointer) != constRowPointerUint32)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const uint32_t*)(testPointer) == constRowPointerUint32);
 
-			if ((const float*)(testPointer) != constRowPointerFloat)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const float*)(testPointer) == constRowPointerFloat);
 
-			if ((const double*)(testPointer) != constRowPointerDouble)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const double*)(testPointer) == constRowPointerDouble);
 
-			if ((const int64_t*)(testPointer) != constRowPointerInt64)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const int64_t*)(testPointer) == constRowPointerInt64);
 
-			if ((const uint64_t*)(testPointer) != constRowPointerUint64)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (const uint64_t*)(testPointer) == constRowPointerUint64);
 		}
 
 
@@ -3196,8 +2667,8 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int x = RandomI::random(0u, width - 1u) / bytesPerElement;
-			const unsigned int y = RandomI::random(0u, height - 1u);
+			const unsigned int x = RandomI::random(randomGenerator, 0u, width - 1u) / bytesPerElement;
+			const unsigned int y = RandomI::random(randomGenerator, 0u, height - 1u);
 
 			const uint8_t* const testRowPointer = frame.constdata<uint8_t>() + frameStrideBytes * y;
 
@@ -3205,129 +2676,86 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 			{
 				const uint8_t* const constPixelPointer = frame.constpixel<uint8_t>(x, y);
 
-				if ((testRowPointer + x * channels) != constPixelPointer)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, (testRowPointer + x * channels), constPixelPointer);
 
 				uint8_t* const pixelPointer = frame.pixel<uint8_t>(x, y);
 
-				if (((uint8_t*)(testRowPointer) + x * channels) != pixelPointer)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((uint8_t*)(testRowPointer) + x * channels) == pixelPointer);
 
 				const uint8_t* const constPixelPointerUint8 = frame.constpixel<uint8_t>(x, y);
 
-				if ((testRowPointer + x * channels) != constPixelPointerUint8)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, (testRowPointer + x * channels), constPixelPointerUint8);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_8)
 			{
 				const int8_t* const constPixelPointerInt8 = frame.constpixel<int8_t>(x, y);
 
-				if (((const int8_t*)(testRowPointer) + x * channels) != constPixelPointerInt8)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const int8_t*)(testRowPointer) + x * channels) == constPixelPointerInt8);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_16)
 			{
 				const int16_t* const constPixelPointerInt16 = frame.constpixel<int16_t>(x, y);
 
-				if (((const int16_t*)(testRowPointer) + x * channels) != constPixelPointerInt16)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const int16_t*)(testRowPointer) + x * channels) == constPixelPointerInt16);
 			}
 
 			if (dataType == FrameType::DT_UNSIGNED_INTEGER_16)
 			{
 				const uint16_t* const constPixelPointerUint16 = frame.constpixel<uint16_t>(x, y);
 
-				if (((const uint16_t*)(testRowPointer) + x * channels) != constPixelPointerUint16)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const uint16_t*)(testRowPointer) + x * channels) == constPixelPointerUint16);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_32)
 			{
 				const int32_t* const constPixelPointerInt32 = frame.constpixel<int32_t>(x, y);
 
-				if (((const int32_t*)(testRowPointer) + x * channels) != constPixelPointerInt32)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const int32_t*)(testRowPointer) + x * channels) == constPixelPointerInt32);
 			}
 
 			if (dataType == FrameType::DT_UNSIGNED_INTEGER_32)
 			{
 				const uint32_t* const constPixelPointerUint32 = frame.constpixel<uint32_t>(x, y);
 
-				if (((const uint32_t*)(testRowPointer) + x * channels) != constPixelPointerUint32)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const uint32_t*)(testRowPointer) + x * channels) == constPixelPointerUint32);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_FLOAT_32)
 			{
 				const float* const constFloatPixelPointer = frame.constpixel<float>(x, y);
 
-				if (((const float*)(testRowPointer) + x * channels) != constFloatPixelPointer)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const float*)(testRowPointer) + x * channels) == constFloatPixelPointer);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_FLOAT_64)
 			{
 				const double* const constDoublePixelPointer = frame.constpixel<double>(x, y);
 
-				if (((const double*)(testRowPointer) + x * channels) != constDoublePixelPointer)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const double*)(testRowPointer) + x * channels) == constDoublePixelPointer);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_64)
 			{
 				const int64_t* const constPixelPointerInt64 = frame.constpixel<int64_t>(x, y);
 
-				if (((const int64_t*)(testRowPointer) + x * channels) != constPixelPointerInt64)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const int64_t*)(testRowPointer) + x * channels) == constPixelPointerInt64);
 			}
 
 			if (dataType == FrameType::DT_UNSIGNED_INTEGER_64)
 			{
 				const uint64_t* const constPixelPointerUint64 = frame.constpixel<uint64_t>(x, y);
 
-				if (((const uint64_t*)(testRowPointer) + x * channels) != constPixelPointerUint64)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, ((const uint64_t*)(testRowPointer) + x * channels) == constPixelPointerUint64);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testAccessorsPixelFormats(const double testDuration)
@@ -3336,7 +2764,8 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 	Log::info() << "Testing row and pixel accessors with pixel formats:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int testsPerPlane = 100u;
 
@@ -3346,17 +2775,17 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 	do
 	{
-		const FrameType::PixelFormat pixelFormat = RandomI::random(FrameType::definedPixelFormats());
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, FrameType::definedPixelFormats());
 
 		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
 
 		ocean_assert(widthMultiple != 0u && heightMultiple != 0u);
 
-		const unsigned int width = RandomI::random(1u, 1920u / widthMultiple) * widthMultiple;
-		const unsigned int height = RandomI::random(1u, 1080u / heightMultiple) * heightMultiple;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u / widthMultiple) * widthMultiple;
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u / heightMultiple) * heightMultiple;
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 		ocean_assert(frameType.isValid());
@@ -3366,11 +2795,12 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int n = 0u; n < numberPlanes; ++n)
 			{
-				paddingElementsPerPlane.emplace_back(RandomI::random(0u, 100u) * RandomI::random(1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+				paddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
@@ -3400,34 +2830,22 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 				for (unsigned int n = 0u; n < testsPerPlane; ++n)
 				{
-					const unsigned int x = RandomI::random(planeWidth - 1u);
-					const unsigned int y = RandomI::random(planeHeight - 1u);
+					const unsigned int x = RandomI::random(randomGenerator, planeWidth - 1u);
+					const unsigned int y = RandomI::random(randomGenerator, planeHeight - 1u);
 
 					const void* const testRow = (const void*)((const uint8_t*)(data) + y * planeStrideBytes);
 					const void* const row = frame.constrow<void>(y, planeIndex);
 
-					if (row != testRow)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-					if (frame.constrow<void>(y, planeIndex) != (const void*)(frame.row<void>(y, planeIndex)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y, planeIndex) == (const void*)(frame.row<void>(y, planeIndex)));
 
 					const void* const testPixel = (const void*)((const uint8_t*)(testRow) + (x * planeChannels) * bytesPerDataType);
 					const void* const pixel = frame.constpixel<void>(x, y, planeIndex);
 
-					if (pixel != testPixel)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, pixel, testPixel);
 
-					if (frame.constpixel<void>(x, y, planeIndex) != (const void*)(frame.pixel<void>(x, y, planeIndex)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, frame.constpixel<void>(x, y, planeIndex) == (const void*)(frame.pixel<void>(x, y, planeIndex)));
 				}
 			}
 		}
@@ -3465,34 +2883,22 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 						for (unsigned int n = 0u; n < testsPerPlane; ++n)
 						{
-							const unsigned int x = RandomI::random(width - 1u);
-							const unsigned int y = RandomI::random(height - 1u);
+							const unsigned int x = RandomI::random(randomGenerator, width - 1u);
+							const unsigned int y = RandomI::random(randomGenerator, height - 1u);
 
 							const void* const testRow = (const void*)((const uint8_t*)(data) + y * strideBytes);
 							const void* const row = frame.constrow<void>(y);
 
-							if (row != testRow)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-							if (frame.constrow<void>(y) != (const void*)(frame.row<void>(y)))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y) == (const void*)(frame.row<void>(y)));
 
 							const void* const testPixel = (const void*)((const uint8_t*)(testRow) + (x * elementsPerPixel) * bytesPerElement);
 							const void* const pixel = frame.constpixel<void>(x, y);
 
-							if (pixel != testPixel)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, pixel, testPixel);
 
-							if (frame.constpixel<void>(x, y) != (const void*)(frame.pixel<void>(x, y)))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, frame.constpixel<void>(x, y) == (const void*)(frame.pixel<void>(x, y)));
 						}
 
 						break;
@@ -3516,34 +2922,22 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 						for (unsigned int n = 0u; n < testsPerPlane; ++n)
 						{
-							const unsigned int x = RandomI::random(width - 1u);
-							const unsigned int y = RandomI::random(height - 1u);
+							const unsigned int x = RandomI::random(randomGenerator, width - 1u);
+							const unsigned int y = RandomI::random(randomGenerator, height - 1u);
 
 							const void* const testRow = (const void*)((const uint8_t*)(data) + y * strideBytes);
 							const void* const row = frame.constrow<void>(y);
 
-							if (row != testRow)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-							if (frame.constrow<void>(y) != (const void*)(frame.row<void>(y)))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y) == (const void*)(frame.row<void>(y)));
 
 							const void* const testPixel = (const void*)((const uint8_t*)(testRow) + (x * elementsPerPixel) * bytesPerElement);
 							const void* const pixel = frame.constpixel<void>(x, y);
 
-							if (pixel != testPixel)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, pixel, testPixel);
 
-							if (frame.constpixel<void>(x, y) != (const void*)(frame.pixel<void>(x, y)))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, frame.constpixel<void>(x, y) == (const void*)(frame.pixel<void>(x, y)));
 						}
 
 						break;
@@ -3566,20 +2960,14 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 						for (unsigned int n = 0u; n < testsPerPlane; ++n)
 						{
 							//const unsigned int x = RandomI::random(width - 1u);
-							const unsigned int y = RandomI::random(height - 1u);
+							const unsigned int y = RandomI::random(randomGenerator, height - 1u);
 
 							const void* const testRow = (const void*)((const uint8_t*)(data) + y * strideBytes);
 							const void* const row = frame.constrow<void>(y);
 
-							if (row != testRow)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-							if (frame.constrow<void>(y) != (const void*)(frame.row<void>(y)))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y) == (const void*)(frame.row<void>(y)));
 
 #if 0 // Frame::pixel() is currently not supported for packed pixel formats
 
@@ -3608,27 +2996,20 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 					default:
 						ocean_assert(false && "The pixel format is not covered in this test!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testSetFrameType(const double testDuration)
@@ -3638,7 +3019,6 @@ bool TestFrame::testSetFrameType(const double testDuration)
 	Log::info() << "Testing set frame type:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -3653,7 +3033,8 @@ bool TestFrame::testSetFrameType(const double testDuration)
 		const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat(sourceDataType, sourceChannels);
 		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxSourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourceFramePaddingElements = maxSourceFramePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		const FrameType sourceFrameType(sourceWidth, sourceHeight, sourcePixelFormat, sourcePixelOrigin);
 		Frame sourceFrame(sourceFrameType, sourceFramePaddingElements);
@@ -3670,8 +3051,8 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 		const FrameType targetFrameType(targetWidth, targetHeight, targetPixelFormat, targetPixelOrigin);
 
-		const bool forceOwner = RandomI::random(randomGenerator, 1u) == 0u;
-		const bool forceWritable = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool forceOwner = RandomI::boolean(randomGenerator);
+		const bool forceWritable = RandomI::boolean(randomGenerator);
 
 		// testing setting/changing/updating an existing valid frame
 
@@ -3796,7 +3177,8 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 	Log::info() << "Testing legacy copy:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -3815,16 +3197,17 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 	{
 		for (const FrameType::PixelFormat pixelFormat : pixelFormats)
 		{
-			const unsigned int width = RandomI::random(1u, 1920u) * FrameType::widthMultiple(pixelFormat);
-			const unsigned int height = RandomI::random(1u, 1080u) * FrameType::heightMultiple(pixelFormat);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
 
 			Indices32 paddingElementsPerPlane;
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				for (unsigned int n = 0u; n < FrameType::numberPlanes(pixelFormat); ++n)
 				{
-					paddingElementsPerPlane.emplace_back(RandomI::random(1u, 100u) * RandomI::random(1u));
+					const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+					paddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 				}
 			}
 
@@ -3833,7 +3216,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			const Frame owningSourceFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElementsPerPlane, sourceTimestamp);
 			const Frame notOwningSourceFrame(owningSourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
 
-			const bool copyTimestamp = RandomI::random(1u) == 0u;
+			const bool copyTimestamp = RandomI::boolean(randomGenerator);
 
 			{
 				// testing to copy the source frame (which is owning the memory) to an invalid target frame
@@ -3843,10 +3226,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 				const Timestamp expectedTimestamp = copyTimestamp ? sourceTimestamp : Timestamp(false);
 
-				if (!invalidTargetFrame.isValid() || invalidTargetFrame.frameType() != owningSourceFrame.frameType() || !invalidTargetFrame.isOwner() || invalidTargetFrame.timestamp() != expectedTimestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invalidTargetFrame.isValid() && invalidTargetFrame.frameType() == owningSourceFrame.frameType() && invalidTargetFrame.isOwner() && invalidTargetFrame.timestamp() == expectedTimestamp);
 			}
 
 			{
@@ -3857,10 +3237,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 				const Timestamp expectedTimestamp = copyTimestamp ? sourceTimestamp : Timestamp(false);
 
-				if (!invalidTargetFrame.isValid() || invalidTargetFrame.frameType() != notOwningSourceFrame.frameType() || !invalidTargetFrame.isOwner() || invalidTargetFrame.timestamp() != expectedTimestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invalidTargetFrame.isValid() && invalidTargetFrame.frameType() == notOwningSourceFrame.frameType() && invalidTargetFrame.isOwner() && invalidTargetFrame.timestamp() == expectedTimestamp);
 			}
 
 			{
@@ -3875,10 +3252,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 				const Timestamp expectedTimestamp = copyTimestamp ? sourceTimestamp : previousTimestamp;
 
-				if (!validTargetFrame.isValid() || validTargetFrame.frameType() != owningSourceFrame.frameType() || !validTargetFrame.isOwner() || validTargetFrame.timestamp() != expectedTimestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validTargetFrame.isValid() && validTargetFrame.frameType() == owningSourceFrame.frameType() && validTargetFrame.isOwner() && validTargetFrame.timestamp() == expectedTimestamp);
 			}
 
 			{
@@ -3893,18 +3267,15 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 				const Timestamp expectedTimestamp = copyTimestamp ? sourceTimestamp : previousTimestamp;
 
-				if (!validTargetFrame.isValid() || validTargetFrame.frameType() != notOwningSourceFrame.frameType() || !validTargetFrame.isOwner() || validTargetFrame.timestamp() != expectedTimestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validTargetFrame.isValid() && validTargetFrame.frameType() == notOwningSourceFrame.frameType() && validTargetFrame.isOwner() && validTargetFrame.timestamp() == expectedTimestamp);
 			}
 
-			const FrameType::PixelFormat previousTargetPixelFormat = RandomI::random(pixelFormats);
+			const FrameType::PixelFormat previousTargetPixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
-			const unsigned int previousTargetWidth = RandomI::random(1u, 1920u) * FrameType::widthMultiple(previousTargetPixelFormat);
-			const unsigned int previousTargetHeight = RandomI::random(1u, 1080u) * FrameType::heightMultiple(previousTargetPixelFormat);
+			const unsigned int previousTargetWidth = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(previousTargetPixelFormat);
+			const unsigned int previousTargetHeight = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(previousTargetPixelFormat);
 
-			const FrameType::PixelOrigin previousTargetPixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+			const FrameType::PixelOrigin previousTargetPixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			{
 				// testing to copy the source frame (which is owning the memory) to a valid target frame (with arbitrary frame type)
@@ -3918,10 +3289,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 				const Timestamp expectedTimestamp = copyTimestamp ? sourceTimestamp : previousTimestamp;
 
-				if (!validTargetFrame.isValid() || validTargetFrame.frameType() != owningSourceFrame.frameType() || !validTargetFrame.isOwner() || validTargetFrame.timestamp() != expectedTimestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validTargetFrame.isValid() && validTargetFrame.frameType() == owningSourceFrame.frameType() && validTargetFrame.isOwner() && validTargetFrame.timestamp() == expectedTimestamp);
 			}
 
 			{
@@ -3936,25 +3304,15 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 
 				const Timestamp expectedTimestamp = copyTimestamp ? sourceTimestamp : previousTimestamp;
 
-				if (!validTargetFrame.isValid() || validTargetFrame.frameType() != notOwningSourceFrame.frameType() || !validTargetFrame.isOwner() || validTargetFrame.timestamp() != expectedTimestamp)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validTargetFrame.isValid() && validTargetFrame.frameType() == notOwningSourceFrame.frameType() && validTargetFrame.isOwner() && validTargetFrame.timestamp() == expectedTimestamp);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testCopy(const double testDuration)
@@ -3964,8 +3322,7 @@ bool TestFrame::testCopy(const double testDuration)
 	Log::info() << "Testing copy:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	// testing all non-packed pixel formats
 
@@ -3995,10 +3352,7 @@ bool TestFrame::testCopy(const double testDuration)
 			case FrameType::DT_SIGNED_INTEGER_8:
 			case FrameType::DT_UNSIGNED_INTEGER_8:
 			{
-				if (!testCopy<uint8_t>(pixelFormat, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testCopy<uint8_t>(pixelFormat, randomGenerator));
 
 				break;
 			}
@@ -4007,10 +3361,7 @@ bool TestFrame::testCopy(const double testDuration)
 			case FrameType::DT_UNSIGNED_INTEGER_16:
 			case FrameType::DT_SIGNED_FLOAT_16:
 			{
-				if (!testCopy<uint16_t>(pixelFormat, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testCopy<uint16_t>(pixelFormat, randomGenerator));
 
 				break;
 			}
@@ -4019,10 +3370,7 @@ bool TestFrame::testCopy(const double testDuration)
 			case FrameType::DT_UNSIGNED_INTEGER_32:
 			case FrameType::DT_SIGNED_FLOAT_32:
 			{
-				if (!testCopy<uint32_t>(pixelFormat, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testCopy<uint32_t>(pixelFormat, randomGenerator));
 
 				break;
 			}
@@ -4031,31 +3379,21 @@ bool TestFrame::testCopy(const double testDuration)
 			case FrameType::DT_UNSIGNED_INTEGER_64:
 			case FrameType::DT_SIGNED_FLOAT_64:
 			{
-				if (!testCopy<uint64_t>(pixelFormat, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testCopy<uint64_t>(pixelFormat, randomGenerator));
 
 				break;
 			}
 
 			default:
 				ocean_assert(false && "Invalid data type!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -4086,11 +3424,12 @@ bool TestFrame::testCopy(const FrameType::PixelFormat pixelFormat, RandomGenerat
 
 	Indices32 sourcePaddingElementsPerPlane;
 
-	if (RandomI::random(randomGenerator, 1u) == 0u)
+	if (RandomI::boolean(randomGenerator))
 	{
 		for (unsigned int planeIndex = 0u; planeIndex < sourceFrameType.numberPlanes(); ++planeIndex)
 		{
-			sourcePaddingElementsPerPlane.emplace_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			sourcePaddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 		}
 	}
 
@@ -4098,11 +3437,12 @@ bool TestFrame::testCopy(const FrameType::PixelFormat pixelFormat, RandomGenerat
 
 	Indices32 targetPaddingElementsPerPlane;
 
-	if (RandomI::random(randomGenerator, 1u) == 0u)
+	if (RandomI::boolean(randomGenerator))
 	{
 		for (unsigned int planeIndex = 0u; planeIndex < targetFrameType.numberPlanes(); ++planeIndex)
 		{
-			targetPaddingElementsPerPlane.emplace_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			targetPaddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 		}
 	}
 
@@ -4210,7 +3550,8 @@ bool TestFrame::testMakeContinuous(const double testDuration)
 {
 	Log::info() << "Make continuous test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -4227,18 +3568,19 @@ bool TestFrame::testMakeContinuous(const double testDuration)
 
 	do
 	{
-		const FrameType::PixelFormat pixelFormat = RandomI::random(pixelFormats);
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
-		const unsigned int width = RandomI::random(1u, 1920u) * FrameType::widthMultiple(pixelFormat);
-		const unsigned int height = RandomI::random(1u, 1080u) * FrameType::heightMultiple(pixelFormat);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int n = 0u; n < FrameType::numberPlanes(pixelFormat); ++n)
 			{
-				paddingElementsPerPlane.emplace_back(RandomI::random(1u, 100u) * RandomI::random(1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElementsPerPlane.emplace_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
@@ -4248,42 +3590,30 @@ bool TestFrame::testMakeContinuous(const double testDuration)
 
 		notOwningFrame.makeContinuous();
 
-		if (!notOwningFrame.isContinuous())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, notOwningFrame.isContinuous());
 
-		if (!notOwningFrame.isOwner() && !frame.isContinuous())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, !notOwningFrame.isOwner() && !frame.isContinuous());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testPlaneBytesPerPixel()
 {
 	Log::info() << "Plane bytes per pixel test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats = definedPixelFormats();
 
 	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * FrameType::widthMultiple(pixelFormat);
-		const unsigned int height = RandomI::random(1u, 1080u) * FrameType::heightMultiple(pixelFormat);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
 
 		const Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), Indices32());
 
@@ -4292,15 +3622,9 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_Y8_LIMITED_RANGE:
 			case FrameType::FORMAT_Y8_FULL_RANGE:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 1u);
 
 				break;
 			}
@@ -4319,15 +3643,9 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_YA16:
 			case FrameType::FORMAT_Y10:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 2u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 2u);
 
 				break;
 			}
@@ -4336,15 +3654,9 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_RGGB10_PACKED:
 			case FrameType::FORMAT_Y10_PACKED:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 0u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 0u);
 
 				break;
 			}
@@ -4354,15 +3666,9 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_YUV24:
 			case FrameType::FORMAT_YVU24:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 3u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 3u);
 
 				break;
 			}
@@ -4379,30 +3685,18 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_Y32:
 			case FrameType::FORMAT_F32:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 4u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 4u);
 
 				break;
 			}
 
 			case FrameType::FORMAT_RGB48:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 6u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 6u);
 
 				break;
 			}
@@ -4411,15 +3705,9 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_RGBA64:
 			case FrameType::FORMAT_F64:
 			{
-				if (frame.numberPlanes() != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 1u);
 
-				if (frame.planeBytesPerPixel(0u) != 8u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 8u);
 
 				break;
 			}
@@ -4433,17 +3721,11 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_R_G_B24:
 			case FrameType::FORMAT_B_G_R24:
 			{
-				if (frame.numberPlanes() != 3u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 3u);
 
 				for (unsigned int planeIndex = 0u; planeIndex < 3u; ++planeIndex)
 				{
-					if (frame.planeBytesPerPixel(planeIndex) != 1u)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(planeIndex), 1u);
 				}
 
 				break;
@@ -4454,27 +3736,18 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
 			case FrameType::FORMAT_Y_VU12_FULL_RANGE:
 			{
-				if (frame.numberPlanes() != 2u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), 2u);
 
-				if (frame.planeBytesPerPixel(0u) != 1u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(0u), 1u);
 
-				if (frame.planeBytesPerPixel(1u) != 2u)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(1u), 2u);
 
 				break;
 			}
 
 			default:
 				ocean_assert(false && "Invalid pixel format!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 	}
@@ -4483,11 +3756,11 @@ bool TestFrame::testPlaneBytesPerPixel()
 
 	for (const FrameType::DataType& dataType : FrameType::definedDataTypes())
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int height = RandomI::random(1u, 1080u);
-		const unsigned int channels = RandomI::random(1u, 5u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const unsigned int planes = RandomI::random(1u, 4u);
+		const unsigned int planes = RandomI::random(randomGenerator, 1u, 4u);
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels, planes);
 
@@ -4496,39 +3769,25 @@ bool TestFrame::testPlaneBytesPerPixel()
 		const unsigned int bytesPerDataType = FrameType::bytesPerDataType(dataType);
 		const unsigned int bytesPerPixel = bytesPerDataType * channels;
 
-		if (frame.numberPlanes() != planes)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, frame.numberPlanes(), planes);
 
 		for (unsigned int planeIndex = 0u; planeIndex < planes; ++planeIndex)
 		{
-			if (frame.planeBytesPerPixel(planeIndex) != bytesPerPixel)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.planeBytesPerPixel(planeIndex), bytesPerPixel);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testSetValue(const double testDuration)
 {
 	Log::info() << "Set value test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -4552,11 +3811,12 @@ bool TestFrame::testSetValue(const double testDuration)
 
 		Indices32 paddingElementsPerPlane;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int planeIndex = 0u; planeIndex < FrameType::numberPlanes(pixelFormat); ++planeIndex)
 			{
-				paddingElementsPerPlane.push_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElementsPerPlane.push_back(maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u));
 			}
 		}
 
@@ -4576,131 +3836,93 @@ bool TestFrame::testSetValue(const double testDuration)
 		{
 			case FrameType::DT_UNSIGNED_INTEGER_8:
 			{
-				if (!testSetValue<uint8_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<uint8_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_INTEGER_8:
 			{
-				if (!testSetValue<int8_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<int8_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_16:
 			{
-				if (!testSetValue<uint16_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<uint16_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_INTEGER_16:
 			{
-				if (!testSetValue<int16_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<int16_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_32:
 			{
-				if (!testSetValue<uint32_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<uint32_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_INTEGER_32:
 			{
-				if (!testSetValue<int32_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<int32_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_64:
 			{
-				if (!testSetValue<uint64_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<uint64_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_INTEGER_64:
 			{
-				if (!testSetValue<int64_t>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<int64_t>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_FLOAT_32:
 			{
-				if (!testSetValue<float>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<float>(frame, randomGenerator));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_FLOAT_64:
 			{
-				if (!testSetValue<double>(frame, randomGenerator))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testSetValue<double>(frame, randomGenerator));
 
 				break;
 			}
 
 			default:
 				ocean_assert(false && "Invalid data type!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testContainsValue(const double testDuration)
 {
 	Log::info() << "Contains value test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -4709,7 +3931,8 @@ bool TestFrame::testContainsValue(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		{
 			// Y8
@@ -4728,7 +3951,7 @@ bool TestFrame::testContainsValue(const double testDuration)
 
 			bool containsValue = backgroundColor == testColor.values_[0];
 
-			if (!containsValue && RandomI::random(randomGenerator, 1u) == 0u)
+			if (!containsValue && RandomI::boolean(randomGenerator))
 			{
 				const unsigned int subFrameLeft = RandomI::random(randomGenerator, frame.width() - 1u);
 				const unsigned int subFrameTop = RandomI::random(randomGenerator, frame.height() - 1u);
@@ -4740,10 +3963,7 @@ bool TestFrame::testContainsValue(const double testDuration)
 				containsValue = true;
 			}
 
-			if (frame.containsValue<uint8_t, 1u>(testColor) != containsValue)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.containsValue<uint8_t, 1u>(testColor), containsValue);
 		}
 
 		{
@@ -4770,7 +3990,7 @@ bool TestFrame::testContainsValue(const double testDuration)
 
 			bool containsValue = backgroundColor == testColor;
 
-			if (!containsValue && RandomI::random(randomGenerator, 1u) == 0u)
+			if (!containsValue && RandomI::boolean(randomGenerator))
 			{
 				const unsigned int subFrameLeft = RandomI::random(randomGenerator, frame.width() - 1u);
 				const unsigned int subFrameTop = RandomI::random(randomGenerator, frame.height() - 1u);
@@ -4782,10 +4002,7 @@ bool TestFrame::testContainsValue(const double testDuration)
 				containsValue = true;
 			}
 
-			if (frame.containsValue<uint8_t, 3u>(testColor) != containsValue)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.containsValue<uint8_t, 3u>(testColor), containsValue);
 		}
 
 		{
@@ -4810,7 +4027,7 @@ bool TestFrame::testContainsValue(const double testDuration)
 
 			bool containsValue = backgroundColor == testColor;
 
-			if (!containsValue && RandomI::random(randomGenerator, 1u) == 0u)
+			if (!containsValue && RandomI::boolean(randomGenerator))
 			{
 				const unsigned int subFrameLeft = RandomI::random(randomGenerator, frame.width() - 1u);
 				const unsigned int subFrameTop = RandomI::random(randomGenerator, frame.height() - 1u);
@@ -4822,33 +4039,22 @@ bool TestFrame::testContainsValue(const double testDuration)
 				containsValue = true;
 			}
 
-			if (frame.containsValue<float, 2u>(testColor) != containsValue)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.containsValue<float, 2u>(testColor), containsValue);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testHasTransparentPixel(const double testDuration)
 {
 	Log::info() << "Has transparent pixel test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -4880,48 +4086,30 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 
 		if (frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 		{
-			if (frame.hasTransparentPixel<uint8_t>(0xFFu))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frame.hasTransparentPixel<uint8_t>(0xFFu));
 		}
 		else if (frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_16)
 		{
 			if (frame.pixelFormat() == FrameType::FORMAT_BGRA4444 || frame.pixelFormat() == FrameType::FORMAT_RGBA4444)
 			{
-				if (frame.hasTransparentPixel<uint16_t>(0x000Fu))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, frame.hasTransparentPixel<uint16_t>(0x000Fu));
 			}
 			else
 			{
-				if (frame.hasTransparentPixel<uint16_t>(0xFFFFu))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, frame.hasTransparentPixel<uint16_t>(0xFFFFu));
 			}
 		}
 		else if (frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_32)
 		{
-			if (frame.hasTransparentPixel<uint32_t>(0xFFFFFFFFu))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frame.hasTransparentPixel<uint32_t>(0xFFFFFFFFu));
 		}
 		else if (frame.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 		{
-			if (frame.hasTransparentPixel<float>(0.0f))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frame.hasTransparentPixel<float>(0.0f));
 		}
 		else if (frame.dataType() == FrameType::DT_SIGNED_FLOAT_64)
 		{
-			if (frame.hasTransparentPixel<double>(0.0f))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frame.hasTransparentPixel<double>(0.0f));
 		}
 	}
 
@@ -4938,7 +4126,8 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 			Frame frame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
 
@@ -4954,7 +4143,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 
 			frame.setValue<uint8_t>(opaquePixelValue, 4u);
 
-			const bool willContainTransparentPixel = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool willContainTransparentPixel = RandomI::boolean(randomGenerator);
 
 			if (willContainTransparentPixel)
 			{
@@ -4978,10 +4167,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 				frame.subFrame(transparentBlockLeft, transparentBlockTop, transparentBlockWidth, transparentBlockHeight).setValue<uint8_t>(transparentPixelValue, 4u);
 			}
 
-			if (frame.hasTransparentPixel<uint8_t>(opaqueValue) != willContainTransparentPixel)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.hasTransparentPixel<uint8_t>(opaqueValue), willContainTransparentPixel);
 		}
 
 		{
@@ -4995,7 +4181,8 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 			Frame frame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
 
@@ -5011,7 +4198,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 
 			frame.setValue<uint8_t>(opaquePixelValue, 4u);
 
-			const bool willContainTransparentPixel = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool willContainTransparentPixel = RandomI::boolean(randomGenerator);
 
 			if (willContainTransparentPixel)
 			{
@@ -5035,10 +4222,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 				frame.subFrame(transparentBlockLeft, transparentBlockTop, transparentBlockWidth, transparentBlockHeight).setValue<uint8_t>(transparentPixelValue, 4u);
 			}
 
-			if (frame.hasTransparentPixel<uint8_t>(opaqueValue) != willContainTransparentPixel)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.hasTransparentPixel<uint8_t>(opaqueValue), willContainTransparentPixel);
 		}
 
 		{
@@ -5052,7 +4236,8 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 			Frame frame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
 
@@ -5068,7 +4253,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 
 			frame.setValue<uint16_t>(opaquePixelValue, 4u);
 
-			const bool willContainTransparentPixel = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool willContainTransparentPixel = RandomI::boolean(randomGenerator);
 
 			if (willContainTransparentPixel)
 			{
@@ -5092,10 +4277,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 				frame.subFrame(transparentBlockLeft, transparentBlockTop, transparentBlockWidth, transparentBlockHeight).setValue<uint16_t>(transparentPixelValue, 4u);
 			}
 
-			if (frame.hasTransparentPixel<uint16_t>(opaqueValue) != willContainTransparentPixel)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.hasTransparentPixel<uint16_t>(opaqueValue), willContainTransparentPixel);
 		}
 
 		{
@@ -5123,7 +4305,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 
 			frame.setValue<uint8_t>(opaquePixelValue, 2u);
 
-			const bool willContainTransparentPixel = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool willContainTransparentPixel = RandomI::boolean(randomGenerator);
 
 			if (willContainTransparentPixel)
 			{
@@ -5145,24 +4327,14 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 				frame.subFrame(transparentBlockLeft, transparentBlockTop, transparentBlockWidth, transparentBlockHeight).setValue<uint8_t>(transparentPixelValue, 2u);
 			}
 
-			if (frame.hasTransparentPixel<uint8_t>(opaqueValue) != willContainTransparentPixel)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.hasTransparentPixel<uint8_t>(opaqueValue), willContainTransparentPixel);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testStrideBytes2paddingElements(const double testDuration)
@@ -5171,9 +4343,8 @@ bool TestFrame::testStrideBytes2paddingElements(const double testDuration)
 
 	Log::info() << "Testing calculate padding elements";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -5200,40 +4371,28 @@ bool TestFrame::testStrideBytes2paddingElements(const double testDuration)
 
 			for (unsigned int& paddingElements : paddingElementsPerPlane)
 			{
-				paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 			}
 
 			const Frame frame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElementsPerPlane);
 
 			ocean_assert(frame.numberPlanes() >= 1u);
-			if (frame.numberPlanes() == 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, frame.numberPlanes(), 0u);
 
 			for (unsigned int planeIndex = 0u; planeIndex < frame.numberPlanes(); ++planeIndex)
 			{
 				unsigned int planePaddingElements = (unsigned int)(-1);
 
-				if (!Frame::strideBytes2paddingElements(frame.pixelFormat(), frame.width(), frame.strideBytes(planeIndex), planePaddingElements, planeIndex) || planePaddingElements != paddingElementsPerPlane[planeIndex])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Frame::strideBytes2paddingElements(frame.pixelFormat(), frame.width(), frame.strideBytes(planeIndex), planePaddingElements, planeIndex) || planePaddingElements != paddingElementsPerPlane[planeIndex]);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testHaveIntersectingMemory(const double testDuration)
@@ -5242,9 +4401,8 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 
 	Log::info() << "Intersecting memory test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -5268,8 +4426,8 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			const bool usePaddingA = RandomI::random(randomGenerator, 1u) < 1u;
-			const bool usePaddingB = RandomI::random(randomGenerator, 1u) < 1u;
+			const bool usePaddingA = RandomI::boolean(randomGenerator);
+			const bool usePaddingB = RandomI::boolean(randomGenerator);
 
 			const unsigned int paddingElementsA = usePaddingA ? RandomI::random(randomGenerator, 1u, 128u) : 0u;
 			const unsigned int paddingElementsB = usePaddingB ? RandomI::random(randomGenerator, 1u, 128u) : 0u;
@@ -5279,25 +4437,13 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 
 			// two individual frames never have intersecting memory
 
-			if (frameA.haveIntersectingMemory(frameB))
-			{
-				allSucceeded = false;
-			}
-			if (frameB.haveIntersectingMemory(frameA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frameA.haveIntersectingMemory(frameB));
+			OCEAN_EXPECT_FALSE(validation, frameB.haveIntersectingMemory(frameA));
 
 			// two identical frames always have intersecting memory
 
-			if (frameA.haveIntersectingMemory(frameA) == false)
-			{
-				allSucceeded = false;
-			}
-			if (frameB.haveIntersectingMemory(frameB) == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameA.haveIntersectingMemory(frameA));
+			OCEAN_EXPECT_TRUE(validation, frameB.haveIntersectingMemory(frameB));
 		}
 
 		{
@@ -5327,8 +4473,8 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 			const FrameType frameTypeA(widthA, heightA, pixelFormatA, pixelOriginA);
 			const FrameType frameTypeB(widthB, heightB, pixelFormatB, pixelOriginB);
 
-			const bool usePaddingA = RandomI::random(randomGenerator, 1u) < 1u;
-			const bool usePaddingB = RandomI::random(randomGenerator, 1u) < 1u;
+			const bool usePaddingA = RandomI::boolean(randomGenerator);
+			const bool usePaddingB = RandomI::boolean(randomGenerator);
 
 			const unsigned int paddingElementsA = usePaddingA ? RandomI::random(randomGenerator, 1u, maximalPaddingElements) : 0u;
 			const unsigned int paddingElementsB = usePaddingB ? RandomI::random(randomGenerator, 1u, maximalPaddingElements) : 0u;
@@ -5357,75 +4503,32 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 
 			const bool memoryIsIntersecting = startIntersection < endIntersection;
 
-			if (memoryIsIntersecting != frameA.haveIntersectingMemory(frameB))
-			{
-				allSucceeded = false;
-			}
-			if (memoryIsIntersecting != frameB.haveIntersectingMemory(frameA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, frameA.haveIntersectingMemory(frameB));
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, frameB.haveIntersectingMemory(frameA));
 
-			if (memoryIsIntersecting != frameA.haveIntersectingMemory(constFrameB))
-			{
-				allSucceeded = false;
-			}
-			if (memoryIsIntersecting != constFrameB.haveIntersectingMemory(frameA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, frameA.haveIntersectingMemory(constFrameB));
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, constFrameB.haveIntersectingMemory(frameA));
 
-			if (memoryIsIntersecting != constFrameA.haveIntersectingMemory(frameB))
-			{
-				allSucceeded = false;
-			}
-			if (memoryIsIntersecting != frameB.haveIntersectingMemory(constFrameA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, constFrameA.haveIntersectingMemory(frameB));
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, frameB.haveIntersectingMemory(constFrameA));
 
-			if (memoryIsIntersecting != constFrameA.haveIntersectingMemory(constFrameB))
-			{
-				allSucceeded = false;
-			}
-			if (memoryIsIntersecting != constFrameB.haveIntersectingMemory(constFrameA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, constFrameA.haveIntersectingMemory(constFrameB));
+			OCEAN_EXPECT_EQUAL(validation, memoryIsIntersecting, constFrameB.haveIntersectingMemory(constFrameA));
 
 			// identical frames always share the same memory
 
-			if (frameA.haveIntersectingMemory(frameA) == false)
-			{
-				allSucceeded = false;
-			}
-			if (frameB.haveIntersectingMemory(frameB) == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frameA.haveIntersectingMemory(frameA));
+			OCEAN_EXPECT_TRUE(validation, frameB.haveIntersectingMemory(frameB));
 
-			if (constFrameA.haveIntersectingMemory(constFrameA) == false)
-			{
-				allSucceeded = false;
-			}
-			if (constFrameB.haveIntersectingMemory(constFrameB) == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, constFrameA.haveIntersectingMemory(constFrameA));
+			OCEAN_EXPECT_TRUE(validation, constFrameB.haveIntersectingMemory(constFrameB));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testUpdateMemory(const double testDuration)
@@ -5446,7 +4549,6 @@ bool TestFrame::testUpdateMemory(const double testDuration)
 	const FrameType::PixelFormats pixelFormats = definedPixelFormats(genericPixelFormats);
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -5904,7 +5006,7 @@ bool TestFrame::testFormatIsPacked()
 {
 	Log::info() << "Format is packed test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	const std::unordered_set<FrameType::PixelFormat> packedPixelFormats =
 	{
@@ -5915,40 +5017,24 @@ bool TestFrame::testFormatIsPacked()
 
 	for (const FrameType::PixelFormat pixelFormat : packedPixelFormats)
 	{
-		if (!FrameType::formatIsPacked(pixelFormat))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, FrameType::formatIsPacked(pixelFormat));
 	}
 
 	for (const FrameType::PixelFormat pixelFormat : FrameType::definedPixelFormats())
 	{
 		if (packedPixelFormats.find(pixelFormat) == packedPixelFormats.cend())
 		{
-			if (FrameType::formatIsPacked(pixelFormat))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, FrameType::formatIsPacked(pixelFormat));
 		}
 		else
 		{
-			if (!FrameType::formatIsPacked(pixelFormat))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, FrameType::formatIsPacked(pixelFormat));
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testFormatIsLimitedRange()
@@ -6048,74 +5134,50 @@ bool TestFrame::testTranslateDataType()
 {
 	Log::info() << "Translate data type test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const FrameType::DataType& dataType : FrameType::definedDataTypes())
 	{
 		const std::string dataTypeString = FrameType::translateDataType(dataType);
 
-		if (dataTypeString.empty())
-		{
-			allSucceeded = false;
-		}
-		else
+		OCEAN_EXPECT_FALSE(validation, dataTypeString.empty());
+
+		if (!dataTypeString.empty())
 		{
 			const FrameType::DataType translatedDataType = FrameType::translateDataType(dataTypeString);
 
-			if (translatedDataType != dataType)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, translatedDataType, dataType);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testTranslatePixelFormat()
 {
 	Log::info() << "Translate pixel format test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const FrameType::PixelFormat& pixelFormat : definedPixelFormats())
 	{
 		const std::string pixelFormatString = FrameType::translatePixelFormat(pixelFormat);
 
-		if (pixelFormatString.empty())
-		{
-			allSucceeded = false;
-		}
-		else
+		OCEAN_EXPECT_FALSE(validation, pixelFormatString.empty());
+
+		if (!pixelFormatString.empty())
 		{
 			const FrameType::PixelFormat translatedPixelFormat = FrameType::translatePixelFormat(pixelFormatString);
 
-			if (translatedPixelFormat != pixelFormat)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, translatedPixelFormat, pixelFormat);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testArePixelFormatsCompatible(const double testDuration)
@@ -6864,7 +5926,6 @@ bool TestFrame::testExtremeResolutions(const double testDuration)
 	Log::info() << "Testing extreme resolutions:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats = definedPixelFormats();
@@ -6992,107 +6053,53 @@ bool TestFrame::testExtremeResolutions(const double testDuration)
 }
 
 template <typename T>
-bool TestFrame::testPlaneContructors(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int paddingElements)
+bool TestFrame::testPlaneContructors(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int paddingElements, RandomGenerator& randomGenerator)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(channels >= 1u);
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	{
 		// create plane owning the memory
 
 		Frame::Plane plane(width, height, channels, sizeof(T), paddingElements);
 
-		if (plane.isValid() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isValid());
 
-		if (plane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isOwner());
 
-		if (plane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, plane.isReadOnly());
 
-		if (plane.isContinuous() != (paddingElements == 0u))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.isContinuous(), paddingElements == 0u);
 
-		if (plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>());
 
-		if (plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>());
 
-		if (sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>());
 
-		if (sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>());
 
-		if (sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>());
 
-		if (sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>());
 
-		if (plane.strideBytes() != (width * channels + paddingElements) * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.strideBytes()), (width * channels + paddingElements) * sizeof(T));
 
-		if (plane.strideElements() != width * channels + paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.strideElements(), width * channels + paddingElements);
 
-		if (plane.paddingElements() != paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.paddingElements(), paddingElements);
 
-		if (plane.paddingBytes() != paddingElements * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.paddingBytes()), paddingElements * sizeof(T));
 
-		if (plane.height() != height)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.height(), height);
 
-		if (plane.size() != (width * channels + paddingElements) * height * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.size()), (width * channels + paddingElements) * height * sizeof(T));
 
-		if (plane.elementTypeSize() != sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.elementTypeSize()), sizeof(T));
 
-		if (plane.constdata<void>() == nullptr || plane.data<void>() == nullptr)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.constdata<void>() != nullptr && plane.data<void>() != nullptr);
 	}
 
 	{
@@ -7102,95 +6109,41 @@ bool TestFrame::testPlaneContructors(const unsigned int width, const unsigned in
 
 		Frame::Plane plane(width, height, channels, memory.constdata<T>(), paddingElements);
 
-		if (plane.isValid() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isValid());
 
-		if (plane.isOwner())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, plane.isOwner());
 
-		if (plane.isReadOnly() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isReadOnly());
 
-		if (plane.isContinuous() != (paddingElements == 0u))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.isContinuous(), paddingElements == 0u);
 
-		if (plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>());
 
-		if (plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>());
 
-		if (sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>());
 
-		if (sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>());
 
-		if (sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>());
 
-		if (sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>());
 
-		if (plane.strideBytes() != (width * channels + paddingElements) * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.strideBytes()), (width * channels + paddingElements) * sizeof(T));
 
-		if (plane.strideElements() != width * channels + paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.strideElements(), width * channels + paddingElements);
 
-		if (plane.paddingElements() != paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.paddingElements(), paddingElements);
 
-		if (plane.paddingBytes() != paddingElements * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.paddingBytes()), paddingElements * sizeof(T));
 
-		if (plane.height() != height)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.height(), height);
 
-		if (plane.size() != (width * channels + paddingElements) * height * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.size()), (width * channels + paddingElements) * height * sizeof(T));
 
-		if (plane.elementTypeSize() != sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.elementTypeSize()), sizeof(T));
 
-		if (plane.constdata<void>() == nullptr || plane.data<void>() != nullptr)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.constdata<void>() != nullptr && plane.data<void>() == nullptr);
 	}
 
 	{
@@ -7200,197 +6153,90 @@ bool TestFrame::testPlaneContructors(const unsigned int width, const unsigned in
 
 		Frame::Plane plane(width, height, channels, memory.data<T>(), paddingElements);
 
-		if (plane.isValid() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isValid());
 
-		if (plane.isOwner())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, plane.isOwner());
 
-		if (plane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, plane.isReadOnly());
 
-		if (plane.isContinuous() != (paddingElements == 0u))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.isContinuous(), paddingElements == 0u);
 
-		if (plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>());
 
-		if (plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>());
 
-		if (sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>());
 
-		if (sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>());
 
-		if (sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>());
 
-		if (sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>());
 
-		if (plane.strideBytes() != (width * channels + paddingElements) * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.strideBytes()), (width * channels + paddingElements) * sizeof(T));
 
-		if (plane.strideElements() != width * channels + paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.strideElements(), width * channels + paddingElements);
 
-		if (plane.paddingElements() != paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.paddingElements(), paddingElements);
 
-		if (plane.paddingBytes() != paddingElements * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.paddingBytes()), paddingElements * sizeof(T));
 
-		if (plane.height() != height)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.height(), height);
 
-		if (plane.size() != (width * channels + paddingElements) * height * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.size()), (width * channels + paddingElements) * height * sizeof(T));
 
-		if (plane.elementTypeSize() != sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.elementTypeSize()), sizeof(T));
 
-		if (plane.constdata<void>() == nullptr || plane.data<void>() == nullptr)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.constdata<void>() != nullptr && plane.data<void>() != nullptr);
 	}
 
 	{
 		// create plane copying the memory
 
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(0u, 1u);
+		const unsigned int maxSourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourcePaddingElements = maxSourcePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		const Memory memory = Memory::create<T>(height * (width * channels + sourcePaddingElements));
 
-		const bool makeCopyOfPaddingData = paddingElements == sourcePaddingElements && RandomI::random(0u, 1u) == 1u;
+		const bool makeCopyOfPaddingData = paddingElements == sourcePaddingElements && RandomI::boolean(randomGenerator);
 
 		Frame::Plane plane(memory.constdata<T>(), width, height, channels, paddingElements, sourcePaddingElements, makeCopyOfPaddingData);
 
-		if (plane.isValid() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isValid());
 
-		if (plane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isOwner());
 
-		if (plane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, plane.isReadOnly());
 
-		if (plane.isContinuous() != (paddingElements == 0u))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.isContinuous(), paddingElements == 0u);
 
-		if (plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>());
 
-		if (plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>());
 
-		if (sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>());
 
-		if (sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>());
 
-		if (sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>());
 
-		if (sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>());
 
-		if (plane.strideBytes() != (width * channels + paddingElements) * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.strideBytes()), (width * channels + paddingElements) * sizeof(T));
 
-		if (plane.strideElements() != width * channels + paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.strideElements(), width * channels + paddingElements);
 
-		if (plane.paddingElements() != paddingElements)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.paddingElements(), paddingElements);
 
-		if (plane.paddingBytes() != paddingElements * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.paddingBytes()), paddingElements * sizeof(T));
 
-		if (plane.height() != height)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, plane.height(), height);
 
-		if (plane.size() != (width * channels + paddingElements) * height * sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.size()), (width * channels + paddingElements) * height * sizeof(T));
 
-		if (plane.elementTypeSize() != sizeof(T))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, size_t(plane.elementTypeSize()), sizeof(T));
 
-		if (plane.constdata<void>() == nullptr || plane.data<void>() == nullptr)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, plane.constdata<void>() != nullptr && plane.data<void>() != nullptr);
 	}
 
 	{
@@ -7410,10 +6256,7 @@ bool TestFrame::testPlaneContructors(const unsigned int width, const unsigned in
 		{
 			Frame::Plane plane(memory.constdata<T>(), width, height, channels, paddingElements, copyMode);
 
-			if (plane.isValid() == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, plane.isValid());
 
 			bool expectedIsOwner = false;
 			bool expectedIsReadOnly = false;
@@ -7453,104 +6296,50 @@ bool TestFrame::testPlaneContructors(const unsigned int width, const unsigned in
 
 			ocean_assert(expectedStrideBytes != 0u);
 
-			if (plane.isOwner() != expectedIsOwner)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.isOwner(), expectedIsOwner);
 
-			if (plane.isReadOnly() != expectedIsReadOnly)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.isReadOnly(), expectedIsReadOnly);
 
-			if (plane.isContinuous() != (expectedPaddingElements == 0u))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.isContinuous(), expectedPaddingElements == 0u);
 
-			if (plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>() == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename SignedTyper<T>::Type>());
 
-			if (plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>() == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, plane.isCompatibleWithDataType<typename UnsignedTyper<T>::Type>());
 
-			if (sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, sizeof(int8_t) != sizeof(T) && plane.isCompatibleWithDataType<int8_t>());
 
-			if (sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, sizeof(int16_t) != sizeof(T) && plane.isCompatibleWithDataType<int16_t>());
 
-			if (sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, sizeof(int32_t) != sizeof(T) && plane.isCompatibleWithDataType<int32_t>());
 
-			if (sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, sizeof(double) != sizeof(T) && plane.isCompatibleWithDataType<double>());
 
-			if (plane.strideBytes() != expectedStrideBytes)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.strideBytes(), expectedStrideBytes);
 
-			if (plane.strideElements() != expectedStrideBytes / sizeof(T))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, size_t(plane.strideElements()), expectedStrideBytes / sizeof(T));
 
-			if (plane.paddingElements() != expectedPaddingElements)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.paddingElements(), expectedPaddingElements);
 
-			if (plane.paddingBytes() != expectedPaddingElements * sizeof(T))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, size_t(plane.paddingBytes()), expectedPaddingElements * sizeof(T));
 
-			if (plane.height() != height)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.height(), height);
 
-			if (plane.size() != expectedStrideBytes * height)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, plane.size(), expectedStrideBytes * height);
 
-			if (plane.elementTypeSize() != sizeof(T))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, size_t(plane.elementTypeSize()), sizeof(T));
 
 			if (expectedIsReadOnly)
 			{
-				if (plane.constdata<void>() == nullptr || plane.data<void>() != nullptr)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, plane.constdata<void>() != nullptr && plane.data<void>() == nullptr);
 			}
 			else
 			{
-				if (plane.constdata<void>() == nullptr || plane.data<void>() == nullptr)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, plane.constdata<void>() != nullptr && plane.data<void>() != nullptr);
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -7559,52 +6348,28 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(channels >= 1u);
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		Frame::Plane sourcePlane(width, height, channels, sizeof(T), paddingElements);
 
 		Frame::Plane newPlane(sourcePlane, Frame::ACM_USE_KEEP_LAYOUT);
 
-		if (newPlane.widthBytes() != sourcePlane.widthBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-		if (newPlane.strideBytes() != sourcePlane.strideBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes());
 
-		if (newPlane.paddingBytes() != sourcePlane.paddingBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), sourcePlane.paddingBytes());
 
-		if (newPlane.height() != sourcePlane.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-		if (newPlane.isOwner())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isOwner());
 
-		if (newPlane.data<void>() != sourcePlane.data<void>() || newPlane.constdata<void>() != sourcePlane.constdata<void>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.data<void>() == sourcePlane.data<void>() && newPlane.constdata<void>() == sourcePlane.constdata<void>());
 
-		if (newPlane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isReadOnly());
 
-		if (!newPlane.isCompatibleWithDataType<T>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 	}
 
 	{
@@ -7612,52 +6377,25 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 		Frame::Plane newPlane(sourcePlane, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
-		if (newPlane.widthBytes() != sourcePlane.widthBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-		if (newPlane.strideBytes() != sourcePlane.strideBytes() - sourcePlane.paddingBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes() - sourcePlane.paddingBytes());
 
-		if (newPlane.paddingBytes() != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), 0u);
 
-		if (newPlane.height() != sourcePlane.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-		if (newPlane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isOwner());
 
-		if (newPlane.data<void>() == sourcePlane.data<void>() || newPlane.constdata<void>() == sourcePlane.constdata<void>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.data<void>() != sourcePlane.data<void>() && newPlane.constdata<void>() != sourcePlane.constdata<void>());
 
-		if (newPlane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isReadOnly());
 
-		if (!newPlane.isCompatibleWithDataType<T>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 
 		for (unsigned int y = 0u; y < sourcePlane.height(); ++y)
 		{
-			if (memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()) != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()), 0);
 		}
 	}
 
@@ -7666,52 +6404,25 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 		Frame::Plane newPlane(sourcePlane, Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA);
 
-		if (newPlane.widthBytes() != sourcePlane.widthBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-		if (newPlane.strideBytes() != sourcePlane.strideBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes());
 
-		if (newPlane.paddingBytes() != sourcePlane.paddingBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), sourcePlane.paddingBytes());
 
-		if (newPlane.height() != sourcePlane.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-		if (newPlane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isOwner());
 
-		if (newPlane.data<void>() == sourcePlane.data<void>() || newPlane.constdata<void>() == sourcePlane.constdata<void>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.data<void>() != sourcePlane.data<void>() && newPlane.constdata<void>() != sourcePlane.constdata<void>());
 
-		if (newPlane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isReadOnly());
 
-		if (!newPlane.isCompatibleWithDataType<T>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 
 		for (unsigned int y = 0u; y < sourcePlane.height(); ++y)
 		{
-			if (memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()) != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()), 0);
 		}
 	}
 
@@ -7720,55 +6431,25 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 		Frame::Plane newPlane(sourcePlane, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		if (newPlane.widthBytes() != sourcePlane.widthBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-		if (newPlane.strideBytes() != sourcePlane.strideBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes());
 
-		if (newPlane.paddingBytes() != sourcePlane.paddingBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), sourcePlane.paddingBytes());
 
-		if (newPlane.height() != sourcePlane.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-		if (newPlane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isOwner());
 
-		if (newPlane.data<void>() == sourcePlane.data<void>() || newPlane.constdata<void>() == sourcePlane.constdata<void>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.data<void>() != sourcePlane.data<void>() && newPlane.constdata<void>() != sourcePlane.constdata<void>());
 
-		if (newPlane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isReadOnly());
 
-		if (!newPlane.isCompatibleWithDataType<T>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 
-		if (newPlane.strideBytes() * newPlane.height() != newPlane.size())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes() * newPlane.height(), newPlane.size());
 
-		if (memcmp(newPlane.constdata<void>(), sourcePlane.constdata<void>(), newPlane.size()) != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, memcmp(newPlane.constdata<void>(), sourcePlane.constdata<void>(), newPlane.size()), 0);
 	}
 
 	{
@@ -7778,52 +6459,25 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 		Frame::Plane newPlane(sourcePlane, Frame::ACM_USE_OR_COPY);
 
-		if (newPlane.widthBytes() != sourcePlane.widthBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-		if (newPlane.strideBytes() != sourcePlane.strideBytes() - sourcePlane.paddingBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes() - sourcePlane.paddingBytes());
 
-		if (newPlane.paddingBytes() != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), 0u);
 
-		if (newPlane.height() != sourcePlane.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-		if (newPlane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isOwner());
 
-		if (newPlane.data<void>() == sourcePlane.data<void>() || newPlane.constdata<void>() == sourcePlane.constdata<void>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.data<void>() != sourcePlane.data<void>() && newPlane.constdata<void>() != sourcePlane.constdata<void>());
 
-		if (newPlane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isReadOnly());
 
-		if (!newPlane.isCompatibleWithDataType<T>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 
 		for (unsigned int y = 0u; y < sourcePlane.height(); ++y)
 		{
-			if (memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()) != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()), 0);
 		}
 	}
 
@@ -7840,45 +6494,21 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 			Frame::Plane newPlane(sourcePlane, Frame::ACM_USE_OR_COPY);
 
-			if (newPlane.widthBytes() != sourcePlane.widthBytes())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-			if (newPlane.strideBytes() != sourcePlane.strideBytes())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes());
 
-			if (newPlane.paddingBytes() != sourcePlane.paddingBytes())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), sourcePlane.paddingBytes());
 
-			if (newPlane.height() != sourcePlane.height())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-			if (newPlane.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, newPlane.isOwner());
 
-			if (newPlane.constdata<void>() != sourcePlane.constdata<void>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.constdata<void>(), sourcePlane.constdata<void>());
 
-			if (newPlane.isReadOnly() != makeReadOnly)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.isReadOnly(), makeReadOnly);
 
-			if (!newPlane.isCompatibleWithDataType<T>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 		}
 	}
 
@@ -7889,52 +6519,25 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 		Frame::Plane newPlane(sourcePlane, Frame::ACM_USE_OR_COPY_KEEP_LAYOUT);
 
-		if (newPlane.widthBytes() != sourcePlane.widthBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-		if (newPlane.strideBytes() != sourcePlane.strideBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes());
 
-		if (newPlane.paddingBytes() != sourcePlane.paddingBytes())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), sourcePlane.paddingBytes());
 
-		if (newPlane.height() != sourcePlane.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-		if (newPlane.isOwner() == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isOwner());
 
-		if (newPlane.data<void>() == sourcePlane.data<void>() || newPlane.constdata<void>() == sourcePlane.constdata<void>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.data<void>() != sourcePlane.data<void>() && newPlane.constdata<void>() != sourcePlane.constdata<void>());
 
-		if (newPlane.isReadOnly())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, newPlane.isReadOnly());
 
-		if (!newPlane.isCompatibleWithDataType<T>())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 
 		for (unsigned int y = 0u; y < sourcePlane.height(); ++y)
 		{
-			if (memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()) != 0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, memcmp(newPlane.constdata<uint8_t>() + y * newPlane.strideBytes() , sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes(), newPlane.widthBytes()), 0);
 		}
 	}
 
@@ -7951,49 +6554,25 @@ bool TestFrame::testPlaneCopyContructors(const unsigned int width, const unsigne
 
 			Frame::Plane newPlane(sourcePlane, Frame::ACM_USE_OR_COPY_KEEP_LAYOUT);
 
-			if (newPlane.widthBytes() != sourcePlane.widthBytes())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.widthBytes(), sourcePlane.widthBytes());
 
-			if (newPlane.strideBytes() != sourcePlane.strideBytes())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.strideBytes(), sourcePlane.strideBytes());
 
-			if (newPlane.paddingBytes() != sourcePlane.paddingBytes())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.paddingBytes(), sourcePlane.paddingBytes());
 
-			if (newPlane.height() != sourcePlane.height())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.height(), sourcePlane.height());
 
-			if (newPlane.isOwner())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, newPlane.isOwner());
 
-			if (newPlane.constdata<void>() != sourcePlane.constdata<void>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.constdata<void>(), sourcePlane.constdata<void>());
 
-			if (newPlane.isReadOnly() != makeReadOnly)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, newPlane.isReadOnly(), makeReadOnly);
 
-			if (!newPlane.isCompatibleWithDataType<T>())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, newPlane.isCompatibleWithDataType<T>());
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -8011,7 +6590,8 @@ bool TestFrame::validatePlaneInitializer(const FrameType& frameType, RandomGener
 
 	if (frameType.numberPlanes() == 1u)
 	{
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		{
 			// plane without memory pointer, but specified padding elements
@@ -8164,8 +6744,10 @@ bool TestFrame::validatePlaneInitializer(const FrameType& frameType, RandomGener
 	}
 	else if (frameType.numberPlanes() == 2u)
 	{
-		const unsigned int paddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int paddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxPaddingElements0 = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements0 = maxPaddingElements0 * RandomI::random(randomGenerator, 0u, 1u);
+		const unsigned int maxPaddingElements1 = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements1 = maxPaddingElements1 * RandomI::random(randomGenerator, 0u, 1u);
 
 		{
 			// plane without memory pointer, but specified padding elements
@@ -8359,7 +6941,8 @@ bool TestFrame::validatePlaneInitializer(const FrameType& frameType, RandomGener
 
 		for (unsigned int nPlane = 0u; nPlane < numberPlanes; ++nPlane)
 		{
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int randomMaxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = randomMaxPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 			paddingElementPerPlane.push_back(paddingElements);
 
@@ -8619,7 +7202,7 @@ bool TestFrame::testSetValue(const Frame& frame, RandomGenerator& randomGenerato
 		const uint8_t byteValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
 		const unsigned int planeIndex = RandomI::random(randomGenerator, frame.numberPlanes() - 1u);
-		const bool skipPaddingData = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool skipPaddingData = RandomI::boolean(randomGenerator);
 
 		if (frameCopy.setValue(byteValue, planeIndex, skipPaddingData))
 		{

@@ -323,11 +323,12 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		 * @param height The height of the plane in pixels, with range [1, infinity)
 		 * @param channels The of channels the plane has, with range [1, infinity)
 		 * @param paddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
+		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 * @tparam T The element data type
 		 */
 		template <typename T>
-		static bool testPlaneContructors(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int paddingElements);
+		static bool testPlaneContructors(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int paddingElements, RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the Plane copy constructors for a specified resolution, channel number and element type.
