@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
@@ -135,7 +136,7 @@ bool TestDataType::testChar()
 	static_assert(int((unsigned char)(-110)) > 0, "Invalid data type!");
 	static_assert(int((unsigned char)(110)) > 0, "Invalid data type!");
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	char signedCharA = char(-110);
 	char signedCharB = char(110);
@@ -143,36 +144,17 @@ bool TestDataType::testChar()
 	unsigned char unsignedCharA = (unsigned char)(-110);
 	unsigned char unsignedCharB = (unsigned char)(110);
 
-	if (int(signedCharA) != -110)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, int(signedCharA), -110);
 
-	if (int(signedCharB) != 110)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, int(signedCharB), 110);
 
-	if (int(unsignedCharA) < 0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_GREATER_EQUAL(validation, int(unsignedCharA), 0);
 
-	if (int(unsignedCharB) < 0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_GREATER_EQUAL(validation, int(unsignedCharB), 0);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Char test: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Char test: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDataType::testIntegerShift()
@@ -184,25 +166,22 @@ bool TestDataType::testIntegerShift()
 	const int valuePositive = 8;
 	const int valueNegative = -8;
 
-	const bool allSucceeded = valuePositive >> 1 == 4 && valueNegative >> 1 == -4;
+	Validation validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	OCEAN_EXPECT_EQUAL(validation, valuePositive >> 1, 4);
+	OCEAN_EXPECT_EQUAL(validation, valueNegative >> 1, -4);
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestDataType::testArbitraryDataType(const double testDuration)
 {
 	Log::info() << "Arbitrary data type test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -210,289 +189,252 @@ bool TestDataType::testArbitraryDataType(const double testDuration)
 	{
 		for (size_t n = 0; n < 1000; ++n)
 		{
-			const DataType<unsigned char, 3u>::Type data24_a = {{(unsigned char)RandomI::random(255), (unsigned char)RandomI::random(255), (unsigned char)RandomI::random(255)}};
-			const DataType<unsigned char, 3u>::Type data24_b = {{(unsigned char)RandomI::random(255), (unsigned char)RandomI::random(255), (unsigned char)RandomI::random(255)}};
+			const unsigned char data24_a_0 = (unsigned char)RandomI::random(randomGenerator, 255u);
+			const unsigned char data24_a_1 = (unsigned char)RandomI::random(randomGenerator, 255u);
+			const unsigned char data24_a_2 = (unsigned char)RandomI::random(randomGenerator, 255u);
+			const DataType<unsigned char, 3u>::Type data24_a = {{data24_a_0, data24_a_1, data24_a_2}};
+
+			const unsigned char data24_b_0 = (unsigned char)RandomI::random(randomGenerator, 255u);
+			const unsigned char data24_b_1 = (unsigned char)RandomI::random(randomGenerator, 255u);
+			const unsigned char data24_b_2 = (unsigned char)RandomI::random(randomGenerator, 255u);
+			const DataType<unsigned char, 3u>::Type data24_b = {{data24_b_0, data24_b_1, data24_b_2}};
 
 			static_assert(sizeof(data24_a) == sizeof(unsigned char) * 3, "Invalid data type!");
 
-			if (data24_a == data24_b && data24_a != data24_b)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, data24_a == data24_b && data24_a != data24_b);
 		}
 
 		for (size_t n = 0; n < 1000; ++n)
 		{
-			const DataType<unsigned short, 3u>::Type data48_a = {{(unsigned short)(RandomI::random32()), (unsigned short)(RandomI::random32()), (unsigned short)(RandomI::random32())}};
-			const DataType<unsigned short, 3u>::Type data48_b = {{(unsigned short)(RandomI::random32()), (unsigned short)(RandomI::random32()), (unsigned short)(RandomI::random32())}};
+			const unsigned short data48_a_0 = (unsigned short)(RandomI::random32(randomGenerator));
+			const unsigned short data48_a_1 = (unsigned short)(RandomI::random32(randomGenerator));
+			const unsigned short data48_a_2 = (unsigned short)(RandomI::random32(randomGenerator));
+			const DataType<unsigned short, 3u>::Type data48_a = {{data48_a_0, data48_a_1, data48_a_2}};
+
+			const unsigned short data48_b_0 = (unsigned short)(RandomI::random32(randomGenerator));
+			const unsigned short data48_b_1 = (unsigned short)(RandomI::random32(randomGenerator));
+			const unsigned short data48_b_2 = (unsigned short)(RandomI::random32(randomGenerator));
+			const DataType<unsigned short, 3u>::Type data48_b = {{data48_b_0, data48_b_1, data48_b_2}};
 
 			static_assert(sizeof(data48_a) == sizeof(unsigned short) * 3, "Invalid data type!");
 
-			if (data48_a == data48_b && data48_a != data48_b)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, data48_a == data48_b && data48_a != data48_b);
 		}
 
 		for (size_t n = 0; n < 1000; ++n)
 		{
-			const DataType<unsigned long long, 2u>::Type data128_a = {{RandomI::random64(), RandomI::random64()}};
-			const DataType<unsigned long long, 2u>::Type data128_b = {{RandomI::random64(), RandomI::random64()}};
+			const unsigned long long data128_a_0 = RandomI::random64(randomGenerator);
+			const unsigned long long data128_a_1 = RandomI::random64(randomGenerator);
+			const DataType<unsigned long long, 2u>::Type data128_a = {{data128_a_0, data128_a_1}};
+
+			const unsigned long long data128_b_0 = RandomI::random64(randomGenerator);
+			const unsigned long long data128_b_1 = RandomI::random64(randomGenerator);
+			const DataType<unsigned long long, 2u>::Type data128_b = {{data128_b_0, data128_b_1}};
 
 			static_assert(sizeof(data128_a) == sizeof(unsigned long long) * 2, "Invalid data type!");
 
-			if (data128_a == data128_b && data128_a != data128_b)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, data128_a == data128_b && data128_a != data128_b);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDataType::testUnsignedTyper()
 {
 	Log::info() << "UnsignedTyper test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		using Typer = UnsignedTyper<bool>;
 
-		if (typeid(Typer::Type) != typeid(bool))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(bool));
 
 		if constexpr (Typer::isUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<signed char>;
 
-		if (typeid(Typer::Type) != typeid(unsigned char))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned char));
 
 		if constexpr (Typer::isUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<unsigned char>;
 
-		if (typeid(Typer::Type) != typeid(unsigned char))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned char));
 
 		if constexpr (Typer::isUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<short>;
 
-		if (typeid(Typer::Type) != typeid(unsigned short))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned short));
 
 		if constexpr (Typer::isUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<unsigned short>;
 
-		if (typeid(Typer::Type) != typeid(unsigned short))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned short));
 
 		if constexpr (Typer::isUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<int>;
 
-		if (typeid(Typer::Type) != typeid(unsigned int))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned int));
 
 		if constexpr (Typer::isUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<unsigned int>;
 
-		if (typeid(Typer::Type) != typeid(unsigned int))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned int));
 
 		if constexpr (Typer::isUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<long long>;
 
-		if (typeid(Typer::Type) != typeid(unsigned long long))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned long long));
 
 		if constexpr (Typer::isUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<unsigned long long>;
 
-		if (typeid(Typer::Type) != typeid(unsigned long long))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(unsigned long long));
 
 		if constexpr (Typer::isUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != true)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<float>;
 
-		if (typeid(Typer::Type) != typeid(float))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(float));
 
 		if constexpr (Typer::isUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	{
 		using Typer = UnsignedTyper<double>;
 
-		if (typeid(Typer::Type) != typeid(double))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, typeid(Typer::Type) == typeid(double));
 
 		if constexpr (Typer::isUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if constexpr (Typer::hasUnsigned != false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDataType::testAbsoluteDifferenceValueTyper()
 {
 	Log::info() << "AbsoluteDifferenceValueTyper test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	/*
 	 * Data type:            Absolute difference data type:
@@ -529,56 +471,50 @@ bool TestDataType::testAbsoluteDifferenceValueTyper()
 
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<char>::Type, unsigned int>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<unsigned char>::Type, unsigned int>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<short>::Type, unsigned long long>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<unsigned short>::Type, unsigned long long>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<int>::Type, unsigned long long>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<unsigned int>::Type, unsigned long long>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<float>::Type, double>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	if constexpr (std::is_same<AbsoluteDifferenceValueTyper<double>::Type, double>::value == false)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDataType::testFloat16(const double testDuration)
 {
 	Log::info() << "Float16 test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -588,60 +524,48 @@ bool TestDataType::testFloat16(const double testDuration)
 		const float value_0_0_0 = float(Float16(0u, 0u, 0u));
 		const float value_1_0_0 = float(Float16(1u, 0u, 0u));
 
-		if (value_0_0_0 != 0.0f || value_1_0_0 != -0.0f)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value_0_0_0, 0.0f);
+		OCEAN_EXPECT_EQUAL(validation, value_1_0_0, -0.0f);
 	}
 
 	{
 		const float value_0_1_0 = float(Float16(0u, 1u, 0u));
 		const float value_1_1_0 = float(Float16(1u, 1u, 0u));
 
-		if (NumericF::isNotEqual(value_0_1_0, 0.000000059604645f) || NumericF::isNotEqual(value_1_1_0, -0.000000059604645f))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(value_0_1_0, 0.000000059604645f));
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(value_1_1_0, -0.000000059604645f));
 	}
 
 	{
 		const float value_0_341_13 = float(Float16(0u, 341u, 13u));
 		const float value_1_341_13 = float(Float16(1u, 341u, 13u));
 
-		if (NumericF::isNotEqual(value_0_341_13, 0.33325195f) || NumericF::isNotEqual(value_1_341_13, -0.33325195f))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(value_0_341_13, 0.33325195f));
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(value_1_341_13, -0.33325195f));
 	}
 
 	{
 		const float value_0_1023_14 = float(Float16(0u, 1023u, 14u));
 		const float value_1_1023_14 = float(Float16(1u, 1023u, 14u));
 
-		if (NumericF::isNotEqual(value_0_1023_14, 0.99951172f) || NumericF::isNotEqual(value_1_1023_14, -0.99951172f))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(value_0_1023_14, 0.99951172f));
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(value_1_1023_14, -0.99951172f));
 	}
 
 	{
 		const float value_0_0_15 = float(Float16(0u, 0u, 15u));
 		const float value_1_0_15 = float(Float16(1u, 0u, 15u));
 
-		if (value_0_0_15 != 1.0f || value_1_0_15 != -1.0f)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value_0_0_15, 1.0f);
+		OCEAN_EXPECT_EQUAL(validation, value_1_0_15, -1.0f);
 	}
 
 	{
 		const float value_0_0_16 = float(Float16(0u, 0u, 16u));
 		const float value_1_0_16 = float(Float16(1u, 0u, 16u));
 
-		if (value_0_0_16 != 2.0f || value_1_0_16 != -2.0f)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value_0_0_16, 2.0f);
+		OCEAN_EXPECT_EQUAL(validation, value_1_0_16, -2.0f);
 	}
 
 	do
@@ -649,20 +573,17 @@ bool TestDataType::testFloat16(const double testDuration)
 		{
 			// testing inverse
 
-			const uint16_t fraction = uint16_t(RandomI::random(1023u));
-			const uint16_t exponent = uint16_t(RandomI::random(31u));
+			const uint16_t fraction = uint16_t(RandomI::random(randomGenerator, 1023u));
+			const uint16_t exponent = uint16_t(RandomI::random(randomGenerator, 31u));
 
-			if (Float16(0u, fraction, exponent) != -Float16(1u, fraction, exponent))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Float16(0u, fraction, exponent), -Float16(1u, fraction, exponent));
 		}
 
 		{
 			// testing random value
 
-			const uint16_t fraction = uint16_t(RandomI::random(1023u));
-			const uint16_t exponent = uint16_t(RandomI::random(31u));
+			const uint16_t fraction = uint16_t(RandomI::random(randomGenerator, 1023u));
+			const uint16_t exponent = uint16_t(RandomI::random(randomGenerator, 31u));
 
 			float positiveValue = 0.0f;
 
@@ -682,24 +603,23 @@ bool TestDataType::testFloat16(const double testDuration)
 			const float positiveResult = float(Float16(0u, fraction, exponent));
 			const float negativeResult = float(Float16(1u, fraction, exponent));
 
-			if (NumericF::isNotEqual(positiveResult, positiveValue) || NumericF::isNotEqual(negativeResult, -positiveValue))
+			if (exponent == 31u)
 			{
-				allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, positiveResult, positiveValue);
+				OCEAN_EXPECT_EQUAL(validation, negativeResult, -positiveValue);
+			}
+			else
+			{
+				OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(positiveResult, positiveValue));
+				OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(negativeResult, -positiveValue));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

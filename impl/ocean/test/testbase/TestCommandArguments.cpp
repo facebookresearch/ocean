@@ -11,6 +11,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -56,7 +57,7 @@ bool TestCommandArguments::testParse()
 {
 	Log::info() << "Parse test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	CommandArguments commandArguments;
 	commandArguments.registerParameter("first", "f", "First parameter");
@@ -67,76 +68,51 @@ bool TestCommandArguments::testParse()
 
 	if (commandArguments.parse(commandLine.c_str()))
 	{
-		if (commandArguments.hasValue("first"))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, commandArguments.hasValue("first"));
 
-		if (commandArguments.value("first"))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, !commandArguments.value("first"));
 
 		Value secondValue;
 		if (commandArguments.hasValue("second", &secondValue) == false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
-			if (secondValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, secondValue.isNull());
 
-			if (!secondValue.isInt() || secondValue.intValue() != 37)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, secondValue.isInt() && secondValue.intValue() == 37);
 		}
 
 		Value thirdValue;
 		if (commandArguments.hasValue("third", &thirdValue) == false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
-			if (thirdValue.isNull() == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, thirdValue.isNull());
 		}
 
 		const Strings& namelessValues = commandArguments.namelessValues();
 
 		if (namelessValues.size() == 1)
 		{
-			if (namelessValues[0] != "nameLessValue")
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, namelessValues[0], std::string("nameLessValue"));
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

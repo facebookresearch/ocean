@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -432,19 +433,33 @@ bool TestCallback::testCallbackMembers()
 	const int result19 = callbackInt19(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
 	const int result20 = callbackInt20(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
 
-	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
-								&& result10 == 10 && result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
+	Validation validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED.";
-	}
+	OCEAN_EXPECT_EQUAL(validation, result0, 0);
+	OCEAN_EXPECT_EQUAL(validation, result1, 1);
+	OCEAN_EXPECT_EQUAL(validation, result2, 2);
+	OCEAN_EXPECT_EQUAL(validation, result3, 3);
+	OCEAN_EXPECT_EQUAL(validation, result4, 4);
+	OCEAN_EXPECT_EQUAL(validation, result5, 5);
+	OCEAN_EXPECT_EQUAL(validation, result6, 6);
+	OCEAN_EXPECT_EQUAL(validation, result7, 7);
+	OCEAN_EXPECT_EQUAL(validation, result8, 8);
+	OCEAN_EXPECT_EQUAL(validation, result9, 9);
+	OCEAN_EXPECT_EQUAL(validation, result10, 10);
+	OCEAN_EXPECT_EQUAL(validation, result11, 11);
+	OCEAN_EXPECT_EQUAL(validation, result12, 12);
+	OCEAN_EXPECT_EQUAL(validation, result13, 13);
+	OCEAN_EXPECT_EQUAL(validation, result14, 14);
+	OCEAN_EXPECT_EQUAL(validation, result15, 15);
+	OCEAN_EXPECT_EQUAL(validation, result16, 16);
+	OCEAN_EXPECT_EQUAL(validation, result17, 17);
+	OCEAN_EXPECT_EQUAL(validation, result18, 18);
+	OCEAN_EXPECT_EQUAL(validation, result19, 19);
+	OCEAN_EXPECT_EQUAL(validation, result20, 20);
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestCallback::testCallbackStatics()
@@ -586,19 +601,33 @@ bool TestCallback::testCallbackStatics()
 	const int result19 = callbackInt19(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
 	const int result20 = callbackInt20(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
 
-	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
-									&& result10 == 10	&& result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
+	Validation validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED.";
-	}
+	OCEAN_EXPECT_EQUAL(validation, result0, 0);
+	OCEAN_EXPECT_EQUAL(validation, result1, 1);
+	OCEAN_EXPECT_EQUAL(validation, result2, 2);
+	OCEAN_EXPECT_EQUAL(validation, result3, 3);
+	OCEAN_EXPECT_EQUAL(validation, result4, 4);
+	OCEAN_EXPECT_EQUAL(validation, result5, 5);
+	OCEAN_EXPECT_EQUAL(validation, result6, 6);
+	OCEAN_EXPECT_EQUAL(validation, result7, 7);
+	OCEAN_EXPECT_EQUAL(validation, result8, 8);
+	OCEAN_EXPECT_EQUAL(validation, result9, 9);
+	OCEAN_EXPECT_EQUAL(validation, result10, 10);
+	OCEAN_EXPECT_EQUAL(validation, result11, 11);
+	OCEAN_EXPECT_EQUAL(validation, result12, 12);
+	OCEAN_EXPECT_EQUAL(validation, result13, 13);
+	OCEAN_EXPECT_EQUAL(validation, result14, 14);
+	OCEAN_EXPECT_EQUAL(validation, result15, 15);
+	OCEAN_EXPECT_EQUAL(validation, result16, 16);
+	OCEAN_EXPECT_EQUAL(validation, result17, 17);
+	OCEAN_EXPECT_EQUAL(validation, result18, 18);
+	OCEAN_EXPECT_EQUAL(validation, result19, 19);
+	OCEAN_EXPECT_EQUAL(validation, result20, 20);
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 void TestCallback::function0()

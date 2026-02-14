@@ -11,6 +11,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -53,38 +54,25 @@ bool TestBinary::testHideString()
 {
 	Log::info() << "Hide string test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		std::wstring value;
 		HIDE_STRING_32(L"test", value, L"\x3C\x9F\x63\x44", L"\x25\xEA\x48\x7B", 4 + 2);
 
-		if (value != L"test")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, std::wstring(L"test"));
 	}
 
 	{
 		std::wstring value;
 		HIDE_STRING_32(L"This is a long string", value, L"\x44\x77\x12\x91\xAF\x03\xB3\xC4\x40\x60\x80\x90\x76\x23\xEE\xCC\x81\x90\x45\x46\x30\x7E", L"\x56\xAE\x50\xB7\x61\xE5\x3A\x80\x56\xBC\x43\x45\x56\xCC\xD5\xB1\xB9\x30\x84\x27\x40", 21 + 2);
 
-		if (value != L"This is a long string")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, std::wstring(L"This is a long string"));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -477,6 +478,8 @@ bool TestCaller::testCallerMembers()
 	Log::info() << " ";
 	Log::info() << "Testing static functions with return value:";
 
+	Validation validation;
+
 	const int result0 = callerInt0();
 	const int result1 = callerInt1();
 	const int result2 = callerInt2();
@@ -499,19 +502,31 @@ bool TestCaller::testCallerMembers()
 	const int result19 = callerInt19();
 	const int result20 = callerInt20();
 
-	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
-								&& result10 == 10 && result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
+	OCEAN_EXPECT_EQUAL(validation, result0, 0);
+	OCEAN_EXPECT_EQUAL(validation, result1, 1);
+	OCEAN_EXPECT_EQUAL(validation, result2, 2);
+	OCEAN_EXPECT_EQUAL(validation, result3, 3);
+	OCEAN_EXPECT_EQUAL(validation, result4, 4);
+	OCEAN_EXPECT_EQUAL(validation, result5, 5);
+	OCEAN_EXPECT_EQUAL(validation, result6, 6);
+	OCEAN_EXPECT_EQUAL(validation, result7, 7);
+	OCEAN_EXPECT_EQUAL(validation, result8, 8);
+	OCEAN_EXPECT_EQUAL(validation, result9, 9);
+	OCEAN_EXPECT_EQUAL(validation, result10, 10);
+	OCEAN_EXPECT_EQUAL(validation, result11, 11);
+	OCEAN_EXPECT_EQUAL(validation, result12, 12);
+	OCEAN_EXPECT_EQUAL(validation, result13, 13);
+	OCEAN_EXPECT_EQUAL(validation, result14, 14);
+	OCEAN_EXPECT_EQUAL(validation, result15, 15);
+	OCEAN_EXPECT_EQUAL(validation, result16, 16);
+	OCEAN_EXPECT_EQUAL(validation, result17, 17);
+	OCEAN_EXPECT_EQUAL(validation, result18, 18);
+	OCEAN_EXPECT_EQUAL(validation, result19, 19);
+	OCEAN_EXPECT_EQUAL(validation, result20, 20);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED.";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCaller::testCallerStatics()
@@ -611,6 +626,8 @@ bool TestCaller::testCallerStatics()
 	Log::info() << " ";
 	Log::info() << "Testing static functions with return value:";
 
+	Validation validation;
+
 	const int result0 = callerInt0();
 	const int result1 = callerInt1();
 	const int result2 = callerInt2();
@@ -633,19 +650,31 @@ bool TestCaller::testCallerStatics()
 	const int result19 = callerInt19();
 	const int result20 = callerInt20();
 
-	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
-									&& result10 == 10 && result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
+	OCEAN_EXPECT_EQUAL(validation, result0, 0);
+	OCEAN_EXPECT_EQUAL(validation, result1, 1);
+	OCEAN_EXPECT_EQUAL(validation, result2, 2);
+	OCEAN_EXPECT_EQUAL(validation, result3, 3);
+	OCEAN_EXPECT_EQUAL(validation, result4, 4);
+	OCEAN_EXPECT_EQUAL(validation, result5, 5);
+	OCEAN_EXPECT_EQUAL(validation, result6, 6);
+	OCEAN_EXPECT_EQUAL(validation, result7, 7);
+	OCEAN_EXPECT_EQUAL(validation, result8, 8);
+	OCEAN_EXPECT_EQUAL(validation, result9, 9);
+	OCEAN_EXPECT_EQUAL(validation, result10, 10);
+	OCEAN_EXPECT_EQUAL(validation, result11, 11);
+	OCEAN_EXPECT_EQUAL(validation, result12, 12);
+	OCEAN_EXPECT_EQUAL(validation, result13, 13);
+	OCEAN_EXPECT_EQUAL(validation, result14, 14);
+	OCEAN_EXPECT_EQUAL(validation, result15, 15);
+	OCEAN_EXPECT_EQUAL(validation, result16, 16);
+	OCEAN_EXPECT_EQUAL(validation, result17, 17);
+	OCEAN_EXPECT_EQUAL(validation, result18, 18);
+	OCEAN_EXPECT_EQUAL(validation, result19, 19);
+	OCEAN_EXPECT_EQUAL(validation, result20, 20);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED.";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCaller::testCallerParameters()
@@ -654,7 +683,7 @@ bool TestCaller::testCallerParameters()
 
 	using MixedCaller = Caller<int>;
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		Log::info() << "Static function without reference parameters";
@@ -668,29 +697,14 @@ bool TestCaller::testCallerParameters()
 		mixedCallerStatic0.setParameter<std::string>(3u, "abcd");
 		mixedCallerStatic0();
 
-		if (parameter0 != 7)
-		{
-			allSucceeded = false;
-		}
-		if (parameter1 != false)
-		{
-			allSucceeded = false;
-		}
-		if (parameter2 != 15.5f)
-		{
-			allSucceeded = false;
-		}
-		if (parameter3 != "test") // the (outside) parameter has not chaned
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter0, 7);
+		OCEAN_EXPECT_FALSE(validation, parameter1);
+		OCEAN_EXPECT_EQUAL(validation, parameter2, 15.5f);
+		OCEAN_EXPECT_EQUAL(validation, parameter3, std::string("test")); // the (outside) parameter has not chaned
 
 		const std::string parameter3_determined = mixedCallerStatic0.parameter<std::string>(3u);
 
-		if (parameter3_determined != "abcd")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter3_determined, std::string("abcd"));
 	}
 
 	{
@@ -707,30 +721,12 @@ bool TestCaller::testCallerParameters()
 		MixedCaller mixedCallerStatic1 = MixedCaller::createStatic<int, bool*, float*, double&, std::string, std::string&, const Object&>(&functionIndividualParameters1, parameter0, &parameter1, &parameter2, parameter3, parameter4, parameter5, parameter6);
 		mixedCallerStatic1();
 
-		if (parameter0 != 7)
-		{
-			allSucceeded = false;
-		}
-		if (parameter1 != false)
-		{
-			allSucceeded = false;
-		}
-		if (parameter2 != 25.2f)
-		{
-			allSucceeded = false;
-		}
-		if (parameter3 != 27.4)
-		{
-			allSucceeded = false;
-		}
-		if (parameter4 != "test")
-		{
-			allSucceeded = false;
-		}
-		if (parameter5 != "tset")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter0, 7);
+		OCEAN_EXPECT_FALSE(validation, parameter1);
+		OCEAN_EXPECT_EQUAL(validation, parameter2, 25.2f);
+		OCEAN_EXPECT_EQUAL(validation, parameter3, 27.4);
+		OCEAN_EXPECT_EQUAL(validation, parameter4, std::string("test"));
+		OCEAN_EXPECT_EQUAL(validation, parameter5, std::string("tset"));
 	}
 
 	{
@@ -746,29 +742,14 @@ bool TestCaller::testCallerParameters()
 		mixedCallerStatic0.setParameter<std::string>(3u, "abcd");
 		mixedCallerStatic0();
 
-		if (parameter0 != 7)
-		{
-			allSucceeded = false;
-		}
-		if (parameter1 != false)
-		{
-			allSucceeded = false;
-		}
-		if (parameter2 != 15.5f)
-		{
-			allSucceeded = false;
-		}
-		if (parameter3 != "test") // the (outside) parameter has not chaned
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter0, 7);
+		OCEAN_EXPECT_FALSE(validation, parameter1);
+		OCEAN_EXPECT_EQUAL(validation, parameter2, 15.5f);
+		OCEAN_EXPECT_EQUAL(validation, parameter3, std::string("test")); // the (outside) parameter has not chaned
 
 		const std::string parameter3_determined = mixedCallerStatic0.parameter<std::string>(3u);
 
-		if (parameter3_determined != "abcd")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter3_determined, std::string("abcd"));
 	}
 
 	{
@@ -786,30 +767,12 @@ bool TestCaller::testCallerParameters()
 		MixedCaller mixedCallerStatic1 = MixedCaller::create<Object, int, bool*, float*, double&, std::string, std::string&, const Object&>(object, &Object::nonConstantFunctionIndividualParameters1, parameter0, &parameter1, &parameter2, parameter3, parameter4, parameter5, parameter6);
 		mixedCallerStatic1();
 
-		if (parameter0 != 7)
-		{
-			allSucceeded = false;
-		}
-		if (parameter1 != false)
-		{
-			allSucceeded = false;
-		}
-		if (parameter2 != 25.2f)
-		{
-			allSucceeded = false;
-		}
-		if (parameter3 != 27.4)
-		{
-			allSucceeded = false;
-		}
-		if (parameter4 != "test")
-		{
-			allSucceeded = false;
-		}
-		if (parameter5 != "tset")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter0, 7);
+		OCEAN_EXPECT_FALSE(validation, parameter1);
+		OCEAN_EXPECT_EQUAL(validation, parameter2, 25.2f);
+		OCEAN_EXPECT_EQUAL(validation, parameter3, 27.4);
+		OCEAN_EXPECT_EQUAL(validation, parameter4, std::string("test"));
+		OCEAN_EXPECT_EQUAL(validation, parameter5, std::string("tset"));
 	}
 
 	{
@@ -825,29 +788,14 @@ bool TestCaller::testCallerParameters()
 		mixedCallerStatic0.setParameter<std::string>(3u, "abcd");
 		mixedCallerStatic0();
 
-		if (parameter0 != 7)
-		{
-			allSucceeded = false;
-		}
-		if (parameter1 != false)
-		{
-			allSucceeded = false;
-		}
-		if (parameter2 != 15.5f)
-		{
-			allSucceeded = false;
-		}
-		if (parameter3 != "test") // the (outside) parameter has not chaned
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter0, 7);
+		OCEAN_EXPECT_FALSE(validation, parameter1);
+		OCEAN_EXPECT_EQUAL(validation, parameter2, 15.5f);
+		OCEAN_EXPECT_EQUAL(validation, parameter3, std::string("test")); // the (outside) parameter has not chaned
 
 		const std::string parameter3_determined = mixedCallerStatic0.parameter<std::string>(3u);
 
-		if (parameter3_determined != "abcd")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter3_determined, std::string("abcd"));
 	}
 
 	{
@@ -865,42 +813,17 @@ bool TestCaller::testCallerParameters()
 		MixedCaller mixedCallerStatic1 = MixedCaller::create<Object, int, bool*, float*, double&, std::string, std::string&, const Object&>(object, &Object::constantFunctionIndividualParameters1, parameter0, &parameter1, &parameter2, parameter3, parameter4, parameter5, parameter6);
 		mixedCallerStatic1();
 
-		if (parameter0 != 7)
-		{
-			allSucceeded = false;
-		}
-		if (parameter1 != false)
-		{
-			allSucceeded = false;
-		}
-		if (parameter2 != 25.2f)
-		{
-			allSucceeded = false;
-		}
-		if (parameter3 != 27.4)
-		{
-			allSucceeded = false;
-		}
-		if (parameter4 != "test")
-		{
-			allSucceeded = false;
-		}
-		if (parameter5 != "tset")
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameter0, 7);
+		OCEAN_EXPECT_FALSE(validation, parameter1);
+		OCEAN_EXPECT_EQUAL(validation, parameter2, 25.2f);
+		OCEAN_EXPECT_EQUAL(validation, parameter3, 27.4);
+		OCEAN_EXPECT_EQUAL(validation, parameter4, std::string("test"));
+		OCEAN_EXPECT_EQUAL(validation, parameter5, std::string("tset"));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 void TestCaller::function0()
