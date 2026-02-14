@@ -29,6 +29,7 @@ class SourceConfig:
     patch: Optional[str] = None  # Path to patch file (relative to manifest dir)
     copy_files: Optional[Dict[str, str]] = None  # src -> dest file mappings
     source_subdir: Optional[str] = None  # Subdirectory within source to use as root
+    ndk_path: Optional[str] = None  # Subpath within Android NDK (for ndk_source type)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "SourceConfig":
@@ -42,6 +43,7 @@ class SourceConfig:
             patch=data.get("patch"),
             copy_files=data.get("copy_files"),
             source_subdir=data.get("source_subdir"),
+            ndk_path=data.get("ndk_path"),
         )
 
 

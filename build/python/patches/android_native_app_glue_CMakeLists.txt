@@ -1,0 +1,32 @@
+# CMakeLists.txt for android_native_app_glue
+# This wraps the NDK-provided native_app_glue source into a proper CMake library.
+
+cmake_minimum_required(VERSION 3.16)
+project(android_native_app_glue C)
+
+add_library(native_app_glue STATIC
+    android_native_app_glue.c
+)
+
+target_include_directories(native_app_glue
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(native_app_glue
+    PUBLIC
+        log
+        android
+)
+
+# Install
+install(TARGETS native_app_glue
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+
+install(FILES
+    android_native_app_glue.h
+    DESTINATION include
+)

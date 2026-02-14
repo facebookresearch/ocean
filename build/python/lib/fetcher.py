@@ -16,6 +16,7 @@ from typing import Dict, Optional
 
 from .directories import DirectoryManager
 from .manifest import SourceConfig
+from .platform import get_android_ndk_path
 
 
 class SourceFetcher:
@@ -109,6 +110,8 @@ class SourceFetcher:
                     self._fetch_archive(source, source_dir)
                 elif source.type == "local":
                     self._fetch_local(source, source_dir)
+                elif source.type == "ndk_source":
+                    self._fetch_ndk_source(source, source_dir)
                 else:
                     raise ValueError(f"Unknown source type: {source.type}")
 
@@ -265,6 +268,34 @@ class SourceFetcher:
             raise ValueError(f"Local path does not exist: {local_path}")
 
         shutil.copytree(local_path, target_dir)
+
+    def _fetch_ndk_source(self, source: SourceConfig, target_dir: Path) -> None:
+        """Copy source from a path within the Android NDK.
+
+        The ndk_path field in SourceConfig specifies a path relative to the
+        NDK root, e.g. "sources/android/native_app_glue".
+        """
+        if not source.ndk_path:
+            raise ValueError("ndk_source type requires 'ndk_path'")
+
+        import shutil
+
+        ndk_root = get_android_ndk_path()
+        if not ndk_root:
+            raise RuntimeError(
+                "Android NDK not found. Set ANDROID_NDK_HOME or ANDROID_NDK "
+                "environment variable to use ndk_source libraries."
+            )
+
+        ndk_source_path = Path(ndk_root) / source.ndk_path
+        if not ndk_source_path.exists():
+            raise ValueError(
+                f"NDK source path does not exist: {ndk_source_path}\n"
+                f"  NDK root: {ndk_root}\n"
+                f"  Relative path: {source.ndk_path}"
+            )
+
+        shutil.copytree(ndk_source_path, target_dir)
 
     def _apply_post_fetch(  # noqa: C901
         self, source: SourceConfig, target_dir: Path, quiet: bool = False

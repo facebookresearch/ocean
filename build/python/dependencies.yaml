@@ -311,10 +311,11 @@ libraries:
     build:
       system: cmake
     platforms:
-      - macos
-      - linux
-      - windows
-      - ios
+        - macos
+        - linux
+        - windows
+        - ios
+        - android
 
   gl:
     version: "local"
@@ -418,6 +419,20 @@ libraries:
       - macos
       - windows
 
-  # Android-specific libraries (require special handling)
-  # TODO: android_native_app_glue - uses NDK sources at ${ANDROID_NDK}/sources/android/native_app_glue
+  # Android-specific libraries
+  android_native_app_glue:
+    version: "ndk"
+    description: "Android native activity glue layer from the NDK"
+    source:
+      type: ndk_source
+      ndk_path: sources/android/native_app_glue
+      copy_files:
+        patches/android_native_app_glue_CMakeLists.txt: CMakeLists.txt
+    build:
+      system: cmake
+    platforms:
+      - android
+    link_types:
+      - static
+
   # TODO: arcore-android-sdk - downloads AAR from Google Maven

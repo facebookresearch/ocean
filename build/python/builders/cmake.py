@@ -19,6 +19,8 @@ from lib.platform import (
     Arch,
     BuildConfig,
     BuildTarget,
+    find_make_program,
+    find_ninja_program,
     get_android_ndk_path,
     get_cmake_generator,
     get_ios_sdk_path,
@@ -156,7 +158,7 @@ class CMakeBuilder(Builder):
             cmd.append(f"-DCMAKE_LIBRARY_PATH={';'.join(library_paths)}")
 
         # Cross-compilation settings
-        self._add_cross_compile_options(cmd, ctx.target)
+        self._add_cross_compile_options(cmd, ctx.target, ctx)
 
         # Add user-specified options from manifest
         for key, value in ctx.build_options.items():
@@ -170,10 +172,12 @@ class CMakeBuilder(Builder):
 
         return cmd
 
-    def _add_cross_compile_options(self, cmd: List[str], target: BuildTarget) -> None:
+    def _add_cross_compile_options(
+        self, cmd: List[str], target: BuildTarget, ctx: Optional[BuildContext] = None
+    ) -> None:
         """Add cross-compilation options for the target."""
         if target.os == OS.ANDROID:
-            self._add_android_options(cmd, target)
+            self._add_android_options(cmd, target, ctx)
         elif target.os == OS.IOS:
             self._add_ios_options(cmd, target)
         elif target.os == OS.MACOS:
@@ -182,7 +186,9 @@ class CMakeBuilder(Builder):
             self._add_windows_options(cmd, target)
         # Linux native builds don't need special handling
 
-    def _add_android_options(self, cmd: List[str], target: BuildTarget) -> None:
+    def _add_android_options(
+        self, cmd: List[str], target: BuildTarget, ctx: Optional[BuildContext] = None
+    ) -> None:
         """Add Android NDK toolchain options."""
         ndk_path = get_android_ndk_path()
         if not ndk_path:
@@ -206,10 +212,25 @@ class CMakeBuilder(Builder):
         cmd.append(f"-DANDROID_ABI={abi_map[target.arch]}")
 
         # API level (minimum supported Android version)
-        cmd.append("-DANDROID_PLATFORM=android-24")
+        api_level = 32
+        if ctx and ctx.android_api_level:
+            api_level = ctx.android_api_level
+        cmd.append(f"-DANDROID_PLATFORM=android-{api_level}")
 
         # Use libc++ (modern C++ library)
         cmd.append("-DANDROID_STL=c++_static")
+
+        # On Windows, build tools may not be on PATH but bundled with the
+        # Android SDK/NDK. Tell CMake where to find them explicitly.
+        ninja_path = find_ninja_program()
+        if ninja_path and ninja_path != "ninja":
+            cmd.append(f"-DCMAKE_MAKE_PROGRAM={ninja_path}")
+        elif not ninja_path:
+            # Ninja not found, but generator may be "Unix Makefiles" —
+            # find make in the NDK prebuilt directory
+            make_path = find_make_program()
+            if make_path and make_path != "make":
+                cmd.append(f"-DCMAKE_MAKE_PROGRAM={make_path}")
 
     def _add_ios_options(self, cmd: List[str], target: BuildTarget) -> None:
         """Add iOS cross-compilation options."""

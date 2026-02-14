@@ -330,6 +330,90 @@ def is_cross_compile(target: BuildTarget) -> bool:
     return False
 
 
+def find_ninja_program() -> Optional[str]:
+    """Find the Ninja build tool executable.
+
+    Checks:
+    1. System PATH
+    2. Ninja bundled with Android SDK CMake (ANDROID_HOME/cmake/*/bin/)
+    3. Ninja in NDK prebuilt (ANDROID_NDK/prebuilt/*/bin/)
+
+    Returns:
+        Path to ninja executable if found, None otherwise.
+    """
+    # Check PATH first
+    try:
+        subprocess.run(
+            ["ninja", "--version"],
+            capture_output=True,
+            check=True,
+        )
+        return "ninja"
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pass
+
+    if platform.system().lower() == "windows":
+        # Check Ninja bundled with the Android SDK/CMake
+        android_home = os.environ.get("ANDROID_HOME")
+        if android_home:
+            cmake_dir = os.path.join(android_home, "cmake")
+            if os.path.isdir(cmake_dir):
+                for version_dir in sorted(os.listdir(cmake_dir), reverse=True):
+                    ninja_path = os.path.join(
+                        cmake_dir, version_dir, "bin", "ninja.exe"
+                    )
+                    if os.path.exists(ninja_path):
+                        return ninja_path
+
+        # Check NDK prebuilt directory
+        ndk_path = get_android_ndk_path()
+        if ndk_path:
+            prebuilt_dir = os.path.join(ndk_path, "prebuilt")
+            if os.path.isdir(prebuilt_dir):
+                for host_dir in os.listdir(prebuilt_dir):
+                    ninja_path = os.path.join(
+                        prebuilt_dir, host_dir, "bin", "ninja.exe"
+                    )
+                    if os.path.exists(ninja_path):
+                        return ninja_path
+
+    return None
+
+
+def find_make_program() -> Optional[str]:
+    """Find the Make build tool executable.
+
+    Checks:
+    1. System PATH
+    2. Make bundled with NDK (ANDROID_NDK/prebuilt/*/bin/)
+
+    Returns:
+        Path to make executable if found, None otherwise.
+    """
+    # Check PATH first
+    try:
+        subprocess.run(
+            ["make", "--version"],
+            capture_output=True,
+            check=True,
+        )
+        return "make"
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pass
+
+    if platform.system().lower() == "windows":
+        ndk_path = get_android_ndk_path()
+        if ndk_path:
+            prebuilt_dir = os.path.join(ndk_path, "prebuilt")
+            if os.path.isdir(prebuilt_dir):
+                for host_dir in os.listdir(prebuilt_dir):
+                    make_path = os.path.join(prebuilt_dir, host_dir, "bin", "make.exe")
+                    if os.path.exists(make_path):
+                        return make_path
+
+    return None
+
+
 def get_cmake_generator(target: BuildTarget, vs_version: Optional[str] = None) -> str:
     """Get the appropriate CMake generator for the target.
 
@@ -338,6 +422,23 @@ def get_cmake_generator(target: BuildTarget, vs_version: Optional[str] = None) -
         vs_version: Optional Visual Studio version year (e.g., "2022", "2026").
                    If not specified, auto-detects the latest installed version.
     """
+    # Android and iOS cross-compilation always use Ninja or Makefiles,
+    # even when building on a Windows host
+    if target.os in (OS.ANDROID, OS.IOS):
+        ninja = find_ninja_program()
+        if ninja:
+            return "Ninja"
+        make = find_make_program()
+        if make:
+            return "Unix Makefiles"
+        raise RuntimeError(
+            "No suitable build tool found for Android/iOS cross-compilation.\n"
+            "Neither Ninja nor Make were found on PATH or in the Android SDK/NDK.\n"
+            "Install Ninja (recommended) or ensure the NDK's make.exe is accessible.\n"
+            "  - Install CMake via Android Studio SDK Manager (includes Ninja)\n"
+            "  - Or install Ninja: https://github.com/nicknisi/ninja-build/releases"
+        )
+
     if target.os == OS.WINDOWS:
         if vs_version:
             # User specified a version - look up the generator string

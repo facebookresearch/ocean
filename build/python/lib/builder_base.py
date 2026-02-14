@@ -60,6 +60,10 @@ class BuildContext:
     # None = auto-detect latest installed version
     vs_version: Optional[str] = None
 
+    # Android API level (e.g., 24, 32, 34)
+    # None = use default (32)
+    android_api_level: Optional[int] = None
+
     def report_progress(self, phase: str) -> None:
         """Report progress to callback if set."""
         if self.progress_callback:

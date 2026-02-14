@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env fbpython
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # This source code is licensed under the MIT license found in the
@@ -424,6 +424,7 @@ def execute_build_job(
     log_level: LogLevel = LogLevel.STATUS,
     progress: Optional[ProgressDisplay] = None,
     vs_version: Optional[str] = None,
+    android_api_level: Optional[int] = None,
 ) -> BuildResult:
     """Execute a single build job.
 
@@ -438,6 +439,7 @@ def execute_build_job(
         log_level: Log level for build output
         progress: Progress display for TUI updates
         vs_version: Visual Studio version to use (e.g., "2022", "2026")
+        android_api_level: Android API level (e.g., 24, 32, 34)
 
     Returns:
         BuildResult with path and timing information
@@ -507,6 +509,7 @@ def execute_build_job(
         progress_callback=progress_callback if progress else None,
         log_file=log_file,
         vs_version=vs_version,
+        android_api_level=android_api_level,
     )
 
     # Get builder
@@ -1093,6 +1096,7 @@ def build_all(
     include_cmake_configs: bool = False,
     log_level: LogLevel = LogLevel.STATUS,
     vs_version: Optional[str] = None,
+    android_api_level: Optional[int] = None,
 ) -> BuildStats:
     """Build all libraries for all targets with maximum parallelism.
 
@@ -1111,6 +1115,7 @@ def build_all(
         include_cmake_configs: If True, include CMake/pkg-config files
         log_level: Log level for build output
         vs_version: Visual Studio version to use (e.g., "2022", "2026")
+        android_api_level: Android API level (e.g., 24, 32, 34)
 
     Returns:
         BuildStats with timing information for all builds
@@ -1192,6 +1197,7 @@ def build_all(
                     log_level,
                     progress,
                     vs_version,
+                    android_api_level,
                 ): job
                 for job in jobs
             }
@@ -1421,6 +1427,12 @@ def parse_args() -> argparse.Namespace:
         help="Visual Studio version to use (e.g., '2022', '2026'). "
         "Default: auto-detect latest installed version.",
     )
+    parser.add_argument(
+        "--android-api-level",
+        type=int,
+        default=None,
+        help="Android API level for cross-compilation (e.g., 24, 32, 34). Default: 32.",
+    )
 
     return parser.parse_args()
 
@@ -1611,6 +1623,26 @@ def main() -> int:  # noqa: C901
         for link_type in link_types
     ]
 
+    # Filter out shared builds for platforms that don't support them
+    unsupported_shared = {OS.ANDROID, OS.IOS}
+    shared_skipped = any(
+        t.link_type == LinkType.SHARED and t.os in unsupported_shared for t in targets
+    )
+    targets = [
+        t
+        for t in targets
+        if not (t.link_type == LinkType.SHARED and t.os in unsupported_shared)
+    ]
+    if shared_skipped:
+        print(
+            "Note: Shared library builds are not supported for Android/iOS. "
+            "Skipping shared targets for those platforms."
+        )
+
+    if not targets:
+        print("Error: No valid targets remain after filtering.")
+        return 1
+
     print(f"Targets: {', '.join(t.to_path_component() for t in targets)}")
 
     # Check toolchains for target platforms (unless skipped)
@@ -1700,6 +1732,7 @@ def main() -> int:  # noqa: C901
             include_cmake_configs=args.with_cmake_configs,
             log_level=log_level,
             vs_version=args.vs_version,
+            android_api_level=args.android_api_level,
         )
         print("\n✓ Build completed successfully!")
         return 0
