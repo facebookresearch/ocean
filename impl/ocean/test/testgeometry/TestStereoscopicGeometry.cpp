@@ -18,6 +18,7 @@
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -109,7 +110,8 @@ bool TestStereoscopicGeometry::testCameraPose(const double testDuration)
 	Log::info() << "Testing camera pose:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << "With pure rotational motion:";
 	Log::info() << " ";
@@ -118,10 +120,7 @@ bool TestStereoscopicGeometry::testCameraPose(const double testDuration)
 	{
 		Log::info() << "... with " << numberCorrespondences << " correspondences:";
 
-		if (!testCameraPose<true>(numberCorrespondences, testDuration))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testCameraPose<true>(numberCorrespondences, testDuration));
 
 		Log::info() << " ";
 	}
@@ -134,24 +133,14 @@ bool TestStereoscopicGeometry::testCameraPose(const double testDuration)
 	{
 		Log::info() << "... with " << numberCorrespondences << " correspondences:";
 
-		if (!testCameraPose<false>(numberCorrespondences, testDuration))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testCameraPose<false>(numberCorrespondences, testDuration));
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tPureRotation>
@@ -160,9 +149,8 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 	ocean_assert(numberCorrespondences >= 5u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr double successThreshold = std::is_same<float, Scalar>::value ? 0.85 : 0.95;
 
@@ -181,7 +169,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 		const std::string indentation1 = indentation0 + "  ";
 
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		std::vector<Scalar> gravityAngleErrors;
 
@@ -191,7 +179,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 			const Vector3 randomTranslation = Random::vector3(randomGenerator, -10, 10);
 			const Quaternion randomOrientation = Random::quaternion(randomGenerator);
@@ -353,7 +341,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << indentation1 << "Performance: " << performance;
 
@@ -366,15 +354,12 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 			Log::info() << indentation1 << "P95 gravity error: " << String::toAString(gravityAngleErrorP95, 1u) << "deg";
 		}
 
-		Log::info() << indentation1 << "Validation: " << validation;
+		Log::info() << indentation1 << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

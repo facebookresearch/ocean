@@ -24,6 +24,7 @@
 #include "ocean/math/Vector3.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -145,18 +146,17 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 	Log::info() << "Testing P3P for 2D image points for '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	constexpr double successThreshold = std::is_same<T, float>::value ? 0.75 : 0.95;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const SharedAnyCameraT<T> anyCamera(Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(1u)));
+		const SharedAnyCameraT<T> anyCamera(Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(randomGenerator, 1u)));
 		ocean_assert(anyCamera);
 
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		HighPerformanceStatistic performance;
 
@@ -164,10 +164,10 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
-			const VectorT3<T> translation = RandomT<T>::vector3(-5, 5);
-			const QuaternionT<T> rotation = RandomT<T>::quaternion();
+			const VectorT3<T> translation = RandomT<T>::vector3(randomGenerator, -5, 5);
+			const QuaternionT<T> rotation = RandomT<T>::quaternion(randomGenerator);
 			const HomogenousMatrixT4<T> world_T_camera(translation, rotation);
 
 			VectorsT3<T> objectPoints(3);
@@ -221,7 +221,7 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 					{
 						if (!AnyCameraT<T>::isObjectPointInFrontIF(flippedCameraCandidate_T_world, objectPoint))
 						{
-							OCEAN_SET_FAILED(validation);
+							OCEAN_SET_FAILED(validationPrecision);
 						}
 					}
 
@@ -267,20 +267,23 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << anyCamera->name() << ":";
 
 		Log::info() << "Performance: " << performance;
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
+		if (!validationPrecision.succeeded())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -531,8 +534,7 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 	Log::info() << "Stress testing P3P for 3D rays for '" << TypeNamer::name<T>() << "':";
 
 	RandomGenerator randomGenerator;
-
-	uint64_t dummyValue = 0ull;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -568,22 +570,13 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 		// we do not evaluate the resulting poses, we just want to ensure that the function does not crash
 
 		HomogenousMatrixT4<T> world_T_cameras[4];
-		const unsigned int numberPoses = Geometry::P3P::poses<T>(objectPoints, rays, world_T_cameras);
-		dummyValue += numberPoses;
+		Geometry::P3P::poses<T>(objectPoints, rays, world_T_cameras);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (dummyValue % 2ull == 0ull)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: succeeded.";
-	}
+	Log::info() << "Validation: " << validation;
 
-	// we return True in any case
-	return (dummyValue % 2ull == 0ull) || (dummyValue % 2ull == 1ull);
+	return validation.succeeded();
 }
 
 template <typename T>

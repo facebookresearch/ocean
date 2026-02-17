@@ -20,6 +20,7 @@
 #include "ocean/math/Vector3.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -75,30 +76,21 @@ bool TestPnP::testPose(const double testDuration)
 	Log::info() << "Testing pose:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int numberCorrespondences : {5u, 10u, 20u, 30u})
 	{
 		Log::info() << "... with " << numberCorrespondences << " correspondences:";
 
-		if (!testPose(numberCorrespondences, testDuration))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testPose(numberCorrespondences, testDuration));
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPnP::testPose(const unsigned int numberPoints, const double testDuration)

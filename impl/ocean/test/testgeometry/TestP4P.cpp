@@ -20,6 +20,7 @@
 #include "ocean/math/Vector3.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -63,17 +64,17 @@ bool TestP4P::testPose(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
 	HighPerformanceStatistic performance;
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp start(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const Vector3 randomTranslation = Random::vector3(randomGenerator, -10, 10);
 		const Quaternion randomOrientation = Random::quaternion(randomGenerator);
 
@@ -116,25 +117,22 @@ bool TestP4P::testPose(const double testDuration)
 
 			Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>>(world_T_determinedCamera, *camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
 
-			if (sqrAveragePixelError <= Scalar(2 * 2) && sqrMaximalPixelError <= Scalar(10 * 10))
+			if (!(sqrAveragePixelError <= Scalar(2 * 2) && sqrMaximalPixelError <= Scalar(10 * 10)))
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (start + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || start + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms, average: " << String::toAString(performance.averageMseconds(), 4u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= 0.95;
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -143,7 +141,7 @@ bool TestP4P::testPose(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

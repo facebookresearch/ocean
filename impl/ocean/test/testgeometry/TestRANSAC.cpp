@@ -386,7 +386,8 @@ bool TestRANSAC::testP3P(const double testDuration)
 
 	Log::info() << "Testing P3P:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
@@ -419,15 +420,12 @@ bool TestRANSAC::testP3P(const double testDuration)
 				Log::info() << " ";
 				Log::info() << "Using " << correspondences << " correspondences:";
 
-				if (!testP3P(anyCameraType, correspondences, faultyRate, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testP3P(anyCameraType, correspondences, faultyRate, testDuration));
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t correspondences, const double faultyRate, const double testDuration)
@@ -437,9 +435,8 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 	ocean_assert(faultyRate >= 0.0 && faultyRate < 1.0);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation outerValidation(randomGenerator);
 
 	const std::string indentation0 = "  ";
 
@@ -623,14 +620,11 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 
 			Log::info() << indentation2 << "Validation: " << validation;
 
-			if (!validation.succeeded())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(outerValidation, validation.succeeded());
 		}
 	}
 
-	return allSucceeded;
+	return outerValidation.succeeded();
 }
 
 bool TestRANSAC::testP3PZoom(const double testDuration)
@@ -751,9 +745,8 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 	Log::info() << "Determination of 6-DOF object transformation for any stereo camera:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation outerValidation(randomGenerator);
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
@@ -882,13 +875,10 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 
 		Log::info() << "Validation: " << validation;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(outerValidation, validation.succeeded());
 	}
 
-	return allSucceeded;
+	return outerValidation.succeeded();
 }
 
 bool TestRANSAC::testHomographyMatrix(const double testDuration, Worker& worker)
@@ -897,7 +887,8 @@ bool TestRANSAC::testHomographyMatrix(const double testDuration, Worker& worker)
 
 	Log::info() << "Testing determination of homography matrix with RANSAC for " << sizeof(Scalar) * 8 << "bit floating point precision:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool useSVD : {false, true})
 	{
@@ -907,20 +898,13 @@ bool TestRANSAC::testHomographyMatrix(const double testDuration, Worker& worker)
 			Log::info() << " ";
 			Log::info() << (useSVD ? "Using SVD " : "Linear ") << (refine ? "with refinement" : "without refinement");
 
-			allSucceeded = testHomographyMatrix(testDuration, refine, useSVD, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHomographyMatrix(testDuration, refine, useSVD, worker));
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Homography RANSAC validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Homography RANSAC validation: FAILED!";
-	}
+	Log::info() << "Homography RANSAC " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRANSAC::testHomographyMatrix(const double testDuration, const bool refine, const bool useSVD, Worker& worker)
@@ -932,7 +916,8 @@ bool TestRANSAC::testHomographyMatrix(const double testDuration, const bool refi
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
-	bool allSucceeded = true;
+	RandomGenerator outerRandomGenerator;
+	Validation outerValidation(outerRandomGenerator);
 
 	for (const size_t correspondences : {20, 50, 100, 200})
 	{
@@ -1049,20 +1034,18 @@ bool TestRANSAC::testHomographyMatrix(const double testDuration, const bool refi
 		Log::info() << "Multi-core boost factor: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x (median)";
 		Log::info() << "Validation: " << validation;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(outerValidation, validation.succeeded());
 	}
 
-	return allSucceeded;
+	return outerValidation.succeeded();
 }
 
 bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double testDuration, Worker& worker)
 {
 	Log::info() << "Testing determination of non-bijective homography matrix with RANSAC for " << sizeof(Scalar) * 8 << "bit floating point precision:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool useSVD : {false, true})
 	{
@@ -1072,20 +1055,13 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 			Log::info() << " ";
 			Log::info() << (useSVD ? "Using SVD " : "Linear ") << (refine ? "with refinement" : "without refinement");
 
-			allSucceeded = testHomographyMatrixForNonBijectiveCorrespondences(testDuration, refine, useSVD, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHomographyMatrixForNonBijectiveCorrespondences(testDuration, refine, useSVD, worker));
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Non-bijective homography RANSAC validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Non-bijective homography RANSAC validation: FAILED!";
-	}
+	Log::info() << "Non-bijective homography RANSAC " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double testDuration, const bool refine, const bool useSVD, Worker& worker)
@@ -1097,7 +1073,8 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
-	bool allSucceeded = true;
+	RandomGenerator outerRandomGenerator;
+	Validation outerValidation(outerRandomGenerator);
 
 	for (const size_t correspondences : {20, 50, 100, 200})
 	{
@@ -1272,13 +1249,10 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 		Log::info() << "Multi-core boost factor: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x (median)";
 		Log::info() << "Validation: " << validation;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(outerValidation, validation.succeeded());
 	}
 
-	return allSucceeded;
+	return outerValidation.succeeded();
 }
 
 bool TestRANSAC::testFundamentalMatrix(const double testDuration)
@@ -1287,7 +1261,8 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 
 	Log::info() << "Testing fundamental matrix with 20% invalid correspondences:";
 
-	bool allSucceeded = true;
+	RandomGenerator outerRandomGenerator;
+	Validation outerValidation(outerRandomGenerator);
 
 	for (const size_t correspondences : {14, 20, 30, 50, 90, 200})
 	{
@@ -1467,23 +1442,12 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 		Log::info() << "Validation Essential: " << validationEssential;
 		Log::info() << "Validation Factorized: " << validationFactorized;
 
-		if (!validationFundamental.succeeded())
-		{
-			allSucceeded = false;
-		}
-
-		if (!validationEssential.succeeded())
-		{
-			allSucceeded = false;
-		}
-
-		if (!validationFactorized.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(outerValidation, validationFundamental.succeeded());
+		OCEAN_EXPECT_TRUE(outerValidation, validationEssential.succeeded());
+		OCEAN_EXPECT_TRUE(outerValidation, validationFactorized.succeeded());
 	}
 
-	return allSucceeded;
+	return outerValidation.succeeded();
 }
 
 }

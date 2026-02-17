@@ -17,6 +17,8 @@
 #include "ocean/math/Triangle2.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -118,9 +120,8 @@ bool TestUtilities::testCreateObjectPoints(const double testDuration)
 
 	Log::info() << "Create 3D object points test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -157,41 +158,25 @@ bool TestUtilities::testCreateObjectPoints(const double testDuration)
 
 			for (size_t n = 0; n < imagePoints.size(); ++n)
 			{
-				if (!AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[n]));
 
-				if (Numeric::isNotEqual(world_T_camera.translation().distance(objectPoints[n]), distance, Scalar(0.001)))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(world_T_camera.translation().distance(objectPoints[n]), distance, Scalar(0.001)));
 
 				const Vector2 projectedObjectPoint = camera->projectToImageIF(flippedCamera_T_world, objectPoints[n]);
 
-				if (projectedObjectPoint.distance(imagePoints[n]) > 1)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, projectedObjectPoint.distance(imagePoints[n]) <= 1);
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testComputePolygonArea(const double testDuration)
@@ -200,9 +185,8 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 
 	Log::info() << "computePolygonArea test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -223,10 +207,7 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 			cornerTR
 		};
 
-		if (!Numeric::isEqualEps(Geometry::Utilities::computePolygonAreaSigned(line, 2)))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqualEps(Geometry::Utilities::computePolygonAreaSigned(line, 2)));
 
 		const Vector2 rectangleCCW[4] =
 		{
@@ -250,25 +231,13 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 		const Scalar rectangleSignedAreaCCW = Geometry::Utilities::computePolygonAreaSigned(rectangleCCW, 4);
 		const Scalar rectangleSignedAreaCW = Geometry::Utilities::computePolygonAreaSigned(rectangleCW, 4);
 
-		if (!Numeric::isEqual(rectangleSignedAreaCCW, rectangleArea))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rectangleSignedAreaCCW, rectangleArea));
 
-		if (!Numeric::isEqual(rectangleSignedAreaCW, -rectangleArea))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rectangleSignedAreaCW, -rectangleArea));
 
-		if (!Numeric::isEqual(Geometry::Utilities::computePolygonArea(rectangleCCW, 4), rectangleArea))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Geometry::Utilities::computePolygonArea(rectangleCCW, 4), rectangleArea));
 
-		if (!Numeric::isEqual(Geometry::Utilities::computePolygonArea(rectangleCW, 4),  rectangleArea))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Geometry::Utilities::computePolygonArea(rectangleCW, 4),  rectangleArea));
 
 		const Vector2 triangleCCW[3] =
 		{
@@ -288,28 +257,15 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 		const Triangle2 triangle2CW(cornerTL, cornerTR, midPointBottom);
 		ocean_assert((triangle2CW.area() - triangle2CCW.area()) < Numeric::eps());
 
-		if (Geometry::Utilities::computePolygonAreaSigned(triangleCCW, 3) - triangle2CCW.area() > Numeric::eps())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Geometry::Utilities::computePolygonAreaSigned(triangleCCW, 3) - triangle2CCW.area() <= Numeric::eps());
 
-		if (Geometry::Utilities::computePolygonAreaSigned(triangleCW, 3) - triangle2CW.area() > Numeric::eps())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Geometry::Utilities::computePolygonAreaSigned(triangleCW, 3) - triangle2CW.area() <= Numeric::eps());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
@@ -318,8 +274,8 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 
 	Log::info() << "isInsideConvexPolygon test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
 
@@ -327,20 +283,20 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 
 	do
 	{
-		bool localSuccess = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const size_t polygonSize = size_t(RandomI::random(3u, 100u));
+		const size_t polygonSize = size_t(RandomI::random(randomGenerator, 3u, 100u));
 
-		const Scalar radius = Random::scalar(Scalar(0.1), range);
-		const Vector2 center = Random::vector2(-range, range);
+		const Scalar radius = Random::scalar(randomGenerator, Scalar(0.1), range);
+		const Vector2 center = Random::vector2(randomGenerator, -range, range);
 
 		Vectors2 circularPolygon;
 		circularPolygon.reserve(polygonSize);
 
 		ocean_assert(polygonSize > 0);
-		const Scalar additionalRandomRotation = Random::scalar(-Numeric::pi(), Numeric::pi());
+		const Scalar additionalRandomRotation = Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi());
 
-		const Scalar directionSign = Random::sign(); // allowing to make a cw circle or a ccw circle
+		const Scalar directionSign = Random::sign(randomGenerator); // allowing to make a cw circle or a ccw circle
 
 		for (size_t i = 0; i < polygonSize; ++i)
 		{
@@ -350,13 +306,13 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 			circularPolygon.emplace_back(center + Vector2(Numeric::cos(adjustedAngle), Numeric::sin(adjustedAngle)) * radius);
 		}
 
-		const bool strict = RandomI::random(1u) == 0u;
+		const bool strict = RandomI::boolean(randomGenerator);
 
 		if (!Geometry::Utilities::isPolygonConvex(circularPolygon.data(), circularPolygon.size(), strict))
 		{
 			ocean_assert(false && "This should never happen!");
 
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		// Because this is a discretized circle, selecting a point inside the continuous circle defined by the radius may be outside the polygon.
@@ -365,56 +321,50 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 		const Scalar innerRadius = (midPoint - center).length();
 		ocean_assert(innerRadius <= radius);
 
-		const Vector2 pointInside = center + Random::vector2() * innerRadius;
-		const Vector2 pointOutside = center + Vector2(Random::scalar(Scalar(1.01), range) * radius, Random::scalar(Scalar(1.01), range) * radius);
+		const Vector2 pointInside = center + Random::vector2(randomGenerator) * innerRadius;
+
+		const Scalar pointOutsideX = Random::scalar(randomGenerator, Scalar(1.01), range) * radius;
+		const Scalar pointOutsideY = Random::scalar(randomGenerator, Scalar(1.01), range) * radius;
+		const Vector2 pointOutside = center + Vector2(pointOutsideX, pointOutsideY);
+
 		const Vector2 pointOnEdge = circularPolygon[0] + ((circularPolygon[1] - circularPolygon[0]) * Scalar(0.5));
 		ocean_assert(Line2(circularPolygon[0], (circularPolygon[1] - circularPolygon[0]).normalized()).isOnLine(pointOnEdge));
 
 		if (Geometry::Utilities::isInsideConvexPolygon(circularPolygon, pointOutside) != false)
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Geometry::Utilities::isInsideConvexPolygon(circularPolygon, pointInside) != true)
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Geometry::Utilities::isInsideConvexPolygon(circularPolygon, pointOnEdge) != true)
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Geometry::Utilities::isInsideConvexPolygon(circularPolygon.data(), circularPolygon.size(), pointOutside) != false)
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Geometry::Utilities::isInsideConvexPolygon(circularPolygon.data(), circularPolygon.size(), pointInside) != true)
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (Geometry::Utilities::isInsideConvexPolygon(circularPolygon.data(), circularPolygon.size(), pointOnEdge) != true)
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
-
-		if (localSuccess)
-		{
-			++validIterations;
-		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testRandomCameraPosePinhole(const double testDuration)
@@ -423,26 +373,28 @@ bool TestUtilities::testRandomCameraPosePinhole(const double testDuration)
 
 	Log::info() << "Random camera pose for pinhole camera test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(100u, 1920u);
-		const unsigned int height = RandomI::random(100u, 1080u);
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(30), Numeric::deg2rad(70));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const unsigned int width = RandomI::random(randomGenerator, 100u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 100u, 1080u);
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(30), Numeric::deg2rad(70));
 
 		const PinholeCamera pinholeCamera(width, height, fovX);
 
-		const Vector3 objectPoint = Random::vector3(-10, 10);
-		const Vector3 cameraDirection = Random::vector3();
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -10, 10);
+		const Vector3 cameraDirection = Random::vector3(randomGenerator);
 
 		const Line3 objectPointRay(objectPoint, cameraDirection);
 
-		const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(pinholeCamera.width() - 5u), Scalar(5), Scalar(pinholeCamera.height() - 5u));
-		const Scalar distance = Random::scalar(Scalar(0.01), 10);
+		const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(pinholeCamera.width() - 5u), Scalar(5), Scalar(pinholeCamera.height() - 5u));
+		const Scalar distance = Random::scalar(randomGenerator, Scalar(0.01), 10);
 
 		const HomogenousMatrix4 world_T_camera = Geometry::Utilities::randomCameraPose(pinholeCamera, objectPointRay, imagePoint, distance);
 		ocean_assert(world_T_camera.isValid());
@@ -455,23 +407,26 @@ bool TestUtilities::testRandomCameraPosePinhole(const double testDuration)
 			{
 				const Vector2 projectedObjectPoint = pinholeCamera.projectToImageIF<true>(flippedCamera_T_world, objectPoint, pinholeCamera.hasDistortionParameters());
 
-				if (projectedObjectPoint.distance(imagePoint) <= 1)
+				if (projectedObjectPoint.distance(imagePoint) > 1)
 				{
-					++validIterations;
+					scopedIteration.setInaccurate();
 				}
 			}
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testRandomCameraPoseFisheye(const double testDuration)
@@ -480,22 +435,24 @@ bool TestUtilities::testRandomCameraPoseFisheye(const double testDuration)
 
 	Log::info() << "Random camera pose for fisheye camera test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector3 objectPoint = Random::vector3(-10, 10);
-		const Vector3 cameraDirection = Random::vector3();
+		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(randomGenerator, 1u));
+
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -10, 10);
+		const Vector3 cameraDirection = Random::vector3(randomGenerator);
 
 		const Line3 objectPointRay(objectPoint, cameraDirection);
 
-		const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
-		const Scalar distance = Random::scalar(Scalar(0.01), 10);
+		const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
+		const Scalar distance = Random::scalar(randomGenerator, Scalar(0.01), 10);
 
 		const HomogenousMatrix4 world_T_camera = Geometry::Utilities::randomCameraPose(fisheyeCamera, objectPointRay, imagePoint, distance);
 		ocean_assert(world_T_camera.isValid());
@@ -508,23 +465,26 @@ bool TestUtilities::testRandomCameraPoseFisheye(const double testDuration)
 			{
 				const Vector2 projectedObjectPoint = fisheyeCamera.projectToImageIF(flippedCamera_T_world, objectPoint);
 
-				if (projectedObjectPoint.distance(imagePoint) <= 1)
+				if (projectedObjectPoint.distance(imagePoint) > 1)
 				{
-					++validIterations;
+					scopedIteration.setInaccurate();
 				}
 			}
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 } // TestGeometry
