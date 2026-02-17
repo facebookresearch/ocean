@@ -17,6 +17,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -79,9 +80,8 @@ bool TestFrameConverterThreshold::testConvertY8ToB8(const unsigned int width, co
 	Log::info() << "Testing convert Y8 to binary " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -134,17 +134,11 @@ bool TestFrameConverterThreshold::testConvertY8ToB8(const unsigned int width, co
 					{
 						if (sourceRow[x] < threshold)
 						{
-							if (targetRow[x] != 0x00)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, targetRow[x], uint8_t(0x00));
 						}
 						else
 						{
-							if (targetRow[x] != 0xFF)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, targetRow[x], uint8_t(0xFF));
 						}
 					}
 				}
@@ -161,16 +155,9 @@ bool TestFrameConverterThreshold::testConvertY8ToB8(const unsigned int width, co
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameConverterThreshold::testInPlaceConvertY8ToB8(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -180,9 +167,8 @@ bool TestFrameConverterThreshold::testInPlaceConvertY8ToB8(const unsigned int wi
 	Log::info() << "Testing in-place convert Y8 to binary " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -232,17 +218,11 @@ bool TestFrameConverterThreshold::testInPlaceConvertY8ToB8(const unsigned int wi
 					{
 						if (copyRow[x] < threshold)
 						{
-							if (frameRow[x] != 0x00)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, frameRow[x], uint8_t(0x00));
 						}
 						else
 						{
-							if (frameRow[x] != 0xFF)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, frameRow[x], uint8_t(0xFF));
 						}
 					}
 				}
@@ -259,16 +239,9 @@ bool TestFrameConverterThreshold::testInPlaceConvertY8ToB8(const unsigned int wi
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

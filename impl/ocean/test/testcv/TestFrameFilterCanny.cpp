@@ -16,6 +16,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -102,8 +103,7 @@ bool TestFrameFilterCanny::testFilterCannyScharr(const unsigned int performanceW
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -163,10 +163,7 @@ bool TestFrameFilterCanny::testFilterCannyScharr(const unsigned int performanceW
 					return false;
 				}
 
-				if (!validationCannyFilterScharr(source, target, TFilter(lowThreshold), TFilter(highThreshold)))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validationCannyFilterScharr(source, target, TFilter(lowThreshold), TFilter(highThreshold)));
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
 		}
@@ -180,16 +177,9 @@ bool TestFrameFilterCanny::testFilterCannyScharr(const unsigned int performanceW
 		Log::info() << "Multi-core boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TFilter>

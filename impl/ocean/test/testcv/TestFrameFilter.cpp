@@ -17,6 +17,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -120,9 +121,8 @@ bool TestFrameFilter::testMagnitude(const double testDuration, Worker& worker)
 
 	Log::info() << "Testing magnitude:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using DataTypePair = std::pair<FrameType::DataType, FrameType::DataTypes>;
 	using DataTypePairs = std::vector<DataTypePair>;
@@ -152,82 +152,57 @@ bool TestFrameFilter::testMagnitude(const double testDuration, Worker& worker)
 		{
 			case FrameType::DT_SIGNED_INTEGER_8:
 			{
-				if (!testMagnitude<int8_t>(magnitudeDataType, randomGenerator, worker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testMagnitude<int8_t>(magnitudeDataType, randomGenerator, worker));
 
 				break;
 			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_8:
 			{
-				if (!testMagnitude<uint8_t>(magnitudeDataType, randomGenerator, worker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testMagnitude<uint8_t>(magnitudeDataType, randomGenerator, worker));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_INTEGER_16:
 			{
-				if (!testMagnitude<int16_t>(magnitudeDataType, randomGenerator, worker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testMagnitude<int16_t>(magnitudeDataType, randomGenerator, worker));
 
 				break;
 			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_16:
 			{
-				if (!testMagnitude<uint16_t>(magnitudeDataType, randomGenerator, worker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testMagnitude<uint16_t>(magnitudeDataType, randomGenerator, worker));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_FLOAT_32:
 			{
-				if (!testMagnitude<float>(magnitudeDataType, randomGenerator, worker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testMagnitude<float>(magnitudeDataType, randomGenerator, worker));
 
 				break;
 			}
 
 			case FrameType::DT_SIGNED_FLOAT_64:
 			{
-				if (!testMagnitude<double>(magnitudeDataType, randomGenerator, worker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testMagnitude<double>(magnitudeDataType, randomGenerator, worker));
 
 				break;
 			}
 
 			default:
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilter::testNormalizeValue(const double testDuration)
@@ -237,35 +212,36 @@ bool TestFrameFilter::testNormalizeValue(const double testDuration)
 	Log::info() << "Testing normalize value:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 #ifdef DISABLED_DUE_TO_FLOAT_TEMPLATE_VALUE // activate once float template parameters are supported
 
-	allSucceeded = testNormalizeValue<float>(testDuration) && allSucceeded; // available since C++20
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<float>(testDuration)); // available since C++20
 	Log::info() << " ";
-	allSucceeded = testNormalizeValue<double>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<double>(testDuration));
 
 	Log::info() << " ";
 
 #endif // DISABLED_DUE_TO_FLOAT_TEMPLATE_VALUE
 
-	allSucceeded = testNormalizeValue<int8_t>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<int8_t>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testNormalizeValue<uint8_t>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<uint8_t>(testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeValue<int16_t>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<int16_t>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testNormalizeValue<uint16_t>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<uint16_t>(testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeValue<int32_t>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<int32_t>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testNormalizeValue<uint32_t>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizeValue<uint32_t>(testDuration));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -275,9 +251,8 @@ bool TestFrameFilter::testNormalizeValue(const double testDuration)
 
 	Log::info() << "... with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -287,40 +262,19 @@ bool TestFrameFilter::testNormalizeValue(const double testDuration)
 		{
 			const float value = RandomF::scalar(randomGenerator, -1000.0f, 1000.0f);
 
-			if (!verifyValueNormalization<T, T(1.0)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(1.0)>(value));
 
-			if (!verifyValueNormalization<T, T(2.0)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(2.0)>(value));
 
-			if (!verifyValueNormalization<T, T(4.0)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(4.0)>(value));
 
-			if (!verifyValueNormalization<T, T(8.0)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(8.0)>(value));
 
-			if (!verifyValueNormalization<T, T(16.0)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(16.0)>(value));
 
-			if (!verifyValueNormalization<T, T(7.5)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(7.5)>(value));
 
-			if (!verifyValueNormalization<T, T(9.05)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(9.05)>(value));
 		}
 		else
 		{
@@ -328,49 +282,24 @@ bool TestFrameFilter::testNormalizeValue(const double testDuration)
 
 			const T value = T(RandomI::random32(randomGenerator));
 
-			if (!verifyValueNormalization<T, T(1)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(1)>(value));
 
-			if (!verifyValueNormalization<T, T(2)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(2)>(value));
 
-			if (!verifyValueNormalization<T, T(3)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(3)>(value));
 
-			if (!verifyValueNormalization<T, T(4)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(4)>(value));
 
-			if (!verifyValueNormalization<T, T(8)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(8)>(value));
 
-			if (!verifyValueNormalization<T, T(16)>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValueNormalization<T, T(16)>(value));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

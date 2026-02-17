@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -258,9 +259,8 @@ bool TestFrameEnlarger::testAddBorder(const double testDuration)
 
 	Log::info() << "Add border with fixed color '" << TypeNamer::name<T>() << "' test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -301,23 +301,13 @@ bool TestFrameEnlarger::testAddBorder(const double testDuration)
 			return false;
 		}
 
-		if (!validateAddBorder<T>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom, color.data()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateAddBorder<T>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom, color.data()));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -327,9 +317,8 @@ bool TestFrameEnlarger::testAddBorderNearestPixel(const double testDuration)
 
 	Log::info() << "Add border with nearest pixel '" << TypeNamer::name<T>() << "' test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -363,23 +352,13 @@ bool TestFrameEnlarger::testAddBorderNearestPixel(const double testDuration)
 			return false;
 		}
 
-		if (!validateAddBorderNearestPixel<T>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateAddBorderNearestPixel<T>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -389,9 +368,8 @@ bool TestFrameEnlarger::testAddBorderMirrored(const double testDuration)
 
 	Log::info() << "Add border with mirroring pixel values test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -425,23 +403,13 @@ bool TestFrameEnlarger::testAddBorderMirrored(const double testDuration)
 			return false;
 		}
 
-		if (!validateAddBorderMirrored<T>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateAddBorderMirrored<T>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameEnlarger::testFrameMultiplyByTwo(const double testDuration, Worker& worker)
@@ -451,7 +419,8 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const double testDuration, Worker
 	Log::info() << "Test multiplication by two ... ";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const IndexPairs32 frameSizes =
 	{
@@ -466,7 +435,7 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const double testDuration, Worker
 	{
 		for (unsigned int channels = 1u; channels <= 4u; ++channels)
 		{
-			allSucceeded = testFrameMultiplyByTwo(frameSize.first, frameSize.second, channels, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testFrameMultiplyByTwo(frameSize.first, frameSize.second, channels, testDuration, worker));
 
 			Log::info() << " ";
 		}
@@ -474,16 +443,9 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const double testDuration, Worker
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test: FAILED!";
-	}
+	Log::info() << "Test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker)
@@ -498,10 +460,9 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const u
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
-
-	bool allSucceeded = true;
 
 	for (const bool performanceIteration : {true, false})
 	{
@@ -528,7 +489,7 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const u
 				CV::FrameEnlarger::Comfort::multiplyByTwo(source, target, useWorker);
 				performance.stopIf(performanceIteration);
 
-				allSucceeded = validationMultiplyByTwo(source, target) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, validationMultiplyByTwo(source, target));
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
 		}
@@ -542,16 +503,9 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const u
 		Log::info() << "Multi-core boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
@@ -559,8 +513,6 @@ bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Add transparent border test:";
-
-	bool allSucceeded = true;
 
 	constexpr size_t numberPixelFormats = 10;
 	constexpr FrameType::PixelFormat pixelFormats8BitsPerChannel[numberPixelFormats] =
@@ -578,6 +530,7 @@ bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
 	};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -613,23 +566,13 @@ bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
 			CV::FrameEnlarger::Comfort::addTransparentBorder<false>(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom);
 		}
 
-		if (!validateAddTransparentBorder(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom, transparentIs0xFF))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateAddTransparentBorder(frame, enlargedFrame, borderSizeLeft, borderSizeTop, borderSizeRight, borderSizeBottom, transparentIs0xFF));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

@@ -16,6 +16,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -111,7 +112,8 @@ bool TestFrameFilterDilation::test8Bit4Neighbor(const unsigned int width, const 
 
 	Log::info() << "Testing 8 bit binary dilation with cross kernel (diameter 3) for " << width << "x" << height << " image:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -145,12 +147,12 @@ bool TestFrameFilterDilation::test8Bit4Neighbor(const unsigned int width, const 
 
 				if (!validate8BitCrossKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask) || !CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -173,12 +175,12 @@ bool TestFrameFilterDilation::test8Bit4Neighbor(const unsigned int width, const 
 
 				if (!validate8BitCrossKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask) || !CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -193,16 +195,9 @@ bool TestFrameFilterDilation::test8Bit4Neighbor(const unsigned int width, const 
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterDilation::test8Bit8Neighbor(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -211,7 +206,8 @@ bool TestFrameFilterDilation::test8Bit8Neighbor(const unsigned int width, const 
 
 	Log::info() << "Testing 8 bit binary dilation with kernel 3x3 for " << width << "x" << height << " image:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -245,12 +241,12 @@ bool TestFrameFilterDilation::test8Bit8Neighbor(const unsigned int width, const 
 
 				if (!validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask) || !CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -273,12 +269,12 @@ bool TestFrameFilterDilation::test8Bit8Neighbor(const unsigned int width, const 
 
 				if (!validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask) || !CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -293,16 +289,9 @@ bool TestFrameFilterDilation::test8Bit8Neighbor(const unsigned int width, const 
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterDilation::test8Bit24Neighbor(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -311,7 +300,8 @@ bool TestFrameFilterDilation::test8Bit24Neighbor(const unsigned int width, const
 
 	Log::info() << "Testing 8 bit binary dilation with kernel 5x5 for " << width << "x" << height << " image:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -345,12 +335,12 @@ bool TestFrameFilterDilation::test8Bit24Neighbor(const unsigned int width, const
 
 				if (!validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 5u, maskValue, mask.paddingElements(), target.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask) || !CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -373,12 +363,12 @@ bool TestFrameFilterDilation::test8Bit24Neighbor(const unsigned int width, const
 
 				if (!validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 5u, maskValue, mask.paddingElements(), target.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask) || !CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -393,16 +383,9 @@ bool TestFrameFilterDilation::test8Bit24Neighbor(const unsigned int width, const
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -411,7 +394,8 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 
 	Log::info() << "Testing 8 bit binary dilation with different kernels for " << width << "x" << height << " image:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -440,7 +424,7 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				Frame validationMask(copyMask, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
@@ -456,7 +440,7 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 				{
 					if (memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()) != 0)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -478,7 +462,7 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				Frame validationMask(copyMask, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
@@ -494,7 +478,7 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 				{
 					if (memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()) != 0)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -516,7 +500,7 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, copyMask))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				Frame validationMask(copyMask, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
@@ -532,7 +516,7 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 				{
 					if (memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()) != 0)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -540,16 +524,9 @@ bool TestFrameFilterDilation::test8Bit(const unsigned int width, const unsigned 
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterDilation::validate8BitCrossKernel(const unsigned char* const mask, const unsigned char* target, const unsigned int width, const unsigned int height, const unsigned int kernelSize, const unsigned char maskValue, const unsigned int maskPaddingElements, const unsigned int targetPaddingElements)
