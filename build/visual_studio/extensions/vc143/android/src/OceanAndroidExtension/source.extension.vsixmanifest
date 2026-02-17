@@ -121,5 +121,8 @@
 
     <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradle-wrapper.jar.sha256" d:VsixSubPath="toolset\GradleWrapper\" />
+
+    <!-- Ocean Android Common shared props - SDK/JDK path resolution for Gradle-based projects -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidCommon\OceanAndroidCommon.props" d:VsixSubPath="toolset\OceanAndroidCommon\" />
   </Assets>
 </PackageManifest>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Common Properties
+  Shared property definitions for Android Application and Java Library projects.
+  Imported by project files via registry path or development fallback.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Android SDK Path Resolution -->
+  <!-- Priority: ANDROID_HOME > ANDROID_SDK_ROOT > default Android Studio location -->
+  <PropertyGroup>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_HOME)</AndroidSdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_SDK_ROOT)</AndroidSdkPath>
+    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(LOCALAPPDATA)\Android\Sdk</AndroidSdkPath>
+  </PropertyGroup>
+
+  <!-- Java Home Detection -->
+  <!-- Requires Java 17+ for AGP 8.x -->
+  <!-- Priority: 1) OCEAN_JAVA_HOME, 2) Auto-detect JDK 17-21, 3) Android Studio JBR, 4) JAVA_HOME -->
+  <!-- Note: JDK 25+ is NOT supported by Gradle yet -->
+  <PropertyGroup>
+    <JavaHome Condition="'$(JavaHome)' == ''">$(OCEAN_JAVA_HOME)</JavaHome>
+    <!-- Auto-detect common JDK installations (JDK 17-21 supported) -->
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-21')">$(ProgramFiles)\Java\jdk-21</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-17')">$(ProgramFiles)\Java\jdk-17</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-21')">$(ProgramFiles)\Eclipse Adoptium\jdk-21</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-17')">$(ProgramFiles)\Eclipse Adoptium\jdk-17</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-21')">$(ProgramFiles)\Microsoft\jdk-21</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-17')">$(ProgramFiles)\Microsoft\jdk-17</JavaHome>
+    <!-- Android Studio bundled JBR -->
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(LOCALAPPDATA)\Programs\Android Studio\jbr')">$(LOCALAPPDATA)\Programs\Android Studio\jbr</JavaHome>
+    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Android\Android Studio\jbr')">$(ProgramFiles)\Android\Android Studio\jbr</JavaHome>
+    <!-- Fall back to JAVA_HOME (may be incompatible version) -->
+    <JavaHome Condition="'$(JavaHome)' == ''">$(JAVA_HOME)</JavaHome>
+  </PropertyGroup>
+
+</Project>

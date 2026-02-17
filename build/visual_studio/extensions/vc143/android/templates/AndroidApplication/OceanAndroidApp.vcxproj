@@ -116,29 +116,16 @@
     <AndroidAbi>x86</AndroidAbi>
   </PropertyGroup>
 
-  <!-- Android SDK Paths -->
+  <!-- Android SDK and Java Home resolution (shared props from extension) -->
   <PropertyGroup>
-    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_HOME)</AndroidSdkPath>
-    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_SDK_ROOT)</AndroidSdkPath>
-    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(LOCALAPPDATA)\Android\Sdk</AndroidSdkPath>
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
+    <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
+    <!-- Development fallback: relative to template location -->
+    <_OceanCommonPropsPath Condition="'$(_OceanCommonPropsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
+  </PropertyGroup>
+  <Import Project="$(_OceanCommonPropsPath)" Condition="'$(_OceanCommonPropsPath)' != '' AND Exists('$(_OceanCommonPropsPath)')" />
 
-    <!-- Java Home detection - requires Java 17+ for AGP 8.x -->
-    <!-- Priority: 1) OCEAN_JAVA_HOME, 2) Auto-detect JDK 17-21, 3) Android Studio JBR, 4) JAVA_HOME -->
-    <!-- Note: JDK 25+ is NOT supported by Gradle yet -->
-    <JavaHome Condition="'$(JavaHome)' == ''">$(OCEAN_JAVA_HOME)</JavaHome>
-    <!-- Auto-detect common JDK installations (JDK 17-21 supported) -->
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-21')">$(ProgramFiles)\Java\jdk-21</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-17')">$(ProgramFiles)\Java\jdk-17</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-21')">$(ProgramFiles)\Eclipse Adoptium\jdk-21</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-17')">$(ProgramFiles)\Eclipse Adoptium\jdk-17</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-21')">$(ProgramFiles)\Microsoft\jdk-21</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-17')">$(ProgramFiles)\Microsoft\jdk-17</JavaHome>
-    <!-- Android Studio bundled JBR -->
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(LOCALAPPDATA)\Programs\Android Studio\jbr')">$(LOCALAPPDATA)\Programs\Android Studio\jbr</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Android\Android Studio\jbr')">$(ProgramFiles)\Android\Android Studio\jbr</JavaHome>
-    <!-- Fall back to JAVA_HOME (may be incompatible version) -->
-    <JavaHome Condition="'$(JavaHome)' == ''">$(JAVA_HOME)</JavaHome>
-
+  <PropertyGroup>
     <!-- Gradle settings - files are in gradle subfolder -->
     <GradleProjectDir>$(MSBuildProjectDirectory)\gradle</GradleProjectDir>
     <GradleWrapper>$(GradleProjectDir)\gradlew.bat</GradleWrapper>

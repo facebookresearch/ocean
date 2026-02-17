@@ -235,6 +235,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <!-- OceanAndroidCommon props - shared SDK/JDK path resolution for Gradle-based projects -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props">
+      <Link>toolset\OceanAndroidCommon\OceanAndroidCommon.props</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <!-- Additional pkgdef for toolset registration -->
   <ItemGroup>
     <Content Include="OceanNDKToolset.pkgdef">

@@ -118,24 +118,16 @@
     <FinalAarPath>$(OutDir)$(ProjectName).aar</FinalAarPath>
   </PropertyGroup>
 
-  <!-- Android SDK Paths -->
+  <!-- Android SDK and Java Home resolution (shared props from extension) -->
   <PropertyGroup>
-    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_HOME)</AndroidSdkPath>
-    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(ANDROID_SDK_ROOT)</AndroidSdkPath>
-    <AndroidSdkPath Condition="'$(AndroidSdkPath)' == ''">$(LOCALAPPDATA)\Android\Sdk</AndroidSdkPath>
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
+    <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
+    <!-- Development fallback: relative to template location -->
+    <_OceanCommonPropsPath Condition="'$(_OceanCommonPropsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
+  </PropertyGroup>
+  <Import Project="$(_OceanCommonPropsPath)" Condition="'$(_OceanCommonPropsPath)' != '' AND Exists('$(_OceanCommonPropsPath)')" />
 
-    <!-- Java Home detection - requires Java 17+ for AGP 8.x -->
-    <JavaHome Condition="'$(JavaHome)' == ''">$(OCEAN_JAVA_HOME)</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-21')">$(ProgramFiles)\Java\jdk-21</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Java\jdk-17')">$(ProgramFiles)\Java\jdk-17</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-21')">$(ProgramFiles)\Eclipse Adoptium\jdk-21</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Eclipse Adoptium\jdk-17')">$(ProgramFiles)\Eclipse Adoptium\jdk-17</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-21')">$(ProgramFiles)\Microsoft\jdk-21</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Microsoft\jdk-17')">$(ProgramFiles)\Microsoft\jdk-17</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(LOCALAPPDATA)\Programs\Android Studio\jbr')">$(LOCALAPPDATA)\Programs\Android Studio\jbr</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == '' AND Exists('$(ProgramFiles)\Android\Android Studio\jbr')">$(ProgramFiles)\Android\Android Studio\jbr</JavaHome>
-    <JavaHome Condition="'$(JavaHome)' == ''">$(JAVA_HOME)</JavaHome>
-
+  <PropertyGroup>
     <!-- Gradle task based on configuration -->
     <GradleTask Condition="'$(Configuration)' == 'Release'">:lib:assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">:lib:assembleDebug</GradleTask>
