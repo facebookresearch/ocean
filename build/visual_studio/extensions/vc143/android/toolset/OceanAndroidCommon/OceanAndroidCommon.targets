@@ -47,6 +47,14 @@
   <Import Project="$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets"
           Condition="'$(IsAndroidJavaLibrary)' == 'true' AND '$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets')" />
 
+  <!-- Gradle Base Properties (common to all Gradle-based project types) -->
+  <!-- Composed here (in .targets) rather than in .props so that project property sheet
+       overrides of IntDir/OutDir and the Gradle directory properties are reflected.
+       Project-type-specific parameters are added via $(ProjectGradleProperties). -->
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'Makefile'">
+    <GradleBaseProperties Condition="'$(GradleBaseProperties)' == ''">--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PjavaVersion=$(JavaVersion) -PgradleBuildDir="$(GradleBuildDir)"</GradleBaseProperties>
+  </PropertyGroup>
+
   <!-- Compose GradleProperties from base + project-specific properties.
        Projects set $(ProjectGradleProperties) for type-specific -P flags.
        This runs late (after project properties are evaluated) so all values are available. -->

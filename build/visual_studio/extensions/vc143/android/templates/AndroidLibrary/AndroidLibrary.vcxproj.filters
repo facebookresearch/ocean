@@ -13,9 +13,9 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Java sources -->
-    <None Include="lib\src\$safeprojectname$.java">
+    <JavaSource Include="lib\src\$safeprojectname$.java">
       <Filter>lib\src</Filter>
-    </None>
+    </JavaSource>
     <!-- Library module build file -->
     <None Include="lib\build.gradle.kts">
       <Filter>lib</Filter>

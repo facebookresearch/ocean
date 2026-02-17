@@ -44,7 +44,7 @@
        this file is imported.
        ============================================================ -->
   <PropertyGroup>
-    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk)</ProjectGradleProperties>
+    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PgradleDependencies="$(GradleDependencies)" -PgradleImplementationDependencies="$(GradleImplementationDependencies)"</ProjectGradleProperties>
   </PropertyGroup>
 
   <!-- ============================================================
@@ -58,7 +58,7 @@
     <AarOutputDir Condition="'$(AarOutputDir)' == ''">$(GradleBuildDir)\outputs\aar</AarOutputDir>
     <AarOutputFile Condition="'$(Configuration)' == 'Debug'">$(AarOutputDir)\lib-debug.aar</AarOutputFile>
     <AarOutputFile Condition="'$(Configuration)' == 'Release'">$(AarOutputDir)\lib-release.aar</AarOutputFile>
-    <FinalAarPath Condition="'$(FinalAarPath)' == ''">$(OutDir)$(ProjectName).aar</FinalAarPath>
+    <FinalAarPath Condition="'$(FinalAarPath)' == ''">$(OutDir)$(TargetName).aar</FinalAarPath>
     <NMakeOutput Condition="'$(NMakeOutput)' == ''">$(FinalAarPath)</NMakeOutput>
   </PropertyGroup>
 

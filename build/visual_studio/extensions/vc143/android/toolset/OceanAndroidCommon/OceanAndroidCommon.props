@@ -76,10 +76,4 @@
     <AndroidAbi Condition="'$(AndroidAbi)' == ''">x86</AndroidAbi>
   </PropertyGroup>
 
-  <!-- Gradle Base Properties (common to all Gradle-based project types) -->
-  <!-- Project-type-specific parameters are added via $(ProjectGradleProperties). -->
-  <PropertyGroup>
-    <GradleBaseProperties Condition="'$(GradleBaseProperties)' == ''">--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PjavaVersion=$(JavaVersion) -PgradleBuildDir="$(GradleBuildDir)"</GradleBaseProperties>
-  </PropertyGroup>
-
 </Project>

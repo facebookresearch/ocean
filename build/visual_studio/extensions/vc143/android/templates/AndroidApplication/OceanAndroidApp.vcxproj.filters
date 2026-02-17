@@ -48,9 +48,9 @@
       <Filter>app</Filter>
     </None>
     <!-- Java sources -->
-    <None Include="app\java\MainActivity.java">
+    <JavaSource Include="app\java\MainActivity.java">
       <Filter>app\java</Filter>
-    </None>
+    </JavaSource>
     <!-- Android manifest -->
     <AndroidManifest Include="app\AndroidManifest.xml">
       <Filter>app</Filter>

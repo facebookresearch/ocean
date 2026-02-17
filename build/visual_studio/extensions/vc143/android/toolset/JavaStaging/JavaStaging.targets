@@ -16,6 +16,11 @@
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Register JavaSource as a known item type so files appear in Solution Explorer -->
+  <ItemGroup>
+    <AvailableItemName Include="JavaSource" />
+  </ItemGroup>
+
   <!-- Inline task for staging Java files based on package declaration -->
   <UsingTask TaskName="StageJavaFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
@@ -91,9 +96,7 @@ catch (Exception ex)
   <!-- Stage Java Sources - copies flat Java files to package-matching directory structure -->
   <Target Name="StageJavaSources"
           BeforeTargets="Build"
-          Condition="'@(JavaSource)' != ''"
-          Inputs="@(JavaSource)"
-          Outputs="$(JavaStagingDir)\%(JavaSource.RecursiveDir)%(JavaSource.Filename)%(JavaSource.Extension)">
+          Condition="'@(JavaSource)' != ''">
 
     <Message Text="========================================" Importance="high" />
     <Message Text="Staging Java sources to $(JavaStagingDir)..." Importance="high" />
