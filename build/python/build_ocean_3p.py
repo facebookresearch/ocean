@@ -817,6 +817,12 @@ def _copy_lib_files_recursive(
     """
     import shutil
 
+    # Collect symlink targets to skip real files that have an unversioned alias
+    symlink_targets = set()
+    for item in src_dir.iterdir():
+        if item.is_symlink():
+            symlink_targets.add(item.resolve())
+
     for item in src_dir.iterdir():
         if item.is_dir() and not item.is_symlink():
             # Skip .framework directories
@@ -833,6 +839,11 @@ def _copy_lib_files_recursive(
 
             # Skip if the symlink target doesn't exist
             if not actual_file.exists():
+                continue
+
+            # Skip real files that have a symlink alias (prefer the
+            # unversioned symlink name, e.g., libpng.a over libpng16.a)
+            if not item.is_symlink() and actual_file in symlink_targets:
                 continue
 
             # Filter out unwanted library files
@@ -965,6 +976,13 @@ def reorganize_output(  # noqa: C901
             shutil.rmtree(final_lib)
         final_lib.mkdir(parents=True, exist_ok=True)
 
+        # Collect symlink targets so we skip real files that have an unversioned
+        # symlink alias (e.g., skip libpng16.a when libpng.a -> libpng16.a exists)
+        symlink_targets = set()
+        for item in src_lib.iterdir():
+            if item.is_symlink():
+                symlink_targets.add(item.resolve())
+
         # Determine which library extensions to skip based on link type
         if target.link_type == LinkType.STATIC:
             # Skip shared libraries when building static
@@ -1009,6 +1027,11 @@ def reorganize_output(  # noqa: C901
 
                 # Skip if the symlink target doesn't exist
                 if not actual_file.exists():
+                    continue
+
+                # Skip real files that have a symlink alias (prefer the
+                # unversioned symlink name, e.g., libpng.a over libpng16.a)
+                if not item.is_symlink() and actual_file in symlink_targets:
                     continue
 
                 # Filter out unwanted library files
