@@ -117,14 +117,12 @@
     <GradleTask Condition="'$(GradleTask)' == ''">:lib:assembleDebug</GradleTask>
 
     <!-- Gradle properties to pass (from VS project settings) -->
-    <GradleProperties>--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PjavaVersion=$(JavaVersion) -PgradleBuildDir="$(GradleBuildDir)"</GradleProperties>
+    <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
+    <ProjectGradleProperties>-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk)</ProjectGradleProperties>
   </PropertyGroup>
 
   <!-- Makefile project commands -->
   <PropertyGroup>
-    <NMakeBuildCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" $(GradleTask) $(GradleProperties) --no-daemon</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleTask) $(GradleProperties) --no-daemon</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleProperties) --no-daemon</NMakeCleanCommandLine>
     <NMakeOutput>$(FinalAarPath)</NMakeOutput>
   </PropertyGroup>
 

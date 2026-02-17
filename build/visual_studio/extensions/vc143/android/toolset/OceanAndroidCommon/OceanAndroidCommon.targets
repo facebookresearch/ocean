@@ -38,4 +38,20 @@
   <Import Project="$(_JavaValidationTargetsPath)"
           Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
 
+  <!-- Compose GradleProperties from base + project-specific properties.
+       Projects set $(ProjectGradleProperties) for type-specific -P flags.
+       This runs late (after project properties are evaluated) so all values are available. -->
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'Makefile'">
+    <GradleProperties Condition="'$(GradleProperties)' == ''">$(GradleBaseProperties) $(ProjectGradleProperties)</GradleProperties>
+  </PropertyGroup>
+
+  <!-- NMake / Gradle Build Commands (shared pattern for Makefile-based Android projects).
+       GradleTask and GradleProperties must be set by the project before this point.
+       NMakeOutput remains project-specific (APK vs AAR). -->
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'Makefile'">
+    <NMakeBuildCommandLine Condition="'$(NMakeBuildCommandLine)' == ''">cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" $(GradleTask) $(GradleProperties) --no-daemon</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine Condition="'$(NMakeReBuildCommandLine)' == ''">cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleTask) $(GradleProperties) --no-daemon</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine Condition="'$(NMakeCleanCommandLine)' == ''">cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleProperties) --no-daemon</NMakeCleanCommandLine>
+  </PropertyGroup>
+
 </Project>
