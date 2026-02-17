@@ -60,6 +60,13 @@
   </PropertyGroup>
 
   <!-- ============================================================
+       Android Manifest Default
+       ============================================================ -->
+  <PropertyGroup>
+    <AndroidManifestFile Condition="'$(AndroidManifestFile)' == ''">$(MSBuildProjectDirectory)\app\AndroidManifest.xml</AndroidManifestFile>
+  </PropertyGroup>
+
+  <!-- ============================================================
        CopyNativeLibsToJniLibs Target
 
        Copies .so libraries declared in @(OceanNativeSharedLibrary) to the
@@ -265,6 +272,41 @@
              Importance="normal"
              Condition="'@(_CopiedLibraryFiles)' != ''" />
     <Message Text="========================================" Importance="high" />
+  </Target>
+
+  <!-- ============================================================
+       Android Manifest Resolution
+
+       Resolves AndroidManifest items into the AndroidManifestFile
+       property and recomposes GradleProperties so the Build target
+       picks up the resolved value.
+       ============================================================ -->
+
+  <Target Name="_ResolveAndroidManifest"
+          BeforeTargets="Build;Rebuild;Clean;StageJavaSources">
+
+    <!-- Validate at most one AndroidManifest item exists -->
+    <Error Text="Multiple AndroidManifest items found: @(AndroidManifest). Only one manifest file is supported."
+           Condition="'@(AndroidManifest->Count())' != '0' AND '@(AndroidManifest->Count())' != '1'" />
+
+    <!-- If an AndroidManifest item exists, use it as the manifest file -->
+    <PropertyGroup Condition="'@(AndroidManifest)' != ''">
+      <AndroidManifestFile>@(AndroidManifest->'%(FullPath)')</AndroidManifestFile>
+    </PropertyGroup>
+
+    <!-- Re-compose GradleProperties with the resolved manifest path.
+         GradleProperties was evaluated statically at project load with the default
+         AndroidManifestFile value. We must redefine it here so the Build/Rebuild/Clean
+         targets pick up the resolved value. -->
+    <PropertyGroup>
+      <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
+      <GradleProperties>$(GradleBaseProperties) $(ProjectGradleProperties)</GradleProperties>
+    </PropertyGroup>
+
+    <Message Text="Using Android manifest: $(AndroidManifestFile)" Importance="high" />
+
+    <Error Text="Android manifest file not found: $(AndroidManifestFile). Ensure the file exists or update the AndroidManifest item."
+           Condition="!Exists('$(AndroidManifestFile)')" />
   </Target>
 
 </Project>

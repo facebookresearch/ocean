@@ -111,9 +111,6 @@
     <ApkOutputPath>$(GradleBuildDir)\outputs\apk</ApkOutputPath>
     <OutputPath>$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutputPath>
 
-    <!-- Android manifest file - default location, overridable via project settings -->
-    <AndroidManifestFile Condition="'$(AndroidManifestFile)' == ''">$(MSBuildProjectDirectory)\app\AndroidManifest.xml</AndroidManifestFile>
-
     <!-- Gradle properties to pass -->
     <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
     <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
@@ -225,34 +222,7 @@
 
   <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
   <!-- Build, Clean, and Rebuild targets are provided by OceanAndroidCommon.targets. -->
-
-  <!-- Resolve AndroidManifest items into the AndroidManifestFile property -->
-  <Target Name="_ResolveAndroidManifest"
-          BeforeTargets="Build;Rebuild;StageJavaSources">
-
-    <!-- Validate at most one AndroidManifest item exists -->
-    <Error Text="Multiple AndroidManifest items found: @(AndroidManifest). Only one manifest file is supported."
-           Condition="'@(AndroidManifest->Count())' != '0' AND '@(AndroidManifest->Count())' != '1'" />
-
-    <!-- If an AndroidManifest item exists, use it as the manifest file -->
-    <PropertyGroup Condition="'@(AndroidManifest)' != ''">
-      <AndroidManifestFile>@(AndroidManifest->'%(FullPath)')</AndroidManifestFile>
-    </PropertyGroup>
-
-    <!-- Re-compose GradleProperties with the resolved manifest path.
-         GradleProperties was evaluated statically at project load with the default
-         AndroidManifestFile value. We must redefine it here so the Build/Rebuild/Clean
-         targets pick up the resolved value. -->
-    <PropertyGroup>
-      <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
-      <GradleProperties>$(GradleBaseProperties) $(ProjectGradleProperties)</GradleProperties>
-    </PropertyGroup>
-
-    <Message Text="Using Android manifest: $(AndroidManifestFile)" Importance="high" />
-
-    <Error Text="Android manifest file not found: $(AndroidManifestFile). Ensure the file exists or update the AndroidManifest item."
-           Condition="!Exists('$(AndroidManifestFile)')" />
-  </Target>
+  <!-- Android manifest resolution and GradleProperties recomposition provided by OceanAndroidApp.targets. -->
 
   <!-- Deploy Target -->
   <Target Name="Deploy" DependsOnTargets="Build">
