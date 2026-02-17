@@ -120,21 +120,13 @@
   <PropertyGroup>
     <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
     <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
-    <!-- Development fallback: relative to template location -->
-    <_OceanCommonPropsPath Condition="'$(_OceanCommonPropsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
   </PropertyGroup>
   <Import Project="$(_OceanCommonPropsPath)" Condition="'$(_OceanCommonPropsPath)' != '' AND Exists('$(_OceanCommonPropsPath)')" />
 
   <PropertyGroup>
-    <!-- Gradle settings - files are in gradle subfolder -->
-    <GradleProjectDir>$(MSBuildProjectDirectory)\gradle</GradleProjectDir>
-    <GradleWrapper>$(GradleProjectDir)\gradlew.bat</GradleWrapper>
+    <!-- Gradle task for this project type -->
     <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">assembleDebug</GradleTask>
-
-    <!-- Redirect Gradle cache and build output to intermediate directory (keeps source tree clean) -->
-    <GradleCacheDir>$(IntDir)gradle-cache</GradleCacheDir>
-    <GradleBuildDir>$(IntDir)gradle-build</GradleBuildDir>
 
     <!-- Output paths -->
     <ApkOutputPath>$(GradleBuildDir)\outputs\apk</ApkOutputPath>
@@ -142,9 +134,6 @@
     <!-- jniLibs output path for native libraries -->
     <JniLibsPath>$(MSBuildProjectDirectory)\app\src\main\jniLibs</JniLibsPath>
 
-    <!-- Java source staging directory - inside intermediate folder -->
-    <!-- Java files are staged here with proper package directory structure before Gradle builds -->
-    <JavaStagingDir>$(IntDir)java-staging</JavaStagingDir>
     <!-- Native library staging directory - inside intermediate folder -->
     <!-- .so files are copied here from referenced native library projects before Gradle builds -->
     <JniLibsStagingDir>$(IntDir)jniLibs</JniLibsStagingDir>
@@ -376,12 +365,8 @@
     <!-- Resolve targets path from extension path -->
     <_OceanAppTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets')">$(_OceanExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets</_OceanAppTargetsPath>
 
-    <!-- Development fallback: Relative to template location (templates\AndroidApplication\) -->
-    <_OceanAppTargetsPath Condition="'$(_OceanAppTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidApp\OceanAndroidApp.targets')">$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidApp\OceanAndroidApp.targets</_OceanAppTargetsPath>
-
     <!-- Resolve property page schema path -->
     <_OceanAppPropsPagePath Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\OceanAndroidApp\PropertyPages\OceanAndroidApp.General.xml</_OceanAppPropsPagePath>
-    <_OceanAppPropsPagePath Condition="'$(_OceanAppPropsPagePath)' == '' OR !Exists('$(_OceanAppPropsPagePath)')">$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidApp\PropertyPages\OceanAndroidApp.General.xml</_OceanAppPropsPagePath>
   </PropertyGroup>
 
   <ItemGroup Condition="Exists('$(_OceanAppPropsPagePath)')">
@@ -401,9 +386,6 @@
   <PropertyGroup>
     <_JavaStagingTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets')"
       >$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
-    <!-- Development fallback: relative to template location (templates/AndroidApplication/) -->
-    <_JavaStagingTargetsPath Condition="'$(_JavaStagingTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaStaging\JavaStaging.targets')"
-      >$(MSBuildThisFileDirectory)..\..\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
   </PropertyGroup>
   <Import Project="$(_JavaStagingTargetsPath)"
           Condition="'$(_JavaStagingTargetsPath)' != '' AND Exists('$(_JavaStagingTargetsPath)')" />
@@ -417,9 +399,6 @@
   <PropertyGroup>
     <_GradleWrapperTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets')"
       >$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
-    <!-- Development fallback: relative to template location (templates/AndroidApplication/) -->
-    <_GradleWrapperTargetsPath Condition="'$(_GradleWrapperTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\GradleWrapper.targets')"
-      >$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
   </PropertyGroup>
   <Import Project="$(_GradleWrapperTargetsPath)"
           Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
@@ -433,9 +412,6 @@
   <PropertyGroup>
     <_JavaValidationTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets')"
       >$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
-    <!-- Development fallback: relative to template location (templates/AndroidApplication/) -->
-    <_JavaValidationTargetsPath Condition="'$(_JavaValidationTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets')"
-      >$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
   </PropertyGroup>
   <Import Project="$(_JavaValidationTargetsPath)"
           Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />

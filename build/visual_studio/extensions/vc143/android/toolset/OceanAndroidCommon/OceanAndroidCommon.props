@@ -34,4 +34,15 @@
     <JavaHome Condition="'$(JavaHome)' == ''">$(JAVA_HOME)</JavaHome>
   </PropertyGroup>
 
+  <!-- Gradle Infrastructure Properties -->
+  <!-- Shared defaults for Android Application and Java Library projects. -->
+  <!-- Each property is conditional so individual projects can override if needed. -->
+  <PropertyGroup>
+    <JavaStagingDir Condition="'$(JavaStagingDir)' == ''">$(IntDir)java-staging</JavaStagingDir>
+    <GradleProjectDir Condition="'$(GradleProjectDir)' == ''">$(MSBuildProjectDirectory)\gradle</GradleProjectDir>
+    <GradleWrapper Condition="'$(GradleWrapper)' == ''">$(GradleProjectDir)\gradlew.bat</GradleWrapper>
+    <GradleCacheDir Condition="'$(GradleCacheDir)' == ''">$(IntDir)gradle-cache</GradleCacheDir>
+    <GradleBuildDir Condition="'$(GradleBuildDir)' == ''">$(IntDir)gradle-build</GradleBuildDir>
+  </PropertyGroup>
+
 </Project>

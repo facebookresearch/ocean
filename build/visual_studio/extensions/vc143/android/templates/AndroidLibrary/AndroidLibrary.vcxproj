@@ -100,16 +100,9 @@
 
   <!-- Path Configuration -->
   <PropertyGroup>
-    <!-- Java source staging directory -->
-    <JavaStagingDir>$(IntDir)java-staging</JavaStagingDir>
-
-    <!-- Gradle directories -->
-    <GradleProjectDir>$(MSBuildProjectDirectory)\gradle</GradleProjectDir>
-    <GradleWrapper>$(GradleProjectDir)\gradlew.bat</GradleWrapper>
     <GradleModuleDir>$(MSBuildProjectDirectory)\lib</GradleModuleDir>
 
     <!-- AAR output path (Gradle's output location - in intermediate dir) -->
-    <GradleBuildDir>$(IntDir)gradle-build</GradleBuildDir>
     <AarOutputDir>$(GradleBuildDir)\outputs\aar</AarOutputDir>
     <AarOutputFile Condition="'$(Configuration)' == 'Debug'">$(AarOutputDir)\lib-debug.aar</AarOutputFile>
     <AarOutputFile Condition="'$(Configuration)' == 'Release'">$(AarOutputDir)\lib-release.aar</AarOutputFile>
@@ -122,8 +115,6 @@
   <PropertyGroup>
     <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
     <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
-    <!-- Development fallback: relative to template location -->
-    <_OceanCommonPropsPath Condition="'$(_OceanCommonPropsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(MSBuildThisFileDirectory)..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
   </PropertyGroup>
   <Import Project="$(_OceanCommonPropsPath)" Condition="'$(_OceanCommonPropsPath)' != '' AND Exists('$(_OceanCommonPropsPath)')" />
 
@@ -132,8 +123,6 @@
     <GradleTask Condition="'$(Configuration)' == 'Release'">:lib:assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">:lib:assembleDebug</GradleTask>
 
-    <!-- Gradle cache directory (redirected out of source tree) -->
-    <GradleCacheDir>$(IntDir)gradle-cache</GradleCacheDir>
     <!-- Gradle properties to pass (from VS project settings) -->
     <GradleProperties>--project-cache-dir="$(GradleCacheDir)" -PprojectName="$(ProjectName)" -PjavaStagingDir="$(JavaStagingDir)" -PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PjavaVersion=$(JavaVersion) -PgradleBuildDir="$(GradleBuildDir)"</GradleProperties>
   </PropertyGroup>
@@ -190,7 +179,6 @@
   <PropertyGroup>
     <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
     <_OceanJavaLibPropsPath Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.General.xml</_OceanJavaLibPropsPath>
-    <_OceanJavaLibPropsPath Condition="'$(_OceanJavaLibPropsPath)' == '' OR !Exists('$(_OceanJavaLibPropsPath)')">$(MSBuildThisFileDirectory)..\..\toolset\OceanJavaLib\OceanJavaLib.General.xml</_OceanJavaLibPropsPath>
   </PropertyGroup>
 
   <ItemGroup Condition="Exists('$(_OceanJavaLibPropsPath)')">
@@ -206,9 +194,6 @@
   <PropertyGroup>
     <_JavaStagingTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets')"
       >$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
-    <!-- Development fallback: relative to template location (templates/AndroidLibrary/) -->
-    <_JavaStagingTargetsPath Condition="'$(_JavaStagingTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaStaging\JavaStaging.targets')"
-      >$(MSBuildThisFileDirectory)..\..\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
   </PropertyGroup>
   <Import Project="$(_JavaStagingTargetsPath)"
           Condition="'$(_JavaStagingTargetsPath)' != '' AND Exists('$(_JavaStagingTargetsPath)')" />
@@ -222,9 +207,6 @@
   <PropertyGroup>
     <_GradleWrapperTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets')"
       >$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
-    <!-- Development fallback: relative to template location (templates/AndroidLibrary/) -->
-    <_GradleWrapperTargetsPath Condition="'$(_GradleWrapperTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\GradleWrapper.targets')"
-      >$(MSBuildThisFileDirectory)..\..\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
   </PropertyGroup>
   <Import Project="$(_GradleWrapperTargetsPath)"
           Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
@@ -238,9 +220,6 @@
   <PropertyGroup>
     <_JavaValidationTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets')"
       >$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
-    <!-- Development fallback: relative to template location (templates/AndroidLibrary/) -->
-    <_JavaValidationTargetsPath Condition="'$(_JavaValidationTargetsPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets')"
-      >$(MSBuildThisFileDirectory)..\..\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
   </PropertyGroup>
   <Import Project="$(_JavaValidationTargetsPath)"
           Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
