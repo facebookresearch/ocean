@@ -14,7 +14,7 @@ import platform
 import subprocess
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 
 class OS(Enum):
@@ -612,17 +612,26 @@ def _detect_visual_studio_version() -> Optional[str]:
     if not vswhere_path:
         return None
 
+    # Map year to CMake generator version number
+    year_to_version = {
+        "2017": "15",
+        "2019": "16",
+        "2022": "17",
+        "2026": "18",
+    }
+
     try:
-        # Get the major version number (e.g., "17" for VS 2022, "18" for VS 2026)
+        # Get the installation version (e.g., "17.x.y" for VS 2022)
         result = subprocess.run(
-            [vswhere_path, "-latest", "-property", "catalog_productLineVersion"],
+            [vswhere_path, "-latest", "-property", "installationVersion"],
             capture_output=True,
             text=True,
             check=True,
         )
-        version = result.stdout.strip()
+        install_version = result.stdout.strip()
+        major_version = install_version.split(".")[0] if install_version else ""
 
-        # Get the display name to extract the year (e.g., "Visual Studio Professional 2026")
+        # Get the display name to extract the year (e.g., "Visual Studio Professional 2022")
         result = subprocess.run(
             [vswhere_path, "-latest", "-property", "displayName"],
             capture_output=True,
@@ -635,14 +644,73 @@ def _detect_visual_studio_version() -> Optional[str]:
         import re
 
         year_match = re.search(r"(\d{4})$", display_name)
-        if year_match and version:
+        if year_match and major_version:
             year = year_match.group(1)
-            return f"Visual Studio {version} {year}"
+            return f"Visual Studio {major_version} {year}"
+
+        # Fallback: if we got a year but no major version, use the mapping
+        if year_match:
+            year = year_match.group(1)
+            version = year_to_version.get(year)
+            if version:
+                return f"Visual Studio {version} {year}"
 
     except (subprocess.CalledProcessError, FileNotFoundError, IndexError):
         pass
 
     return None
+
+
+def get_installed_windows_archs() -> List[Arch]:
+    """Detect which Windows architectures have MSVC tools installed via vswhere.
+
+    Probes for 64-bit architecture components only (x86_64 and ARM64).
+    Falls back to the host architecture if vswhere is unavailable or no
+    components are detected.
+    """
+    vswhere_paths = [
+        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
+        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
+    ]
+    vswhere_path = None
+    for path in vswhere_paths:
+        if os.path.exists(path):
+            vswhere_path = path
+            break
+
+    if not vswhere_path:
+        return [detect_host_arch()]
+
+    # Map VS component IDs to architectures (64-bit only)
+    component_to_arch = {
+        "Microsoft.VisualStudio.Component.VC.Tools.x86.x64": Arch.X86_64,
+        "Microsoft.VisualStudio.Component.VC.Tools.ARM64": Arch.ARM64,
+    }
+
+    archs = []
+    for component, arch in component_to_arch.items():
+        try:
+            result = subprocess.run(
+                [
+                    vswhere_path,
+                    "-latest",
+                    "-products",
+                    "*",
+                    "-requires",
+                    component,
+                    "-property",
+                    "installationPath",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            if result.stdout.strip():
+                archs.append(arch)
+        except subprocess.CalledProcessError:
+            pass
+
+    return archs if archs else [detect_host_arch()]
 
 
 def parse_platform_string(platform_str: str) -> tuple[OS, Arch]:

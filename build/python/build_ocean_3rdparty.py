@@ -155,7 +155,7 @@ from lib import (
     SourceFetcher,
 )
 from lib.builder_base import BuildContext, Builder
-from lib.platform import detect_host_os, get_msvc_toolset_version
+from lib.platform import detect_host_os, get_installed_windows_archs, get_msvc_toolset_version
 from lib.progress import BuildPhase, ProgressDisplay
 
 
@@ -190,7 +190,6 @@ PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
     ],
     "windows": [
         (OS.WINDOWS, Arch.X86_64),
-        (OS.WINDOWS, Arch.X86),
         (OS.WINDOWS, Arch.ARM64),
     ],
 }
@@ -215,7 +214,8 @@ def get_all_supported_platforms() -> (
         - android_arm64, android_armv7, android_x86_64, android_x86 (if NDK available)
 
     On Windows:
-        - windows_x86_64, windows_x86, windows_arm64 (Visual Studio can cross-compile)
+        - All architectures with installed MSVC tools (detected via vswhere)
+        - Only 64-bit architectures (x86_64, arm64); x86 (32-bit) is excluded
         - android_arm64, android_armv7, android_x86_64, android_x86 (if NDK available)
     """
     from lib.platform import (
@@ -247,14 +247,10 @@ def get_all_supported_platforms() -> (
             platforms.append((OS.MACOS, Arch.ARM64))
 
     elif host_os == OS.WINDOWS:
-        # Visual Studio can cross-compile to all Windows architectures
-        # Add x86 and ARM64 targets (native target already added above)
-        if host_arch != Arch.X86:
-            platforms.append((OS.WINDOWS, Arch.X86))
-        if host_arch != Arch.ARM64:
-            platforms.append((OS.WINDOWS, Arch.ARM64))
-        if host_arch != Arch.X86_64:
-            platforms.append((OS.WINDOWS, Arch.X86_64))
+        # Add all 64-bit architectures that have MSVC tools installed.
+        for arch in get_installed_windows_archs():
+            if (OS.WINDOWS, arch) not in platforms:
+                platforms.append((OS.WINDOWS, arch))
 
     # All platforms can cross-compile to Android if NDK is available
     if get_android_ndk_path():

@@ -65,6 +65,7 @@ OS = _platform_module.OS
 detect_host_arch = _platform_module.detect_host_arch
 detect_host_os = _platform_module.detect_host_os
 get_msvc_toolset_version = _platform_module.get_msvc_toolset_version
+get_installed_windows_archs = _platform_module.get_installed_windows_archs
 parse_platform_string = _platform_module.parse_platform_string
 
 
@@ -118,14 +119,10 @@ def get_all_supported_platforms() -> List[Tuple[OS, Arch]]:
             platforms.append((OS.MACOS, Arch.ARM64))
 
     elif host_os == OS.WINDOWS:
-        # Visual Studio can cross-compile to all Windows architectures
-        # Add x86 and ARM64 targets (native target already added above)
-        if host_arch != Arch.X86:
-            platforms.append((OS.WINDOWS, Arch.X86))
-        if host_arch != Arch.ARM64:
-            platforms.append((OS.WINDOWS, Arch.ARM64))
-        if host_arch != Arch.X86_64:
-            platforms.append((OS.WINDOWS, Arch.X86_64))
+        # Add all 64-bit architectures that have MSVC tools installed.
+        for arch in get_installed_windows_archs():
+            if (OS.WINDOWS, arch) not in platforms:
+                platforms.append((OS.WINDOWS, arch))
 
     # All platforms can cross-compile to Android if NDK is available
     if get_android_ndk_path():

@@ -298,7 +298,7 @@ class CMakeBuilder(Builder):
             raise RuntimeError(f"Unsupported Windows architecture: {target.arch}")
 
         # Add architecture flag for Visual Studio generator
-        cmd.append(f"-A {arch_map[target.arch]}")
+        cmd.extend(["-A", arch_map[target.arch]])
 
     def _find_ios_toolchain(self) -> Optional[Path]:
         """Find iOS CMake toolchain file."""
