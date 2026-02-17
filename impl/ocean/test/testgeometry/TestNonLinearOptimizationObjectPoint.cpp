@@ -20,6 +20,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -742,7 +743,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 	Log::info() << "Optimization of 3D object points with fixed 6DOF poses for fisheye camera:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int poses = 20u;
 
@@ -769,12 +771,12 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 			{
 				Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-				result = testNonLinearOptimizationObjectPointFisheyeCamera(poses, testDuration, estimatorType, noise, poses * outlier / 100u) && result;
+				OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectPointFisheyeCamera(poses, testDuration, estimatorType, noise, poses * outlier / 100u));
 			}
 		}
 	}
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointFisheyeCamera(const unsigned int numberPoses, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar standardDeviation, const unsigned int numberOutliers)
@@ -782,8 +784,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -797,10 +801,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 
 	do
 	{
-		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector3 objectPoint = Random::vector3(-1, 1);
-		const Vector3 faultyObjectPoint = objectPoint + Random::vector3() * Random::scalar(Scalar(0.01), Scalar(0.1));
+		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(randomGenerator, 1u));
+
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -1, 1);
+		const Scalar faultyOffset = Random::scalar(randomGenerator, Scalar(0.01), Scalar(0.1));
+		const Vector3 faultyObjectPoint = objectPoint + Random::vector3(randomGenerator) * faultyOffset;
 
 		HomogenousMatrices4 poses_world_T_camera;
 
@@ -809,9 +816,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 
 		while (poses_world_T_camera.size() < size_t(numberPoses))
 		{
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_camera = Geometry::Utilities::randomCameraPose(fisheyeCamera, objectPointRay, imagePoint, distance);
 			ocean_assert(fisheyeCamera.projectToImage(world_T_camera, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -830,14 +837,17 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 			}
 			else
 			{
-				imagePoints.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePoints.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 		}
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 		{
-			imagePoints[*i] = Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
+			imagePoints[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
 		}
 
 		performance.start();
@@ -868,31 +878,31 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 
 			medianInitialPixelErrors.push_back(sqrPixelErrorInitial);
 			medianOptimizedPixelErrors.push_back(sqrPixelErrorOptimized);
-
-			succeeded++;
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(validation.iterations() != 0ull);
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	averageInitialSqrError /= Scalar(validation.iterations());
+	averageOptimizedSqrError /= Scalar(validation.iterations());
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 	if (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u)
 	{
-		return percent >= 0.99 && averageOptimizedSqrError < Numeric::sqr(5);
+		OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError < Numeric::sqr(5));
 	}
 
-	return true;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointAnyCamera(const double testDuration)
@@ -902,13 +912,14 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	Log::info() << "Optimization of 3D object points with fixed 6DOF poses for any camera:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int poses = 20u;
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCamera);
 
 		Log::info() << " ";
@@ -938,13 +949,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 				{
 					Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-					allSucceeded = testNonLinearOptimizationObjectPointAnyCamera(*anyCamera, poses, testDuration, estimatorType, noise, poses * outlier / 100u) && allSucceeded;
+					OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectPointAnyCamera(*anyCamera, poses, testDuration, estimatorType, noise, poses * outlier / 100u));
 				}
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointAnyCamera(const AnyCamera& anyCamera, const unsigned int numberPoses, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar standardDeviation, const unsigned int numberOutliers)
@@ -954,8 +965,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -969,8 +982,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 	do
 	{
-		const Vector3 objectPoint = Random::vector3(-1, 1);
-		const Vector3 faultyObjectPoint = objectPoint + Random::vector3() * Random::scalar(Scalar(0.01), Scalar(0.1));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -1, 1);
+		const Scalar faultyOffset = Random::scalar(randomGenerator, Scalar(0.01), Scalar(0.1));
+		const Vector3 faultyObjectPoint = objectPoint + Random::vector3(randomGenerator) * faultyOffset;
 
 		HomogenousMatrices4 world_T_cameras;
 
@@ -979,9 +995,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 		while (world_T_cameras.size() < size_t(numberPoses))
 		{
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_camera = Geometry::Utilities::randomCameraPose(anyCamera, objectPointRay, imagePoint, distance);
 			ocean_assert(anyCamera.projectToImage(world_T_camera, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -1000,14 +1016,17 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 			}
 			else
 			{
-				imagePoints.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePoints.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 		}
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 		{
-			imagePoints[*i] = Random::vector2(Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u));
+			imagePoints[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u));
 		}
 
 		performance.start();
@@ -1038,31 +1057,31 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 			medianInitialPixelErrors.push_back(sqrPixelErrorInitial);
 			medianOptimizedPixelErrors.push_back(sqrPixelErrorOptimized);
-
-			succeeded++;
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(validation.iterations() != 0ull);
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	averageInitialSqrError /= Scalar(validation.iterations());
+	averageOptimizedSqrError /= Scalar(validation.iterations());
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 	if (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u)
 	{
-		return percent >= 0.99 && averageOptimizedSqrError < Numeric::sqr(5);
+		OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError < Numeric::sqr(5));
 	}
 
-	return true;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointStereoAnyCamera(const double testDuration)
@@ -1072,14 +1091,15 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	Log::info() << "Optimization of 3D object points with fixed 6DOF poses for any stereo camera:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int poses = 20u;
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-		const std::shared_ptr<AnyCamera> anyCameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> anyCameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
+		const std::shared_ptr<AnyCamera> anyCameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCameraA && anyCameraB);
 
 		Log::info() << " ";
@@ -1109,13 +1129,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 				{
 					Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-					result = testNonLinearOptimizationObjectPointStereoAnyCamera(*anyCameraA, *anyCameraB, poses, testDuration, estimatorType, noise, poses * outlier / 100u) && result;
+					OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectPointStereoAnyCamera(*anyCameraA, *anyCameraB, poses, testDuration, estimatorType, noise, poses * outlier / 100u));
 				}
 			}
 		}
 	}
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointStereoAnyCamera(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const unsigned int numberPoses, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar standardDeviation, const unsigned int numberOutliers)
@@ -1124,8 +1144,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1139,13 +1161,16 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 	do
 	{
-		const Vector3 objectPoint = Random::vector3(-1, 1);
-		const Vector3 faultyObjectPoint = objectPoint + Random::vector3() * Random::scalar(Scalar(0.01), Scalar(0.1));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -1, 1);
+		const Scalar faultyOffset = Random::scalar(randomGenerator, Scalar(0.01), Scalar(0.1));
+		const Vector3 faultyObjectPoint = objectPoint + Random::vector3(randomGenerator) * faultyOffset;
 
 		HomogenousMatrices4 world_T_camerasA;
 		HomogenousMatrices4 world_T_camerasB;
 
-		const unsigned int numberPosesA = RandomI::random(1u, numberPoses - 1u);
+		const unsigned int numberPosesA = RandomI::random(randomGenerator, 1u, numberPoses - 1u);
 		const unsigned int numberPosesB = numberPoses - numberPosesA;
 		ocean_assert(numberPosesA < numberPoses && numberPosesB < numberPoses && numberPosesA + numberPosesB == numberPoses);
 
@@ -1156,9 +1181,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 		while (world_T_camerasA.size() < size_t(numberPosesA))
 		{
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(anyCameraA.width() - 5u), Scalar(5), Scalar(anyCameraA.height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCameraA.width() - 5u), Scalar(5), Scalar(anyCameraA.height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_cameraA = Geometry::Utilities::randomCameraPose(anyCameraA, objectPointRay, imagePoint, distance);
 			ocean_assert(anyCameraA.projectToImage(world_T_cameraA, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -1177,7 +1202,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 			}
 			else
 			{
-				imagePointsA.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePointsA.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 		}
 
@@ -1188,9 +1216,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 		while (world_T_camerasB.size() < size_t(numberPosesB))
 		{
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(anyCameraB.width() - 5u), Scalar(5), Scalar(anyCameraB.height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCameraB.width() - 5u), Scalar(5), Scalar(anyCameraB.height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_cameraB = Geometry::Utilities::randomCameraPose(anyCameraB, objectPointRay, imagePoint, distance);
 			ocean_assert(anyCameraB.projectToImage(world_T_cameraB, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -1209,13 +1237,16 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 			}
 			else
 			{
-				imagePointsB.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePointsB.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 		}
 
 		// let's create some outliers
 
-		unsigned int numberOutliersA = RandomI::random(0u, std::min(numberOutliers, numberPosesA));
+		unsigned int numberOutliersA = RandomI::random(randomGenerator, 0u, std::min(numberOutliers, numberPosesA));
 		unsigned int numberOutliersB = numberOutliers - numberOutliersA;
 		if (numberOutliersB > numberPosesB)
 		{
@@ -1224,16 +1255,16 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 		}
 		ocean_assert(numberOutliersA <= numberPosesA && numberOutliersB <= numberPosesB && numberOutliersA + numberOutliersB == numberOutliers);
 
-		const IndexSet32 outlierSetA(Utilities::randomIndices(numberPosesA, numberOutliersA));
+		const IndexSet32 outlierSetA(Utilities::randomIndices(numberPosesA, numberOutliersA, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSetA.begin(); i != outlierSetA.end(); ++i)
 		{
-			imagePointsA[*i] = Random::vector2(Scalar(5), Scalar(anyCameraA.width() - 5u), Scalar(5), Scalar(anyCameraA.height() - 5u));
+			imagePointsA[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCameraA.width() - 5u), Scalar(5), Scalar(anyCameraA.height() - 5u));
 		}
 
-		const IndexSet32 outlierSetB(Utilities::randomIndices(numberPosesB, numberOutliersB));
+		const IndexSet32 outlierSetB(Utilities::randomIndices(numberPosesB, numberOutliersB, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSetB.begin(); i != outlierSetB.end(); ++i)
 		{
-			imagePointsB[*i] = Random::vector2(Scalar(5), Scalar(anyCameraB.width() - 5u), Scalar(5), Scalar(anyCameraB.height() - 5u));
+			imagePointsB[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCameraB.width() - 5u), Scalar(5), Scalar(anyCameraB.height() - 5u));
 		}
 
 		performance.start();
@@ -1270,31 +1301,31 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 			medianInitialPixelErrors.push_back(sqrPixelErrorInitial);
 			medianOptimizedPixelErrors.push_back(sqrPixelErrorOptimized);
-
-			succeeded++;
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(validation.iterations() != 0ull);
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	averageInitialSqrError /= Scalar(validation.iterations());
+	averageOptimizedSqrError /= Scalar(validation.iterations());
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 	if (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u)
 	{
-		return percent >= 0.99 && averageOptimizedSqrError < Numeric::sqr(5);
+		OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError < Numeric::sqr(5));
 	}
 
-	return true;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointAnyCameras(const double testDuration)
@@ -1304,7 +1335,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	Log::info() << "Optimization of 3D object points with fixed 6DOF poses for any cameras:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int poses = 20u;
 
@@ -1331,12 +1363,12 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 			{
 				Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-				allSucceeded = testNonLinearOptimizationObjectPointAnyCameras(poses, testDuration, estimatorType, noise, poses * outlier / 100u) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectPointAnyCameras(poses, testDuration, estimatorType, noise, poses * outlier / 100u));
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointAnyCameras(const unsigned int numberPoses, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar standardDeviation, const unsigned int numberOutliers)
@@ -1344,8 +1376,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1361,8 +1395,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 	do
 	{
-		const Vector3 objectPoint = Random::vector3(-1, 1);
-		const Vector3 faultyObjectPoint = objectPoint + Random::vector3() * Random::scalar(Scalar(0.01), Scalar(0.1));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -1, 1);
+		const Scalar faultyOffset = Random::scalar(randomGenerator, Scalar(0.01), Scalar(0.1));
+		const Vector3 faultyObjectPoint = objectPoint + Random::vector3(randomGenerator) * faultyOffset;
 
 		SharedAnyCameras cameras;
 		HomogenousMatrices4 world_T_cameras;
@@ -1372,12 +1409,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 		while (world_T_cameras.size() < size_t(numberPoses))
 		{
-			SharedAnyCamera anyCamera = Utilities::realisticAnyCamera(Random::random(anyCameraTypes), RandomI::random(1u));
+			const AnyCameraType anyCameraType = Random::random(randomGenerator, anyCameraTypes);
+			SharedAnyCamera anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 			ocean_assert(anyCamera);
 
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(anyCamera->width() - 5u), Scalar(5), Scalar(anyCamera->height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(anyCamera->width() - 5u), Scalar(5), Scalar(anyCamera->height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_camera = Geometry::Utilities::randomCameraPose(*anyCamera, objectPointRay, imagePoint, distance);
 			ocean_assert(anyCamera->projectToImage(world_T_camera, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -1396,7 +1434,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 			}
 			else
 			{
-				imagePoints.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePoints.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 
 			cameras.emplace_back(std::move(anyCamera));
@@ -1404,11 +1445,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 		ocean_assert(cameras.size() == imagePoints.size());
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(numberPoses, numberOutliers, &randomGenerator));
 		for (const Index32& outlierIndex : outlierSet)
 		{
 			const SharedAnyCamera& camera = cameras[outlierIndex];
-			imagePoints[outlierIndex] = Random::vector2(Scalar(5), Scalar(camera->width() - 5u), Scalar(5), Scalar(camera->height() - 5u));
+			imagePoints[outlierIndex] = Random::vector2(randomGenerator, Scalar(5), Scalar(camera->width() - 5u), Scalar(5), Scalar(camera->height() - 5u));
 		}
 
 		performance.start();
@@ -1441,31 +1482,31 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 
 			medianInitialPixelErrors.push_back(sqrPixelErrorInitial);
 			medianOptimizedPixelErrors.push_back(sqrPixelErrorOptimized);
-
-			succeeded++;
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(validation.iterations() != 0ull);
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	averageInitialSqrError /= Scalar(validation.iterations());
+	averageOptimizedSqrError /= Scalar(validation.iterations());
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 	if (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u)
 	{
-		return percent >= 0.99 && averageOptimizedSqrError < Numeric::sqr(5);
+		OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError < Numeric::sqr(5));
 	}
 
-	return true;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointStereoFisheyeCamera(const double testDuration)
@@ -1475,7 +1516,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	Log::info() << "Optimization of 3D object points with fixed 6DOF poses for stereo fisheye camera:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int poses = 20u;
 
@@ -1502,12 +1544,12 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 			{
 				Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-				result = testNonLinearOptimizationObjectPointStereoFisheyeCamera(poses, testDuration, estimatorType, noise, poses * outlier / 100u) && result;
+				OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectPointStereoFisheyeCamera(poses, testDuration, estimatorType, noise, poses * outlier / 100u));
 			}
 		}
 	}
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointStereoFisheyeCamera(const unsigned int numberPoses, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar standardDeviation, const unsigned int numberOutliers)
@@ -1515,8 +1557,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1530,20 +1574,23 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		unsigned int cameraIndexA = (unsigned int)(-1);
 		unsigned int cameraIndexB = (unsigned int)(-1);
-		RandomI::random(1u, cameraIndexA, cameraIndexB);
+		RandomI::random(randomGenerator, 1u, cameraIndexA, cameraIndexB);
 
 		const FisheyeCamera fisheyeCameraA = Utilities::realisticFisheyeCamera(cameraIndexA);
 		const FisheyeCamera fisheyeCameraB = Utilities::realisticFisheyeCamera(cameraIndexB);
 
-		const Vector3 objectPoint = Random::vector3(-1, 1);
-		const Vector3 faultyObjectPoint = objectPoint + Random::vector3() * Random::scalar(Scalar(0.01), Scalar(0.1));
+		const Vector3 objectPoint = Random::vector3(randomGenerator, -1, 1);
+		const Scalar faultyOffset = Random::scalar(randomGenerator, Scalar(0.01), Scalar(0.1));
+		const Vector3 faultyObjectPoint = objectPoint + Random::vector3(randomGenerator) * faultyOffset;
 
 		HomogenousMatrices4 world_T_camerasA;
 		HomogenousMatrices4 world_T_camerasB;
 
-		const unsigned int numberPosesA = RandomI::random(1u, numberPoses - 1u);
+		const unsigned int numberPosesA = RandomI::random(randomGenerator, 1u, numberPoses - 1u);
 		const unsigned int numberPosesB = numberPoses - numberPosesA;
 		ocean_assert(numberPosesA < numberPoses && numberPosesB < numberPoses && numberPosesA + numberPosesB == numberPoses);
 
@@ -1554,9 +1601,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 		while (world_T_camerasA.size() < size_t(numberPosesA))
 		{
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(fisheyeCameraA.width() - 5u), Scalar(5), Scalar(fisheyeCameraA.height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCameraA.width() - 5u), Scalar(5), Scalar(fisheyeCameraA.height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_cameraA = Geometry::Utilities::randomCameraPose(fisheyeCameraA, objectPointRay, imagePoint, distance);
 			ocean_assert(fisheyeCameraA.projectToImage(world_T_cameraA, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -1575,7 +1622,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 			}
 			else
 			{
-				imagePointsA.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePointsA.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 		}
 
@@ -1586,9 +1636,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 		while (world_T_camerasB.size() < size_t(numberPosesB))
 		{
-			const Line3 objectPointRay(objectPoint, Random::vector3());
-			const Vector2 imagePoint = Random::vector2(Scalar(5), Scalar(fisheyeCameraB.width() - 5u), Scalar(5), Scalar(fisheyeCameraB.height() - 5u));
-			const Scalar distance = Random::scalar(1, 5);
+			const Line3 objectPointRay(objectPoint, Random::vector3(randomGenerator));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCameraB.width() - 5u), Scalar(5), Scalar(fisheyeCameraB.height() - 5u));
+			const Scalar distance = Random::scalar(randomGenerator, 1, 5);
 
 			const HomogenousMatrix4 world_T_cameraB = Geometry::Utilities::randomCameraPose(fisheyeCameraB, objectPointRay, imagePoint, distance);
 			ocean_assert(fisheyeCameraB.projectToImage(world_T_cameraB, objectPoint).sqrDistance(imagePoint) < Scalar(1));
@@ -1607,13 +1657,16 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 			}
 			else
 			{
-				imagePointsB.push_back(imagePoint + Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation)));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePointsB.push_back(imagePoint + Vector2(noiseX, noiseY));
 			}
 		}
 
 		// let's create some outliers
 
-		unsigned int numberOutliersA = RandomI::random(0u, std::min(numberOutliers, numberPosesA));
+		unsigned int numberOutliersA = RandomI::random(randomGenerator, 0u, std::min(numberOutliers, numberPosesA));
 		unsigned int numberOutliersB = numberOutliers - numberOutliersA;
 		if (numberOutliersB > numberPosesB)
 		{
@@ -1622,16 +1675,16 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 		}
 		ocean_assert(numberOutliersA <= numberPosesA && numberOutliersB <= numberPosesB && numberOutliersA + numberOutliersB == numberOutliers);
 
-		const IndexSet32 outlierSetA(Utilities::randomIndices(numberPosesA, numberOutliersA));
+		const IndexSet32 outlierSetA(Utilities::randomIndices(numberPosesA, numberOutliersA, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSetA.begin(); i != outlierSetA.end(); ++i)
 		{
-			imagePointsA[*i] = Random::vector2(Scalar(5), Scalar(fisheyeCameraA.width() - 5u), Scalar(5), Scalar(fisheyeCameraA.height() - 5u));
+			imagePointsA[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCameraA.width() - 5u), Scalar(5), Scalar(fisheyeCameraA.height() - 5u));
 		}
 
-		const IndexSet32 outlierSetB(Utilities::randomIndices(numberPosesB, numberOutliersB));
+		const IndexSet32 outlierSetB(Utilities::randomIndices(numberPosesB, numberOutliersB, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSetB.begin(); i != outlierSetB.end(); ++i)
 		{
-			imagePointsB[*i] = Random::vector2(Scalar(5), Scalar(fisheyeCameraB.width() - 5u), Scalar(5), Scalar(fisheyeCameraB.height() - 5u));
+			imagePointsB[*i] = Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCameraB.width() - 5u), Scalar(5), Scalar(fisheyeCameraB.height() - 5u));
 		}
 
 		performance.start();
@@ -1668,31 +1721,31 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 
 			medianInitialPixelErrors.push_back(sqrPixelErrorInitial);
 			medianOptimizedPixelErrors.push_back(sqrPixelErrorOptimized);
-
-			succeeded++;
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(validation.iterations() != 0ull);
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	averageInitialSqrError /= Scalar(validation.iterations());
+	averageOptimizedSqrError /= Scalar(validation.iterations());
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 	if (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u)
 	{
-		return percent >= 0.99 && averageOptimizedSqrError < Numeric::sqr(5);
+		OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError < Numeric::sqr(5));
 	}
 
-	return true;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjectPoints(const double testDuration)
@@ -1702,7 +1755,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 	Log::info() << "Optimization of one 6DOF camera pose and several 3D object point positions:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int poses = 20u;
 
@@ -1759,14 +1813,14 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-						result = testNonLinearOptimizationOnePoseObjectPoints(objectPoints, testDuration, estimatorType, noise, objectPoints * outlier / 100u, useCovariances) && result;
+						OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationOnePoseObjectPoints(objectPoints, testDuration, estimatorType, noise, objectPoints * outlier / 100u, useCovariances));
 					}
 				}
 			}
 		}
 	}
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjectPoints(const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useCovariances)
@@ -1774,10 +1828,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
+	Validation allValidation(randomGenerator);
 
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
-
-	bool allSucceeded = true;
 
 	for (const bool useGravityConstraints : {false, true})
 	{
@@ -2073,13 +2126,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		Log::info() << indentation << "Performance: " << performance;
 		Log::info() << indentation << "Validation: " << validation;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(allValidation, validation.succeeded());
 	}
 
-	return allSucceeded;
+	return allValidation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObjectPoints(const double testDuration)
@@ -2394,7 +2444,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 	Log::info() << "Optimization of 6DOF camera poses and 3D object point positions:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int outliersPercent : {0u, 10u})
 	{
@@ -2422,7 +2473,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-						result = testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, testDuration, estimatorType, noise, numberObjectPoints * outliersPercent / 100u) && result;
+						OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, testDuration, estimatorType, noise, numberObjectPoints * outliersPercent / 100u));
 
 						Log::info() << " ";
 					}
@@ -2431,7 +2482,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 		}
 	}
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectPoints(const unsigned int numberPoses, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar noiseStandardDeviation, const unsigned int numberOutliers)
@@ -2439,9 +2490,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberObjectPoints);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation allValidation(randomGenerator);
 
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 
@@ -2783,11 +2833,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 		{
 			Log::info() << "Validation: Accuracy verification FAILED, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(allValidation);
 		}
 	}
 
-	return allSucceeded;
+	return allValidation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationalPosesObjectPoints(const double testDuration)
@@ -2797,7 +2847,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 	Log::info() << "Optimization of 6DOF camera poses (with fixed translations) and 3D object point positions:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int outliersPercent : {0u, 10u})
 	{
@@ -2825,7 +2876,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-						result = testNonLinearOptimizationOrientationalPosesObjectPoints(numberPoses, numberObjectPoints, testDuration, estimatorType, noise, numberObjectPoints * outliersPercent / 100u) && result;
+						OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationOrientationalPosesObjectPoints(numberPoses, numberObjectPoints, testDuration, estimatorType, noise, numberObjectPoints * outliersPercent / 100u));
 
 						Log::info() << " ";
 					}
@@ -2834,7 +2885,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 		}
 	}
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationalPosesObjectPoints(const unsigned int numberPoses, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar noiseStandardDeviation, const unsigned int numberOutliers)
@@ -2842,8 +2893,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberObjectPoints);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -2859,13 +2910,14 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 	const Timestamp startTimestamp(true);
 
-	RandomGenerator randomGenerator;
-
 	do
 	{
-		const SharedAnyCamera firstCamera = Utilities::realisticAnyCamera(RandomI::random(randomGenerator, anyCameraTypes), RandomI::random(randomGenerator, 1u));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const bool useSingleCamera = RandomI::random(randomGenerator, 1u) == 0u;
+		const AnyCameraType firstCameraType = RandomI::random(randomGenerator, anyCameraTypes);
+		const SharedAnyCamera firstCamera = Utilities::realisticAnyCamera(firstCameraType, RandomI::random(randomGenerator, 1u));
+
+		const bool useSingleCamera = RandomI::boolean(randomGenerator);
 
 		SharedAnyCameras cameras;
 		cameras.emplace_back(firstCamera);
@@ -2900,7 +2952,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			}
 			else
 			{
-				cameras.emplace_back(Utilities::realisticAnyCamera(RandomI::random(randomGenerator, anyCameraTypes), RandomI::random(randomGenerator, 1u)));
+				const AnyCameraType cameraType = RandomI::random(randomGenerator, anyCameraTypes);
+				cameras.emplace_back(Utilities::realisticAnyCamera(cameraType, RandomI::random(randomGenerator, 1u)));
 			}
 
 			const Quaternion offsetRotation(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(35)));
@@ -2947,7 +3000,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 				Vector2 imagePointNoise(0, 0);
 				if (noiseStandardDeviation > 0)
 				{
-					imagePointNoise = Vector2(Random::gaussianNoise(randomGenerator, noiseStandardDeviation), Random::gaussianNoise(randomGenerator, noiseStandardDeviation));
+					const Scalar noiseX = Random::gaussianNoise(randomGenerator, noiseStandardDeviation);
+					const Scalar noiseY = Random::gaussianNoise(randomGenerator, noiseStandardDeviation);
+
+					imagePointNoise = Vector2(noiseX, noiseY);
 				}
 
 				perfectImagePoints.emplace_back(perfectImagePoint);
@@ -2975,7 +3031,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 				if (outlierSet.emplace(objectPointIndex).second)
 				{
-					const Vector2 outlierError = Random::vector2(randomGenerator, 50, 100, 50, 100) * Random::sign(randomGenerator);
+					const Scalar sign = Random::sign(randomGenerator);
+					const Vector2 outlierError = Random::vector2(randomGenerator, 50, 100, 50, 100) * sign;
 
 					imagePoints[poseIndex * numberObjectPoints + objectPointIndex] += outlierError;
 				}
@@ -3087,46 +3144,30 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 			medianInitialPixelErrors.push_back(sqrAveragePixelErrorInitial);
 			medianOptimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
-
-			succeeded++;
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(validation.iterations() != 0ull);
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	averageInitialSqrError /= Scalar(validation.iterations());
+	averageOptimizedSqrError /= Scalar(validation.iterations());
 
 	Log::info() << "Average pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms";
 
-	bool allSucceeded = true;
-
-	if (percent < 0.95)
-	{
-		allSucceeded = false;
-	}
-
-	if (averageOptimizedSqrError >= averageInitialSqrError)
-	{
-		// the optimized solution must be better than the initial solution
-
-		allSucceeded = false;
-	}
+	// the optimized solution must be better than the initial solution
+	OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError < averageInitialSqrError);
 
 	if (numberPoses * numberObjectPoints > 1000u) // in case we have enough signals
 	{
-		if (averageOptimizedSqrError > 200)
-		{
-			// we always need a reasonable result
-
-			allSucceeded = false;
-		}
+		// we always need a reasonable result
+		OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError <= Scalar(200));
 	}
 
 	if (numberPoses >= 50u)
@@ -3136,11 +3177,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			if (numberOutliers == 0u)
 			{
 				// we have perfect conditions, so we expect perfect results
-
-				if (averageOptimizedSqrError > Scalar(0.1))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError <= Scalar(0.1));
 			}
 			else
 			{
@@ -3149,20 +3186,12 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 					if (estimatorType == Geometry::Estimator::ET_LINEAR || estimatorType == Geometry::Estimator::ET_HUBER || estimatorType == Geometry::Estimator::ET_CAUCHY)
 					{
 						// the robust estimators need to handle outliers
-
-						if (averageOptimizedSqrError > Scalar(10.0))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError <= Scalar(10.0));
 					}
 					else if (estimatorType == Geometry::Estimator::ET_TUKEY)
 					{
 						// Tukey may not find the optimal solution
-
-						if (averageOptimizedSqrError > Scalar(30.0))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError <= Scalar(30.0));
 					}
 				}
 			}
@@ -3174,26 +3203,15 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 				if (estimatorType == Geometry::Estimator::ET_LINEAR || estimatorType == Geometry::Estimator::ET_HUBER || estimatorType == Geometry::Estimator::ET_CAUCHY)
 				{
 					// the robust estimators cannot handle noise, but still need to handle the outliers
-
-					if (averageOptimizedSqrError > Scalar(10.0))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, averageOptimizedSqrError <= Scalar(10.0));
 				}
 			}
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Accuracy verification succeeded, " << String::toAString(percent * 100.0, 1u) << "% finished";
-	}
-	else
-	{
-		Log::info() << "Validation: Accuracy verification FAILED, " << String::toAString(percent * 100.0, 1u) << "% finished";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(const double testDuration)
@@ -3202,7 +3220,8 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 
 	Log::info() << "Optimization of 3D object points for fixed 3DOF (orientational) poses:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
 
@@ -3240,17 +3259,14 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-						if (!testOptimizeObjectPointRotationalPoses(pinholeCamera, observations, testDuration, estimatorType, noise, observations * outlier / 100u, useRoughObjectPoint))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, testOptimizeObjectPointRotationalPoses(pinholeCamera, observations, testDuration, estimatorType, noise, observations * outlier / 100u, useRoughObjectPoint));
 					}
 				}
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(const PinholeCamera& patternCamera, const unsigned int numberObservations, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useRoughObjectPoint)

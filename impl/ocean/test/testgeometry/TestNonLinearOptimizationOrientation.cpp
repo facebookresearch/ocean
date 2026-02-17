@@ -18,6 +18,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -122,7 +123,8 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const double 
 	Log::info() << "Optimization of 3-DOF camera orientation:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool useRoughOrientation : {true, false})
 	{
@@ -161,14 +163,14 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const double 
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-						allSucceeded = testOptimizeOrientation(correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u, useRoughOrientation) && allSucceeded;
+						OCEAN_EXPECT_TRUE(validation, testOptimizeOrientation(correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u, useRoughOrientation));
 					}
 				}
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useRoughOrientation)

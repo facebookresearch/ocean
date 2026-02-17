@@ -19,6 +19,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -183,9 +184,6 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
-
 	Scalar averagePixelError = 0;
 	Scalar averageOptimizedPixelError = 0;
 
@@ -200,15 +198,24 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 	Scalars medianPixelErrors;
 	Scalars medianOptimizedPixelErrors;
 
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
+
+	unsigned int distortionIteration = 0u;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		// create a distorted camera
-		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3u == 1u || iterations % 3u == 2u, iterations % 3u == 2u));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector3 translation(Random::vector3(-1, 1));
-		const Euler euler(Random::euler(Numeric::deg2rad(10)));
+		// create a distorted camera
+		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, distortionIteration % 3u == 1u || distortionIteration % 3u == 2u, distortionIteration % 3u == 2u));
+
+		++distortionIteration;
+
+		const Vector3 translation(Random::vector3(randomGenerator, -1, 1));
+		const Euler euler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
 		const Quaternion rotation(euler);
 
 		const HomogenousMatrix4 world_T_camera(translation, rotation);
@@ -222,17 +229,21 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 
 		for (unsigned int n = 0; n < correspondences; ++n)
 		{
-			Vector2 imagePoint(Random::scalar(40, Scalar(pinholeCamera.width() - 41)), Random::scalar(40, Scalar(pinholeCamera.height() - 41)));
+			const Scalar imagePointX = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.width() - 41));
+			const Scalar imagePointY = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.height() - 41));
+			Vector2 imagePoint(imagePointX, imagePointY);
 
 			const Line3 ray(pinholeCamera.ray(imagePoint, world_T_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(Scalar(0.9), Scalar(1.1))));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.9), Scalar(1.1))));
 
 			imagePoint = pinholeCamera.projectToImageIF<true>(flippedCamera_T_world, objectPoint, pinholeCamera.hasDistortionParameters());
 
 			Vector2 imagePointNoise(0, 0);
 			if (standardDeviation > 0)
 			{
-				imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+				imagePointNoise = Vector2(noiseX, noiseY);
 
 				if (useCovariances)
 				{
@@ -252,15 +263,17 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 			objectPoints.push_back(objectPoint);
 		}
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 		{
-			const Vector2 outlierNoise(Random::gaussianNoise(100), Random::gaussianNoise(100));
+			const Scalar outlierNoiseX = Random::gaussianNoise(randomGenerator, 100);
+			const Scalar outlierNoiseY = Random::gaussianNoise(randomGenerator, 100);
+			const Vector2 outlierNoise(outlierNoiseX, outlierNoiseY);
 			imagePoints[*i] += outlierNoise;
 		}
 
-		const Vector3 errorTranslation(Random::vector3(Scalar(-0.1), Scalar(0.1)));
-		const Euler errorEuler(Random::euler(Numeric::deg2rad(10)));
+		const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
+		const Euler errorEuler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
 		const Quaternion errorRotation(errorEuler);
 
 		const Vector3 faultyTranslation(translation + errorTranslation);
@@ -317,19 +330,20 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 			const Vector3 translationDifference(translation - optimizedTranslation);
 			const Scalar angleDifference = Numeric::rad2deg(rotation.smallestAngle(optimizedRotation));
 
-			if (translationDifference.length() < 0.1 && angleDifference < 5)
+			if (translationDifference.length() > 0.1 || angleDifference > 5)
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
 		}
 		else
 		{
 			performance.skip();
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	const uint64_t iterations = uint64_t(validation.iterations());
 
 	ocean_assert(iterations != 0ull);
 	averageTranslationError /= Scalar(iterations);
@@ -340,18 +354,16 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 	averageOptimizedAngleError /= Scalar(iterations);
 	averageOptimizedPixelError /= Scalar(iterations);
 
-	const double percent = double(succeeded) / double(iterations);
-
 	Log::info() << "Average translation error: " << String::toAString(averageTranslationError, 2u) << " -> " << String::toAString(averageOptimizedTranslationError, 2u);
 	Log::info() << "Average angle error: " << String::toAString(averageAngleError, 1u) << "deg -> " << String::toAString(averageOptimizedAngleError, 1u) << "deg";
 	Log::info() << "Average sqr pixel error: " << String::toAString(averagePixelError, 1u) << "px -> " << String::toAString(averageOptimizedPixelError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianPixelErrors.data(), medianPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms, average: " << String::toAString(performance.averageMseconds(), 4u) << "ms, median: " << String::toAString(performance.medianMseconds(), 4u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
 	if (std::is_same<double, Scalar>::value && standardDeviation == 0 && numberOutliers == 0u)
 	{
-		return NumericD::isEqual(percent, 1.0);
+		return validation.succeeded();
 	}
 
 	return true;
@@ -442,7 +454,8 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	bool allSucceeded = true;
+	RandomGenerator outerRandomGenerator;
+	Validation outerValidation(outerRandomGenerator);
 
 	for (const bool useGravityConstraints : {false, true})
 	{
@@ -657,20 +670,18 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 		Log::info() << indentation << "P95 gravity error: " << String::toAString(gravityErrorP95, 1u) << "deg";
 		Log::info() << indentation << "P95 iterations: " << optimizationIterationP95;
 		Log::info() << indentation << "Performance: " << performance;
-		Log::info() << indentation << "Validation: " << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
-
-		const bool succeeded = validation.succeeded();
+		Log::info() << indentation << "Validation: " << validation;
 
 		if (std::is_same<double, Scalar>::value && standardDeviation == 0 && numberOutliers == 0u)
 		{
-			if (!succeeded)
+			if (!validation.succeeded())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(outerValidation);
 			}
 		}
 	}
 
-	return allSucceeded;
+	return outerValidation.succeeded();
 }
 
 bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const double testDuration)
@@ -748,9 +759,6 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
-
 	Scalar averagePixelError = 0;
 	Scalar averageOptimizedPixelError = 0;
 
@@ -768,17 +776,26 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 	Scalars medianPixelErrors;
 	Scalars medianOptimizedPixelErrors;
 
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
+
+	unsigned int distortionIteration = 0u;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		// create a distorted camera
-		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3u == 1u || iterations % 3u == 2u, iterations % 3u == 2u));
+		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, distortionIteration % 3u == 1u || distortionIteration % 3u == 2u, distortionIteration % 3u == 2u));
 
-		const Scalar zoom = (iterations % 3u == 0u) ? Scalar(1) : Random::scalar(0.5, 10);
+		const Scalar zoom = (distortionIteration % 3u == 0u) ? Scalar(1) : Random::scalar(randomGenerator, Scalar(0.5), 10);
 
-		const Vector3 translation(Random::vector3(-1, 1));
-		const Euler euler(Random::euler(Numeric::deg2rad(10)));
+		++distortionIteration;
+
+		const Vector3 translation(Random::vector3(randomGenerator, -1, 1));
+		const Euler euler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
 		const Quaternion rotation(euler);
 
 		const HomogenousMatrix4 pose(translation, rotation);
@@ -792,17 +809,21 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 
 		for (unsigned int n = 0; n < correspondences; ++n)
 		{
-			Vector2 imagePoint(Random::scalar(40, Scalar(pinholeCamera.width() - 41)), Random::scalar(40, Scalar(pinholeCamera.height() - 41)));
+			const Scalar imagePointX = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.width() - 41));
+			const Scalar imagePointY = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.height() - 41));
+			Vector2 imagePoint(imagePointX, imagePointY);
 
 			const Line3 ray(pinholeCamera.ray(imagePoint, pose, zoom));
-			const Vector3 objectPoint(ray.point(Random::scalar(Scalar(0.9), Scalar(1.1))));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.9), Scalar(1.1))));
 
 			imagePoint = pinholeCamera.projectToImageIF<true>(poseIF, objectPoint, pinholeCamera.hasDistortionParameters(), zoom);
 
 			Vector2 imagePointNoise(0, 0);
 			if (standardDeviation > 0)
 			{
-				imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+				imagePointNoise = Vector2(noiseX, noiseY);
 
 				if (useCovariances)
 				{
@@ -822,21 +843,23 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 			objectPoints.push_back(objectPoint);
 		}
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 		{
-			const Vector2 outlierNoise(Random::gaussianNoise(100), Random::gaussianNoise(100));
+			const Scalar outlierNoiseX = Random::gaussianNoise(randomGenerator, 100);
+			const Scalar outlierNoiseY = Random::gaussianNoise(randomGenerator, 100);
+			const Vector2 outlierNoise(outlierNoiseX, outlierNoiseY);
 			imagePoints[*i] += outlierNoise;
 		}
 
-		const Vector3 errorTranslation(Random::vector3(Scalar(-0.1), Scalar(0.1)));
-		const Euler errorEuler(Random::euler(Numeric::deg2rad(10)));
+		const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
+		const Euler errorEuler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
 		const Quaternion errorRotation(errorEuler);
 
 		const Vector3 faultyTranslation(translation + errorTranslation);
 		const Quaternion faultyRotation(rotation * errorRotation);
 
-		const Scalar faultyZoom = minmax<Scalar>(Scalar(0.0001), zoom * Random::scalar(Scalar(0.1), 10), 100); // we take a quite random zoom factor
+		const Scalar faultyZoom = minmax<Scalar>(Scalar(0.0001), zoom * Random::scalar(randomGenerator, Scalar(0.1), 10), 100); // we take a quite random zoom factor
 
 		averageTranslationError += (translation - faultyTranslation).length();
 		averageAngleError += Numeric::rad2deg(rotation.smallestAngle(faultyRotation));
@@ -889,19 +912,20 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 			const Scalar angleDifference = Numeric::rad2deg(rotation.smallestAngle(optimizedRotation));
 			const Scalar zoomDifference = Numeric::abs(zoom - optimizedZoom);
 
-			if (translationDifference.length() < 0.1 && angleDifference < 5 && zoomDifference < 0.5)
+			if (translationDifference.length() > 0.1 || angleDifference > 5 || zoomDifference > 0.5)
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
 		}
 		else
 		{
 			performance.skip();
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	const uint64_t iterations = uint64_t(validation.iterations());
 
 	ocean_assert(iterations != 0ull);
 	averageTranslationError /= Scalar(iterations);
@@ -920,9 +944,9 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 	Log::info() << "Average sqr pixel error: " << String::toAString(averagePixelError, 1u) << "px -> " << String::toAString(averageOptimizedPixelError, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianPixelErrors.data(), medianPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms, average: " << String::toAString(performance.averageMseconds(), 4u) << "ms, median: " << String::toAString(performance.medianMseconds(), 4u) << "ms";
-	Log::info() << "Validation: " << String::toAString(double(succeeded) * 100.0 / double(iterations), 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	return true;
+	return validation.succeeded();
 }
 
 }

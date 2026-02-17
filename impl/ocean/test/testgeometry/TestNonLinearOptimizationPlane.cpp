@@ -9,6 +9,7 @@
 #include "ocean/test/testgeometry/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -71,39 +72,42 @@ bool TestNonLinearOptimizationPlane::testOptimizePlane(const double testDuration
 	Log::info() << "Optimization of 3D plane:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 	Log::info() << " ";
-	allSucceeded = testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 	Log::info() << " ";
-	allSucceeded = testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 	Log::info() << " ";
-	allSucceeded = testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_TUKEY, 1u) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_TUKEY, 3u) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_TUKEY, 15u) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_TUKEY, 100u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testOptimizePlaneNoisy(10u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 3u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_TUKEY, 1u));
 	Log::info() << " ";
-	allSucceeded = testOptimizePlaneNoisy(20u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 6u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_TUKEY, 3u));
 	Log::info() << " ";
-	allSucceeded = testOptimizePlaneNoisy(50u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 10u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_TUKEY, 15u));
 	Log::info() << " ";
-	allSucceeded = testOptimizePlaneNoisy(500u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 100u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_TUKEY, 100u));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(10u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 3u));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(20u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 6u));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(50u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 10u));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(500u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 100u));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const double testDuration)
@@ -113,7 +117,8 @@ bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const double te
 	Log::info() << "Optimization of one 6DOF camera pose and one 3D plane:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int numberObjectPoints : {50u, 200u})
 	{
@@ -128,11 +133,13 @@ bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const double te
 		{
 			Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-			result = testOptimizeOnePoseOnePlane(numberObjectPoints, testDuration, estimatorType) && result;
+			OCEAN_EXPECT_TRUE(validation, testOptimizeOnePoseOnePlane(numberObjectPoints, testDuration, estimatorType));
 		}
 	}
 
-	return result;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const double testDuration)
@@ -142,7 +149,8 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const double test
 	Log::info() << "Optimization of several 6DOF camera poses and one 3D plane:";
 	Log::info() << " ";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int numberPoses = 5u;
 
@@ -159,11 +167,13 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const double test
 		{
 			Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-			result = testOptimizePosesOnePlane(numberPoses, numberObjectPoints, testDuration, estimatorType) && result;
+			OCEAN_EXPECT_TRUE(validation, testOptimizePosesOnePlane(numberPoses, numberObjectPoints, testDuration, estimatorType));
 		}
 	}
 
-	return result;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const unsigned int outliers)

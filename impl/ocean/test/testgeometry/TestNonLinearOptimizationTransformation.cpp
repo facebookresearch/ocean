@@ -9,6 +9,7 @@
 #include "ocean/test/testgeometry/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -111,11 +112,12 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	Log::info() << "Optimization of 6-DOF any camera transformation parameters:";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> camera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> camera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(camera);
 
 		Log::info() << " ";
@@ -141,12 +143,14 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 				Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
-				result = testNonLinearOptimizationObjectTransformation(*camera, poses, correspondences, testDuration) && result;
+				OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectTransformation(*camera, poses, correspondences, testDuration));
 			}
 		}
 	}
 
-	return result;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformation(const AnyCamera& camera, const unsigned int poses, const unsigned int correspondences, const double testDuration)
@@ -155,8 +159,10 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	ocean_assert(poses >= 2u && correspondences >= 5u);
 	ocean_assert(testDuration > 0.0);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	const double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.95;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -164,6 +170,8 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		std::vector<Vectors3> objectPointGroups(poses);
 		std::vector<Vectors2> imagePointGroups(poses);
 		HomogenousMatrices4 world_T_cameras(poses);
@@ -208,26 +216,23 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 		performance.start();
 		if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformation(camera, world_T_cameras, faultyObjectTransformation, objectPointGroups, imagePointGroups, optimizedObjectTransformation, 20u, estimatorType, Scalar(0.001), Scalar(5), &initialError, &finalError, &intermediateErrors))
 		{
-			if (finalError < Scalar(0.1))
+			if (finalError >= Scalar(0.1))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
 		}
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 		performance.stop();
-
-		iterations++;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 
-	const double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.95;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereo(const double testDuration)
@@ -236,12 +241,13 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	Log::info() << "Optimization of 6-DOF stereo any camera transformation parameters:";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> cameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-		const std::shared_ptr<AnyCamera> cameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> cameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
+		const std::shared_ptr<AnyCamera> cameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(cameraA && cameraB);
 
 		Log::info() << " ";
@@ -267,12 +273,14 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 				Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
-				result = testNonLinearOptimizationObjectTransformationStereo(*cameraA, *cameraB, poses, correspondences, testDuration) && result;
+				OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationObjectTransformationStereo(*cameraA, *cameraB, poses, correspondences, testDuration));
 			}
 		}
 	}
 
-	return result;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereo(const AnyCamera& cameraA, const AnyCamera& cameraB, const unsigned int poses, const unsigned int correspondences, const double testDuration)
@@ -281,8 +289,10 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	ocean_assert(poses >= 2u && correspondences >= 5u);
 	ocean_assert(testDuration > 0.0);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	const double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.95;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -290,6 +300,8 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const HomogenousMatrix4 objectTransformation(Random::vector3(-5, 5), Random::quaternion());
 		const HomogenousMatrix4 iObjectTransformation = objectTransformation.inverted();
 
@@ -359,26 +371,23 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 		performance.start();
 		if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformationStereo(cameraA, cameraB, extrinsicsA, extrinsicsB, faultyObjectTransformation, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, optimizedObjectTransformation, 20u, estimatorType, Scalar(0.001), Scalar(5), &initialError, &finalError, &intermediateErrors))
 		{
-			if (finalError < Scalar(0.1))
+			if (finalError >= Scalar(0.1))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
 		}
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 		performance.stop();
-
-		iterations++;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 
-	const double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.95;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 }
