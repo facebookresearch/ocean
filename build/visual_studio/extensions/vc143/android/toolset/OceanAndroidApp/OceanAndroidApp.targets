@@ -90,6 +90,18 @@
   </PropertyGroup>
 
   <!-- ============================================================
+       Project Gradle Properties Default
+
+       Defines the project-type-specific -P flags passed to Gradle.
+       Composed with GradleBaseProperties by OceanAndroidCommon.targets.
+       Projects can override by defining ProjectGradleProperties before
+       this file is imported.
+       ============================================================ -->
+  <PropertyGroup>
+    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
+  </PropertyGroup>
+
+  <!-- ============================================================
        APK Output and NMake Output
 
        ApkOutputPath is the Gradle APK output directory.

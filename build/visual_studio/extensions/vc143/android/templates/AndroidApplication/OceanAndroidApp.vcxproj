@@ -85,10 +85,8 @@
 
   <PropertyGroup Label="UserMacros" />
 
-  <PropertyGroup>
-    <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
-    <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
-  </PropertyGroup>
+  <!-- ProjectGradleProperties is set by OceanAndroidApp.targets with App-specific
+       Gradle -P flags. Override here if you need custom parameters. -->
 
   <!-- Project Items for Solution Explorer -->
   <ItemGroup>

@@ -36,6 +36,18 @@
   </PropertyGroup>
 
   <!-- ============================================================
+       Project Gradle Properties Default
+
+       Defines the project-type-specific -P flags passed to Gradle.
+       Composed with GradleBaseProperties by OceanAndroidCommon.targets.
+       Projects can override by defining ProjectGradleProperties before
+       this file is imported.
+       ============================================================ -->
+  <PropertyGroup>
+    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk)</ProjectGradleProperties>
+  </PropertyGroup>
+
+  <!-- ============================================================
        Lib-specific Property Defaults
 
        Path properties for Gradle module, AAR output, and NMake output.

@@ -87,10 +87,8 @@
 
   <PropertyGroup Label="UserMacros" />
 
-  <PropertyGroup>
-    <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
-    <ProjectGradleProperties>-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk)</ProjectGradleProperties>
-  </PropertyGroup>
+  <!-- ProjectGradleProperties is set by OceanJavaLib.targets with Lib-specific
+       Gradle -P flags. Override here if you need custom parameters. -->
 
   <!-- Java source files -->
   <ItemGroup>
