@@ -16,7 +16,7 @@ A Visual Studio 2022 extension enabling Android app development with first-class
 - Visual Studio 2022 (17.0 or later)
 - Android SDK (with platform-tools and build-tools)
 - Android NDK (for native C++ development) - auto-detected from SDK folder
-- JDK 17 or later
+- JDK 17 to 24
 
 ## Installation
 
@@ -42,7 +42,7 @@ This copies the OceanNDK Application Type files to Visual Studio, enabling proje
 <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
 ```
 
-The Platform Toolset remains `v143` - the Application Type provides the Android-specific property pages and build rules.
+The `PlatformToolset` is set to `OceanNDK` - the Application Type provides the Android-specific property pages and build rules.
 
 To uninstall the Application Type:
 ```powershell
@@ -68,7 +68,7 @@ To uninstall the Application Type:
 
 ## Project Types
 
-### Ocean Android Application (.oceanandroidproj)
+### Ocean Android Application (.vcxproj with Makefile ConfigurationType)
 
 Android app with Gradle build system. Supports:
 - Java and Kotlin source files
@@ -102,8 +102,9 @@ The toolset automatically detects the Android NDK using the following priority:
 |----------|--------|-------------|
 | 0 | `OCEAN_ANDROID_NDK_HOME` | Override for pinning a specific NDK version |
 | 1 | `ANDROID_NDK_HOME` | Standard environment variable |
-| 2 | Registry | Auto-detected by extension from SDK/ndk/ folder |
-| 3 | `ndk-bundle` | Legacy SDK installations |
+| 2 | `ANDROID_NDK_ROOT` / `NDK_ROOT` | Alternative standard environment variables |
+| 3 | Registry | Auto-detected by extension from SDK/ndk/ folder |
+| 4 | `ndk-bundle` | Legacy SDK installations |
 
 To pin a specific NDK version (e.g., for compatibility):
 ```cmd
@@ -117,7 +118,7 @@ The project automatically detects the JDK using the following priority:
 | Priority | Source | Description |
 |----------|--------|-------------|
 | 0 | `OCEAN_JAVA_HOME` | Override for pinning a specific JDK for Ocean builds |
-| 1 | Auto-detect JDK 17-21 | Scans standard install locations (Program Files) |
+| 1 | Auto-detect JDK 17-24 | Scans standard install locations (Program Files) |
 | 2 | Android Studio JBR | Bundled Java Runtime from Android Studio |
 | 3 | `JAVA_HOME` | Standard environment variable (may be incompatible version) |
 
@@ -135,7 +136,7 @@ When an Android Application project references a Native Library project:
 3. Gradle includes them in the APK automatically
 
 ```xml
-<!-- Example project reference in .oceanandroidproj -->
+<!-- Example project reference in .vcxproj -->
 <ProjectReference Include="..\NativeLib\NativeLib.vcxproj">
   <Project>{GUID}</Project>
   <CopyToJniLibs>true</CopyToJniLibs>
@@ -253,6 +254,8 @@ dotnet test tests\Integration.Tests\Integration.Tests.csproj
 ```
 xplat\ocean\build\visual_studio\extensions\vc143\android\
 ├── OceanAndroidExtension.sln          # Solution file
+├── Directory.Build.props              # Shared MSBuild properties
+├── Directory.Packages.props           # Central NuGet package versions
 ├── src\
 │   ├── OceanAndroidExtension\             # Main VSIX extension package
 │   ├── OceanAndroidExtension.BuildTasks\  # Custom MSBuild tasks

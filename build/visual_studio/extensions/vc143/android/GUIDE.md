@@ -28,12 +28,12 @@ Before installing Ocean Android Extension, ensure you have the following:
 |-------------|-----------------|----------|
 | Visual Studio 2022 | 17.0+ | [visualstudio.microsoft.com](https://visualstudio.microsoft.com/) |
 | Android SDK | Latest | Via Android Studio or SDK Manager |
-| JDK | 17+ | [Adoptium](https://adoptium.net/) or [Oracle](https://www.oracle.com/java/) |
+| JDK | 17-24 | [Adoptium](https://adoptium.net/) or [Oracle](https://www.oracle.com/java/) |
 | Android NDK | 25+ (optional) | For native C++ development (auto-detected from SDK) |
 
 ### Installing JDK 17
 
-A JDK 17-21 installation is required. The project auto-detects JDK installations from common locations.
+A JDK 17-24 installation is required. The project auto-detects JDK installations from common locations.
 
 **Option 1: Microsoft OpenJDK (recommended)**
 ```cmd
@@ -190,7 +190,7 @@ The project finds the JDK using the following priority:
 | Priority | Source | Description |
 |----------|--------|-------------|
 | 0 | `OCEAN_JAVA_HOME` | Ocean-specific override for using a custom JDK |
-| 1 | Auto-detect JDK 17-21 | Scans standard install locations (Program Files) |
+| 1 | Auto-detect JDK 17-24 | Scans standard install locations (Program Files) |
 | 2 | Android Studio JBR | Bundled Java Runtime from Android Studio |
 | 3 | `JAVA_HOME` | Standard environment variable (may be incompatible version) |
 
@@ -269,7 +269,7 @@ F5
 
 ## Project Types
 
-### Ocean Android Application (.oceanandroidproj)
+### Ocean Android Application (.vcxproj with Makefile ConfigurationType)
 
 Full Android application with Gradle build system.
 
@@ -283,7 +283,7 @@ Full Android application with Gradle build system.
 **Project Structure:**
 ```
 MyApp/
-├── MyApp.oceanandroidproj     # VS project file
+├── MyApp.vcxproj                 # VS project file (Makefile ConfigurationType)
 ├── app/
 │   ├── build.gradle.kts       # Module build config
 │   └── src/main/
@@ -529,7 +529,7 @@ The extension provides a custom MSBuild Application Type that:
 - Supports incremental builds with .tlog files
 - Auto-detects NDK from your SDK installation
 
-**Note:** The Platform Toolset remains `v143` (or your default MSVC toolset). The Application Type provides the Android-specific behavior.
+**Note:** The `PlatformToolset` is set to `OceanNDK`. The Application Type provides the Android-specific behavior.
 
 ### Adding a Native Reference
 
@@ -592,19 +592,19 @@ Java_com_example_myapp_NativeLib_add(JNIEnv* env, jobject, jint a, jint b) {
 
 ```bash
 # Build debug
-msbuild MyApp.oceanandroidproj /p:Configuration=Debug
+msbuild MyApp.vcxproj /p:Configuration=Debug
 
 # Build release
-msbuild MyApp.oceanandroidproj /p:Configuration=Release
+msbuild MyApp.vcxproj /p:Configuration=Release
 
 # Deploy to device
-msbuild MyApp.oceanandroidproj /t:Deploy
+msbuild MyApp.vcxproj /t:Deploy
 
 # Clean build
-msbuild MyApp.oceanandroidproj /t:Clean
+msbuild MyApp.vcxproj /t:Clean
 
 # Rebuild
-msbuild MyApp.oceanandroidproj /t:Rebuild
+msbuild MyApp.vcxproj /t:Rebuild
 ```
 
 ### Building Native Libraries
