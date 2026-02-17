@@ -10,6 +10,7 @@
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -116,9 +117,8 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 
 	Log::info() << "Any image encode/decode test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const std::vector<FrameType::PixelFormat> pixelFormats = {FrameType::FORMAT_BGR24, FrameType::FORMAT_BGRA32, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_Y8};
 
@@ -135,9 +135,12 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 
 		Indices32 paddingElements;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
-			paddingElements.push_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+
+			paddingElements.push_back(maxPaddingElements * paddingElementsMultiplier);
 		}
 
 		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
@@ -160,7 +163,7 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 			std::vector<uint8_t> buffer;
 			if (!Media::WIC::Image::encodeImage(sourceFrame, encoderType, buffer, true))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -169,21 +172,21 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 
 			if (!targetFrameExplicit.isValid() || encoderType != decoderTypeExplicit)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
 				Frame convertedFrame;
 				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					double minDifference, aveDifference, maxDifference;
 					if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -193,21 +196,21 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 
 			if (!targetFrameImplicit.isValid() || encoderType != decoderTypeImplicit)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
 				Frame convertedFrame;
 				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					double minDifference, aveDifference, maxDifference;
 					if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -215,16 +218,9 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestWIC::determineSimilarity(const Frame& firstFrame, const Frame& secondFrame, double& minDifference, double& aveDifference, double& maxDifference)

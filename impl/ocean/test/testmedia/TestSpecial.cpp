@@ -8,8 +8,10 @@
 #include "ocean/test/testmedia/TestSpecial.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/RandomI.h"
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/WorkerPool.h"
@@ -387,31 +389,19 @@ bool TestSpecial::testBmpImageEncodeDecode(const double testDuration)
 
 	Log::info() << "BMP image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// first we ensure that we cannot encode images with alpha channel
 
 	std::vector<uint8_t> buffer;
 
-	if (Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_BGRA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_BGRA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
-	if (Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
-	if (Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YA16, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YA16, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
-	if (Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YUVA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::Special::ImageBmp::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YUVA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -446,26 +436,16 @@ bool TestSpecial::testBmpImageEncodeDecode(const double testDuration)
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testBmpImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testBmpImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "BMP image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "BMP image encode/decode test FAILED!";
-	}
+	Log::info() << "BMP image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testPfmImageEncodeDecode(const double testDuration)
@@ -474,7 +454,7 @@ bool TestSpecial::testPfmImageEncodeDecode(const double testDuration)
 
 	Log::info() << "PFM image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -508,26 +488,16 @@ bool TestSpecial::testPfmImageEncodeDecode(const double testDuration)
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testPfmImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testPfmImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "PFM image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "PFM image encode/decode test FAILED!";
-	}
+	Log::info() << "PFM image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testNpyImageEncodeDecode(const double testDuration)
@@ -536,7 +506,7 @@ bool TestSpecial::testNpyImageEncodeDecode(const double testDuration)
 
 	Log::info() << "NPY image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -573,26 +543,16 @@ bool TestSpecial::testNpyImageEncodeDecode(const double testDuration)
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testNpyImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testNpyImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "PFM image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "PFM image encode/decode test FAILED!";
-	}
+	Log::info() << "NPY image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
@@ -601,7 +561,8 @@ bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
 
 	Log::info() << "OCN image encode/decode test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const std::vector<FrameType::DataType> dataTypes =
 	{
@@ -618,15 +579,13 @@ bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
 		FrameType::DT_SIGNED_FLOAT_64
 	};
 
-	RandomGenerator randomGenerator;
-
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, FrameType::definedPixelFormats());
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
 			ocean_assert(dataType != FrameType::DT_UNDEFINED && dataType < FrameType::DT_END);
@@ -649,16 +608,17 @@ bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
 		if (!frameType.isValid())
 		{
 			ocean_assert(false && "This should never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		Indices32 planePaddingElements;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 			{
-				planePaddingElements.emplace_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
+				const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+				planePaddingElements.emplace_back(RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier);
 			}
 		}
 
@@ -693,23 +653,13 @@ bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
@@ -718,7 +668,8 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 
 	Log::info() << "Any image encode/decode test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Strings encoderTypes =
 	{
@@ -730,42 +681,40 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 
 	do
 	{
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 		Frame sourceFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 		ocean_assert(sourceFrame);
 
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, sourceFrame.pixels() >= 50u * 50u ? WorkerPool::get().scopedWorker()() : nullptr);
 
 		for (const std::string& encoderType : encoderTypes)
 		{
 			std::vector<uint8_t> buffer;
-			if (!Media::Special::Image::encodeImage(sourceFrame, encoderType, buffer, true))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, Media::Special::Image::encodeImage(sourceFrame, encoderType, buffer, true));
 
 			std::string decoderTypeExplicit;
 			const Frame targetFrameExplicit = Media::Special::Image::decodeImage(buffer.data(), buffer.size(), encoderType, &decoderTypeExplicit);
 
 			if (!targetFrameExplicit.isValid() || encoderType != decoderTypeExplicit)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
 				Frame convertedFrame;
 				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					double minDifference, aveDifference, maxDifference;
 					if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -775,21 +724,21 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 
 			if (!targetFrameImplicit.isValid() || encoderType != decoderTypeImplicit)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
 				Frame convertedFrame;
 				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					double minDifference, aveDifference, maxDifference;
 					if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -797,16 +746,9 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testBmpImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration)
@@ -815,7 +757,8 @@ bool TestSpecial::testBmpImageEncodeDecode(const unsigned int width, const unsig
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	std::vector<uint8_t> buffer;
 
@@ -826,12 +769,13 @@ bool TestSpecial::testBmpImageEncodeDecode(const unsigned int width, const unsig
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
 		ocean_assert(sourceFrame);
 
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
 
 		unsigned int correctRows = 0u;
 
@@ -883,26 +827,16 @@ bool TestSpecial::testBmpImageEncodeDecode(const unsigned int width, const unsig
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testBmpDecodeStressTest()
@@ -979,7 +913,8 @@ bool TestSpecial::testPfmImageEncodeDecode(const unsigned int width, const unsig
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	std::vector<uint8_t> buffer;
 
@@ -990,12 +925,13 @@ bool TestSpecial::testPfmImageEncodeDecode(const unsigned int width, const unsig
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
 		ocean_assert(sourceFrame);
 
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
 
 		unsigned int correctRows = 0u;
 
@@ -1038,26 +974,16 @@ bool TestSpecial::testPfmImageEncodeDecode(const unsigned int width, const unsig
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testPfmDecodeStressTest()
@@ -1144,7 +1070,8 @@ bool TestSpecial::testNpyImageEncodeDecode(const unsigned int width, const unsig
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	std::vector<uint8_t> buffer;
 
@@ -1155,12 +1082,13 @@ bool TestSpecial::testNpyImageEncodeDecode(const unsigned int width, const unsig
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
 		ocean_assert(sourceFrame);
 
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
 
 		unsigned int correctRows = 0u;
 
@@ -1206,26 +1134,16 @@ bool TestSpecial::testNpyImageEncodeDecode(const unsigned int width, const unsig
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpecial::testNpyDecodeStressTest()

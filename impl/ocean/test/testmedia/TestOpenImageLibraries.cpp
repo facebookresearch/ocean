@@ -8,8 +8,10 @@
 #include "ocean/test/testmedia/TestOpenImageLibraries.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/WorkerPool.h"
 
@@ -550,51 +552,27 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const double testDuration)
 
 	Log::info() << "JPEG image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// first we ensure that we cannot encode images with alpha channel
 
 	std::vector<uint8_t> buffer;
 
-	if (Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_BGRA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, false))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_BGRA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, false));
 
-	if (!Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_BGRA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_BGRA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
-	if (Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, false))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, false));
 
-	if (!Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
-	if (Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YA16, FrameType::ORIGIN_UPPER_LEFT)), buffer, false))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YA16, FrameType::ORIGIN_UPPER_LEFT)), buffer, false));
 
-	if (!Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YA16, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YA16, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
-	if (Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YUVA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, false))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YUVA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, false));
 
-	if (!Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YUVA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Media::OpenImageLibraries::ImageJpg::encodeImage(Frame(FrameType(128u, 128u, FrameType::FORMAT_YUVA32, FrameType::ORIGIN_UPPER_LEFT)), buffer, true));
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -628,31 +606,18 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const double testDuration)
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testJpgImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testJpgImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "jpg", 10.0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "jpg", 10.0));
 
-	if (allSucceeded)
-	{
-		Log::info() << "JPEG image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "JPEG image encode/decode test FAILED!";
-	}
+	Log::info() << "JPEG image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #endif // OCEAN_MEDIA_OIL_SUPPORT_JPG
@@ -665,7 +630,7 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const double testDuration)
 
 	Log::info() << "PNG image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -702,31 +667,18 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const double testDuration)
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testPngImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testPngImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), "png", 0.0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), "png", 0.0));
 
-	if (allSucceeded)
-	{
-		Log::info() << "PNG image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "PNG image encode/decode test FAILED!";
-	}
+	Log::info() << "PNG image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #endif // OCEAN_MEDIA_OIL_SUPPORT_PNG
@@ -739,7 +691,7 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const double testDuration)
 
 	Log::info() << "TIFF image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -772,31 +724,18 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const double testDuration)
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testTifImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testTifImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), "tif", 0.0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), "tif", 0.0));
 
-	if (allSucceeded)
-	{
-		Log::info() << "TIFF image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "TIFF image encode/decode test FAILED!";
-	}
+	Log::info() << "TIFF image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #endif // OCEAN_MEDIA_OIL_SUPPORT_TIF
@@ -809,7 +748,7 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const double testDuration
 
 	Log::info() << "WEBP image encode/decode test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// we use tiny images to ensure code correctness,
 	// normal images for performance,
@@ -853,31 +792,18 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const double testDuration
 
 			for (const FrameType::PixelOrigin pixelOrigin : {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT})
 			{
-				if (!testWebpImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, testWebpImageEncodeDecode(widths[s], heights[s], pixelFormat, pixelOrigin, testDuration));
 			}
 		}
 
 		Log::info() << " ";
 	}
 
-	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "webp", 0.0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "webp", 0.0));
 
-	if (allSucceeded)
-	{
-		Log::info() << "WEBP image encode/decode test succeeded.";
-	}
-	else
-	{
-		Log::info() << "WEBP image encode/decode test FAILED!";
-	}
+	Log::info() << "WEBP image encode/decode test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #endif // OCEAN_MEDIA_OIL_SUPPORT_WEBP
@@ -888,7 +814,8 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 
 	Log::info() << "Any image encode/decode test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Strings encoderTypes(1, "bmp");
 
@@ -928,21 +855,21 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 
 				if (!targetFrameExplicit.isValid() || encoderType != decoderTypeExplicit)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					Frame convertedFrame;
 					if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 					else
 					{
 						double minDifference, aveDifference, maxDifference;
 						if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -952,43 +879,36 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 
 				if (!targetFrameImplicit.isValid() || encoderType != decoderTypeImplicit)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					Frame convertedFrame;
 					if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 					else
 					{
 						double minDifference, aveDifference, maxDifference;
 						if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_JPG
@@ -999,7 +919,8 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const unsigned int width, 
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	std::vector<uint8_t> buffer;
 
@@ -1078,26 +999,16 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const unsigned int width, 
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOpenImageLibraries::testJpgDecodeStressTest()
@@ -1179,7 +1090,8 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const unsigned int width, 
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	std::vector<uint8_t> buffer;
 
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
@@ -1237,26 +1149,16 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const unsigned int width, 
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOpenImageLibraries::testPngDecodeStressTest()
@@ -1339,7 +1241,8 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const unsigned int width, 
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	std::vector<uint8_t> buffer;
 
@@ -1381,26 +1284,16 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const unsigned int width, 
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOpenImageLibraries::testTifDecodeStressTest()
@@ -1559,13 +1452,12 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const unsigned int width,
 
 	Log::info() << "... for " << width << "x" << height << " image, with origin " << FrameType::translatePixelOrigin(pixelOrigin) << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	std::vector<uint8_t> buffer;
 
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 	do
@@ -1610,26 +1502,16 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const unsigned int width,
 			}
 		}
 
-		if (correctRows != sourceFrame.height())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, correctRows, sourceFrame.height());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOpenImageLibraries::testWebpDecodeStressTest()

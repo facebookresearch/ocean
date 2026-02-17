@@ -8,6 +8,7 @@
 #include "ocean/test/testmedia/TestMovie.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/String.h"
 
@@ -325,7 +326,7 @@ bool TestMovie::testEncodeDecode()
 	const Strings encoderNames(libraryNamesEncoder());
 	const Strings decoderNames(libraryNamesDecoder());
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	if (encoderNames.empty())
 	{
@@ -351,15 +352,14 @@ bool TestMovie::testEncodeDecode()
 			{
 				Log::info() << "Using '" << encoderName << "' to encode, and '" << decoderName << "' to decode the movie:";
 
-				if (file.exists() && readMovie(file, width, height, numberFrames, fps, decoderName))
+				if (!file.exists() || !readMovie(file, width, height, numberFrames, fps, decoderName))
 				{
-					Log::info() << "Validation: succeeded";
+					OCEAN_SET_FAILED(validation);
+					Log::info() << "Validation: FAILED!";
 				}
 				else
 				{
-					Log::info() << "Validation: FAILED!";
-
-					allSucceeded = false;
+					Log::info() << "Validation: succeeded";
 				}
 
 				Log::info() << " ";
@@ -368,19 +368,12 @@ bool TestMovie::testEncodeDecode()
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "All encode/decode tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "All encode/decode tests FAILED!";
-	}
+	Log::info() << "All encode/decode tests: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMovie::testLoop()
@@ -391,7 +384,7 @@ bool TestMovie::testLoop()
 	const Strings encoderNames(libraryNamesEncoder());
 	const Strings decoderNames(libraryNamesDecoder());
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	if (encoderNames.empty())
 	{
@@ -423,7 +416,7 @@ bool TestMovie::testLoop()
 
 					if (movie.isNull())
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 
 						continue;
 					}
@@ -431,7 +424,7 @@ bool TestMovie::testLoop()
 					if (movie->library() != decoderName)
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 
 						continue;
 					}
@@ -439,14 +432,14 @@ bool TestMovie::testLoop()
 					// we need to ensure that we are guaranteed to receive each individual frame
 					if (!movie->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 
 						continue;
 					}
 
 					if (!movie->setLoop(useLoop))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 
 						continue;
 					}
@@ -457,7 +450,7 @@ bool TestMovie::testLoop()
 
 					if (!movie->start())
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 
 						continue;
 					}
@@ -483,7 +476,7 @@ bool TestMovie::testLoop()
 
 							if (NumericD::isNotEqual(double(expectedRelativeTimestamp), double(frame.relativeTimestamp()), 0.01))
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							Frame rgbFrame;
@@ -491,7 +484,7 @@ bool TestMovie::testLoop()
 							{
 								ocean_assert(false && "This should never happen!");
 
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							unsigned int parsedFrameIndex = (unsigned int)(-1);
@@ -499,12 +492,12 @@ bool TestMovie::testLoop()
 							{
 								if (expectedFrameIndex != parsedFrameIndex)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 							else
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							if (frameCounter / numberFrames >= 3u)
@@ -524,7 +517,7 @@ bool TestMovie::testLoop()
 							{
 								// we did not receive any frames anymore
 
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
@@ -534,7 +527,7 @@ bool TestMovie::testLoop()
 						if (useLoop)
 						{
 							// the movie was supposed to loop, so we don't expect it to ever finish
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 					else
@@ -542,7 +535,7 @@ bool TestMovie::testLoop()
 						if (!useLoop && frameCounter != numberFrames)
 						{
 							// not using loop so number of frame retrieved should match number of frames in file
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 
@@ -553,24 +546,17 @@ bool TestMovie::testLoop()
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "All encode/decode tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "All encode/decode tests FAILED!";
-	}
+	Log::info() << "All encode/decode tests: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMovie::testPause()
@@ -581,7 +567,7 @@ bool TestMovie::testPause()
 	const Strings encoderNames(libraryNamesEncoder());
 	const Strings decoderNames(libraryNamesDecoder());
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	if (encoderNames.empty())
 	{
@@ -611,7 +597,7 @@ bool TestMovie::testPause()
 
 				if (movie.isNull())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					continue;
 				}
@@ -619,7 +605,7 @@ bool TestMovie::testPause()
 				if (movie->library() != decoderName)
 				{
 					ocean_assert(false && "This should never happen!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					continue;
 				}
@@ -627,14 +613,14 @@ bool TestMovie::testPause()
 				// we need to ensure that we are guaranteed to receive each individual frame
 				if (!movie->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					continue;
 				}
 
 				if (!movie->setLoop(false))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					continue;
 				}
@@ -645,7 +631,7 @@ bool TestMovie::testPause()
 
 				if (!movie->start())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 
 					continue;
 				}
@@ -670,7 +656,7 @@ bool TestMovie::testPause()
 
 						if (movie->startTimestamp().isInvalid() || movie->pauseTimestamp().isValid() || movie->stopTimestamp().isValid())
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						if (movie->pause())
@@ -680,12 +666,12 @@ bool TestMovie::testPause()
 
 							if (movie->startTimestamp().isValid() || movie->pauseTimestamp().isInvalid() || movie->stopTimestamp().isValid())
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 						else
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 
@@ -700,7 +686,7 @@ bool TestMovie::testPause()
 
 							if (frameIndex > pausedFrameIndex + frameTolerance)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 								break;
 							}
 						}
@@ -713,7 +699,7 @@ bool TestMovie::testPause()
 						{
 							Log::debug() << "Invalid relative timestamp: " << double(frame.relativeTimestamp()) << ", expected: " << double(expectedRelativeTimestamp);
 
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						Frame rgbFrame;
@@ -721,7 +707,7 @@ bool TestMovie::testPause()
 						{
 							ocean_assert(false && "This should never happen!");
 
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						unsigned int parsedFrameIndex = (unsigned int)(-1);
@@ -731,12 +717,12 @@ bool TestMovie::testPause()
 							{
 								Log::debug() << "Invalid frame index: " << parsedFrameIndex << ", expected: " << frameIndex;
 
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 						else
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						++frameIndex;
@@ -753,7 +739,7 @@ bool TestMovie::testPause()
 							{
 								if (pausedFrameIndex == (unsigned int)(-1))
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 
 								if (movie->start())
@@ -762,19 +748,19 @@ bool TestMovie::testPause()
 
 									if (movie->startTimestamp().isInvalid() || movie->pauseTimestamp().isValid() || movie->stopTimestamp().isValid())
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 								else
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 
 								lastFrameTimestamp.toNow();
 							}
 							else
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
@@ -783,24 +769,17 @@ bool TestMovie::testPause()
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "All encode/decode tests succeeded.";
-	}
-	else
-	{
-		Log::info() << "All encode/decode tests FAILED!";
-	}
+	Log::info() << "All encode/decode tests: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 void TestMovie::registerMediaLibraries()
