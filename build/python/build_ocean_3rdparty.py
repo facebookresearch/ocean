@@ -175,7 +175,6 @@ PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
         (OS.ANDROID, Arch.ARM64),
         (OS.ANDROID, Arch.ARMV7),
         (OS.ANDROID, Arch.X86_64),
-        (OS.ANDROID, Arch.X86),
     ],
     "ios": [
         (OS.IOS, Arch.ARM64),
@@ -207,16 +206,16 @@ def get_all_supported_platforms() -> (
     On macOS:
         - macos_arm64 or macos_x86_64 (native)
         - ios_arm64 (if Xcode is available)
-        - android_arm64, android_armv7, android_x86_64, android_x86 (if NDK available)
+        - android_arm64, android_armv7, android_x86_64 (if NDK available)
 
     On Linux:
         - linux_arm64 or linux_x86_64 (native)
-        - android_arm64, android_armv7, android_x86_64, android_x86 (if NDK available)
+        - android_arm64, android_armv7, android_x86_64 (if NDK available)
 
     On Windows:
         - All architectures with installed MSVC tools (detected via vswhere)
         - Only 64-bit architectures (x86_64, arm64); x86 (32-bit) is excluded
-        - android_arm64, android_armv7, android_x86_64, android_x86 (if NDK available)
+        - android_arm64, android_armv7, android_x86_64 (if NDK available)
     """
     from lib.platform import (
         detect_host_arch,
@@ -259,7 +258,6 @@ def get_all_supported_platforms() -> (
                 (OS.ANDROID, Arch.ARM64),
                 (OS.ANDROID, Arch.ARMV7),
                 (OS.ANDROID, Arch.X86_64),
-                (OS.ANDROID, Arch.X86),
             ]
         )
     else:
