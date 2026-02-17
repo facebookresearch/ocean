@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -118,125 +119,128 @@ bool TestSumSquareDifferences::testPatch8BitPerChannel(const double testDuration
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testPatch8BitPerChannel<1u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<2u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<3u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<4u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<1u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<2u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<3u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<4u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<1u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<2u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<3u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<4u, 5u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<1u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<2u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<3u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<4u, 7u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<1u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<2u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<3u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<4u, 9u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<1u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<2u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<3u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatch8BitPerChannel<4u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<1u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<2u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<3u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatch8BitPerChannel<4u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 7u>(width, height, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<1u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<2u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<3u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatch8BitPerChannel<4u, 31u>(width, height, testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSumSquareDifferences::testBuffer8BitPerChannel(const double testDuration)
@@ -249,142 +253,145 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const double testDuratio
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testBuffer8BitPerChannel<1u, 1u * 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<2u, 1u * 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 1u * 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<3u, 1u * 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 1u * 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<4u, 1u * 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<1u, 3u * 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 1u * 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<2u, 3u * 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<3u, 3u * 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<4u, 3u * 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 1u * 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<1u, 5u * 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 3u * 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<2u, 5u * 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 3u * 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<3u, 5u * 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 3u * 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<4u, 5u * 5u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<1u, 7u * 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<2u, 7u * 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<3u, 7u * 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<4u, 7u * 7u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 3u * 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<1u, 9u * 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 5u * 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<2u, 9u * 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 5u * 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<3u, 9u * 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 5u * 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<4u, 9u * 9u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<1u, 15u * 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<2u, 15u * 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<3u, 15u * 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testBuffer8BitPerChannel<4u, 15u * 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 5u * 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<1u, 31u * 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 7u * 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<2u, 31u * 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 7u * 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<3u, 31u * 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 7u * 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<4u, 31u * 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 7u * 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<1u, 63u * 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 9u * 9u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<2u, 63u * 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 9u * 9u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<3u, 63u * 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 9u * 9u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testBuffer8BitPerChannel<4u, 63u * 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 9u * 9u>(width, height, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 15u * 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 15u * 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 15u * 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 15u * 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 31u * 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 31u * 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 31u * 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 31u * 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 63u * 63u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 63u * 63u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 63u * 63u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 63u * 63u>(width, height, testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSumSquareDifferences::testPatchBuffer8BitPerChannel(const double testDuration)
@@ -397,142 +404,145 @@ bool TestSumSquareDifferences::testPatchBuffer8BitPerChannel(const double testDu
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 5u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 7u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 9u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<1u, 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 9u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<2u, 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 9u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<3u, 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 9u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchBuffer8BitPerChannel<4u, 63u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 9u>(width, height, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<1u, 63u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<2u, 63u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<3u, 63u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchBuffer8BitPerChannel<4u, 63u>(width, height, testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const double testDuration)
@@ -545,125 +555,128 @@ bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const double test
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 5u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 7u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 9u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<1u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<2u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<3u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchAtBorder8BitPerChannel<4u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 7u>(width, height, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<1u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<2u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<3u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchAtBorder8BitPerChannel<4u, 31u>(width, height, testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const double testDuration)
@@ -676,125 +689,128 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const doubl
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 1u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 5u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 7u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 3u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 9u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 9u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 15u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 5u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<1u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<2u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<3u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 7u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testPatchMirroredBorder8BitPerChannel<4u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 7u>(width, height, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 9u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<1u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<2u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<3u, 31u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testPatchMirroredBorder8BitPerChannel<4u, 31u>(width, height, testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>
@@ -810,9 +826,8 @@ bool TestSumSquareDifferences::testPatch8BitPerChannel(const unsigned int width,
 
 	Log::info() << "... with " << tChannels << " channels and " << tPatchSize * tPatchSize << " pixels (" << tPatchSize << "x" << tPatchSize << "):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
@@ -998,27 +1013,27 @@ bool TestSumSquareDifferences::testPatch8BitPerChannel(const unsigned int width,
 
 			if (!resultsNaive.empty() && resultsNaive[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsTemplate.empty() && resultsTemplate[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (resultsDefault[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -1049,16 +1064,9 @@ bool TestSumSquareDifferences::testPatch8BitPerChannel(const unsigned int width,
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPixels>
@@ -1074,9 +1082,8 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const unsigned int width
 
 	Log::info() << "... with " << tChannels << " channels and " << tPixels << " pixels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
@@ -1226,27 +1233,27 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const unsigned int width
 
 			if (!resultsNaive.empty() && resultsNaive[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsTemplate.empty() && resultsTemplate[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (resultsDefault[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -1277,16 +1284,9 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const unsigned int width
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>
@@ -1303,9 +1303,8 @@ bool TestSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsigned int 
 
 	Log::info() << "... with " << tChannels << " channels and " << tPatchSize * tPatchSize << " pixels (" << tPatchSize << "x" << tPatchSize << "):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
@@ -1485,27 +1484,27 @@ bool TestSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsigned int 
 
 			if (!resultsNaive.empty() && resultsNaive[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsTemplate.empty() && resultsTemplate[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (resultsDefault[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -1536,16 +1535,9 @@ bool TestSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsigned int 
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>
@@ -1561,9 +1553,8 @@ bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const unsigned in
 
 	Log::info() << "... with " << tChannels << " channels and " << tPatchSize * tPatchSize << " pixels (" << tPatchSize << "x" << tPatchSize << ") at " << locations << " locations:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
@@ -1717,27 +1708,27 @@ bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const unsigned in
 
 			if (!resultsNaive.empty() && resultsNaive[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsTemplate.empty() && resultsTemplate[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (resultsDefault[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -1768,16 +1759,9 @@ bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const unsigned in
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>
@@ -1793,9 +1777,8 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 
 	Log::info() << "... with " << tChannels << " channels and " << tPatchSize * tPatchSize << " pixels (" << tPatchSize << "x" << tPatchSize << "):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceTemplate;
 	HighPerformanceStatistic performanceSSE;
@@ -1965,22 +1948,22 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 
 			if (!resultsTemplate.empty() && resultsTemplate[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (resultsDefault[n] != ssdTest)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -2006,16 +1989,9 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 IndexPair32 TestSumSquareDifferences::calculateAtBorder8BitPerChannel(const Frame& frame0, const Frame& frame1, const CV::PixelPosition& center0, const CV::PixelPosition& center1, const unsigned int patchSize)

@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <array>
 
@@ -257,9 +258,8 @@ bool TestUtilities::testCopyPixel(const double testDuration)
 
 	Log::info() << "Copy pixel with " << TypeNamer::name<T>() << ", and " << tChannels << " channels test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -285,10 +285,7 @@ bool TestUtilities::testCopyPixel(const double testDuration)
 
 			for (unsigned int channelIndex = 0u; channelIndex < tChannels; ++channelIndex)
 			{
-				if (targetPixel[channelIndex] != sourcePixel[channelIndex])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetPixel[channelIndex], sourcePixel[channelIndex]);
 			}
 
 			if (targetPixel[tChannels] != targetPadding)
@@ -326,10 +323,7 @@ bool TestUtilities::testCopyPixel(const double testDuration)
 					const T sourceValue = frame.constpixel<T>(xSource, ySource)[channelIndex];
 					const T targetValue = frame.constpixel<T>(xTarget, yTarget)[channelIndex];
 
-					if (sourceValue != targetValue)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, sourceValue, targetValue);
 				}
 			}
 
@@ -342,16 +336,9 @@ bool TestUtilities::testCopyPixel(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>
@@ -363,9 +350,8 @@ bool TestUtilities::testCopyPixelWithIndex(const double testDuration)
 
 	Log::info() << "Copy pixel with index for " << TypeNamer::name<T>() << ", and " << tChannels << " channels test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -391,10 +377,7 @@ bool TestUtilities::testCopyPixelWithIndex(const double testDuration)
 
 			for (unsigned int channelIndex = 0u; channelIndex < tChannels; ++channelIndex)
 			{
-				if (targetPixel[channelIndex] != sourcePixel[channelIndex])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetPixel[channelIndex], sourcePixel[channelIndex]);
 			}
 
 			if (targetPixel[tChannels] != targetPadding)
@@ -436,26 +419,16 @@ bool TestUtilities::testCopyPixelWithIndex(const double testDuration)
 					const T sourceValue = source.constpixel<T>(xSource, ySource)[channelIndex];
 					const T targetValue = target.constpixel<T>(xTarget, yTarget)[channelIndex];
 
-					if (sourceValue != targetValue)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, sourceValue, targetValue);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>
@@ -467,9 +440,8 @@ bool TestUtilities::testCopyPixelWithPosition(const double testDuration)
 
 	Log::info() << "Copy pixel with position for " << TypeNamer::name<T>() << ", and " << tChannels << " channels test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -495,10 +467,7 @@ bool TestUtilities::testCopyPixelWithPosition(const double testDuration)
 
 			for (unsigned int channelIndex = 0u; channelIndex < tChannels; ++channelIndex)
 			{
-				if (targetPixel[channelIndex] != sourcePixel[channelIndex])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, targetPixel[channelIndex], sourcePixel[channelIndex]);
 			}
 
 			if (targetPixel[tChannels] != targetPadding)
@@ -539,10 +508,7 @@ bool TestUtilities::testCopyPixelWithPosition(const double testDuration)
 					const T sourceValue = source.constpixel<T>(xSource, ySource)[channelIndex];
 					const T targetValue = target.constpixel<T>(xTarget, yTarget)[channelIndex];
 
-					if (sourceValue != targetValue)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, sourceValue, targetValue);
 				}
 			}
 
@@ -555,16 +521,9 @@ bool TestUtilities::testCopyPixelWithPosition(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
