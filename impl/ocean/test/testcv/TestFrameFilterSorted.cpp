@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -77,18 +78,14 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 
 	using MedianHistogram = HistogramInteger<uint8_t, uint16_t, 256>;
 
-	const bool allSucceeded = testHistogram<MedianHistogram>(testDuration);
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testHistogram<MedianHistogram>(testDuration));
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFrameFilterSorted::testSortedElements(const double testDuration)
@@ -98,27 +95,21 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 	Log::info() << "Testing sorted elements:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testSortedElements<int8_t>(testDuration) && allSucceeded;
-	allSucceeded = testSortedElements<uint8_t>(testDuration) && allSucceeded;
-	allSucceeded = testSortedElements<int32_t>(testDuration) && allSucceeded;
-	allSucceeded = testSortedElements<uint32_t>(testDuration) && allSucceeded;
-	allSucceeded = testSortedElements<float>(testDuration) && allSucceeded;
-	allSucceeded = testSortedElements<double>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSortedElements<int8_t>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSortedElements<uint8_t>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSortedElements<int32_t>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSortedElements<uint32_t>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSortedElements<float>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSortedElements<double>(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename THistogram>
@@ -126,9 +117,8 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -173,7 +163,7 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 
 			if (minValue != histogramMinValue || medianValue != histogramMedianValue || maxValue != histogramMaxValue)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (histogram.values() > size_t(maximalValues))
@@ -198,7 +188,7 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 
 				if (minValue != histogramMinValue || medianValue != histogramMedianValue || maxValue != histogramMaxValue)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -227,14 +217,14 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 
 				if (minValue != histogramMinValue || medianValue != histogramMedianValue || maxValue != histogramMaxValue)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -242,9 +232,8 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -287,7 +276,7 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 
 			if (minValue != sortedMinValue || medianValue != sortedMedianValue || maxValue != sortedMaxValue)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (sortedElements.size() > size_t(maximalValues))
@@ -312,7 +301,7 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 
 				if (minValue != sortedMinValue || medianValue != sortedMedianValue || maxValue != sortedMaxValue)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -350,7 +339,7 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 
 				if (minValue != sortedMinValue || medianValue != sortedMedianValue || maxValue != sortedMaxValue)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -379,14 +368,14 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 
 				if (minValue != sortedMinValue || medianValue != sortedMedianValue || maxValue != sortedMaxValue)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

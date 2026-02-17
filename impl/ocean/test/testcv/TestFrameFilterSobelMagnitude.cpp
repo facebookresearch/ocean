@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -170,7 +171,8 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 		Log::info() << "Testing 8 bit horizontal and vertical Sobel magnitude filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -193,17 +195,17 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -212,7 +214,7 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 					if (!CV::FrameFilterSobelMagnitude::Comfort::filterHorizontalVerticalAs1Channel(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -223,10 +225,7 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 						return false;
 					}
 
-					if (!validateFilterHorizontalVerticalAs1Channel8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterHorizontalVerticalAs1Channel8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -243,16 +242,9 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -271,7 +263,8 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 		Log::info() << "Testing 8 bit diagonal Sobel magnitude filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -294,17 +287,17 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -313,7 +306,7 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 					if (!CV::FrameFilterSobelMagnitude::Comfort::filterDiagonalAs1Channel(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -324,10 +317,7 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 						return false;
 					}
 
-					if (!validateFilterDiagonalAs1Channel8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterDiagonalAs1Channel8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -344,16 +334,9 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -372,7 +355,8 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 		Log::info() << "Testing 8 bit horizontal, vertical, and diagonal Sobel magnitude filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -395,17 +379,17 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 4u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -414,7 +398,7 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 					if (!CV::FrameFilterSobelMagnitude::Comfort::filterAs1Channel(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -425,10 +409,7 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 						return false;
 					}
 
-					if (!validateFilterAs1Channel8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterAs1Channel8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -445,16 +426,9 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -473,7 +447,8 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 		Log::info() << "Testing 8 bit horizontal and vertical Sobel filter with 1 response per pixel, with response range [0, 65535]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -496,17 +471,17 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 1u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -515,7 +490,7 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 					if (!CV::FrameFilterSobelMagnitude::Comfort::filterHorizontalVerticalTo1Response(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -526,10 +501,7 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 						return false;
 					}
 
-					if (!validateFilterTo1Response8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterTo1Response8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -546,16 +518,9 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterSobelMagnitude::validateFilterHorizontalVerticalAs1Channel8Bit(const Frame& frame, const Frame& response)

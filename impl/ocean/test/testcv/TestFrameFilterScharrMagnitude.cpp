@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -140,7 +141,8 @@ bool TestFrameFilterScharrMagnitude::testHorizontalVerticalFilter8BitPerChannel(
 		Log::info() << "Testing 8 bit horizontal and vertical Scharr magnitude filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -163,17 +165,17 @@ bool TestFrameFilterScharrMagnitude::testHorizontalVerticalFilter8BitPerChannel(
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -182,7 +184,7 @@ bool TestFrameFilterScharrMagnitude::testHorizontalVerticalFilter8BitPerChannel(
 					if (!CV::FrameFilterScharrMagnitude::Comfort::filterHorizontalVerticalAs1Channel(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -190,13 +192,10 @@ bool TestFrameFilterScharrMagnitude::testHorizontalVerticalFilter8BitPerChannel(
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(response, copyResponse))
 					{
 						ocean_assert(false && "Invalid memory!");
-						return false;
+						OCEAN_SET_FAILED(validation);
 					}
 
-					if (!validateFilterHorizontalVerticalAs1Channel8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterHorizontalVerticalAs1Channel8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -213,16 +212,9 @@ bool TestFrameFilterScharrMagnitude::testHorizontalVerticalFilter8BitPerChannel(
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -241,7 +233,8 @@ bool TestFrameFilterScharrMagnitude::testDiagonalFilter8BitPerChannel(const unsi
 		Log::info() << "Testing 8 bit diagonal Scharr magnitude filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -264,17 +257,17 @@ bool TestFrameFilterScharrMagnitude::testDiagonalFilter8BitPerChannel(const unsi
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -283,7 +276,7 @@ bool TestFrameFilterScharrMagnitude::testDiagonalFilter8BitPerChannel(const unsi
 					if (!CV::FrameFilterScharrMagnitude::Comfort::filterDiagonalAs1Channel(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -291,13 +284,10 @@ bool TestFrameFilterScharrMagnitude::testDiagonalFilter8BitPerChannel(const unsi
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(response, copyResponse))
 					{
 						ocean_assert(false && "Invalid memory!");
-						return false;
+						OCEAN_SET_FAILED(validation);
 					}
 
-					if (!validateFilterDiagonalAs1Channel8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterDiagonalAs1Channel8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -314,16 +304,9 @@ bool TestFrameFilterScharrMagnitude::testDiagonalFilter8BitPerChannel(const unsi
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -342,7 +325,8 @@ bool TestFrameFilterScharrMagnitude::testFilter8BitPerChannel(const unsigned int
 		Log::info() << "Testing 8 bit horizontal, vertical, and diagonal Scharr magnitude filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -365,17 +349,17 @@ bool TestFrameFilterScharrMagnitude::testFilter8BitPerChannel(const unsigned int
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(100u) * RandomI::random(1u);
-					const unsigned int responsePaddingElements = RandomI::random(100u) * RandomI::random(1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 4u>()), responsePaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame);
-					CV::CVUtilities::randomizeFrame(response);
+					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
 
 					const Frame copyResponse(response, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -384,7 +368,7 @@ bool TestFrameFilterScharrMagnitude::testFilter8BitPerChannel(const unsigned int
 					if (!CV::FrameFilterScharrMagnitude::Comfort::filterAs1Channel(frame, response, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -392,13 +376,10 @@ bool TestFrameFilterScharrMagnitude::testFilter8BitPerChannel(const unsigned int
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(response, copyResponse))
 					{
 						ocean_assert(false && "Invalid memory!");
-						return false;
+						OCEAN_SET_FAILED(validation);
 					}
 
-					if (!validateFilterAs1Channel8Bit(frame, response))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterAs1Channel8Bit(frame, response));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -415,16 +396,9 @@ bool TestFrameFilterScharrMagnitude::testFilter8BitPerChannel(const unsigned int
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterScharrMagnitude::validateFilterHorizontalVerticalAs1Channel8Bit(const Frame& frame, const Frame& response)

@@ -19,6 +19,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -203,12 +204,11 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo8BitInteger(const unsign
 
 	const int filterPattern[] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nOrientation = 0u; nOrientation < 8u; ++nOrientation)
 	{
-		bool localSucceeded = true;
-
 		Log::info().newLine(nOrientation != 0u);
 		Log::info() << "Orientation: " << directionStrings()[nOrientation];
 
@@ -228,17 +228,20 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo8BitInteger(const unsign
 			{
 				for (bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, 500u);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, 500u);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 500u);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 500u);
 
-					const unsigned int framePaddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
+					const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+					const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
+
+					const unsigned int maxTargetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+					const unsigned int targetPaddingElements = maxTargetPaddingElements * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame target(FrameType(frame, FrameType::genericPixelFormat<int8_t>(channels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -252,10 +255,7 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo8BitInteger(const unsign
 						return false;
 					}
 
-					if (!validateFilter8BitPerChannel<int8_t, int32_t>(frame.constdata<uint8_t>(), target.data<int8_t>(), frame.width(), frame.height(), channels, filterPattern, 4, 0, directions()[nOrientation], frame.paddingElements(), target.paddingElements()))
-					{
-						localSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilter8BitPerChannel<int8_t, int32_t>(frame.constdata<uint8_t>(), target.data<int8_t>(), frame.width(), frame.height(), channels, filterPattern, 4, 0, directions()[nOrientation], frame.paddingElements(), target.paddingElements()));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -270,18 +270,10 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo8BitInteger(const unsign
 			Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 		}
 
-		if (localSucceeded)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			allSucceeded = false;
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterTemplate::testFilter8BitPerChannelTo32BitFloat(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker)
@@ -295,12 +287,11 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo32BitFloat(const unsigne
 
 	const int filterPattern[] = {-1, 4, 3, -2, -4, 2, 1, 7, -6};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nOrientation = 0u; nOrientation < 8u; ++nOrientation)
 	{
-		bool localSucceeded = true;
-
 		Log::info().newLine(nOrientation != 0u);
 		Log::info() << "Orientation: " << directionStrings()[nOrientation];
 
@@ -320,17 +311,20 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo32BitFloat(const unsigne
 			{
 				for (bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, 500u);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, 500u);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 500u);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 500u);
 
-					const unsigned int framePaddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
+					const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+					const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
+
+					const unsigned int maxTargetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+					const unsigned int targetPaddingElements = maxTargetPaddingElements * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame target(FrameType(frame, FrameType::genericPixelFormat<float>(channels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -344,10 +338,7 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo32BitFloat(const unsigne
 						return false;
 					}
 
-					if (!validateFilter8BitPerChannel<float, int>(frame.constdata<uint8_t>(), target.data<float>(), frame.width(), frame.height(), channels, filterPattern, 1, 0, directions()[nOrientation], frame.paddingElements(), target.paddingElements()))
-					{
-						localSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilter8BitPerChannel<float, int>(frame.constdata<uint8_t>(), target.data<float>(), frame.width(), frame.height(), channels, filterPattern, 1, 0, directions()[nOrientation], frame.paddingElements(), target.paddingElements()));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -362,18 +353,10 @@ bool TestFrameFilterTemplate::testFilter8BitPerChannelTo32BitFloat(const unsigne
 			Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 		}
 
-		if (localSucceeded)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			allSucceeded = false;
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker)
@@ -387,12 +370,11 @@ bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(con
 
 	const int filterPattern[] = {-1, 4, 3, -2, -4, 2, 1, 7, -6};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nOrientation = 0u; nOrientation < 8u; ++nOrientation)
 	{
-		bool localSucceeded = true;
-
 		Log::info().newLine(nOrientation != 0u);
 		Log::info() << "Orientation: " << directionStrings()[nOrientation];
 
@@ -414,17 +396,20 @@ bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(con
 			{
 				for (bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, 500u);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, 500u);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 500u);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 500u);
 
-					const unsigned int framePaddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(0u, 100u) * RandomI::random(1u);
+					const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+					const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
+
+					const unsigned int maxTargetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+					const unsigned int targetPaddingElements = maxTargetPaddingElements * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame target(FrameType(frame, FrameType::genericPixelFormat(FrameType::DT_SIGNED_FLOAT_32, channels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(frame, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -440,10 +425,7 @@ bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(con
 						return false;
 					}
 
-					if (!validateFilterWithFactor8BitPerChannel<float, float>(frame.constdata<uint8_t>(), target.data<float>(), frame.width(), frame.height(), channels, filterPattern, normalizationFactor, directions()[nOrientation], frame.paddingElements(), target.paddingElements()))
-					{
-						localSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilterWithFactor8BitPerChannel<float, float>(frame.constdata<uint8_t>(), target.data<float>(), frame.width(), frame.height(), channels, filterPattern, normalizationFactor, directions()[nOrientation], frame.paddingElements(), target.paddingElements()));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -458,18 +440,10 @@ bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(con
 			Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 		}
 
-		if (localSucceeded)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			allSucceeded = false;
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterTemplate::testPixel8BitPerChannel(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration)
@@ -490,7 +464,8 @@ bool TestFrameFilterTemplate::testPixel8BitPerChannel(const unsigned int width, 
 	using IntegerFilterTemplate = CV::FrameFilterTemplate<int32_t, -1, 0, 1, -2, 0, 2, -1, 0, 1>;
 	using FloatFilterTemplate = CV::FrameFilterTemplate<int32_t, -1, 4, 3, -2, -4, 2, 1, 7, -6>;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nOrientation = 0u; nOrientation < 8u; ++nOrientation)
 	{
@@ -498,44 +473,28 @@ bool TestFrameFilterTemplate::testPixel8BitPerChannel(const unsigned int width, 
 
 		const Timestamp startTimestamp(true);
 
-		CV::CVUtilities::randomizeFrame(frame);
+		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
 
 		do
 		{
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const unsigned int x = RandomI::random(0u, width - 1u);
-				const unsigned int y = RandomI::random(0u, height - 1u);
+				const unsigned int x = RandomI::random(randomGenerator, 0u, width - 1u);
+				const unsigned int y = RandomI::random(randomGenerator, 0u, height - 1u);
 
-				if (!validateFilterPixel<IntegerFilterTemplate, int8_t, int32_t, 4, 0>(frame.constdata<uint8_t>(), frame.width(), frame.height(), x, y, channels, directions()[nOrientation]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateFilterPixel<IntegerFilterTemplate, int8_t, int32_t, 4, 0>(frame.constdata<uint8_t>(), frame.width(), frame.height(), x, y, channels, directions()[nOrientation]));
 
-				if (!validateFilterPixel<IntegerFilterTemplate, uint8_t, int32_t, 4, 0>(frame.constdata<uint8_t>(), frame.width(), frame.height(), x, y, channels, directions()[nOrientation]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateFilterPixel<IntegerFilterTemplate, uint8_t, int32_t, 4, 0>(frame.constdata<uint8_t>(), frame.width(), frame.height(), x, y, channels, directions()[nOrientation]));
 
-				if (!validateFilterPixel<FloatFilterTemplate, float, int32_t, 1, 0>(frame.constdata<uint8_t>(), frame.width(), frame.height(), x, y, channels, directions()[nOrientation]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateFilterPixel<FloatFilterTemplate, float, int32_t, 1, 0>(frame.constdata<uint8_t>(), frame.width(), frame.height(), x, y, channels, directions()[nOrientation]));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TResponse, typename TNormalization>

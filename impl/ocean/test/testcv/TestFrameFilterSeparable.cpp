@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -419,21 +420,15 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 {
 	Log::info() << "Testing extreme frame dimensions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testExtremeDimensions<unsigned char, unsigned int>(testDuration, worker) && allSucceeded;
-	allSucceeded = testExtremeDimensions<float, float>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testExtremeDimensions<unsigned char, unsigned int>(testDuration, worker));
+	OCEAN_EXPECT_TRUE(validation, testExtremeDimensions<float, float>(testDuration, worker));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -450,10 +445,9 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 #endif
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const ProcessorInstructions processorInstructions = Processor::get().instructions();
-
-	bool allSucceeded = true;
 
 	const Timestamp startTimestamp(true);
 
@@ -462,8 +456,8 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 64u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 64u);
 
-		unsigned int horizontalFilterSize = RandomI::random(1u, width);
-		unsigned int verticalFilterSize = RandomI::random(1u, height);
+		unsigned int horizontalFilterSize = RandomI::random(randomGenerator, 1u, width);
+		unsigned int verticalFilterSize = RandomI::random(randomGenerator, 1u, height);
 
 		// we need odd filter sizes but also smaller than width and height
 		if ((horizontalFilterSize & 0x01u) == 0x00u)
@@ -494,7 +488,7 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 
 				if (!CV::FrameFilterSeparable::filter<T, TFilter>(source.constdata<T>(), target.data<T>(), source.width(), source.height(), source.channels(), source.paddingElements(), target.paddingElements(), horizontalFilter.data(), horizontalFilterSize, verticalFilter.data(), verticalFilterSize, useWorker ? &worker : nullptr, reusableMemory, processorInstructions))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
@@ -511,14 +505,14 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 				TestFrameFilterSeparable::validateFilter<T>(source.constdata<T>(), target.constdata<T>(), source.width(), source.height(), source.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, source.paddingElements(), target.paddingElements(), 0u);
 				if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterSeparable::testNormalDimensions(const double testDuration, Worker& worker)
@@ -533,7 +527,8 @@ bool TestFrameFilterSeparable::testNormalDimensions(const double testDuration, W
 
 	const IndexPair32 filterCombinations[] = {IndexPair32(3u, 3u), IndexPair32(5u, 9u), IndexPair32(11u, 7u)};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 0u; n < sizeof(widths) / sizeof(widths[0]); ++n)
 	{
@@ -560,19 +555,19 @@ bool TestFrameFilterSeparable::testNormalDimensions(const double testDuration, W
 				Log::info() << " ";
 
 				Log::info() << "... with data type 'unsigned char'";
-				allSucceeded = testFilter8BitPerChannel<unsigned char, unsigned int>(width, height, channels, filterCombination.first, filterCombination.second, testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, (testFilter8BitPerChannel<unsigned char, unsigned int>(width, height, channels, filterCombination.first, filterCombination.second, testDuration, worker)));
 
 				Log::info() << " ";
 
 				Log::info() << "... with data type 'float'";
-				allSucceeded = testFilter8BitPerChannel<float, float>(width, height, channels, filterCombination.first, filterCombination.second, testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, (testFilter8BitPerChannel<float, float>(width, height, channels, filterCombination.first, filterCombination.second, testDuration, worker)));
 			}
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (validation.succeededSoFar())
 	{
 		Log::info() << "Normal frame dimension test succeeded.";
 	}
@@ -581,7 +576,7 @@ bool TestFrameFilterSeparable::testNormalDimensions(const double testDuration, W
 		Log::info() << "Normal frame dimension test FAILED!";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -606,10 +601,9 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 #endif
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const ProcessorInstructions processorInstructions = Processor::get().instructions();
-
-	bool allSucceeded = true;
 
 	HighPerformanceStatistic performanceStandard;
 	HighPerformanceStatistic performanceReusableMemory;
@@ -650,7 +644,7 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -660,16 +654,9 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 	Log::info() << "Reusable memory performance: Best: " << performanceReusableMemory.bestMseconds() << "ms, worst: " << performanceReusableMemory.worstMseconds() << "ms, average: " << performanceReusableMemory.averageMseconds() << "ms, median: " << performanceReusableMemory.medianMseconds() << "ms";
 	Log::info() << "Reusable memory boost factor: Best: " << String::toAString(performanceStandard.best() / performanceReusableMemory.best(), 2u) << "x, worst: " << String::toAString(performanceStandard.worst() / performanceReusableMemory.worst(), 2u) << "x, average: " << String::toAString(performanceStandard.average() / performanceReusableMemory.average(), 2u) << "x, median: " << String::toAString(performanceStandard.median() / performanceReusableMemory.median(), 2u) << "x";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -694,10 +681,9 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 #endif
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const ProcessorInstructions processorInstructions = Processor::get().instructions();
-
-	bool allSucceeded = true;
 
 	HighPerformanceStatistic performanceStandard;
 	HighPerformanceStatistic performanceReusableMemory;
@@ -738,7 +724,7 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -748,16 +734,9 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 	Log::info() << "Reusable memory performance: Best: " << performanceReusableMemory.bestMseconds() << "ms, worst: " << performanceReusableMemory.worstMseconds() << "ms, average: " << performanceReusableMemory.averageMseconds() << "ms, median: " << performanceReusableMemory.medianMseconds() << "ms";
 	Log::info() << "Reusable memory boost factor: Best: " << String::toAString(performanceStandard.best() / performanceReusableMemory.best(), 2u) << "x, worst: " << String::toAString(performanceStandard.worst() / performanceReusableMemory.worst(), 2u) << "x, average: " << String::toAString(performanceStandard.average() / performanceReusableMemory.average(), 2u) << "x, median: " << String::toAString(performanceStandard.median() / performanceReusableMemory.median(), 2u) << "x";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -777,10 +756,9 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const ProcessorInstructions processorInstructions = Processor::get().instructions();
-
-	bool allSucceeded = true;
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -824,7 +802,7 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), channels, normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -839,16 +817,9 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 		Log::info() << "Multi-core boost factor: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1) << "x, median: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -867,20 +838,19 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 #endif
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	unsigned long long iterations = 0ull;
-
-	bool allSucceeded = true;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 64u);
-		const unsigned int height = RandomI::random(1u, 64u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 64u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 64u);
 
-		unsigned int horizontalFilterSize = RandomI::random(1u, width);
-		unsigned int verticalFilterSize = RandomI::random(1u, height);
+		unsigned int horizontalFilterSize = RandomI::random(randomGenerator, 1u, width);
+		unsigned int verticalFilterSize = RandomI::random(randomGenerator, 1u, height);
 
 		if (horizontalFilterSize % 2u == 0u)
 		{
@@ -932,7 +902,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 
 			if (!CV::FrameFilterSeparable::filterUniversal<T>(sourceFrame.constdata<T>(), targetFrame.data<T>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), targetFrame.paddingElements(), horizontalFilter.data(), (unsigned int)(horizontalFilter.size()), verticalFilter.data(), (unsigned int)(verticalFilter.size()), useWorker))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
@@ -947,7 +917,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -955,16 +925,9 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -975,15 +938,16 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const double testDur
 	Log::info() << "Universal separable filter test for data type '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testSeparableFilterUniversal<T>(640u, 480u, n, 3u, 3u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSeparableFilterUniversal<T>(640u, 480u, n, 3u, 3u, testDuration, worker)));
 		Log::info() << " ";
-		allSucceeded = testSeparableFilterUniversal<T>(640u, 480u, n, 5u, 9u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSeparableFilterUniversal<T>(640u, 480u, n, 5u, 9u, testDuration, worker)));
 		Log::info() << " ";
-		allSucceeded = testSeparableFilterUniversal<T>(640u, 480u, n, 11u, 7u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSeparableFilterUniversal<T>(640u, 480u, n, 11u, 7u, testDuration, worker)));
 		Log::info() << " ";
 	}
 
@@ -991,15 +955,15 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const double testDur
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testSeparableFilterUniversal<T>(1920u, 1080u, n, 3u, 3u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSeparableFilterUniversal<T>(1920u, 1080u, n, 3u, 3u, testDuration, worker)));
 		Log::info() << " ";
-		allSucceeded = testSeparableFilterUniversal<T>(1920u, 1080u, n, 5u, 9u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSeparableFilterUniversal<T>(1920u, 1080u, n, 5u, 9u, testDuration, worker)));
 		Log::info() << " ";
-		allSucceeded = testSeparableFilterUniversal<T>(1920u, 1080u, n, 11u, 7u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSeparableFilterUniversal<T>(1920u, 1080u, n, 11u, 7u, testDuration, worker)));
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
+	if (validation.succeededSoFar())
 	{
 		Log::info() << "Universal separable filter test succeeded.";
 	}
@@ -1008,7 +972,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const double testDur
 		Log::info() << "Universal separable filter test FAILED!";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1023,9 +987,8 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 		Log::info() << "... filtering " << width << "x" << height << ", " << channels << " channels and filter size " << horizontalFilterSize << "x" << verticalFilterSize << ":";
 	}
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	double sumAverageError = 0.0;
 	double maximalError = 0.0;
@@ -1091,7 +1054,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 
 			if (!localResult)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			double averageAbsError = NumericD::maxValue();
@@ -1127,19 +1090,22 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 	ocean_assert(measurements != 0ull);
 	const double averageAbsError = sumAverageError / double(measurements);
 
-	allSucceeded = allSucceeded && averageAbsError <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
+	if (averageAbsError > averageErrorThreshold || maximalError > maximalErrorThreshold)
+	{
+		OCEAN_SET_FAILED(validation);
+	}
 
 	if (width > 64u)
 	{
 		Log::info() << "Validation: average error: " << String::toAString(averageAbsError, 2u) << ", maximal error: " << String::toAString(maximalError, 2u);
 
-		if (!allSucceeded)
+		if (!validation.succeededSoFar())
 		{
 			Log::info() << "Validation: FAILED!";
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
