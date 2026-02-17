@@ -16,6 +16,8 @@
 #include "ocean/io/Base64.h"
 #include "ocean/io/Utilities.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -159,15 +161,14 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeEncoding(const double testDuration)
 
 	Log::info() << "Micro QR code encoding test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const MicroQRCodeVerificationItems verificationItems = TestMicroQRCodeEncoder::loadDataTestMicroQRCodeEncoding();
 
 	ocean_assert(!verificationItems.empty());
 	if (!verificationItems.empty())
 	{
-		RandomGenerator randomGenerator;
-
 		Timestamp start(true);
 
 		do
@@ -176,14 +177,11 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeEncoding(const double testDuration)
 			const MicroQRCodeVerificationItem& verificationItem = verificationItems[randomIndex];
 
 			MicroQRCode testCode;
-			if (MicroQRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) != QRCodeEncoderBase::SC_SUCCESS || !testCode.isValid())
-			{
-				allSucceeded = false;
-			}
+			const QRCodeEncoderBase::StatusCode status = MicroQRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode);
+			OCEAN_EXPECT_TRUE(validation, status == QRCodeEncoderBase::SC_SUCCESS && testCode.isValid());
 
-			allSucceeded = testCode.version() == verificationItem.version_
-				&& testCode.errorCorrectionCapacity() == (unsigned int)verificationItem.errorCorrectionCapacity_
-				&& allSucceeded;
+			OCEAN_EXPECT_EQUAL(validation, testCode.version(), verificationItem.version_);
+			OCEAN_EXPECT_EQUAL(validation, (unsigned int)testCode.errorCorrectionCapacity(), (unsigned int)verificationItem.errorCorrectionCapacity_);
 
 			std::vector<char> modulesString(testCode.modules().size());
 			for (unsigned int i = 0u; i < testCode.modules().size(); ++i)
@@ -191,34 +189,26 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeEncoding(const double testDuration)
 				modulesString[i] = testCode.modules()[i] == 0u ? '0' : '1';
 			}
 
-			allSucceeded = std::equal(modulesString.begin(), modulesString.end(), verificationItem.modules_.begin()) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, std::equal(modulesString.begin(), modulesString.end(), verificationItem.modules_.begin()));
 		}
 		while (Timestamp(true) < start + testDuration);
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 {
 	Log::info() << "Format encoding/decoding test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const std::array<MicroQRCodeEncoder::MaskingPattern, 4> maskingPatterns =
 	{
@@ -242,19 +232,16 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 		{
 			const uint32_t encodedFormat = MicroQRCodeEncoder::encodeFormat(version, errorCorrectionCapacity, maskingPattern);
 
-			if (encodedFormat >> 15u != 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, encodedFormat >> 15u, 0u);
 
 			unsigned int decodedVersion;
 			MicroQRCode::ErrorCorrectionCapacity decodedErrorCorrectionCapacity;
 			MicroQRCodeEncoder::MaskingPattern decodedMaskingPattern;
 
-			if (MicroQRCodeEncoder::decodeFormatBits(encodedFormat, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || version != decodedVersion || errorCorrectionCapacity != decodedErrorCorrectionCapacity || maskingPattern != decodedMaskingPattern)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, MicroQRCodeEncoder::decodeFormatBits(encodedFormat, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern));
+			OCEAN_EXPECT_EQUAL(validation, version, decodedVersion);
+			OCEAN_EXPECT_EQUAL(validation, errorCorrectionCapacity, decodedErrorCorrectionCapacity);
+			OCEAN_EXPECT_EQUAL(validation, maskingPattern, decodedMaskingPattern);
 
 			// The encoded format must be recoverable with up to 3 incorrect bits
 
@@ -276,23 +263,16 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 			ocean_assert(xorMask >> 15u == 0u);
 			const uint32_t encodedFormatWithErrors = encodedFormat ^ xorMask;
 
-			if (MicroQRCodeEncoder::decodeFormatBits(encodedFormatWithErrors, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || version != decodedVersion || errorCorrectionCapacity != decodedErrorCorrectionCapacity || maskingPattern != decodedMaskingPattern)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, MicroQRCodeEncoder::decodeFormatBits(encodedFormatWithErrors, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern));
+			OCEAN_EXPECT_EQUAL(validation, version, decodedVersion);
+			OCEAN_EXPECT_EQUAL(validation, errorCorrectionCapacity, decodedErrorCorrectionCapacity);
+			OCEAN_EXPECT_EQUAL(validation, maskingPattern, decodedMaskingPattern);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation successful";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 TestMicroQRCodeEncoder::MicroQRCodeVerificationItems TestMicroQRCodeEncoder::loadDataTestMicroQRCodeEncoding()

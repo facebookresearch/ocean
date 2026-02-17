@@ -13,6 +13,8 @@
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCodeEncoder.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/io/Base64.h"
 #include "ocean/io/Utilities.h"
 
@@ -170,15 +172,14 @@ bool TestQRCodeEncoder::testQRCodeEncoding(const double testDuration)
 
 	Log::info() << "QR code encoding test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadDataTestQRCodeEncoding();
 
 	ocean_assert(!verificationItems.empty());
 	if (!verificationItems.empty())
 	{
-		RandomGenerator randomGenerator;
-
 		Timestamp start(true);
 
 		do
@@ -189,12 +190,11 @@ bool TestQRCodeEncoder::testQRCodeEncoding(const double testDuration)
 			QRCode testCode;
 			if (QRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) != QRCodeEncoderBase::SC_SUCCESS || !testCode.isValid())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
-			allSucceeded = testCode.version() == verificationItem.version_
-				&& testCode.errorCorrectionCapacity() == (unsigned int)verificationItem.errorCorrectionCapacity_
-				&& allSucceeded;
+			OCEAN_EXPECT_EQUAL(validation, testCode.version(), verificationItem.version_);
+			OCEAN_EXPECT_EQUAL(validation, (unsigned int)testCode.errorCorrectionCapacity(), (unsigned int)verificationItem.errorCorrectionCapacity_);
 
 			std::vector<char> modulesString(testCode.modules().size());
 			for (unsigned int i = 0u; i < testCode.modules().size(); ++i)
@@ -202,34 +202,26 @@ bool TestQRCodeEncoder::testQRCodeEncoding(const double testDuration)
 				modulesString[i] = testCode.modules()[i] == 0u ? '0' : '1';
 			}
 
-			allSucceeded = std::equal(modulesString.begin(), modulesString.end(), verificationItem.modules_.begin()) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, std::equal(modulesString.begin(), modulesString.end(), verificationItem.modules_.begin()));
 		}
 		while (Timestamp(true) < start + testDuration);
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestQRCodeEncoder::testQRCodeVersionEncodingDecoding()
 {
 	Log::info() << "Version encoding/decoding test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// Note: QR code versions 1-6 do not have version bit fields, but we're still include those values into this test.
 
@@ -237,15 +229,12 @@ bool TestQRCodeEncoder::testQRCodeVersionEncodingDecoding()
 	{
 		const uint32_t encodedVersion = CV::Detector::QRCodes::QRCodeEncoder::encodeVersion(version);
 
-		if (encodedVersion >> 18u != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, encodedVersion >> 18u, 0u);
 
 		uint32_t decodedVersion;
 		if (CV::Detector::QRCodes::QRCodeEncoder::decodeVersionBits(encodedVersion, decodedVersion) == false || version != decodedVersion)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		// The encoded version must be recoverable with up to 3 incorrect bits
@@ -271,20 +260,13 @@ bool TestQRCodeEncoder::testQRCodeVersionEncodingDecoding()
 		decodedVersion = 0u;
 		if (CV::Detector::QRCodes::QRCodeEncoder::decodeVersionBits(encodedVersionWithErrors, decodedVersion) == false || version != decodedVersion)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation successful";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 
@@ -292,9 +274,8 @@ bool TestQRCodeEncoder::testQRCodeFormatEncodingDecoding()
 {
 	Log::info() << "Format encoding/decoding test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity errorCorrectionCapacities[4] =
 	{
@@ -322,17 +303,14 @@ bool TestQRCodeEncoder::testQRCodeFormatEncodingDecoding()
 		{
 			const uint32_t encodedFormat = CV::Detector::QRCodes::QRCodeEncoder::encodeFormat(errorCorrectionCapacities[ecc], maskingPatterns[m]);
 
-			if (encodedFormat >> 15u != 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, encodedFormat >> 15u, 0u);
 
 			CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity decodedErrorCorrectionCapacity;
 			CV::Detector::QRCodes::QRCodeEncoder::MaskingPattern decodedMaskingPattern;
 
 			if (CV::Detector::QRCodes::QRCodeEncoder::decodeFormatBits(encodedFormat, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || errorCorrectionCapacities[ecc] != decodedErrorCorrectionCapacity || maskingPatterns[m] != decodedMaskingPattern)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			// The encoded format must be recoverable with up to 3 incorrect bits
@@ -357,21 +335,14 @@ bool TestQRCodeEncoder::testQRCodeFormatEncodingDecoding()
 
 			if (CV::Detector::QRCodes::QRCodeEncoder::decodeFormatBits(encodedFormatWithErrors, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || errorCorrectionCapacities[ecc] != decodedErrorCorrectionCapacity || maskingPatterns[m] != decodedMaskingPattern)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation successful";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadDataTestQRCodeEncoding()

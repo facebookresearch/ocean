@@ -12,6 +12,8 @@
 
 #include "ocean/base/RandomI.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/cv/detector/qrcodes/MicroQRCode.h"
 #include "ocean/cv/detector/qrcodes/MicroQRCodeDecoder.h"
 
@@ -113,7 +115,7 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 	Log::info() << "Micro QR code decoding test:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	// Testing
 
@@ -172,25 +174,23 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 					break;
 
 				case MicroQRCode::EM_BYTE:
-					allSucceeded = Utilities::generateRandomByteData(randomGenerator, messageLength, message) && allSucceeded;
+					OCEAN_EXPECT_TRUE(validation, Utilities::generateRandomByteData(randomGenerator, messageLength, message));
 					qrcodeGenerated = (MicroQRCodeEncoder::encodeBinary(message, params.eccMin, code) == MicroQRCodeEncoder::SC_SUCCESS) && code.isValid();
 					break;
 
 				default:
 					ocean_assert(false && "Never be here");
-					allSucceeded = false;
-					return false;
+					OCEAN_SET_FAILED(validation);
+					return validation.succeeded();
 			}
 
-			allSucceeded = allSucceeded && qrcodeGenerated;
+			OCEAN_EXPECT_TRUE(validation, qrcodeGenerated);
 
 			MicroQRCode testCode;
-			if (!MicroQRCodeDecoder::decodeMicroQRCode(code.modules(), testCode) || !testCode.isValid())
-			{
-				allSucceeded = false;
-			}
+			const bool decoded = MicroQRCodeDecoder::decodeMicroQRCode(code.modules(), testCode);
+			OCEAN_EXPECT_TRUE(validation, decoded && testCode.isValid());
 
-			allSucceeded = allSucceeded && (code == testCode);
+			OCEAN_EXPECT_TRUE(validation, code == testCode);
 		}
 		while (Timestamp(true) < start + testDuration);
 	}
@@ -203,7 +203,8 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 		if (verificationItems.empty())
 		{
 			ocean_assert(false && "This should never happen!");
-			return false;
+			OCEAN_SET_FAILED(validation);
+			return validation.succeeded();
 		}
 
 		Timestamp start(true);
@@ -221,39 +222,25 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 			}
 
 			MicroQRCode testCode;
-			if (!MicroQRCodeDecoder::decodeMicroQRCode(modules, testCode) || !testCode.isValid())
-			{
-				allSucceeded = false;
-			}
+			const bool decoded = MicroQRCodeDecoder::decodeMicroQRCode(modules, testCode);
+			OCEAN_EXPECT_TRUE(validation, decoded && testCode.isValid());
 
-			allSucceeded = testCode.version() == verificationItem.version_
-				&& testCode.errorCorrectionCapacity() == verificationItem.errorCorrectionCapacity_
-				&& allSucceeded;
+			OCEAN_EXPECT_EQUAL(validation, testCode.version(), verificationItem.version_);
+			OCEAN_EXPECT_EQUAL(validation, testCode.errorCorrectionCapacity(), verificationItem.errorCorrectionCapacity_);
 
 			const std::vector<uint8_t>& testData = testCode.data();
 			const std::string testDataString(testData.begin(), testData.end());
 
-			if (testDataString != verificationItem.message_)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, testDataString, verificationItem.message_);
 		}
 		while (Timestamp(true) < start + testDuration);
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 

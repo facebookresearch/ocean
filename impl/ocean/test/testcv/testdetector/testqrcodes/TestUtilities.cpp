@@ -12,6 +12,8 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/WorkerPool.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameFilterGaussian.h"
 #include "ocean/cv/FrameInterpolatorBilinear.h"
@@ -122,15 +124,14 @@ bool TestUtilities::testContainsCode(const double testDuration)
 
 	Log::info() << "Test for the check if a QR code is contained in a list of existing QR codes (without poses):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	Timestamp start(true);
 
 	do
 	{
 		// Indicates whether the code that will be tested against a list of reference codes should be unique or contained in the list of existing codes.
-		const bool useUniqueTestCode = RandomI::random(randomGenerator, 1u);
+		const bool useUniqueTestCode = RandomI::boolean(randomGenerator);
 
 		// The number of reference codes that will be tested against; will be 0 in 10% of the cases, if the test code is unique (i.e. not in the list of existing codes)
 		const size_t numberReferenceCodes = size_t(useUniqueTestCode && RandomI::random(randomGenerator, 0u, 9u) == 0u ? 0u : RandomI::random(randomGenerator, 1u, 100u));
@@ -175,27 +176,16 @@ bool TestUtilities::testContainsCode(const double testDuration)
 
 		const bool containsCode = CV::Detector::QRCodes::Utilities::containsCode(referenceCodes, testCode);
 
-		if (useUniqueTestCode == containsCode)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_NOT_EQUAL(validation, useUniqueTestCode, containsCode);
 
 	}
 	while (Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::stressTestParseWifiConfig(const double testDuration)
@@ -204,9 +194,8 @@ bool TestUtilities::stressTestParseWifiConfig(const double testDuration)
 
 	Log::info() << "Stress test for parsing Wi-Fi configurations stored as a string:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	Timestamp start(true);
 
 	do
@@ -238,16 +227,9 @@ bool TestUtilities::stressTestParseWifiConfig(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Stress test: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Stress test: FAILED!";
-	}
+	Log::info() << "Stress test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testParseWifiConfig(const double testDuration)
@@ -256,9 +238,8 @@ bool TestUtilities::testParseWifiConfig(const double testDuration)
 
 	Log::info() << "Test for parsing Wi-Fi configurations stored as a string:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	Timestamp start(true);
 
 	do
@@ -286,7 +267,7 @@ bool TestUtilities::testParseWifiConfig(const double testDuration)
 
 		ocean_assert(encryptionType.empty() || !escapedPassword.empty());
 
-		const bool isHiddenSsid = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool isHiddenSsid = RandomI::boolean(randomGenerator);
 
 		// The types of fields that the Wi-Fi config may contain
 		enum FieldType : uint32_t
@@ -315,14 +296,14 @@ bool TestUtilities::testParseWifiConfig(const double testDuration)
 		}
 		else
 		{
-			const bool useValidPrefix = RandomI::random(randomGenerator, 1u) == 1u;
+			const bool useValidPrefix = RandomI::boolean(randomGenerator);
 			if (useValidPrefix)
 			{
 				wifiConfig = "WIFI:";
 			}
 			else
 			{
-				const bool useNoPrefixAtAll = RandomI::random(randomGenerator, 1u) == 1u;
+				const bool useNoPrefixAtAll = RandomI::boolean(randomGenerator);
 
 				if (useNoPrefixAtAll)
 				{
@@ -400,35 +381,23 @@ bool TestUtilities::testParseWifiConfig(const double testDuration)
 		const CV::Detector::QRCodes::Utilities::ParsingStatus parsingStatus = CV::Detector::QRCodes::Utilities::parseWifiConfig(wifiConfig, parsedSsid, parsedPassword, &parsedEncryption, &parsedIsHiddenSsid);
 		const bool parsingSucceeded = parsingStatus == CV::Detector::QRCodes::Utilities::PS_SUCCESS;
 
-		if (parsingSucceeded != createValidWifiConfig)
+		OCEAN_EXPECT_EQUAL(validation, parsingSucceeded, createValidWifiConfig);
+
+		if (parsingSucceeded)
 		{
-			allSucceeded = false;
-		}
-		else
-		{
-			if (parsingSucceeded)
-			{
-				if (parsedSsid != ssid || parsedPassword != password || parsedEncryption != encryptionType || parsedIsHiddenSsid != isHiddenSsid)
-				{
-					allSucceeded = false;
-				}
-			}
+			OCEAN_EXPECT_EQUAL(validation, parsedSsid, ssid);
+			OCEAN_EXPECT_EQUAL(validation, parsedPassword, password);
+			OCEAN_EXPECT_EQUAL(validation, parsedEncryption, encryptionType);
+			OCEAN_EXPECT_EQUAL(validation, parsedIsHiddenSsid, isHiddenSsid);
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testEscapeSpecialCharacters(const double testDuration)
@@ -437,9 +406,8 @@ bool TestUtilities::testEscapeSpecialCharacters(const double testDuration)
 
 	Log::info() << "Test for escaping special characters in a string:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	Timestamp start(true);
 
 	do
@@ -455,25 +423,15 @@ bool TestUtilities::testEscapeSpecialCharacters(const double testDuration)
 
 		const std::string escapedString = CV::Detector::QRCodes::Utilities::escapeSpecialCharacters(rawString, specialCharacters);
 
-		if (!validateEscapeSpecialCharacters(rawString, specialCharacters, escapedString))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateEscapeSpecialCharacters(rawString, specialCharacters, escapedString));
 	}
 	while (Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testUnescapeSpecialCharacters(const double testDuration)
@@ -482,9 +440,8 @@ bool TestUtilities::testUnescapeSpecialCharacters(const double testDuration)
 
 	Log::info() << "Test for unescaping special characters in a string:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	Timestamp start(true);
 
 	do
@@ -502,30 +459,17 @@ bool TestUtilities::testUnescapeSpecialCharacters(const double testDuration)
 		const std::string escapedString = CV::Detector::QRCodes::Utilities::escapeSpecialCharacters(rawString, specialCharacters);
 
 		std::string unescapedString;
-		if (!CV::Detector::QRCodes::Utilities::unescapeSpecialCharacters(escapedString, unescapedString, specialCharacters))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, CV::Detector::QRCodes::Utilities::unescapeSpecialCharacters(escapedString, unescapedString, specialCharacters));
 
-		if (unescapedString != rawString)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, unescapedString, rawString);
 	}
 	while (Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::validateEscapeSpecialCharacters(const std::string& rawString, const std::string& specialCharacters, const std::string& testEscapedString)

@@ -12,6 +12,8 @@
 
 #include "ocean/base/RandomI.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCodeDecoder.h"
 
@@ -113,7 +115,7 @@ bool TestQRCodeDecoder::testQRCodeDecoding(const double testDuration)
 	Log::info() << "QR code decoding test:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	// Testing
 
@@ -138,33 +140,30 @@ bool TestQRCodeDecoder::testQRCodeDecoding(const double testDuration)
 			switch (encodationMode)
 			{
 				case QRCode::EM_NUMERIC:
-					qrcodeGenerated = (QRCodeEncoder::encodeText(Utilities::generateRandomNumericString(randomGenerator, messageLength), QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS) && allSucceeded;
+					qrcodeGenerated = (QRCodeEncoder::encodeText(Utilities::generateRandomNumericString(randomGenerator, messageLength), QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS);
 					break;
 
 				case QRCode::EM_ALPHANUMERIC:
-					qrcodeGenerated = (QRCodeEncoder::encodeText(Utilities::generateRandomAlphanumericString(randomGenerator, messageLength), QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS) && allSucceeded;
+					qrcodeGenerated = (QRCodeEncoder::encodeText(Utilities::generateRandomAlphanumericString(randomGenerator, messageLength), QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS);
 					break;
 
 				case QRCode::EM_BYTE:
-					allSucceeded = Utilities::generateRandomByteData(randomGenerator, messageLength, message) && allSucceeded;
-					qrcodeGenerated = (QRCodeEncoder::encodeBinary(message, QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS) && allSucceeded;
+					OCEAN_EXPECT_TRUE(validation, Utilities::generateRandomByteData(randomGenerator, messageLength, message));
+					qrcodeGenerated = (QRCodeEncoder::encodeBinary(message, QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS);
 					break;
 
 				default:
 					ocean_assert(false && "Never be here");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 			}
 
-			ocean_assert_and_suppress_unused(qrcodeGenerated, qrcodeGenerated);
+			OCEAN_EXPECT_TRUE(validation, qrcodeGenerated);
 
 			QRCode testCode;
-			if (!QRCodeDecoder::decodeQRCode(code.modules(), testCode))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, QRCodeDecoder::decodeQRCode(code.modules(), testCode));
 
-			allSucceeded = code == testCode;
+			OCEAN_EXPECT_TRUE(validation, code == testCode);
 		}
 		while (Timestamp(true) < start + testDuration);
 	}
@@ -195,39 +194,22 @@ bool TestQRCodeDecoder::testQRCodeDecoding(const double testDuration)
 			}
 
 			QRCode testCode;
-			if (!QRCodeDecoder::decodeQRCode(modules, testCode) || !testCode.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, QRCodeDecoder::decodeQRCode(modules, testCode) && testCode.isValid());
 
-			allSucceeded = testCode.version() == verificationItem.version_
-				&& testCode.errorCorrectionCapacity() == verificationItem.errorCorrectionCapacity_
-				&& allSucceeded;
+			OCEAN_EXPECT_EQUAL(validation, testCode.version(), verificationItem.version_);
+			OCEAN_EXPECT_EQUAL(validation, testCode.errorCorrectionCapacity(), verificationItem.errorCorrectionCapacity_);
 
 			const std::vector<uint8_t>& testData = testCode.data();
 			const std::string testDataString(testData.begin(), testData.end());
 
-			if (testDataString != verificationItem.message_)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, testDataString, verificationItem.message_);
 		}
 		while (Timestamp(true) < start + testDuration);
 	}
 
-	Log::info() << " ";
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 
