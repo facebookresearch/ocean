@@ -12,10 +12,10 @@ This guide explains how to add new libraries or update existing ones in `depende
 ./visualize_deps.py
 
 # Test build a single library
-./build_ocean_3p.py --config debug --dry-run
+./build_ocean_3rdparty.py --config debug --dry-run
 
 # Build just one library (with dependencies)
-./build_ocean_3p.py --config debug
+./build_ocean_3rdparty.py --config debug
 ```
 
 ## Adding a New Library
@@ -86,10 +86,10 @@ This checks:
 
 ```bash
 # Dry run first
-./build_ocean_3p.py --dry-run
+./build_ocean_3rdparty.py --dry-run
 
 # Build debug only to test faster
-./build_ocean_3p.py \
+./build_ocean_3rdparty.py \
     --install-dir /tmp/test-install \
     --build-dir /tmp/test-build \
     --config debug
@@ -130,7 +130,7 @@ my-lib:
 rm -rf /tmp/test-build/my-lib /tmp/test-source/my-lib
 
 # Rebuild
-./build_ocean_3p.py --install-dir /tmp/test-install --config debug
+./build_ocean_3rdparty.py --install-dir /tmp/test-install --config debug
 ```
 
 ## Library Types
@@ -166,7 +166,7 @@ opencv:
   # ...
 ```
 
-Build with: `./build_ocean_3p.py --with opencv` or `--with-group vision`
+Build with: `./build_ocean_3rdparty.py --with opencv` or `--with-group vision`
 
 ## Dependency Levels
 

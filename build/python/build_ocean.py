@@ -29,7 +29,7 @@ Usage:
     # Build shared libraries
     ./build_ocean.py --link shared
 
-    # Use Python 3P layout (from build_ocean_3p.py output)
+    # Use Python 3P layout (from build_ocean_3rdparty.py output)
     ./build_ocean.py --third-party-layout python --third-party-root ./3rdparty
 
     # Show build plan without building
@@ -654,7 +654,7 @@ def main() -> int:
     if args.third_party_dir:
         third_party_dir = Path(args.third_party_dir)
     elif args.third_party_layout == "python":
-        # Python layout: default to ocean_install_thirdparty (from build_ocean_3p.py)
+        # Python layout: default to ocean_install_thirdparty (from build_ocean_3rdparty.py)
         third_party_dir = cwd / "ocean_install_thirdparty"
     else:
         # CMake layout: default to bin/cmake/3rdparty
@@ -718,7 +718,7 @@ def main() -> int:
     if args.third_party_layout == "python":
         if not third_party_dir.exists():
             print(f"Error: Third-party directory not found: {third_party_dir}")
-            print("  Build third-party libraries first with build_ocean_3p.py")
+            print("  Build third-party libraries first with build_ocean_3rdparty.py")
             return 1
     elif not third_party_dir.exists():
         print(f"Warning: Third-party directory not found: {third_party_dir}")

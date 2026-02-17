@@ -21,48 +21,48 @@ This script builds third-party libraries for Ocean with:
 
 Usage:
     # Build all required libraries for all supported platforms (default)
-    ./build_ocean_3p.py
+    ./build_ocean_3rdparty.py
 
     # Build for a specific target platform
-    ./build_ocean_3p.py --target ios_arm64
+    ./build_ocean_3rdparty.py --target ios_arm64
 
     # Build for an OS group (all architectures for that OS)
-    ./build_ocean_3p.py --target android
-    ./build_ocean_3p.py --target macos
+    ./build_ocean_3rdparty.py --target android
+    ./build_ocean_3rdparty.py --target macos
 
     # Build for multiple platforms or groups (both styles work)
-    ./build_ocean_3p.py --target ios --target macos
-    ./build_ocean_3p.py --target android,ios
-    ./build_ocean_3p.py --target android,macos_arm64
+    ./build_ocean_3rdparty.py --target ios --target macos
+    ./build_ocean_3rdparty.py --target android,ios
+    ./build_ocean_3rdparty.py --target android,macos_arm64
 
     # Build release only
-    ./build_ocean_3p.py --config release
+    ./build_ocean_3rdparty.py --config release
 
     # Build shared libraries
-    ./build_ocean_3p.py --link shared
+    ./build_ocean_3rdparty.py --link shared
 
     # Build both static and shared (both styles work)
-    ./build_ocean_3p.py --link static --link shared
-    ./build_ocean_3p.py --link static,shared
+    ./build_ocean_3rdparty.py --link static --link shared
+    ./build_ocean_3rdparty.py --link static,shared
 
     # Combining options
-    ./build_ocean_3p.py -t ios,macos -l static,shared -c release
+    ./build_ocean_3rdparty.py -t ios,macos -l static,shared -c release
 
     # Include optional libraries
-    ./build_ocean_3p.py --with opencv --with openssl
+    ./build_ocean_3rdparty.py --with opencv --with openssl
 
     # Build specific library and its dependencies
-    ./build_ocean_3p.py --library libpng
-    ./build_ocean_3p.py -L libpng,freetype
+    ./build_ocean_3rdparty.py --library libpng
+    ./build_ocean_3rdparty.py -L libpng,freetype
 
     # Rebuild a single library (dependencies already built)
-    ./build_ocean_3p.py --library curl --target ios
+    ./build_ocean_3rdparty.py --library curl --target ios
 
     # Show build plan without building
-    ./build_ocean_3p.py --dry-run
+    ./build_ocean_3rdparty.py --dry-run
 
     # Clean and rebuild
-    ./build_ocean_3p.py --clean
+    ./build_ocean_3rdparty.py --clean
 """
 
 from __future__ import annotations
@@ -273,7 +273,7 @@ def get_all_supported_platforms() -> (
 
 
 def get_equivalent_command(
-    args: argparse.Namespace, script_name: str = "build_ocean_3p.py"
+    args: argparse.Namespace, script_name: str = "build_ocean_3rdparty.py"
 ) -> str:
     """Generate the equivalent explicit command for the given args."""
     parts = [f"python {script_name}"]

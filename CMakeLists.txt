@@ -118,7 +118,7 @@ if (ANDROID)
 endif()
 
 # Third-party library layout support
-# Supports both legacy "cmake" layout and new "python" layout from build_ocean_3p.py
+# Supports both legacy "cmake" layout and new "python" layout from build_ocean_3rdparty.py
 set(OCEAN_THIRD_PARTY_LAYOUT "cmake" CACHE STRING "Third-party library layout: 'cmake' (legacy) or 'python' (new)")
 set(OCEAN_THIRD_PARTY_ROOT "" CACHE PATH "Root directory for third-party libraries (required for 'python' layout)")
 
