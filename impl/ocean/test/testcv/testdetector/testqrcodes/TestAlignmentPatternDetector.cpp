@@ -21,6 +21,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -123,14 +125,12 @@ bool TestAlignmentPatternDetector::testDetectAlignmentPatternsSyntheticData(cons
 
 	Log::info() << "Detect alignment patterns test using synthetic data (" << (gaussianFilterSize == 0u ? "no Gaussian filter" : "Gaussian filter: " + String::toAString(gaussianFilterSize)) + ")";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
-	Timestamp start(true);
-
-	unsigned int numberTruePositives = 0u;
+	ValidationPrecision validation(0.99, randomGenerator);
 	unsigned int numberFalsePositives = 0u;
 	unsigned int numberAllAlignmentPatterns = 0u;
+
+	Timestamp start(true);
 
 	do
 	{
@@ -139,7 +139,7 @@ bool TestAlignmentPatternDetector::testDetectAlignmentPatternsSyntheticData(cons
 		const unsigned int highIntensity = RandomI::random(randomGenerator, lowIntensity + 30u, 255u);
 		ocean_assert(highIntensity > lowIntensity && highIntensity - lowIntensity >= 30u);
 
-		const bool isNormalReflectance = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool isNormalReflectance = RandomI::boolean(randomGenerator);
 
 		const uint8_t foregroundValue = uint8_t(isNormalReflectance ? lowIntensity : highIntensity);
 		const uint8_t backgroundValue = uint8_t(isNormalReflectance ? highIntensity : lowIntensity);
@@ -149,7 +149,8 @@ bool TestAlignmentPatternDetector::testDetectAlignmentPatternsSyntheticData(cons
 		// Input frame
 		const unsigned int frameWidth = RandomI::random(randomGenerator, 250u, 1280u);
 		const unsigned int frameHeight = RandomI::random(randomGenerator, 250u, 1280u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 		frame.setValue(backgroundValue);
@@ -253,6 +254,8 @@ bool TestAlignmentPatternDetector::testDetectAlignmentPatternsSyntheticData(cons
 
 		const AlignmentPatterns alignmentPatterns = AlignmentPatternDetector::detectAlignmentPatterns(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), /* searchX */ 0u, /* searchY */ 0u, /* searchWidth */ frame.width(), /* searchHeight */ frame.height(), isNormalReflectance, grayThreshold);
 
+		unsigned int truePositivesThisFrame = 0u;
+
 		for (size_t i = 0; i < alignmentPatternCenters.size(); ++i)
 		{
 			bool foundMatch = false;
@@ -280,9 +283,11 @@ bool TestAlignmentPatternDetector::testDetectAlignmentPatternsSyntheticData(cons
 
 			if (foundMatch)
 			{
-				numberTruePositives++;
+				truePositivesThisFrame++;
 			}
 		}
+
+		validation.addIterations(truePositivesThisFrame, alignmentPatternCenters.size());
 
 		// Backward check
 		for (const AlignmentPattern& alignmentPattern : alignmentPatterns)
@@ -316,31 +321,22 @@ bool TestAlignmentPatternDetector::testDetectAlignmentPatternsSyntheticData(cons
 			}
 		}
 	}
-	while (Timestamp(true) < start + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
 	ocean_assert(numberAllAlignmentPatterns != 0u);
-
-	const double correctInPercent = double(numberTruePositives) / double(numberAllAlignmentPatterns);
 	const double falsePositivesInPercent = double(numberFalsePositives) / double(numberAllAlignmentPatterns);
 
-	Log::info() << "Correct detections: " << String::toAString(correctInPercent * 100.0, 2u) << "%";
+	Log::info() << "Correct detections: " << validation;
 	Log::info() << "False positives:    " << String::toAString(falsePositivesInPercent * 100.0, 2u) << "%";
 
-	allSucceeded = correctInPercent >= 0.99 && falsePositivesInPercent <= 0.01 && allSucceeded;
-
-	if (allSucceeded)
+	if (falsePositivesInPercent > 0.01)
 	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
+		OCEAN_SET_FAILED(validation);
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 void TestAlignmentPatternDetector::drawAlignmentPattern(Frame& yFrame, const Vector2& location, const Scalar patternSizeInPixels, const Scalar rotation, const uint8_t foregroundColor, const uint8_t backgroundColor)

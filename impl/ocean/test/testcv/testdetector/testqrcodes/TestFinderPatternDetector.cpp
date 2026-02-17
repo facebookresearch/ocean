@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testdetector/testqrcodes/TestFinderPatternDetector.h"
 #include "ocean/test/testcv/testdetector/testqrcodes/Utilities.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 #include "ocean/base/RandomI.h"
 
 #include "ocean/cv/Canvas.h"
@@ -124,11 +126,10 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 
 	using GroundtruthFinderPatterns = std::vector<GroundtruthFinderPattern>;
 
-	uint64_t finderPatternsTotal = 0ull;
-	uint64_t truePositiveDetections = 0ull;
-	uint64_t falsePositiveDetections = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
+	uint64_t falsePositiveDetections = 0ull;
+	uint64_t finderPatternsTotal = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -215,9 +216,11 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 
 		finderPatternsTotal += groundtruthFinderPatterns.size();
 
-		const FinderPatterns detectedFinderPatterns = FinderPatternDetector::detectFinderPatterns(frame.constdata<uint8_t>(), frame.width(), frame.height(), 10u, frame.paddingElements(), (RandomI::random(1) == 1u ? &worker : nullptr));
+		const FinderPatterns detectedFinderPatterns = FinderPatternDetector::detectFinderPatterns(frame.constdata<uint8_t>(), frame.width(), frame.height(), 10u, frame.paddingElements(), (RandomI::boolean(randomGenerator) ? &worker : nullptr));
 
 		// Forward check
+		uint64_t truePositivesThisFrame = 0ull;
+
 		for (const GroundtruthFinderPattern& groundtruthFinderPattern : groundtruthFinderPatterns)
 		{
 			bool foundMatch = false;
@@ -236,9 +239,11 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 
 			if (foundMatch)
 			{
-				truePositiveDetections++;
+				truePositivesThisFrame++;
 			}
 		}
+
+		validation.addIterations(truePositivesThisFrame, groundtruthFinderPatterns.size());
 
 		// Backward check
 		for (const FinderPattern& detectedFinderPattern : detectedFinderPatterns)
@@ -263,28 +268,20 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(finderPatternsTotal != 0u);
-
-	const double percentCorrect = double(truePositiveDetections) / double(finderPatternsTotal);
+	ocean_assert(finderPatternsTotal != 0ull);
 	const double percentFalsePositives = double(falsePositiveDetections) / double(finderPatternsTotal);
 
-	Log::info() << "Correct detections: " << String::toAString(percentCorrect * 100.0, 2u) << "%";
+	Log::info() << "Correct detections: " << validation;
 	Log::info() << "False positives:    " << String::toAString(percentFalsePositives * 100.0, 2u) << "%";
 
-	const bool succeeded = percentCorrect >= 0.99 && percentFalsePositives <= 0.01;
-
-	if (succeeded)
+	if (percentFalsePositives > 0.01)
 	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
+		OCEAN_SET_FAILED(validation);
 	}
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 void TestFinderPatternDetector::paintFinderPattern(Frame& yFrame, const Vector2& location, const Scalar& length, const Scalar& rotationAngle, const uint8_t foregroundColor, const uint8_t backgroundColor, Worker* worker)

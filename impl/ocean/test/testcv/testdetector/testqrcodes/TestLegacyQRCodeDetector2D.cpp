@@ -9,6 +9,8 @@
 
 #include "ocean/base/RandomI.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/cv/FrameConverter.h"
 
 #include "ocean/io/image/Image.h"
@@ -177,9 +179,8 @@ bool TestLegacyQRCodeDetector2D::testStressTest(const double testDuration, Worke
 
 	Log::info() << "Stress test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -194,31 +195,22 @@ bool TestLegacyQRCodeDetector2D::testStressTest(const double testDuration, Worke
 
 			const QRCodes qrCodes = LegacyQRCodeDetector2D::detectQRCodes(yFrame, useWorker ? &worker : nullptr);
 
-			if (qrCodes.size() >= size_t(width * height))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS(validation, qrCodes.size(), size_t(width * height));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLegacyQRCodeDetector2D::testDetectQRCodes_0_qrcodes(const double testDuration, Worker& worker, const bool forceFullTest)
 {
 	Log::info() << "Detection of QR codes (on images with 0 QR codes):";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -247,7 +239,7 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_0_qrcodes(const double testDu
 					{
 						QRCodes qrcodes;
 
-						if (RandomI::boolean())
+						if (RandomI::boolean(randomGenerator))
 						{
 							qrcodes = LegacyQRCodeDetector2D::detectQRCodes(yTestImage, useWorker ? &worker : nullptr);
 						}
@@ -256,20 +248,17 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_0_qrcodes(const double testDu
 							qrcodes = LegacyQRCodeDetector2D::detectQRCodes(yTestImage.constdata<uint8_t>(), yTestImage.width(), yTestImage.height(), yTestImage.paddingElements(), useWorker ? &worker : nullptr);
 						}
 
-						if (qrcodes.size() != 0)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, qrcodes.size(), size_t(0));
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!forceFullTest == false && startTimestamp + testDuration <= Timestamp(true))
@@ -282,19 +271,12 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_0_qrcodes(const double testDu
 	{
 		Log::error() << "Failed to access test data";
 
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(const double testDuration, Worker& worker, const bool forceFullTest)
@@ -304,7 +286,8 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(const double testDur
 	uint64_t iterations = 0ull;
 	uint64_t validIterations = 0ull;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -333,7 +316,7 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(const double testDur
 					{
 						QRCodes qrcodes;
 
-						if (RandomI::boolean())
+						if (RandomI::boolean(randomGenerator))
 						{
 							qrcodes = LegacyQRCodeDetector2D::detectQRCodes(yTestImage, useWorker ? &worker : nullptr);
 						}
@@ -352,12 +335,12 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(const double testDur
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (!forceFullTest == false && startTimestamp + testDuration <= Timestamp(true))
@@ -370,7 +353,7 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(const double testDur
 	{
 		Log::error() << "Failed to access test data";
 
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	double percent = 0.0;
@@ -380,16 +363,9 @@ bool TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(const double testDur
 		percent = double(validIterations) / double(iterations);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded, with " << String::toAString(percent, 1u) << "%.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED, with " << String::toAString(percent, 1u) << "%!";
-	}
+	Log::info() << "Validation: " << validation << " Detection rate: " << String::toAString(percent * 100.0, 1u) << "%";
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #ifdef OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
