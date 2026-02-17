@@ -8,6 +8,7 @@
 #include "ocean/test/testio/TestFile.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -56,7 +57,8 @@ bool TestFile::testFileExists(const double testDuration)
 {
 	Log::info() << "File exists test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -69,68 +71,44 @@ bool TestFile::testFileExists(const double testDuration)
 
 			if (!scopedDirectory.isValid() || !scopedDirectory.exists())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			const unsigned int numberFiles = RandomI::random(1u, 20u);
+			const unsigned int numberFiles = RandomI::random(randomGenerator, 1u, 20u);
 
 			for (unsigned int n = 0u; n < numberFiles; ++n)
 			{
 				IO::File newFile(scopedDirectory + IO::File("file_" + String::toAString(n)));
 
-				if (newFile.exists())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, newFile.exists());
 
 				{
 					std::ofstream stream(newFile().c_str(), std::ios::binary);
 
 					stream << "CONTENT";
 
-					if (!stream.good())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, stream.good());
 				}
 
-				if (!newFile.exists())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, newFile.exists());
 
 				files.emplace_back(std::move(newFile));
 			}
 		}
 
-		if (files.empty())
+		OCEAN_EXPECT_FALSE(validation, files.empty());
+
+		for (const IO::File& file : files)
 		{
-			allSucceeded = false;
-		}
-		else
-		{
-			for (const IO::File& file : files)
-			{
-				if (file.exists())
-				{
-					allSucceeded = false;
-				}
-			}
+			OCEAN_EXPECT_FALSE(validation, file.exists());
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

@@ -8,6 +8,7 @@
 #include "ocean/test/testio/TestUtilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -57,9 +58,8 @@ bool TestUtilities::testReadFile(const double testDuration)
 {
 	Log::info() << "Read file test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -67,9 +67,13 @@ bool TestUtilities::testReadFile(const double testDuration)
 	{
 		const IO::ScopedDirectory scopedDirectory(IO::Directory::createTemporaryDirectory());
 
+		OCEAN_EXPECT_TRUE(validation, scopedDirectory.exists());
+
 		if (scopedDirectory.exists())
 		{
 			const IO::File file(scopedDirectory + IO::File(String::toAString(RandomI::random32(randomGenerator))));
+
+			OCEAN_EXPECT_FALSE(validation, file.exists());
 
 			if (!file.exists())
 			{
@@ -87,55 +91,27 @@ bool TestUtilities::testReadFile(const double testDuration)
 
 					stream.write((const char*)(writeBuffer.data()), writeBuffer.size());
 
-					if (!stream.good())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, stream.good());
 				}
 
 				IO::Utilities::Buffer readBuffer;
 
-				if (IO::Utilities::readFile(file(), readBuffer))
+				OCEAN_EXPECT_TRUE(validation, IO::Utilities::readFile(file(), readBuffer));
+
+				OCEAN_EXPECT_EQUAL(validation, readBuffer.size(), writeBuffer.size());
+
+				if (readBuffer.size() == writeBuffer.size() && !readBuffer.empty())
 				{
-					if (readBuffer.size() == writeBuffer.size())
-					{
-						if (!readBuffer.empty() && memcmp(readBuffer.data(), writeBuffer.data(), readBuffer.size()) != 0)
-						{
-							allSucceeded = false;
-						}
-					}
-					else
-					{
-						allSucceeded = false;
-					}
-				}
-				else
-				{
-					allSucceeded = false;
+					OCEAN_EXPECT_TRUE(validation, memcmp(readBuffer.data(), writeBuffer.data(), readBuffer.size()) == 0);
 				}
 			}
-			else
-			{
-				allSucceeded = false;
-			}
-		}
-		else
-		{
-			allSucceeded = false;
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

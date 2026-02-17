@@ -8,6 +8,7 @@
 #include "ocean/test/testio/TestCompression.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -56,7 +57,8 @@ bool TestCompression::testGzipCompression(const double testDuration)
 {
 	Log::info() << "Gzip 100KB test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	IO::Compression::Buffer uncompressedBuffer, compressedBuffer, testBuffer;
 
@@ -71,12 +73,12 @@ bool TestCompression::testGzipCompression(const double testDuration)
 		compressedBuffer.clear();
 		testBuffer.clear();
 
-		const unsigned int size = 102439u +  RandomI::random(2u);
+		const unsigned int size = 102439u + RandomI::random(randomGenerator, 2u);
 
 		uncompressedBuffer.resize(size);
 		for (unsigned int n = 0u; n < size; ++n)
 		{
-			uncompressedBuffer[n] = 'a' + char(RandomI::random(1u));
+			uncompressedBuffer[n] = 'a' + char(RandomI::random(randomGenerator, 1u));
 		}
 
 		performanceCompression.start();
@@ -87,19 +89,11 @@ bool TestCompression::testGzipCompression(const double testDuration)
 		IO::Compression::gzipDecompress(compressedBuffer.data(), compressedBuffer.size(), testBuffer);
 		performanceDecompression.stop();
 
-		if (uncompressedBuffer.size() != testBuffer.size())
+		OCEAN_EXPECT_EQUAL(validation, uncompressedBuffer.size(), testBuffer.size());
+
+		if (uncompressedBuffer.size() == testBuffer.size())
 		{
-			allSucceeded = false;
-		}
-		else
-		{
-			for (unsigned int n = 0u; n < uncompressedBuffer.size(); ++n)
-			{
-				if (uncompressedBuffer[n] != testBuffer[n])
-				{
-					allSucceeded = false;
-				}
-			}
+			OCEAN_EXPECT_TRUE(validation, std::equal(uncompressedBuffer.begin(), uncompressedBuffer.end(), testBuffer.begin()));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -107,16 +101,9 @@ bool TestCompression::testGzipCompression(const double testDuration)
 	Log::info() << "Compression: Best: " << performanceCompression.bestMseconds() << "ms, worst: " << performanceCompression.worstMseconds() << "ms, average: " << performanceCompression.averageMseconds() << "ms";
 	Log::info() << "Decompression: Best: " << performanceDecompression.bestMseconds() << "ms, worst: " << performanceDecompression.worstMseconds() << "ms, average: " << performanceDecompression.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

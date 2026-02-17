@@ -8,6 +8,7 @@
 #include "ocean/test/testio/TestBase64.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -55,9 +56,8 @@ bool TestBase64::testEncodingDecoding(const double testDuration)
 {
 	Log::info() << "Encoding/decoding test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -78,20 +78,13 @@ bool TestBase64::testEncodingDecoding(const double testDuration)
 		IO::Base64::Buffer decodedBuffer;
 		IO::Base64::decode(encodedBuffer.data(), encodedBuffer.size(), decodedBuffer);
 
-		allSucceeded = std::equal(message.begin(), message.end(), decodedBuffer.begin()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, std::equal(message.begin(), message.end(), decodedBuffer.begin()));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestIO

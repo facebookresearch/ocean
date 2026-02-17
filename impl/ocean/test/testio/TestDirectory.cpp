@@ -8,6 +8,7 @@
 #include "ocean/test/testio/TestDirectory.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -55,7 +56,8 @@ bool TestDirectory::testScopedDirectory(const double testDuration)
 {
 	Log::info() << "ScopedDirectory test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -68,43 +70,27 @@ bool TestDirectory::testScopedDirectory(const double testDuration)
 
 			if (!scopedDirectory.isValid() || !scopedDirectory.exists())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			const unsigned int numberFiles = RandomI::random(0u, 2u);
-			const unsigned int numberDirectories = RandomI::random(0u, 2u);
+			const unsigned int numberFiles = RandomI::random(randomGenerator, 0u, 2u);
+			const unsigned int numberDirectories = RandomI::random(randomGenerator, 0u, 2u);
 
-			if (!createContentInDirectory(scopedDirectory, numberFiles, numberDirectories))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, createContentInDirectory(scopedDirectory, numberFiles, numberDirectories));
 
-			if (!scopedDirectory.exists())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, scopedDirectory.exists());
 
 			directoryPath = scopedDirectory();
 		}
 
-		if (directoryPath.empty() || IO::Directory(directoryPath).exists())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, !directoryPath.empty() && !IO::Directory(directoryPath).exists());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDirectory::createContentInDirectory(const IO::Directory& directory, const unsigned int numberFiles, const unsigned int numberDirectories)
