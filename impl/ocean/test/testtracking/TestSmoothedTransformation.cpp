@@ -8,6 +8,7 @@
 #include "ocean/test/testtracking/TestSmoothedTransformation.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/math/Random.h"
 
@@ -58,9 +59,8 @@ bool TestSmoothedTransformation::testTransformation(const double testDuration)
 
 	Log::info() << "Transformation test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -77,10 +77,7 @@ bool TestSmoothedTransformation::testTransformation(const double testDuration)
 		smoothedTransformation.setTransformation(transformationA, timestampA);
 
 		// we have only one transformation, we expect the same transformation for any timestamp
-		if (smoothedTransformation.transformation(Timestamp(RandomD::scalar(randomGenerator, -10, 10))) != transformationA)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(Timestamp(RandomD::scalar(randomGenerator, -10, 10))), transformationA);
 
 		const Timestamp timestampB(timestampA + RandomD::scalar(randomGenerator, 0.01, 10));
 		const Vector3 translationB(Random::vector3(randomGenerator));
@@ -89,22 +86,13 @@ bool TestSmoothedTransformation::testTransformation(const double testDuration)
 		smoothedTransformation.setTransformation(transformationB, timestampB);
 
 		// before A is always A
-		if (smoothedTransformation.transformation(timestampA) != transformationA)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(timestampA), transformationA);
 
 		// before B is always A
-		if (smoothedTransformation.transformation(Timestamp(timestampB - NumericD::eps())) != transformationA)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(Timestamp(timestampB - NumericD::eps())), transformationA);
 
 		// after B + timeinterval is always B
-		if (smoothedTransformation.transformation(Timestamp(timestampB + timeInterval + NumericD::eps())) != transformationB)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(Timestamp(timestampB + timeInterval + NumericD::eps())), transformationB);
 
 		// between B and B + timeinterval is always interpolated (linear)
 
@@ -117,10 +105,7 @@ bool TestSmoothedTransformation::testTransformation(const double testDuration)
 
 		const HomogenousMatrix4 expectedTransformationAB(translationA * factorA + translationB * factorB);
 
-		if (!smoothedTransformation.transformation(Timestamp(timestampB + intervalAB)).translation().isEqual(expectedTransformationAB.translation(), Numeric::weakEps()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, smoothedTransformation.transformation(Timestamp(timestampB + intervalAB)).translation().isEqual(expectedTransformationAB.translation(), Numeric::weakEps()));
 
 		const Timestamp timestampC(timestampB + RandomD::scalar(randomGenerator, 0.01, 10));
 		const Vector3 translationC(Random::vector3(randomGenerator));
@@ -131,22 +116,13 @@ bool TestSmoothedTransformation::testTransformation(const double testDuration)
 		smoothedTransformation.setTransformation(transformationC, timestampC);
 
 		// before A is now always the new/smoothed B
-		if (smoothedTransformation.transformation(timestampA) != smoothedTransformationB)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(timestampA), smoothedTransformationB);
 
 		// before B is now always B
-		if (smoothedTransformation.transformation(Timestamp(timestampB - NumericD::eps())) != smoothedTransformationB)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(Timestamp(timestampB - NumericD::eps())), smoothedTransformationB);
 
 		// after C + timeinterval is always C
-		if (smoothedTransformation.transformation(Timestamp(timestampC + timeInterval + NumericD::eps())) != transformationC)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, smoothedTransformation.transformation(Timestamp(timestampC + timeInterval + NumericD::eps())), transformationC);
 
 		// between C and C + timeinterval is always interpolated (linear)
 
@@ -159,23 +135,13 @@ bool TestSmoothedTransformation::testTransformation(const double testDuration)
 
 		const HomogenousMatrix4 expectedTransformationBC(smoothedTransformationB.translation() * factorB + translationC * factorC);
 
-		if (!smoothedTransformation.transformation(Timestamp(timestampC + intervalBC)).translation().isEqual(expectedTransformationBC.translation(), Numeric::weakEps()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, smoothedTransformation.transformation(Timestamp(timestampC + intervalBC)).translation().isEqual(expectedTransformationBC.translation(), Numeric::weakEps()));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

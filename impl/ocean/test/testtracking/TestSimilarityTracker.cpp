@@ -18,7 +18,7 @@
 
 #include "ocean/math/Random.h"
 
-#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/tracking/point/SimilarityTracker.h"
 
@@ -84,10 +84,7 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 	Log::info() << "Tracking quality test:";
 
 	RandomGenerator randomGenerator;
-	bool failed = false;
-
-	uint64_t iterations = 0u;
-	uint64_t validIterations = 0u;
+	ValidationPrecision validation(0.85, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -98,12 +95,13 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 		unsigned int width = width_height.first;
 		unsigned int height = width_height.second;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			std::swap(width, height);
 		}
 
-		const unsigned int yFrame0PaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxYFrame0PaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int yFrame0PaddingElements = maxYFrame0PaddingElements * RandomI::random(randomGenerator, 1u);
 		Frame yFrame0(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame0PaddingElements);
 
 		// let's create a random image (which will be simple to track)
@@ -194,12 +192,12 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 			// we expect the identity for the first frame
 			if (!resultSimilarity.isIdentity() || !resultTranslation.isNull() || Numeric::isNotEqualEps(resultRotationAngle) || Numeric::isNotEqual(resultScale, 1))
 			{
-				failed = true;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		else
 		{
-			failed = true;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		SquareMatrix3 frameN_S_frame0(true);
@@ -208,7 +206,7 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 		{
 			// let's create a random similarity transformation
 
-			const bool largeOffset = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool largeOffset = RandomI::boolean(randomGenerator);
 
 			const Scalar maximalOffset = Scalar(std::min(width, height)) * (largeOffset ? Scalar(0.25) : Scalar(0.05)); // 5% or 25% of the image resolution
 
@@ -249,7 +247,7 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 			if (!CV::FrameInterpolatorBilinear::Comfort::homography(yFrame0, yFrame1, frame0_S_frame1, nullptr, &worker))
 			{
 				ocean_assert(false && "This must never happen!");
-				failed = true;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			Vector2 predictedTranslation = Vector2(0, 0);
@@ -266,6 +264,9 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 			resultScale = Scalar(-1);
 
 			Tracking::Point::SimilarityTracker::TrackerConfidence trackerConfidence = Tracking::Point::SimilarityTracker::TC_NONE;
+
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			if (similarityTracker.determineSimilarity(yFrame1, region, &resultSimilarity, &resultTranslation, &resultRotationAngle, &resultScale, predictedTranslation, &trackerConfidence))
 			{
 				if (trackerConfidence != Tracking::Point::SimilarityTracker::TC_NONE)
@@ -288,36 +289,35 @@ bool TestSimilarityTracker::testTracking(const double testDuration, Worker& work
 						if (newBoundingBox.box2integer(yFrame1.width(), yFrame1.height(), newBoundingBoxLeft, newBoundingBoxTop, newBoundingBoxWidth, newBoundingBoxHeight))
 						{
 							region = CV::PixelBoundingBox(CV::PixelPosition(newBoundingBoxLeft, newBoundingBoxTop), newBoundingBoxWidth, newBoundingBoxHeight);
-
-							validIterations++;
+						}
+						else
+						{
+							scopedIteration.setInaccurate();
 						}
 					}
+					else
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+				else
+				{
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
 			{
-				failed = true;
+				OCEAN_SET_FAILED(validation);
 			}
-
-			iterations++;
 
 			yFrame0 = std::move(yFrame1);
 		}
 	}
-	while (iterations < 100ull || !startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	if (failed)
-	{
-		Log::info() << "Validation: FAILED!";
-		return false;
-	}
+	Log::info() << "Validation: " << validation;
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Validation: " + String::toAString(percent * 100.0, 1u) + "% succeeded.";
-
-	return percent >= 0.85;
+	return validation.succeeded();
 }
 
 bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& worker)

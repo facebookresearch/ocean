@@ -8,6 +8,7 @@
 #include "ocean/test/testtracking/TestVocabularyTree.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -338,7 +339,7 @@ bool TestVocabularyTree::testDetermineClustersMeanForBinaryDescriptor(const doub
 	constexpr unsigned int descriptorBits = sizeof(uint8_t) * binaryDescriptorElements_ * 8u;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -384,14 +385,14 @@ bool TestVocabularyTree::testDetermineClustersMeanForBinaryDescriptor(const doub
 			clusterIndicesForDescriptor.emplace_back(RandomI::random(randomGenerator, numberClusters - 1u));
 		}
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		const BinaryDescriptors meanDescriptors = Tracking::VocabularyTree<BinaryDescriptor, unsigned int, TypeHelper<DT_BINARY>::determineDistance>::determineClustersMeanForBinaryDescriptor<descriptorBits>(numberClusters, binaryDescriptors.data(), descriptorIndices.data(), clusterIndicesForDescriptor.data(), binaryDescriptors.size(), useWorker);
 
 		ocean_assert(meanDescriptors.size() == numberClusters);
-		if (meanDescriptors.size() != numberClusters)
+		if (meanDescriptors.size() != size_t(numberClusters))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -434,25 +435,15 @@ bool TestVocabularyTree::testDetermineClustersMeanForBinaryDescriptor(const doub
 
 			for (size_t n = 0; n < descriptorSum.size(); ++n)
 			{
-				if (descriptorSum[n] != separatedMeanDescriptor[n])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, descriptorSum[n], separatedMeanDescriptor[n]);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(const double testDuration, Worker& worker)
@@ -464,7 +455,7 @@ bool TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(const doubl
 	using FloatDescriptors = std::vector<FloatDescriptor>;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -500,14 +491,14 @@ bool TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(const doubl
 			clusterIndicesForDescriptor.emplace_back(RandomI::random(randomGenerator, numberClusters - 1u));
 		}
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		const FloatDescriptors meanDescriptors = Tracking::VocabularyTree<FloatDescriptor, float, TypeHelper<DT_FLOAT>::determineDistance>::determineClustersMeanForFloatDescriptor<floatDescriptorElements_>(numberClusters, floatDescriptors.data(), descriptorIndices.data(), clusterIndicesForDescriptor.data(), floatDescriptors.size(), useWorker);
 
 		ocean_assert(meanDescriptors.size() == numberClusters);
-		if (meanDescriptors.size() != numberClusters)
+		if (meanDescriptors.size() != size_t(numberClusters))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -547,25 +538,15 @@ bool TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(const doubl
 
 			for (size_t n = 0; n < meanDescriptor.size(); ++n)
 			{
-				if (NumericF::isNotEqual(descriptorSum[n], meanDescriptor[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(descriptorSum[n], meanDescriptor[n]));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestVocabularyTree::DescriptorType tDescriptorType>
@@ -588,7 +569,7 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 	using VocabularyTree = typename TypeHelper::VocabularyTree;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -632,39 +613,27 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 
 					if (node->childNodes().empty())
 					{
-						if (node->descriptorIndices().empty())
-						{
-							// a leaf node should never be empty
-							allSucceeded = false;
-						}
+						// a leaf node should never be empty
+						OCEAN_EXPECT_FALSE(validation, node->descriptorIndices().empty());
 
 						for (const Index32& descriptorIndex : node->descriptorIndices())
 						{
-							if (descriptorIndexSet.find(descriptorIndex) != descriptorIndexSet.cend())
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, descriptorIndexSet.find(descriptorIndex) == descriptorIndexSet.cend());
 
 							descriptorIndexSet.emplace(descriptorIndex);
 						}
 					}
 					else
 					{
-						if (!node->descriptorIndices().empty())
-						{
-							// a non-leaf node should always be empty
-							allSucceeded = false;
-						}
+						// a non-leaf node should always be empty
+						OCEAN_EXPECT_TRUE(validation, node->descriptorIndices().empty());
 
 						nodes.insert(nodes.cend(), node->childNodes().cbegin(), node->childNodes().cend());
 					}
 				}
 
-				if (descriptorIndexSet.size() != numberDescriptors)
-				{
-					// not all descriptors are represented in the tree
-					allSucceeded = false;
-				}
+				// not all descriptors are represented in the tree
+				OCEAN_EXPECT_EQUAL(validation, descriptorIndexSet.size(), size_t(numberDescriptors));
 
 				for (unsigned int nDescriptor = 0u; nDescriptor < numberDescriptors; ++nDescriptor)
 				{
@@ -710,10 +679,7 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 						}
 						else
 						{
-							if (!Ocean::hasElement<Index32>(node->descriptorIndices(), nDescriptor))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, Ocean::hasElement<Index32>(node->descriptorIndices(), nDescriptor));
 
 							break;
 						}
@@ -730,16 +696,9 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 	Log::info() << "Performance single-core: " << String::toAString(performanceSinglecore.average(), 2u) << "s";
 	Log::info() << "Performance multi-core: " << String::toAString(performanceMulticore.average(), 2u) << "s";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestVocabularyTree::DescriptorType tDescriptorType>
@@ -766,7 +725,7 @@ bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker
 	using DistanceTypes = std::vector<DistanceType>;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int numberEpsilons = 3u;
 
@@ -862,14 +821,14 @@ bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker
 
 			if (localSumBestLeaf < (unsigned int)(double(numberDescriptors) * 0.5))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			sumRefindDescriptorBestLeaf += localSumBestLeaf;
 
 			if (localSumBestLeaves < (unsigned int)(double(numberDescriptors) * 0.999))
 			{
 				// we have the guarantee that we can re-find all descriptors
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			sumRefindDescriptorBestLeaves += localSumBestLeaves;
 		}
@@ -1033,7 +992,7 @@ bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker
 
 	if (refindDescriptorBestLeafPercent < 0.95 || refindDescriptorBestLeavesPercent < 0.95)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	Log::info() << "Re-find descriptors, best leaf: Found " << String::toAString(refindDescriptorBestLeafPercent * 100.0, 1u) << "% descriptors";
@@ -1048,7 +1007,7 @@ bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker
 
 	if (queryDescriptorBestLeafPercent < 0.15)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	Log::info() << "Find query descriptors, best leaf: Found " << String::toAString(queryDescriptorBestLeafPercent * 100.0, 1u) << "% descriptors";
@@ -1063,23 +1022,16 @@ bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker
 
 		if (queryDescriptorBestLeavesPercent < 0.2)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		Log::info() << "Find query descriptors, best leaves with epsilon " << descriptorEpsilons[epsIndex] << ": Found " << String::toAString(queryDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
 		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeaves[epsIndex].averageMseconds(), 2u) << "ms";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestVocabularyTree::DescriptorType tDescriptorType>
@@ -1105,7 +1057,7 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 	using DistanceType = typename TypeHelper::DistanceType;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int numberStages = 3u;
 
@@ -1246,7 +1198,7 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 	const double queryDescriptorBestLeafPercent = double(sumQueryDescriptorBestLeaf) / double(numberQueryDescriptors * performanceQueryBestLeaf.measurements());
 	if (queryDescriptorBestLeafPercent < 0.15)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	Log::info() << "Find query descriptors, best leaf: Found " << String::toAString(queryDescriptorBestLeafPercent * 100.0, 1u) << "% descriptors";
@@ -1261,23 +1213,16 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 
 		if (queryDescriptorBestLeavesPercent < 0.2)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		Log::info() << "Find query descriptors, best leaves in stage " << stageIndex << ": Found " << String::toAString(queryDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
 		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeaves[stageIndex].averageMseconds(), 2u) << "ms";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestVocabularyTree::DescriptorType tDescriptorType>
@@ -1305,7 +1250,7 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 	using VocabularyForest = Tracking::VocabularyForest<Descriptor, DistanceType, TypeHelper::determineDistance>;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int numberStages = 3u;
 
@@ -1444,7 +1389,7 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 	const double queryDescriptorBestLeafPercent = double(sumQueryDescriptorBestLeaf) / double(numberQueryDescriptors * performanceQueryBestLeaf.measurements());
 	if (queryDescriptorBestLeafPercent < 0.50)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	Log::info() << "Find query descriptors, best leaf: Found " << String::toAString(queryDescriptorBestLeafPercent * 100.0, 1u) << "% descriptors";
@@ -1459,23 +1404,16 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 
 		if (queryDescriptorBestLeavesPercent < 0.60)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		Log::info() << "Find query descriptors, best leaves in stage " << stageIndex << ": Found " << String::toAString(queryDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
 		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeaves[stageIndex].averageMseconds(), 2u) << "ms";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 Indices32 TestVocabularyTree::separateBinaryDescriptor(const BinaryDescriptor& descriptor)

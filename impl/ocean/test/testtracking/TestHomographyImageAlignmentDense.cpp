@@ -8,6 +8,7 @@
 #include "ocean/test/testtracking/TestHomographyImageAlignmentDense.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -177,37 +178,26 @@ bool TestHomographyImageAlignmentDense::testAdditive(const double testDuration, 
 	Log::info() << "Additive alignment test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
 		Log::info() << "... with " << channels << " channels:";
 
-		if (!testAdditive(channels, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testAdditive(channels, testDuration, worker));
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Additive alignment test succeeded";
-	}
-	else
-	{
-		Log::info() << "Additive alignment test FAILED!";
-	}
+	Log::info() << "Additive alignment test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels, const double testDuration, Worker& /*worker*/)
 {
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceDefault;
 	HighPerformanceStatistic performanceConsistency;
@@ -230,7 +220,7 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 		{
 			ocean_assert(false && "This should never happen!");
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -260,24 +250,15 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 			{
 				performance.stop();
 
-				if (intermediateErrors.size() <= 1)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_GREATER(validation, intermediateErrors.size(), size_t(1));
 
 				if constexpr (std::is_same<double, Scalar>::value)
 				{
-					if (finalError > initialError * Scalar(0.1))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_LESS_EQUAL(validation, finalError, initialError * Scalar(0.1));
 				}
 				else
 				{
-					if (finalError >= initialError) // generous check for 32bit float
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_LESS(validation, finalError, initialError); // generous check for 32bit float
 				}
 
 				double averageErrorInitial = NumericD::maxValue();
@@ -286,23 +267,20 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 				{
 					if constexpr (std::is_same<double, Scalar>::value)
 					{
-						if (averageErrorFinal > averageErrorInitial * Scalar(0.1))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, averageErrorFinal <= averageErrorInitial * double(0.1));
 					}
 				}
 				else
 				{
 					ocean_assert(false && "This should never happen!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
 				performance.skip();
 
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -311,16 +289,9 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 	Log::info() << "Default performance: " << performanceDefault.averageMseconds() << "ms";
 	Log::info() << "Consistency performance: " << performanceConsistency.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomographyImageAlignmentDense::testInverseCompositional(const double testDuration, Worker& worker)
@@ -328,37 +299,26 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const double te
 	Log::info() << "Inverse compositional alignment test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
 		Log::info() << "... with " << channels << " channels:";
 
-		if (!testInverseCompositional(channels, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testInverseCompositional(channels, testDuration, worker));
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Inverse compositional alignment test succeeded";
-	}
-	else
-	{
-		Log::info() << "Inverse compositional alignment test FAILED!";
-	}
+	Log::info() << "Inverse compositional alignment test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned int channels, const double testDuration, Worker& /*worker*/)
 {
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceDefault;
 	HighPerformanceStatistic performanceConsistency;
@@ -381,7 +341,7 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned 
 		{
 			ocean_assert(false && "This should never happen!");
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -411,15 +371,9 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned 
 			{
 				performance.stop();
 
-				if (intermediateErrors.size() <= 1)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_GREATER(validation, intermediateErrors.size(), size_t(1));
 
-				if (finalError >= initialError) // quite generous
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_LESS(validation, finalError, initialError); // quite generous
 
 				double averageErrorInitial = NumericD::maxValue();
 				double averageErrorFinal = NumericD::maxValue();
@@ -427,23 +381,20 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned 
 				{
 					if constexpr (std::is_same<double, Scalar>::value)
 					{
-						if (averageErrorFinal >= averageErrorInitial) // quite generous
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_LESS(validation, averageErrorFinal, averageErrorInitial); // quite generous
 					}
 				}
 				else
 				{
 					ocean_assert(false && "This should never happen!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
 				performance.skip();
 
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -452,16 +403,9 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned 
 	Log::info() << "Default performance: " << performanceDefault.averageMseconds() << "ms";
 	Log::info() << "Consistency performance: " << performanceConsistency.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomographyImageAlignmentDense::testMultiResolution(const double testDuration, Worker& worker)
@@ -469,7 +413,7 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const double testDur
 	Log::info() << "Multi-resolution alignment test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -477,32 +421,21 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const double testDur
 		{
 			Log::info() << "... with " << channels << " channels, and " << (additive ? "additive:" : "inverse compositional");
 
-			if (!testMultiResolution(channels, additive, testDuration, worker))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, testMultiResolution(channels, additive, testDuration, worker));
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Multi-resolution alignment test succeeded";
-	}
-	else
-	{
-		Log::info() << "Multi-resolution alignment test FAILED!";
-	}
+	Log::info() << "Multi-resolution alignment test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomographyImageAlignmentDense::testMultiResolution(const unsigned int channels, const bool additive, const double testDuration, Worker& /*worker*/)
 {
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -524,7 +457,7 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const unsigned int c
 		{
 			ocean_assert(false && "This should never happen!");
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -552,39 +485,29 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const unsigned int c
 			{
 				if constexpr (std::is_same<double, Scalar>::value)
 				{
-					if (averageErrorFinal > averageErrorInitial * Scalar(0.1))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, averageErrorFinal <= averageErrorInitial * double(0.1));
 				}
 			}
 			else
 			{
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		else
 		{
 			performance.skip();
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomographyImageAlignmentDense::createRandomData(const FrameType& frameType, RandomGenerator& randomGenerator, Frame& templateFrame, Frame& trackingFrame, SquareMatrix3& tracking_H_template, const Scalar maximalHomographyRadius)

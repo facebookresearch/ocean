@@ -8,6 +8,7 @@
 #include "ocean/test/testtracking/TestDatabase.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/RandomI.h"
@@ -78,7 +79,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 	const static unsigned int maxNumberObjectPoints = 100u;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -110,7 +111,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 		const Indices32 secondDatabaseObjectPointIds(secondDatabase.objectPointIds<false>());
 
-		const unsigned int numberObjectPointsToAdd = RandomI::random(1u, secondDatabaseNumberObjectPoints);
+		const unsigned int numberObjectPointsToAdd = RandomI::random(randomGenerator, 1u, secondDatabaseNumberObjectPoints);
 
 		// simple translation by (100, 100)
 		const SquareMatrix3 transformation(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(100, 100, 1));
@@ -118,12 +119,12 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 		Index32 lowerPoseId = Tracking::Database::invalidId;
 		Index32 upperPoseId = Tracking::Database::invalidId;
 
-		if (RandomI::random(randomGenerator, 1u) == 1u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			lowerPoseId = RandomI::random(randomGenerator, (unsigned int)secondDatabase.poseNumber<false>() + 10u);
 		}
 
-		if (RandomI::random(randomGenerator, 1u) == 1u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			if (lowerPoseId == Tracking::Database::invalidId)
 			{
@@ -137,30 +138,30 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 		ocean_assert(lowerPoseId == Tracking::Database::invalidId || upperPoseId == Tracking::Database::invalidId || lowerPoseId <= upperPoseId);
 
-		const bool forExistingPosesOnly = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool forExistingPosesOnly = RandomI::boolean(randomGenerator);
 
 		IndexSet32 addedObjectPointIds;
 
 		for (unsigned int n = 0u; n < numberObjectPointsToAdd; ++n)
 		{
-			Index32 secondDatabaseObjectPointId = secondDatabaseObjectPointIds[RandomI::random(0u, (unsigned int)(secondDatabaseObjectPointIds.size() - 1))];
+			Index32 secondDatabaseObjectPointId = secondDatabaseObjectPointIds[RandomI::random(randomGenerator, 0u, (unsigned int)(secondDatabaseObjectPointIds.size() - 1))];
 			while (addedObjectPointIds.find(secondDatabaseObjectPointId) != addedObjectPointIds.end())
 			{
-				secondDatabaseObjectPointId = secondDatabaseObjectPointIds[RandomI::random(0u, (unsigned int)(secondDatabaseObjectPointIds.size() - 1))];
+				secondDatabaseObjectPointId = secondDatabaseObjectPointIds[RandomI::random(randomGenerator, 0u, (unsigned int)(secondDatabaseObjectPointIds.size() - 1))];
 			}
 
 			const Index32 newFirstDatabaseObjectPointId = firstDatabase.addObjectPointFromDatabase(secondDatabase, secondDatabaseObjectPointId, transformation, Tracking::Database::invalidId, lowerPoseId, upperPoseId, forExistingPosesOnly);
 
 			// first we need to check that original data hasn't been modified
 
-			for (unsigned int i = 0u; allSucceeded && i < firstDatabaseCopyPoseIds.size(); ++i)
+			for (unsigned int i = 0u; validation.succeededSoFar() && i < firstDatabaseCopyPoseIds.size(); ++i)
 			{
 				const Index32 poseId = firstDatabaseCopyPoseIds[i];
 
 				// the pose must still exist
 				if (!firstDatabase.hasPose<false>(poseId))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -168,7 +169,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 				const HomogenousMatrix4& pose = firstDatabase.pose<false>(poseId);
 				if (pose != firstDatabaseCopyPoses[i])
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -180,7 +181,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 				if (newAttachedImagePointIds != firstDatabase.imagePointsFromPose<false>(poseId))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -193,19 +194,19 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 				if (newAttachedObjectPointIdSet != IndexSet32(newAttachedObjectPointIds.cbegin(), newAttachedObjectPointIds.cend()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 			}
 
-			for (unsigned int i = 0u; allSucceeded && i < firstDatabaseCopyImagePointIds.size(); ++i)
+			for (unsigned int i = 0u; validation.succeededSoFar() && i < firstDatabaseCopyImagePointIds.size(); ++i)
 			{
 				const Index32 imagePointId = firstDatabaseCopyImagePointIds[i];
 
 				// the image point must still exist
 				if (!firstDatabase.hasImagePoint<false>(imagePointId))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -213,19 +214,19 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 				const Vector2& imagePoint = firstDatabase.imagePoint<false>(imagePointId);
 				if (imagePoint != firstDatabaseCopyImagePoints[i])
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 			}
 
-			for (unsigned int i = 0u; allSucceeded && i < firstDatabaseCopyObjectPointIds.size(); ++i)
+			for (unsigned int i = 0u; validation.succeededSoFar() && i < firstDatabaseCopyObjectPointIds.size(); ++i)
 			{
 				const Index32 objectPointId = firstDatabaseCopyObjectPointIds[i];
 
 				// the object point must still exist
 				if (!firstDatabase.hasObjectPoint<false>(objectPointId))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -233,7 +234,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 				const Vector3& objectPoint = firstDatabase.objectPoint<false>(objectPointId);
 				if (objectPoint != firstDatabaseCopyObjectPoints[i])
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 			}
@@ -244,13 +245,13 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 			Vector3 newFirstDatabaseObjectPoint, secondDatabaseObjectPoint;
 			if (!firstDatabase.hasObjectPoint<false>(newFirstDatabaseObjectPointId, &newFirstDatabaseObjectPoint) || !secondDatabase.hasObjectPoint<false>(secondDatabaseObjectPointId, &secondDatabaseObjectPoint))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			if (newFirstDatabaseObjectPoint != secondDatabaseObjectPoint)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -260,7 +261,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 			if (oldVisibleInPoses.size() != oldImagePointIds.size() || oldImagePointIds.size() != oldImagePoints.size())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -270,7 +271,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 			if (newVisibleInPoses.size() != newImagePointIds.size() || newImagePointIds.size() != newImagePoints.size())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -278,14 +279,14 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 
 			if (newVisibleInPoses.size() > oldVisibleInPoses.size() || newImagePointIds.size() > oldImagePointIds.size())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
 			const Index32 lowerPoseRange = lowerPoseId == Tracking::Database::invalidId ? 0u : lowerPoseId;
 			const Index32 upperPoseRange = upperPoseId == Tracking::Database::invalidId ? 0xFFFFFFFFu : upperPoseId;
 
-			for (size_t i = 0; allSucceeded && i < oldImagePointIds.size(); ++i)
+			for (size_t i = 0; validation.succeededSoFar() && i < oldImagePointIds.size(); ++i)
 			{
 				const Index32 poseId = oldVisibleInPoses[i]; // oldPoseId == newPoseId
 
@@ -294,7 +295,7 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 					// the original database did not have this pose, so we still must not have this pose
 					if (firstDatabase.hasPose<false>(poseId))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 				}
@@ -307,13 +308,13 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 						Vector2 newImagePoint;
 						if (!firstDatabase.hasObservation<false>(poseId, newFirstDatabaseObjectPointId, &newImagePoint))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 						}
 
 						if (newImagePoint != oldImagePoint + Vector2(100, 100))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 						}
 					}
@@ -321,14 +322,14 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 					{
 						if (firstDatabase.hasObservation<false>(poseId, newFirstDatabaseObjectPointId))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 						}
 					}
 				}
 			}
 
-			if (!allSucceeded)
+			if (!validation.succeededSoFar())
 			{
 				break;
 			}
@@ -336,16 +337,9 @@ bool TestDatabase::testAddObjectPointFromDatabase(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDatabase::testSerialization(const double testDuration)
@@ -358,7 +352,7 @@ bool TestDatabase::testSerialization(const double testDuration)
 	const static unsigned int maxNumberObjectPoints = 100u;
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -373,7 +367,7 @@ bool TestDatabase::testSerialization(const double testDuration)
 		IO::OutputBitstream outputStream(stringOutputStream);
 		if (!Tracking::Utilities::writeDatabase(originalDatabase, outputStream))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		std::istringstream stringInputStream(stringOutputStream.str(), std::ios::binary);
@@ -391,7 +385,7 @@ bool TestDatabase::testSerialization(const double testDuration)
 				{
 					if (!newDatabase.hasPose<false>(poseId) || originalDatabase.pose<false>(poseId) != newDatabase.pose<false>(poseId))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -405,7 +399,7 @@ bool TestDatabase::testSerialization(const double testDuration)
 				{
 					if (!newDatabase.hasImagePoint<false>(imagePointId) || originalDatabase.imagePoint<false>(imagePointId) != newDatabase.imagePoint<false>(imagePointId))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -419,33 +413,26 @@ bool TestDatabase::testSerialization(const double testDuration)
 				{
 					if (!newDatabase.hasObjectPoint<false>(objectPointId) || originalDatabase.objectPoint<false>(objectPointId) != newDatabase.objectPoint<false>(objectPointId))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					if (originalDatabase.imagePointsFromObjectPoint<false>(objectPointId) != newDatabase.imagePointsFromObjectPoint<false>(objectPointId))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 Tracking::Database TestDatabase::createDatabaseWithRandomTopology(RandomGenerator& randomGenerator, const unsigned int lowerPoseId, const unsigned int upperPoseId, const unsigned int numberPoses, const unsigned int numberObjectPoints, const unsigned int minimalNumberObservations, const unsigned int maximalNumberObservations)
