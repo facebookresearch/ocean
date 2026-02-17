@@ -983,7 +983,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::bu
 		const int16x8_t bufferHigh0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_high_u8(buffer0_u_8x16), vget_high_u8(buffer1_u_8x16))); // high 8 bytes: buffer0 - buffer1
 
 		constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 		const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1027,7 +1027,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::bu
 		const int16x8_t buffer0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(buffer0_u_8x8, buffer1_u_8x8)); // buffer0 - buffer1
 
 		constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 		const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1157,7 +1157,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::bu
 
 
 		constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 		const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1230,7 +1230,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::bu
 		const int16x8_t bufferChannel2_0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(buffer0_u_8x8x3.val[2], buffer1_u_8x8x3.val[2]));
 
 		constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+		constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 		const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1370,7 +1370,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 				// mask: |<- overlapping ->|<- remainingAfterBlocks16 ->|
 				//        00 00 00 00 00 00 FF FF FF FF FF FF FF FF FF FF
 
-				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 				constexpr uint64_t maskHigh = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) >> overlappingElements * 2u * 8u);
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
@@ -1393,7 +1393,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 				const int16x8_t patchHigh0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_high_u8(patch0_u_8x16), vget_high_u8(patch1_u_8x16))); // high 8 bytes: patch0 - patch1
 
 				constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1439,7 +1439,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 
 				const int16x8_t patch0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8, patch1_u_8x8)); // patch0 - patch1
 
-				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 				constexpr uint64_t maskHigh = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) >> overlappingElements * 2u * 8u);
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
@@ -1457,7 +1457,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 				const int16x8_t patch0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8, patch1_u_8x8)); // patch0 - patch1
 
 				constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1604,7 +1604,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::pa
 				// mask: |<- overlapping ->|<- remainingAfterBlocks16 ->|
 				//        00 00 00 00 00 00 FF FF FF FF FF FF FF FF FF FF
 
-				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 				constexpr uint64_t maskHigh = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) >> overlappingElements * 2u * 8u);
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
@@ -1652,7 +1652,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::pa
 
 
 				constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1727,7 +1727,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::pa
 				const int16x8_t patchChannel1_0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8x3.val[1], patch1_u_8x8x3.val[1]));
 				const int16x8_t patchChannel2_0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8x3.val[2], patch1_u_8x8x3.val[2]));
 
-				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 				constexpr uint64_t maskHigh = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) >> overlappingElements * 2u * 8u);
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
@@ -1755,7 +1755,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::pa
 				const int16x8_t patchChannel2_0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8x3.val[2], patch1_u_8x8x3.val[2]));
 
 				constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1924,7 +1924,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 				// mask: |<- overlapping ->|<- remainingAfterBlocks16 ->|
 				//        00 00 00 00 00 00 FF FF FF FF FF FF FF FF FF FF
 
-				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 				constexpr uint64_t maskHigh = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) >> overlappingElements * 2u * 8u);
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
@@ -1947,7 +1947,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 				const int16x8_t patchHigh0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_high_u8(patch0_u_8x16), vget_high_u8(patch1_u_8x16))); // high 8 bytes: patch0 - patch1
 
 				constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
@@ -1993,7 +1993,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 
 				const int16x8_t patch0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8, patch1_u_8x8)); // patch0 - patch1
 
-				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskLow = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) >> std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 				constexpr uint64_t maskHigh = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) >> overlappingElements * 2u * 8u);
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
@@ -2011,7 +2011,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 				const int16x8_t patch0_1_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(patch0_u_8x8, patch1_u_8x8)); // patch0 - patch1
 
 				constexpr uint64_t maskLow = overlappingElements >= 4u ? uint64_t(0) : (uint64_t(-1) << overlappingElements * 2u * 8u);
-				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << (overlappingElements - 4u) * 2u * 8u);
+				constexpr uint64_t maskHigh = (overlappingElements <= 4u || overlappingElements >= 8u) ? uint64_t(-1) : (uint64_t(-1) << std::min((overlappingElements - 4u) * 2u * 8u, 63u));
 
 				const uint16x8_t mask_u_16x8 = vcombine_u16(vcreate_u16(maskLow), vcreate_u16(maskHigh));
 
