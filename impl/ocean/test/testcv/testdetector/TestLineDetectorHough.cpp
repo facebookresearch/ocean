@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestLineDetectorHough.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -97,7 +98,8 @@ bool TestLineDetectorHough::testAccumulatorJoin(const unsigned int width, const 
 
 	const unsigned int diagonalHalf = (unsigned int)(Numeric::sqrt(Scalar(width * width + height * height))) / 2u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		CV::Detector::LineDetectorHough::Accumulator accumulators[] =
@@ -110,8 +112,8 @@ bool TestLineDetectorHough::testAccumulatorJoin(const unsigned int width, const 
 
 		for (unsigned int n = 0; n < accumulatorElements; ++n)
 		{
-			accumulators[0].accumulatorFrame_.data<uint32_t>()[n] = RandomI::random(10000u);
-			accumulators[1].accumulatorFrame_.data<uint32_t>()[n] = RandomI::random(10000u);
+			accumulators[0].accumulatorFrame_.data<uint32_t>()[n] = RandomI::random(randomGenerator, 10000u);
+			accumulators[1].accumulatorFrame_.data<uint32_t>()[n] = RandomI::random(randomGenerator, 10000u);
 		}
 
 		CV::Detector::LineDetectorHough::Accumulator copy[] =
@@ -125,19 +127,12 @@ bool TestLineDetectorHough::testAccumulatorJoin(const unsigned int width, const 
 
 		CV::Detector::LineDetectorHough::Accumulator::joinTwo(accumulators);
 
-		allSucceeded = validateJoin(copy, accumulators, 2) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validateJoin(copy, accumulators, 2));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuration, Worker& worker)
@@ -146,11 +141,10 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 
 	Log::info() << "Detector test on random frame:";
 
-	bool allSucceeded = true;
-
 	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -163,10 +157,10 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 
 		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		const CV::Detector::LineDetectorHough::FilterType filterType = RandomI::random(1u) == 0u ? CV::Detector::LineDetectorHough::FT_SOBEL : CV::Detector::LineDetectorHough::FT_SCHARR;
+		const CV::Detector::LineDetectorHough::FilterType filterType = RandomI::boolean(randomGenerator) ? CV::Detector::LineDetectorHough::FT_SOBEL : CV::Detector::LineDetectorHough::FT_SCHARR;
 		CV::Detector::LineDetectorHough::FilterResponse filterResponse = CV::Detector::LineDetectorHough::FR_INVALID;
 
-		switch (RandomI::random(1u))
+		switch (RandomI::random(randomGenerator, 1u))
 		{
 			case 0u:
 				filterResponse = CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL;
@@ -188,29 +182,21 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines;
 		FiniteLines2 optionalFiniteLines;
 
-		FiniteLines2* finiteLines = RandomI::random(randomGenerator, 1u) == 0u ? &optionalFiniteLines : nullptr;
+		const bool useFiniteLines = RandomI::boolean(randomGenerator);
+		FiniteLines2* finiteLines = useFiniteLines ? &optionalFiniteLines : nullptr;
 
-		const bool optimizeLines = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool optimizeLines = RandomI::boolean(randomGenerator);
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		const bool useWorkerBool = RandomI::boolean(randomGenerator);
+		Worker* useWorker = useWorkerBool ? &worker : nullptr;
 
-		if (!CV::Detector::LineDetectorHough::detectLines(frame, filterType, filterResponse, infiniteLines, finiteLines, optimizeLines, 100u, 16u, 2u, true, useWorker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, CV::Detector::LineDetectorHough::detectLines(frame, filterType, filterResponse, infiniteLines, finiteLines, optimizeLines, 100u, 16u, 2u, true, useWorker));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -225,19 +211,18 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 	RandomGenerator randomGenerator;
 
-	bool allSucceeded = true;
-
 	constexpr uint8_t dark = 0x40u;
 
-	constexpr uint64_t minimalIterations = 100u;
+	constexpr double threshold = std::is_same<Scalar, float>::value ? 0.85 : 0.95;
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		frame.setValue(0xFF);
 
@@ -271,10 +256,7 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 			const bool result0 = CV::Detector::LineDetectorHough::detectLines(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines0, nullptr, true, 80u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
 		performance0.stop();
 
-		if (!result0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, result0);
 
 		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines1;
 
@@ -282,10 +264,7 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 			const bool result1 = CV::Detector::LineDetectorHough::detectLinesWithAdaptiveThreshold(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines1, nullptr, true, Scalar(10), 61u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
 		performance1.stop();
 
-		if (!result1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, result1);
 
 		std::sort(infiniteLines0.rbegin(), infiniteLines0.rend());
 		std::sort(infiniteLines1.rbegin(), infiniteLines1.rend());
@@ -321,38 +300,19 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 			}
 		}
 
-		if (foundLines == 8u)
+		if (foundLines != 8u)
 		{
-			++succeeded;
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
-	while (iterations < minimalIterations || !startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance static threshold: " << performance0.averageMseconds() << "ms";
 	Log::info() << "Performance dynamic threshold: " << performance1.averageMseconds() << "ms";
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	constexpr double threshold = std::is_same<Scalar, float>::value ? 0.85 : 0.95;
-
-	if (percent < threshold)
-	{
-		allSucceeded = false;
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded with " << String::toAString(percent * 100.0, 1u) << "%";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED! with " << String::toAString(percent * 100.0, 1u) << "%";
-	}
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorHough::validateSmooth(const unsigned int* original, const unsigned int* smoothAccumulator, const unsigned int width, const unsigned int height)

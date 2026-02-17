@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestHemiCube.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
@@ -101,9 +102,8 @@ bool TestHemiCube::testAdd(const double testDuration)
 	const unsigned int imageHeight = 1080u;
 	const Scalar focalLength = Scalar(1);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -127,14 +127,11 @@ bool TestHemiCube::testAdd(const double testDuration)
 			HemiCube hemiCube(hemiCubeBins, imageWidth, imageHeight, focalLength);
 			hemiCube.insert(randomCollinearLines);
 
-			if (hemiCube.size() != randomCollinearLines.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hemiCube.size(), randomCollinearLines.size());
 
 			if (hemiCube.nonEmptyBins() == 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
@@ -185,7 +182,7 @@ bool TestHemiCube::testAdd(const double testDuration)
 				if (!hasElementsOnCubeFace[0] && !hasElementsOnCubeFace[1] && !hasElementsOnCubeFace[2])
 				{
 					ocean_assert(false && "The map indices have been found - that must not be!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
@@ -200,10 +197,8 @@ bool TestHemiCube::testAdd(const double testDuration)
 						ocean_assert(minimumBinX[faceIndex] <= maximumBinX[faceIndex]);
 						ocean_assert(minimumBinY[faceIndex] <= maximumBinY[faceIndex]);
 
-						if (maximumBinX[faceIndex] - minimumBinX[faceIndex] >= 3u || maximumBinY[faceIndex] - minimumBinY[faceIndex] >= 3u)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_LESS(validation, maximumBinX[faceIndex] - minimumBinX[faceIndex], 3u);
+						OCEAN_EXPECT_LESS(validation, maximumBinY[faceIndex] - minimumBinY[faceIndex], 3u);
 					}
 				}
 			}
@@ -219,24 +214,14 @@ bool TestHemiCube::testAdd(const double testDuration)
 			hemiCube.insert(lines);
 
 			ocean_assert(hemiCubeBins >= 2u && "This test case requires more than one bin in the Hemi cube");
-			if (hemiCube.nonEmptyBins() != 2)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hemiCube.nonEmptyBins(), size_t(2));
 		}
 	}
 	while (startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHemiCube::testLineFusion(const double testDuration)
@@ -246,9 +231,8 @@ bool TestHemiCube::testLineFusion(const double testDuration)
 	const unsigned int imageWidth = 1920u;
 	const unsigned int imageHeight = 1080u;
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -261,23 +245,13 @@ bool TestHemiCube::testLineFusion(const double testDuration)
 
 		const FiniteLines2 lines = {line0, line1};
 
-		if (!validateLineFusion(mergedLine, lines))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateLineFusion(mergedLine, lines));
 	}
 	while (startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
@@ -291,9 +265,8 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 	const Scalar maxLineGap = Scalar(imageDiagonal);
 	const Scalar maxLineDistance(Scalar(0.5));
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -302,7 +275,7 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 		{
 			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin (for Scalar = double)
 			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
-			const unsigned int linesCount = RandomI::random(2u, 10000u);
+			const unsigned int linesCount = RandomI::random(randomGenerator, 2u, 10000u);
 			FiniteLines2 randomCollinearLines;
 
 			for (unsigned int i = 0u; i < linesCount; ++i)
@@ -315,18 +288,12 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 
 			if constexpr (std::is_same<double, Scalar>::value)
 			{
-				if (mergedLines.size() != 1)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, mergedLines.size(), size_t(1));
 			}
 			else
 			{
 				// In the case of 32-bit floating numbers, it can't be guaranteed that all of the input lines are merged into a single line. Accepting one or more.
-				if (mergedLines.empty())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, mergedLines.empty());
 			}
 		}
 
@@ -338,24 +305,14 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 
 			const FiniteLines2 mergedLines = HemiCube::mergeGreedyBruteForce(lines, maxLineDistance, maxLineGap);
 
-			if (mergedLines.size() != 2)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, mergedLines.size(), size_t(2));
 		}
 	}
 	while (startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHemiCube::testMerge(const double testDuration)
@@ -370,9 +327,8 @@ bool TestHemiCube::testMerge(const double testDuration)
 	const Scalar maxLineGap = Scalar(imageDiagonal);
 	const Scalar maxLineDistance(Scalar(0.5));
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -397,18 +353,12 @@ bool TestHemiCube::testMerge(const double testDuration)
 
 			if constexpr (std::is_same<double, Scalar>::value)
 			{
-				if (hemiCube.nonEmptyBins() != 1)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, hemiCube.nonEmptyBins(), size_t(1));
 			}
 			else
 			{
 				// In the case of 32-bit floating numbers, it can't be guaranteed that all of the input lines are merged into a single bin. Accepting one or more.
-				if (hemiCube.nonEmptyBins() == 0)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_NOT_EQUAL(validation, hemiCube.nonEmptyBins(), size_t(0));
 			}
 		}
 
@@ -422,24 +372,14 @@ bool TestHemiCube::testMerge(const double testDuration)
 			hemiCube.merge(lines, maxLineDistance, maxLineGap);
 
 			ocean_assert(hemiCubeBins >= 2u && "This test case requires more than one bin in the Hemi cube");
-			if (hemiCube.nonEmptyBins() != 2)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hemiCube.nonEmptyBins(), size_t(2));
 		}
 	}
 	while (startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 FiniteLine2 TestHemiCube::generateRandomFiniteLine2(RandomGenerator& randomGenerator, const unsigned int imageWidth, const unsigned int imageHeight)
@@ -512,7 +452,7 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(RandomGenerator& ra
 	do
 	{
 		const Scalar length = Random::scalar(randomGenerator, minLineLength, Scalar(std::min(imageHeight, imageWidth)));
-		point1 = point0 + line.direction() * length * Random::sign();
+		point1 = point0 + line.direction() * length * Random::sign(randomGenerator);
 		ocean_assert((line.nearestPointOnInfiniteLine(point1) - point1).length() <= maxDistance);
 
 		collinearLine = FiniteLine2(point0, point1);

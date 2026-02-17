@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestLineDetectorULF.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
@@ -184,9 +185,8 @@ bool TestLineDetectorULF::testRowSums(const double testDuration)
 {
 	Log::info() << "Sliding window sums for rows test (just sums):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -227,39 +227,25 @@ bool TestLineDetectorULF::testRowSums(const double testDuration)
 				testSum += row[n + i];
 			}
 
-			if (testSum != sums[n])
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, testSum, sums[n]);
 		}
 
 		ocean_assert(outOfMemoryAccessChecker == sums.back());
-		if (outOfMemoryAccessChecker != sums.back())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, outOfMemoryAccessChecker, sums.back());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testRowSqrSums(const double testDuration)
 {
 	Log::info() << "Sliding window sums for rows test (sums and sums of squared):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -309,28 +295,16 @@ bool TestLineDetectorULF::testRowSqrSums(const double testDuration)
 					testSqrSum += uint64_t(row[n + i]) * uint64_t(row[n + i]);
 				}
 
-				if (testSum != uint64_t(sums[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, testSum, uint64_t(sums[n]));
 
-				if (testSqrSum != uint64_t(sqrSums[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, testSqrSum, uint64_t(sqrSums[n]));
 			}
 
 			ocean_assert(outOfMemoryAccessCheckerSums == sums.back());
-			if (outOfMemoryAccessCheckerSums != sums.back())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, outOfMemoryAccessCheckerSums, uint32_t(sums.back()));
 
 			ocean_assert(outOfMemoryAccessCheckerSqrSums == sqrSums.back());
-			if (outOfMemoryAccessCheckerSqrSums != sqrSums.back())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, outOfMemoryAccessCheckerSqrSums, sqrSums.back());
 		}
 
 		{
@@ -377,42 +351,23 @@ bool TestLineDetectorULF::testRowSqrSums(const double testDuration)
 					testSqrSum += uint64_t(row[n + i]) * uint64_t(row[n + i]);
 				}
 
-				if (testSum != uint64_t(sums[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, testSum, uint64_t(sums[n]));
 
-				if (testSqrSum != uint64_t(sqrSums[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, testSqrSum, uint64_t(sqrSums[n]));
 			}
 
 			ocean_assert(outOfMemoryAccessCheckerSums == sums.back());
-			if (outOfMemoryAccessCheckerSums != sums.back())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, outOfMemoryAccessCheckerSums, (unsigned int)(sums.back()));
 
 			ocean_assert(outOfMemoryAccessCheckerSqrSums == sqrSums.back());
-			if (outOfMemoryAccessCheckerSqrSums != sqrSums.back())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, outOfMemoryAccessCheckerSqrSums, sqrSums.back());
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
@@ -422,8 +377,6 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 	Log::info() << "RMS bar edge detector test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	std::vector<double> maxAbsErrors;
 	std::vector<double> maxAbsErrorsPercent;
 	std::vector<double> averageAbsErrorsPercent;
@@ -432,6 +385,7 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 	constexpr unsigned int minimalDelta = 5u;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -463,10 +417,7 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 		rmsBarEdgeDetectorI.invokeVertical(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), responseFrameI.data<int16_t>(), yFrame.paddingElements());
 
 		ocean_assert(sqr(rmsBarEdgeDetectorF.adjustThreshold(100u)) == rmsBarEdgeDetectorI.adjustThreshold(100u));
-		if (sqr(rmsBarEdgeDetectorF.adjustThreshold(100u)) != rmsBarEdgeDetectorI.adjustThreshold(100u))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, sqr(rmsBarEdgeDetectorF.adjustThreshold(100u)), rmsBarEdgeDetectorI.adjustThreshold(100u));
 
 		double maxAbsError = 0.0;
 		double maxAbsErrorPercent = 0.0;
@@ -483,10 +434,7 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 			{
 				const double groundTruth = rmsBarEdgeResponse(yFrame, x, y, windowSize, double(minimalDelta)) * 16.0; // 16: is an explicit scaling factor to increase the response to a reasonable number
 
-				if (abs(NumericD::round32(groundTruth) - int(responseRowF[x])) > 3)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_LESS_EQUAL(validation, abs(NumericD::round32(groundTruth) - int(responseRowF[x])), 3);
 
 				const double responseF = minmax(-181.0, double(responseRowF[x]), 181.0); // maximal possible sqrt response: 181 = sqrt(2^15)
 				const int responseI = responseRowI[x];
@@ -501,10 +449,7 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 
 					const double absErrorPercent = absError / std::max(1.0, std::max(std::abs(responseF), std::abs(sqrtResponseI)));
 
-					if (absErrorPercent >= 0.1)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_LESS(validation, absErrorPercent, 0.1);
 
 					maxAbsErrorPercent = std::max(maxAbsErrorPercent, absErrorPercent);
 
@@ -531,15 +476,9 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 	const double maxAbsErrorsPercentP90 = maxAbsErrorsPercent[maxAbsErrorsPercent.size() * 90 / 100];
 	const double averageAbsErrorsPercentP90 = averageAbsErrorsPercent[averageAbsErrorsPercent.size() * 90 / 100];
 
-	if (maxAbsErrorsPercentP90 >= 0.085) // 8.5%
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS(validation, maxAbsErrorsPercentP90, 0.085); // 8.5%
 
-	if (averageAbsErrorsPercentP90 >= 0.025) // 2.5%
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS(validation, averageAbsErrorsPercentP90, 0.025); // 2.5%
 
 	Log::info() << "Error between integer and floating point calculation:";
 	Log::info() << "Maximal error p90: " << maxAbsErrorP90;
@@ -548,16 +487,9 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testHorizontalRMSBarEdgeDetector(const double testDuration)
@@ -587,9 +519,8 @@ bool TestLineDetectorULF::testRMSBarLineDetector(const double testDuration)
 	Log::info() << "RMS bar line detector test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -600,14 +531,14 @@ bool TestLineDetectorULF::testRMSBarLineDetector(const double testDuration)
 
 		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		const bool darkBackground = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool darkBackground = RandomI::boolean(randomGenerator);
 
 		const uint8_t backgroundColor = darkBackground ? 0x00 : 0xFF;
 		const uint8_t foregroundColor = darkBackground ? 0xFF : 0x00;
 
 		yFrame.setValue(backgroundColor);
 
-		const bool horizontal = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool horizontal = RandomI::boolean(randomGenerator);
 
 		unsigned int position = (unsigned int)(-1);
 
@@ -634,14 +565,11 @@ bool TestLineDetectorULF::testRMSBarLineDetector(const double testDuration)
 		EdgeTypes types;
 		const FiniteLines2 lines = LineDetectorULF::detectLines(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), LineDetectorULF::RMSBarEdgeDetectorI::asEdgeDetectors(), threshold, minimalLength, maximalStraightLineDistance, &types);
 
-		if (types.size() != lines.size())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, types.size(), lines.size());
 
 		if (lines.size() != 1 || types.size() != 1)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
@@ -651,67 +579,36 @@ bool TestLineDetectorULF::testRMSBarLineDetector(const double testDuration)
 
 			if (horizontal)
 			{
-				if (Numeric::isNotEqual(line.point0().y(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point0().y(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.point1().y(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point1().y(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.length(), Scalar(width - 1u), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.length(), Scalar(width - 1u), maximalError));
 			}
 			else
 			{
-				if (Numeric::isNotEqual(line.point0().x(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point0().x(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.point1().x(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point1().x(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.length(), Scalar(height - 1u), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.length(), Scalar(height - 1u), maximalError));
 			}
 
 			if (darkBackground)
 			{
-				if (types.front() != (ET_SIGN_POSITIVE | ET_BAR))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, types.front(), EdgeType(ET_SIGN_POSITIVE | ET_BAR));
 			}
 			else
 			{
-				if (types.front() != (ET_SIGN_NEGATIVE | ET_BAR))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, types.front(), EdgeType(ET_SIGN_NEGATIVE | ET_BAR));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
@@ -721,8 +618,6 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 	Log::info() << "RMS step edge detector test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	std::vector<double> maxAbsErrors;
 	std::vector<double> maxAbsErrorsPercent;
 	std::vector<double> averageAbsErrorsPercent;
@@ -730,6 +625,7 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 	constexpr unsigned int windowSize = 4u;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -761,10 +657,7 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 		rmsStepEdgeDetectorI.invokeVertical(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), responseFrameI.data<int16_t>(), yFrame.paddingElements());
 
 		ocean_assert(sqr(rmsStepEdgeDetectorF.adjustThreshold(100u)) == rmsStepEdgeDetectorI.adjustThreshold(100u));
-		if (sqr(rmsStepEdgeDetectorF.adjustThreshold(100u)) != rmsStepEdgeDetectorI.adjustThreshold(100u))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, sqr(rmsStepEdgeDetectorF.adjustThreshold(100u)), rmsStepEdgeDetectorI.adjustThreshold(100u));
 
 		double maxAbsError = 0.0;
 		double maxAbsErrorPercent = 0.0;
@@ -781,10 +674,7 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 			{
 				const double groundTruthSeparateResidual = rmsStepEdgeResponse<true, false>(yFrame, x, y, windowSize);
 
-				if (abs(NumericD::round32(groundTruthSeparateResidual) - int(responseRowF[x])) > 1)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_LESS_EQUAL(validation, abs(NumericD::round32(groundTruthSeparateResidual) - int(responseRowF[x])), 1);
 
 				double decisionDelta = 0.0;
 				const double groundTruthCommonResidualSqr = rmsStepEdgeResponse<false, true>(yFrame, x, y, windowSize, &decisionDelta);
@@ -803,10 +693,7 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 
 					const double absErrorPercent = absError / std::max(1.0, std::max(std::abs(responseF), std::abs(sqrtResponseI)));
 
-					if (absErrorPercent >= 0.1)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_LESS(validation, absErrorPercent, 0.1);
 
 					maxAbsErrorPercent = std::max(maxAbsErrorPercent, absErrorPercent);
 
@@ -833,15 +720,9 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 	const double maxAbsErrorsPercentP90 = maxAbsErrorsPercent[maxAbsErrorsPercent.size() * 90 / 100];
 	const double averageAbsErrorsPercentP90 = averageAbsErrorsPercent[averageAbsErrorsPercent.size() * 90 / 100];
 
-	if (maxAbsErrorsPercentP90 >= 0.085) // 8.5%
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS(validation, maxAbsErrorsPercentP90, 0.085); // 8.5%
 
-	if (averageAbsErrorsPercentP90 >= 0.025) // 2.5%
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS(validation, averageAbsErrorsPercentP90, 0.025); // 2.5%
 
 	Log::info() << "Error between integer and floating point calculation:";
 	Log::info() << "Maximal error p90: " << maxAbsErrorP90;
@@ -850,16 +731,9 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testHorizontalRMSStepEdgeDetector(const double testDuration)
@@ -889,9 +763,8 @@ bool TestLineDetectorULF::testRMSStepLineDetector(const double testDuration)
 	Log::info() << "RMS step line detector test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -902,14 +775,14 @@ bool TestLineDetectorULF::testRMSStepLineDetector(const double testDuration)
 
 		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		const bool darkStart = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool darkStart = RandomI::boolean(randomGenerator);
 
 		const uint8_t startColor = darkStart ? 0x00 : 0xFF;
 		const uint8_t endColor = darkStart ? 0xFF : 0x00;
 
 		yFrame.setValue(startColor);
 
-		const bool horizontal = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool horizontal = RandomI::boolean(randomGenerator);
 
 		unsigned int position = (unsigned int)(-1);
 
@@ -939,14 +812,11 @@ bool TestLineDetectorULF::testRMSStepLineDetector(const double testDuration)
 		EdgeTypes types;
 		const FiniteLines2 lines = LineDetectorULF::detectLines(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), LineDetectorULF::RMSStepEdgeDetectorI::asEdgeDetectors(), threshold, minimalLength, maximalStraightLineDistance, &types);
 
-		if (types.size() != lines.size())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, types.size(), lines.size());
 
 		if (lines.size() != 1 || types.size() != 1)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
@@ -956,67 +826,36 @@ bool TestLineDetectorULF::testRMSStepLineDetector(const double testDuration)
 
 			if (horizontal)
 			{
-				if (Numeric::isNotEqual(line.point0().y(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point0().y(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.point1().y(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point1().y(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.length(), Scalar(width - 1u), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.length(), Scalar(width - 1u), maximalError));
 			}
 			else
 			{
-				if (Numeric::isNotEqual(line.point0().x(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point0().x(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.point1().x(), Scalar(position), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.point1().x(), Scalar(position), maximalError));
 
-				if (Numeric::isNotEqual(line.length(), Scalar(height - 1u), maximalError))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(line.length(), Scalar(height - 1u), maximalError));
 			}
 
 			if (darkStart)
 			{
-				if (types.front() != (ET_SIGN_NEGATIVE | ET_STEP))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, types.front(), EdgeType(ET_SIGN_NEGATIVE | ET_STEP));
 			}
 			else
 			{
-				if (types.front() != (ET_SIGN_POSITIVE | ET_STEP))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, types.front(), EdgeType(ET_SIGN_POSITIVE | ET_STEP));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testSDStepEdgeDetector(const double testDuration)
@@ -1026,9 +865,8 @@ bool TestLineDetectorULF::testSDStepEdgeDetector(const double testDuration)
 	Log::info() << "SD step edge detector test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1059,25 +897,15 @@ bool TestLineDetectorULF::testSDStepEdgeDetector(const double testDuration)
 				const double response = double(responseRow[x]);
 				const double groundTruthResponse = sdStepEdgeResponse(yFrame, x, y, stepSize, windowSize);
 
-				if (groundTruthResponse != response)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, groundTruthResponse, response);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineDetectorULF::testHorizontalSDStepEdgeDetector(const double testDuration)
@@ -1087,7 +915,9 @@ bool TestLineDetectorULF::testHorizontalSDStepEdgeDetector(const double testDura
 	Log::info() << "Horizontal SD steps edge detector test:";
 	Log::info() << " ";
 
-	const unsigned int windowSize = RandomI::random(1u, 5u);
+	RandomGenerator randomGenerator;
+
+	const unsigned int windowSize = RandomI::random(randomGenerator, 1u, 5u);
 
 	const SDStepEdgeDetectorI sdStepEdgeDetectorI(windowSize);
 
@@ -1105,13 +935,12 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 	ocean_assert(edgeDetector.hasInvokeHorizontal(50, 50));
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	HighPerformanceStatistic performanceVertical;
 	HighPerformanceStatistic performanceVerticalTranspose;
 	HighPerformanceStatistic performanceHorizontal;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	unsigned int iteration = 0u;
 
@@ -1129,7 +958,8 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 		ocean_assert(yFrame.isValid());
 		ocean_assert(edgeDetector.hasInvokeHorizontal(yFrame.width(), yFrame.height()));
 
-		const unsigned int transposedPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int transposedPaddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		Frame yTransposedFrame(FrameType(yFrame, yFrame.height(), yFrame.width()), transposedPaddingElements);
 		Frame transposedResposeFrame(FrameType(yTransposedFrame, FrameType::genericPixelFormat<int16_t, 1u>()));
@@ -1145,7 +975,7 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 		if (!CV::FrameTransposer::transpose(yFrame, yTransposedFrame))
 		{
 			ocean_assert(false && "This should never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (performanceIteration)
@@ -1164,10 +994,7 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 		}
 
 		ocean_assert(horizontalResponseFrame.isContinuous());
-		if (!edgeDetector.invokeHorizontal(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), horizontalResponseFrame.data<int16_t>(), yFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, edgeDetector.invokeHorizontal(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), horizontalResponseFrame.data<int16_t>(), yFrame.paddingElements()));
 
 		if (performanceIteration)
 		{
@@ -1178,17 +1005,14 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 		if (!CV::FrameTransposer::transpose(transposedResposeFrame, responseFrame))
 		{
 			ocean_assert(false && "This should never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		ocean_assert(responseFrame.width() == yFrame.width() && responseFrame.height() == yFrame.height());
 
 		for (unsigned int n = 0u; n < responseFrame.pixels(); ++n)
 		{
-			if (abs(int32_t(responseFrame.constdata<int16_t>()[n]) - int32_t(horizontalResponseFrame.constdata<int16_t>()[n])) > 1)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, abs(int32_t(responseFrame.constdata<int16_t>()[n]) - int32_t(horizontalResponseFrame.constdata<int16_t>()[n])), 1);
 		}
 
 		++iteration;
@@ -1200,16 +1024,9 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 double TestLineDetectorULF::rmsBarEdgeResponse(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int windowSize, const double minimalDelta)

@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestLineEvaluator.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
@@ -75,7 +76,7 @@ bool TestLineEvaluator::testMatchDetermination(const double /*testDuration*/)
 
 	using LineMap = std::unordered_map<LineEvaluator::Id, FiniteLineT2<T>>;
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// for now we test static data, however we need to extend the test to use random data
 
@@ -129,63 +130,35 @@ bool TestLineEvaluator::testMatchDetermination(const double /*testDuration*/)
 
 	// perfect match with id 0:
 	LineEvaluator::LineMatchMap::const_iterator iMatch = lineMatches.find(0);
-	if (iMatch == lineMatches.end() || !verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PERFECT, {0}))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, iMatch != lineMatches.end() && verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PERFECT, {0}));
 
 	// perfect math with id 2:
 	iMatch = lineMatches.find(2);
-	if (iMatch == lineMatches.end() || !verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PERFECT, {2}))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, iMatch != lineMatches.end() && verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PERFECT, {2}));
 
 	// partial math with id 4:
 	iMatch = lineMatches.find(4);
-	if (iMatch == lineMatches.end() || !verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PARTIAL, {4}))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, iMatch != lineMatches.end() && verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PARTIAL, {4}));
 
 	// partial math with id 6:
 	iMatch = lineMatches.find(6);
-	if (iMatch == lineMatches.end() || !verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PARTIAL, {6, 7, 8}))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, iMatch != lineMatches.end() && verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_PARTIAL, {6, 7, 8}));
 
 	// complex math with id 10:
 	iMatch = lineMatches.find(10);
-	if (iMatch == lineMatches.end() || !verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_COMPLEX, {10}))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, iMatch != lineMatches.end() && verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_COMPLEX, {10}));
 
 	// complex math with id 11:
 	iMatch = lineMatches.find(11);
-	if (iMatch == lineMatches.end() || !verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_COMPLEX, {10}))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, iMatch != lineMatches.end() && verifyMatch(iMatch->second, LineEvaluator::LineMatch::MT_COMPLEX, {10}));
 
 	// we must have 6 matches
 
-	if (lineMatches.size() != 6)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, lineMatches.size(), size_t(6));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLineEvaluator::verifyMatch(const CV::Detector::LineEvaluator::LineMatchRef& match, const CV::Detector::LineEvaluator::LineMatch::MatchType matchType, const CV::Detector::LineEvaluator::IdSet& targetIds)

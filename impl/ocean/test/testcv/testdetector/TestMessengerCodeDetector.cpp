@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testdetector/TestMessengerCodeDetector.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/WorkerPool.h"
@@ -262,13 +264,12 @@ bool TestMessengerCodeDetector::testExtractCodeCandidates(const double testDurat
 	constexpr Scalar minRadius = Scalar(5);
 	constexpr Scalar maxRadius = Scalar(15);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// CodePair stores the center of a code and the radius of the bullseyes
 	using CodePair = std::pair<Vector2, Scalar>;
 	using CodePairs = std::vector<CodePair>;
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -297,7 +298,7 @@ bool TestMessengerCodeDetector::testExtractCodeCandidates(const double testDurat
 			ocean_assert(distanceShort > Numeric::eps() && distanceLong > distanceShort);
 			if (distanceShort < bullseyeRadius * Scalar(5) || distanceLong <= distanceShort)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			bool tooClose = false;
@@ -373,7 +374,7 @@ bool TestMessengerCodeDetector::testExtractCodeCandidates(const double testDurat
 
 		if (indexQuartets.size() != size_t(numberCodes))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -399,33 +400,26 @@ bool TestMessengerCodeDetector::testExtractCodeCandidates(const double testDurat
 
 						if (Numeric::isNotEqual(corners[currentIndex].distance(corners[nextIndex]), distanceShort, Scalar(0.01)))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned int filterSize, const double testDuration)
@@ -439,11 +433,9 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 	using BullseyePair = std::pair<Vector2, Scalar>;
 	using BullseyePairs = std::vector<BullseyePair>;
 
-	unsigned long long bullseyesTotal = 0ull;
-	unsigned long long bullseyesDetectedCorrect = 0ull;
-	unsigned long long bullseyesDetectedWrong = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validationCorrect(0.99, randomGenerator);
+	ValidationPrecision validationFalsePositive(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -454,7 +446,8 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 		const unsigned int width = RandomI::random(randomGenerator, 250u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 250u, 1920u);
 
-		const unsigned int frameHorizontalPadding = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxFrameHorizontalPadding = RandomI::random(randomGenerator, 0u, 100u);
+		const unsigned int frameHorizontalPadding = maxFrameHorizontalPadding * RandomI::random(randomGenerator, 1u);
 
 		BullseyePairs bullseyePairs;
 		const unsigned int bullseyeIterations = RandomI::random(randomGenerator, 1u, 50u);
@@ -529,8 +522,6 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 			CV::FrameFilterGaussian::filter(yFrame, filterSize, WorkerPool::get().scopedWorker()());
 		}
 
-		bullseyesTotal += bullseyePairs.size();
-
 		const MessengerCodeDetector::Bullseyes detectedBullseyes = MessengerCodeDetector::detectBullseyes(yFrame.constdata<uint8_t>(), width, height, yFrame.paddingElements());
 
 		/// forward check
@@ -550,10 +541,7 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 				}
 			}
 
-			if (foundMatch)
-			{
-				bullseyesDetectedCorrect++;
-			}
+			validationCorrect.addIteration(foundMatch);
 		}
 
 		/// backward check
@@ -573,35 +561,16 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 				}
 			}
 
-			if (foundMatch == false)
-			{
-				bullseyesDetectedWrong++;
-			}
+			validationFalsePositive.addIteration(foundMatch);
 		}
 
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validationCorrect.needMoreIterations() || validationFalsePositive.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(bullseyesTotal != 0ull);
+	Log::info() << "Correctly detected validation: " << validationCorrect;
+	Log::info() << "False positive validation: " << validationFalsePositive;
 
-	const double percentCorrect = double(bullseyesDetectedCorrect) / double(bullseyesTotal);
-	const double percentWrong = double(bullseyesDetectedWrong) / double(bullseyesTotal);
-
-	Log::info() << "Corrected detected: " << String::toAString(percentCorrect * 100.0, 2u) << "%";
-	Log::info() << "False positive: " << String::toAString(percentWrong * 100.0, 2u) << "%";
-
-	const bool succeeded = percentCorrect >= 0.99 && percentWrong <= 0.01;
-
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return succeeded;
+	return validationCorrect.succeeded() && validationFalsePositive.succeeded();
 }
 
 bool TestMessengerCodeDetector::testStressTest(const double testDuration, Worker& worker)
@@ -613,6 +582,7 @@ bool TestMessengerCodeDetector::testStressTest(const double testDuration, Worker
 	// we actually do not validate the result, but we simply try to crash the detector instead
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	size_t dummyValue = 0;
 
@@ -623,12 +593,13 @@ bool TestMessengerCodeDetector::testStressTest(const double testDuration, Worker
 		const unsigned int width = RandomI::random(randomGenerator, 21u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 21u, 1920u);
 
-		const unsigned int horizontalPadding = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxHorizontalPadding = RandomI::random(randomGenerator, 0u, 100u);
+		const unsigned int horizontalPadding = maxHorizontalPadding * RandomI::random(randomGenerator, 1u);
 
 		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), horizontalPadding);
 		CV::CVUtilities::randomizeFrame(yFrame, false, &randomGenerator);
 
-		Worker* useWorker = (worker && RandomI::random(1u) == 1u) ? &worker : nullptr;
+		Worker* useWorker = (worker && RandomI::boolean(randomGenerator)) ? &worker : nullptr;
 
 		const MessengerCodeDetector::Codes codes = MessengerCodeDetector::detectMessengerCodes(yFrame.constdata<uint8_t>(), width, height, yFrame.paddingElements(), useWorker);
 
@@ -641,14 +612,14 @@ bool TestMessengerCodeDetector::testStressTest(const double testDuration, Worker
 
 	if (dummyValue % 2 == 0)
 	{
-		Log::info() << "Validation: Succeeded.";
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		Log::info() << "Validation: Succeeded.";
+		Log::info() << "Validation: " << validation;
 	}
 
-	return true;
+	return validation.succeeded();
 }
 
 #ifdef OCEAN_USE_TEST_DATA_COLLECTION
@@ -657,7 +628,7 @@ bool TestMessengerCodeDetector::testDetect1Bullseye(Worker& worker)
 {
 	Log::info() << "Detection of exactly 1 Bullseye:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	const SharedTestDataCollection dataCollection = TestDataManager::get().testDataCollection("messengercodedetector_1bullseye");
 
@@ -687,7 +658,7 @@ bool TestMessengerCodeDetector::testDetect1Bullseye(Worker& worker)
 
 							if (bullseyes.empty())
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 							else
 							{
@@ -695,7 +666,7 @@ bool TestMessengerCodeDetector::testDetect1Bullseye(Worker& worker)
 								{
 									if (bullseye.position().distance(imageCenter) > distance5)
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 							}
@@ -704,7 +675,7 @@ bool TestMessengerCodeDetector::testDetect1Bullseye(Worker& worker)
 							if (!CV::FrameInterpolatorNearestPixel::Comfort::rotate90(yTestImage, rotatedImage, true))
 							{
 								ocean_assert(false && "Should never happen!");
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							yTestImage = std::move(rotatedImage);
@@ -717,33 +688,26 @@ bool TestMessengerCodeDetector::testDetect1Bullseye(Worker& worker)
 
 			Log::error() << "Invalid test image with index " << dataIndex;
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
 		Log::error() << "Failed to access test data";
 
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMessengerCodeDetector::testDetect0Code(Worker& worker)
 {
 	Log::info() << "Detection of 0 Messenger code:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	const SharedTestDataCollection dataCollection = TestDataManager::get().testDataCollection("messengercodedetector_0code");
 
@@ -764,10 +728,7 @@ bool TestMessengerCodeDetector::testDetect0Code(Worker& worker)
 					{
 						CV::Detector::MessengerCodeDetector::Codes codes = CV::Detector::MessengerCodeDetector::detectMessengerCodes(yTestImage.constdata<uint8_t>(), yTestImage.width(), yTestImage.height(), yTestImage.paddingElements(), useWorker ? &worker : nullptr);
 
-						if (codes.size() != 0)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, codes.size(), size_t(0));
 					}
 
 					continue;
@@ -776,36 +737,26 @@ bool TestMessengerCodeDetector::testDetect0Code(Worker& worker)
 
 			Log::error() << "Invalid test image with index " << dataIndex;
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
 		Log::error() << "Failed to access test data";
 
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMessengerCodeDetector::testDetect1Code(Worker& worker)
 {
 	Log::info() << "Detection of exactly 1 Messenger code:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
-	bool allSucceeded = true;
+	ValidationPrecision validation(0.95);
 
 	const SharedTestDataCollection dataCollection = TestDataManager::get().testDataCollection("messengercodedetector_1code");
 
@@ -826,12 +777,7 @@ bool TestMessengerCodeDetector::testDetect1Code(Worker& worker)
 					{
 						CV::Detector::MessengerCodeDetector::Codes codes = CV::Detector::MessengerCodeDetector::detectMessengerCodes(yTestImage.constdata<uint8_t>(), yTestImage.width(), yTestImage.height(), yTestImage.paddingElements(), useWorker ? &worker : nullptr);
 
-						if (codes.size() == 1)
-						{
-							++validIterations;
-						}
-
-						++iterations;
+						validation.addIteration(codes.size() == 1);
 					}
 
 					continue;
@@ -840,32 +786,13 @@ bool TestMessengerCodeDetector::testDetect1Code(Worker& worker)
 
 			Log::error() << "Invalid test image with index " << dataIndex;
 
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
-	ocean_assert(allSucceeded == false || iterations != 0ull);
-	if (iterations != 0u)
-	{
-		const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-		if (percent < 0.95)
-		{
-			Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
-			allSucceeded = false;
-		}
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 #endif // OCEAN_USE_TEST_DATA_COLLECTION
@@ -888,7 +815,10 @@ Vectors2 TestMessengerCodeDetector::createCodeCorners(const Vector2& codeCenter,
 	// we shuffle the order
 	for (unsigned int n = 0u; n < 10u; ++n)
 	{
-		std::swap(corners[RandomI::random(randomGenerator, (unsigned int)corners.size() - 1u)], corners[RandomI::random(randomGenerator, (unsigned int)corners.size() - 1u)]);
+		const unsigned int indexA = RandomI::random(randomGenerator, (unsigned int)corners.size() - 1u);
+		const unsigned int indexB = RandomI::random(randomGenerator, (unsigned int)corners.size() - 1u);
+
+		std::swap(corners[indexA], corners[indexB]);
 	}
 
 	const Scalar rotation = Random::scalar(randomGenerator, 0, Numeric::pi2() - Numeric::eps());
