@@ -9,6 +9,7 @@
 #include "ocean/test/testgeometry/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -52,39 +53,42 @@ bool TestNonLinearOptimizationLine::testNonLinearOptimizationLine(const double t
 	Log::info() << "Optimization of 2D line:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testOptimizeLineIdeal(5u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(5u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 	Log::info() << " ";
-	allSucceeded = testOptimizeLineIdeal(15u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(15u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 	Log::info() << " ";
-	allSucceeded = testOptimizeLineIdeal(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 	Log::info() << " ";
-	allSucceeded = testOptimizeLineIdeal(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0u) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testOptimizeLineIdeal(5u, testDuration, Geometry::Estimator::ET_TUKEY, 1u) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeLineIdeal(15u, testDuration, Geometry::Estimator::ET_TUKEY, 3u) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeLineIdeal(50u, testDuration, Geometry::Estimator::ET_TUKEY, 15u) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeLineIdeal(500u, testDuration, Geometry::Estimator::ET_TUKEY, 100u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testOptimizeLineNoisy(10u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 3u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(5u, testDuration, Geometry::Estimator::ET_TUKEY, 1u));
 	Log::info() << " ";
-	allSucceeded = testOptimizeLineNoisy(20u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 6u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(15u, testDuration, Geometry::Estimator::ET_TUKEY, 3u));
 	Log::info() << " ";
-	allSucceeded = testOptimizeLineNoisy(50u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 10u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(50u, testDuration, Geometry::Estimator::ET_TUKEY, 15u));
 	Log::info() << " ";
-	allSucceeded = testOptimizeLineNoisy(500u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 100u) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineIdeal(500u, testDuration, Geometry::Estimator::ET_TUKEY, 100u));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineNoisy(10u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 3u));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineNoisy(20u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 6u));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineNoisy(50u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 10u));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testOptimizeLineNoisy(500u, testDuration, Geometry::Estimator::ET_TUKEY, Scalar(0.05), 100u));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const unsigned int outliers)

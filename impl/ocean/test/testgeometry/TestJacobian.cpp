@@ -19,6 +19,7 @@
 #include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -1500,9 +1501,8 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 	Log::info() << "Testing any camera pose Jacobian Rodrigues 2x6 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	bool firstCameraIteration = true;
 
@@ -1520,7 +1520,7 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 
 		constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
 
-		ValidationPrecision validation(threshold, randomGenerator);
+		ValidationPrecision validationPrecision(threshold, randomGenerator);
 
 		HighPerformanceStatistic performanceNaive;
 		HighPerformanceStatistic performance;
@@ -1529,7 +1529,7 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 			const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -10, 10));
 			const QuaternionT<T> quaternion(RandomT<T>::quaternion(randomGenerator));
@@ -1611,19 +1611,18 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 				}
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance naive: " << performanceNaive;
 		Log::info() << "Performance: " << performance;
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 /**
@@ -2921,21 +2920,20 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 	bool firstCameraIteration = true;
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
 		Log::info().newLine(!firstCameraIteration);
 		firstCameraIteration = false;
 
-		const std::shared_ptr<AnyCamera> anyCameraShared = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> anyCameraShared = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCameraShared);
 
 		const AnyCamera& anyCamera = *anyCameraShared;
 
-		ValidationPrecision validation(successThreshold(), randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold(), randomGenerator);
 
 		HighPerformanceStatistic performanceNaive;
 		HighPerformanceStatistic performanceOptimized;
@@ -2944,10 +2942,14 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
-			const Vector3 world_t_camera(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
-			const Quaternion world_Q_camera(Random::quaternion());
+			const Scalar world_t_camera_x = Random::scalar(randomGenerator, -1, 1);
+			const Scalar world_t_camera_y = Random::scalar(randomGenerator, -1, 1);
+			const Scalar world_t_camera_z = Random::scalar(randomGenerator, -1, 1);
+
+			const Vector3 world_t_camera(world_t_camera_x, world_t_camera_y, world_t_camera_z);
+			const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 			const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
@@ -2957,9 +2959,9 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 			while (objectPoints.size() < numberPoints)
 			{
-				const Vector2 imagePoint = Random::vector2(Scalar(5u), Scalar(anyCamera.width() - 5u), Scalar(5u), Scalar(anyCamera.height() - 5u));
+				const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5u), Scalar(anyCamera.width() - 5u), Scalar(5u), Scalar(anyCamera.height() - 5u));
 				const Line3 ray(anyCamera.ray(imagePoint, world_T_camera));
-				const Vector3 objectPoint(ray.point(Random::scalar(1, 10)));
+				const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 10)));
 
 				objectPoints.push_back(objectPoint);
 			}
@@ -3031,29 +3033,19 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 				}
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Camera name: " << anyCamera.name();
 		Log::info() << "Performance naive: " << performanceNaive;
 		Log::info() << "Performance optimized: " << performanceOptimized;
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 	}
 
-	if (!allSucceeded)
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
@@ -3406,9 +3398,8 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 
 	const VectorT3<T> defaultRotationDirection(0, 0, -1);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	bool firstCameraIteration = true;
 
@@ -3426,18 +3417,18 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 
 		constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
 
-		ValidationPrecision validation(threshold, randomGenerator);
+		ValidationPrecision validationPrecision(threshold, randomGenerator);
 
 		const Timestamp startTimestamp(true);
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
-			const T radius = std::is_same<T, double>::value ? RandomT<T>::scalar(T(0.001), T(100)) : RandomT<T>::scalar(T(0.1), T(10));
+			const T radius = std::is_same<T, double>::value ? RandomT<T>::scalar(randomGenerator, T(0.001), T(100)) : RandomT<T>::scalar(randomGenerator, T(0.1), T(10));
 			const VectorT3<T> defaultObjectPoint(defaultRotationDirection * radius);
 
-			const SquareMatrixT3<T> world_R_camera(RandomT<T>::rotation());
+			const SquareMatrixT3<T> world_R_camera(RandomT<T>::rotation(randomGenerator));
 			const SquareMatrixT3<T> flippedCamera_R_world(AnyCamera::standard2InvertedFlipped(world_R_camera));
 
 			const VectorT2<T> testImagePoint = RandomT<T>::vector2(randomGenerator, T(5), T(camera.width() - 5u), T(5), T(camera.height() - 5u));
@@ -3466,17 +3457,16 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 				}
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 /**

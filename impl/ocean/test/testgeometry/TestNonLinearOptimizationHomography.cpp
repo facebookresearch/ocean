@@ -9,6 +9,7 @@
 #include "ocean/test/testgeometry/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -131,7 +132,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 	Log::info() << "Testing optimization homography:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int modelParameters : {8u, 9u})
 	{
@@ -188,10 +190,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 						{
 							Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType);
 
-							if (!testNonLinearOptimizationHomography(numberCorrespondences, modelParameters, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u, useCovariances))
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationHomography(numberCorrespondences, modelParameters, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u, useCovariances));
 						}
 					}
 				}
@@ -199,7 +198,9 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 		}
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(const double testDuration)
@@ -209,7 +210,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 	Log::info() << "Testing optimization similarity:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int outliersPercent : {0u, 10u})
 	{
@@ -264,17 +266,16 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType);
 
-						if (!testNonLinearOptimizationSimilarity(numberCorrespondences, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u, useCovariances))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, testNonLinearOptimizationSimilarity(numberCorrespondences, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u, useCovariances));
 					}
 				}
 			}
 		}
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(const unsigned int correspondences, const unsigned int modelParameter, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useCovariances)
@@ -283,17 +284,15 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 	ocean_assert(numberOutliers <= correspondences);
 	ocean_assert(modelParameter >= 8u && modelParameter <= 9u);
 
-	uint64_t validIterations = 0ull;
-	uint64_t iterations = 0ull;
+	const double threshold = (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u) ? 0.99 : 0.0;
 
-	bool explicitError = false;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
 	// camera profile
 	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(45));
-
-	RandomGenerator randomGenerator;
 
 	Scalar averageSqrPixelErrorHomography = 0;
 	Scalar averageSqrPixelErrorOpimization = 0;
@@ -308,6 +307,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		// creating the object point into the plane
 		Vectors3 objectPoints;
 		for (size_t i = 0; i < correspondences; i++)
@@ -415,7 +416,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 			{
 				if (intermediateErrors[i] > intermediateErrors[i -1])
 				{
-					explicitError = true;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -432,9 +433,9 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 				{
 					// perfect conditions need perfect results
 
-					if (averageSqrDistance <= Scalar(1))
+					if (averageSqrDistance > Scalar(1))
 					{
-						++validIterations;
+						scopedIteration.setInaccurate();
 					}
 				}
 				else
@@ -442,54 +443,30 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 					// as we do not know anything about the outliers etc. we do not check the result for accuracy
 					// we just ensure that we have a couple of optimization iterations
 
-					if (intermediateErrors.size() >= 5)
+					if (intermediateErrors.size() < 5)
 					{
-						++validIterations;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
 		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	// output errors
-	ocean_assert(iterations != 0ull);
-	averageSqrPixelErrorHomography /= Scalar(iterations);
-	averageSqrPixelErrorOpimization /= Scalar(iterations);
+	averageSqrPixelErrorHomography /= Scalar(validation.iterations());
+	averageSqrPixelErrorOpimization /= Scalar(validation.iterations());
 
 	const Scalar medianPixelErrorFaulty = Median::constMedian(medianSqrPixelErrors.data(), medianSqrPixelErrors.size());
 	const Scalar medianPixelErrorOpimization = Median::constMedian(medianOptimizedSqrPixelErrors.data(), medianOptimizedSqrPixelErrors.size());
-	const double percent = double(validIterations) / double(iterations);
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageSqrPixelErrorHomography, 1u) << "px -> " << String::toAString(averageSqrPixelErrorOpimization, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(medianPixelErrorFaulty, 1u) << "px -> " << String::toAString(medianPixelErrorOpimization, 1u) << "px";
 	Log::info() << "Performance Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms average: " << String::toAString(performance.averageMseconds(), 4u) << "ms first: " << String::toAString(performance.firstMseconds(), 4u) << "ms";
 
-	if (explicitError)
-	{
-		Log::info() << "Validation: FAILED!";
-		return false;
-	}
+	Log::info() << "Validation: " << validation;
 
-	if (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u)
-	{
-		// perfect conditions need perfect results
-
-		if (percent >= 0.99)
-		{
-			Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-			return true;
-		}
-
-		Log::info() << "Validation: FAILED!";
-		return false;
-	}
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return true;
+	return validation.succeeded();
 }
 
 bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useCovariances)
@@ -497,17 +474,15 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	uint64_t validIterations = 0ull;
-	uint64_t iterations = 0ull;
+	const double threshold = (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u) ? 0.99 : 0.0;
 
-	bool explicitError = false;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
-
-	RandomGenerator randomGenerator;
 
 	Scalar averageSqrPixelErrorSimilarity = 0;
 	Scalar averageSqrPixelErrorOpimization = 0;
@@ -519,6 +494,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const Vector2 translation = Random::vector2(-100, 100);
 		const Scalar rotation = Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30));
 		const Scalar scale = Random::scalar(Scalar(0.25), Scalar(1.75));
@@ -617,12 +594,12 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 			if (Numeric::isNotEqual(optimizedSimilarity(0, 0), optimizedSimilarity(1, 1)) || Numeric::isNotEqual(optimizedSimilarity(1, 0), -optimizedSimilarity(0, 1)))
 			{
-				explicitError = true;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (Numeric::isNotEqual(optimizedSimilarity(2, 0), 0) || Numeric::isNotEqual(optimizedSimilarity(2, 1), 0) || Numeric::isNotEqual(optimizedSimilarity(2, 2), 1))
 			{
-				explicitError = true;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			// let's ensure that the intermediate errors are decreasing
@@ -631,7 +608,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 			{
 				if (intermediateErrors[i] > intermediateErrors[i -1])
 				{
-					explicitError = true;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -648,9 +625,9 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 				{
 					// perfect conditions need perfect results
 
-					if (averageSqrDistance <= Scalar(1))
+					if (averageSqrDistance > Scalar(1))
 					{
-						++validIterations;
+						scopedIteration.setInaccurate();
 					}
 				}
 				else
@@ -658,54 +635,30 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 					// as we do not know anything about the outliers etc. we do not check the result for accuracy
 					// we just ensure that we have a couple of optimization iterations
 
-					if (intermediateErrors.size() >= 5)
+					if (intermediateErrors.size() < 5)
 					{
-						++validIterations;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
 		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	// output errors
-	ocean_assert(iterations != 0ull);
-	averageSqrPixelErrorSimilarity /= Scalar(iterations);
-	averageSqrPixelErrorOpimization /= Scalar(iterations);
+	averageSqrPixelErrorSimilarity /= Scalar(validation.iterations());
+	averageSqrPixelErrorOpimization /= Scalar(validation.iterations());
 
 	const Scalar medianPixelErrorFaulty = Median::constMedian(medianSqrPixelErrors.data(), medianSqrPixelErrors.size());
 	const Scalar medianPixelErrorOpimization = Median::constMedian(medianOptimizedSqrPixelErrors.data(), medianOptimizedSqrPixelErrors.size());
-	const double percent = double(validIterations) / double(iterations);
 
 	Log::info() << "Average sqr pixel error: " << String::toAString(averageSqrPixelErrorSimilarity, 1u) << "px -> " << String::toAString(averageSqrPixelErrorOpimization, 1u) << "px";
 	Log::info() << "Median sqr pixel error: " << String::toAString(medianPixelErrorFaulty, 1u) << "px -> " << String::toAString(medianPixelErrorOpimization, 1u) << "px";
 	Log::info() << "Performance Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms average: " << String::toAString(performance.averageMseconds(), 4u) << "ms first: " << String::toAString(performance.firstMseconds(), 4u) << "ms";
 
-	if (explicitError)
-	{
-		Log::info() << "Validation: FAILED!";
-		return false;
-	}
+	Log::info() << "Validation: " << validation;
 
-	if (correspondences >= 20 && standardDeviation == 0 && numberOutliers == 0u)
-	{
-		// perfect conditions need perfect results
-
-		if (percent >= 0.99)
-		{
-			Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-			return true;
-		}
-
-		Log::info() << "Validation: FAILED!";
-		return false;
-	}
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return true;
+	return validation.succeeded();
 }
 
 Scalar TestNonLinearOptimizationHomography::determineHomographyError(const SquareMatrix3& homography, const Vectors2& pointsLeft, const Vectors2& pointsRight, Scalar* maximalSqrDistance)

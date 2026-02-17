@@ -9,6 +9,8 @@
 #include "ocean/test/testgeometry/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/Accessor.h"
 #include "ocean/base/HighPerformanceTimer.h"
@@ -108,16 +110,18 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 		Log::info() << "Testing trifocal tensor with perfect image points from three views:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Scalar sigma = addGaussianNoise ? Scalar(1) : Scalar(0);
+
+	const double threshold = addGaussianNoise ? 0.75 : 0.95;
 
 	for (const unsigned int points : {7u, 35u, 350u})
 	{
 		Log::info() << "... with " << points << " points:";
 
-		uint64_t failedMetric = 0ull;
-		uint64_t validIterations = 0ull;
+		ValidationPrecision validationPrecision(threshold, randomGenerator);
 
 		const Timestamp startTimestamp(true);
 		HighPerformanceStatistic performance;
@@ -182,7 +186,7 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 					continue;
 				}
 
-				++validIterations;
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 				const PinholeCamera calibratedCamera(intrinsic, pinholeCamera.width(), pinholeCamera.height());
 
@@ -191,31 +195,30 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 
 				if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5)))
 				{
-					++failedMetric;
+					scopedIteration.setInaccurate();
 				}
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
-		if (validIterations < 1)
+		if (validationPrecision.iterations() == 0ull)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			Log::info() << "No succeeded executions";
 		}
 		else
 		{
-			const Scalar percentage(Scalar(validIterations - failedMetric) / Scalar(validIterations));
 			const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
-			Log::info() << "Validation: " << String::toAString(percentage * 100.00, 1u) << "% succeeded. Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
+			Log::info() << "Validation: " << validationPrecision << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
 
-			allSucceeded = (addGaussianNoise ? percentage >= 0.75 : percentage >= 0.95) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGaussianNoise, const double testDuration)
@@ -235,8 +238,10 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 
 	const Scalar sigma = addGaussianNoise ? Scalar(1) : Scalar(0);
 
-	uint64_t failedMetric = 0ull;
-	uint64_t validIterations = 0ull;
+	const double threshold = addGaussianNoise ? 0.25 : 0.50;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	HighPerformanceStatistic performance;
@@ -282,7 +287,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 				continue;
 			}
 
-			++validIterations;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const PinholeCamera calibratedCamera(intrinsic, pinholeCamera.width(), pinholeCamera.height());
 
@@ -291,27 +296,26 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 
 			if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5)))
 			{
-				++failedMetric;
+				scopedIteration.setInaccurate();
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
-	if (validIterations < 1)
+	if (validation.iterations() == 0ull)
 	{
+		Log::info() << "Validation: FAILED! No succeeded executions";
+
 		return false;
 	}
-	else
-	{
-		const Scalar percentage(Scalar(validIterations - failedMetric) / Scalar(validIterations));
-		const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
-		Log::info() << "Validation: " << String::toAString(percentage * 100.00, 1u) << "% succeeded. Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
+	const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
-		return addGaussianNoise? percentage > 0.25 : percentage > 0.5;
-	}
+	Log::info() << "Validation: " << validation << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
+
+	return validation.succeeded();
 }
 
 bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int views, bool addGaussianNoise, const double testDuration)
@@ -332,8 +336,10 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 
 	const Scalar sigma = addGaussianNoise ? Scalar(1) : Scalar(0);
 
-	uint64_t failedMetric = 0ull;
-	uint64_t validIterations = 0ull;
+	const double threshold = addGaussianNoise ? 0.25 : 0.75;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	HighPerformanceStatistic performance;
@@ -371,7 +377,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 				continue;
 			}
 
-			++validIterations;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const PinholeCamera calibratedCamera(intrinsic, pinholeCamera.width(), pinholeCamera.height());
 
@@ -380,27 +386,26 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 
 			if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5)))
 			{
-				++failedMetric;
+				scopedIteration.setInaccurate();
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
-	if (validIterations < 1)
+	if (validation.iterations() == 0ull)
 	{
+		Log::info() << "Validation: FAILED! No succeeded executions";
+
 		return false;
 	}
-	else
-	{
-		const Scalar percentage(Scalar(validIterations - failedMetric) / Scalar(validIterations));
-		const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
-		Log::info() << "Validation: " << String::toAString(percentage * 100.00, 1u) << "% succeeded. Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
+	const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
-		return addGaussianNoise? percentage > 0.25 : percentage > 0.75;
-	}
+	Log::info() << "Validation: " << validation << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
+
+	return validation.succeeded();
 }
 
 bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned int views, const double testDuration)
@@ -410,14 +415,14 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 	Log::info() << "Projective reconstruction with faulty point correspondences from " << views << " views:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int points : {15u, 50u, 500u})
 	{
 		Log::info() << "... with " << points << " points:";
 
-		uint64_t failedMetric = 0ull;
-		uint64_t validIterations = 0ull;
+		ValidationPrecision validationPrecision(0.50, randomGenerator);
 
 		const Timestamp startTimestamp(true);
 		HighPerformanceStatistic performance;
@@ -486,7 +491,8 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 					continue;
 				}
 
-				++validIterations;
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
+
 				const PinholeCamera calibratedCamera(intrinsic, pinholeCamera.width(), pinholeCamera.height());
 
 				Scalar maxSquaredMetricError = evaluateReprojectionError(imagePointsPerPose, calibratedCamera, posesIF);
@@ -494,31 +500,30 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 				if (maxSquaredMetricError > (1.5 * 1.5))
 				{
-					++failedMetric;
+					scopedIteration.setInaccurate();
 				}
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance in ms: " << String::toAString(performance.averageMseconds());
 
-		if (validIterations < 1)
+		if (validationPrecision.iterations() == 0ull)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			Log::info() << "No succeeded executions";
-
 		}
 		else
 		{
-			const Scalar percentage(Scalar(validIterations - failedMetric) / Scalar(validIterations));
 			const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
-			Log::info() << "Validation: " << String::toAString(percentage * 100.00, 1u) << "% succeeded. Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
+			Log::info() << "Validation: " << validationPrecision << " Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
 
-			allSucceeded = percentage >= 0.5 && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 		}
 	}
-	return allSucceeded;
+
+	return validation.succeeded();
 }
 
 bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma, Vectors3* objectPoints)

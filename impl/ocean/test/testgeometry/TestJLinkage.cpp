@@ -9,6 +9,7 @@
 #include "ocean/test/testgeometry/TestJLinkage.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/String.h"
@@ -136,7 +137,8 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int correspondences[] = {10u, 25u, 50u, 100u};
 
@@ -148,13 +150,14 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 
 		HighPerformanceStatistic performance;
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		ValidationPrecision validationPrecision(0.97, randomGenerator);
 
 		const Timestamp startTimestamp(true);
 
 		do
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
+
 			const Vector3 translation(Random::vector3());
 			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
 			const Quaternion quaternion(euler);
@@ -194,7 +197,7 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 
 				while (double(indexSet.size()) < 0.2 * double(number))
 				{
-					const Index32 index = RandomI::random((unsigned int)number - 1u);
+					const Index32 index = RandomI::random(randomGenerator, (unsigned int)number - 1u);
 					indexSet.insert(index);
 				}
 
@@ -245,37 +248,28 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 				localSucceeded = false;
 			}
 
-			if (localSucceeded)
+			if (!localSucceeded)
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms, first: " << String::toAString(performance.firstMseconds(), 1u) << "ms";
 
-		Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validationPrecision;
 
-		allSucceeded = percent >= 0.97 && allSucceeded;
+		if (!validationPrecision.succeeded())
+		{
+			OCEAN_SET_FAILED(validation);
+		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestJLinkage::LinkageMethod tLinkageType>
@@ -291,9 +285,8 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int correspondences[] = {10u, 20u, 30u, 100u};
 
@@ -305,8 +298,7 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 		HighPerformanceStatistic performance;
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		ValidationPrecision validationPrecision(0.85, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
@@ -350,7 +342,7 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 				while (double(indexSet.size()) < 0.5 * double(number))
 				{
-					const Index32 index = RandomI::random((unsigned int)number - 1u);
+					const Index32 index = RandomI::random(randomGenerator, (unsigned int)number - 1u);
 					indexSet.insert(index);
 				}
 
@@ -369,6 +361,8 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 				performance.stop();
 
+				size_t accuratePoints = 0;
+
 				if (homographies.size() == 1ull)
 				{
 					for (size_t n = 0; n < leftImagePoints.size(); ++n)
@@ -381,38 +375,31 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 						const Scalar error = testRightPoint.sqrDistance(rightImagePoint);
 						if (error <= Scalar(3.5 * 3.5))
 						{
-							validIterations++;
+							++accuratePoints;
 						}
 					}
 				}
+
+				validationPrecision.addIterations(accuratePoints, leftImagePoints.size());
 			}
-
-			iterations += (unsigned long long)leftImagePoints.size();
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms, first: " << String::toAString(performance.firstMseconds(), 1u) << "ms";
 
-		Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validationPrecision;
 
-		allSucceeded = percent >= 0.85 && allSucceeded;
+		if (!validationPrecision.succeeded())
+		{
+			OCEAN_SET_FAILED(validation);
+		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestJLinkage::LinkageMethod tLinkageType>
@@ -428,9 +415,8 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int h = 2u; h < 4u; h++)
 	{
@@ -448,13 +434,14 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 
 			HighPerformanceStatistic performance;
 
-			unsigned long long iterations = 0ull;
-			unsigned long long validIterations = 0ull;
+			ValidationPrecision validationPrecision(0.90, randomGenerator);
 
 			const Timestamp startTimestamp(true);
 
 			do
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
+
 				const Plane3 plane(Vector3(0, -5, 0), Vector3(Scalar(0.1), 1, Scalar(0.2)).normalized());
 
 				Vectors2 leftImagePoints, rightImagePoints;
@@ -541,38 +528,29 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 					localSucceeded = false;
 				}
 
-				if (localSucceeded)
+				if (!localSucceeded)
 				{
-					++validIterations;
+					scopedIteration.setInaccurate();
 				}
-
-				++iterations;
 			}
-			while (!startTimestamp.hasTimePassed(testDuration));
-
-			ocean_assert(iterations != 0ull);
-			const double percent = double(validIterations) / double(iterations);
+			while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 			Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms, first: " << String::toAString(performance.firstMseconds(), 1u) << "ms";
 
-			Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+			Log::info() << "Validation: " << validationPrecision;
 
-			allSucceeded = percent >= 0.90 && allSucceeded;
+			if (!validationPrecision.succeeded())
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <TestJLinkage::LinkageMethod tLinkageType>
@@ -587,7 +565,8 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 	const unsigned int size = 640u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int l = 1u; l < 5u; l++)
 	{
@@ -603,13 +582,14 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 			HighPerformanceStatistic performance;
 
-			unsigned long long iterations = 0ull;
-			unsigned long long validIterations = 0ull;
+			ValidationPrecision validationPrecision(0.50, randomGenerator);
 
 			const Timestamp startTimestamp(true);
 
 			do
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
+
 				Vectors2 imagePoints;
 
 				Lines2 randomLines;
@@ -657,13 +637,13 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 				for (unsigned int i = 0u; i < l; i++)
 				{
-					const Index32 index = RandomI::random(i * number, (i + 1u) * number - 1u);
+					const Index32 index = RandomI::random(randomGenerator, i * number, (i + 1u) * number - 1u);
 					indexSet.insert(index);
 				}
 
 				while (double(indexSet.size()) < 0.2 * double(number))
 				{
-					const Index32 index = RandomI::random((unsigned int)imagePoints.size() - 1u);
+					const Index32 index = RandomI::random(randomGenerator, (unsigned int)imagePoints.size() - 1u);
 					indexSet.insert(index);
 				}
 
@@ -718,44 +698,35 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 					localSucceeded = false;
 				}
 
-				if (localSucceeded)
+				if (!localSucceeded)
 				{
-					++validIterations;
+					scopedIteration.setInaccurate();
 				}
-
-				++iterations;
 			}
-			while (!startTimestamp.hasTimePassed(testDuration));
-
-			ocean_assert(iterations != 0ull);
-			const double percent = double(validIterations) / double(iterations);
+			while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 			Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms, first: " << String::toAString(performance.firstMseconds(), 1u) << "ms";
 
-			Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+			Log::info() << "Validation: " << validationPrecision;
 
-			allSucceeded = percent >= 0.50 && allSucceeded;
+			if (!validationPrecision.succeeded())
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
 	}
 
 	Log::info() << " ";
 
-	if (!allSucceeded && std::is_same<Scalar, float>::value)
+	if (!validation.succeededSoFar() && std::is_same<Scalar, float>::value)
 	{
 		Log::info() << "The test failed, however the applied 32 bit floating point value precision is too low for this function so that we rate the result as expected.";
 		return true;
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestGeometry
