@@ -14,6 +14,7 @@
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -121,8 +122,8 @@ bool TestEuler::testConversionToMatrix(const double testDuration)
 
 	const unsigned int constIterations = 100000u;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	Rotations rotations(constIterations);
 	SquareMatrices3 matrices(constIterations);
@@ -157,23 +158,20 @@ bool TestEuler::testConversionToMatrix(const double testDuration)
 			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(rotation * Vector3(0, 1, 0)));
 			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(rotation * Vector3(0, 0, 1)));
 
-			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon))
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			if (!Numeric::isEqual(angleX, 0, epsilon) || !Numeric::isEqual(angleY, 0, epsilon) || !Numeric::isEqual(angleZ, 0, epsilon))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		iterations += constIterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 / double(constIterations) << "mys";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestEuler::testConversionFromRotation(const double testDuration)
@@ -182,8 +180,8 @@ bool TestEuler::testConversionFromRotation(const double testDuration)
 
 	Log::info() << "Test conversion from angle-axis rotation:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Scalar(0.02) : Numeric::weakEps();
 
@@ -206,7 +204,8 @@ bool TestEuler::testConversionFromRotation(const double testDuration)
 
 			const Rotation eulerRotation(yEuler * xEuler * zEuler);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
 				const Vector3 vector(Random::vector3());
@@ -218,26 +217,16 @@ bool TestEuler::testConversionFromRotation(const double testDuration)
 
 				if (Numeric::isNotEqual(angle, 0, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestEuler::testConversionFromMatrix(const double testDuration)
@@ -248,8 +237,8 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 	const Scalar angleEpsilon = std::is_same<float, Scalar>::value ? Numeric::deg2rad(Scalar(0.02)) : Numeric::deg2rad(Scalar(0.001));
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -277,7 +266,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 			const SquareMatrix3 eulerMatrix(yEuler * xEuler * zEuler);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -290,7 +279,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 				if (angle >= angleEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -298,25 +287,18 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 			if ((matrix * Vector3(1, 0, 0)).angle(eulerMatrix * Vector3(1, 0, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 1, 0)).angle(eulerMatrix * Vector3(0, 1, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 0, 1)).angle(eulerMatrix * Vector3(0, 0, 1)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -333,7 +315,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 			const SquareMatrix3 eulerMatrix(yEuler * xEuler * zEuler);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -346,7 +328,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 				if (angle >= angleEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -354,35 +336,25 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 			if ((matrix * Vector3(1, 0, 0)).angle(eulerMatrix * Vector3(1, 0, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 1, 0)).angle(eulerMatrix * Vector3(0, 1, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 0, 1)).angle(eulerMatrix * Vector3(0, 0, 1)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
@@ -393,8 +365,8 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 	const Scalar angleEpsilon = std::is_same<float, Scalar>::value ? Numeric::deg2rad(Scalar(0.02)) : Numeric::deg2rad(Scalar(0.001));
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -426,7 +398,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 			const SquareMatrix3 decomposeMatrix(yDecompose * xDecompose * zDecompose);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -439,7 +411,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 				if (angle >= angleEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -447,25 +419,18 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 			if ((matrix * Vector3(1, 0, 0)).angle(decomposeMatrix * Vector3(1, 0, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 1, 0)).angle(decomposeMatrix * Vector3(0, 1, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 0, 1)).angle(decomposeMatrix * Vector3(0, 0, 1)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -486,7 +451,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 			const SquareMatrix3 decomposeMatrix(yDecompose * xDecompose * zDecompose);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -499,7 +464,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 				if (angle >= angleEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -507,35 +472,25 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 			if ((matrix * Vector3(1, 0, 0)).angle(decomposeMatrix * Vector3(1, 0, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 1, 0)).angle(decomposeMatrix * Vector3(0, 1, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 0, 1)).angle(decomposeMatrix * Vector3(0, 0, 1)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
@@ -546,8 +501,8 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 	const Scalar angleEpsilon = std::is_same<float, Scalar>::value ? Numeric::deg2rad(Scalar(0.02)) : Numeric::deg2rad(Scalar(0.001));
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -579,7 +534,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 			const SquareMatrix3 decomposeMatrix(xDecompose * yDecompose * zDecompose);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -592,7 +547,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 				if (angle >= angleEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -600,25 +555,18 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 			if ((matrix * Vector3(1, 0, 0)).angle(decomposeMatrix * Vector3(1, 0, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 1, 0)).angle(decomposeMatrix * Vector3(0, 1, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 0, 1)).angle(decomposeMatrix * Vector3(0, 0, 1)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -639,7 +587,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 			const SquareMatrix3 decomposeMatrix(xDecompose * yDecompose * zDecompose);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -652,7 +600,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 				if (angle >= angleEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -660,35 +608,25 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 			if ((matrix * Vector3(1, 0, 0)).angle(decomposeMatrix * Vector3(1, 0, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 1, 0)).angle(decomposeMatrix * Vector3(0, 1, 0)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((matrix * Vector3(0, 0, 1)).angle(decomposeMatrix * Vector3(0, 0, 1)) >= angleEpsilon)
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestEuler::testAdjustAngles(const double testDuration)
@@ -697,10 +635,8 @@ bool TestEuler::testAdjustAngles(const double testDuration)
 
 	Log::info() << "Test adjustAngles():";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -772,11 +708,11 @@ bool TestEuler::testAdjustAngles(const double testDuration)
 			Euler::adjustAngles(adjustedYaw, adjustedPitch, adjustedRoll);
 			const Euler euler(adjustedYaw, adjustedPitch, adjustedRoll);
 
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			if (!euler.isValid())
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 
@@ -787,25 +723,15 @@ bool TestEuler::testAdjustAngles(const double testDuration)
 
 			if (!resultVectorA.isEqual(resultVectorB, Numeric::weakEps()))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				++validIterations;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 }

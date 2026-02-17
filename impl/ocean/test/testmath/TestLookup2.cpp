@@ -13,6 +13,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Lookup2.h"
 #include "ocean/math/Random.h"
@@ -145,17 +146,18 @@ bool TestLookup2::testCenterLookupBinPositions(const double testDuration)
 
 	Log::info() << "Center lookup object bin position test:";
 
-	const Timestamp startTimestamp(true);
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	bool allSucceeded = true;
+	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int sizeX = RandomI::random(7u, std::is_same<Scalar, float>::value ? 2048u : 8192u);
-		const unsigned int sizeY = RandomI::random(7u, std::is_same<Scalar, float>::value ? 2048u : 8192u);
+		const unsigned int sizeX = RandomI::random(randomGenerator, 7u, std::is_same<Scalar, float>::value ? 2048u : 8192u);
+		const unsigned int sizeY = RandomI::random(randomGenerator, 7u, std::is_same<Scalar, float>::value ? 2048u : 8192u);
 
-		const unsigned int binsX = RandomI::random(1u, sizeX);
-		const unsigned int binsY = RandomI::random(1u, sizeY);
+		const unsigned int binsX = RandomI::random(randomGenerator, 1u, sizeX);
+		const unsigned int binsY = RandomI::random(randomGenerator, 1u, sizeY);
 
 		LookupCenter2<Scalar> lookupObject(sizeX, sizeY, binsX, binsY);
 		Frame indexFrame(FrameType(sizeX, sizeY, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT));
@@ -189,7 +191,7 @@ bool TestLookup2::testCenterLookupBinPositions(const double testDuration)
 
 				if (left >= sizeX || right >= sizeX || top >= sizeY || bottom >= sizeY)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
@@ -197,43 +199,27 @@ bool TestLookup2::testCenterLookupBinPositions(const double testDuration)
 					{
 						for (unsigned int x = left; x <= right; ++x)
 						{
-							if (visitedFrame.constpixel<uint8_t>(x, y)[0] != 0u)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, visitedFrame.constpixel<uint8_t>(x, y)[0], uint8_t(0u));
 
 							visitedFrame.pixel<uint8_t>(x, y)[0] = 1u;
 
-							if (indexFrame.constpixel<uint32_t>(x, y)[0u] != binIndex)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, indexFrame.constpixel<uint32_t>(x, y)[0u], binIndex);
 						}
 					}
 
 					const Vector2 testCenter((Scalar(right) + Scalar(left)) * Scalar(0.5), (Scalar(top) + Scalar(bottom)) * Scalar(0.5));
 					const Vector2 center = lookupObject.binCenterPosition(xBin, yBin);
 
-					if (testCenter.sqrDistance(center) >= Numeric::sqr(Scalar(0.001)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, testCenter.sqrDistance(center) < Numeric::sqr(Scalar(0.001)));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testCenterLookupClampedValues(const double testDuration)
@@ -242,18 +228,18 @@ bool TestLookup2::testCenterLookupClampedValues(const double testDuration)
 
 	Log::info() << "Center lookup object clamped value test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int sizeX = RandomI::random(1u, 500u);
-		const unsigned int sizeY = RandomI::random(1u, 500u);
+		const unsigned int sizeX = RandomI::random(randomGenerator, 1u, 500u);
+		const unsigned int sizeY = RandomI::random(randomGenerator, 1u, 500u);
 
-		const unsigned int binsX = RandomI::random(1u, sizeX);
-		const unsigned int binsY = RandomI::random(1u, sizeY);
+		const unsigned int binsX = RandomI::random(randomGenerator, 1u, sizeX);
+		const unsigned int binsY = RandomI::random(randomGenerator, 1u, sizeY);
 
 		LookupCenter2<Scalar> lookupObject(sizeX, sizeY, binsX, binsY);
 
@@ -261,32 +247,32 @@ bool TestLookup2::testCenterLookupClampedValues(const double testDuration)
 		{
 			for (unsigned int xBin = 0u; xBin < lookupObject.binsX(); ++xBin)
 			{
-				lookupObject.setBinCenterValue(xBin, yBin, Random::scalar(-100, 100));
+				lookupObject.setBinCenterValue(xBin, yBin, Random::scalar(randomGenerator, -100, 100));
 			}
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Scalar x = Random::scalar(-10, Scalar(lookupObject.sizeX()) + 10);
-			const Scalar y = Random::scalar(-10, Scalar(lookupObject.sizeY()) + 10);
+			const Scalar x = Random::scalar(randomGenerator, -10, Scalar(lookupObject.sizeX()) + 10);
+			const Scalar y = Random::scalar(randomGenerator, -10, Scalar(lookupObject.sizeY()) + 10);
 
 			if (x >= 0 && y >= 0 && x <= Scalar(lookupObject.sizeX() - 1) && y <= Scalar(lookupObject.sizeY() - 1))
 			{
 				if (lookupObject.nearestValue(x, y) != lookupObject.clampedNearestValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bilinearValue(x, y) != lookupObject.clampedBilinearValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bicubicValue(x, y) != lookupObject.clampedBicubicValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -314,36 +300,26 @@ bool TestLookup2::testCenterLookupClampedValues(const double testDuration)
 
 				if (lookupObject.nearestValue(clampedX, clampedY) != lookupObject.clampedNearestValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bilinearValue(clampedX, clampedY) != lookupObject.clampedBilinearValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bicubicValue(clampedX, clampedY) != lookupObject.clampedBicubicValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuration)
@@ -352,18 +328,18 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 
 	Log::info() << "Advanced center lookup object clamped value test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int sizeX = RandomI::random(1u, 500u);
-		const unsigned int sizeY = RandomI::random(1u, 500u);
+		const unsigned int sizeX = RandomI::random(randomGenerator, 1u, 500u);
+		const unsigned int sizeY = RandomI::random(randomGenerator, 1u, 500u);
 
-		const unsigned int binsX = RandomI::random(1u, sizeX);
-		const unsigned int binsY = RandomI::random(1u, sizeY);
+		const unsigned int binsX = RandomI::random(randomGenerator, 1u, sizeX);
+		const unsigned int binsY = RandomI::random(randomGenerator, 1u, sizeY);
 
 		AdvancedLookupCenter2<Scalar> lookupObject(sizeX, sizeY, binsX, binsY);
 
@@ -371,16 +347,16 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 		{
 			for (unsigned int xBin = 0u; xBin < lookupObject.binsX(); ++xBin)
 			{
-				lookupObject.setBinCenterValue(xBin, yBin, Random::scalar(-100, 100), RandomI::random(1u) == 0u ? false : true);
+				lookupObject.setBinCenterValue(xBin, yBin, Random::scalar(randomGenerator, -100, 100), RandomI::boolean(randomGenerator));
 			}
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Scalar x = Random::scalar(-10, Scalar(lookupObject.sizeX()) + 10);
-			const Scalar y = Random::scalar(-10, Scalar(lookupObject.sizeY()) + 10);
+			const Scalar x = Random::scalar(randomGenerator, -10, Scalar(lookupObject.sizeX()) + 10);
+			const Scalar y = Random::scalar(randomGenerator, -10, Scalar(lookupObject.sizeY()) + 10);
 
 			Scalar value = Numeric::maxValue();
 			Scalar clampedValue = Numeric::maxValue();
@@ -389,12 +365,12 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 			{
 				if (lookupObject.nearestValue(x, y, value) != lookupObject.clampedNearestValue(x, y, clampedValue) || value != clampedValue)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bilinearValue(x, y, value) != lookupObject.clampedBilinearValue(x, y, clampedValue) || value != clampedValue)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -422,31 +398,21 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 
 				if (lookupObject.nearestValue(clampedX, clampedY, value) != lookupObject.clampedNearestValue(x, y, clampedValue) || value != clampedValue)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bilinearValue(clampedX, clampedY, value) != lookupObject.clampedBilinearValue(x, y, clampedValue) || value != clampedValue)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testCornerLookupNearestNeighbor(const double testDuration)
@@ -455,14 +421,15 @@ bool TestLookup2::testCornerLookupNearestNeighbor(const double testDuration)
 
 	Log::info() << "Corner lookup object nearest value test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 100u);
-		const unsigned int height = RandomI::random(1u, 100u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 100u);
 
 		LookupCorner2<Vector2> lookupObject(width, height, 1, 1);
 		lookupObject.setBinTopLeftCornerValue(0, 0, Vector2(0, 0));
@@ -504,25 +471,15 @@ bool TestLookup2::testCornerLookupNearestNeighbor(const double testDuration)
 					found = values[n] == value;
 				}
 
-				if (!found)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, found);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testCornerLookupBilinear(const double testDuration)
@@ -531,14 +488,15 @@ bool TestLookup2::testCornerLookupBilinear(const double testDuration)
 
 	Log::info() << "Corner lookup object bilinear value test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 100u);
-		const unsigned int height = RandomI::random(1u, 100u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 100u);
 
 		LookupCorner2<Vector2> lookupObject(width, height, 1, 1);
 		lookupObject.setBinTopLeftCornerValue(0, 0, Vector2(0, 0));
@@ -554,33 +512,20 @@ bool TestLookup2::testCornerLookupBilinear(const double testDuration)
 
 				if (std::is_same<Scalar, float>::value)
 				{
-					if (Numeric::isNotWeakEqual(value.x(), Scalar(x)) || Numeric::isNotWeakEqual(value.y(), Scalar(y)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(value.x(), Scalar(x)) && Numeric::isWeakEqual(value.y(), Scalar(y)));
 				}
 				else
 				{
-					if (Numeric::isNotEqual(value.x(), Scalar(x)) || Numeric::isNotEqual(value.y(), Scalar(y)))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(value.x(), Scalar(x)) && Numeric::isEqual(value.y(), Scalar(y)));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
@@ -589,7 +534,8 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 
 	Log::info() << "Corner lookup object bilinear values test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceRows;
 	HighPerformanceStatistic performanceIndividuals;
@@ -601,11 +547,11 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 		{
 			// testing accuracy
 
-			const size_t sizeX = RandomI::random(20u, 100u);
-			const size_t sizeY = RandomI::random(20u, 100u);
+			const size_t sizeX = RandomI::random(randomGenerator, 20u, 100u);
+			const size_t sizeY = RandomI::random(randomGenerator, 20u, 100u);
 
-			const size_t binsX = RandomI::random(1u, (unsigned int)(sizeX) / 4u);
-			const size_t binsY = RandomI::random(1u, (unsigned int)(sizeY) / 4u);
+			const size_t binsX = RandomI::random(randomGenerator, 1u, (unsigned int)(sizeX) / 4u);
+			const size_t binsY = RandomI::random(randomGenerator, 1u, (unsigned int)(sizeY) / 4u);
 
 			LookupCorner2<Vector2> lookupObject(sizeX, sizeY, binsX, binsY);
 
@@ -613,7 +559,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			{
 				for (size_t bX = 0; bX <= binsX; ++bX)
 				{
-					const Vector2 value = Random::vector2(-10, 10);
+					const Vector2 value = Random::vector2(randomGenerator, -10, 10);
 					lookupObject.setBinTopLeftCornerValue(bX, bY, value);
 				}
 			}
@@ -644,10 +590,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			{
 				const Scalar error = valuesRows[n].distance(valuesIndividuals[n]);
 
-				if (error >= Scalar(0.001))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, error < Scalar(0.001));
 			}
 		}
 
@@ -666,7 +609,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			{
 				for (size_t bX = 0; bX <= binsX; ++bX)
 				{
-					const Vector2 value = Random::vector2(-10, 10);
+					const Vector2 value = Random::vector2(randomGenerator, -10, 10);
 					lookupObject.setBinTopLeftCornerValue(bX, bY, value);
 				}
 			}
@@ -699,10 +642,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			{
 				const Scalar error = valuesRows[n].distance(valuesIndividuals[n]);
 
-				if (error >= Scalar(0.001))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, error < Scalar(0.001));
 			}
 		}
 	}
@@ -711,16 +651,9 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 	Log::info() << "Performance individuals: " << performanceIndividuals.medianMseconds() << "ms";
 	Log::info() << "Performance rows: " << performanceRows.medianMseconds() << "ms, " << String::toAString(performanceIndividuals.median() / performanceRows.median(), 2u) << "x";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration)
@@ -729,9 +662,8 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 
 	Log::info() << "Corner lookup object bilinear subset values test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -781,26 +713,16 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 				{
 					const Scalar error = valuesRows[n - x].distance(valuesIndividuals[y * sizeX + n]);
 
-					if (error >= Scalar(0.001))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, error < Scalar(0.001));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestLookup2::testCornerLookupClampedValues(const double testDuration)
@@ -809,18 +731,18 @@ bool TestLookup2::testCornerLookupClampedValues(const double testDuration)
 
 	Log::info() << "Corner lookup object clamped value test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int sizeX = RandomI::random(1u, 500u);
-		const unsigned int sizeY = RandomI::random(1u, 500u);
+		const unsigned int sizeX = RandomI::random(randomGenerator, 1u, 500u);
+		const unsigned int sizeY = RandomI::random(randomGenerator, 1u, 500u);
 
-		const unsigned int binsX = RandomI::random(1u, max(1u, sizeX / 2u));
-		const unsigned int binsY = RandomI::random(1u, max(1u, sizeY / 2u));
+		const unsigned int binsX = RandomI::random(randomGenerator, 1u, max(1u, sizeX / 2u));
+		const unsigned int binsY = RandomI::random(randomGenerator, 1u, max(1u, sizeY / 2u));
 
 		LookupCorner2<Scalar> lookupObject(sizeX, sizeY, binsX, binsY);
 
@@ -828,32 +750,32 @@ bool TestLookup2::testCornerLookupClampedValues(const double testDuration)
 		{
 			for (unsigned int xBin = 0u; xBin <= lookupObject.binsX(); ++xBin)
 			{
-				lookupObject.setBinTopLeftCornerValue(xBin, yBin, Random::scalar(-100, 100));
+				lookupObject.setBinTopLeftCornerValue(xBin, yBin, Random::scalar(randomGenerator, -100, 100));
 			}
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Scalar x = Random::scalar(-10, Scalar(lookupObject.sizeX()) + 10);
-			const Scalar y = Random::scalar(-10, Scalar(lookupObject.sizeY()) + 10);
+			const Scalar x = Random::scalar(randomGenerator, -10, Scalar(lookupObject.sizeX()) + 10);
+			const Scalar y = Random::scalar(randomGenerator, -10, Scalar(lookupObject.sizeY()) + 10);
 
 			if (x >= 0 && y >= 0 && x <= Scalar(lookupObject.sizeX()) && y <= Scalar(lookupObject.sizeY()))
 			{
 				if (lookupObject.nearestValue(x, y) != lookupObject.clampedNearestValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bilinearValue(x, y) != lookupObject.clampedBilinearValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bicubicValue(x, y) != lookupObject.clampedBicubicValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -881,36 +803,26 @@ bool TestLookup2::testCornerLookupClampedValues(const double testDuration)
 
 				if (lookupObject.nearestValue(clampedX, clampedY) != lookupObject.clampedNearestValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bilinearValue(clampedX, clampedY) != lookupObject.clampedBilinearValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (lookupObject.bicubicValue(clampedX, clampedY) != lookupObject.clampedBicubicValue(x, y))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

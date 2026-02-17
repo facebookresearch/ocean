@@ -15,6 +15,7 @@
 #include "ocean/math/Rotation.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -60,8 +61,8 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 	Log::info() << "Testing the constructors:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -70,22 +71,24 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 		{
 			// angle-axis rotation
 
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Rotation rotation = Random::rotation();
 
 			const ExponentialMap exponentialMap(rotation);
 
 			const Rotation resultRotation = exponentialMap.rotation();
 
-			if (resultRotation == rotation)
+			if (resultRotation != rotation)
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 
 		{
 			// axis and angle
+
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const Vector3 axis = Random::vector3();
 			ocean_assert(axis.isUnit());
@@ -96,12 +99,10 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			const Rotation resultRotation = exponentialMap.rotation();
 
-			if (resultRotation == Rotation(axis, angle))
+			if (resultRotation != Rotation(axis, angle))
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 
 		{
@@ -119,27 +120,33 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 				axis /= angle;
 			}
 
-			const Rotation resultRotation = exponentialMap.rotation();
-
-			if ((Numeric::isEqualEps(angle) && resultRotation == Rotation()) || (!Numeric::isEqualEps(angle) && resultRotation == Rotation(axis, angle)))
 			{
-				++validIterations;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const Rotation resultRotation = exponentialMap.rotation();
+
+				if (!((Numeric::isEqualEps(angle) && resultRotation == Rotation()) || (!Numeric::isEqualEps(angle) && resultRotation == Rotation(axis, angle))))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			++iterations;
-
-			const Quaternion resultQuaternion = exponentialMap.quaternion();
-
-			if ((Numeric::isEqualEps(angle) && resultQuaternion == Quaternion(true)) || (!Numeric::isEqualEps(angle) && resultQuaternion == Quaternion(axis, angle)))
 			{
-				++validIterations;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			++iterations;
+				const Quaternion resultQuaternion = exponentialMap.quaternion();
+
+				if (!((Numeric::isEqualEps(angle) && resultQuaternion == Quaternion(true)) || (!Numeric::isEqualEps(angle) && resultQuaternion == Quaternion(axis, angle))))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 
 		{
 			// quaternion
+
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const Quaternion quaternion = Random::quaternion();
 
@@ -147,16 +154,16 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			const Quaternion resultQuaternion = exponentialMap.quaternion();
 
-			if (resultQuaternion == quaternion)
+			if (resultQuaternion != quaternion)
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 
 		{
 			// 3x3 rotation matrix
+
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const Quaternion quaternion = Random::quaternion();
 
@@ -164,23 +171,17 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			const Quaternion resultQuaternion = exponentialMap.quaternion();
 
-			if (resultQuaternion == quaternion)
+			if (resultQuaternion != quaternion)
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	Log::info() << " ";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 }

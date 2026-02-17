@@ -11,6 +11,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/math/Random.h"
 #include "ocean/math/MathUtilities.h"
@@ -57,9 +58,8 @@ bool TestMathUtilities::testEncodeFloatToUint8(const double testDuration)
 {
 	Log::info() << "Encode float to uin8_t values test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -87,21 +87,11 @@ bool TestMathUtilities::testEncodeFloatToUint8(const double testDuration)
 
 	Log::info() << "Maximal error: " << String::toAString(maxError, 10u) << ", average error: " << String::toAString(sumError / double(iterations), 10u);
 
-	if (maxError > 0.0001f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_LESS_EQUAL(validation, maxError, 0.0001f);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

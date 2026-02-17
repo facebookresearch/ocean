@@ -12,6 +12,7 @@
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -71,54 +72,42 @@ bool TestFrustum::testConstructors(const double testDuration)
 
 	Log::info() << "Constructors test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Frustum invalidFrustum;
 
-	if (invalidFrustum.isValid())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, invalidFrustum.isValid());
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(10u, 1920u);
-		const unsigned int height = RandomI::random(10u, 1080u);
+		const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 10u, 1080u);
 
-		const Scalar principalX = Random::scalar(Scalar(2), Scalar(width - 2u));
-		const Scalar principalY = Random::scalar(Scalar(2), Scalar(height - 2u));
+		const Scalar principalX = Random::scalar(randomGenerator, Scalar(2), Scalar(width - 2u));
+		const Scalar principalY = Random::scalar(randomGenerator, Scalar(2), Scalar(height - 2u));
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(20), Numeric::deg2rad(90));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(20), Numeric::deg2rad(90));
 
 		const PinholeCamera pinholeCamera(width, height, fovX, principalX, principalY);
 		ocean_assert(pinholeCamera.isValid());
 
-		const Scalar nearDistance = Random::scalar(Scalar(0.1), Scalar(1));
-		const Scalar farDistance = Random::scalar(Scalar(5), Scalar(50));
+		const Scalar nearDistance = Random::scalar(randomGenerator, Scalar(0.1), Scalar(1));
+		const Scalar farDistance = Random::scalar(randomGenerator, Scalar(5), Scalar(50));
 
 		const Frustum frustum(pinholeCamera, nearDistance, farDistance);
 
 		const Frustum identityFrustum(HomogenousMatrix4(true), pinholeCamera, nearDistance, farDistance);
 
-		if (!frustum.isEqual(identityFrustum))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, frustum.isEqual(identityFrustum));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrustum::testIsInsidePoint(const double testDuration)
@@ -127,79 +116,66 @@ bool TestFrustum::testIsInsidePoint(const double testDuration)
 
 	Log::info() << "Constructors test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(10u, 1920u);
-		const unsigned int height = RandomI::random(10u, 1080u);
+		const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 10u, 1080u);
 
-		const Scalar principalX = Random::scalar(Scalar(2), Scalar(width - 2u));
-		const Scalar principalY = Random::scalar(Scalar(2), Scalar(height - 2u));
+		const Scalar principalX = Random::scalar(randomGenerator, Scalar(2), Scalar(width - 2u));
+		const Scalar principalY = Random::scalar(randomGenerator, Scalar(2), Scalar(height - 2u));
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(20), Numeric::deg2rad(90));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(20), Numeric::deg2rad(90));
 
 		const PinholeCamera pinholeCamera(width, height, fovX, principalX, principalY);
 		ocean_assert(pinholeCamera.isValid());
 
-		const Scalar nearDistance = Random::scalar(Scalar(0.1), Scalar(1));
-		const Scalar farDistance = Random::scalar(Scalar(5), Scalar(50));
+		const Scalar nearDistance = Random::scalar(randomGenerator, Scalar(0.1), Scalar(1));
+		const Scalar farDistance = Random::scalar(randomGenerator, Scalar(5), Scalar(50));
 
 		const Frustum frustum(pinholeCamera, nearDistance, farDistance);
 
 		// in front of frustum
-		if (frustum.isInside(Vector3(0, 0, -nearDistance + Random::scalar(Scalar(0.1), Scalar(10)))))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, frustum.isInside(Vector3(0, 0, -nearDistance + Random::scalar(randomGenerator, Scalar(0.1), Scalar(10)))));
 
 		// behind frustum
-		if (frustum.isInside(Vector3(0, 0, -farDistance - Random::scalar(Scalar(0.1), Scalar(10)))))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, frustum.isInside(Vector3(0, 0, -farDistance - Random::scalar(randomGenerator, Scalar(0.1), Scalar(10)))));
 
 		// in the center of the frustum
-		if (!frustum.isInside(Vector3(0, 0, -Random::scalar(nearDistance + Scalar(0.1), farDistance - Scalar(0.1)))))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, frustum.isInside(Vector3(0, 0, -Random::scalar(randomGenerator, nearDistance + Scalar(0.1), farDistance - Scalar(0.1)))));
 
 		{
-			const Vector2 insideImagePoint = Vector2(Random::scalar(Scalar(0.1), Scalar(width) - Scalar(0.1)), Random::scalar(Scalar(0.1), Scalar(height) - Scalar(0.1)));
+			const Scalar insideImagePointX = Random::scalar(randomGenerator, Scalar(0.1), Scalar(width) - Scalar(0.1));
+			const Scalar insideImagePointY = Random::scalar(randomGenerator, Scalar(0.1), Scalar(height) - Scalar(0.1));
+			const Vector2 insideImagePoint = Vector2(insideImagePointX, insideImagePointY);
 			const Vector3 insideRay = pinholeCamera.vectorToPlane(insideImagePoint, Scalar(1));
 
-			if (frustum.isInside(insideRay * Random::scalar(-10, nearDistance - Scalar(0.1))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frustum.isInside(insideRay * Random::scalar(randomGenerator, -10, nearDistance - Scalar(0.1))));
 
-			if (frustum.isInside(insideRay * Random::scalar(farDistance + Scalar(0.1), 100)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frustum.isInside(insideRay * Random::scalar(randomGenerator, farDistance + Scalar(0.1), 100)));
 
-			if (!frustum.isInside(insideRay * Random::scalar(nearDistance + Scalar(0.1), farDistance - Scalar(0.1))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, frustum.isInside(insideRay * Random::scalar(randomGenerator, nearDistance + Scalar(0.1), farDistance - Scalar(0.1))));
 		}
 
 		{
-			const Scalar xOutsideImagePoint = RandomI::random(1u) == 0u ? Random::scalar(-100, Scalar(-0.1)) : Scalar(width) + Random::scalar(Scalar(0.1), 100);
-			const Scalar yOutsideImagePoint = RandomI::random(1u) == 0u ? Random::scalar(-100, Scalar(-0.1)) : Scalar(height) + Random::scalar(Scalar(0.1), 100);
+			const bool xIsNegative = RandomI::boolean(randomGenerator);
+			const Scalar xOutsideImagePoint = xIsNegative ? Random::scalar(randomGenerator, -100, Scalar(-0.1)) : Scalar(width) + Random::scalar(randomGenerator, Scalar(0.1), 100);
+
+			const bool yIsNegative = RandomI::boolean(randomGenerator);
+			const Scalar yOutsideImagePoint = yIsNegative ? Random::scalar(randomGenerator, -100, Scalar(-0.1)) : Scalar(height) + Random::scalar(randomGenerator, Scalar(0.1), 100);
 			const Vector2 outsideImagePoint = Vector2(xOutsideImagePoint, yOutsideImagePoint);
 			const Vector3 outsideRay = pinholeCamera.vectorToPlane(outsideImagePoint, Scalar(1));
 
-			if (frustum.isInside(outsideRay * Random::scalar(-10, farDistance + Scalar(10))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, frustum.isInside(outsideRay * Random::scalar(randomGenerator, -10, farDistance + Scalar(10))));
 		}
 
-		const HomogenousMatrix4 world_T_camera(Random::vector3(-100, 100), Random::quaternion());
+		const Vector3 randomTranslation = Random::vector3(randomGenerator, -100, 100);
+		const Quaternion randomRotation = Random::quaternion(randomGenerator);
+		const HomogenousMatrix4 world_T_camera(randomTranslation, randomRotation);
 		const HomogenousMatrix4 camera_T_world = world_T_camera.inverted();
 
 		const Frustum transformedFrustum(world_T_camera, pinholeCamera, nearDistance, farDistance);
@@ -207,7 +183,7 @@ bool TestFrustum::testIsInsidePoint(const double testDuration)
 		unsigned int invalidIterations = 0u;
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector3 worldObjectPoint = Random::vector3(-100, 100);
+			const Vector3 worldObjectPoint = Random::vector3(randomGenerator, -100, 100);
 
 			if (transformedFrustum.isInside(worldObjectPoint) != frustum.isInside(camera_T_world * worldObjectPoint))
 			{
@@ -215,23 +191,13 @@ bool TestFrustum::testIsInsidePoint(const double testDuration)
 			}
 		}
 
-		if (invalidIterations >= 5u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS(validation, invalidIterations, 5u);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
