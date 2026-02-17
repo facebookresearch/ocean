@@ -15,6 +15,7 @@
 #include "ocean/math/Numeric.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -155,7 +156,8 @@ bool TestPixelPosition::testIsNeighbor8(const double testDuration)
 	const unsigned int width = 20u;
 	const unsigned int height = 20u;
 
-	bool succeeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -173,10 +175,7 @@ bool TestPixelPosition::testIsNeighbor8(const double testDuration)
 
 			const unsigned int sqrDistance = position0.sqrDistance(position1);
 
-			if (position0.isNeighbor8(position1) != (sqrDistance == 1u || sqrDistance == 2u))
-			{
-				succeeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, position0.isNeighbor8(position1), (sqrDistance == 1u || sqrDistance == 2u));
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -192,24 +191,14 @@ bool TestPixelPosition::testIsNeighbor8(const double testDuration)
 
 			const unsigned int sqrDistance = position0.sqrDistance(position1);
 
-			if (position0.isNeighbor8(position1) != (sqrDistance == 1u || sqrDistance == 2u))
-			{
-				succeeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, position0.isNeighbor8(position1), (sqrDistance == 1u || sqrDistance == 2u));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestPixelPosition::testInArea9(const double testDuration)
@@ -221,7 +210,8 @@ bool TestPixelPosition::testInArea9(const double testDuration)
 	const unsigned int width = 20u;
 	const unsigned int height = 20u;
 
-	bool succeeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -239,10 +229,7 @@ bool TestPixelPosition::testInArea9(const double testDuration)
 
 			const unsigned int sqrDistance = position0.sqrDistance(position1);
 
-			if (position0.inArea9(position1) != (sqrDistance <= 2u))
-			{
-				succeeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, position0.inArea9(position1), (sqrDistance <= 2u));
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -258,24 +245,14 @@ bool TestPixelPosition::testInArea9(const double testDuration)
 
 			const unsigned int sqrDistance = position0.sqrDistance(position1);
 
-			if (position0.inArea9(position1) != (sqrDistance <= 2u))
-			{
-				succeeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, position0.inArea9(position1), (sqrDistance <= 2u));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestPixelPosition::testNeighbor(const double testDuration)
@@ -285,8 +262,7 @@ bool TestPixelPosition::testNeighbor(const double testDuration)
 	Log::info() << "Neighbor test:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -319,7 +295,7 @@ bool TestPixelPosition::testNeighbor(const double testDuration)
 
 				if (xTest != neighbor.x() || yTest != neighbor.y())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -351,23 +327,16 @@ bool TestPixelPosition::testNeighbor(const double testDuration)
 
 				if (xTest != neighbor.x() || yTest != neighbor.y())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelPosition::testMultiplication(const double testDuration)
@@ -376,7 +345,8 @@ bool TestPixelPosition::testMultiplication(const double testDuration)
 
 	Log::info() << "Multiplication operator test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -399,7 +369,7 @@ bool TestPixelPosition::testMultiplication(const double testDuration)
 
 			if (multpliedPositionA != testPosition || multpliedPositionB != testPosition)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -421,22 +391,15 @@ bool TestPixelPosition::testMultiplication(const double testDuration)
 
 			if (multpliedPositionA != testPosition || multpliedPositionB != testPosition)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelPosition::testDivision(const double testDuration)
@@ -445,7 +408,8 @@ bool TestPixelPosition::testDivision(const double testDuration)
 
 	Log::info() << "Division operator test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -469,7 +433,7 @@ bool TestPixelPosition::testDivision(const double testDuration)
 
 			if (multpliedPositionA != testPosition || multpliedPositionB != testPosition)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -492,22 +456,15 @@ bool TestPixelPosition::testDivision(const double testDuration)
 
 			if (multpliedPositionA != testPosition || multpliedPositionB != testPosition)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

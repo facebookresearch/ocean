@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -104,9 +105,8 @@ bool TestMaskAnalyzer::testDetectBoundingBox(const unsigned int width, const uns
 
 	Log::info() << "Test detect bounding box for a " << width << "x" << height << " frame:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -152,26 +152,16 @@ bool TestMaskAnalyzer::testDetectBoundingBox(const unsigned int width, const uns
 			const CV::PixelBoundingBox boundingBox = CV::MaskAnalyzer::detectBoundingBox(frame.constdata<uint8_t>(), frame.width(), frame.height(), nonMaskValue, frame.paddingElements());
 			performance.stopIf(performanceIteration);
 
-			if (boundingBox != maskBoundingBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, boundingBox, maskBoundingBox);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testDetectBoundingBoxWithRoughGuess(const unsigned int width, const unsigned int height, const double testDuration)
@@ -180,9 +170,8 @@ bool TestMaskAnalyzer::testDetectBoundingBoxWithRoughGuess(const unsigned int wi
 
 	Log::info() << "Test detect bounding box with rough guess for a " << width << "x" << height << " frame:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -234,24 +223,14 @@ bool TestMaskAnalyzer::testDetectBoundingBoxWithRoughGuess(const unsigned int wi
 
 			const CV::PixelBoundingBox boundingBox = CV::MaskAnalyzer::detectBoundingBox(frame.constdata<uint8_t>(), frame.width(), frame.height(), roughBoundingBox, maxUncertainty, nonMaskValue, frame.paddingElements());
 
-			if (boundingBox != maskBoundingBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, boundingBox, maskBoundingBox);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -259,8 +238,6 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 	ocean_assert(width >= 1u && height >= 1u && testDuration > 0.0);
 
 	Log::info() << "Test detect opaque bounding box for a " << width << "x" << height << " frame:";
-
-	bool allSucceeded = true;
 
 	const FrameType::PixelFormats pixelFormats =
 	{
@@ -272,6 +249,7 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 	};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -317,7 +295,7 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 					else
 					{
 						ocean_assert(false && "This must never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					frame.setValue(transparentColor.data(), transparentColor.size());
@@ -358,10 +336,7 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 					const CV::PixelBoundingBox boundingBox = CV::MaskAnalyzer::detectOpaqueBoundingBox(frame, fullTransparentValue, useWorker);
 					performance.stopIf(performanceIteration);
 
-					if (boundingBox != opaqueBoundingBox)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, boundingBox, opaqueBoundingBox);
 				}
 			}
 		}
@@ -376,16 +351,9 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int height, const double testDuration)
@@ -394,9 +362,8 @@ bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int
 
 	Log::info() << "Test has value for a " << width << "x" << height << " frame:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -455,26 +422,16 @@ bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int
 
 			const bool expectedHasValue = placeValue && !boundingBoxDoesNotCoverValue;
 
-			if (expectedHasValue != hasValue)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, expectedHasValue, hasValue);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance Average: " << performance.averageMseconds() << "ms" << ", worst: " << performance.worstMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

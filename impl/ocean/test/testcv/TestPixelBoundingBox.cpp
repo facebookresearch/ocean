@@ -13,6 +13,7 @@
 #include "ocean/cv/PixelBoundingBox.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -163,15 +164,16 @@ bool TestPixelBoundingBox::testConstructors(const double testDuration)
 	const unsigned int width = 640u;
 	const unsigned int height = 480u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// create invalid bounding boxes
 		const CV::PixelBoundingBox boundingBox;
 		const CV::PixelBoundingBoxI boundingBoxI;
 
-		if (boundingBox.isValid() || boundingBoxI.isValid())
-			allSucceeded = false;
+		OCEAN_EXPECT_FALSE(validation, boundingBox.isValid());
+		OCEAN_EXPECT_FALSE(validation, boundingBoxI.isValid());
 	}
 
 	const Timestamp startTimestamp(true);
@@ -179,50 +181,56 @@ bool TestPixelBoundingBox::testConstructors(const double testDuration)
 	do
 	{
 		{
-			const CV::PixelPosition pixel(RandomI::random(0u, width - 1u), RandomI::random(0u, height - 1u));
+			const unsigned int pixelX = RandomI::random(randomGenerator, 0u, width - 1u);
+			const unsigned int pixelY = RandomI::random(randomGenerator, 0u, height - 1u);
+			const CV::PixelPosition pixel(pixelX, pixelY);
 			ocean_assert(pixel.isValid());
 
 			const CV::PixelBoundingBox boundingBox(pixel);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
-			if (!boundingBox.isInside(pixel))
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isInside(pixel));
 
-			if (boundingBox.size() != 1u)
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.size(), 1u);
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const CV::PixelPosition newPixel(RandomI::random(0u, width - 1u), RandomI::random(0u, height - 1u));
+				const unsigned int newPixelX = RandomI::random(randomGenerator, 0u, width - 1u);
+				const unsigned int newPixelY = RandomI::random(randomGenerator, 0u, height - 1u);
+				const CV::PixelPosition newPixel(newPixelX, newPixelY);
 
 				if (newPixel != pixel && boundingBox.isInside(newPixel))
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 		}
 
 		{
-			const CV::PixelPositionI pixel(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height)));
+			const int pixelX = RandomI::random(randomGenerator, -int(width), int(width));
+			const int pixelY = RandomI::random(randomGenerator, -int(height), int(height));
+			const CV::PixelPositionI pixel(pixelX, pixelY);
 			ocean_assert(pixel.isValid());
 
 			const CV::PixelBoundingBoxI boundingBox(pixel);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
-			if (!boundingBox.isInside(pixel))
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isInside(pixel));
 
-			if (boundingBox.size() != 1u)
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.size(), 1u);
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const CV::PixelPositionI newPixel(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height)));
+				const int newPixelX = RandomI::random(randomGenerator, -int(width), int(width));
+				const int newPixelY = RandomI::random(randomGenerator, -int(height), int(height));
+				const CV::PixelPositionI newPixel(newPixelX, newPixelY);
 
 				if (newPixel != pixel && boundingBox.isInside(newPixel))
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 		}
 
@@ -237,7 +245,9 @@ bool TestPixelBoundingBox::testConstructors(const double testDuration)
 
 			while (pixels.size() < 100)
 			{
-				const CV::PixelPosition pixel(RandomI::random(0u, width - 1u), RandomI::random(0u, height - 1u));
+				const unsigned int pixelX = RandomI::random(randomGenerator, 0u, width - 1u);
+				const unsigned int pixelY = RandomI::random(randomGenerator, 0u, height - 1u);
+				const CV::PixelPosition pixel(pixelX, pixelY);
 				ocean_assert(pixel.isValid());
 
 				left = min(left, pixel.x());
@@ -251,18 +261,19 @@ bool TestPixelBoundingBox::testConstructors(const double testDuration)
 
 			const CV::PixelBoundingBox boundingBox(pixels);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
 			for (CV::PixelPositions::const_iterator i = pixels.begin(); i != pixels.end(); ++i)
-				if (!boundingBox.isInside(*i))
-					allSucceeded = false;
+			{
+				OCEAN_EXPECT_TRUE(validation, boundingBox.isInside(*i));
+			}
 
-			if (boundingBox.left() != left || boundingBox.top() != top || boundingBox.right() != right || boundingBox.bottom() != bottom)
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.left(), left);
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.top(), top);
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.right(), right);
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.bottom(), bottom);
 
-			if (boundingBox.size() != (right - left + 1u) * (bottom - top + 1u))
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.size(), (right - left + 1u) * (bottom - top + 1u));
 		}
 
 		{
@@ -276,7 +287,9 @@ bool TestPixelBoundingBox::testConstructors(const double testDuration)
 
 			while (pixels.size() < 100)
 			{
-				const CV::PixelPositionI pixel(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height)));
+				const int pixelX = RandomI::random(randomGenerator, -int(width), int(width));
+				const int pixelY = RandomI::random(randomGenerator, -int(height), int(height));
+				const CV::PixelPositionI pixel(pixelX, pixelY);
 				ocean_assert(pixel.isValid());
 
 				left = min(left, pixel.x());
@@ -290,28 +303,26 @@ bool TestPixelBoundingBox::testConstructors(const double testDuration)
 
 			const CV::PixelBoundingBoxI boundingBox(pixels);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
 			for (CV::PixelPositionsI::const_iterator i = pixels.begin(); i != pixels.end(); ++i)
-				if (!boundingBox.isInside(*i))
-					allSucceeded = false;
+			{
+				OCEAN_EXPECT_TRUE(validation, boundingBox.isInside(*i));
+			}
 
-			if (boundingBox.left() != left || boundingBox.top() != top || boundingBox.right() != right || boundingBox.bottom() != bottom)
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.left(), left);
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.top(), top);
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.right(), right);
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.bottom(), bottom);
 
-			if (boundingBox.size() != (unsigned int)((right - left + 1) * (bottom - top + 1)))
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, boundingBox.size(), (unsigned int)((right - left + 1) * (bottom - top + 1)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testPointIsInside(const double testDuration)
@@ -323,73 +334,67 @@ bool TestPixelBoundingBox::testPointIsInside(const double testDuration)
 	const unsigned int width = 640u;
 	const unsigned int height = 480u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		{
-			const unsigned int left = RandomI::random(0u, width - 1u);
-			const unsigned int top = RandomI::random(0u, height - 1u);
+			const unsigned int left = RandomI::random(randomGenerator, 0u, width - 1u);
+			const unsigned int top = RandomI::random(randomGenerator, 0u, height - 1u);
 
-			const unsigned int right = RandomI::random(left, width - 1u);
-			const unsigned int bottom = RandomI::random(top, height - 1u);
+			const unsigned int right = RandomI::random(randomGenerator, left, width - 1u);
+			const unsigned int bottom = RandomI::random(randomGenerator, top, height - 1u);
 
 			const CV::PixelBoundingBox boundingBox(left, top, right, bottom);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const CV::PixelPosition pixel(RandomI::random(0u, 2u * width - 1u), RandomI::random(0u, 2u * height - 1u));
+				const unsigned int pixelX = RandomI::random(randomGenerator, 0u, 2u * width - 1u);
+				const unsigned int pixelY = RandomI::random(randomGenerator, 0u, 2u * height - 1u);
+				const CV::PixelPosition pixel(pixelX, pixelY);
 				ocean_assert(pixel.isValid());
 
 				const bool result = boundingBox.isInside(pixel);
 				const bool test = !(pixel.x() < boundingBox.left() || pixel.y() < boundingBox.top() || pixel.x() > boundingBox.right() || pixel.y() > boundingBox.bottom());
 
-				if (result != test)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, result, test);
 			}
 		}
 
 		{
-			const int left = RandomI::random(-int(width), int(width));
-			const int top = RandomI::random(-int(height), int(height));
+			const int left = RandomI::random(randomGenerator, -int(width), int(width));
+			const int top = RandomI::random(randomGenerator, -int(height), int(height));
 
-			const int right = RandomI::random(left, int(width));
-			const int bottom = RandomI::random(top, int(height));
+			const int right = RandomI::random(randomGenerator, left, int(width));
+			const int bottom = RandomI::random(randomGenerator, top, int(height));
 
 			const CV::PixelBoundingBoxI boundingBox(left, top, right, bottom);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const CV::PixelPositionI pixel(RandomI::random(-int(width * 2u), int(width * 2u)), RandomI::random(-int(height * 2u), int(height * 2u)));
+				const int pixelX = RandomI::random(randomGenerator, -int(width * 2u), int(width * 2u));
+				const int pixelY = RandomI::random(randomGenerator, -int(height * 2u), int(height * 2u));
+				const CV::PixelPositionI pixel(pixelX, pixelY);
 				ocean_assert(pixel.isValid());
 
 				const bool result = boundingBox.isInside(pixel);
 				const bool test = !(pixel.x() < boundingBox.left() || pixel.y() < boundingBox.top() || pixel.x() > boundingBox.right() || pixel.y() > boundingBox.bottom());
 
-				if (result != test)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, result, test);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testBoxIsInside(const double testDuration)
@@ -401,30 +406,30 @@ bool TestPixelBoundingBox::testBoxIsInside(const double testDuration)
 	const unsigned int width = 640u;
 	const unsigned int height = 480u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		{
-			const unsigned int left = RandomI::random(0u, width - 1u);
-			const unsigned int top = RandomI::random(0u, height - 1u);
+			const unsigned int left = RandomI::random(randomGenerator, 0u, width - 1u);
+			const unsigned int top = RandomI::random(randomGenerator, 0u, height - 1u);
 
-			const unsigned int right = RandomI::random(left, width - 1u);
-			const unsigned int bottom = RandomI::random(top, height - 1u);
+			const unsigned int right = RandomI::random(randomGenerator, left, width - 1u);
+			const unsigned int bottom = RandomI::random(randomGenerator, top, height - 1u);
 
 			const CV::PixelBoundingBox boundingBox(left, top, right, bottom);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const unsigned int childLeft = RandomI::random(0u, 2u * width - 1u);
-				const unsigned int childTop = RandomI::random(0u, 2u * height - 1u);
+				const unsigned int childLeft = RandomI::random(randomGenerator, 0u, 2u * width - 1u);
+				const unsigned int childTop = RandomI::random(randomGenerator, 0u, 2u * height - 1u);
 
-				const unsigned int childRight = RandomI::random(childLeft, 2u * width - 1u);
-				const unsigned int childBottom = RandomI::random(childTop, 2u * height - 1u);
+				const unsigned int childRight = RandomI::random(randomGenerator, childLeft, 2u * width - 1u);
+				const unsigned int childBottom = RandomI::random(randomGenerator, childTop, 2u * height - 1u);
 
 				const CV::PixelBoundingBox childBox(childLeft, childTop, childRight, childBottom);
 				ocean_assert(childBox.isValid());
@@ -432,30 +437,28 @@ bool TestPixelBoundingBox::testBoxIsInside(const double testDuration)
 				const bool result = boundingBox.isInside(childBox);
 				const bool test = boundingBox.isInside(childBox.topLeft()) && boundingBox.isInside(childBox.topRight()) && boundingBox.isInside(childBox.bottomLeft()) && boundingBox.isInside(childBox.bottomRight());
 
-				if (result != test)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, result, test);
 			}
 		}
 
 		{
-			const int left = RandomI::random(-int(width), int(width));
-			const int top = RandomI::random(-int(height), int(height));
+			const int left = RandomI::random(randomGenerator, -int(width), int(width));
+			const int top = RandomI::random(randomGenerator, -int(height), int(height));
 
-			const int right = RandomI::random(left, int(width));
-			const int bottom = RandomI::random(top, int(height));
+			const int right = RandomI::random(randomGenerator, left, int(width));
+			const int bottom = RandomI::random(randomGenerator, top, int(height));
 
 			const CV::PixelBoundingBoxI boundingBox(left, top, right, bottom);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const int childLeft = RandomI::random(-int(width * 2u), int(width * 2u));
-				const int childTop = RandomI::random(-int(height * 2u), int(height * 2u));
+				const int childLeft = RandomI::random(randomGenerator, -int(width * 2u), int(width * 2u));
+				const int childTop = RandomI::random(randomGenerator, -int(height * 2u), int(height * 2u));
 
-				const int childRight = RandomI::random(childLeft, int(width * 2u));
-				const int childBottom = RandomI::random(childTop, int(height * 2u));
+				const int childRight = RandomI::random(randomGenerator, childLeft, int(width * 2u));
+				const int childBottom = RandomI::random(randomGenerator, childTop, int(height * 2u));
 
 				const CV::PixelBoundingBoxI childBox(childLeft, childTop, childRight, childBottom);
 				ocean_assert(childBox.isValid());
@@ -463,23 +466,15 @@ bool TestPixelBoundingBox::testBoxIsInside(const double testDuration)
 				const bool result = boundingBox.isInside(childBox);
 				const bool test = boundingBox.isInside(childBox.topLeft()) && boundingBox.isInside(childBox.topRight()) && boundingBox.isInside(childBox.bottomLeft()) && boundingBox.isInside(childBox.bottomRight());
 
-				if (result != test)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, result, test);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testBoxHasIntersection(const double testDuration)
@@ -491,15 +486,25 @@ bool TestPixelBoundingBox::testBoxHasIntersection(const double testDuration)
 	constexpr unsigned int width = 1000u;
 	constexpr unsigned int height = 1000u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const CV::PixelBoundingBox boxA(CV::PixelPosition(RandomI::random(0u, width), RandomI::random(0u, height)), RandomI::random(1u, width), RandomI::random(1u, height));
-			const CV::PixelBoundingBox boxB(CV::PixelPosition(RandomI::random(0u, width), RandomI::random(0u, height)), RandomI::random(1u, width), RandomI::random(1u, height));
+			const unsigned int boxAX = RandomI::random(randomGenerator, 0u, width);
+			const unsigned int boxAY = RandomI::random(randomGenerator, 0u, height);
+			const unsigned int boxAWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxAHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBox boxA(CV::PixelPosition(boxAX, boxAY), boxAWidth, boxAHeight);
+
+			const unsigned int boxBX = RandomI::random(randomGenerator, 0u, width);
+			const unsigned int boxBY = RandomI::random(randomGenerator, 0u, height);
+			const unsigned int boxBWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxBHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBox boxB(CV::PixelPosition(boxBX, boxBY), boxBWidth, boxBHeight);
 
 			bool hasIntersection = false;
 
@@ -527,31 +532,28 @@ bool TestPixelBoundingBox::testBoxHasIntersection(const double testDuration)
 				hasIntersection = true;
 			}
 
-			if (hasIntersection != boxA.hasIntersection(boxB))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hasIntersection, boxA.hasIntersection(boxB));
 
-			if (hasIntersection != boxB.hasIntersection(boxA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hasIntersection, boxB.hasIntersection(boxA));
 
-			if (!boxA.hasIntersection(boxA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxA.hasIntersection(boxA));
 
-			if (!boxB.hasIntersection(boxB))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxB.hasIntersection(boxB));
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const CV::PixelBoundingBoxI boxA(CV::PixelPositionI(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height))), RandomI::random(1u, width), RandomI::random(1u, height));
-			const CV::PixelBoundingBoxI boxB(CV::PixelPositionI(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height))), RandomI::random(1u, width), RandomI::random(1u, height));
+			const int boxAX = RandomI::random(randomGenerator, -int(width), int(width));
+			const int boxAY = RandomI::random(randomGenerator, -int(height), int(height));
+			const unsigned int boxAWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxAHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBoxI boxA(CV::PixelPositionI(boxAX, boxAY), boxAWidth, boxAHeight);
+
+			const int boxBX = RandomI::random(randomGenerator, -int(width), int(width));
+			const int boxBY = RandomI::random(randomGenerator, -int(height), int(height));
+			const unsigned int boxBWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxBHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBoxI boxB(CV::PixelPositionI(boxBX, boxBY), boxBWidth, boxBHeight);
 
 			bool hasIntersection = false;
 
@@ -579,39 +581,20 @@ bool TestPixelBoundingBox::testBoxHasIntersection(const double testDuration)
 				hasIntersection = true;
 			}
 
-			if (hasIntersection != boxA.hasIntersection(boxB))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hasIntersection, boxA.hasIntersection(boxB));
 
-			if (hasIntersection != boxB.hasIntersection(boxA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hasIntersection, boxB.hasIntersection(boxA));
 
-			if (!boxA.hasIntersection(boxA))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxA.hasIntersection(boxA));
 
-			if (!boxB.hasIntersection(boxB))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxB.hasIntersection(boxB));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testBoxIsTouching(const double testDuration)
@@ -623,15 +606,25 @@ bool TestPixelBoundingBox::testBoxIsTouching(const double testDuration)
 	constexpr unsigned int width = 1000u;
 	constexpr unsigned int height = 1000u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const CV::PixelBoundingBox boxA(CV::PixelPosition(RandomI::random(1u, width), RandomI::random(1u, height)), RandomI::random(1u, width), RandomI::random(1u, height));
-			const CV::PixelBoundingBox boxB(CV::PixelPosition(RandomI::random(1u, width), RandomI::random(1u, height)), RandomI::random(1u, width), RandomI::random(1u, height));
+			const unsigned int boxAX = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxAY = RandomI::random(randomGenerator, 1u, height);
+			const unsigned int boxAWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxAHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBox boxA(CV::PixelPosition(boxAX, boxAY), boxAWidth, boxAHeight);
+
+			const unsigned int boxBX = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxBY = RandomI::random(randomGenerator, 1u, height);
+			const unsigned int boxBWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxBHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBox boxB(CV::PixelPosition(boxBX, boxBY), boxBWidth, boxBHeight);
 
 			bool isTouching = boxA.hasIntersection(boxB);
 
@@ -669,22 +662,25 @@ bool TestPixelBoundingBox::testBoxIsTouching(const double testDuration)
 					}
 				}
 
-				if (isTouching != boxA.isTouching(boxB, useNeighborhood8))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, isTouching, boxA.isTouching(boxB, useNeighborhood8));
 
-				if (boxA.isTouching(boxB, useNeighborhood8) != boxB.isTouching(boxA, useNeighborhood8))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, boxA.isTouching(boxB, useNeighborhood8), boxB.isTouching(boxA, useNeighborhood8));
 			}
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const CV::PixelBoundingBoxI boxA(CV::PixelPositionI(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height))), RandomI::random(1u, width), RandomI::random(1u, height));
-			const CV::PixelBoundingBoxI boxB(CV::PixelPositionI(RandomI::random(-int(width), int(width)), RandomI::random(-int(height), int(height))), RandomI::random(1u, width), RandomI::random(1u, height));
+			const int boxAX = RandomI::random(randomGenerator, -int(width), int(width));
+			const int boxAY = RandomI::random(randomGenerator, -int(height), int(height));
+			const unsigned int boxAWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxAHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBoxI boxA(CV::PixelPositionI(boxAX, boxAY), boxAWidth, boxAHeight);
+
+			const int boxBX = RandomI::random(randomGenerator, -int(width), int(width));
+			const int boxBY = RandomI::random(randomGenerator, -int(height), int(height));
+			const unsigned int boxBWidth = RandomI::random(randomGenerator, 1u, width);
+			const unsigned int boxBHeight = RandomI::random(randomGenerator, 1u, height);
+			const CV::PixelBoundingBoxI boxB(CV::PixelPositionI(boxBX, boxBY), boxBWidth, boxBHeight);
 
 			bool isTouching = boxA.hasIntersection(boxB);
 
@@ -722,30 +718,17 @@ bool TestPixelBoundingBox::testBoxIsTouching(const double testDuration)
 					}
 				}
 
-				if (isTouching != boxA.isTouching(boxB, useNeighborhood8))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, isTouching, boxA.isTouching(boxB, useNeighborhood8));
 
-				if (boxA.isTouching(boxB, useNeighborhood8) != boxB.isTouching(boxA, useNeighborhood8))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, boxA.isTouching(boxB, useNeighborhood8), boxB.isTouching(boxA, useNeighborhood8));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testExtended(const double testDuration)
@@ -757,143 +740,143 @@ bool TestPixelBoundingBox::testExtended(const double testDuration)
 	const unsigned int width = 640u;
 	const unsigned int height = 480u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		{
-			const unsigned int left = RandomI::random(0u, width - 1u);
-			const unsigned int top = RandomI::random(0u, height - 1u);
+			const unsigned int left = RandomI::random(randomGenerator, 0u, width - 1u);
+			const unsigned int top = RandomI::random(randomGenerator, 0u, height - 1u);
 
-			const unsigned int right = RandomI::random(left, width - 1u);
-			const unsigned int bottom = RandomI::random(top, height - 1u);
+			const unsigned int right = RandomI::random(randomGenerator, left, width - 1u);
+			const unsigned int bottom = RandomI::random(randomGenerator, top, height - 1u);
 
 			const CV::PixelBoundingBox boundingBox(left, top, right, bottom);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
-			const unsigned int pixels = RandomI::random(0u, 20u);
+			const unsigned int pixels = RandomI::random(randomGenerator, 0u, 20u);
 			const CV::PixelBoundingBox extendedBoundingBox(boundingBox.extended(pixels, 0u, 0u, width - 1u, height - 1u));
 
 			if (extendedBoundingBox.left() == 0u)
 			{
 				if (boundingBox.left() > pixels)
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (boundingBox.left() - extendedBoundingBox.left() != pixels)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, boundingBox.left() - extendedBoundingBox.left(), pixels);
 			}
 
 			if (extendedBoundingBox.top() == 0u)
 			{
 				if (boundingBox.top() > pixels)
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (boundingBox.top() - extendedBoundingBox.top() != pixels)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, boundingBox.top() - extendedBoundingBox.top(), pixels);
 			}
 
 			if (extendedBoundingBox.right() == width - 1u)
 			{
 				if (boundingBox.right() < width - 1u - pixels)
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (extendedBoundingBox.right() - boundingBox.right() != pixels)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, extendedBoundingBox.right() - boundingBox.right(), pixels);
 			}
 
 			if (extendedBoundingBox.bottom() == height - 1u)
 			{
 				if (boundingBox.bottom() < height - 1u - pixels)
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (extendedBoundingBox.bottom() - boundingBox.bottom() != pixels)
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, extendedBoundingBox.bottom() - boundingBox.bottom(), pixels);
 			}
 		}
 
 		{
-			const int left = RandomI::random(-int(width), int(width));
-			const int top = RandomI::random(-int(height), int(height));
+			const int left = RandomI::random(randomGenerator, -int(width), int(width));
+			const int top = RandomI::random(randomGenerator, -int(height), int(height));
 
-			const int right = RandomI::random(left, int(width));
-			const int bottom = RandomI::random(top, int(height));
+			const int right = RandomI::random(randomGenerator, left, int(width));
+			const int bottom = RandomI::random(randomGenerator, top, int(height));
 
 			const CV::PixelBoundingBoxI boundingBox(left, top, right, bottom);
 
-			if (!boundingBox.isValid())
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, boundingBox.isValid());
 
-			const unsigned int pixels = RandomI::random(0u, 20u);
+			const unsigned int pixels = RandomI::random(randomGenerator, 0u, 20u);
 			const CV::PixelBoundingBoxI extendedBoundingBox(boundingBox.extended(pixels, -int(width) - 2, -int(height) - 2, int(width) + 2, int(height) + 2));
 
 			if (extendedBoundingBox.left() == -int(width) - 2)
 			{
 				if (boundingBox.left() > int(pixels) - 2)
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (boundingBox.left() - extendedBoundingBox.left() != int(pixels))
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, boundingBox.left() - extendedBoundingBox.left(), int(pixels));
 			}
 
 			if (extendedBoundingBox.top() == -int(height) - 2)
 			{
 				if (boundingBox.top() > int(pixels) - 2)
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (boundingBox.top() - extendedBoundingBox.top() != int(pixels))
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, boundingBox.top() - extendedBoundingBox.top(), int(pixels));
 			}
 
 			if (extendedBoundingBox.right() == int(width) + 2)
 			{
 				if (boundingBox.right() < int(width) + 2 - int(pixels))
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (extendedBoundingBox.right() - boundingBox.right() != int(pixels))
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, extendedBoundingBox.right() - boundingBox.right(), int(pixels));
 			}
 
 			if (extendedBoundingBox.bottom() == int(height + 2))
 			{
 				if (boundingBox.bottom() < int(height) + 2 - int(pixels))
-					allSucceeded = false;
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
-				if (extendedBoundingBox.bottom() - boundingBox.bottom() != int(pixels))
-					allSucceeded = false;
+				OCEAN_EXPECT_EQUAL(validation, extendedBoundingBox.bottom() - boundingBox.bottom(), int(pixels));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testMultiplication(const double testDuration)
@@ -902,25 +885,26 @@ bool TestPixelBoundingBox::testMultiplication(const double testDuration)
 
 	Log::info() << "Multiplication operator test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int left = RandomI::random(1920u);
-			const unsigned int top = RandomI::random(1080u);
+			const unsigned int left = RandomI::random(randomGenerator, 1920u);
+			const unsigned int top = RandomI::random(randomGenerator, 1080u);
 
-			const unsigned int width = RandomI::random(1u, 1920u);
-			const unsigned int height = RandomI::random(1u, 1080u);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
 			const unsigned int right = left + width - 1u;
 			const unsigned int bottom = top + height - 1u;
 
 			const CV::PixelBoundingBox boundingBox(CV::PixelPosition(left, top), width, height);
 
-			const unsigned int factor = RandomI::random(10u);
+			const unsigned int factor = RandomI::random(randomGenerator, 10u);
 
 			const CV::PixelBoundingBox multpliedBoundingBoxA = boundingBox * factor;
 
@@ -929,26 +913,24 @@ bool TestPixelBoundingBox::testMultiplication(const double testDuration)
 
 			const CV::PixelBoundingBox testBoundingBox(left * factor, top * factor, right * factor, bottom * factor);
 
-			if (multpliedBoundingBoxA != testBoundingBox || multpliedBoundingBoxB != testBoundingBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxA, testBoundingBox);
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxB, testBoundingBox);
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const int left = RandomI::random(-1920, 1920);
-			const int top = RandomI::random(-1080, 1080);
+			const int left = RandomI::random(randomGenerator, -1920, 1920);
+			const int top = RandomI::random(randomGenerator, -1080, 1080);
 
-			const unsigned int width = RandomI::random(1u, 1920u);
-			const unsigned int height = RandomI::random(1u, 1080u);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
 			const int right = left + int(width) - 1;
 			const int bottom = top + int(height) - 1;
 
 			const CV::PixelBoundingBoxI boundingBox(CV::PixelPositionI(left, top), width, height);
 
-			const int factor = RandomI::random(-10, 10);
+			const int factor = RandomI::random(randomGenerator, -10, 10);
 
 			const CV::PixelBoundingBoxI multpliedBoundingBoxA = boundingBox * factor;
 
@@ -957,24 +939,15 @@ bool TestPixelBoundingBox::testMultiplication(const double testDuration)
 
 			const CV::PixelBoundingBoxI testBoundingBox(left * factor, top * factor, right * factor, bottom * factor);
 
-			if (multpliedBoundingBoxA != testBoundingBox || multpliedBoundingBoxB != testBoundingBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxA, testBoundingBox);
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxB, testBoundingBox);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPixelBoundingBox::testDivision(const double testDuration)
@@ -983,25 +956,26 @@ bool TestPixelBoundingBox::testDivision(const double testDuration)
 
 	Log::info() << "Division operator test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int left = RandomI::random(1920u);
-			const unsigned int top = RandomI::random(1080u);
+			const unsigned int left = RandomI::random(randomGenerator, 1920u);
+			const unsigned int top = RandomI::random(randomGenerator, 1080u);
 
-			const unsigned int width = RandomI::random(1u, 1920u);
-			const unsigned int height = RandomI::random(1u, 1080u);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
 			const unsigned int right = left + width - 1u;
 			const unsigned int bottom = top + height - 1u;
 
 			const CV::PixelBoundingBox boundingBox(CV::PixelPosition(left, top), width, height);
 
-			const unsigned int factor = RandomI::random(1u, 10u);
+			const unsigned int factor = RandomI::random(randomGenerator, 1u, 10u);
 			ocean_assert(factor != 0u);
 
 			const CV::PixelBoundingBox multpliedBoundingBoxA = boundingBox / factor;
@@ -1011,26 +985,25 @@ bool TestPixelBoundingBox::testDivision(const double testDuration)
 
 			const CV::PixelBoundingBox testBoundingBox(left / factor, top / factor, right / factor, bottom / factor);
 
-			if (multpliedBoundingBoxA != testBoundingBox || multpliedBoundingBoxB != testBoundingBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxA, testBoundingBox);
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxB, testBoundingBox);
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const int left = RandomI::random(-1920, 1920);
-			const int top = RandomI::random(-1080, 1080);
+			const int left = RandomI::random(randomGenerator, -1920, 1920);
+			const int top = RandomI::random(randomGenerator, -1080, 1080);
 
-			const unsigned int width = RandomI::random(1u, 1920u);
-			const unsigned int height = RandomI::random(1u, 1080u);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
 			const int right = left + int(width) - 1;
 			const int bottom = top + int(height) - 1;
 
 			const CV::PixelBoundingBoxI boundingBox(CV::PixelPositionI(left, top), width, height);
 
-			const int factor = RandomI::random(1, 10) * (RandomI::random(1u) == 0u ? 1 : -1);
+			const int sign = RandomI::boolean(randomGenerator) ? 1 : -1;
+			const int factor = RandomI::random(randomGenerator, 1, 10) * sign;
 			ocean_assert(factor != 0);
 
 			const CV::PixelBoundingBoxI multpliedBoundingBoxA = boundingBox / factor;
@@ -1040,24 +1013,15 @@ bool TestPixelBoundingBox::testDivision(const double testDuration)
 
 			const CV::PixelBoundingBoxI testBoundingBox(left / factor, top / factor, right / factor, bottom / factor);
 
-			if (multpliedBoundingBoxA != testBoundingBox || multpliedBoundingBoxB != testBoundingBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxA, testBoundingBox);
+			OCEAN_EXPECT_EQUAL(validation, multpliedBoundingBoxB, testBoundingBox);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

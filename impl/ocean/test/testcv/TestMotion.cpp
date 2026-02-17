@@ -20,6 +20,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -205,36 +206,37 @@ bool TestMotion::testMotionMirroredBorder(const double testDuration)
 	static_assert(tChannels >= 1u, "Invalid channel number!");
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testMotionMirroredBorder<tChannels, 5u>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testMotionMirroredBorder<tChannels, 7u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMotionMirroredBorder<tChannels, 5u>(testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testMotionMirroredBorder<tChannels, 9u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMotionMirroredBorder<tChannels, 7u>(testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testMotionMirroredBorder<tChannels, 15u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMotionMirroredBorder<tChannels, 9u>(testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testMotionMirroredBorder<tChannels, 31u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMotionMirroredBorder<tChannels, 15u>(testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testMotionMirroredBorder<tChannels, 63u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMotionMirroredBorder<tChannels, 31u>(testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testMotionMirroredBorder<tChannels, 63u>(testDuration));
+
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tSize>
@@ -249,15 +251,16 @@ bool TestMotion::testMotionMirroredBorder(const double testDuration)
 	Log::info() << "Motion point " << tChannels * 8u << " bit " << tChannels << " channel " << tSize << "x" << tSize << " test (with mirrored border):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testMotionMirroredBorder<CV::SumAbsoluteDifferences, tChannels, tSize>(1920u, 1080u, 1920u, 1080u, testDuration_3) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testMotionMirroredBorder<CV::SumAbsoluteDifferences, tChannels, tSize>(1920u, 1080u, 1920u, 1080u, testDuration_3)));
 	Log::info() << " ";
-	allSucceeded = testMotionMirroredBorder<CV::SumSquareDifferences, tChannels, tSize>(1920u, 1080u, 1920u, 1080u, testDuration_3) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testMotionMirroredBorder<CV::SumSquareDifferences, tChannels, tSize>(1920u, 1080u, 1920u, 1080u, testDuration_3)));
 	Log::info() << " ";
-	allSucceeded = testMotionMirroredBorder<CV::ZeroMeanSumSquareDifferences, tChannels, tSize>(1920u, 1080u, 1920u, 1080u, testDuration_3) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testMotionMirroredBorder<CV::ZeroMeanSumSquareDifferences, tChannels, tSize>(1920u, 1080u, 1920u, 1080u, testDuration_3)));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TMetric, unsigned int tChannels, unsigned int tPatchSize>
@@ -288,9 +291,8 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int radiusSteps = 4u;
 
@@ -381,7 +383,7 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 
 				if (testBest != metric)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
@@ -394,7 +396,7 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 
 						if (sqrDistance != testSqrDistance)
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -410,16 +412,9 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 		Log::info() << constIterations << " Radius " << radius << " performance: [" << performance.bestMseconds() << ", " << performance.medianMseconds() << ", " << performance.worstMseconds() << "] ms";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
