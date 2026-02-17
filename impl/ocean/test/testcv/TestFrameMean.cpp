@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
@@ -190,8 +191,7 @@ bool TestFrameMean::testAddToFrameIndividually(const unsigned int performanceWid
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -237,7 +237,7 @@ bool TestFrameMean::testAddToFrameIndividually(const unsigned int performanceWid
 				const Frame clonedDenominators(denominators, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				performance.startIf(performanceIteration);
-				allSucceeded = CV::FrameMean::addToFrameIndividually(source, mask, target, denominators, nonMaskValue, useWorker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, CV::FrameMean::addToFrameIndividually(source, mask, target, denominators, nonMaskValue, useWorker));
 				performance.stopIf(performanceIteration);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, clonedTarget) || !CV::CVUtilities::isPaddingMemoryIdentical(denominators, clonedDenominators))
@@ -248,10 +248,7 @@ bool TestFrameMean::testAddToFrameIndividually(const unsigned int performanceWid
 					return false;
 				}
 
-				if (!validateAddToFrameIndividually(source, mask, target, denominators, nonMaskValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateAddToFrameIndividually(source, mask, target, denominators, nonMaskValue));
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
 		}
@@ -265,16 +262,9 @@ bool TestFrameMean::testAddToFrameIndividually(const unsigned int performanceWid
 		Log::info() << "Multi-core boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 bool TestFrameMean::testMeanValue(const double testDuration, Worker& worker)
 {
@@ -284,59 +274,53 @@ bool TestFrameMean::testMeanValue(const double testDuration, Worker& worker)
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testMeanValue<uint8_t, uint8_t, uint32_t>(width, height, 1u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<uint8_t, uint8_t, uint32_t>(width, height, 1u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<uint8_t, int32_t, int32_t>(width, height, 2u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<uint8_t, int32_t, int32_t>(width, height, 2u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<uint8_t, int64_t, int64_t>(width, height, 3u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<uint8_t, int64_t, int64_t>(width, height, 3u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<uint8_t, float, double>(width, height, 4u, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testMeanValue<int16_t, int16_t, int32_t>(width, height, 1u, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMeanValue<int16_t, int32_t, int32_t>(width, height, 2u, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMeanValue<int16_t, int64_t, int64_t>(width, height, 3u, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testMeanValue<int16_t, double, double>(width, height, 4u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<uint8_t, float, double>(width, height, 4u, testDuration, worker));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testMeanValue<int32_t, int32_t, int64_t>(width, height, 1u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int16_t, int16_t, int32_t>(width, height, 1u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<int32_t, int64_t, int64_t>(width, height, 2u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int16_t, int32_t, int32_t>(width, height, 2u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<int32_t, int64_t, int64_t>(width, height, 3u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int16_t, int64_t, int64_t>(width, height, 3u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<int32_t, float, double>(width, height, 4u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int16_t, double, double>(width, height, 4u, testDuration, worker));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testMeanValue<float, float, double>(width, height, 1u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int32_t, int32_t, int64_t>(width, height, 1u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<float, double, double>(width, height, 2u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int32_t, int64_t, int64_t>(width, height, 2u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<double, float, double>(width, height, 3u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int32_t, int64_t, int64_t>(width, height, 3u, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testMeanValue<double, double, double>(width, height, 4u, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<int32_t, float, double>(width, height, 4u, testDuration, worker));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Mean value test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mean value test FAILED!";
-	}
+	Log::info() << " ";
+	Log::info() << " ";
 
-	return allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<float, float, double>(width, height, 1u, testDuration, worker));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<float, double, double>(width, height, 2u, testDuration, worker));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<double, float, double>(width, height, 3u, testDuration, worker));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testMeanValue<double, double, double>(width, height, 4u, testDuration, worker));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T, typename TMean, typename TIntermediate>
@@ -346,7 +330,8 @@ bool TestFrameMean::testMeanValue(const unsigned int width, const unsigned int h
 
 	Log::info() << "... for '" << TypeNamer::name<T>() << "' -> '" << TypeNamer::name<TMean>() << "' with " << channels << " channels:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -405,10 +390,7 @@ bool TestFrameMean::testMeanValue(const unsigned int width, const unsigned int h
 				performance.stop();
 			}
 
-			if (!validateMeanValue<T, TMean, TIntermediate>(frame.constdata<T>(), frame.width(), frame.height(), channels, meanValues.data(), frame.paddingElements()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateMeanValue<T, TMean, TIntermediate>(frame.constdata<T>(), frame.width(), frame.height(), channels, meanValues.data(), frame.paddingElements()));
 
 			++iterations;
 		}
@@ -423,16 +405,9 @@ bool TestFrameMean::testMeanValue(const unsigned int width, const unsigned int h
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, average: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameMean::validateAddToFrameIndividually(const Frame& source, const Frame& mask, const Frame& testTarget, const Frame& testDenominators, const uint8_t nonMaskValue)

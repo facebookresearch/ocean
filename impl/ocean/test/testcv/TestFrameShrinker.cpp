@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
@@ -390,16 +391,17 @@ bool TestFrameShrinker::testRowDownsamplingByTwoThreeRows8Bit121(const double te
 
 	Log::info() << "Testing downsampling three rows (by two) with 121 filtering:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1000u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u);
 		const unsigned int width_2 = std::max(1u, width / 2u);
 
-		const unsigned int channels = RandomI::random(1u, 5u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
 		const Frame sourceRows = CV::CVUtilities::randomizedFrame(FrameType(width, 3u, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT));
 		Frame targetRow = CV::CVUtilities::randomizedFrame(FrameType(width_2, 1u, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT));
@@ -465,23 +467,16 @@ bool TestFrameShrinker::testRowDownsamplingByTwoThreeRows8Bit121(const double te
 
 				if (result != uint32_t(target[channelIndex]))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Verification: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Verification: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const double testDuration, Worker& worker)
@@ -491,7 +486,8 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const double testDurati
 	Log::info() << "Testing downsampling (by two) with 11 filtering:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int sourceWidths[] = {640u, 641u, 640u, 641u, 800u, 1024u, 1920u, 3840u};
 	const unsigned int sourceHeights[] = {480u, 480u, 481u, 481u, 640u, 512u, 1080u, 2160u};
@@ -510,29 +506,23 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const double testDurati
 		{
 			Log::info() << " ";
 
-			allSucceeded = testFrameDownsamplingByTwo8Bit11(sourceWidth, sourceHeight, channels, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testFrameDownsamplingByTwo8Bit11(sourceWidth, sourceHeight, channels, testDuration, worker));
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Downsampling test with 11 filtering succeeded.";
-	}
-	else
-	{
-		Log::info() << "Downsampling test with 11 filtering FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11ExtremeResolutions(Worker& worker)
 {
 	Log::info() << "Testing downsampling (by two) with 11 filtering for extreme frame resolutions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -540,26 +530,19 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11ExtremeResolutions(Worke
 		{
 			for (unsigned int sourceHeight = 2u; sourceHeight < 64u; ++sourceHeight)
 			{
-				allSucceeded = testFrameDownsamplingByTwo8Bit11(sourceWidth, sourceHeight, channels, NumericD::eps(), worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testFrameDownsamplingByTwo8Bit11(sourceWidth, sourceHeight, channels, NumericD::eps(), worker));
 			}
 		}
 
-		const unsigned int sourceWidth = RandomI::random(2u, 1920u);
-		const unsigned int sourceHeight = RandomI::random(2u, 1080u);
+		const unsigned int sourceWidth = RandomI::random(randomGenerator, 2u, 1920u);
+		const unsigned int sourceHeight = RandomI::random(randomGenerator, 2u, 1080u);
 
-		allSucceeded = testFrameDownsamplingByTwo8Bit11(sourceWidth, sourceHeight, channels, NumericD::eps(), worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testFrameDownsamplingByTwo8Bit11(sourceWidth, sourceHeight, channels, NumericD::eps(), worker));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const double testDuration, Worker& worker)
@@ -569,7 +552,8 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const double testDur
 	Log::info() << "Testing downsampling (by two) with 14641 filtering:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int sourceWidths[] = {640u, 641u, 640u, 641u, 800u, 1024u, 1920u, 3840u};
 	const unsigned int sourceHeights[] = {480u, 480u, 481u, 481u, 640u, 512u, 1080u, 2160u};
@@ -592,29 +576,23 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const double testDur
 		{
 			Log::info() << " ";
 
-			allSucceeded = testFrameDownsamplingByTwo8Bit14641(sourceWidth, sourceHeight, targetWidth, targetHeight, channels, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testFrameDownsamplingByTwo8Bit14641(sourceWidth, sourceHeight, targetWidth, targetHeight, channels, testDuration, worker));
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Downsampling test with 14641 filtering succeeded.";
-	}
-	else
-	{
-		Log::info() << "Downsampling test with 14641 filtering FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641ExtremeResolutions(Worker& worker)
 {
 	Log::info() << "Testing downsampling (by two) with 14641 filtering for extreme frame resolutions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -644,31 +622,27 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641ExtremeResolutions(Wo
 							continue;
 						}
 
-						allSucceeded = testFrameDownsamplingByTwo8Bit14641(sourceWidth, sourceHeight, targetWidth, targetHeight, channels, NumericD::eps(), worker) && allSucceeded;
+						OCEAN_EXPECT_TRUE(validation, testFrameDownsamplingByTwo8Bit14641(sourceWidth, sourceHeight, targetWidth, targetHeight, channels, NumericD::eps(), worker));
 					}
 				}
 			}
 		}
 
-		const unsigned int sourceWidth = RandomI::random(2u, 1920u);
-		const unsigned int sourceHeight = RandomI::random(2u, 1080u);
+		const unsigned int sourceWidth = RandomI::random(randomGenerator, 2u, 1920u);
+		const unsigned int sourceHeight = RandomI::random(randomGenerator, 2u, 1080u);
 
-		const unsigned int targetWidth = (sourceWidth + RandomI::random(1u)) / 2u;
-		const unsigned int targetHeight = (sourceHeight + RandomI::random(1u)) / 2u;
+		const unsigned int randomOffsetX = RandomI::random(randomGenerator, 1u);
+		const unsigned int targetWidth = (sourceWidth + randomOffsetX) / 2u;
 
-		allSucceeded = testFrameDownsamplingByTwo8Bit14641(sourceWidth, sourceHeight, targetWidth, targetHeight, channels, NumericD::eps(), worker) && allSucceeded;
+		const unsigned int randomOffsetY = RandomI::random(randomGenerator, 1u);
+		const unsigned int targetHeight = (sourceHeight + randomOffsetY) / 2u;
+
+		OCEAN_EXPECT_TRUE(validation, testFrameDownsamplingByTwo8Bit14641(sourceWidth, sourceHeight, targetWidth, targetHeight, channels, NumericD::eps(), worker));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const double testDuration, Worker& worker)
@@ -678,7 +652,8 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const double testDuration
 	Log::info() << "Testing downsampling binary mask (by two) with 11 filtering:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int sourceWidths[] = {640u, 641u, 640u, 641u, 800u, 1024u, 1920u, 3840u};
 	const unsigned int sourceHeights[] = {480u, 480u, 481u, 481u, 640u, 512u, 1080u, 2160u};
@@ -695,52 +670,39 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const double testDuration
 		Log::info() << "Testing binary frame with size " << sourceWidth << "x" << sourceHeight << " -> " << targetWidth << "x" << targetHeight << ":";
 		Log::info() << " ";
 
-		allSucceeded = testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, testDuration, worker));
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Downsampling test with 11 filtering succeeded.";
-	}
-	else
-	{
-		Log::info() << "Downsampling test with 11 filtering FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testDownsampleBinayMaskByTwo11ExtremeResolutions(Worker& worker)
 {
 	Log::info() << "Testing binary downsampling (by two) with 11 filtering for extreme frame resolutions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int sourceWidth = 2u; sourceWidth < 64u; ++sourceWidth)
 	{
 		for (unsigned int sourceHeight = 2u; sourceHeight < 64u; ++sourceHeight)
 		{
-			allSucceeded = testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, NumericD::eps(), worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, NumericD::eps(), worker));
 		}
 	}
 
-	const unsigned int sourceWidth = RandomI::random(2u, 1920u);
-	const unsigned int sourceHeight = RandomI::random(2u, 1080u);
+	const unsigned int sourceWidth = RandomI::random(randomGenerator, 2u, 1920u);
+	const unsigned int sourceHeight = RandomI::random(randomGenerator, 2u, 1080u);
 
-	allSucceeded = testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, NumericD::eps(), worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, NumericD::eps(), worker));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& worker)
@@ -754,8 +716,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 	constexpr unsigned int frameHeight = 1080u;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -782,12 +743,12 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 
 					unsigned int maximalLayers = (unsigned int)(-1);
 
-					if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+					if (!performanceIteration && RandomI::boolean(randomGenerator))
 					{
 						maximalLayers = RandomI::random(randomGenerator, 1u, 10u);
 					}
 
-					const bool copyFirstLayer = performanceIteration || RandomI::random(randomGenerator, 1u) == 0u;
+					const bool copyFirstLayer = performanceIteration || RandomI::boolean(randomGenerator);
 
 					unsigned int pyramidPixels = 0u;
 
@@ -842,7 +803,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 
 					if (!result)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					if (copyFirstLayer)
@@ -853,7 +814,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 						{
 							if (memcmp(frame.constrow<uint8_t>(y), pyramidMemory.constdata<uint8_t>() + y * frame.planeWidthBytes(0u), frame.planeWidthBytes(0u)) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 
@@ -883,12 +844,12 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 							double maximalAbsError = NumericD::maxValue();
 							if (!validateDownsamplingByTwo8Bit11(sourceLayer, targetLayer, &averageAbsError, &maximalAbsError))
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							if (averageAbsError > 5.0 || maximalAbsError > 5.0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							layerWidth = coarserLayerWidth;
@@ -923,12 +884,12 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 							double maximalAbsError = NumericD::maxValue();
 							if (!validateDownsamplingByTwo8Bit11(sourceLayer, targetLayer, &averageAbsError, &maximalAbsError))
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							if (averageAbsError > 5.0 || maximalAbsError > 5.0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							layerWidth = coarserLayerWidth;
@@ -956,16 +917,9 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const double testDuration, Worker& worker)
@@ -983,6 +937,9 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 	{
 		Log::info() << ".... with " << channels << " channels:";
 	}
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1046,19 +1003,16 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 	ocean_assert(measurements != 0ull);
 	const double averageAbsError = sumAverageError / double(measurements);
 
-	const bool allSucceeded = averageAbsError <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
+	OCEAN_EXPECT_LESS_EQUAL(validation, averageAbsError, averageErrorThreshold);
+	OCEAN_EXPECT_LESS_EQUAL(validation, maximalError, maximalErrorThreshold);
 
 	if (textOutput)
 	{
 		Log::info() << "Validation: average error: " << String::toAString(averageAbsError, 2u) << ", maximal error: " << String::toAString(maximalError, 2u);
-
-		if (!allSucceeded)
-		{
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int sourceWidth, const unsigned int sourceHeight, const double testDuration, Worker& worker)
@@ -1071,8 +1025,7 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int source
 	const bool textOutput = sourceWidth >= 64u && testDuration > NumericD::eps();
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1111,7 +1064,7 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int source
 				return false;
 			}
 
-			allSucceeded = validateDownsampleBinayMaskByTwo11(sourceFrame.constdata<uint8_t>(), targetFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, validateDownsampleBinayMaskByTwo11(sourceFrame.constdata<uint8_t>(), targetFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u));
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
@@ -1126,17 +1079,10 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int source
 			Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, average: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 		}
 
-		if (allSucceeded)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int targetWidth, const unsigned int targetHeight, const unsigned int channels, const double testDuration, Worker& worker)
@@ -1155,6 +1101,9 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int s
 	{
 		Log::info() << ".... with " << channels << " channels:";
 	}
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1218,19 +1167,16 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int s
 	ocean_assert(measurements != 0ull);
 	const double averageAbsError = sumAverageError / double(measurements);
 
-	const bool allSucceeded = averageAbsError <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
+	OCEAN_EXPECT_LESS_EQUAL(validation, averageAbsError, averageErrorThreshold);
+	OCEAN_EXPECT_LESS_EQUAL(validation, maximalError, maximalErrorThreshold);
 
 	if (textOutput)
 	{
 		Log::info() << "Validation: average error: " << String::toAString(averageAbsError, 2u) << ", maximal error: " << String::toAString(maximalError, 2u);
-
-		if (!allSucceeded)
-		{
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinker::validateDownsamplingByTwo8Bit11(const Frame& source, const Frame& target, double* averageAbsError, double* maximalAbsError, uint8_t* groundTruth, const unsigned int groundTruthPaddingElements)

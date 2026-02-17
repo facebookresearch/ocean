@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/DataType.h"
 #include "ocean/base/HighPerformanceTimer.h"
@@ -127,14 +128,13 @@ bool TestFrameOperations::testSubtraction(const unsigned int performanceWidth, c
 
 	Log::info() << "Frame subtraction test for an " << performanceWidth << "x" << performanceHeight << " image with " << channels << " channels (" << TypeNamer::name<T>() << "):";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
-
-	RandomGenerator randomGenerator;
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -172,10 +172,7 @@ bool TestFrameOperations::testSubtraction(const unsigned int performanceWidth, c
 				CV::FrameOperations::subtract(source0, source1, target, useWorker);
 				performance.stopIf(performanceIteration);
 
-				if (!validateSubtraction<T>(source0, source1, target))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateSubtraction<T>(source0, source1, target));
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetClone))
 				{
@@ -195,16 +192,9 @@ bool TestFrameOperations::testSubtraction(const unsigned int performanceWidth, c
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
@@ -133,9 +134,8 @@ bool TestFrameMinMax::testDetermineMinValue(const double testDuration)
 
 	Log::info() << "For resolution " << fixedWidth << "x" << fixedHeight << " (1 channel, float):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	HighPerformanceStatistic performance;
 
 	// we use the following dummy locations to ensure that the compiler does not apply unintended optimizations
@@ -151,7 +151,8 @@ bool TestFrameMinMax::testDetermineMinValue(const double testDuration)
 			float minValue;
 			CV::PixelPosition minLocation((unsigned int)(-1), (unsigned int)(-1));
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 			Frame frame(FrameType(fixedWidth, fixedHeight, FrameType::genericPixelFormat<float, 1u>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
@@ -169,45 +170,39 @@ bool TestFrameMinMax::testDetermineMinValue(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 500u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 500u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
-			allSucceeded = testDetermineMinValue<int8_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMinValue<uint8_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<int8_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<uint8_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMinValue<int16_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMinValue<uint16_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<int16_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<uint16_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMinValue<int32_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMinValue<uint32_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<int32_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<uint32_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMinValue<int64_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMinValue<uint64_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<int64_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<uint64_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMinValue<float>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMinValue<double>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<float>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMinValue<double>(width, height, paddingElements));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
-	if (allSucceeded)
+	if (dummyValue > 5.0f && dummyLocationX > 5u && dummyLocationY > 5u)
 	{
-		if (dummyValue > 5.0f &&  dummyLocationX > 5u && dummyLocationY > 5u)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: succeeded.";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameMinMax::testDetermineMaxValue(const double testDuration)
@@ -220,9 +215,8 @@ bool TestFrameMinMax::testDetermineMaxValue(const double testDuration)
 
 	Log::info() << "For resolution " << fixedWidth << "x" << fixedHeight << " (1 channel, float):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	HighPerformanceStatistic performance;
 
 	// we use the following dummy locations to ensure that the compiler does not apply unintended optimizations
@@ -238,7 +232,8 @@ bool TestFrameMinMax::testDetermineMaxValue(const double testDuration)
 			float maxValue;
 			CV::PixelPosition maxLocation((unsigned int)(-1), (unsigned int)(-1));
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 			Frame frame(FrameType(fixedWidth, fixedHeight, FrameType::genericPixelFormat<float, 1u>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
@@ -256,45 +251,39 @@ bool TestFrameMinMax::testDetermineMaxValue(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 500u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 500u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
-			allSucceeded = testDetermineMaxValue<int8_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint8_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int8_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint8_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<int16_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint16_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int16_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint16_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<int32_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint32_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int32_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint32_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<int64_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint64_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int64_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint64_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<float>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<double>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<float>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<double>(width, height, paddingElements));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
-	if (allSucceeded)
+	if (dummyValue > 5.0f && dummyLocationX > 5u && dummyLocationY > 5u)
 	{
-		if (dummyValue > 5.0f &&  dummyLocationX > 5u && dummyLocationY > 5u)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: succeeded.";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -305,34 +294,28 @@ bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const 
 	Log::info() << "Determine minimal and maximal values test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testDetermineMinMaxValues<uint8_t>(width, height, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testDetermineMinMaxValues<int16_t>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDetermineMinMaxValues<uint8_t>(width, height, testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testDetermineMinMaxValues<uint32_t>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDetermineMinMaxValues<int16_t>(width, height, testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testDetermineMinMaxValues<float>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDetermineMinMaxValues<uint32_t>(width, height, testDuration, worker));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testDetermineMinMaxValues<float>(width, height, testDuration, worker));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -342,8 +325,7 @@ bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const 
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 1u; channels <= 5u; ++channels)
 	{
@@ -377,7 +359,8 @@ bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const 
 					const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
 					const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					T* frameData = frame.data<T>();
@@ -423,15 +406,12 @@ bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const 
 
 						default:
 							ocean_assert(false && "Invalid channel number!");
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(benchmark);
 
-					if (!validateDetermineMinMaxValues<T>(frame, minValues.data(), maxValues.data()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateDetermineMinMaxValues<T>(frame, minValues.data(), maxValues.data()));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -446,7 +426,7 @@ bool TestFrameMinMax::testDetermineMinMaxValues(const unsigned int width, const 
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameMinMax::testCountElementsOutsideRange(const double testDuration)
@@ -459,9 +439,8 @@ bool TestFrameMinMax::testCountElementsOutsideRange(const double testDuration)
 
 	Log::info() << "For resolution " << fixedWidth << "x" << fixedHeight << " (1 channel, uint8_t):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	HighPerformanceStatistic performance;
 
 	// A dummy value to ensure that the compiler does not apply unintended optimizations
@@ -473,7 +452,8 @@ bool TestFrameMinMax::testCountElementsOutsideRange(const double testDuration)
 	{
 		{
 			// Performance
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 			Frame frame(FrameType(fixedWidth, fixedHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 			CV::CVUtilities::randomizeFrame(frame, /* skip padding */ false, &randomGenerator);
@@ -490,7 +470,7 @@ bool TestFrameMinMax::testCountElementsOutsideRange(const double testDuration)
 			const bool countStatus = CV::FrameMinMax::countElementsOutsideRange<uint8_t>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), rangeStart, rangeEnd, &countBelowRange, &countAboveRange);
 			performance.stop();
 
-			allSucceeded = allSucceeded && countStatus;
+			OCEAN_EXPECT_TRUE(validation, countStatus);
 
 			dummyValue = std::max(1u, dummyValue + countBelowRange + countAboveRange);
 		}
@@ -500,45 +480,39 @@ bool TestFrameMinMax::testCountElementsOutsideRange(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 500u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 500u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
-			allSucceeded = testCountElementsOutsideRange<int8_t>(randomGenerator, width, height, paddingElements) && allSucceeded;
-			allSucceeded = testCountElementsOutsideRange<uint8_t>(randomGenerator, width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testCountElementsOutsideRange<int8_t>(randomGenerator, width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testCountElementsOutsideRange<uint8_t>(randomGenerator, width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<int16_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint16_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int16_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint16_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<int32_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint32_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int32_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint32_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<int64_t>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<uint64_t>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<int64_t>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<uint64_t>(width, height, paddingElements));
 
-			allSucceeded = testDetermineMaxValue<float>(width, height, paddingElements) && allSucceeded;
-			allSucceeded = testDetermineMaxValue<double>(width, height, paddingElements) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<float>(width, height, paddingElements));
+			OCEAN_EXPECT_TRUE(validation, testDetermineMaxValue<double>(width, height, paddingElements));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
-	if (allSucceeded)
+	if (dummyValue > 0u)
 	{
-		if (dummyValue > 0u)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: succeeded.";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -552,6 +526,7 @@ bool TestFrameMinMax::testDetermineMinValue(const unsigned int width, const unsi
 	Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int y = 0u; y < height; ++y)
 	{
@@ -598,40 +573,16 @@ bool TestFrameMinMax::testDetermineMinValue(const unsigned int width, const unsi
 
 	ocean_assert(testMinLocationX >= 0 && testMinLocationX >= 0);
 
-	if (testMinLocationX < 0 || testMinLocationX >= int(width))
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, testMinLocationX >= 0 && testMinLocationX < int(width));
+	OCEAN_EXPECT_TRUE(validation, testMinLocationY >= 0 && testMinLocationY < int(height));
 
-	if (testMinLocationY < 0 || testMinLocationY >= int(height))
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, double(minValue) >= double(minRangeValue) && double(minValue) <= double(maxRangeValue));
 
-	if (double(minValue) < double(minRangeValue) || double(minValue) > double(maxRangeValue))
-	{
-		return false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, double(minValue), testMinValue);
+	OCEAN_EXPECT_EQUAL(validation, double(justMinValue), testMinValue);
 
-	if (double(minValue) != testMinValue)
-	{
-		return false;
-	}
-
-	if (double(justMinValue) != testMinValue)
-	{
-		return false;
-	}
-
-	if (minLocation.x() >= width || minLocation.y() >= height)
-	{
-		return false;
-	}
-
-	if (justMinLocation.x() >= width || justMinLocation.y() >= height)
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, minLocation.x() < width && minLocation.y() < height);
+	OCEAN_EXPECT_TRUE(validation, justMinLocation.x() < width && justMinLocation.y() < height);
 
 	if (testMinLocationX != int(minLocation.x()) || testMinLocationY != int(minLocation.y()))
 	{
@@ -642,18 +593,12 @@ bool TestFrameMinMax::testDetermineMinValue(const unsigned int width, const unsi
 
 		const T value = frame.constpixel<T>(minLocation.x(), minLocation.y())[0];
 
-		if (double(value) != testMinValue)
-		{
-			return false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, double(value), testMinValue);
 	}
 
-	if (minLocation != justMinLocation)
-	{
-		return false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, minLocation, justMinLocation);
 
-	return true;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -667,6 +612,7 @@ bool TestFrameMinMax::testDetermineMaxValue(const unsigned int width, const unsi
 	Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int y = 0u; y < height; ++y)
 	{
@@ -713,40 +659,16 @@ bool TestFrameMinMax::testDetermineMaxValue(const unsigned int width, const unsi
 
 	ocean_assert(testMaxLocationX >= 0 && testMaxLocationX >= 0);
 
-	if (testMaxLocationX < 0 || testMaxLocationX >= int(width))
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, testMaxLocationX >= 0 && testMaxLocationX < int(width));
+	OCEAN_EXPECT_TRUE(validation, testMaxLocationY >= 0 && testMaxLocationY < int(height));
 
-	if (testMaxLocationY < 0 || testMaxLocationY >= int(height))
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, double(maxValue) >= double(minRangeValue) && double(maxValue) <= double(maxRangeValue));
 
-	if (double(maxValue) < double(minRangeValue) || double(maxValue) > double(maxRangeValue))
-	{
-		return false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, double(maxValue), testMaxValue);
+	OCEAN_EXPECT_EQUAL(validation, double(justMaxValue), testMaxValue);
 
-	if (double(maxValue) != testMaxValue)
-	{
-		return false;
-	}
-
-	if (double(justMaxValue) != testMaxValue)
-	{
-		return false;
-	}
-
-	if (maxLocation.x() >= width || maxLocation.y() >= height)
-	{
-		return false;
-	}
-
-	if (justMaxLocation.x() >= width || justMaxLocation.y() >= height)
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, maxLocation.x() < width && maxLocation.y() < height);
+	OCEAN_EXPECT_TRUE(validation, justMaxLocation.x() < width && justMaxLocation.y() < height);
 
 	if (testMaxLocationX != int(maxLocation.x()) || testMaxLocationY != int(maxLocation.y()))
 	{
@@ -757,24 +679,20 @@ bool TestFrameMinMax::testDetermineMaxValue(const unsigned int width, const unsi
 
 		const T value = frame.constpixel<T>(maxLocation.x(), maxLocation.y())[0];
 
-		if (double(value) != testMaxValue)
-		{
-			return false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, double(value), testMaxValue);
 	}
 
-	if (maxLocation != justMaxLocation)
-	{
-		return false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, maxLocation, justMaxLocation);
 
-	return true;
+	return validation.succeeded();
 }
 
 template <typename T>
 bool TestFrameMinMax::testCountElementsOutsideRange(RandomGenerator& randomGenerator, const uint32_t width, const uint32_t height, const uint32_t paddingElements)
 {
 	ocean_assert(width >= 1u && height >= 1u);
+
+	Validation validation(randomGenerator);
 
 	const T rangeStart = T(RandomT<T>::random(randomGenerator, NumericT<T>::minValue(), NumericT<T>::maxValue()));
 	const T rangeEnd = T(RandomT<T>::random(randomGenerator, rangeStart, NumericT<T>::maxValue()));
@@ -793,10 +711,7 @@ bool TestFrameMinMax::testCountElementsOutsideRange(RandomGenerator& randomGener
 	uint32_t elementsAboveRangeOnly = RandomI::random(randomGenerator, 100000u);
 	executionSuccessful = CV::FrameMinMax::countElementsOutsideRange<T>(frame.constdata<T>(), frame.width(), frame.height(), frame.paddingElements(), rangeStart, rangeEnd, nullptr, &elementsAboveRangeOnly) && executionSuccessful;
 
-	if (executionSuccessful == false)
-	{
-		return false;
-	}
+	OCEAN_EXPECT_TRUE(validation, executionSuccessful);
 
 	uint32_t elementsBelowRangeGroundtruth = 0u;
 	uint32_t elementsAboveRangeGroundtruth = 0u;
@@ -818,12 +733,12 @@ bool TestFrameMinMax::testCountElementsOutsideRange(RandomGenerator& randomGener
 		}
 	}
 
-	const bool allSucceeded = elementsBelowRange == elementsBelowRangeGroundtruth
-								&& elementsAboveRange == elementsAboveRangeGroundtruth
-								&& elementsBelowRangeOnly == elementsBelowRangeGroundtruth
-								&& elementsAboveRangeOnly == elementsAboveRangeGroundtruth;
+	OCEAN_EXPECT_EQUAL(validation, elementsBelowRange, elementsBelowRangeGroundtruth);
+	OCEAN_EXPECT_EQUAL(validation, elementsAboveRange, elementsAboveRangeGroundtruth);
+	OCEAN_EXPECT_EQUAL(validation, elementsBelowRangeOnly, elementsBelowRangeGroundtruth);
+	OCEAN_EXPECT_EQUAL(validation, elementsAboveRangeOnly, elementsAboveRangeGroundtruth);
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -833,6 +748,8 @@ bool TestFrameMinMax::validateDetermineMinMaxValues(const Frame& frame, const T*
 	ocean_assert(minValues != nullptr && maxValues != nullptr);
 
 	ocean_assert(frame.numberPlanes() == 1u && frame.dataType() == FrameType::dataType<T>());
+
+	Validation validation;
 
 	const unsigned int channels = frame.channels();
 
@@ -857,18 +774,11 @@ bool TestFrameMinMax::validateDetermineMinMaxValues(const Frame& frame, const T*
 
 	for (unsigned int c = 0u; c < channels; ++c)
 	{
-		if (minValues[c] != testMinValues[c])
-		{
-			return false;
-		}
-
-		if (maxValues[c] != testMaxValues[c])
-		{
-			return false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, minValues[c], testMinValues[c]);
+		OCEAN_EXPECT_EQUAL(validation, maxValues[c], testMaxValues[c]);
 	}
 
-	return true;
+	return validation.succeeded();
 }
 
 }

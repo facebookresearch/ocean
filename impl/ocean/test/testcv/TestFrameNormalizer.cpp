@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/RandomGenerator.h"
@@ -621,43 +622,44 @@ bool TestFrameNormalizer::testNormalizerToUint8(const double testDuration, Worke
 	Log::info() << "Testing 1-channel normalizer to 8 bit images:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testNormalizerToUint8<uint8_t>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<uint8_t>(testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testNormalizerToUint8<int8_t>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNormalizerToUint8<uint16_t>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNormalizerToUint8<int16_t>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<int8_t>(testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizerToUint8<uint32_t>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<uint16_t>(testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testNormalizerToUint8<int32_t>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<int16_t>(testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizerToUint8<uint64_t>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<uint32_t>(testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testNormalizerToUint8<int64_t>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<int32_t>(testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizerToUint8<float>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<uint64_t>(testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testNormalizerToUint8<double>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<int64_t>(testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizerToUint8<float, true>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<float>(testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testNormalizerToUint8<double, true>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testNormalizerToUint8<double>(testDuration, worker));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testNormalizerToUint8<float, true>(testDuration, worker)));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testNormalizerToUint8<double, true>(testDuration, worker)));
+
+	return validation.succeeded();
 }
 
 template <typename T, bool tExtremeValueRange>
@@ -669,21 +671,22 @@ bool TestFrameNormalizer::testNormalizerToUint8(const double testDuration, Worke
 
 	Log::info() << "... for " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int normalizedPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxNormalizedPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int normalizedPaddingElements = maxNormalizedPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 		Frame normalized(FrameType(frame, FrameType::genericPixelFormat<uint8_t, 1u>()), normalizedPaddingElements);
@@ -717,23 +720,13 @@ bool TestFrameNormalizer::testNormalizerToUint8(const double testDuration, Worke
 			return false;
 		}
 
-		if (!verifyLinearNormalizedUint8<T>(frame.constdata<T>(), normalized.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), normalized.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, verifyLinearNormalizedUint8<T>(frame.constdata<T>(), normalized.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), normalized.paddingElements()));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker& worker)
@@ -743,207 +736,208 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 	Log::info() << "Testing normalization to float images:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testNormalizeToFloat<uint8_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint8_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint8_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint8_t, float, 4u>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testNormalizeToFloat<int8_t, float, 1u>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int8_t, float, 2u>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int8_t, float, 3u>(testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int8_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint16_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint16_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint16_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint16_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int16_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int16_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int16_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int16_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint32_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint32_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint32_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint32_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int32_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int32_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int32_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int32_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint64_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint64_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint64_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint64_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int64_t, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int64_t, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int64_t, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int64_t, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<float, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<float, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<float, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<float, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<double, float, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<double, float, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<double, float, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<double, float, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint8_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, float, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint8_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, float, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint8_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, float, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint8_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, float, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int8_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int8_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int8_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int8_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint8_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint16_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint16_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint16_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint16_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int8_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int16_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int16_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int16_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int16_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint16_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint32_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint32_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint32_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint32_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int16_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int32_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int32_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int32_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int32_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint32_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<uint64_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint64_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint64_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<uint64_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int32_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<int64_t, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int64_t, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int64_t, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<int64_t, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<uint64_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<float, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<float, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<float, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<float, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<int64_t, double, 4u>(testDuration, worker)));
 
 	Log::info() << " ";
 
-	allSucceeded = testNormalizeToFloat<double, double, 1u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, double, 1u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<double, double, 2u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, double, 2u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<double, double, 3u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, double, 3u>(testDuration, worker)));
 	Log::info() << " ";
-	allSucceeded = testNormalizeToFloat<double, double, 4u>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<float, double, 4u>(testDuration, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, double, 1u>(testDuration, worker)));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, double, 2u>(testDuration, worker)));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, double, 3u>(testDuration, worker)));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testNormalizeToFloat<double, double, 4u>(testDuration, worker)));
+
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, unsigned int tChannels>
@@ -953,9 +947,8 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 
 	Log::info() << "... for " << TypeNamer::name<TSource>() << " to " << TypeNamer::name<TTarget>() << " with " << tChannels << " channel(s):";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -966,8 +959,8 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 
 	do
 	{
-		const bool normalizeToRange0To1 = RandomI::random(randomGenerator, 1u) == 0u;
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		const bool normalizeToRange0To1 = RandomI::boolean(randomGenerator);
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		const TTarget* useBias = nullptr;
 		const TTarget* useScale = nullptr;
@@ -977,7 +970,9 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 			for (unsigned int c = 0u; c < tChannels; ++c)
 			{
 				bias[c] = RandomT<TTarget>::scalar(randomGenerator, TTarget(-100), TTarget(100));
-				scale[c] = TTarget(RandomI::random(randomGenerator, 1u) == 0u ? 1 : -1) * RandomT<TTarget>::scalar(randomGenerator, NumericT<TTarget>::weakEps(), TTarget(5));
+
+				const TTarget scaleSign = TTarget(RandomI::boolean(randomGenerator) ? 1 : -1);
+				scale[c] = scaleSign * RandomT<TTarget>::scalar(randomGenerator, NumericT<TTarget>::weakEps(), TTarget(5));
 
 				useBias = bias;
 				useScale = scale;
@@ -987,8 +982,10 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int normalizedPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxNormalizedPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int normalizedPaddingElements = maxNormalizedPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<TSource, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 		Frame normalized(FrameType(frame, FrameType::genericPixelFormat<TTarget, tChannels>()), normalizedPaddingElements);
@@ -1007,10 +1004,7 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 		}
 
 		double currentMaxAbsoluteError = 0;
-		if (!verifyNormalizeToFloat<TSource, TTarget, tChannels>(frame.constdata<TSource>(), normalized.constdata<TTarget>(), frame.width(), frame.height(), useBias, useScale, frame.paddingElements(), normalized.paddingElements(), currentMaxAbsoluteError))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, (verifyNormalizeToFloat<TSource, TTarget, tChannels>(frame.constdata<TSource>(), normalized.constdata<TTarget>(), frame.width(), frame.height(), useBias, useScale, frame.paddingElements(), normalized.paddingElements(), currentMaxAbsoluteError)));
 
 		maxAbsoluteError = std::max(maxAbsoluteError, currentMaxAbsoluteError);
 	}
@@ -1018,16 +1012,9 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 
 	Log::info() << "Max. absolute error: " << String::toAString(maxAbsoluteError, 5u);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDuration, Worker& worker)
@@ -1037,15 +1024,16 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 	Log::info() << "Testing value range normalize to float:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testValueRangeNormalizerToUint8<float>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testValueRangeNormalizerToUint8<float>(testDuration, worker));
 
 	Log::info() << " ";
 
-	allSucceeded = testValueRangeNormalizerToUint8<double>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testValueRangeNormalizerToUint8<double>(testDuration, worker));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TFloat>
@@ -1062,15 +1050,14 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 
 	constexpr unsigned int pixels = width * height;
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TFloat, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
@@ -1166,7 +1153,7 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 
 				if (int(value) < previousValue) // each value must be equal or larger than the previous value
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++histogram[value];
@@ -1193,21 +1180,14 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 
 		if (percent >= 0.005) // 0.5%
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
