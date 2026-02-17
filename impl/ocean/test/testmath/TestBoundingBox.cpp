@@ -13,6 +13,7 @@
 #include "ocean/math/BoundingBox.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -70,8 +71,8 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 
 	Log::info() << "Positive front intersection test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.0001) : Numeric::eps();
 
@@ -82,6 +83,8 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 		// front test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 lower(Random::vector3(-100, 100));
 			const Vector3 offset(Random::vector3(Scalar(0.05), 100));
 			const Vector3 higher(lower + offset);
@@ -103,26 +106,24 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 			Vector3 position;
 			Scalar distance;
 
-			bool localSucceeded = true;
-
 			if (box.positiveFrontIntersection(intersectingRay, position, distance))
 			{
 				ocean_assert(intersectingRay.isOnLine(position));
 
 				if (!box.isOnSurface(position, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
 				if (!testPosition.isEqual(position, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (intersectingRay.point().distance(center) < intersectingRay.point().distance(position))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				Vector3 position2(0, 0, 0);
@@ -137,12 +138,12 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 				const Vector3 normalOffset = position + normal2 * Scalar(0.01);
 				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (normal2 * intersectingRay.direction() > 0)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				Vector3 position3(0, 0, 0);
@@ -160,20 +161,15 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 			}
 			else
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		// center test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 lower(Random::vector3(-100, 100));
 			const Vector3 offset(Random::vector3(Scalar(0.05), 100));
 			const Vector3 higher(lower + offset);
@@ -196,26 +192,19 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 			Vector3 normal;
 			Vector2 textureCoordinate;
 
-			bool localSucceeded = true;
-
 			if (box.positiveFrontIntersection(intersectingRay, position, distance)
 					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal)
 					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal, textureCoordinate))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		// back test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 lower(Random::vector3(-100, 100));
 			const Vector3 offset(Random::vector3(Scalar(0.05), 100));
 			const Vector3 higher(lower + offset);
@@ -239,31 +228,19 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 			Vector3 normal;
 			Vector2 textureCoordinate;
 
-			bool localSucceeded = true;
-
 			if (box.positiveFrontIntersection(intersectingRay, position, distance)
 					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal)
 					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal, textureCoordinate))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
@@ -272,8 +249,8 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 
 	Log::info() << "Positive back intersection test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.0001) : Numeric::eps();
 
@@ -284,6 +261,8 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 		// front test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 lower(Random::vector3(-100, 100));
 			const Vector3 offset(Random::vector3(Scalar(0.05), 100));
 			const Vector3 higher(lower + offset);
@@ -305,21 +284,19 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			Vector3 position;
 			Scalar distance;
 
-			bool localSucceeded = true;
-
 			if (box.positiveBackIntersection(intersectingRay, position, distance))
 			{
 				ocean_assert(intersectingRay.isOnLine(position));
 
 				if (!box.isOnSurface(position, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
 				if (!testPosition.isEqual(position, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				Vector3 position2(0, 0, 0);
@@ -334,12 +311,12 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 				const Vector3 normalOffset = position + normal2 * Scalar(0.01);
 				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (normal2 * intersectingRay.direction() < 0)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				Vector3 position3(0, 0, 0);
@@ -357,20 +334,15 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			}
 			else
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		// center test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 lower(Random::vector3(-100, 100));
 			const Vector3 offset(Random::vector3(Scalar(0.05), 100));
 			const Vector3 higher(lower + offset);
@@ -391,21 +363,19 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			Vector3 position;
 			Scalar distance;
 
-			bool localSucceeded = true;
-
 			if (box.positiveBackIntersection(intersectingRay, position, distance))
 			{
 				ocean_assert(intersectingRay.isOnLine(position));
 
 				if (!box.isOnSurface(position, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
 				if (!testPosition.isEqual(position, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				Vector3 position2(0, 0, 0);
@@ -420,12 +390,12 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 				const Vector3 normalOffset = position + normal2 * Scalar(0.01);
 				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (normal2 * intersectingRay.direction() < 0)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				Vector3 position3(0, 0, 0);
@@ -443,20 +413,15 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			}
 			else
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 
 		// back test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 lower(Random::vector3(-100, 100));
 			const Vector3 offset(Random::vector3(Scalar(0.05), 100));
 			const Vector3 higher(lower + offset);
@@ -480,31 +445,19 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			Vector3 normal;
 			Vector2 textureCoordinate;
 
-			bool localSucceeded = true;
-
 			if (box.positiveBackIntersection(intersectingRay, position, distance)
 					|| box.positiveBackIntersection(intersectingRay, position, distance, normal)
 					|| box.positiveBackIntersection(intersectingRay, position, distance, normal, textureCoordinate))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

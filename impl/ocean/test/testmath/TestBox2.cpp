@@ -16,6 +16,8 @@
 #include "ocean/math/SquareMatrix3.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -157,7 +159,8 @@ bool TestBox2::testConstructors(const double testDuration)
 
 	Log::info() << "Constructors test with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -168,11 +171,11 @@ bool TestBox2::testConstructors(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const T left = RandomT<T>::scalar(-coordinateRange, coordinateRange);
-			const T top = RandomT<T>::scalar(-coordinateRange, coordinateRange);
+			const T left = RandomT<T>::scalar(randomGenerator, -coordinateRange, coordinateRange);
+			const T top = RandomT<T>::scalar(randomGenerator, -coordinateRange, coordinateRange);
 
-			const T width = RandomT<T>::scalar(0, dimensionRange);
-			const T height = RandomT<T>::scalar(0, dimensionRange);
+			const T width = RandomT<T>::scalar(randomGenerator, 0, dimensionRange);
+			const T height = RandomT<T>::scalar(randomGenerator, 0, dimensionRange);
 
 			const T right = left + width;
 			const T bottom = top + height;
@@ -187,70 +190,51 @@ bool TestBox2::testConstructors(const double testDuration)
 
 			const BoxT2<T> boxTopLeftWidthHeight(width, height, VectorT2<T>(left, top));
 
-			if (!boxTopLeftWidthHeight.isValid()
-					|| NumericT<T>::isNotEqual(boxTopLeftWidthHeight.left(), left)
-					|| NumericT<T>::isNotEqual(boxTopLeftWidthHeight.top(), top)
-					|| NumericT<T>::isNotEqual(boxTopLeftWidthHeight.right(), right)
-					|| NumericT<T>::isNotEqual(boxTopLeftWidthHeight.bottom(), bottom)
-					|| NumericT<T>::isNotEqual(boxTopLeftWidthHeight.width(), width)
-					|| NumericT<T>::isNotEqual(boxTopLeftWidthHeight.height(), height)
-					|| boxTopLeftWidthHeight.center() != VectorT2<T>(centerX, centerY))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxTopLeftWidthHeight.isValid());
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxTopLeftWidthHeight.left(), left));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxTopLeftWidthHeight.top(), top));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxTopLeftWidthHeight.right(), right));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxTopLeftWidthHeight.bottom(), bottom));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxTopLeftWidthHeight.width(), width));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxTopLeftWidthHeight.height(), height));
+			OCEAN_EXPECT_EQUAL(validation, boxTopLeftWidthHeight.center(), VectorT2<T>(centerX, centerY));
 
 			// bounding box based on left, top, right, and bottom coordinates
 
 			const BoxT2<T> boxLeftTopRightBottom(left, top, right, bottom);
 
-			if (!boxLeftTopRightBottom.isValid()
-				|| NumericT<T>::isNotEqual(boxLeftTopRightBottom.left(), left)
-				|| NumericT<T>::isNotEqual(boxLeftTopRightBottom.top(), top)
-				|| NumericT<T>::isNotEqual(boxLeftTopRightBottom.right(), right)
-				|| NumericT<T>::isNotEqual(boxLeftTopRightBottom.bottom(), bottom)
-				|| NumericT<T>::isNotEqual(boxLeftTopRightBottom.width(), width)
-				|| NumericT<T>::isNotEqual(boxLeftTopRightBottom.height(), height)
-				|| boxLeftTopRightBottom.center() != VectorT2<T>(centerX, centerY))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxLeftTopRightBottom.isValid());
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxLeftTopRightBottom.left(), left));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxLeftTopRightBottom.top(), top));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxLeftTopRightBottom.right(), right));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxLeftTopRightBottom.bottom(), bottom));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxLeftTopRightBottom.width(), width));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxLeftTopRightBottom.height(), height));
+			OCEAN_EXPECT_EQUAL(validation, boxLeftTopRightBottom.center(), VectorT2<T>(centerX, centerY));
 
 			// bounding box based on the box's center and width and height
 
 			const BoxT2<T> boxCenterWithHeight(VectorT2<T>(centerX, centerY), width, height);
 
-			if (!boxCenterWithHeight.isValid()
-				|| NumericT<T>::isNotEqual(boxCenterWithHeight.left(), left)
-				|| NumericT<T>::isNotEqual(boxCenterWithHeight.top(), top)
-				|| NumericT<T>::isNotEqual(boxCenterWithHeight.right(), right)
-				|| NumericT<T>::isNotEqual(boxCenterWithHeight.bottom(), bottom)
-				|| NumericT<T>::isNotEqual(boxCenterWithHeight.width(), width)
-				|| NumericT<T>::isNotEqual(boxCenterWithHeight.height(), height)
-				|| boxCenterWithHeight.center() != VectorT2<T>(centerX, centerY))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, boxCenterWithHeight.isValid());
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxCenterWithHeight.left(), left));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxCenterWithHeight.top(), top));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxCenterWithHeight.right(), right));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxCenterWithHeight.bottom(), bottom));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxCenterWithHeight.width(), width));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(boxCenterWithHeight.height(), height));
+			OCEAN_EXPECT_EQUAL(validation, boxCenterWithHeight.center(), VectorT2<T>(centerX, centerY));
 
-			if (boxTopLeftWidthHeight != boxLeftTopRightBottom
-					|| boxTopLeftWidthHeight != boxCenterWithHeight
-					|| boxLeftTopRightBottom != boxCenterWithHeight)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, boxTopLeftWidthHeight, boxLeftTopRightBottom);
+			OCEAN_EXPECT_EQUAL(validation, boxTopLeftWidthHeight, boxCenterWithHeight);
+			OCEAN_EXPECT_EQUAL(validation, boxLeftTopRightBottom, boxCenterWithHeight);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -262,24 +246,26 @@ bool TestBox2::testIntersects(const double testDuration)
 
 	const T epsilon = std::is_same<float, T>::value ? T(0.001) : NumericT<T>::eps();
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const T boxLeft0 = RandomT<T>::scalar(-500, 1000);
-		const T boxTop0 = RandomT<T>::scalar(-500, 1000);
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const T boxRight0 = RandomT<T>::scalar(boxLeft0 + T(0.01), 1500);
-		const T boxBottom0 = RandomT<T>::scalar(boxTop0 + T(0.01), 1500);
+		const T boxLeft0 = RandomT<T>::scalar(randomGenerator, -500, 1000);
+		const T boxTop0 = RandomT<T>::scalar(randomGenerator, -500, 1000);
 
-		const T boxLeft1 = RandomT<T>::scalar(-500, 1000);
-		const T boxTop1 = RandomT<T>::scalar(-500, 1000);
+		const T boxRight0 = RandomT<T>::scalar(randomGenerator, boxLeft0 + T(0.01), 1500);
+		const T boxBottom0 = RandomT<T>::scalar(randomGenerator, boxTop0 + T(0.01), 1500);
 
-		const T boxRight1 = RandomT<T>::scalar(boxLeft1 + T(0.01), 1500);
-		const T boxBottom1 = RandomT<T>::scalar(boxTop1 + T(0.01), 1500);
+		const T boxLeft1 = RandomT<T>::scalar(randomGenerator, -500, 1000);
+		const T boxTop1 = RandomT<T>::scalar(randomGenerator, -500, 1000);
+
+		const T boxRight1 = RandomT<T>::scalar(randomGenerator, boxLeft1 + T(0.01), 1500);
+		const T boxBottom1 = RandomT<T>::scalar(randomGenerator, boxTop1 + T(0.01), 1500);
 
 		const BoxT2<T> box0(boxLeft0, boxTop0, boxRight0, boxBottom0);
 		const BoxT2<T> box1(boxLeft1, boxTop1, boxRight1, boxBottom1);
@@ -330,21 +316,16 @@ bool TestBox2::testIntersects(const double testDuration)
 
 		ocean_assert(test == testEdges);
 
-		if (result == test)
+		if (result != test)
 		{
-			validIterations++;
+			scopedIteration.setInaccurate();
 		}
-
-		iterations++;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -354,20 +335,21 @@ bool TestBox2::testUnsignedBox2integer(const double testDuration)
 
 	Log::info() << "Unsigned box2integer test with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1000u);
-		const unsigned int height = RandomI::random(1u, 1000u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u);
 
-		const T boxLeft = RandomT<T>::scalar(-500, 1000);
-		const T boxTop = RandomT<T>::scalar(-500, 1000);
+		const T boxLeft = RandomT<T>::scalar(randomGenerator, -500, 1000);
+		const T boxTop = RandomT<T>::scalar(randomGenerator, -500, 1000);
 
-		const T boxRight = RandomT<T>::scalar(boxLeft, 2500);
-		const T boxBottom = RandomT<T>::scalar(boxTop, 2500);
+		const T boxRight = RandomT<T>::scalar(randomGenerator, boxLeft, 2500);
+		const T boxBottom = RandomT<T>::scalar(randomGenerator, boxTop, 2500);
 
 		ocean_assert(boxRight >= boxLeft);
 		ocean_assert(boxBottom >= boxTop);
@@ -381,7 +363,7 @@ bool TestBox2::testUnsignedBox2integer(const double testDuration)
 		{
 			if (box.box2integer(width, height, testLeft, testTop, testWidth, testHeight))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 		}
@@ -389,7 +371,7 @@ bool TestBox2::testUnsignedBox2integer(const double testDuration)
 		{
 			if (!box.box2integer(width, height, testLeft, testTop, testWidth, testHeight))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 
@@ -407,22 +389,15 @@ bool TestBox2::testUnsignedBox2integer(const double testDuration)
 
 			if (left != testLeft || top != testTop || testWidth != (right - left + 1u) || testHeight != (bottom - top + 1u))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -432,23 +407,24 @@ bool TestBox2::testSignedBox2integer(const double testDuration)
 
 	Log::info() << "Signed box2integer test with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const int areaLeft = RandomI::random(-1000, 1000);
-		const int areaTop = RandomI::random(-1000, 1000);
+		const int areaLeft = RandomI::random(randomGenerator, -1000, 1000);
+		const int areaTop = RandomI::random(randomGenerator, -1000, 1000);
 
-		const int areaRight = RandomI::random(areaLeft + 1, 2000);
-		const int areaBottom = RandomI::random(areaTop + 1, 2000);
+		const int areaRight = RandomI::random(randomGenerator, areaLeft + 1, 2000);
+		const int areaBottom = RandomI::random(randomGenerator, areaTop + 1, 2000);
 
-		const T boxLeft = RandomT<T>::scalar(-1500, 2000);
-		const T boxTop = RandomT<T>::scalar(-1500, 2000);
+		const T boxLeft = RandomT<T>::scalar(randomGenerator, -1500, 2000);
+		const T boxTop = RandomT<T>::scalar(randomGenerator, -1500, 2000);
 
-		const T boxRight = RandomT<T>::scalar(boxLeft, 2500);
-		const T boxBottom = RandomT<T>::scalar(boxTop, 2500);
+		const T boxRight = RandomT<T>::scalar(randomGenerator, boxLeft, 2500);
+		const T boxBottom = RandomT<T>::scalar(randomGenerator, boxTop, 2500);
 
 		ocean_assert(boxRight >= boxLeft);
 		ocean_assert(boxBottom >= boxTop);
@@ -463,7 +439,7 @@ bool TestBox2::testSignedBox2integer(const double testDuration)
 		{
 			if (box.box2integer(areaLeft, areaTop, areaRight, areaBottom, testLeft, testTop, testWidth, testHeight))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 		}
@@ -471,7 +447,7 @@ bool TestBox2::testSignedBox2integer(const double testDuration)
 		{
 			if (!box.box2integer(areaLeft, areaTop, areaRight, areaBottom, testLeft, testTop, testWidth, testHeight))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 
@@ -571,22 +547,15 @@ bool TestBox2::testSignedBox2integer(const double testDuration)
 
 			if (left != testLeft || top != testTop || testWidth != (right - left + 1u) || testHeight != (bottom - top + 1u))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -596,40 +565,35 @@ bool TestBox2::testMultiplicationOperators(const double testDuration)
 
 	Log::info() << "Signed multiplication operators test with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const T width = RandomT<T>::scalar(T(0.1), 10);
-		const T height = RandomT<T>::scalar(T(0.1), 10);
+		const T width = RandomT<T>::scalar(randomGenerator, T(0.1), 10);
+		const T height = RandomT<T>::scalar(randomGenerator, T(0.1), 10);
 
-		const T centerX = RandomT<T>::scalar(-10, 10);
-		const T centerY = RandomT<T>::scalar(-10, 10);
+		const T centerX = RandomT<T>::scalar(randomGenerator, -10, 10);
+		const T centerY = RandomT<T>::scalar(randomGenerator, -10, 10);
 
 		const BoxT2<T> sourceBox(VectorT2<T>(centerX, centerY), width, height);
 
 		ocean_assert(sourceBox.isValid());
-		if (!sourceBox.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, sourceBox.isValid());
 
 		{
 			// testing scalar multiplication factor
 
-			const T scalarFactor = RandomT<T>::scalar(-10, 10);
+			const T scalarFactor = RandomT<T>::scalar(randomGenerator, -10, 10);
 
 			BoxT2<T> copySourceBox(sourceBox);
 
 			const BoxT2<T> targetBox = sourceBox * scalarFactor;
 			copySourceBox *= scalarFactor;
 
-			if (targetBox != copySourceBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, targetBox, copySourceBox);
 
 			T newLeft = sourceBox.left() * scalarFactor;
 			T newRight = sourceBox.right() * scalarFactor;
@@ -639,22 +603,19 @@ bool TestBox2::testMultiplicationOperators(const double testDuration)
 			T newBottom = sourceBox.bottom() * scalarFactor;
 			Utilities::sortLowestToFront2(newTop, newBottom);
 
-			if (NumericT<T>::isNotEqual(newLeft, targetBox.left())
-				|| NumericT<T>::isNotEqual(newRight, targetBox.right())
-				|| NumericT<T>::isNotEqual(newTop, targetBox.top())
-				|| NumericT<T>::isNotEqual(newBottom, targetBox.bottom()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newLeft, targetBox.left()));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newRight, targetBox.right()));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newTop, targetBox.top()));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newBottom, targetBox.bottom()));
 		}
 
 		{
 			// testing matrix multiplication factor
 
-			const QuaternionT<T> rotation(VectorT3<T>(0, 0, 1), RandomT<T>::scalar(0, NumericT<T>::pi2()));
+			const QuaternionT<T> rotation(VectorT3<T>(0, 0, 1), RandomT<T>::scalar(randomGenerator, 0, NumericT<T>::pi2()));
 			const VectorT3<T> xAxis((rotation * VectorT3<T>(1, 0, 0)).xy(), 0);
 			const VectorT3<T> yAxis((rotation * VectorT3<T>(0, 1, 0)).xy(), 0);
-			const VectorT3<T> zAxis(RandomT<T>::vector2(-10, 10), 1);
+			const VectorT3<T> zAxis(RandomT<T>::vector2(randomGenerator, -10, 10), 1);
 
 			const SquareMatrixT3<T> transformation = SquareMatrixT3<T>(xAxis, yAxis, zAxis);
 			ocean_assert(!transformation.isSingular());
@@ -664,10 +625,7 @@ bool TestBox2::testMultiplicationOperators(const double testDuration)
 			const BoxT2<T> targetBox = sourceBox * transformation;
 			copySourceBox *= transformation;
 
-			if (targetBox != copySourceBox)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, targetBox, copySourceBox);
 
 			const VectorT2<T> transformedTopLeft = transformation * VectorT2<T>(sourceBox.left(), sourceBox.top());
 			const VectorT2<T> transformedTopRight = transformation * VectorT2<T>(sourceBox.right(), sourceBox.top());
@@ -680,27 +638,17 @@ bool TestBox2::testMultiplicationOperators(const double testDuration)
 			const T newTop = std::min(std::min(transformedTopLeft.y(), transformedTopRight.y()), std::min(transformedBottomLeft.y(), transformedBottomRight.y()));
 			const T newBottom = std::max(std::max(transformedTopLeft.y(), transformedTopRight.y()), std::max(transformedBottomLeft.y(), transformedBottomRight.y()));
 
-			if (NumericT<T>::isNotEqual(newLeft, targetBox.left())
-				|| NumericT<T>::isNotEqual(newRight, targetBox.right())
-				|| NumericT<T>::isNotEqual(newTop, targetBox.top())
-				|| NumericT<T>::isNotEqual(newBottom, targetBox.bottom()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newLeft, targetBox.left()));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newRight, targetBox.right()));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newTop, targetBox.top()));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newBottom, targetBox.bottom()));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 
 
 }

@@ -9,13 +9,13 @@
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
-#include "ocean/base/String.h"
 
 #include "ocean/math/Plane3.h"
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -245,7 +245,8 @@ bool TestBox3::testPoint(const double testDuration)
 
 	Log::info() << "Test point with '" << TypeNamer::name<T>() << "':";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -253,48 +254,26 @@ bool TestBox3::testPoint(const double testDuration)
 	{
 		BoxT3<T> box;
 
-		if (box.isValid())
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, box.isValid());
 
 		box += RandomT<T>::vector3(-10, 10);
 
-		if (!box.isValid())
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, box.isValid());
 
 		VectorT3<T> point;
-		if (!box.isPoint(&point))
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, box.isPoint(&point));
 
 		PlaneT3<T> plane;
-		if (!box.isPlanar(plane))
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, box.isPlanar(plane));
 
 		VectorT3<T> points[8];
-		if (box.corners(points) != 1)
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, box.corners(points), 1u);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -304,7 +283,8 @@ bool TestBox3::testIsInside(const double testDuration)
 
 	Log::info() << "Test isInside with '" << TypeNamer::name<T>() << "':";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -344,23 +324,13 @@ bool TestBox3::testIsInside(const double testDuration)
 			testInside = false;
 		}
 
-		if (box.isInside(point) != testInside)
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, box.isInside(point), testInside);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -370,7 +340,8 @@ bool TestBox3::testAddition(const double testDuration)
 
 	Log::info() << "Test addition operator with '" << TypeNamer::name<T>() << "':";
 
-	bool succeeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -410,23 +381,13 @@ bool TestBox3::testAddition(const double testDuration)
 
 		const BoxT3<T> finalBox(VectorT3<T>(x0, y0, z0), VectorT3<T>(x1, y1, z1));
 
-		if (box != finalBox)
-		{
-			succeeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, box, finalBox);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -436,8 +397,8 @@ bool TestBox3::testTransformation(const double testDuration)
 
 	Log::info() << "Test box transformation with '" << TypeNamer::name<T>() << "':";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -445,6 +406,8 @@ bool TestBox3::testTransformation(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const T x0 = RandomT<T>::scalar(-100, 100);
 			const T y0 = RandomT<T>::scalar(-100, 100);
 			const T z0 = RandomT<T>::scalar(-100, 100);
@@ -497,22 +460,17 @@ bool TestBox3::testTransformation(const double testDuration)
 
 			const BoxT3<T> testBox(VectorT3<T>(lowX, lowY, lowZ), VectorT3<T>(highX, highY, highZ));
 
-			if (testBox.isEqual(worldBox, NumericT<T>::weakEps()))
+			if (!testBox.isEqual(worldBox, NumericT<T>::weakEps()))
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -522,8 +480,8 @@ bool TestBox3::testLine(const double testDuration)
 
 	Log::info() << "Test box composed of a line with '" << TypeNamer::name<T>() << "':";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -531,7 +489,7 @@ bool TestBox3::testLine(const double testDuration)
 	{
 		for (unsigned int index = 0u; index < 3u; ++index)
 		{
-			bool result = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			BoxT3<T> box;
 
@@ -551,42 +509,32 @@ bool TestBox3::testLine(const double testDuration)
 			VectorT3<T> points[8];
 			if (box.corners(points) != 2u)
 			{
-				result = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if ((first != points[0] || second != points[1]) && (first != points[1] || second != points[0]))
 			{
-				result = false;
+				scopedIteration.setInaccurate();
 			}
 
 			VectorT3<T> point;
 			if (box.isPoint(&point))
 			{
-				result = false;
+				scopedIteration.setInaccurate();
 			}
 
 			PlaneT3<T> plane;
 			if (!box.isPlanar(plane))
 			{
-				result = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (result)
-			{
-				++validIterations;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -596,8 +544,8 @@ bool TestBox3::testPlane(const double testDuration)
 
 	Log::info() << "Test plane with '" << TypeNamer::name<T>() << "':";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -607,7 +555,7 @@ bool TestBox3::testPlane(const double testDuration)
 	{
 		for (unsigned int index = 0u; index < 3u; ++index)
 		{
-			bool localResult = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			BoxT3<T> box;
 
@@ -624,7 +572,7 @@ bool TestBox3::testPlane(const double testDuration)
 			VectorT3<T> points[8];
 			if (box.corners(points) != 4)
 			{
-				localResult = false;
+				scopedIteration.setInaccurate();
 			}
 
 			const T xDim = max(NumericT<T>::abs(points[0].x() - points[1].x()), NumericT<T>::abs(points[0].x() - points[2].x()));
@@ -633,37 +581,27 @@ bool TestBox3::testPlane(const double testDuration)
 
 			if (NumericT<T>::isNotEqual(xDim, box.xDimension(), epsilon) || NumericT<T>::isNotEqual(yDim, box.yDimension(), epsilon) || NumericT<T>::isNotEqual(zDim, box.zDimension(), epsilon))
 			{
-				localResult = false;
+				scopedIteration.setInaccurate();
 			}
 
 			VectorT3<T> point;
 			if (box.isPoint(&point))
 			{
-				localResult = false;
+				scopedIteration.setInaccurate();
 			}
 
 			PlaneT3<T> plane;
 			if (!box.isPlanar(plane))
 			{
-				localResult = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localResult)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -673,8 +611,8 @@ bool TestBox3::testSpace(const double testDuration)
 
 	Log::info() << "Test space with '" << TypeNamer::name<T>() << "':";
 
-	uint64_t validIterations = 0u;
-	uint64_t iterations = 0u;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -682,7 +620,7 @@ bool TestBox3::testSpace(const double testDuration)
 
 	do
 	{
-		bool localSucceeded = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		BoxT3<T> box;
 
@@ -694,19 +632,19 @@ bool TestBox3::testSpace(const double testDuration)
 		VectorT3<T> point;
 		if (box.isPoint(&point))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		PlaneT3<T> plane;
 		if (box.isPlanar(plane))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		VectorT3<T> points[8];
 		if (box.corners(points) != 8)
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
 
 		const T xDim = max(NumericT<T>::abs(points[0].x() - points[1].x()), max(NumericT<T>::abs(points[0].x() - points[2].x()), max(NumericT<T>::abs(points[0].x() - points[3].x()), max(NumericT<T>::abs(points[0].x() - points[4].x()), max(NumericT<T>::abs(points[0].x() - points[5].x()), max(NumericT<T>::abs(points[0].x() - points[6].x()), NumericT<T>::abs(points[0].x() - points[7].x())))))));
@@ -715,24 +653,14 @@ bool TestBox3::testSpace(const double testDuration)
 
 		if (NumericT<T>::isNotEqual(xDim, box.xDimension(), epsilon) || NumericT<T>::isNotEqual(yDim, box.yDimension(), epsilon) || NumericT<T>::isNotEqual(zDim, box.zDimension(), epsilon))
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
-
-		if (localSucceeded)
-		{
-			validIterations++;
-		}
-
-		iterations++;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -804,13 +732,15 @@ bool TestBox3::testExpand(const double testDuration)
 
 	Log::info() << "Expand test:";
 
-	size_t iterations = 0;
-	size_t validIterations = 0;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const BoxT3<T> box(RandomT<T>::vector3(-100, 100), RandomT<T>::vector3(-100, 100));
 		ocean_assert(box.isValid());
 
@@ -835,22 +765,33 @@ bool TestBox3::testExpand(const double testDuration)
 							&& NumericT<T>::isWeakEqual(expandedBox.yDimension(), yExpandedDimension)
 							&& NumericT<T>::isWeakEqual(expandedBox.zDimension(), zExpandedDimension))
 					{
-						++validIterations;
+						// all checks passed, iteration is accurate (default)
+					}
+					else
+					{
+						scopedIteration.setInaccurate();
 					}
 				}
+				else
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+			else
+			{
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -858,8 +799,8 @@ bool TestBox3::validateHasIntersection(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -867,7 +808,7 @@ bool TestBox3::validateHasIntersection(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			bool localResult = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const VectorT3<T> lower(RandomT<T>::vector3(-2, 0));
 			const BoxT3<T> box(lower, lower + RandomT<T>::vector3(T(0.01), 2));
@@ -882,7 +823,7 @@ bool TestBox3::validateHasIntersection(const double testDuration)
 
 				if (result != test)
 				{
-					localResult = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -904,26 +845,16 @@ bool TestBox3::validateHasIntersection(const double testDuration)
 
 				if (result != test)
 				{
-					localResult = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localResult)
-			{
-				succeeded++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 template <typename T>
