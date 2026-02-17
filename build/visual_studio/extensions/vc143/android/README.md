@@ -269,7 +269,7 @@ xplat\ocean\build\visual_studio\extensions\vc143\android\
 
 ## Gradle Wrapper Integrity
 
-The project templates include `gradle-wrapper.jar`, a bootstrap JAR that downloads the Gradle distribution. Both templates ship the same JAR verified against a `.sha256` checksum file.
+The Gradle wrapper files (`gradlew.bat`, `gradlew`, `wrapper/gradle-wrapper.jar`, `wrapper/gradle-wrapper.properties`) are stored centrally in the extension's `toolset\GradleWrapper\` directory and shared by all projects. Individual projects no longer carry their own copies.
 
 | Property | Value |
 |----------|-------|
@@ -277,9 +277,9 @@ The project templates include `gradle-wrapper.jar`, a bootstrap JAR that downloa
 | Source | https://services.gradle.org/distributions/gradle-8.5-bin.zip |
 | SHA-256 | `d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd` |
 
-The `VerifyGradleWrapper` MSBuild target runs automatically before each build and compares the JAR against the expected hash stored in the extension's `toolset\GradleWrapper\gradle-wrapper.jar.sha256`. The checksum file is part of the extension, not copied into each project. If the hash does not match, the build fails with an error. If the `.sha256` file is missing, a warning is logged but the build continues.
+The `VerifyGradleWrapper` MSBuild target runs automatically before each build and compares the JAR against the expected hash stored in the extension's `toolset\GradleWrapper\gradle-wrapper.jar.sha256`. If the hash does not match, the build fails with an error. If the `.sha256` file is missing, a warning is logged but the build continues.
 
-To update the wrapper JAR (e.g., when upgrading Gradle), replace `gradle-wrapper.jar` in both template directories and update `toolset\GradleWrapper\gradle-wrapper.jar.sha256` with the new hash.
+To update the wrapper JAR (e.g., when upgrading Gradle), replace the files in `toolset\GradleWrapper\` and update `gradle-wrapper.jar.sha256` with the new hash.
 
 ## License
 

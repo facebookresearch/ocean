@@ -125,8 +125,12 @@
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.targets" d:VsixSubPath="toolset\OceanJavaLib\" />
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.General.xml" d:VsixSubPath="toolset\OceanJavaLib\" />
 
-    <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
+    <!-- GradleWrapper - checksum, wrapper scripts, and JAR for Gradle builds -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradle-wrapper.jar.sha256" d:VsixSubPath="toolset\GradleWrapper\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradlew.bat" d:VsixSubPath="toolset\GradleWrapper\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradlew" d:VsixSubPath="toolset\GradleWrapper\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\wrapper\gradle-wrapper.jar" d:VsixSubPath="toolset\GradleWrapper\wrapper\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\wrapper\gradle-wrapper.properties" d:VsixSubPath="toolset\GradleWrapper\wrapper\" />
 
     <!-- Ocean Android Common shared props - SDK/JDK path resolution for Gradle-based projects -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidCommon\OceanAndroidCommon.props" d:VsixSubPath="toolset\OceanAndroidCommon\" />

@@ -7,8 +7,8 @@
   checksum to detect tampering or corruption.
 
   Requirements from the importing project:
-    - $(GradleProjectDir) property: path to the Gradle project directory
-      containing the wrapper/ subdirectory
+    - $(GradleWrapper) property: path to gradlew.bat (the wrapper/ subdirectory
+      containing the JAR is resolved relative to this path)
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
@@ -65,7 +65,7 @@ return success;
   <!-- Verify gradle-wrapper.jar integrity before building -->
   <Target Name="VerifyGradleWrapper" BeforeTargets="Build;Rebuild">
     <PropertyGroup>
-      <_GradleWrapperJar>$(GradleProjectDir)\wrapper\gradle-wrapper.jar</_GradleWrapperJar>
+      <_GradleWrapperJar>$([System.IO.Path]::GetDirectoryName('$(GradleWrapper)'))\wrapper\gradle-wrapper.jar</_GradleWrapperJar>
     </PropertyGroup>
 
     <VerifyFileHash

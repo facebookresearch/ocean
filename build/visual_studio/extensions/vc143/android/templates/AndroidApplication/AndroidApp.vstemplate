@@ -34,14 +34,10 @@
       <!-- Resources - mipmap -->
       <ProjectItem ReplaceParameters="false">app\res\mipmap-anydpi-v26\ic_launcher.xml</ProjectItem>
       <ProjectItem ReplaceParameters="false">app\res\mipmap-anydpi-v26\ic_launcher_round.xml</ProjectItem>
-      <!-- Gradle wrapper and build files - no TargetFileName, preserve source structure -->
-      <ProjectItem ReplaceParameters="false">gradle\wrapper\gradle-wrapper.jar</ProjectItem>
-      <ProjectItem ReplaceParameters="false">gradle\wrapper\gradle-wrapper.properties</ProjectItem>
+      <!-- Gradle build files - no TargetFileName, preserve source structure -->
       <ProjectItem ReplaceParameters="true">gradle\build.gradle.kts</ProjectItem>
       <ProjectItem ReplaceParameters="true">gradle\settings.gradle.kts</ProjectItem>
       <ProjectItem ReplaceParameters="false">gradle\gradle.properties</ProjectItem>
-      <ProjectItem ReplaceParameters="false">gradle\gradlew</ProjectItem>
-      <ProjectItem ReplaceParameters="false">gradle\gradlew.bat</ProjectItem>
       <ProjectItem ReplaceParameters="false">gradle\deploy.bat</ProjectItem>
     </Project>
   </TemplateContent>

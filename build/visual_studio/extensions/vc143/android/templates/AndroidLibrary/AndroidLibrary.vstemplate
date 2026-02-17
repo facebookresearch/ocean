@@ -27,12 +27,6 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="build.gradle.kts">build.gradle.kts</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="settings.gradle.kts">settings.gradle.kts</ProjectItem>
         <ProjectItem ReplaceParameters="false" TargetFileName="gradle.properties">gradle.properties</ProjectItem>
-        <ProjectItem ReplaceParameters="false" TargetFileName="gradlew">gradlew</ProjectItem>
-        <ProjectItem ReplaceParameters="false" TargetFileName="gradlew.bat">gradlew.bat</ProjectItem>
-        <Folder Name="wrapper" TargetFolderName="wrapper">
-          <ProjectItem ReplaceParameters="false" TargetFileName="gradle-wrapper.jar">gradle-wrapper.jar</ProjectItem>
-          <ProjectItem ReplaceParameters="false" TargetFileName="gradle-wrapper.properties">gradle-wrapper.properties</ProjectItem>
-        </Folder>
       </Folder>
     </Project>
   </TemplateContent>

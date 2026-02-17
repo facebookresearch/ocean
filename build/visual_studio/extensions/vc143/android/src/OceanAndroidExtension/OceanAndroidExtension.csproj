@@ -231,6 +231,26 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\toolset\GradleWrapper\gradlew.bat">
+      <Link>toolset\GradleWrapper\gradlew.bat</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\toolset\GradleWrapper\gradlew">
+      <Link>toolset\GradleWrapper\gradlew</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\toolset\GradleWrapper\wrapper\gradle-wrapper.jar">
+      <Link>toolset\GradleWrapper\wrapper\gradle-wrapper.jar</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\toolset\GradleWrapper\wrapper\gradle-wrapper.properties">
+      <Link>toolset\GradleWrapper\wrapper\gradle-wrapper.properties</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <!-- JavaValidation targets - Java Home validation and version detection -->
   <ItemGroup>

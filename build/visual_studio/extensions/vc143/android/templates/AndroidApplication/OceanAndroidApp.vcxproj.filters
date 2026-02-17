@@ -37,12 +37,6 @@
     <None Include="gradle\gradle.properties">
       <Filter>gradle</Filter>
     </None>
-    <None Include="gradle\gradlew">
-      <Filter>gradle</Filter>
-    </None>
-    <None Include="gradle\gradlew.bat">
-      <Filter>gradle</Filter>
-    </None>
     <!-- App module build file -->
     <None Include="app\build.gradle.kts">
       <Filter>app</Filter>

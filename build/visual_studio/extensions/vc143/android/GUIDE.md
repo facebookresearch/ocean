@@ -292,9 +292,7 @@ MyApp/
 │       └── res/               # Resources
 ├── build.gradle.kts           # Root build config
 ├── settings.gradle.kts
-├── gradle.properties
-├── gradlew
-└── gradlew.bat
+└── gradle.properties
 ```
 
 ---
@@ -622,21 +620,17 @@ msbuild MyNativeLib.vcxproj /t:CompileSingleFile /p:SelectedFiles=src\native-lib
 
 ### Gradle Commands (Direct)
 
-```bash
-# Navigate to project directory
-cd MyApp
+You can invoke Gradle directly via MSBuild's `$(GradleWrapper)` property, which points to the extension's centralized wrapper. From a Visual Studio Developer Command Prompt:
 
+```bash
 # Build debug APK
-gradlew assembleDebug
+msbuild MyApp.vcxproj /t:Build /p:Configuration=Debug
 
 # Build release APK
-gradlew assembleRelease
-
-# Run tests
-gradlew test
+msbuild MyApp.vcxproj /t:Build /p:Configuration=Release
 
 # Clean
-gradlew clean
+msbuild MyApp.vcxproj /t:Clean
 ```
 
 ### ADB Commands
@@ -711,7 +705,7 @@ Source: https://services.gradle.org/distributions/gradle-8.5-bin.zip
 
 **Solution:**
 1. Re-download the correct `gradle-wrapper.jar` from the [Gradle GitHub repository](https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar)
-2. Replace `gradle/wrapper/gradle-wrapper.jar` in your project
+2. Replace `wrapper/gradle-wrapper.jar` in the extension's `toolset\GradleWrapper\` directory
 3. Verify the SHA-256 hash matches the value above
 
 If you are intentionally upgrading Gradle, update both the JAR and the hash in the extension's `toolset\GradleWrapper\gradle-wrapper.jar.sha256`.
@@ -721,7 +715,7 @@ If you are intentionally upgrading Gradle, update both the JAR and the hash in t
 **Check:**
 - JDK is installed and `JAVA_HOME` is set
 - Internet connection (Gradle downloads dependencies)
-- Gradle wrapper exists (`gradlew.bat`)
+- The extension is installed (the Gradle wrapper is provided by the extension)
 
 **Try:**
 ```bash

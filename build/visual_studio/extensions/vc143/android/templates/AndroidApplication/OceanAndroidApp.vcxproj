@@ -95,8 +95,6 @@
     <None Include="gradle\build.gradle.kts" />
     <None Include="gradle\settings.gradle.kts" />
     <None Include="gradle\gradle.properties" />
-    <None Include="gradle\gradlew" />
-    <None Include="gradle\gradlew.bat" />
   </ItemGroup>
 
   <ItemGroup>
