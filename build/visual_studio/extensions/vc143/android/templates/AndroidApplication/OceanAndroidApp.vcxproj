@@ -107,28 +107,12 @@
     <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">assembleDebug</GradleTask>
 
-    <!-- Output paths -->
-    <ApkOutputPath>$(GradleBuildDir)\outputs\apk</ApkOutputPath>
+    <!-- Output path for VS -->
     <OutputPath>$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutputPath>
 
     <!-- Gradle properties to pass -->
     <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
     <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
-  </PropertyGroup>
-
-  <!-- Makefile project build commands -->
-  <PropertyGroup>
-    <NMakeOutput>$(ApkOutputPath)\debug\app-debug.apk</NMakeOutput>
-    <NMakeOutput Condition="'$(Configuration)' == 'Release'">$(ApkOutputPath)\release\app-release.apk</NMakeOutput>
-  </PropertyGroup>
-
-  <!-- Debug/Start settings - F5 runs deploy.bat to install and launch via ADB -->
-  <PropertyGroup>
-    <LocalDebuggerCommand>$(MSBuildProjectDirectory)\gradle\deploy.bat</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments Condition="$(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\release\app-release.apk"</LocalDebuggerCommandArguments>
-    <LocalDebuggerCommandArguments Condition="!$(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>$(MSBuildProjectDirectory)</LocalDebuggerWorkingDirectory>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 
   <!-- Project Items for Solution Explorer -->
@@ -221,23 +205,8 @@
           Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
   <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
-  <!-- Build, Clean, and Rebuild targets are provided by OceanAndroidCommon.targets. -->
-  <!-- Android manifest resolution and GradleProperties recomposition provided by OceanAndroidApp.targets. -->
-
-  <!-- Deploy Target -->
-  <Target Name="Deploy" DependsOnTargets="Build">
-    <Message Text="Deploying to device..." Importance="high" />
-    <PropertyGroup>
-      <ApkFile Condition="$(Configuration.Contains('Release'))">$(ApkOutputPath)\release\app-release.apk</ApkFile>
-      <ApkFile Condition="'$(ApkFile)' == ''">$(ApkOutputPath)\debug\app-debug.apk</ApkFile>
-    </PropertyGroup>
-
-    <Exec Command="&quot;$(AndroidSdkPath)\platform-tools\adb.exe&quot; install -r &quot;$(ApkFile)&quot;"
-          ConsoleToMsBuild="true"
-          Condition="Exists('$(ApkFile)')" />
-
-    <Error Text="APK not found at $(ApkFile). Build the project first."
-           Condition="!Exists('$(ApkFile)')" />
-  </Target>
+  <!-- Build, Clean, Rebuild targets provided by OceanAndroidCommon.targets. -->
+  <!-- Android manifest resolution, Deploy target, debug settings, APK output, and
+       NMakeOutput provided by OceanAndroidApp.targets. -->
 
 </Project>

@@ -67,6 +67,31 @@
   </PropertyGroup>
 
   <!-- ============================================================
+       APK Output and NMake Output
+
+       ApkOutputPath is the Gradle APK output directory.
+       NMakeOutput tells VS what the build output file is.
+       ============================================================ -->
+  <PropertyGroup>
+    <ApkOutputPath Condition="'$(ApkOutputPath)' == ''">$(GradleBuildDir)\outputs\apk</ApkOutputPath>
+    <NMakeOutput Condition="'$(NMakeOutput)' == ''">$(ApkOutputPath)\debug\app-debug.apk</NMakeOutput>
+    <NMakeOutput Condition="'$(Configuration)' == 'Release'">$(ApkOutputPath)\release\app-release.apk</NMakeOutput>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Debug/Start Settings
+
+       F5 runs deploy.bat to install and launch via ADB.
+       ============================================================ -->
+  <PropertyGroup>
+    <LocalDebuggerCommand Condition="'$(LocalDebuggerCommand)' == ''">$(MSBuildProjectDirectory)\gradle\deploy.bat</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND $(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\release\app-release.apk"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND !$(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory Condition="'$(LocalDebuggerWorkingDirectory)' == ''">$(MSBuildProjectDirectory)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor Condition="'$(DebuggerFlavor)' == ''">WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+
+  <!-- ============================================================
        CopyNativeLibsToJniLibs Target
 
        Copies .so libraries declared in @(OceanNativeSharedLibrary) to the
@@ -307,6 +332,27 @@
 
     <Error Text="Android manifest file not found: $(AndroidManifestFile). Ensure the file exists or update the AndroidManifest item."
            Condition="!Exists('$(AndroidManifestFile)')" />
+  </Target>
+
+  <!-- ============================================================
+       Deploy Target
+
+       Installs the built APK to a connected device via ADB.
+       ============================================================ -->
+
+  <Target Name="Deploy" DependsOnTargets="Build">
+    <Message Text="Deploying to device..." Importance="high" />
+    <PropertyGroup>
+      <ApkFile Condition="$(Configuration.Contains('Release'))">$(ApkOutputPath)\release\app-release.apk</ApkFile>
+      <ApkFile Condition="'$(ApkFile)' == ''">$(ApkOutputPath)\debug\app-debug.apk</ApkFile>
+    </PropertyGroup>
+
+    <Exec Command="&quot;$(AndroidSdkPath)\platform-tools\adb.exe&quot; install -r &quot;$(ApkFile)&quot;"
+          ConsoleToMsBuild="true"
+          Condition="Exists('$(ApkFile)')" />
+
+    <Error Text="APK not found at $(ApkFile). Build the project first."
+           Condition="!Exists('$(ApkFile)')" />
   </Target>
 
 </Project>
