@@ -53,6 +53,22 @@
     <GradleBuildDir Condition="'$(GradleBuildDir)' == ''">$(IntDir)gradle-build</GradleBuildDir>
   </PropertyGroup>
 
+  <!-- Platform to Android ABI Mapping -->
+  <!-- Consistent with the NDK toolset (Toolset.props). Used by App projects for jniLibs
+       staging; defined universally so $(AndroidAbi) is available to all project types. -->
+  <PropertyGroup Condition="'$(Platform)' == 'ARM64'">
+    <AndroidAbi Condition="'$(AndroidAbi)' == ''">arm64-v8a</AndroidAbi>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'ARM'">
+    <AndroidAbi Condition="'$(AndroidAbi)' == ''">armeabi-v7a</AndroidAbi>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <AndroidAbi Condition="'$(AndroidAbi)' == ''">x86_64</AndroidAbi>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x86'">
+    <AndroidAbi Condition="'$(AndroidAbi)' == ''">x86</AndroidAbi>
+  </PropertyGroup>
+
   <!-- Gradle Base Properties (common to all Gradle-based project types) -->
   <!-- Project-type-specific parameters are added via $(ProjectGradleProperties). -->
   <PropertyGroup>

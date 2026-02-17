@@ -102,20 +102,6 @@
     <AvailableItemName Include="AndroidManifest" />
   </ItemGroup>
 
-  <!-- Platform Configurations - Android ABI mapping -->
-  <PropertyGroup Condition="'$(Platform)' == 'ARM64'">
-    <AndroidAbi>arm64-v8a</AndroidAbi>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'ARM'">
-    <AndroidAbi>armeabi-v7a</AndroidAbi>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'x64'">
-    <AndroidAbi>x86_64</AndroidAbi>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'x86'">
-    <AndroidAbi>x86</AndroidAbi>
-  </PropertyGroup>
-
   <PropertyGroup>
     <!-- Gradle task for this project type -->
     <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
