@@ -42,6 +42,12 @@
     <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
 
+  <!-- Configuration Defaults -->
+  <!-- ConfigurationType is set per-project in Globals; CharacterSet is universal. -->
+  <PropertyGroup>
+    <CharacterSet Condition="'$(CharacterSet)' == '' OR '$(CharacterSet)' == 'NotSet'">Unicode</CharacterSet>
+  </PropertyGroup>
+
   <!-- Gradle Infrastructure Properties -->
   <!-- Shared defaults for Android Application and Java Library projects. -->
   <!-- Each property is conditional so individual projects can override if needed. -->
