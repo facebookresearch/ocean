@@ -74,12 +74,12 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
 
-  <!-- Default output directories - defined BEFORE Microsoft.Cpp.props so they act as defaults -->
-  <!-- User .props files imported via PropertySheets can override these unconditionally -->
+  <!-- Android SDK, Java Home, output directories, and Gradle infrastructure (shared props from extension) -->
   <PropertyGroup>
-    <IntDir Condition="'$(IntDir)' == ''">$(MSBuildProjectDirectory)\obj\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
+    <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
   </PropertyGroup>
+  <Import Project="$(_OceanCommonPropsPath)" Condition="'$(_OceanCommonPropsPath)' != '' AND Exists('$(_OceanCommonPropsPath)')" />
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
@@ -110,13 +110,6 @@
     <!-- Final output location (copied after Gradle build) -->
     <FinalAarPath>$(OutDir)$(ProjectName).aar</FinalAarPath>
   </PropertyGroup>
-
-  <!-- Android SDK and Java Home resolution (shared props from extension) -->
-  <PropertyGroup>
-    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
-    <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
-  </PropertyGroup>
-  <Import Project="$(_OceanCommonPropsPath)" Condition="'$(_OceanCommonPropsPath)' != '' AND Exists('$(_OceanCommonPropsPath)')" />
 
   <PropertyGroup>
     <!-- Gradle task based on configuration -->

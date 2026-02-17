@@ -34,6 +34,14 @@
     <JavaHome Condition="'$(JavaHome)' == ''">$(JAVA_HOME)</JavaHome>
   </PropertyGroup>
 
+  <!-- Output Directory Defaults -->
+  <!-- Defined before Gradle properties since they depend on $(IntDir). -->
+  <!-- Conditional so projects or user .props files can override. -->
+  <PropertyGroup>
+    <IntDir Condition="'$(IntDir)' == ''">$(MSBuildProjectDirectory)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(OutDir)' == ''">$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+
   <!-- Gradle Infrastructure Properties -->
   <!-- Shared defaults for Android Application and Java Library projects. -->
   <!-- Each property is conditional so individual projects can override if needed. -->
