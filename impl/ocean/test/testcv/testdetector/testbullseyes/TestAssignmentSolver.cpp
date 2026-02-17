@@ -11,6 +11,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -75,9 +77,8 @@ bool TestAssignmentSolver::testSolve(const double testDuration)
 
 	Log::info() << "AssignmentSolver::solve() test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	const Timestamp startTimestamp(true);
 
 	do
@@ -104,14 +105,14 @@ bool TestAssignmentSolver::testSolve(const double testDuration)
 		// Verify solve returned true for valid input
 		if (!solveResult)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// Validate the solution
 		if (!validateSolve(originalCostMatrix, assignments))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -122,23 +123,16 @@ bool TestAssignmentSolver::testSolve(const double testDuration)
 			const size_t expectedAssignments = std::min(rows, columns);
 			if (assignments.size() != expectedAssignments)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAssignmentSolver::validateSolve(const CostMatrix& costMatrix, const Assignments& assignments)

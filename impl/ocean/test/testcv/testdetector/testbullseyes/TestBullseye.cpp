@@ -11,6 +11,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -125,7 +127,7 @@ bool TestBullseye::testBullseyeIsValid(const double testDuration, RandomGenerato
 
 	Log::info() << "Bullseye::isValid() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -133,31 +135,20 @@ bool TestBullseye::testBullseyeIsValid(const double testDuration, RandomGenerato
 	{
 		Bullseye bullseye;
 
-		const bool isValid = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool isValid = RandomI::boolean(randomGenerator);
 
 		if (isValid)
 		{
 			bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 		}
 
-		if (bullseye.isValid() != isValid)
-		{
-			allSucceeded = false;
-			break;
-		}
+		OCEAN_EXPECT_EQUAL(validation, bullseye.isValid(), isValid);
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseye::testBullseyeConstructor(const double testDuration, RandomGenerator& randomGenerator)
@@ -166,7 +157,7 @@ bool TestBullseye::testBullseyeConstructor(const double testDuration, RandomGene
 
 	Log::info() << "Bullseye::Bullseye() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -176,54 +167,30 @@ bool TestBullseye::testBullseyeConstructor(const double testDuration, RandomGene
 		{
 			const Bullseye bullseye;
 
-			if (bullseye.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, bullseye.isValid());
 
-			if (bullseye.radius() != Bullseye::invalidRadius())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, bullseye.radius(), Bullseye::invalidRadius());
 
-			if (bullseye.grayThreshold() != Bullseye::invalidGrayThreshold())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, bullseye.grayThreshold(), Bullseye::invalidGrayThreshold());
 		}
 
 		// Test parameterized constructor with valid values
 		{
 			const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
-			if (!bullseye.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, bullseye.isValid());
 
-			if (bullseye.radius() <= Scalar(0))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_GREATER(validation, bullseye.radius(), Scalar(0));
 
-			if (bullseye.grayThreshold() == 0u || bullseye.grayThreshold() >= 256u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, bullseye.grayThreshold(), 0u);
+			OCEAN_EXPECT_LESS(validation, bullseye.grayThreshold(), 256u);
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseye::testBullseyePosition(const double testDuration, RandomGenerator& randomGenerator)
@@ -232,7 +199,7 @@ bool TestBullseye::testBullseyePosition(const double testDuration, RandomGenerat
 
 	Log::info() << "Bullseye::position() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -240,23 +207,14 @@ bool TestBullseye::testBullseyePosition(const double testDuration, RandomGenerat
 	{
 		const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
-		if (bullseye.position().x() < Scalar(0) || bullseye.position().y() < Scalar(0))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, bullseye.position().x(), Scalar(0));
+		OCEAN_EXPECT_GREATER_EQUAL(validation, bullseye.position().y(), Scalar(0));
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseye::testBullseyeRadius(const double testDuration, RandomGenerator& randomGenerator)
@@ -265,7 +223,7 @@ bool TestBullseye::testBullseyeRadius(const double testDuration, RandomGenerator
 
 	Log::info() << "Bullseye::radius() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -273,23 +231,13 @@ bool TestBullseye::testBullseyeRadius(const double testDuration, RandomGenerator
 	{
 		const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
-		if (bullseye.radius() <= Scalar(0))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER(validation, bullseye.radius(), Scalar(0));
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseye::testBullseyeGrayThreshold(const double testDuration, RandomGenerator& randomGenerator)
@@ -298,7 +246,7 @@ bool TestBullseye::testBullseyeGrayThreshold(const double testDuration, RandomGe
 
 	Log::info() << "Bullseye::grayThreshold() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -306,23 +254,14 @@ bool TestBullseye::testBullseyeGrayThreshold(const double testDuration, RandomGe
 	{
 		const Bullseye bullseye = TestUtilities::createRandomValidBullseye(randomGenerator);
 
-		if (bullseye.grayThreshold() == 0u || bullseye.grayThreshold() >= 256u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_NOT_EQUAL(validation, bullseye.grayThreshold(), 0u);
+		OCEAN_EXPECT_LESS(validation, bullseye.grayThreshold(), 256u);
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestBullseyes

@@ -22,6 +22,8 @@
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/test/testgeometry/Utilities.h"
 
 namespace Ocean
@@ -139,360 +141,236 @@ bool TestBullseyeDetectorMono::testParametersConstructor()
 {
 	Log::info() << "Testing Parameters constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	BullseyeDetectorMono::Parameters parameters;
 
-	if (!parameters.isValid())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, parameters.isValid());
 
-	if (parameters.framePyramidPixelThreshold() != 640u * 480u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 640u * 480u);
 
-	if (parameters.framePyramidLayers() != 3u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 3u);
 
-	if (!parameters.useAdaptiveRowSpacing())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, parameters.useAdaptiveRowSpacing());
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersIsValid()
 {
 	Log::info() << "Testing Parameters::isValid():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 
-		if (!parameters.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.isValid());
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(1u);
 
-		if (!parameters.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.isValid());
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(0u);
 
-		if (parameters.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, parameters.isValid());
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(10u);
 
-		if (!parameters.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.isValid());
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersFramePyramidPixelThreshold()
 {
 	Log::info() << "Testing Parameters::framePyramidPixelThreshold():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 
-		if (parameters.framePyramidPixelThreshold() != 640u * 480u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 640u * 480u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidPixelThreshold(1000u);
 
-		if (parameters.framePyramidPixelThreshold() != 1000u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 1000u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidPixelThreshold(0u);
 
-		if (parameters.framePyramidPixelThreshold() != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 0u);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersSetFramePyramidPixelThreshold()
 {
 	Log::info() << "Testing Parameters::setFramePyramidPixelThreshold():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidPixelThreshold(100u);
 
-		if (parameters.framePyramidPixelThreshold() != 100u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 100u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidPixelThreshold(1920u * 1080u);
 
-		if (parameters.framePyramidPixelThreshold() != 1920u * 1080u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 1920u * 1080u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidPixelThreshold(0u);
 
-		if (parameters.framePyramidPixelThreshold() != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidPixelThreshold(), 0u);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersFramePyramidLayers()
 {
 	Log::info() << "Testing Parameters::framePyramidLayers():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 
-		if (parameters.framePyramidLayers() != 3u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 3u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(1u);
 
-		if (parameters.framePyramidLayers() != 1u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 1u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(10u);
 
-		if (parameters.framePyramidLayers() != 10u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 10u);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersSetFramePyramidLayers()
 {
 	Log::info() << "Testing Parameters::setFramePyramidLayers():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(5u);
 
-		if (parameters.framePyramidLayers() != 5u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 5u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(1u);
 
-		if (parameters.framePyramidLayers() != 1u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 1u);
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setFramePyramidLayers(0u);
 
-		if (parameters.framePyramidLayers() != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, parameters.framePyramidLayers(), 0u);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersUseAdaptiveRowSpacing()
 {
 	Log::info() << "Testing Parameters::useAdaptiveRowSpacing():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 
-		if (!parameters.useAdaptiveRowSpacing())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.useAdaptiveRowSpacing());
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setUseAdaptiveRowSpacing(false);
 
-		if (parameters.useAdaptiveRowSpacing())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, parameters.useAdaptiveRowSpacing());
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setUseAdaptiveRowSpacing(true);
 
-		if (!parameters.useAdaptiveRowSpacing())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.useAdaptiveRowSpacing());
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersSetUseAdaptiveRowSpacing()
 {
 	Log::info() << "Testing Parameters::setUseAdaptiveRowSpacing():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setUseAdaptiveRowSpacing(false);
 
-		if (parameters.useAdaptiveRowSpacing())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, parameters.useAdaptiveRowSpacing());
 	}
 
 	{
 		BullseyeDetectorMono::Parameters parameters;
 		parameters.setUseAdaptiveRowSpacing(true);
 
-		if (!parameters.useAdaptiveRowSpacing())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.useAdaptiveRowSpacing());
 	}
 
 	{
@@ -500,79 +378,41 @@ bool TestBullseyeDetectorMono::testParametersSetUseAdaptiveRowSpacing()
 		parameters.setUseAdaptiveRowSpacing(false);
 		parameters.setUseAdaptiveRowSpacing(true);
 
-		if (!parameters.useAdaptiveRowSpacing())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, parameters.useAdaptiveRowSpacing());
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testParametersDefaultParameters()
 {
 	Log::info() << "Testing Parameters::defaultParameters():";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	BullseyeDetectorMono::Parameters defaultParams = BullseyeDetectorMono::Parameters::defaultParameters();
 
-	if (!defaultParams.isValid())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, defaultParams.isValid());
 
-	if (defaultParams.framePyramidPixelThreshold() != 640u * 480u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, defaultParams.framePyramidPixelThreshold(), 640u * 480u);
 
-	if (defaultParams.framePyramidLayers() != 3u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, defaultParams.framePyramidLayers(), 3u);
 
-	if (!defaultParams.useAdaptiveRowSpacing())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, defaultParams.useAdaptiveRowSpacing());
 
 	BullseyeDetectorMono::Parameters anotherDefaultParams = BullseyeDetectorMono::Parameters::defaultParameters();
 
-	if (anotherDefaultParams.framePyramidPixelThreshold() != defaultParams.framePyramidPixelThreshold())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, anotherDefaultParams.framePyramidPixelThreshold(), defaultParams.framePyramidPixelThreshold());
 
-	if (anotherDefaultParams.framePyramidLayers() != defaultParams.framePyramidLayers())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, anotherDefaultParams.framePyramidLayers(), defaultParams.framePyramidLayers());
 
-	if (anotherDefaultParams.useAdaptiveRowSpacing() != defaultParams.useAdaptiveRowSpacing())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, anotherDefaultParams.useAdaptiveRowSpacing(), defaultParams.useAdaptiveRowSpacing());
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double testDuration)
@@ -580,10 +420,9 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data (random seed: " << randomGenerator.initialSeed() << "):";
-
-	bool allSucceeded = true;
 
 	const Timestamp startTimestamp(true);
 
@@ -597,7 +436,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 		const unsigned int width = RandomI::random(randomGenerator, 250u, 2048u);
 		const unsigned int height = RandomI::random(randomGenerator, 250u, 2048u);
 
-		const bool useFisheye = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool useFisheye = RandomI::boolean(randomGenerator);
 
 		SharedAnyCamera camera;
 
@@ -640,14 +479,14 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 
 		if (!CV::Detector::Bullseyes::Utilities::drawBullseyeWithOffset(rgbFrame, offset, diameter, emptyBorder, nullptr, nullptr))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		Frame yFrame;
 		if (!CV::FrameConverter::Comfort::convert(rgbFrame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -658,7 +497,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 		Bullseyes bullseyes;
 		if (!BullseyeDetectorMono::detectBullseyes(yFrame, bullseyes, parameters, WorkerPool::get().scopedWorker()()))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -682,7 +521,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 	if (detectionAccuracyErrors.empty())
 	{
 		Log::info() << "Detection accuracy errors: no valid detections recorded";
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	else
 	{
@@ -695,7 +534,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 
 		if (detectionAccuracyErrorMax > 1.5)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -704,19 +543,12 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 
 	if (detectionRate < 0.99)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDuration)
@@ -726,8 +558,7 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 	Log::info() << "BullseyeDetectorMono::detectBullseyes() stress test:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -755,31 +586,24 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 		BullseyeDetectorMono::Parameters parameters = BullseyeDetectorMono::Parameters::defaultParameters();
 		parameters.setFramePyramidPixelThreshold((unsigned int)(Scalar(yFrame.pixels()) * Random::scalar(randomGenerator, 0.1, 2.0) + Scalar(0.5)));
 		parameters.setFramePyramidLayers(RandomI::random(randomGenerator, 1u, 5u));
-		parameters.setUseAdaptiveRowSpacing(RandomI::random(randomGenerator, 1u) == 1u);
+		parameters.setUseAdaptiveRowSpacing(RandomI::boolean(randomGenerator));
 		ocean_assert(parameters.isValid());
 
-		const bool useWorker = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool useWorker = RandomI::boolean(randomGenerator);
 
 
 		Bullseyes bullseyes;
 		if (!BullseyeDetectorMono::detectBullseyes(yFrame, bullseyes, parameters, (useWorker ? WorkerPool::get().scopedWorker()() : nullptr)))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Stress test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Stress test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestBullseyes

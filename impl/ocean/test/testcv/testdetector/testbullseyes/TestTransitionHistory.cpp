@@ -13,6 +13,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 #include <vector>
 
 using Ocean::CV::Detector::Bullseyes::TransitionHistory;
@@ -118,7 +120,7 @@ bool TestTransitionHistory::testHistoryAndPush(const double testDuration, Random
 
 	Log::info() << "TransitionHistory::history1(), history2(), history3(), and push() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -134,72 +136,38 @@ bool TestTransitionHistory::testHistoryAndPush(const double testDuration, Random
 		// Test history1
 		history.push(delta1);
 
-		if (history.history1() != delta1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history1(), delta1);
 
 		// Test history2
 		history.push(delta2);
 
-		if (history.history1() != delta2)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history1(), delta2);
 
-		if (history.history2() != delta1 + delta2)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history2(), delta1 + delta2);
 
 		// Test history3
 		history.push(delta3);
 
-		if (history.history1() != delta3)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history1(), delta3);
 
-		if (history.history2() != delta2 + delta3)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history2(), delta2 + delta3);
 
-		if (history.history3() != delta1 + delta2 + delta3)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history3(), delta1 + delta2 + delta3);
 
 		// Test push with 4 values - verify sliding window behavior
 		history.push(delta4);
 
-		if (history.history1() != delta4)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history1(), delta4);
 
-		if (history.history2() != delta3 + delta4)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history2(), delta3 + delta4);
 
-		if (history.history3() != delta2 + delta3 + delta4)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history3(), delta2 + delta3 + delta4);
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTransitionHistory::testReset(const double testDuration, RandomGenerator& randomGenerator)
@@ -208,7 +176,7 @@ bool TestTransitionHistory::testReset(const double testDuration, RandomGenerator
 
 	Log::info() << "TransitionHistory::reset() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -227,33 +195,17 @@ bool TestTransitionHistory::testReset(const double testDuration, RandomGenerator
 		history.reset();
 
 		// After reset, all history values should be 0
-		if (history.history1() != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history1(), 0);
 
-		if (history.history2() != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history2(), 0);
 
-		if (history.history3() != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, history.history3(), 0);
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, RandomGenerator& randomGenerator)
@@ -262,7 +214,7 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 
 	Log::info() << "TransitionHistory::isTransitionToBlack() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	// Test with hard-coded clear transition from white to black
 	{
@@ -271,10 +223,7 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 
 		const bool isTransition = TransitionHistory::isTransitionToBlack(&pixels[1], history);
 
-		if (!isTransition)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, isTransition);
 	}
 
 	// Test with hard-coded steep gradient (monotonic decreasing)
@@ -301,10 +250,7 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 			}
 		}
 
-		if (transitionIndices.empty())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, transitionIndices.empty());
 	}
 
 	// Test with gentle gradient where history matters
@@ -335,10 +281,7 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 			}
 		}
 
-		if (transitionIndices.empty())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, transitionIndices.empty());
 	}
 
 	// Now run randomized stress tests for the remaining test duration
@@ -378,7 +321,7 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 			// So currentDelta < -7.5, meaning totalDelta < -7.5 * 31 ≈ -233
 			if (totalDelta < -240 && transitionCount == 0u)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				Log::info() << "Random test failed: startValue=" << startValue << ", endValue=" << endValue << ", totalDelta=" << totalDelta << ", transitions=" << transitionCount;
 				break;
 			}
@@ -403,30 +346,23 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 
 				if (isTransition)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					Log::info() << "Constant value test failed: detected false positive transition at index " << n << " with value " << int(constantValue);
 					break;
 				}
 			}
 		}
 
-		if (!allSucceeded)
+		if (!validation.succeededSoFar())
 		{
 			break;
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, RandomGenerator& randomGenerator)
@@ -435,7 +371,7 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 
 	Log::info() << "TransitionHistory::isTransitionToWhite() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	// Test with hard-coded clear transition from black to white
 	{
@@ -444,10 +380,7 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 
 		const bool isTransition = TransitionHistory::isTransitionToWhite(&pixels[1], history);
 
-		if (!isTransition)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, isTransition);
 	}
 
 	// Test with hard-coded steep gradient (monotonic increasing)
@@ -474,10 +407,7 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 			}
 		}
 
-		if (transitionIndices.empty())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, transitionIndices.empty());
 	}
 
 	// Test with gentle gradient where history matters
@@ -508,10 +438,7 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 			}
 		}
 
-		if (transitionIndices.empty())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, transitionIndices.empty());
 	}
 
 	// Now run randomized stress tests for the remaining test duration
@@ -551,7 +478,7 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 			// So currentDelta > 7.5, meaning totalDelta > 7.5 * 31 ≈ 233
 			if (totalDelta > 240 && transitionCount == 0u)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				Log::info() << "Random test failed: startValue=" << startValue << ", endValue=" << endValue << ", totalDelta=" << totalDelta << ", transitions=" << transitionCount;
 				break;
 			}
@@ -576,30 +503,23 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 
 				if (isTransition)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					Log::info() << "Constant value test failed: detected false positive transition at index " << n << " with value " << int(constantValue);
 					break;
 				}
 			}
 		}
 
-		if (!allSucceeded)
+		if (!validation.succeededSoFar())
 		{
 			break;
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestBullseyes

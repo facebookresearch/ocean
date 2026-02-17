@@ -12,6 +12,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -113,7 +115,7 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 
 	Log::info() << "Utilities::createBullseyeImage() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	{
 		// Invalid diameter - expect failure
@@ -121,13 +123,10 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
 		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
 
-		const unsigned int invalidDiameter = RandomI::random(randomGenerator, 1u) == 0u ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
+		const unsigned int invalidDiameter = RandomI::boolean(randomGenerator) ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
 
-		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), invalidDiameter, emptyBorder))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), invalidDiameter, emptyBorder));
 	}
 
 	Timestamp start(true);
@@ -140,8 +139,8 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 100u);
 
 		// Randomly decide whether to use custom colors or nullptr
-		const bool useCustomForegroundColor = RandomI::random(randomGenerator, 1u) == 0u;
-		const bool useCustomBackgroundColor = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool useCustomForegroundColor = RandomI::boolean(randomGenerator);
+		const bool useCustomBackgroundColor = RandomI::boolean(randomGenerator);
 
 		uint8_t foregroundColorBuffer[3];
 		uint8_t backgroundColorBuffer[3];
@@ -169,14 +168,14 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 		Frame rgbFrame;
 		if (!Utilities::createBullseyeImage(diameter, emptyBorder, rgbFrame, foregroundColor, backgroundColor))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// Verify the pixel format is RGB24
 		if (rgbFrame.pixelFormat() != FrameType::FORMAT_RGB24)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -184,7 +183,7 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 		const unsigned int expectedSize = diameter + 2u * emptyBorder;
 		if (rgbFrame.width() != expectedSize || rgbFrame.height() != expectedSize)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -222,22 +221,15 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 
 		if (foundUnexpectedColor)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, RandomGenerator& randomGenerator)
@@ -246,17 +238,14 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 
 	Log::info() << "Utilities::drawBullseye() with offset test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	{
 		// Invalid frame - expect failure
 		Frame invalidFrame;
 		const unsigned int diameter = RandomI::random(randomGenerator, 15u, 100u) | 1u;
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
-		if (Utilities::drawBullseyeWithOffset(invalidFrame, CV::PixelPosition(0u, 0u), diameter, emptyBorder))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Utilities::drawBullseyeWithOffset(invalidFrame, CV::PixelPosition(0u, 0u), diameter, emptyBorder));
 	}
 
 	{
@@ -268,10 +257,7 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		const unsigned int diameter = RandomI::random(randomGenerator, 15u, 100u) | 1u;
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
 
-		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), diameter, emptyBorder))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), diameter, emptyBorder));
 	}
 
 	{
@@ -280,7 +266,7 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
 		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
 
-		const unsigned int diameter = RandomI::random(randomGenerator, 1u) == 0u ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
+		const unsigned int diameter = RandomI::boolean(randomGenerator) ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
 
 		const unsigned int bullseyeSize = diameter + 2u * emptyBorder;
@@ -289,10 +275,7 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		const unsigned int offsetY = RandomI::random(randomGenerator, height - bullseyeSize + 1u, height);
 		const CV::PixelPosition offset(offsetX, offsetY);
 
-		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, offset, diameter, emptyBorder))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Utilities::drawBullseyeWithOffset(incompatibleFrame, offset, diameter, emptyBorder));
 	}
 
 	{
@@ -301,13 +284,10 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
 		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
 
-		const unsigned int invalidDiameter = RandomI::random(randomGenerator, 1u) == 0u ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
+		const unsigned int invalidDiameter = RandomI::boolean(randomGenerator) ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
 
-		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), invalidDiameter, emptyBorder))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), invalidDiameter, emptyBorder));
 	}
 
 	Timestamp start(true);
@@ -339,8 +319,8 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		const CV::PixelPosition offset(offsetX, offsetY);
 
 		// Randomly decide whether to use custom colors or nullptr
-		const bool useCustomForegroundColor = RandomI::random(randomGenerator, 1u) == 0u;
-		const bool useCustomBackgroundColor = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool useCustomForegroundColor = RandomI::boolean(randomGenerator);
+		const bool useCustomBackgroundColor = RandomI::boolean(randomGenerator);
 
 		uint8_t foregroundColorBuffer[3];
 		uint8_t backgroundColorBuffer[3];
@@ -386,21 +366,21 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		// Draw the bullseye into the frame
 		if (!Utilities::drawBullseyeWithOffset(rgbFrame, offset, diameter, emptyBorder, foregroundColor, backgroundColor))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// Verify the pixel format is still RGB24
 		if (rgbFrame.pixelFormat() != FrameType::FORMAT_RGB24)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// Verify the frame size hasn't changed
 		if (rgbFrame.width() != frameWidth || rgbFrame.height() != frameHeight)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -454,22 +434,15 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		// 2. No pixels inside the bullseye region changed (foundChangedPixelInside == false)
 		if (foundChangedPixelOutside || !foundChangedPixelInside)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testDrawBullseye(const double testDuration, RandomGenerator& randomGenerator)
@@ -478,7 +451,7 @@ bool TestUtilities::testDrawBullseye(const double testDuration, RandomGenerator&
 
 	Log::info() << "Utilities::drawBullseye() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -534,22 +507,15 @@ bool TestUtilities::testDrawBullseye(const double testDuration, RandomGenerator&
 
 		if (!foundChangedPixel)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testDrawBullseyes(const double testDuration, RandomGenerator& randomGenerator)
@@ -558,7 +524,7 @@ bool TestUtilities::testDrawBullseyes(const double testDuration, RandomGenerator
 
 	Log::info() << "Utilities::drawBullseyes() test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -629,7 +595,7 @@ bool TestUtilities::testDrawBullseyes(const double testDuration, RandomGenerator
 
 		if (!framesIdentical)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -657,22 +623,15 @@ bool TestUtilities::testDrawBullseyes(const double testDuration, RandomGenerator
 
 		if (!foundChangedPixel)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 Bullseye TestUtilities::createRandomValidBullseye(RandomGenerator& randomGenerator)

@@ -15,6 +15,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/test/testgeometry/Utilities.h"
 
 namespace Ocean
@@ -158,7 +160,7 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 
 	Log::info() << "Parameters class test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -169,26 +171,14 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 			const BullseyeDetectorStereo::Parameters defaultParams;
 
 			// Verify the object is valid
-			if (!defaultParams.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, defaultParams.isValid());
 
 			// Verify inherited mono parameters have default values
-			if (defaultParams.framePyramidPixelThreshold() != 640u * 480u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, defaultParams.framePyramidPixelThreshold(), 640u * 480u);
 
-			if (defaultParams.framePyramidLayers() != 3u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, defaultParams.framePyramidLayers(), 3u);
 
-			if (defaultParams.useAdaptiveRowSpacing() != true)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, defaultParams.useAdaptiveRowSpacing());
 		}
 
 		// Test 2: Static factory method (Parameters::defaultParameters())
@@ -196,26 +186,14 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 			const BullseyeDetectorStereo::Parameters factoryParams = BullseyeDetectorStereo::Parameters::defaultParameters();
 
 			// Verify the object is valid
-			if (!factoryParams.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, factoryParams.isValid());
 
 			// Verify it has the same values as default constructor
-			if (factoryParams.framePyramidPixelThreshold() != 640u * 480u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, factoryParams.framePyramidPixelThreshold(), 640u * 480u);
 
-			if (factoryParams.framePyramidLayers() != 3u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, factoryParams.framePyramidLayers(), 3u);
 
-			if (factoryParams.useAdaptiveRowSpacing() != true)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, factoryParams.useAdaptiveRowSpacing());
 		}
 
 		// Test 3: Parameter modification (modify inherited mono parameters, verify changes persist)
@@ -226,34 +204,22 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 			const unsigned int newPixelThreshold = RandomI::random(randomGenerator, 100u, 1000000u);
 			params.setFramePyramidPixelThreshold(newPixelThreshold);
 
-			if (params.framePyramidPixelThreshold() != newPixelThreshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, params.framePyramidPixelThreshold(), newPixelThreshold);
 
 			// Modify framePyramidLayers
 			const unsigned int newLayers = RandomI::random(randomGenerator, 1u, 10u);
 			params.setFramePyramidLayers(newLayers);
 
-			if (params.framePyramidLayers() != newLayers)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, params.framePyramidLayers(), newLayers);
 
 			// Modify useAdaptiveRowSpacing
-			const bool newAdaptiveSpacing = RandomI::random(randomGenerator, 1u) == 1u;
+			const bool newAdaptiveSpacing = RandomI::boolean(randomGenerator);
 			params.setUseAdaptiveRowSpacing(newAdaptiveSpacing);
 
-			if (params.useAdaptiveRowSpacing() != newAdaptiveSpacing)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, params.useAdaptiveRowSpacing(), newAdaptiveSpacing);
 
 			// Verify still valid after modifications
-			if (!params.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, params.isValid());
 		}
 
 		// Test 4: Inheritance verification (verify all BullseyeDetectorMono::Parameters members accessible)
@@ -264,57 +230,33 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 			const BullseyeDetectorMono::Parameters& monoParamsRef = stereoParams;
 
 			// Verify mono parameters are accessible through the reference
-			if (!monoParamsRef.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, monoParamsRef.isValid());
 
-			if (monoParamsRef.framePyramidPixelThreshold() != stereoParams.framePyramidPixelThreshold())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, monoParamsRef.framePyramidPixelThreshold(), stereoParams.framePyramidPixelThreshold());
 
-			if (monoParamsRef.framePyramidLayers() != stereoParams.framePyramidLayers())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, monoParamsRef.framePyramidLayers(), stereoParams.framePyramidLayers());
 
-			if (monoParamsRef.useAdaptiveRowSpacing() != stereoParams.useAdaptiveRowSpacing())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, monoParamsRef.useAdaptiveRowSpacing(), stereoParams.useAdaptiveRowSpacing());
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::testInvalidMatchingCost()
 {
 	Log::info() << "invalidMatchingCost() function test:";
 
-	bool allSucceeded = invalidMatchingCost() == Scalar(1000);
+	Validation validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	OCEAN_EXPECT_EQUAL(validation, invalidMatchingCost(), Scalar(1000));
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, RandomGenerator& randomGenerator)
@@ -323,7 +265,7 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 
 	Log::info() << "Candidate class test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -334,22 +276,14 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			const Candidate defaultCandidate;
 
 			// Verify default candidate is invalid
-			if (defaultCandidate.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, defaultCandidate.isValid());
 
 			// Verify center is sentinel value
-			if (defaultCandidate.center() != Candidate::invalidBullseyeCenter())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, defaultCandidate.center(), Candidate::invalidBullseyeCenter());
 
 			// Verify reprojection errors are negative (Numeric::minValue())
-			if (defaultCandidate.reprojectionErrorA() >= Scalar(0) || defaultCandidate.reprojectionErrorB() >= Scalar(0))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS(validation, defaultCandidate.reprojectionErrorA(), Scalar(0));
+			OCEAN_EXPECT_LESS(validation, defaultCandidate.reprojectionErrorB(), Scalar(0));
 		}
 
 		// Test 2: Parameterized Constructor with valid data
@@ -361,27 +295,15 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			const Candidate candidate(center, errorA, errorB);
 
 			// Verify candidate is valid
-			if (!candidate.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, candidate.isValid());
 
 			// Verify center is stored correctly
-			if (candidate.center() != center)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, candidate.center(), center);
 
 			// Verify reprojection errors are stored correctly
-			if (candidate.reprojectionErrorA() != errorA)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, candidate.reprojectionErrorA(), errorA);
 
-			if (candidate.reprojectionErrorB() != errorB)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, candidate.reprojectionErrorB(), errorB);
 		}
 
 		// Test 3: Parameterized Constructor with zero errors
@@ -393,16 +315,12 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			const Candidate candidate(center, errorA, errorB);
 
 			// Verify candidate is valid (zero errors are valid)
-			if (!candidate.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, candidate.isValid());
 
 			// Verify values
-			if (candidate.center() != center || candidate.reprojectionErrorA() != errorA || candidate.reprojectionErrorB() != errorB)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, candidate.center(), center);
+			OCEAN_EXPECT_EQUAL(validation, candidate.reprojectionErrorA(), errorA);
+			OCEAN_EXPECT_EQUAL(validation, candidate.reprojectionErrorB(), errorB);
 		}
 
 		// Test 4: Invalid candidate with sentinel center value (cannot test directly as constructor asserts isValid())
@@ -411,16 +329,10 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			const Candidate defaultCandidate;
 			const Vector3 invalidCenter = Candidate::invalidBullseyeCenter();
 
-			if (defaultCandidate.center() != invalidCenter)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, defaultCandidate.center(), invalidCenter);
 
 			// Verify sentinel value is Vector3::minValue()
-			if (invalidCenter != Vector3::minValue())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, invalidCenter, Vector3::minValue());
 		}
 
 		// Test 5: Static method invalidBullseyeCenter()
@@ -429,16 +341,10 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			const Vector3 invalidCenter2 = Candidate::invalidBullseyeCenter();
 
 			// Verify consistency
-			if (invalidCenter1 != invalidCenter2)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, invalidCenter1, invalidCenter2);
 
 			// Verify it returns Vector3::minValue()
-			if (invalidCenter1 != Vector3::minValue())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, invalidCenter1, Vector3::minValue());
 		}
 
 		// Test 6: Copy semantics
@@ -452,49 +358,25 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			// Test copy constructor
 			const Candidate copied(original);
 
-			if (!copied.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, copied.isValid());
 
-			if (copied.center() != original.center())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, copied.center(), original.center());
 
-			if (copied.reprojectionErrorA() != original.reprojectionErrorA())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, copied.reprojectionErrorA(), original.reprojectionErrorA());
 
-			if (copied.reprojectionErrorB() != original.reprojectionErrorB())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, copied.reprojectionErrorB(), original.reprojectionErrorB());
 
 			// Test assignment operator
 			Candidate assigned;
 			assigned = original;
 
-			if (!assigned.isValid())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, assigned.isValid());
 
-			if (assigned.center() != original.center())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, assigned.center(), original.center());
 
-			if (assigned.reprojectionErrorA() != original.reprojectionErrorA())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, assigned.reprojectionErrorA(), original.reprojectionErrorA());
 
-			if (assigned.reprojectionErrorB() != original.reprojectionErrorB())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, assigned.reprojectionErrorB(), original.reprojectionErrorB());
 		}
 
 		// Test 7: Accessor methods return correct types
@@ -510,24 +392,15 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			if (&centerRef != &candidate.center())
 			{
 				// Different addresses would indicate copy, not reference
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			// Verify values match exactly
-			if (!centerRef.isEqual(center, Numeric::weakEps()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, centerRef.isEqual(center, Numeric::weakEps()));
 
-			if (std::abs(candidate.reprojectionErrorA() - errorA) > Numeric::weakEps())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, std::abs(candidate.reprojectionErrorA() - errorA) <= Numeric::weakEps());
 
-			if (std::abs(candidate.reprojectionErrorB() - errorB) > Numeric::weakEps())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, std::abs(candidate.reprojectionErrorB() - errorB) <= Numeric::weakEps());
 		}
 
 		// Test 8: Const correctness
@@ -544,24 +417,17 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			const Scalar constErrorA = constCandidate.reprojectionErrorA();
 			const Scalar constErrorB = constCandidate.reprojectionErrorB();
 
-			if (!valid || constCenter != center || constErrorA != errorA || constErrorB != errorB)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, valid);
+			OCEAN_EXPECT_EQUAL(validation, constCenter, center);
+			OCEAN_EXPECT_EQUAL(validation, constErrorA, errorA);
+			OCEAN_EXPECT_EQUAL(validation, constErrorB, errorB);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDuration, RandomGenerator& randomGenerator)
@@ -570,7 +436,7 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 
 	Log::info() << "triangulateBullseye() function test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -642,7 +508,7 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 
 			if (triangulationSucceeded != expectedSuccess)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
@@ -655,13 +521,13 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 
 					if (pointError > maxPointError)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					constexpr Scalar maxReprojectionError = Scalar(1.5); // in pixels
 					if (reprojectionError0 > maxReprojectionError || reprojectionError1 > maxReprojectionError)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -669,16 +535,9 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded > 0u)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDuration, RandomGenerator& randomGenerator)
@@ -687,7 +546,7 @@ bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDura
 
 	Log::info() << "BullseyeDetectorStereo::detectBullseyes() stress test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -736,38 +595,31 @@ bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDura
 		BullseyeDetectorStereo::Parameters parameters = BullseyeDetectorStereo::Parameters::defaultParameters();
 		parameters.setFramePyramidPixelThreshold((unsigned int)(Scalar(yFrames[0].pixels()) * Random::scalar(randomGenerator, 0.1, 2.0) + Scalar(0.5)));
 		parameters.setFramePyramidLayers(RandomI::random(randomGenerator, 1u, 5u));
-		parameters.setUseAdaptiveRowSpacing(RandomI::random(randomGenerator, 1u) == 1u);
+		parameters.setUseAdaptiveRowSpacing(RandomI::boolean(randomGenerator));
 		ocean_assert(parameters.isValid());
 
-		const bool useWorker = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool useWorker = RandomI::boolean(randomGenerator);
 
 		BullseyeDetectorStereo::BullseyePairs bullseyePairs;
 		Vectors3 bullseyeCenters;
 		if (!BullseyeDetectorStereo::detectBullseyes(cameras, yFrames, world_T_device, device_T_cameras, bullseyePairs, bullseyeCenters, parameters, (useWorker ? WorkerPool::get().scopedWorker()() : nullptr)))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// Validate that the output is consistent
 		if (bullseyePairs.size() != bullseyeCenters.size())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Stress test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Stress test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double testDuration, RandomGenerator& randomGenerator)
@@ -776,7 +628,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 
 	Log::info() << "extractBullseyeCandidates() function test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -791,10 +643,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 
 			CandidateMap candidateMap = extractBullseyeCandidates(*setup.cameraA, *setup.cameraB, setup.world_T_cameraA, setup.world_T_cameraB, bullseyesA, bullseyesB);
 
-			if (!candidateMap.empty())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, candidateMap.empty());
 		}
 
 		// Test 2: One empty, one non-empty should return empty map
@@ -816,10 +665,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 
 			CandidateMap candidateMap = extractBullseyeCandidates(*setup.cameraA, *setup.cameraB, setup.world_T_cameraA, setup.world_T_cameraB, bullseyesA, bullseyesB);
 
-			if (!candidateMap.empty())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, candidateMap.empty());
 		}
 
 		// Test 3: Non-empty bullseye lists should produce candidates
@@ -845,10 +691,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 					for (const auto& entry : candidateMap)
 					{
 						const Candidate& candidate = entry.second;
-						if (!candidate.isValid())
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, candidate.isValid());
 					}
 				}
 			}
@@ -856,16 +699,9 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration, RandomGenerator& randomGenerator)
@@ -874,7 +710,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 
 	Log::info() << "extractBullseyes() function test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -893,10 +729,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 
 			const bool result = extractBullseyes(*setup.cameraA, *setup.cameraB, bullseyesA, bullseyesB, candidateMap, bullseyePairs, bullseyeCenters);
 
-			if (result != false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, result);
 		}
 
 		// Test 2: Non-empty bullseyes but empty candidate map should return false
@@ -917,10 +750,7 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 
 			const bool result = extractBullseyes(*setup.cameraA, *setup.cameraB, bullseyesA, bullseyesB, candidateMap, bullseyePairs, bullseyeCenters);
 
-			if (result != false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, result);
 		}
 
 		// Test 3: Valid input with candidate map generated from extractBullseyeCandidates should succeed
@@ -947,17 +777,12 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 
 					const bool result = extractBullseyes(*setup.cameraA, *setup.cameraB, bullseyesA, bullseyesB, candidateMap, bullseyePairs, bullseyeCenters);
 
-					if (!result)
-					{
-						allSucceeded = false;
-					}
-					else
+					OCEAN_EXPECT_TRUE(validation, result);
+
+					if (result)
 					{
 						// Verify output sizes match
-						if (bullseyePairs.size() != bullseyeCenters.size())
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, bullseyePairs.size(), bullseyeCenters.size());
 					}
 				}
 			}
@@ -965,16 +790,9 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration, RandomGenerator& randomGenerator)
@@ -983,7 +801,7 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 
 	Log::info() << "computeCostMatrix() function test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1001,10 +819,7 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 
 			const bool result = computeCostMatrix(*setup.cameraA, *setup.cameraB, bullseyesA, bullseyesB, candidateMap, costMatrix);
 
-			if (result != false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, result);
 		}
 
 		// Test 2: Non-empty bullseyes but empty candidate map should return false
@@ -1024,10 +839,7 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 
 			const bool result = computeCostMatrix(*setup.cameraA, *setup.cameraB, bullseyesA, bullseyesB, candidateMap, costMatrix);
 
-			if (result != false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, result);
 		}
 
 		// Test 3: Valid input should return correct cost matrix dimensions
@@ -1061,17 +873,13 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 					Matrix costMatrix;
 					const bool result = computeCostMatrix(*setup.cameraA, *setup.cameraB, bullseyesA, bullseyesB, candidateMap, costMatrix);
 
-					if (!result)
-					{
-						allSucceeded = false;
-					}
-					else
+					OCEAN_EXPECT_TRUE(validation, result);
+
+					if (result)
 					{
 						// Verify matrix dimensions
-						if (costMatrix.rows() != bullseyesA.size() || costMatrix.columns() != bullseyesB.size())
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, costMatrix.rows(), bullseyesA.size());
+						OCEAN_EXPECT_EQUAL(validation, costMatrix.columns(), bullseyesB.size());
 
 						// Verify cost values are in valid range [0, invalidMatchingCost()]
 						for (size_t row = 0; row < costMatrix.rows(); ++row)
@@ -1079,10 +887,8 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 							for (size_t col = 0; col < costMatrix.columns(); ++col)
 							{
 								const Scalar cost = costMatrix(row, col);
-								if (cost < 0 || cost > invalidMatchingCost())
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_GREATER_EQUAL(validation, cost, Scalar(0));
+								OCEAN_EXPECT_LESS_EQUAL(validation, cost, invalidMatchingCost());
 							}
 						}
 					}
@@ -1092,16 +898,9 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 TestBullseyeDetectorStereo::StereoTestSetup TestBullseyeDetectorStereo::createRandomStereoSetup(RandomGenerator& randomGenerator)
