@@ -184,52 +184,23 @@
           Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
   <!-- ============================================================
-       Custom Build Targets
+       Project-Specific Build Hooks
+       Build, Clean, and Rebuild targets are provided by OceanAndroidCommon.targets.
        ============================================================ -->
 
-  <!-- Build Target - stages Java sources, runs Gradle, copies AAR -->
-  <Target Name="Build" DependsOnTargets="VerifyGradleWrapper">
-    <!-- Display Java source files being compiled -->
-    <Message Text="%(JavaSource.Filename)%(JavaSource.Extension)" Importance="high" />
-
-    <!-- Run Gradle build -->
-    <Message Text="Building AAR with Gradle..." Importance="high" />
-    <Exec Command="&quot;$(GradleWrapper)&quot; $(GradleTask) $(GradleProperties) --no-daemon"
-          WorkingDirectory="$(GradleProjectDir)"
-          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
-          ConsoleToMsBuild="true"
-          Condition="Exists('$(GradleWrapper)')" />
-
-    <Warning Text="Gradle wrapper not found at $(GradleWrapper). Please ensure gradlew.bat exists."
-             Condition="!Exists('$(GradleWrapper)')" />
-
-    <!-- Copy AAR to output directory -->
+  <!-- Copy AAR to output directory after Gradle build -->
+  <Target Name="_CopyAarOutput" AfterTargets="Build;Rebuild">
     <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
     <Copy SourceFiles="$(AarOutputFile)"
           DestinationFiles="$(FinalAarPath)"
           SkipUnchangedFiles="true"
           Condition="Exists('$(AarOutputFile)')" />
-
-    <!-- Display output path similar to native library -->
     <Message Text="$(MSBuildProjectFile) -> $([System.IO.Path]::GetFullPath('$(FinalAarPath)'))" Importance="high" />
   </Target>
 
-  <!-- Clean Target -->
-  <Target Name="Clean" DependsOnTargets="CleanStagedJavaSources">
-    <Message Text="Cleaning with Gradle..." Importance="high" />
-    <Exec Command="&quot;$(GradleWrapper)&quot; clean $(GradleProperties) --no-daemon"
-          WorkingDirectory="$(GradleProjectDir)"
-          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
-          ConsoleToMsBuild="true"
-          IgnoreExitCode="true"
-          Condition="Exists('$(GradleWrapper)')" />
-
-    <!-- Remove output AAR -->
+  <!-- Delete AAR from output directory during Clean -->
+  <Target Name="_CleanAarOutput" AfterTargets="Clean">
     <Delete Files="$(FinalAarPath)" Condition="Exists('$(FinalAarPath)')" />
-    <Message Text="[$(ProjectName)] Cleaned" Importance="normal" />
   </Target>
-
-  <!-- Rebuild Target -->
-  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
 </Project>

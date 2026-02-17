@@ -376,6 +376,7 @@
           Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
   <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
+  <!-- Build, Clean, and Rebuild targets are provided by OceanAndroidCommon.targets. -->
 
   <!-- Resolve AndroidManifest items into the AndroidManifestFile property -->
   <Target Name="_ResolveAndroidManifest"
@@ -403,54 +404,6 @@
 
     <Error Text="Android manifest file not found: $(AndroidManifestFile). Ensure the file exists or update the AndroidManifest item."
            Condition="!Exists('$(AndroidManifestFile)')" />
-  </Target>
-
-  <!-- Build Target - invokes Gradle -->
-  <Target Name="Build" DependsOnTargets="VerifyGradleWrapper;StageJavaSources">
-    <Message Text="========================================" Importance="high" />
-    <Message Text="Building Ocean Android Application with Gradle..." Importance="high" />
-    <Message Text="  SDK Path: $(AndroidSdkPath)" Importance="normal" />
-    <Message Text="  Configuration: $(Configuration)" Importance="normal" />
-    <Message Text="  Platform: $(Platform) ($(AndroidAbi))" Importance="normal" />
-    <Message Text="  Java Home: $(JavaHome)" Importance="normal" />
-    <Message Text="========================================" Importance="high" />
-
-    <Exec Command="&quot;$(GradleWrapper)&quot; $(GradleTask) $(GradleProperties) --no-daemon"
-          WorkingDirectory="$(GradleProjectDir)"
-          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
-          ConsoleToMsBuild="true"
-          Condition="Exists('$(GradleWrapper)')" />
-
-    <Warning Text="Gradle wrapper not found at $(GradleWrapper). Please ensure gradlew.bat exists."
-             Condition="!Exists('$(GradleWrapper)')" />
-
-    <Message Text="Build complete. APK at: $(ApkOutputPath)" Importance="high" />
-  </Target>
-
-  <!-- Clean Target -->
-  <Target Name="Clean">
-    <Message Text="Cleaning Ocean Android project..." Importance="high" />
-    <Exec Command="&quot;$(GradleWrapper)&quot; clean $(GradleProperties) --no-daemon"
-          WorkingDirectory="$(GradleProjectDir)"
-          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
-          ConsoleToMsBuild="true"
-          IgnoreExitCode="true"
-          Condition="Exists('$(GradleWrapper)')" />
-  </Target>
-
-  <!-- Rebuild Target: runs clean + build with no-build-cache flag for a true rebuild -->
-  <Target Name="Rebuild" DependsOnTargets="CleanStagedJavaSources;StageJavaSources">
-    <Message Text="========================================" Importance="high" />
-    <Message Text="Rebuilding Ocean Android Application (no cache)..." Importance="high" />
-    <Message Text="========================================" Importance="high" />
-
-    <Exec Command="&quot;$(GradleWrapper)&quot; clean $(GradleTask) $(GradleProperties) --no-daemon --no-build-cache"
-          WorkingDirectory="$(GradleProjectDir)"
-          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
-          ConsoleToMsBuild="true"
-          Condition="Exists('$(GradleWrapper)')" />
-
-    <Message Text="Rebuild complete. APK at: $(ApkOutputPath)" Importance="high" />
   </Target>
 
   <!-- Deploy Target -->

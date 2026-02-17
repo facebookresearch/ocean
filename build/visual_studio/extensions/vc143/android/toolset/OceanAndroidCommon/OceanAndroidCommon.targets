@@ -54,4 +54,48 @@
     <NMakeCleanCommandLine Condition="'$(NMakeCleanCommandLine)' == ''">cd /d "$(GradleProjectDir)" &amp;&amp; set "ANDROID_HOME=$(AndroidSdkPath)" &amp;&amp; set "JAVA_HOME=$(JavaHome)" &amp;&amp; "$(GradleWrapper)" clean $(GradleProperties) --no-daemon</NMakeCleanCommandLine>
   </PropertyGroup>
 
+  <!-- Shared Build / Clean / Rebuild Targets for Makefile-based Android projects.
+       These override the NMake targets from Microsoft.Cpp.targets.
+       Projects can add pre/post logic via BeforeTargets/AfterTargets hooks.
+       Rebuild always passes clean and disables the Gradle build cache for a true from-scratch build. -->
+  <Target Name="Build" Condition="'$(ConfigurationType)' == 'Makefile'">
+    <Message Text="========================================" Importance="high" />
+    <Message Text="Building $(ProjectName) with Gradle..." Importance="high" />
+    <Message Text="  Configuration: $(Configuration)" Importance="normal" />
+    <Message Text="  Java Home: $(JavaHome)" Importance="normal" />
+    <Message Text="========================================" Importance="high" />
+
+    <Exec Command="&quot;$(GradleWrapper)&quot; $(GradleTask) $(GradleProperties) --no-daemon"
+          WorkingDirectory="$(GradleProjectDir)"
+          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
+          ConsoleToMsBuild="true"
+          Condition="Exists('$(GradleWrapper)')" />
+
+    <Warning Text="Gradle wrapper not found at $(GradleWrapper). Please ensure gradlew.bat exists."
+             Condition="!Exists('$(GradleWrapper)')" />
+  </Target>
+
+  <Target Name="Clean" Condition="'$(ConfigurationType)' == 'Makefile'">
+    <Message Text="Cleaning $(ProjectName) with Gradle..." Importance="high" />
+    <Exec Command="&quot;$(GradleWrapper)&quot; clean $(GradleProperties) --no-daemon"
+          WorkingDirectory="$(GradleProjectDir)"
+          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
+          ConsoleToMsBuild="true"
+          IgnoreExitCode="true"
+          Condition="Exists('$(GradleWrapper)')" />
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="CleanStagedJavaSources;StageJavaSources"
+          Condition="'$(ConfigurationType)' == 'Makefile'">
+    <Message Text="========================================" Importance="high" />
+    <Message Text="Rebuilding $(ProjectName) with Gradle (no build cache)..." Importance="high" />
+    <Message Text="========================================" Importance="high" />
+
+    <Exec Command="&quot;$(GradleWrapper)&quot; clean $(GradleTask) $(GradleProperties) --no-daemon --no-build-cache"
+          WorkingDirectory="$(GradleProjectDir)"
+          EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
+          ConsoleToMsBuild="true"
+          Condition="Exists('$(GradleWrapper)')" />
+  </Target>
+
 </Project>
