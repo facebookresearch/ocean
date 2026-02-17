@@ -80,8 +80,8 @@ android {
       if (javaStagingDir != null && file(javaStagingDir).exists()) {
         java.setSrcDirs(listOf(file(javaStagingDir)))
       } else {
-        // Default: sources in src folder (flat structure, package in file)
-        java.setSrcDirs(listOf(file("src")))
+        // Default: sources in java folder (flat structure, package in file)
+        java.setSrcDirs(listOf(file("java")))
       }
     }
   }

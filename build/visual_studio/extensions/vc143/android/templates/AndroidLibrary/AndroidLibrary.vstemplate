@@ -19,7 +19,7 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.vcxproj.filters">AndroidLibrary.vcxproj.filters</ProjectItem>
       <Folder Name="lib" TargetFolderName="lib">
         <ProjectItem ReplaceParameters="true" TargetFileName="build.gradle.kts">build.gradle.kts</ProjectItem>
-        <Folder Name="src" TargetFolderName="src">
+        <Folder Name="java" TargetFolderName="java">
           <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.java">MyLibrary.java</ProjectItem>
         </Folder>
       </Folder>

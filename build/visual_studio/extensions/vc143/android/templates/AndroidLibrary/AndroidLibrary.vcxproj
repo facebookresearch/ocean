@@ -32,14 +32,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x86">
-      <Configuration>Debug</Configuration>
-      <Platform>x86</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x86">
-      <Configuration>Release</Configuration>
-      <Platform>x86</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
 
   <!-- Global project properties -->
@@ -92,7 +84,7 @@
 
   <!-- Java source files -->
   <ItemGroup>
-    <JavaSource Include="lib\src\*.java" />
+    <JavaSource Include="lib\java\$safeprojectname$.java" />
   </ItemGroup>
 
   <!-- Project Items for Solution Explorer -->

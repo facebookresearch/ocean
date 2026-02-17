@@ -34,15 +34,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <!-- x86 configurations -->
-    <ProjectConfiguration Include="Debug|x86">
-      <Configuration>Debug</Configuration>
-      <Platform>x86</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x86">
-      <Configuration>Release</Configuration>
-      <Platform>x86</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
 
   <!-- Global project properties -->
@@ -100,7 +91,7 @@
   <ItemGroup>
     <!-- Java sources - can include files from anywhere on the machine -->
     <!-- The staging process reads package declarations and creates proper directory structure -->
-    <JavaSource Include="app\java\*.java" />
+    <JavaSource Include="app\java\MainActivity.java" />
     <!-- Example: Reference Java files from another location: -->
     <!-- <JavaSource Include="..\shared\*.java" /> -->
   </ItemGroup>
