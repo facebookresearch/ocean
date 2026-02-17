@@ -102,4 +102,15 @@
     </StringProperty.DataSource>
   </StringProperty>
 
+  <StringProperty Name="GradleLocalAARDependencies"
+                  DisplayName="Local AAR Dependencies"
+                  Description="Local AAR library dependencies (compile-only). Enter one file path per line, or separate with semicolons. Use MSBuild properties like $(OceanRootPath) for paths. These provide classes at compile time but are not bundled into this library's AAR."
+                  Category="Dependencies"
+                  F1Keyword="VC.Project.GradleLocalAARDependencies"
+                  Subtype="multiline">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
 </Rule>

@@ -44,7 +44,7 @@
        this file is imported.
        ============================================================ -->
   <PropertyGroup>
-    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PgradleDependencies="$(GradleDependencies)" -PgradleImplementationDependencies="$(GradleImplementationDependencies)"</ProjectGradleProperties>
+    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk) -PgradleDependencies="$(GradleDependencies)" -PgradleImplementationDependencies="$(GradleImplementationDependencies)" -PgradleLocalAARDependencies="$(GradleLocalAARDependencies)"</ProjectGradleProperties>
   </PropertyGroup>
 
   <!-- ============================================================
