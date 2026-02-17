@@ -18,6 +18,7 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -104,9 +105,8 @@ bool TestEpipolarGeometry::testFundamentalMatrix(const double testDuration)
 
 	Log::info() << "Testing fundamental matrix:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const size_t correspondences : {8, 11, 15, 30, 50, 90, 200})
 	{
@@ -293,28 +293,18 @@ bool TestEpipolarGeometry::testFundamentalMatrix(const double testDuration)
 		Log::info() << "Validation Essential: " << validationEssential;
 		Log::info() << "Validation Factorized: " << validationFactorized;
 
-		if (!validationFundamental.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationFundamental.succeeded());
 
-		if (!validationEpipoles.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationEpipoles.succeeded());
 
-		if (!validationEssential.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationEssential.succeeded());
 
-		if (!validationFactorized.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationFactorized.succeeded());
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEpipolarGeometry::testFundamentalMatrixWithNoise(const double testDuration)
@@ -323,9 +313,8 @@ bool TestEpipolarGeometry::testFundamentalMatrixWithNoise(const double testDurat
 
 	Log::info() << "Testing fundamental matrix with nosy image points:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const size_t correspondences : {8, 11, 15, 30, 50, 90, 200})
 	{
@@ -440,14 +429,16 @@ bool TestEpipolarGeometry::testFundamentalMatrixWithNoise(const double testDurat
 		{
 			if (angleErrorP95 >= Scalar(5))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 
 				Log::info() << "Validation: FAILED!";
 			}
 		}
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEpipolarGeometry::testEssentialMatrix(const double testDuration)
@@ -456,9 +447,8 @@ bool TestEpipolarGeometry::testEssentialMatrix(const double testDuration)
 
 	Log::info() << "Testing essential matrix:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const size_t correspondences : {8, 11, 15, 30, 50, 90, 200})
 	{
@@ -640,18 +630,14 @@ bool TestEpipolarGeometry::testEssentialMatrix(const double testDuration)
 		Log::info() << "Validation Essential: " << validationEssential;
 		Log::info() << "Validation Factorized: " << validationFactorized;
 
-		if (!validationEssential.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationEssential.succeeded());
 
-		if (!validationFactorized.succeeded())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationFactorized.succeeded());
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)

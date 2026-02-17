@@ -25,6 +25,7 @@
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -905,8 +906,7 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int correspondences : {4u, 10u, 20u, 30u, 100u})
 	{
@@ -914,13 +914,13 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 
 		constexpr double successThreshold = 0.99;
 
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		const Timestamp startTimestamp(true);
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 			const Vector3 translation(Random::vector3(randomGenerator));
 			const Euler euler = Random::euler(randomGenerator, Numeric::deg2rad(30));;
@@ -980,28 +980,21 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
+		if (!validationPrecision.succeeded())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDuration)
@@ -1017,15 +1010,14 @@ bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDura
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int correspondences : {4u, 10u, 20u, 30u, 100u})
 	{
 		Log::info() << "... with " << correspondences << " correspondences:";
 
 		constexpr double successThreshold = 0.90;
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
@@ -1074,7 +1066,7 @@ bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDura
 				{
 					for (size_t n = 0; n < leftImagePoints.size(); ++n)
 					{
-						ValidationPrecision::ScopedIteration scopedIteration(validation);
+						ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 						const Vector2& leftImagePoint = leftImagePoints[n];
 						const Vector2& rightImagePoint = rightImagePoints[n];
@@ -1089,34 +1081,27 @@ bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDura
 				}
 				else
 				{
-					validation.addIterations(0, leftImagePoints.size());
+					validationPrecision.addIterations(0, leftImagePoints.size());
 				}
 
 				break;
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
+		if (!validationPrecision.succeeded())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testFaultlessHomography(const double testDuration)
@@ -1135,20 +1120,20 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 
 	const Plane3 zPlane(Vector3(0, 0, 0), Vector3(0, 0, 1));
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int correspondences : {10u, 20u, 30u, 100u})
 	{
 		Log::info() << "... with " << correspondences << " points:";
 
 		constexpr double successThreshold = 0.90;
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 			const Scalar xTranslation = Random::scalar(randomGenerator, Scalar(-10), Scalar(10));
 			const Scalar yTranslation = Random::scalar(randomGenerator, Scalar(-10), Scalar(10));
@@ -1200,28 +1185,21 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 				}
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
+		if (!validationPrecision.succeeded())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
@@ -1237,21 +1215,20 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 	const Plane3 zPlane(Vector3(0, 0, 0), Vector3(0, 0, 1));
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int correspondences : {10, 20, 30, 100})
 	{
 		Log::info() << "... with " << correspondences << " points:";
 
 		constexpr double successThreshold = 0.90;
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 			const Scalar focalX = Random::scalar(randomGenerator, 524, 526);
 			const Scalar focalY = Random::scalar(randomGenerator, 524, 526);
@@ -1314,28 +1291,21 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 				}
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
+		if (!validationPrecision.succeeded())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testIntrinsic(const double testDuration)
@@ -1355,21 +1325,20 @@ bool TestHomography::testIntrinsic(const double testDuration)
 	const unsigned int correspondences = 20u;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int images : {3u, 5u, 10u, 20u})
 	{
 		Log::info() << "... with " << images << " homographies:";
 
 		constexpr double successThreshold = 0.90;
-		ValidationPrecision validation(successThreshold, randomGenerator);
+		ValidationPrecision validationPrecision(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 			SquareMatrices3 homographies;
 			HomogenousMatrices4 extrinsics;
@@ -1478,34 +1447,27 @@ bool TestHomography::testIntrinsic(const double testDuration)
 				OCEAN_SET_FAILED(validation);
 			}
 		}
-		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-		Log::info() << "Validation: " << validation;
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (!validation.succeeded())
+		if (!validationPrecision.succeeded())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (!allSucceeded && std::is_same<Scalar, float>::value)
+	if (!validation.succeededSoFar() && std::is_same<Scalar, float>::value)
 	{
 		Log::info() << "The test failed, however the applied 32 bit floating point value precision is too low for this function so that we rate the result as expected.";
 		return true;
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testHomotheticMatrix(const double testDuration)
@@ -1514,30 +1476,24 @@ bool TestHomography::testHomotheticMatrix(const double testDuration)
 
 	Log::info() << "Testing determination of homothetic matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const size_t points : {100, 1000, 10000, 100000})
 	{
 		Log::info() << " ";
 
-		if (!testHomotheticMatrix(testDuration, points) && allSucceeded)
+		if (!testHomotheticMatrix(testDuration, points))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testHomotheticMatrix(const double testDuration, const size_t points)
@@ -1638,30 +1594,24 @@ bool TestHomography::testSimilarityMatrix(const double testDuration)
 
 	Log::info() << "Testing determination of similarity matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const size_t points : {100, 1000, 10000, 100000})
 	{
 		Log::info() << " ";
 
-		if (!testSimilarityMatrix(testDuration, points) && allSucceeded)
+		if (!testSimilarityMatrix(testDuration, points))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testSimilarityMatrix(const double testDuration, const size_t points)
@@ -1763,7 +1713,8 @@ bool TestHomography::testAffineMatrix(const double testDuration)
 
 	Log::info() << "Testing determination of affine matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const size_t points : {100, 1000, 10000, 100000})
 	{
@@ -1771,22 +1722,15 @@ bool TestHomography::testAffineMatrix(const double testDuration)
 
 		if (!testAffineMatrix(testDuration, points))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testAffineMatrix(const double testDuration, const size_t points)
@@ -1878,37 +1822,31 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const bool 
 	Log::info() << "Testing determination of homography matrix with " << sizeof(Scalar) * 8 << "bit floating point precision, " << (useSVD ? "using SVD:" : "using a linear solution:");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testHomographyMatrix(testDuration, 100, useSVD) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testHomographyMatrix(testDuration, 100, useSVD));
 
 	Log::info() << " ";
 
-	allSucceeded = testHomographyMatrix(testDuration, 1000, useSVD) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testHomographyMatrix(testDuration, 1000, useSVD));
 
 	if (!useSVD)
 	{
 		Log::info() << " ";
 
-		allSucceeded = testHomographyMatrix(testDuration, 10000, useSVD) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testHomographyMatrix(testDuration, 10000, useSVD));
 
 		Log::info() << " ";
 
-		allSucceeded = testHomographyMatrix(testDuration, 100000, useSVD) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testHomographyMatrix(testDuration, 100000, useSVD));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double testDuration)
@@ -1918,30 +1856,24 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 	Log::info() << "Testing determination of point- and line-based homography matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testHomographyMatrixFromPointsAndLinesSVD(testDuration, 10) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testHomographyMatrixFromPointsAndLinesSVD(testDuration, 30) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testHomographyMatrixFromPointsAndLinesSVD(testDuration, 10));
 
 	Log::info() << " ";
 
-	allSucceeded = testHomographyMatrixFromPointsAndLinesSVD(testDuration, 100) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testHomographyMatrixFromPointsAndLinesSVD(testDuration, 30));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testHomographyMatrixFromPointsAndLinesSVD(testDuration, 100));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestHomography::testHomographyMatrix(const double testDuration, const size_t points, const bool useSVD)

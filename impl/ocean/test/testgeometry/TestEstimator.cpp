@@ -485,14 +485,11 @@ bool TestEstimator::testTranslateEstimatorType()
 {
 	Log::info() << "Testing translate estimator type:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	const Estimator::EstimatorTypes& estimatorTypes = Estimator::estimatorTypes();
 
-	if (estimatorTypes.size() != 5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, estimatorTypes.size(), size_t(5));
 
 	for (const Estimator::EstimatorType estimatorType : estimatorTypes)
 	{
@@ -500,30 +497,17 @@ bool TestEstimator::testTranslateEstimatorType()
 
 		if (name == "Invalid")
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
-		if (Estimator::translateEstimatorType(name) != estimatorType)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, Estimator::translateEstimatorType(name), estimatorType);
 	}
 
-	if (Estimator::translateEstimatorType(Estimator::ET_INVALID) != "Invalid")
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, Estimator::translateEstimatorType(Estimator::ET_INVALID), std::string("Invalid"));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

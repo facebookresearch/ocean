@@ -19,6 +19,7 @@
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Vector3.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -96,9 +97,8 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnPoints(const d
 		Geometry::AbsoluteTransformation::ScaleErrorType::Symmetric
 	};
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool withScale : {false, true})
 	{
@@ -117,7 +117,7 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnPoints(const d
 		{
 			Log::info() << "Testing " << numberPoints << " points:";
 
-			ValidationPrecision validation(0.95, randomGenerator);
+			ValidationPrecision validationPrecision(0.95, randomGenerator);
 
 			HighPerformanceStatistic performance;
 
@@ -125,7 +125,7 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnPoints(const d
 
 			do
 			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 				const Vector3 randomTranslation(Random::vector3(randomGenerator, -100, 100));
 				const Quaternion randomRotation(Random::quaternion(randomGenerator));
@@ -194,26 +194,25 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnPoints(const d
 				}
 				else
 				{
-					OCEAN_SET_FAILED(validation);
+					OCEAN_SET_FAILED(validationPrecision);
 				}
 			}
-			while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+			while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 			Log::info() << "Performance: " << performance;
 
-			Log::info() << "Validation: " << validation;
+			Log::info() << "Validation: " << validationPrecision;
 			Log::info().newLine();
 
-			if (!validation.succeeded())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 		}
 
 		Log::info().newLine();
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformations(const double testDuration)
@@ -227,9 +226,8 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 		Geometry::AbsoluteTransformation::ScaleErrorType::Symmetric
 	};
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool withScale : {false, true})
 	{
@@ -248,7 +246,7 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 		{
 			Log::info() << "Testing " << numberTransformations << " transformations:";
 
-			ValidationPrecision validation(0.95, randomGenerator);
+			ValidationPrecision validationPrecision(0.95, randomGenerator);
 
 			HighPerformanceStatistic performance;
 
@@ -256,7 +254,7 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 
 			do
 			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 				const Vector3 randomTranslation(Random::vector3(randomGenerator, -100, 100));
 				const Quaternion randomRotation(Random::quaternion(randomGenerator));
@@ -325,28 +323,25 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 				}
 				else
 				{
-					OCEAN_SET_FAILED(validation);
+					OCEAN_SET_FAILED(validationPrecision);
 				}
 			}
-			while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+			while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 			Log::info() << "Performance: " << performance;
 
-			Log::info() << "Validation: " << validation;
+			Log::info() << "Validation: " << validationPrecision;
 			Log::info().newLine();
 
-			if (!validation.succeeded())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 		}
 
 		Log::info().newLine();
 	}
 
-	Log::info().newLine();
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformationsWithOutliers(const double testDuration)
@@ -360,9 +355,8 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 		Geometry::AbsoluteTransformation::ScaleErrorType::Symmetric
 	};
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool withScale : {false, true})
 	{
@@ -384,7 +378,7 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 
 			Log::info() << "Testing " << numberTransformations << " transformations, and " << numberOutliers << " outliers:";
 
-			ValidationPrecision validation(0.95, randomGenerator);
+			ValidationPrecision validationPrecision(0.95, randomGenerator);
 
 			HighPerformanceStatistic performance;
 
@@ -392,7 +386,7 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 
 			do
 			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
+				ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
 				const Vector3 randomTranslation(Random::vector3(randomGenerator, -100, 100));
 				const Quaternion randomRotation(Random::quaternion(randomGenerator));
@@ -473,28 +467,25 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 				}
 				else
 				{
-					OCEAN_SET_FAILED(validation);
+					OCEAN_SET_FAILED(validationPrecision);
 				}
 			}
-			while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+			while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 			Log::info() << "Performance: " << performance;
 
-			Log::info() << "Validation: " << validation;
+			Log::info() << "Validation: " << validationPrecision;
 			Log::info().newLine();
 
-			if (!validation.succeeded())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 		}
 
 		Log::info().newLine();
 	}
 
-	Log::info().newLine();
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

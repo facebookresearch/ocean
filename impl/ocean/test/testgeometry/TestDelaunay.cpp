@@ -8,8 +8,11 @@
 #include "ocean/test/testgeometry/TestDelaunay.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/geometry/Delaunay.h"
@@ -57,7 +60,8 @@ bool TestDelaunay::testTriangulation(const double testDuration)
 {
 	Log::info() << "Test triangulation:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 #ifdef OCEAN_MATH_USE_SINGLE_PRECISION
 	for (const unsigned int numberPoints : {3u, 5u, 10u, 50u})
@@ -67,24 +71,14 @@ bool TestDelaunay::testTriangulation(const double testDuration)
 	{
 		Log::info() << " ";
 
-		if (!testTriangulation(numberPoints, testDuration))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTriangulation(numberPoints, testDuration));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Triangulation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Triangulation test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const double testDuration)
@@ -95,8 +89,10 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 
 	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.95 : 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -104,6 +100,8 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		constexpr Scalar areaSize = range * Scalar(2);
 		constexpr unsigned int bins = (unsigned int)(range * 10);
 
@@ -128,24 +126,17 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 			const Geometry::Delaunay::IndexTriangles triangles = Geometry::Delaunay::triangulation(points);
 		performance.stop();
 
-		if (Geometry::Delaunay::checkTriangulation(triangles, points))
+		if (!Geometry::Delaunay::checkTriangulation(triangles, points))
 		{
-			++validIterations;
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
+	Log::info() << "Validation: " << validation;
 
-	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.95 : 0.99;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 }
