@@ -17,6 +17,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -76,9 +77,8 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 
 	Log::info() << "Structural similarity stress test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -131,19 +131,13 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 		double meanContrast = -1.0;
 		if (CV::ImageQuality::structuralSimilarity8BitPerChannel(frameX.constdata<uint8_t>(), frameY.constdata<uint8_t>(), width, height, channels, frameX.paddingElements(), frameY.paddingElements(), meanSSIM, meanContrast, useWorker))
 		{
-			if (meanSSIM < 0.0 || meanSSIM > 1.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, meanSSIM >= 0.0 && meanSSIM <= 1.0);
 
-			if (meanContrast < 0.0 || meanContrast > 1.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, meanContrast >= 0.0 && meanContrast <= 1.0);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (width >= 200u && height >= 200u)
@@ -153,37 +147,24 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 			if (meanSSIM == 1.0)
 			{
 				// this would be too perfect
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (similarImage)
 			{
-				if (meanSSIM < 0.97)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, meanSSIM >= 0.97);
 			}
 			else
 			{
-				if (meanSSIM > 0.03)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, meanSSIM <= 0.03);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double testDuration, Worker& worker)
@@ -192,9 +173,8 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 
 	Log::info() << "Multi-scale structural similarity stress test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -247,14 +227,11 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 		double msssim = -1.0;
 		if (CV::ImageQuality::multiScaleStructuralSimilarity8BitPerChannel(frameX.constdata<uint8_t>(), frameY.constdata<uint8_t>(), width, height, channels, frameX.paddingElements(), frameY.paddingElements(), msssim, useWorker))
 		{
-			if (msssim < 0.0 || msssim > 1.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, msssim >= 0.0 && msssim <= 1.0);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (width >= 200u && height >= 200u)
@@ -264,37 +241,24 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 			if (msssim == 1.0)
 			{
 				// this would be too perfect
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (similarImage)
 			{
-				if (msssim < 0.85)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, msssim >= 0.85);
 			}
 			else
 			{
-				if (msssim > 0.15)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, msssim <= 0.15);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

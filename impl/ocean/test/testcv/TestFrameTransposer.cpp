@@ -17,6 +17,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -169,7 +170,8 @@ bool TestFrameTransposer::testTransposer(const double testDuration, Worker& work
 		IndexPair32(1920u, 1080u),
 	};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << "Transposer frame transposer:";
 	Log::info() << " ";
@@ -182,29 +184,22 @@ bool TestFrameTransposer::testTransposer(const double testDuration, Worker& work
 		const unsigned int width = sizes[n].first;
 		const unsigned int height = sizes[n].second;
 
-		if (!testTransposer<uint8_t>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTransposer<uint8_t>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!testTransposer<int8_t>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTransposer<int8_t>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!testTransposer<float>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTransposer<float>(width, height, testDuration, worker));
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -213,19 +208,20 @@ bool TestFrameTransposer::testTransposer(const unsigned int width, const unsigne
 	Log::info() << "Testing frame dimension " << width << "x" << height << " with data type '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testTransposer<T, 1u>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testTransposer<T, 1u>(width, height, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testTransposer<T, 2u>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testTransposer<T, 2u>(width, height, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testTransposer<T, 3u>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testTransposer<T, 3u>(width, height, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testTransposer<T, 4u>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testTransposer<T, 4u>(width, height, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testTransposer<T, 5u>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testTransposer<T, 5u>(width, height, testDuration, worker));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>
@@ -239,9 +235,8 @@ bool TestFrameTransposer::testTransposer(const unsigned int width, const unsigne
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -270,7 +265,7 @@ bool TestFrameTransposer::testTransposer(const unsigned int width, const unsigne
 
 				performance.startIf(performanceIteration);
 
-				if (RandomI::random(1u) == 0u || tChannels > 4u)
+				if (RandomI::boolean(randomGenerator) || tChannels > 4u)
 				{
 					CV::FrameTransposer::transpose<T, tChannels>(frame.constdata<T>(), transposed.data<T>(), frame.width(), frame.height(), frame.paddingElements(), transposed.paddingElements(), useWorker);
 				}
@@ -287,10 +282,7 @@ bool TestFrameTransposer::testTransposer(const unsigned int width, const unsigne
 					return false;
 				}
 
-				if (!validateTransposer<T, tChannels>(frame.constdata<T>(), transposed.constdata<T>(), frame.width(), frame.height(), frame.paddingElements(), transposed.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateTransposer<T, tChannels>(frame.constdata<T>(), transposed.constdata<T>(), frame.width(), frame.height(), frame.paddingElements(), transposed.paddingElements()));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -304,23 +296,14 @@ bool TestFrameTransposer::testTransposer(const unsigned int width, const unsigne
 		Log::info() << "Multi-core boost factor: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, median: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker)
 {
 	Log::info() << "Test comfort rotate 90 degree function:";
-
-	bool allSucceeded = true;
 
 	FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
 	std::unordered_set<FrameType::PixelFormat> pixelFormatSet(pixelFormats.cbegin(), pixelFormats.cend());
@@ -331,12 +314,15 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 
 	pixelFormats = FrameType::PixelFormats(pixelFormatSet.cbegin(), pixelFormatSet.cend());
 
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	// ensuring that we have covered all pixel formats
 
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 4) // -3 due to missing packed formats
 	{
 		ocean_assert(false && "Missing pixel format!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	for (const FrameType::PixelFormat pixelFormat : pixelFormats)
@@ -344,11 +330,9 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 		if (FrameType::formatIsPacked(pixelFormat))
 		{
 			ocean_assert(false && "Invalid pixel format!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -378,14 +362,14 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 
 		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
-		const bool clockwise = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
+		const bool clockwise = RandomI::boolean(randomGenerator);
 
 		Frame targetFrame;
 		Frame copyTargetFrame;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrameType, height, width), &randomGenerator);
 
@@ -394,14 +378,11 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 
 		if (CV::FrameTransposer::Comfort::rotate90(sourceFrame, targetFrame, clockwise, useWorker))
 		{
-			if (!validateRotate90(sourceFrame, targetFrame, clockwise))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateRotate90(sourceFrame, targetFrame, clockwise));
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (copyTargetFrame.isValid())
@@ -415,23 +396,14 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worker)
 {
 	Log::info() << "Test comfort rotate 180 degree function:";
-
-	bool allSucceeded = true;
 
 	FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
 	std::unordered_set<FrameType::PixelFormat> pixelFormatSet(pixelFormats.cbegin(), pixelFormats.cend());
@@ -442,15 +414,16 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 
 	pixelFormats = FrameType::PixelFormats(pixelFormatSet.cbegin(), pixelFormatSet.cend());
 
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	// ensuring that we have covered all pixel formats
 
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 4) // -3 due to missing packed formats
 	{
 		ocean_assert(false && "Missing pixel format!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -480,12 +453,12 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 
 		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		Frame targetFrame;
 		Frame copyTargetFrame;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			targetFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
@@ -494,14 +467,11 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 
 		if (CV::FrameTransposer::Comfort::rotate180(sourceFrame, targetFrame, useWorker))
 		{
-			if (!validateRotate180(sourceFrame, targetFrame))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateRotate180(sourceFrame, targetFrame));
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (copyTargetFrame.isValid())
@@ -515,23 +485,14 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 {
 	Log::info() << "Test comfort rotate +/- 90 degree steps function:";
-
-	bool allSucceeded = true;
 
 	FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
 	std::unordered_set<FrameType::PixelFormat> pixelFormatSet(pixelFormats.cbegin(), pixelFormats.cend());
@@ -542,15 +503,16 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 
 	pixelFormats = FrameType::PixelFormats(pixelFormatSet.cbegin(), pixelFormatSet.cend());
 
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	// ensuring that we have covered all pixel formats
 
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 4) // -3 due to missing packed formats
 	{
 		ocean_assert(false && "Missing pixel format!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -574,11 +536,11 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 400u) * widthMultiple;
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 400u) * heightMultiple;
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		int angle = int(RandomI::random(randomGenerator, 100u) * 90u); // [0, 90 * 100]
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			angle = -angle;
 		}
@@ -595,7 +557,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 				Frame targetFrame;
 				Frame copyTargetFrame;
 
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					FrameType targetFrameType = sourceFrameType;
 
@@ -609,10 +571,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 					copyTargetFrame = Frame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				}
 
-				if (!CV::FrameTransposer::Comfort::rotate(sourceFrame, targetFrame, angle, useWorker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, CV::FrameTransposer::Comfort::rotate(sourceFrame, targetFrame, angle, useWorker));
 
 				if (copyTargetFrame.isValid())
 				{
@@ -623,10 +582,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 					}
 				}
 
-				if (!validateRotate(sourceFrame, targetFrame, angle))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateRotate(sourceFrame, targetFrame, angle));
 			}
 			else
 			{
@@ -641,10 +597,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), &randomGenerator);
 				const Frame copyTargetFrame (targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				if (!rotate(sourceFrame, targetFrame, angle, useWorker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, rotate(sourceFrame, targetFrame, angle, useWorker));
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 				{
@@ -652,25 +605,15 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 					return false;
 				}
 
-				if (!validateRotate(sourceFrame, targetFrame, angle))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateRotate(sourceFrame, targetFrame, angle));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>

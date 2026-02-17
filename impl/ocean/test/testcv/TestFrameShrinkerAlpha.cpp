@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -65,7 +66,8 @@ bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const double testDuration, Wor
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -75,16 +77,16 @@ bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const double testDuration, Wor
 			Log::info() << " ";
 		}
 
-		allSucceeded = testFrameDivideByTwo(width, height, channels, false, false, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testFrameDivideByTwo(width, height, channels, false, false, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testFrameDivideByTwo(width, height, channels, false, true, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testFrameDivideByTwo(width, height, channels, false, true, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testFrameDivideByTwo(width, height, channels, true, false, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testFrameDivideByTwo(width, height, channels, true, false, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testFrameDivideByTwo(width, height, channels, true, true, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testFrameDivideByTwo(width, height, channels, true, true, testDuration, worker));
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const unsigned int width, const unsigned int height, const unsigned int channels, const bool alphaAtFront, const bool transparentIs0xFF, const double testDuration, Worker& worker)
@@ -101,9 +103,8 @@ bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const unsigned int width, cons
 		Log::info() << "... for " << width << "x" << height << ", and " << channels << " channels, alpha back, and " << (transparentIs0xFF ? "0xFF as transparent" : "0x00 as transparent") << ":";
 	}
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -145,10 +146,7 @@ bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const unsigned int width, cons
 					return false;
 				}
 
-				if (!validationDivideByTwo(source, target, alphaAtFront, transparentIs0xFF))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validationDivideByTwo(source, target, alphaAtFront, transparentIs0xFF));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -162,16 +160,9 @@ bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const unsigned int width, cons
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, average: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 void TestFrameShrinkerAlpha::invokeFrameDivideByTwo(const Frame& source, Frame& target, const bool alphaAtFront, const bool transparentIs0xFF, Worker* worker)

@@ -20,6 +20,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <array>
 
@@ -1017,8 +1018,7 @@ bool TestHistogram::testDetermineHistogram8BitPerChannel(const double testDurati
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	const std::vector<std::pair<unsigned int, unsigned int>> sourceImageSizes =
 	{
@@ -1039,16 +1039,16 @@ bool TestHistogram::testDetermineHistogram8BitPerChannel(const double testDurati
 
 	for (const std::pair<unsigned int, unsigned int>& sourceImageSize : sourceImageSizes)
 	{
-		validationSuccessful = testDetermineHistogram8BitPerChannel<1u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
-		validationSuccessful = testDetermineHistogram8BitPerChannel<2u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
-		validationSuccessful = testDetermineHistogram8BitPerChannel<3u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
-		validationSuccessful = testDetermineHistogram8BitPerChannel<4u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannel<1u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannel<2u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannel<3u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannel<4u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
 	}
 
 	Log::info() << " ";
-	Log::info() << "Validation of test to determine histograms (8-bit): " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double testDuration, Worker& worker)
@@ -1059,8 +1059,7 @@ bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double te
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	const std::vector<std::pair<unsigned int, unsigned int>> sourceImageSizes =
 	{
@@ -1081,16 +1080,16 @@ bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double te
 
 	for (const std::pair<unsigned int, unsigned int>& sourceImageSize : sourceImageSizes)
 	{
-		validationSuccessful = testDetermineHistogram8BitPerChannelSubFrame<1u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
-		validationSuccessful = testDetermineHistogram8BitPerChannelSubFrame<2u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
-		validationSuccessful = testDetermineHistogram8BitPerChannelSubFrame<3u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
-		validationSuccessful = testDetermineHistogram8BitPerChannelSubFrame<4u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker) && validationSuccessful;
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannelSubFrame<1u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannelSubFrame<2u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannelSubFrame<3u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
+		OCEAN_EXPECT_TRUE(validation, testDetermineHistogram8BitPerChannelSubFrame<4u>(testDuration, sourceImageSize.first, sourceImageSize.second, randomGenerator, worker));
 	}
 
 	Log::info() << " ";
-	Log::info() << "Validation of test to determine histograms (8-bit): " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 bool TestHistogram::testContrastLimitedAdaptiveHistogramTileLookupTables(const double testDuration, Worker& worker)
@@ -1100,7 +1099,8 @@ bool TestHistogram::testContrastLimitedAdaptiveHistogramTileLookupTables(const d
 	Log::info() << "Test for CLAHE: computation of tile lookup tables";
 	Log::info() << " ";
 
-	bool validationSuccessful = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const std::vector<std::pair<unsigned int, unsigned int>> sourceImageSizes =
 	{
@@ -1129,13 +1129,13 @@ bool TestHistogram::testContrastLimitedAdaptiveHistogramTileLookupTables(const d
 		const unsigned int horizontalTiles = randomize ? 0u : 8u;
 		const unsigned int verticalTiles = randomize ? 0u : 8u;
 
-		validationSuccessful = testContrastLimitedAdaptiveHistogramTileLookupTables(sourceImageSize.first, sourceImageSize.second, Scalar(clipLimit), horizontalTiles, verticalTiles, testDuration, worker) && validationSuccessful;
+		OCEAN_EXPECT_TRUE(validation, testContrastLimitedAdaptiveHistogramTileLookupTables(sourceImageSize.first, sourceImageSize.second, Scalar(clipLimit), horizontalTiles, verticalTiles, testDuration, worker));
 	}
 
 	Log::info() << " ";
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 bool TestHistogram::testContrastLimitedAdaptiveBilinearInterpolationParameters(const double testDuration)
@@ -1146,8 +1146,7 @@ bool TestHistogram::testContrastLimitedAdaptiveBilinearInterpolationParameters(c
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimeValidation(true);
 
@@ -1176,21 +1175,19 @@ bool TestHistogram::testContrastLimitedAdaptiveBilinearInterpolationParameters(c
 		std::vector<unsigned char> leftFactors_fixed7(sourceImageWidth);
 		CV::ContrastLimitedAdaptiveHistogram::computeLowBilinearInterpolationFactors7BitPrecision(tileLookupCenter2, /* isHorizontal */ true, leftBins.data(), leftFactors_fixed7.data());
 
-		validationSuccessful = validateBilinearInterpolationParameters(leftBins, leftFactors_fixed7, sourceImage.width(), (unsigned int)tileLookupCenter2.binsX()) && validationSuccessful;
+		OCEAN_EXPECT_TRUE(validation, validateBilinearInterpolationParameters(leftBins, leftFactors_fixed7, sourceImage.width(), (unsigned int)tileLookupCenter2.binsX()));
 
 		Indices32 topBins(sourceImageHeight);
 		std::vector<unsigned char> topFactors_fixed7(sourceImageHeight);
 		CV::ContrastLimitedAdaptiveHistogram::computeLowBilinearInterpolationFactors7BitPrecision(tileLookupCenter2, /* isHorizontal */ false, topBins.data(), topFactors_fixed7.data());
 
-		validationSuccessful = validateBilinearInterpolationParameters(topBins, topFactors_fixed7, sourceImage.height(), (unsigned int)tileLookupCenter2.binsY()) && validationSuccessful;
-
-		ocean_assert(validationSuccessful);
+		OCEAN_EXPECT_TRUE(validation, validateBilinearInterpolationParameters(topBins, topFactors_fixed7, sourceImage.height(), (unsigned int)tileLookupCenter2.binsY()));
 	}
 	while (startTimeValidation + testDuration > Timestamp(true));
 
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 bool TestHistogram::validateBilinearInterpolationParameters(const Indices32& lowBins, const std::vector<unsigned char>& lowFactors_fixed7, const unsigned int imageEdgeLength, const unsigned int tilesCount)
@@ -1480,7 +1477,8 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const double testDu
 	Log::info() << "Test for CLAHE: equalization";
 	Log::info() << " ";
 
-	bool validationSuccessful = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const std::vector<std::pair<unsigned int, unsigned int>> sourceImageSizes =
 	{
@@ -1509,13 +1507,13 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const double testDu
 		const unsigned int horizontalTiles = randomize ? 0u : 8u;
 		const unsigned int verticalTiles = randomize ? 0u : 8u;
 
-		validationSuccessful = testContrastLimitedHistogramEqualization(sourceImageSize.first, sourceImageSize.second, Scalar(clipLimit), horizontalTiles, verticalTiles, testDuration, worker) && validationSuccessful;
+		OCEAN_EXPECT_TRUE(validation, testContrastLimitedHistogramEqualization(sourceImageSize.first, sourceImageSize.second, Scalar(clipLimit), horizontalTiles, verticalTiles, testDuration, worker));
 	}
 
 	Log::info() << " ";
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 bool TestHistogram::validateEqualization8BitPerChannel(const unsigned char* const source, const unsigned int width, const unsigned height, const unsigned char* const validationTarget, const Scalar clipLimit, const unsigned int horizontalTiles, const unsigned int verticalTiles, const unsigned int sourcePaddingElements, const unsigned int validationTargetPaddingElements, double* maxError, unsigned char* groundtruth)
@@ -1762,8 +1760,7 @@ bool TestHistogram::testContrastLimitedAdaptiveHistogramTileLookupTables(const u
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	const double maxErrorThresholdMultiple = 1.0;
 	const double maxErrorThreshold = 15.0;
@@ -1861,10 +1858,14 @@ bool TestHistogram::testContrastLimitedAdaptiveHistogramTileLookupTables(const u
 	ocean_assert(totalIterations != 0u);
 	const double ratioIncorrectTileLUTs = (double)incorrectTileLUTs / (double)totalTileLUTs;
 
-	validationSuccessful = ratioIncorrectTileLUTs < 0.02;
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed") << ", max. absolute error: " << String::toAString(maxError, 2u) << ", incorrect tile LUTs ratio: " << String::toAString(ratioIncorrectTileLUTs, 4u) << ", incorrect tile LUTs total: " << incorrectTileLUTs;
+	if (ratioIncorrectTileLUTs >= 0.02)
+	{
+		OCEAN_SET_FAILED(validation);
+	}
 
-	return validationSuccessful;
+	Log::info() << "Validation: " << validation << ", max. absolute error: " << String::toAString(maxError, 2u) << ", incorrect tile LUTs ratio: " << String::toAString(ratioIncorrectTileLUTs, 4u) << ", incorrect tile LUTs total: " << incorrectTileLUTs;
+
+	return validation.succeeded();
 }
 
 bool TestHistogram::testContrastLimitedHistogramEqualization(const unsigned int width0, const unsigned int height0, const Scalar clipLimit0, const unsigned int horizontalTiles0, const unsigned int verticalTiles0, const double testDuration, Worker& worker)
@@ -1872,8 +1873,7 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const unsigned int 
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	double maxError = 0.0;
 
@@ -1931,7 +1931,7 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const unsigned int 
 			performance.stop();
 
 			double error = NumericD::maxValue();
-			validationSuccessful = validateEqualization8BitPerChannel(sourceImage.constdata<uint8_t>(), sourceImage.width(), sourceImage.height(), targetImage.data<uint8_t>(), Scalar(clipLimit), horizontalTiles, verticalTiles, sourceImage.paddingElements(), targetImage.paddingElements(), &error, nullptr /* groundtruth */) && validationSuccessful;
+			OCEAN_EXPECT_TRUE(validation, validateEqualization8BitPerChannel(sourceImage.constdata<uint8_t>(), sourceImage.width(), sourceImage.height(), targetImage.data<uint8_t>(), Scalar(clipLimit), horizontalTiles, verticalTiles, sourceImage.paddingElements(), targetImage.paddingElements(), &error, nullptr /* groundtruth */));
 
 			maxError = std::max(maxError, error);
 		}
@@ -1956,9 +1956,9 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const unsigned int 
 		Log::info() << "Random parameters";
 	}
 
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed") << ", max. absolute error: " << String::toAString(maxError, 2u);
+	Log::info() << "Validation: " << validation << ", max. absolute error: " << String::toAString(maxError, 2u);
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -1977,7 +1977,7 @@ bool TestHistogram::testDetermineHistogram8BitPerChannel(const double testDurati
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
 
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	for (unsigned int workerIteration = 0u; workerIteration < totalWorkerIterations; ++workerIteration)
 	{
@@ -2000,7 +2000,7 @@ bool TestHistogram::testDetermineHistogram8BitPerChannel(const double testDurati
 			const CV::Histogram::Histogram8BitPerChannel<tChannels> histogram = CV::Histogram::determineHistogram8BitPerChannel<tChannels>(randomFrame.constdata<uint8_t>(), randomFrame.width(), randomFrame.height(), randomFrame.paddingElements(), useWorker);
 			performance.stop();
 
-			validationSuccessful = validateDetermineHistogram8BitPerChannel<tChannels>(randomFrame.constdata<uint8_t>(), randomFrame.width(), randomFrame.height(), randomFrame.paddingElements(), 0u, 0u, randomFrame.width(), randomFrame.height(), histogram) && validationSuccessful;
+			OCEAN_EXPECT_TRUE(validation, validateDetermineHistogram8BitPerChannel<tChannels>(randomFrame.constdata<uint8_t>(), randomFrame.width(), randomFrame.height(), randomFrame.paddingElements(), 0u, 0u, randomFrame.width(), randomFrame.height(), histogram));
 		}
 		while (startTimePerformance + testDuration > Timestamp(true));
 	}
@@ -2020,10 +2020,10 @@ bool TestHistogram::testDetermineHistogram8BitPerChannel(const double testDurati
 		Log::info() << "Performance tests disabled because of random image size";
 	}
 
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 	Log::info() << " ";
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 template<unsigned int tChannels>
@@ -2042,7 +2042,7 @@ bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double te
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
 
-	bool validationSuccessful = true;
+	Validation validation(randomGenerator);
 
 	for (unsigned int workerIteration = 0u; workerIteration < totalWorkerIterations; ++workerIteration)
 	{
@@ -2085,7 +2085,7 @@ bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double te
 			const CV::Histogram::Histogram8BitPerChannel<tChannels> histogram = CV::Histogram::determineHistogram8BitPerChannel<tChannels>(randomFrame.constdata<uint8_t>(), randomFrame.width(), randomFrame.height(), subFrameX, subFrameY, subFrameWidth, subFrameHeight, randomFrame.paddingElements(), worker_);
 			performance.stop();
 
-			validationSuccessful = validateDetermineHistogram8BitPerChannel<tChannels>(randomFrame.constdata<uint8_t>(), randomFrame.width(), randomFrame.height(), randomFrame.paddingElements(), subFrameX, subFrameY, subFrameWidth, subFrameHeight, histogram) && validationSuccessful;
+			OCEAN_EXPECT_TRUE(validation, validateDetermineHistogram8BitPerChannel<tChannels>(randomFrame.constdata<uint8_t>(), randomFrame.width(), randomFrame.height(), randomFrame.paddingElements(), subFrameX, subFrameY, subFrameWidth, subFrameHeight, histogram));
 		}
 		while (startTimePerformance + testDuration > Timestamp(true));
 	}
@@ -2105,10 +2105,10 @@ bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double te
 		Log::info() << "Performance tests disabled because of random image size";
 	}
 
-	Log::info() << "Validation: " << (validationSuccessful ? "successful" : "failed");
+	Log::info() << "Validation: " << validation;
 	Log::info() << " ";
 
-	return validationSuccessful;
+	return validation.succeeded();
 }
 
 template<unsigned int tChannels>

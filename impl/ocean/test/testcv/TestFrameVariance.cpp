@@ -19,6 +19,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -118,11 +119,10 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 
 	Log::info() << "Testing 8 bit with frame size " << width << "x" << height << " and window " << window << ", using '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
-
 	const unsigned int window_2 = window / 2u;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -150,31 +150,18 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 				return false;
 			}
 
-			if (!localResult)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, localResult);
 
-			if (!validateDeviation1Channel<T, uint8_t>(frame, deviationFrame, window))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateDeviation1Channel<T, uint8_t>(frame, deviationFrame, window));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned int height, const double testDuration)
@@ -182,72 +169,66 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 	Log::info() << "Frame statistics (mean, variance, standard deviation):";
 	Log::info() << " ";
 
-	bool succeeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	succeeded = succeeded && testFrameStatistics<int8_t, int64_t, int32_t, 1u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<int8_t, int64_t, int32_t, 1u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<int8_t, int64_t, int32_t, 2u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<int8_t, int64_t, int32_t, 2u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<int8_t, int64_t, int32_t, 3u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<int8_t, int64_t, int32_t, 3u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<int8_t, int64_t, int32_t, 4u>(width, height, testDuration);
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 1u>(width, height, testDuration);
-	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 2u>(width, height, testDuration);
-	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 3u>(width, height, testDuration);
-	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 4u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<int8_t, int64_t, int32_t, 4u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 1u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 1u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 2u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 2u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 3u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 3u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, uint32_t, 4u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 4u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, double, 1u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 1u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, double, 2u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 2u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, double, 3u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 3u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<uint8_t, uint64_t, double, 4u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, uint32_t, 4u>(width, height, testDuration));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	succeeded = succeeded && testFrameStatistics<float, double, double, 1u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, double, 1u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<float, double, double, 2u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, double, 2u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<float, double, double, 3u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, double, 3u>(width, height, testDuration));
 	Log::info() << " ";
-	succeeded = succeeded && testFrameStatistics<float, double, double, 4u>(width, height, testDuration);
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<uint8_t, uint64_t, double, 4u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<float, double, double, 1u>(width, height, testDuration));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<float, double, double, 2u>(width, height, testDuration));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<float, double, double, 3u>(width, height, testDuration));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testFrameStatistics<float, double, double, 4u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	if (succeeded)
-	{
-		Log::info() << "Frame statistics: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame statistics: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 template <typename TElementType, typename TSummationType, typename TMultiplicationType, unsigned int tChannels>
@@ -256,9 +237,8 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	bool succeeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	HighPerformanceStatistic performance;
 
 	Log::info() << "Image size: " << width << "x" << height << " px";
@@ -304,7 +284,7 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 			double currentErrorVariance = 0.0;
 			double currentErrorStandardDeviation = 0.0;
 
-			succeeded = succeeded && validateFrameStatistics<TElementType, tChannels>(frame.constdata<TElementType>(), frame.width(), frame.height(), frame.paddingElements(), returnMean, returnVariance, returnStandardDeviation, currentErrorMean, currentErrorVariance, currentErrorStandardDeviation);
+			OCEAN_EXPECT_TRUE(validation, validateFrameStatistics<TElementType, tChannels>(frame.constdata<TElementType>(), frame.width(), frame.height(), frame.paddingElements(), returnMean, returnVariance, returnStandardDeviation, currentErrorMean, currentErrorVariance, currentErrorStandardDeviation));
 
 			maxErrorMean = std::max(maxErrorMean, currentErrorMean);
 			maxErrorVariance = std::max(maxErrorMean, currentErrorVariance);
@@ -316,12 +296,9 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 	Log::info() << "Performance: " << String::toAString(performance.bestMseconds(), 3u) << "/" << String::toAString(performance.medianMseconds(), 3u) << "/" << String::toAString(performance.worstMseconds(), 3u) << " ms";
 	Log::info() << "Max. errors (mean/variance/stddev): " << String::toAString(maxErrorMean, 3u) << "/" << String::toAString(maxErrorVariance, 3u) << "/" << String::toAString(maxErrorStandardDeviation, 3u);
 
-	if (!succeeded)
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TVariance>
