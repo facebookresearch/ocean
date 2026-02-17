@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestFrameChangeDetector.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/Frame.h"
 
@@ -117,7 +118,7 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 	Log::info() << (nonStaticInput ? "Non-static" : "Static") << " input test (with" << (simulateDeviceMotion ? "" : "out") << " device motion, with" << (forcedKeyframes ? "" : "out") << " forced keyframes):";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -165,14 +166,14 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 		// The detector should only be invalid if the spatial bin size is invalid, or if the specified times between keyframes were invalid.
 		if (!detector.isValid())
 		{
-			allSucceeded = (spatialBinSize < 4u || minimumTimeBetweenKeyframes >= preferredMaximumTimeBetweenKeyframes || preferredMaximumTimeBetweenKeyframes > absoluteMaximumTimeBetweenKeyframes) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, spatialBinSize < 4u || minimumTimeBetweenKeyframes >= preferredMaximumTimeBetweenKeyframes || preferredMaximumTimeBetweenKeyframes > absoluteMaximumTimeBetweenKeyframes);
 			continue;
 		}
 
 		++numberTests;
 
 		// Use multi-core processing in ~50% of tests.
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? nullptr : &worker;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? nullptr : &worker;
 
 		// Note that the detector will prefer not to create keyframes if large motion has occurred in the span (<timestamp of frame before the current frame>, now].
 		bool priorFrameHadLargeDeviceMotion = false;
@@ -181,7 +182,8 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 		Timestamp currentTimestamp = Timestamp(true);
 		Timestamp lastKeyframeTimestamp(currentTimestamp - Timestamp(2.0 * (forcedKeyframes ? options.absoluteMaximumTimeBetweenKeyframes : secondsPerFrame))); // valid, but guaranteed to be stale
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 		CV::CVUtilities::randomizeFrame(yFrame, false, &randomGenerator);
@@ -208,8 +210,11 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 				const Scalar minimumRotation = largeRotation ? Scalar(1.0) : Scalar(0.0);
 				const Scalar maximumRotation = largeRotation ? Scalar(3.0) : Scalar(1.0) - Numeric::weakEps();
 
-				detector.addAccelerationSample(Random::vector3(randomGenerator) * Random::scalar(randomGenerator, minimumAcceleration, maximumAcceleration), accelerometerTimestamp);
-				detector.addGyroSample(Random::vector3(randomGenerator) * Random::scalar(randomGenerator, minimumRotation, maximumRotation), gyroscopeTimestamp);
+				const Vector3 accelerationDirection = Random::vector3(randomGenerator);
+				detector.addAccelerationSample(accelerationDirection * Random::scalar(randomGenerator, minimumAcceleration, maximumAcceleration), accelerometerTimestamp);
+
+				const Vector3 gyroDirection = Random::vector3(randomGenerator);
+				detector.addGyroSample(gyroDirection * Random::scalar(randomGenerator, minimumRotation, maximumRotation), gyroscopeTimestamp);
 
 				// The detector will internally disregard any device motion registered before the first frame.
 				if (i > 0u)
@@ -235,7 +240,7 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 			// Also, we have a guaranteed keyframe if (1) the absolute maximum time between keyframes was reached or (2) the preferred maximum time was reached and the last two frames did not have large motion.
 			if (i == 0u || maximumTimeReached)
 			{
-				allSucceeded = (result == FrameChangeDetector::FrameChangeResult::CHANGE_DETECTED) && allSucceeded;
+				OCEAN_EXPECT_EQUAL(validation, result, FrameChangeDetector::FrameChangeResult::CHANGE_DETECTED);
 				lastKeyframeTimestamp = currentTimestamp;
 				++numberFramesWithChange;
 				++numberForcedKeyframes;
@@ -243,11 +248,11 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 			else if (!minimumTimeReached || !nonStaticInput || frameHasLargeDeviceMotion || priorFrameHadLargeDeviceMotion)
 			{
 				// Otherwise, we guarantee "not a keyframe" if the minimum time between keyframes wasn't reached, the frame is static, or large motion was recently observed.
-				allSucceeded = (result == FrameChangeDetector::FrameChangeResult::NO_CHANGE_DETECTED) && allSucceeded;
+				OCEAN_EXPECT_EQUAL(validation, result, FrameChangeDetector::FrameChangeResult::NO_CHANGE_DETECTED);
 			}
 			else
 			{
-				allSucceeded = (result == FrameChangeDetector::FrameChangeResult::CHANGE_DETECTED) && allSucceeded;
+				OCEAN_EXPECT_EQUAL(validation, result, FrameChangeDetector::FrameChangeResult::CHANGE_DETECTED);
 				lastKeyframeTimestamp = currentTimestamp;
 				++numberFramesWithChange;
 			}
@@ -278,23 +283,16 @@ bool TestFrameChangeDetector::testInput(const double testDuration, bool nonStati
 	// Static inputs only have forced keyframes, and they only have one keyframe without forcing.
 	if (!nonStaticInput)
 	{
-		allSucceeded = (numberFramesWithChange == numberForcedKeyframes) && allSucceeded;
+		OCEAN_EXPECT_EQUAL(validation, numberFramesWithChange, numberForcedKeyframes);
 		if (!forcedKeyframes)
 		{
-			allSucceeded = (numberFramesWithChange == numberTests) && allSucceeded;
+			OCEAN_EXPECT_EQUAL(validation, numberFramesWithChange, numberTests);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestDetector

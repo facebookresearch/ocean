@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestFASTDetector.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -106,7 +107,8 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 
 	Log::info() << "Testing FAST detector with standard strength:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int threshold : {20u, 30u, 90u, 150u})
 	{
@@ -135,8 +137,8 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 
 					if (randomIteration)
 					{
-						const unsigned int testWidth = RandomI::random(9u, 1280u);
-						const unsigned int testHeight = RandomI::random(9u, 720u);
+						const unsigned int testWidth = RandomI::random(randomGenerator, 9u, 1280u);
+						const unsigned int testHeight = RandomI::random(randomGenerator, 9u, 720u);
 
 						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 					}
@@ -149,10 +151,7 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 						const bool localResult = CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(testFrame, threshold, false, preciseScoring, features, useWorker);
 					performance.stopIf(!randomIteration);
 
-					if (!localResult)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, localResult);
 
 					if (foundFeatures == size_t(-1))
 					{
@@ -162,10 +161,7 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 
 					std::sort(features.begin(), features.end(), sortPoints);
 
-					if (!validate(testFrame, threshold, features))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validate(testFrame, threshold, features));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -181,16 +177,9 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double testDuration, Worker& worker)
@@ -206,7 +195,8 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 
 	Log::info() << "Testing FAST detector with precise strength:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int threshold : {20u, 30u, 90u, 150u})
 	{
@@ -238,8 +228,8 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 
 					if (randomIteration)
 					{
-						const unsigned int testWidth = RandomI::random(9u, 1280u);
-						const unsigned int testHeight = RandomI::random(9u, 720u);
+						const unsigned int testWidth = RandomI::random(randomGenerator, 9u, 1280u);
+						const unsigned int testHeight = RandomI::random(randomGenerator, 9u, 720u);
 
 						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 					}
@@ -252,10 +242,7 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 						const bool localResult = CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(testFrame, threshold, false, preciseScoring, features, useWorker);
 					performance.stopIf(!randomIteration);
 
-					if (!localResult)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, localResult);
 
 					if (foundFeatures == size_t(-1))
 					{
@@ -280,21 +267,17 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 			while (!startTimestamp.hasTimePassed(testDuration));
 		}
 
-		if (singlecoreFeatures.size() != multicoreFeatures.size())
-		{
-			allSucceeded = false;
-		}
-		else
+		OCEAN_EXPECT_EQUAL(validation, singlecoreFeatures.size(), multicoreFeatures.size());
+
+		if (singlecoreFeatures.size() == multicoreFeatures.size())
 		{
 			std::sort(singlecoreFeatures.begin(), singlecoreFeatures.end(), sortPoints);
 			std::sort(multicoreFeatures.begin(), multicoreFeatures.end(), sortPoints);
 
 			for (unsigned int n = 0u; n < multicoreFeatures.size(); ++n)
 			{
-				if (singlecoreFeatures[n] != multicoreFeatures[n] || singlecoreFeatures[n].strength() != multicoreFeatures[n].strength())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, singlecoreFeatures[n], multicoreFeatures[n]);
+				OCEAN_EXPECT_EQUAL(validation, singlecoreFeatures[n].strength(), multicoreFeatures[n].strength());
 			}
 		}
 
@@ -308,16 +291,9 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFASTDetector::validate(const Frame& yFrame, const unsigned int threshold, const CV::Detector::FASTFeatures& features)

@@ -9,6 +9,7 @@
 #include "ocean/test/testcv/testdetector/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -179,42 +180,30 @@ bool TestHarrisDetector::testThreshold(const double testDuration)
 
 	Log::info() << "Testing Harris detector threshold:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int threshold = RandomI::random(512u);
+		const unsigned int threshold = RandomI::random(randomGenerator, 512u);
 
 		const int32_t internalThreshold = CV::Detector::HarrisCornerDetector::determineInternalThreshold(threshold);
 
 		const int32_t testInternalThreshold = int32_t((threshold * threshold) / 8u) * int32_t((threshold * threshold) / 8u);
 
-		if (internalThreshold != testInternalThreshold)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, internalThreshold, testInternalThreshold);
 
 		const int32_t externalThreshold = CV::Detector::HarrisCornerDetector::determineThreshold(testInternalThreshold);
 
-		if (externalThreshold < 0 || std::abs(externalThreshold - int32_t(threshold)) > 4)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, externalThreshold >= 0 && std::abs(externalThreshold - int32_t(threshold)) <= 4);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 
 }
 
@@ -224,7 +213,8 @@ bool TestHarrisDetector::testPixelAccuracy(const double testDuration, Worker& wo
 
 	Log::info() << "Testing Harris detector with pixel accuracy:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -257,16 +247,16 @@ bool TestHarrisDetector::testPixelAccuracy(const double testDuration, Worker& wo
 					}
 					else
 					{
-						yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u);
+						yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
 						ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 					}
 				}
 				else
 				{
-					const unsigned int width = RandomI::random(10u, 1920u);
-					const unsigned int height = RandomI::random(7u, 1080u);
+					const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+					const unsigned int height = RandomI::random(randomGenerator, 7u, 1080u);
 
-					yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u);
+					yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
 					ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 				}
 
@@ -295,16 +285,15 @@ bool TestHarrisDetector::testPixelAccuracy(const double testDuration, Worker& wo
 						}
 					}
 
-					if (yFrame.pixels() >= 100u * 100u && !validatePixelAccuracy(yFrame, threshold, features))
+					if (yFrame.pixels() >= 100u * 100u)
 					{
-						allSucceeded = false;
+						OCEAN_EXPECT_TRUE(validation, validatePixelAccuracy(yFrame, threshold, features));
 					}
 				}
 
-				if (maxWorkerIterations != 1u && foundFeaturesSinglecore != foundFeaturesMulticore)
+				if (maxWorkerIterations != 1u)
 				{
-					ocean_assert(false && "This must never happen!");
-					allSucceeded = false;
+					OCEAN_EXPECT_EQUAL(validation, foundFeaturesSinglecore, foundFeaturesMulticore);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -323,16 +312,9 @@ bool TestHarrisDetector::testPixelAccuracy(const double testDuration, Worker& wo
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::testPixelAccuracyCorners(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -341,25 +323,27 @@ bool TestHarrisDetector::testPixelAccuracyCorners(const unsigned int width, cons
 
 	Log::info() << "Testing Harris detector for four corners with pixel accuracy:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-		CV::CVUtilities::randomizeFrame(yFrame, false);
+		CV::CVUtilities::randomizeFrame(yFrame, false, &randomGenerator);
 		yFrame.setValue(0xFF);
 
 		// we create a black rectangle and detect the four corners
 
-		const unsigned int left = RandomI::random(5u, width / 2u);
-		const unsigned int top = RandomI::random(5u, height / 2u);
+		const unsigned int left = RandomI::random(randomGenerator, 5u, width / 2u);
+		const unsigned int top = RandomI::random(randomGenerator, 5u, height / 2u);
 
-		const unsigned int right = RandomI::random(left + 5u, width - 6u);
-		const unsigned int bottom = RandomI::random(top + 5u, height - 6u);
+		const unsigned int right = RandomI::random(randomGenerator, left + 5u, width - 6u);
+		const unsigned int bottom = RandomI::random(randomGenerator, top + 5u, height - 6u);
 
 		yFrame.subFrame(left, top, right - left + 1u, bottom - top + 1u).setValue(0x00);
 
@@ -403,23 +387,13 @@ bool TestHarrisDetector::testPixelAccuracyCorners(const unsigned int width, cons
 			}
 		}
 
-		if (!foundTopLeft || !foundTopRight || !foundBottomLeft || !foundBottomRight)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, foundTopLeft && foundTopRight && foundBottomLeft && foundBottomRight);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::testSubPixelAccuracy(const double testDuration, Worker& worker, const Frame& yFrameTest)
@@ -428,7 +402,8 @@ bool TestHarrisDetector::testSubPixelAccuracy(const double testDuration, Worker&
 
 	Log::info() << "Testing Harris detector with sub-pixel accuracy:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -461,16 +436,16 @@ bool TestHarrisDetector::testSubPixelAccuracy(const double testDuration, Worker&
 					}
 					else
 					{
-						yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u);
+						yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
 						ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 					}
 				}
 				else
 				{
-					const unsigned int width = RandomI::random(10u, 1920u);
-					const unsigned int height = RandomI::random(7u, 1080u);
+					const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+					const unsigned int height = RandomI::random(randomGenerator, 7u, 1080u);
 
-					yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u);
+					yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
 					ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 				}
 
@@ -500,10 +475,9 @@ bool TestHarrisDetector::testSubPixelAccuracy(const double testDuration, Worker&
 					}
 				}
 
-				if (maxWorkerIterations != 1u && foundFeaturesSinglecore != foundFeaturesMulticore)
+				if (maxWorkerIterations != 1u)
 				{
-					ocean_assert(false && "This must never happen!");
-					allSucceeded = false;
+					OCEAN_EXPECT_EQUAL(validation, foundFeaturesSinglecore, foundFeaturesMulticore);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -522,16 +496,9 @@ bool TestHarrisDetector::testSubPixelAccuracy(const double testDuration, Worker&
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::testSubFrameDetection(const double testDuration, Worker& worker, const Frame& yFrameTest)
@@ -540,7 +507,8 @@ bool TestHarrisDetector::testSubFrameDetection(const double testDuration, Worker
 
 	Log::info() << "Sub-frame detection test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -558,45 +526,39 @@ bool TestHarrisDetector::testSubFrameDetection(const double testDuration, Worker
 				}
 				else
 				{
-					yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u);
+					yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
 					ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 				}
 			}
 			else
 			{
-				const unsigned int width = RandomI::random(10u * 3u, 1920u);
-				const unsigned int height = RandomI::random(7u * 3u, 1080u);
+				const unsigned int width = RandomI::random(randomGenerator, 10u * 3u, 1920u);
+				const unsigned int height = RandomI::random(randomGenerator, 7u * 3u, 1080u);
 
-				yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u);
+				yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
 				ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 			}
 
-			const unsigned int subFrameLeft = RandomI::random(yFrame.width() - 10u);
-			const unsigned int subFrameTop = RandomI::random(yFrame.height() - 7u);
+			const unsigned int subFrameLeft = RandomI::random(randomGenerator, yFrame.width() - 10u);
+			const unsigned int subFrameTop = RandomI::random(randomGenerator, yFrame.height() - 7u);
 
-			const unsigned int subFrameWidth = RandomI::random(10u, yFrame.width() - subFrameLeft);
-			const unsigned int subFrameHeight = RandomI::random(7u, yFrame.height() - subFrameTop);
+			const unsigned int subFrameWidth = RandomI::random(randomGenerator, 10u, yFrame.width() - subFrameLeft);
+			const unsigned int subFrameHeight = RandomI::random(randomGenerator, 7u, yFrame.height() - subFrameTop);
 
 			ocean_assert(subFrameLeft + subFrameWidth <= yFrame.width());
 			ocean_assert(subFrameTop + subFrameHeight <= yFrame.height());
 
-			Worker* useWorker = RandomI::random(1u) == 0u ? &worker : nullptr;
+			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 			CV::Detector::HarrisCorners cornersPixelAccuracy;
-			if (!CV::Detector::HarrisCornerDetector::detectCorners(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, 20u, true, cornersPixelAccuracy, false, useWorker))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, CV::Detector::HarrisCornerDetector::detectCorners(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, 20u, true, cornersPixelAccuracy, false, useWorker));
 
 			CV::Detector::HarrisCorners cornersSubPixelAccuracy;
-			if (!CV::Detector::HarrisCornerDetector::detectCorners(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, 20u, true, cornersSubPixelAccuracy, true, useWorker))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, CV::Detector::HarrisCornerDetector::detectCorners(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, 20u, true, cornersSubPixelAccuracy, true, useWorker));
 
 			if (cornersPixelAccuracy.size() != cornersSubPixelAccuracy.size())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
@@ -624,26 +586,16 @@ bool TestHarrisDetector::testSubFrameDetection(const double testDuration, Worker
 						}
 					}
 
-					if (!found)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, found);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::testCheckerboardDetection(const double testDuration, Worker& worker)
@@ -652,38 +604,37 @@ bool TestHarrisDetector::testCheckerboardDetection(const double testDuration, Wo
 
 	Log::info() << "Checkerboard detection test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int horizontalElements = RandomI::random(2u, 64u);
-		const unsigned int verticalElements = RandomI::random(2u, 64u);
+		const unsigned int horizontalElements = RandomI::random(randomGenerator, 2u, 64u);
+		const unsigned int verticalElements = RandomI::random(randomGenerator, 2u, 64u);
 
-		const unsigned int elementWidth = RandomI::random(8u, 30u);
-		const unsigned int elementHeight = RandomI::random(8u, 30u);
+		const unsigned int elementWidth = RandomI::random(randomGenerator, 8u, 30u);
+		const unsigned int elementHeight = RandomI::random(randomGenerator, 8u, 30u);
 
 		const unsigned int width = horizontalElements * elementWidth;
 		const unsigned int height = verticalElements * elementHeight;
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 
-		const uint8_t bright = uint8_t(RandomI::random(180, 255));
-		const uint8_t dark = uint8_t(RandomI::random(0, 90));
+		const uint8_t bright = uint8_t(RandomI::random(randomGenerator, 180, 255));
+		const uint8_t dark = uint8_t(RandomI::random(randomGenerator, 0, 90));
 
 		const Frame checkerboardImage = CV::CVUtilities::createCheckerboardImage(width, height, horizontalElements, verticalElements, paddingElements, bright, dark);
 
-		const bool frameIsDistorted = RandomI::random(1u) == 0u;
-		const bool determineExactPosition = RandomI::random(1u) == 0u;
+		const bool frameIsDistorted = RandomI::boolean(randomGenerator);
+		const bool determineExactPosition = RandomI::boolean(randomGenerator);
 
-		Worker* useWorker = RandomI::random(1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		CV::Detector::HarrisCorners corners;
-		if (!CV::Detector::HarrisCornerDetector::detectCorners(checkerboardImage, 30u, frameIsDistorted, corners, determineExactPosition, useWorker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, CV::Detector::HarrisCornerDetector::detectCorners(checkerboardImage, 30u, frameIsDistorted, corners, determineExactPosition, useWorker));
 
 		if (corners.size() == (horizontalElements - 1u) * (verticalElements - 1u))
 		{
@@ -704,36 +655,21 @@ bool TestHarrisDetector::testCheckerboardDetection(const double testDuration, Wo
 				// center between both elements: elementWidth - 0.5
 				const Vector2 idealLocation = Vector2(Scalar(elementWidth * xIndex) - Scalar(0.5), Scalar(elementHeight * yIndex) - Scalar(0.5));
 
-				if (location.distance(idealLocation) >= 2)
-				{
-					// the location of the detected corner is not accurate
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, location.distance(idealLocation) < 2);
 			}
 
-			if (indexPairs.size() != corners.size())
-			{
-				// we have detected a corner several times
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, indexPairs.size(), corners.size());
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& worker)
@@ -742,9 +678,8 @@ bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& 
 
 	Log::info() << "Harris vote pixel test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -799,10 +734,7 @@ bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& 
 
 				for (size_t n = 0; n < pixelVotes.size(); ++n)
 				{
-					if (pixelVotes[n] != testVote && pixelVotes[n] != testVoteRounded)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, pixelVotes[n] == testVote || pixelVotes[n] == testVoteRounded);
 				}
 			}
 		}
@@ -821,16 +753,9 @@ bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& 
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Response validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Response validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& worker, const Frame& yFrameTest)
@@ -839,7 +764,8 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 
 	Log::info() << "Harris vote frame test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -859,16 +785,16 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 				}
 				else
 				{
-					yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u);
+					yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
 					ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 				}
 			}
 			else
 			{
-				const unsigned int width = RandomI::random(10u, 1920u);
-				const unsigned int height = RandomI::random(7u, 1080u);
+				const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+				const unsigned int height = RandomI::random(randomGenerator, 7u, 1080u);
 
-				yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u);
+				yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
 				ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 			}
 
@@ -876,11 +802,11 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 			{
 				Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
 
-				Frame votesFrame = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()));
+				Frame votesFrame = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()), &randomGenerator);
 
 				const Frame copyVotesFrame(votesFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const bool setBorderPixels = RandomI::random(1u) == 0u;
+				const bool setBorderPixels = RandomI::boolean(randomGenerator);
 
 				CV::Detector::HarrisCornerDetector::harrisVotesFrame(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), votesFrame.data<int32_t>(), votesFrame.paddingElements(), useWorker, setBorderPixels);
 
@@ -899,17 +825,11 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 						const int32_t testVote = harrisVote3x3<false>(yFrame, x, y);
 						const int32_t testVoteRounded = harrisVote3x3<true>(yFrame, x, y);
 
-						if (vote != testVote && vote != testVoteRounded)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, vote == testVote || vote == testVoteRounded);
 
 						const int32_t pixelVote = CV::Detector::HarrisCornerDetector::harrisVotePixel(yFrame.constdata<uint8_t>(), yFrame.width(), x, y, yFrame.paddingElements());
 
-						if (pixelVote != vote)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, pixelVote, vote);
 					}
 				}
 
@@ -917,28 +837,20 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 				{
 					for (unsigned int x = 0u; x < votesFrame.width(); ++x)
 					{
-						if (votesFrame.constpixel<int32_t>(x, 0u)[0] != 0 || votesFrame.constpixel<int32_t>(x, 1u)[0] != 0)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, 0u)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, 1u)[0], 0);
 
-						if (votesFrame.constpixel<int32_t>(x, votesFrame.height() - 2u)[0] != 0 || votesFrame.constpixel<int32_t>(x, votesFrame.height() - 1u)[0] != 0)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, votesFrame.height() - 2u)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, votesFrame.height() - 1u)[0], 0);
 					}
 
 					for (unsigned int y = 0u; y < votesFrame.height(); ++y)
 					{
-						if (votesFrame.constpixel<int32_t>(0u, y)[0] != 0 || votesFrame.constpixel<int32_t>(1u, y)[0] != 0)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(0u, y)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(1u, y)[0], 0);
 
-						if (votesFrame.constpixel<int32_t>(votesFrame.width() - 2u, y)[0] != 0 || votesFrame.constpixel<int32_t>(votesFrame.width() - 1u, y)[0] != 0)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(votesFrame.width() - 2u, y)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(votesFrame.width() - 1u, y)[0], 0);
 					}
 				}
 			}
@@ -946,16 +858,9 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Response validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Response validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestHarrisDetector::validatePixelAccuracy(const Frame& yFrame, const unsigned int threshold, const CV::Detector::HarrisCorners& features)

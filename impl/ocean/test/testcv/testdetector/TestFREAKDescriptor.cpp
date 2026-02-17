@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestFREAKDescriptor.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -98,9 +99,8 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 	Log::info() << "Testing creation of blurred frame pyramid:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -130,10 +130,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 			for (unsigned int y = 0u; y < yFrame.height(); ++y)
 			{
-				if (memcmp(yFrame.constrow<void>(y), blurredFramePyramid.finestLayer().constrow<void>(y), yFrame.planeWidthBytes(0u)) != 0)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, memcmp(yFrame.constrow<void>(y), blurredFramePyramid.finestLayer().constrow<void>(y), yFrame.planeWidthBytes(0u)), 0);
 			}
 
 			// the remaining layers are based on the blurred version of the finer pyramid layer and then downsampled
@@ -144,10 +141,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 			{
 				if (kernelWidth <= finerLayer.width() && kernelHeight <= finerLayer.height()) // we skip the blur if the layer is already too small
 				{
-					if (!CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(finerLayer.data<uint8_t>(), finerLayer.width(), finerLayer.height(), finerLayer.channels(), finerLayer.paddingElements(), kernelWidth, kernelHeight, -1.0f, &worker))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(finerLayer.data<uint8_t>(), finerLayer.width(), finerLayer.height(), finerLayer.channels(), finerLayer.paddingElements(), kernelWidth, kernelHeight, -1.0f, &worker));
 				}
 
 				const CV::FramePyramid twoLayerPyramid(CV::FramePyramid::DM_FILTER_11, std::move(finerLayer), 2u, &worker);
@@ -159,10 +153,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 				for (unsigned int y = 0u; y < blurredFrameCoarserLayer.height(); ++y)
 				{
-					if (memcmp(testCoarserLayer.constrow<void>(y), blurredFrameCoarserLayer.constrow<void>(y), testCoarserLayer.planeWidthBytes(0u)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(testCoarserLayer.constrow<void>(y), blurredFrameCoarserLayer.constrow<void>(y), testCoarserLayer.planeWidthBytes(0u)), 0);
 				}
 
 				finerLayer = std::move(testCoarserLayer);
@@ -170,21 +161,14 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: successful";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 // Explicit instantiations of the test of the FREAK descriptor class

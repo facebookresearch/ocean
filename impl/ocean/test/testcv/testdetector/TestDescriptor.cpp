@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestDescriptor.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
@@ -60,9 +61,8 @@ bool TestDescriptor::testCalculateHammingDistance(const double testDuration)
 
 	Log::info() << "Test calculateHammingDistance():";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -109,13 +109,10 @@ bool TestDescriptor::testCalculateHammingDistance(const double testDuration)
 
 				default:
 					ocean_assert(false && "Invalid bits!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 			}
 
-			if (hammingDistance > nBits)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, hammingDistance, nBits);
 
 			unsigned int counter = 0u;
 
@@ -136,26 +133,16 @@ bool TestDescriptor::testCalculateHammingDistance(const double testDuration)
 				}
 			}
 
-			if (hammingDistance != counter)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, hammingDistance, counter);
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
