@@ -17,6 +17,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -109,27 +110,21 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 	Log::info() << "Pixel interpolation test with 7bit precision:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testInterpolatePixel8BitPerChannel<float>(CV::PC_TOP_LEFT, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<float>(CV::PC_TOP_LEFT, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixel8BitPerChannel<float>(CV::PC_CENTER, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<float>(CV::PC_CENTER, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixel8BitPerChannel<double>(CV::PC_TOP_LEFT, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<double>(CV::PC_TOP_LEFT, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixel8BitPerChannel<double>(CV::PC_CENTER, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<double>(CV::PC_CENTER, testDuration));
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Pixel interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Pixel interpolation test FAILED!";
-	}
+	Log::info() << "Pixel interpolation test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TScalar>
@@ -149,8 +144,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 	}
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -186,7 +180,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 				if (!CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::Comfort::interpolatePixel8BitPerChannel(frame.constdata<uint8_t>(), frame.channels(),frame.width(), frame.height(), frame.paddingElements(), pixelCenter, position, resultPixel.data()))
 				{
 					ocean_assert(false && "This should never happenn!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (lastValue != resultPixel.back())
@@ -197,14 +191,11 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 
 				if (interpolatePixel8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, pixelCenter, testPixel.data()))
 				{
-					if (memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)), 0);
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -225,7 +216,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 				if (!CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::Comfort::interpolatePixel8BitPerChannel(frame.constdata<uint8_t>(), frame.channels(),frame.width(), frame.height(), frame.paddingElements(), pixelCenter, position, resultPixel.data()))
 				{
 					ocean_assert(false && "This should never happenn!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (lastValue != resultPixel.back())
@@ -236,14 +227,11 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 
 				if (interpolatePixel8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, pixelCenter, testPixel.data()))
 				{
-					if (memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)), 0);
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -264,7 +252,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 				if (!CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::Comfort::interpolatePixel8BitPerChannel(frame.constdata<uint8_t>(), frame.channels(),frame.width(), frame.height(), frame.paddingElements(), pixelCenter, position, resultPixel.data()))
 				{
 					ocean_assert(false && "This should never happenn!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (lastValue != resultPixel.back())
@@ -275,14 +263,11 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 
 				if (interpolatePixel8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, pixelCenter, testPixel.data()))
 				{
-					if (memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)), 0);
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -303,7 +288,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 				if (!CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::Comfort::interpolatePixel8BitPerChannel(frame.constdata<uint8_t>(), frame.channels(),frame.width(), frame.height(), frame.paddingElements(), pixelCenter, position, resultPixel.data()))
 				{
 					ocean_assert(false && "This should never happenn!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (lastValue != resultPixel.back())
@@ -314,30 +299,20 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 
 				if (interpolatePixel8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, pixelCenter, testPixel.data()))
 				{
-					if (memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), channels * sizeof(uint8_t)), 0);
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerChannel(const unsigned int width, const unsigned int height, const double testDuration)
@@ -345,27 +320,28 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 	Log::info() << "Infinite border interpolation test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testInterpolateInfiniteBorder8BitPerChannel<1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateInfiniteBorder8BitPerChannel<2u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolateInfiniteBorder8BitPerChannel<1u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateInfiniteBorder8BitPerChannel<3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolateInfiniteBorder8BitPerChannel<2u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateInfiniteBorder8BitPerChannel<4u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolateInfiniteBorder8BitPerChannel<3u>(width, height, testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateInfiniteBorder8BitPerChannel<5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolateInfiniteBorder8BitPerChannel<4u>(width, height, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testInterpolateInfiniteBorder8BitPerChannel<5u>(width, height, testDuration));
+
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -376,8 +352,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 	Log::info() << "... with " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -407,10 +382,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 					CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::interpolateInfiniteBorder8BitPerChannel<tChannels>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), position, resultPixel.data());
 					infiniteBorderInterpolation8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, testPixel.data());
 
-					if (memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)), 0);
 				}
 
 				{
@@ -423,10 +395,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 					CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::interpolateInfiniteBorder8BitPerChannel<tChannels>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), position, resultPixel.data());
 					infiniteBorderInterpolation8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, testPixel.data());
 
-					if (memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)), 0);
 				}
 
 				{
@@ -439,10 +408,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 					CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::interpolateInfiniteBorder8BitPerChannel<tChannels>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), position, resultPixel.data());
 					infiniteBorderInterpolation8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, testPixel.data());
 
-					if (memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)), 0);
 				}
 
 				{
@@ -455,26 +421,16 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 					CV::FrameInterpolatorBilinearAlpha<tAlphaAtFront, tTransparentIs0xFF>::interpolateInfiniteBorder8BitPerChannel<tChannels>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), position, resultPixel.data());
 					infiniteBorderInterpolation8BitPerChannel(frame, tAlphaAtFront, tTransparentIs0xFF, position, testPixel.data());
 
-					if (memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(resultPixel.data(), testPixel.data(), tChannels * sizeof(uint8_t)), 0);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TScalar>

@@ -16,6 +16,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -222,7 +223,8 @@ bool TestFrameInterpolator::testResize(const double testDuration, Worker& worker
 
 	ocean_assert(sourceResolutions.size() == targetResolutions.size());
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 0u; n < sourceResolutions.size(); ++n)
 	{
@@ -235,49 +237,49 @@ bool TestFrameInterpolator::testResize(const double testDuration, Worker& worker
 		const unsigned int targetWidth = targetResolutions[n].first;
 		const unsigned int targetHeight = targetResolutions[n].second;
 
-		allSucceeded = testResize<1u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<1u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<2u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<2u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<3u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<3u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<4u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<4u, CV::FrameInterpolator::RM_NEAREST_PIXEL>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		allSucceeded = testResize<1u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<1u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<2u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<2u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<3u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<3u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<4u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<4u, CV::FrameInterpolator::RM_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		allSucceeded = testResize<1u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<1u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<2u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<2u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<3u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<3u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<4u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<4u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		allSucceeded = testResize<1u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<1u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<2u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<2u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<3u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<3u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 		Log::info() << " ";
-		allSucceeded = testResize<4u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize<4u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(sourceWidth, sourceHeight, targetWidth, targetHeight, testDuration, worker));
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, CV::FrameInterpolator::ResizeMethod tResizeMethod>
@@ -303,8 +305,7 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 	Log::info() << "... for '" << resizeMethodStrings[size_t(tResizeMethod)] << "' resizing " << sourceWidth << "x" << sourceHeight << " -> " << targetWidth << "x" << targetHeight << " with " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -361,17 +362,11 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 						const bool result = CV::FrameInterpolator::resize<uint8_t, tChannels, tResizeMethod>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.width(), targetFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
 					performance.stop();
 
-					if (!result)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, result);
 				}
 				else
 				{
-					if (!CV::FrameInterpolator::resize(sourceFrame, targetFrame, tResizeMethod, useWorker))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, CV::FrameInterpolator::resize(sourceFrame, targetFrame, tResizeMethod, useWorker));
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
@@ -380,23 +375,17 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 					return false;
 				}
 
-				if (!validateResizedFrame(sourceFrame, targetFrame, tResizeMethod))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateResizedFrame(sourceFrame, targetFrame, tResizeMethod));
 
 				Frame copySourceFrame(sourceFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				if (CV::FrameInterpolator::resize(copySourceFrame, targetFrame.width(), targetFrame.height(), tResizeMethod, useWorker))
 				{
-					if (!validateResizedFrame(sourceFrame, copySourceFrame, tResizeMethod))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateResizedFrame(sourceFrame, copySourceFrame, tResizeMethod));
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -411,16 +400,9 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 		Log::info() << "Multi-core boost factor: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, median: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolator::testResizeUseCase(const double testDuration)
@@ -429,30 +411,21 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration)
 
 	Log::info() << "Testing resize() with focus on production use case:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int workerThreads : {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 15u, 16u})
 	{
 		Log::info() << " ";
 
-		if (!testResizeUseCase(testDuration, workerThreads))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testResizeUseCase(testDuration, workerThreads));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Resize with production use case validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Resize with production use case validation: FAILED!";
-	}
+	Log::info() << "Resize with production use case validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const unsigned int workerThreads)
@@ -477,8 +450,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 	};
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Worker worker(workerThreads, Worker::TYPE_CUSTOM);
 
@@ -532,7 +504,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 
 			if (targetWidth < 1 || targetHeight < 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 
@@ -540,7 +512,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 
 			if (targetWidth % 32 != 0 || targetHeight % 32 != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 
@@ -558,17 +530,17 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 
 			const CV::FrameInterpolator::ResizeMethod resizeMethod = RandomI::random(randomGenerator, resizeMethods);
 
-			Worker* useWorker = RandomI::boolean() ? &worker : nullptr;
+			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 			if (!CV::FrameInterpolator::resize(frame, resizedFrame, resizeMethod, useWorker))
 			{
 #ifdef OCEAN_DEBUG
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 #else
 				if (targetWidth != 0 && targetHeight != 0)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 #endif
 			}
@@ -581,25 +553,15 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 					return false;
 				}
 
-				if (!validateResizedFrame(frame, resizedFrame, resizeMethod))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateResizedFrame(frame, resizedFrame, resizeMethod));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolator::validateResizedFrame(const Frame& source, const Frame& target, const CV::FrameInterpolator::ResizeMethod resizeMethod)

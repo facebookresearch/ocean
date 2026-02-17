@@ -22,6 +22,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -625,27 +626,21 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const dou
 	Log::info() << "Pixel interpolation test with 7bit precision:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testInterpolatePixel8BitPerChannel<float>(CV::PC_TOP_LEFT, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<float>(CV::PC_TOP_LEFT, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixel8BitPerChannel<float>(CV::PC_CENTER, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<float>(CV::PC_CENTER, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixel8BitPerChannel<double>(CV::PC_TOP_LEFT, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<double>(CV::PC_TOP_LEFT, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixel8BitPerChannel<double>(CV::PC_CENTER, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixel8BitPerChannel<double>(CV::PC_CENTER, testDuration));
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Pixel interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Pixel interpolation test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TScalar>
@@ -664,11 +659,10 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 		Log::info() << "... with '" << TypeNamer::name<TScalar>() << "' and with pixel center at (0.5, 0.5):";
 	}
 
-	bool allSucceeded = true;
-
 	constexpr TScalar threshold = TScalar(2.5);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// testing interpolation of a 2x2 image into a larger image
@@ -753,7 +747,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 
 						if (NumericD::isNotEqual(double(targetPixel[n]), result, double(threshold)))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -831,7 +825,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 
 						if (NumericD::isNotEqual(double(targetPixel[n]), result, double(threshold)))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -842,22 +836,22 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 
 		if (memcmp(targetFrame.constpixel<uint8_t>(0u, 0u), sourceTopLeft, sizeof(uint8_t) * channels) != 0)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (memcmp(targetFrame.constpixel<uint8_t>(targetFrame.width() - 1u, 0u), sourceTopRight, sizeof(uint8_t) * channels) != 0)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (memcmp(targetFrame.constpixel<uint8_t>(0u, targetFrame.height() - 1u), sourceBottomLeft, sizeof(uint8_t) * channels) != 0)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (memcmp(targetFrame.constpixel<uint8_t>(targetFrame.width() - 1u, targetFrame.height() - 1u), sourceBottomRight, sizeof(uint8_t) * channels) != 0)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -890,7 +884,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 			if (!CV::FrameInterpolatorBilinear::Comfort::interpolatePixel8BitPerChannel(frame.constdata<uint8_t>(), frame.channels(), frame.width(), frame.height(), frame.paddingElements(), pixelCenter, position, interpolationResult.data()))
 			{
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (lastValue != interpolationResult.back())
@@ -901,22 +895,15 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 
 			if (!validateInterpolatePixel8BitPerChannel<TScalar>(frame, position, pixelCenter, interpolationResult.data(), threshold))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testInterpolatePixel(const double testDuration)
@@ -926,36 +913,30 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const double testDurati
 	Log::info() << "Pixel interpolation test with floating point precision:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::PixelCenter pixelCenter : {CV::PC_TOP_LEFT, CV::PC_CENTER})
 	{
 		Log::info().newLine(pixelCenter != CV::PC_TOP_LEFT);
 
-		allSucceeded = testInterpolatePixel<uint8_t, uint8_t, float>(pixelCenter, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testInterpolatePixel<uint8_t, uint8_t, float>(pixelCenter, testDuration)));
 		Log::info() << " ";
-		allSucceeded = testInterpolatePixel<uint8_t, float, float>(pixelCenter, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testInterpolatePixel<uint8_t, float, float>(pixelCenter, testDuration)));
 		Log::info() << " ";
-		allSucceeded = testInterpolatePixel<float, float, float>(pixelCenter, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testInterpolatePixel<float, float, float>(pixelCenter, testDuration)));
 		Log::info() << " ";
-		allSucceeded = testInterpolatePixel<uint8_t, uint8_t, double>(pixelCenter, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testInterpolatePixel<uint8_t, uint8_t, double>(pixelCenter, testDuration)));
 		Log::info() << " ";
-		allSucceeded = testInterpolatePixel<uint8_t, double, double>(pixelCenter, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testInterpolatePixel<uint8_t, double, double>(pixelCenter, testDuration)));
 		Log::info() << " ";
-		allSucceeded = testInterpolatePixel<double, double, double>(pixelCenter, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testInterpolatePixel<double, double, double>(pixelCenter, testDuration)));
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Pixel interpolation test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Pixel interpolation test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, typename TScalar>
@@ -965,14 +946,13 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 	Log::info() << "... with source '" << TypeNamer::name<TSource>() << "', target '" << TypeNamer::name<TTarget>() << "', scalar type '" << TypeNamer::name<TScalar>() << "' and with pixel center at " << (pixelCenter == CV::PC_TOP_LEFT ? "(0.0, 0.0)" : "(0.5, 0.5)") << ":";
 
-	bool allSucceeded = true;
-
 	constexpr double floatThreshold = 0.1;
 	constexpr double integerThreshold = 2.5;
 
 	constexpr double threshold = std::is_floating_point<TTarget>::value ? floatThreshold : integerThreshold;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// testing interpolation of a 2x2 image into a larger image
@@ -1017,7 +997,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 					if (!CV::FrameInterpolatorBilinear::Comfort::interpolatePixel<TSource, TTarget, TScalar>(sourceFrame.constdata<TSource>(), sourceFrame.channels(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), pixelCenter, VectorT2<TScalar>(xPosition, yPosition), targetFrame.pixel<TTarget>(x, y)))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -1057,7 +1037,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 						if (NumericD::isNotEqual(double(targetPixel[n]), result, threshold))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -1087,7 +1067,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 					if (!CV::FrameInterpolatorBilinear::Comfort::interpolatePixel<TSource, TTarget, TScalar>(sourceFrame.constdata<TSource>(), sourceFrame.channels(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), pixelCenter, VectorT2<TScalar>(xPosition, yPosition), targetFrame.pixel<TTarget>(x, y)))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -1127,7 +1107,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 						if (NumericD::isNotEqual(double(targetPixel[n]), result, threshold))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -1140,22 +1120,22 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 		{
 			if (targetFrame.constpixel<TTarget>(0u, 0u)[n] != TTarget(sourceTopLeft[n]))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (targetFrame.constpixel<TTarget>(targetFrame.width() - 1u, 0u)[n] != TTarget(sourceTopRight[n]))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (targetFrame.constpixel<TTarget>(0u, targetFrame.height() - 1u)[n] != TTarget(sourceBottomLeft[n]))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (targetFrame.constpixel<TTarget>(targetFrame.width() - 1u, targetFrame.height() - 1u)[n] != TTarget(sourceBottomRight[n]))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -1189,7 +1169,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 			if (!CV::FrameInterpolatorBilinear::Comfort::interpolatePixel<TSource, TTarget, TScalar>(frame.constdata<TSource>(), frame.channels(), frame.width(), frame.height(), frame.paddingElements(), pixelCenter, position, interpolationResult.data()))
 			{
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (lastValue != interpolationResult.back())
@@ -1200,22 +1180,15 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 			if (!validateInterpolatePixel<TSource, TTarget, TScalar>(frame, position, pixelCenter, interpolationResult.data(), TScalar(threshold)))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testAffine(const double testDuration, Worker& worker)
@@ -1234,28 +1207,22 @@ bool TestFrameInterpolatorBilinear::testAffine(const double testDuration, Worker
 	Log::info() << "Interpolation test for affine transformations (with constant border color):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const IndexPair32& dimension : dimensions)
 	{
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testAffine(dimension.first, dimension.second, channel, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testAffine(dimension.first, dimension.second, channel, testDuration, worker));
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Affine transformations succeeded.";
-	}
-	else
-	{
-		Log::info() << "Affine transformations FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1274,28 +1241,22 @@ bool TestFrameInterpolatorBilinear::testHomography(const double testDuration, Wo
 	Log::info() << "Homography interpolation test (with constant border color) for data type '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const IndexPair32& dimension : dimensions)
 	{
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testHomography<T>(dimension.first, dimension.second, channel, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, (testHomography<T>(dimension.first, dimension.second, channel, testDuration, worker)));
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Homography interpolation validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Homography interpolation validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testHomographyMask(const double testDuration, Worker& worker)
@@ -1313,29 +1274,23 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const double testDuration
 	Log::info() << "Homography interpolation test (with binary mask):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const IndexPair32& dimension : dimensions)
 	{
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testHomographyMask(dimension.first, dimension.second, channel, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHomographyMask(dimension.first, dimension.second, channel, testDuration, worker));
 			Log::info() << " ";
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Homography mask interpolation validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Homography mask interpolation validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double testDuration, Worker& worker)
@@ -1354,7 +1309,8 @@ bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double te
 
 	unsigned long long iterations = 0ull;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1404,7 +1360,7 @@ bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double te
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 			{
 				ocean_assert(false && "Invalid padding memory!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
@@ -1417,7 +1373,7 @@ bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double te
 
 			if (averageAbsErrorToInteger > averageErrorThreshold || maximalAbsErrorToInteger > maximalErrorThreshold)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -1425,16 +1381,9 @@ bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double te
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker& worker)
@@ -1444,14 +1393,15 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 	Log::info() << "Frame resizing test (for 8 bit frames):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize(640u, 480u, n, 320u, 240u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(640u, 480u, n, 320u, 240u, testDuration, worker));
 		Log::info() << " ";
 
-		allSucceeded = testResize(320u, 240u, n, 640u, 480u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(320u, 240u, n, 640u, 480u, testDuration, worker));
 		Log::info() << " ";
 	}
 
@@ -1459,21 +1409,10 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize(641u, 480u, n, 321u, 240u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(641u, 480u, n, 321u, 240u, testDuration, worker));
 		Log::info() << " ";
 
-		allSucceeded = testResize(321u, 240u, n, 641u, 480u, testDuration, worker) && allSucceeded;
-		Log::info() << " ";
-	}
-
-	Log::info() << " ";
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
-	{
-		allSucceeded = testResize(640u, 481u, n, 320u, 241u, testDuration, worker) && allSucceeded;
-		Log::info() << " ";
-
-		allSucceeded = testResize(320u, 241u, n, 640u, 481u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(321u, 240u, n, 641u, 480u, testDuration, worker));
 		Log::info() << " ";
 	}
 
@@ -1481,30 +1420,10 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize(641u, 481u, n, 321u, 241u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(640u, 481u, n, 320u, 241u, testDuration, worker));
 		Log::info() << " ";
 
-		allSucceeded = testResize(321u, 241u, n, 641u, 481u, testDuration, worker) && allSucceeded;
-		Log::info() << " ";
-	}
-
-	Log::info() << " ";
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
-	{
-		allSucceeded = testResize(731u, 617u, n, 188u, 373u, testDuration, worker) && allSucceeded;
-		Log::info() << " ";
-
-		allSucceeded = testResize(188u, 373u, n, 731u, 617u, testDuration, worker) && allSucceeded;
-		Log::info() << " ";
-	}
-
-	for (unsigned int n = 1u; n <= 4u; ++n)
-	{
-		allSucceeded = testResize(1280u, 720u, n, 1280u, 600u, testDuration, worker) && allSucceeded;
-		Log::info() << " ";
-
-		allSucceeded = testResize(1280u, 720u, n, 1000u, 720u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(320u, 241u, n, 640u, 481u, testDuration, worker));
 		Log::info() << " ";
 	}
 
@@ -1512,10 +1431,10 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize(1920u, 1080u, n, 1000u, 700u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(641u, 481u, n, 321u, 241u, testDuration, worker));
 		Log::info() << " ";
 
-		allSucceeded = testResize(1000u, 700u, n, 1920u, 1080u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(321u, 241u, n, 641u, 481u, testDuration, worker));
 		Log::info() << " ";
 	}
 
@@ -1523,34 +1442,58 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize(1920u, 1080u, n, 1280u, 720u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(731u, 617u, n, 188u, 373u, testDuration, worker));
 		Log::info() << " ";
 
-		allSucceeded = testResize(1280u, 720u, n, 1920u, 1080u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(188u, 373u, n, 731u, 617u, testDuration, worker));
 		Log::info() << " ";
 	}
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize(1920u, 1080u, n, 128u, 128u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(1280u, 720u, n, 1280u, 600u, testDuration, worker));
 		Log::info() << " ";
 
-		allSucceeded = testResize(128u, 128u, n, 1920u, 1080u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testResize(1280u, 720u, n, 1000u, 720u, testDuration, worker));
 		Log::info() << " ";
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		Log::info() << "Frame resizing test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame resizing test FAILED!";
+		OCEAN_EXPECT_TRUE(validation, testResize(1920u, 1080u, n, 1000u, 700u, testDuration, worker));
+		Log::info() << " ";
+
+		OCEAN_EXPECT_TRUE(validation, testResize(1000u, 700u, n, 1920u, 1080u, testDuration, worker));
+		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	for (unsigned int n = 1u; n <= 4u; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, testResize(1920u, 1080u, n, 1280u, 720u, testDuration, worker));
+		Log::info() << " ";
+
+		OCEAN_EXPECT_TRUE(validation, testResize(1280u, 720u, n, 1920u, 1080u, testDuration, worker));
+		Log::info() << " ";
+	}
+
+	for (unsigned int n = 1u; n <= 4u; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, testResize(1920u, 1080u, n, 128u, 128u, testDuration, worker));
+		Log::info() << " ";
+
+		OCEAN_EXPECT_TRUE(validation, testResize(128u, 128u, n, 1920u, 1080u, testDuration, worker));
+		Log::info() << " ";
+	}
+
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1561,14 +1504,15 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 	Log::info() << "Frame resizing test for data type '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize<T>(640u, 480u, n, 320u, 240u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testResize<T>(640u, 480u, n, 320u, 240u, testDuration, worker)));
 		Log::info() << " ";
 
-		allSucceeded = testResize<T>(320u, 240u, n, 640u, 480u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testResize<T>(320u, 240u, n, 640u, 480u, testDuration, worker)));
 		Log::info() << " ";
 	}
 
@@ -1576,10 +1520,10 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize<T>(1920u, 1080u, n, 1000u, 700u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testResize<T>(1920u, 1080u, n, 1000u, 700u, testDuration, worker)));
 		Log::info() << " ";
 
-		allSucceeded = testResize<T>(1000u, 700u, n, 1920u, 1080u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testResize<T>(1000u, 700u, n, 1920u, 1080u, testDuration, worker)));
 		Log::info() << " ";
 	}
 
@@ -1587,23 +1531,16 @@ bool TestFrameInterpolatorBilinear::testResize(const double testDuration, Worker
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
-		allSucceeded = testResize<T>(1920u, 1080u, n, 1280u, 720u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testResize<T>(1920u, 1080u, n, 1280u, 720u, testDuration, worker)));
 		Log::info() << " ";
 
-		allSucceeded = testResize<T>(1280u, 720u, n, 1920u, 1080u, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testResize<T>(1280u, 720u, n, 1920u, 1080u, testDuration, worker)));
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Frame resizing test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame resizing test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testLookup(const double testDuration, Worker& worker)
@@ -1613,27 +1550,21 @@ bool TestFrameInterpolatorBilinear::testLookup(const double testDuration, Worker
 	Log::info() << "Frame lookup transformation test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testLookup<uint8_t>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testLookup<float>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testLookup<uint8_t>(testDuration, worker)));
 
 	Log::info() << " ";
+	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Frame lookup transformation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Frame lookup transformation FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, (testLookup<float>(testDuration, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1647,7 +1578,8 @@ bool TestFrameInterpolatorBilinear::testLookup(const double testDuration, Worker
 	Log::info() << "With data type '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 0u; n < widths.size(); ++n)
 	{
@@ -1655,23 +1587,16 @@ bool TestFrameInterpolatorBilinear::testLookup(const double testDuration, Worker
 
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testLookup<T>(widths[n], heights[n], channel, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, (testLookup<T>(widths[n], heights[n], channel, testDuration, worker)));
 			Log::info() << " ";
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker)
@@ -1682,8 +1607,7 @@ bool TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 	Log::info() << "... for a " << width << "x" << height << " frame with " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSingleCore;
 	HighPerformanceStatistic performanceMultiCore;
@@ -1749,7 +1673,7 @@ bool TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 					return false;
 				}
 
-				allSucceeded = validateTransformation8BitPerChannel(source, target, source_A_target, backgroundColor.data(), targetFrameOriginOffset) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, validateTransformation8BitPerChannel(source, target, source_A_target, backgroundColor.data(), targetFrameOriginOffset));
 			}
 			while (startTimestamp + testDuration > Timestamp(true) || performance.measurements() == 0u);
 		}
@@ -1758,9 +1682,9 @@ bool TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 	Log::info() << "Median performance (single-core): " << String::toAString(performanceSingleCore.medianMseconds(), 3u) << "ms";
 	Log::info() << "Median performance (multi-core): " << String::toAString(performanceMultiCore.medianMseconds(), 3u) << "ms";
 
-	Log::info() << "Validation: " << (allSucceeded ? "successful" : "FAILED");
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1786,6 +1710,7 @@ bool TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 	const Scalar maximalOffsetY = Scalar(height) * Scalar(0.075);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	double sumAverageError = 0.0;
 	double maximalError = 0.0;
@@ -1906,19 +1831,22 @@ bool TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 	ocean_assert(performanceSinglecore.measurements() != 0);
 	const double averageAbsError = sumAverageError / double(performanceSinglecore.measurements());
 
-	const bool allSucceeded = averageAbsError <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
+	if (averageAbsError > averageErrorThreshold || maximalError > maximalErrorThreshold)
+	{
+		OCEAN_SET_FAILED(validation);
+	}
 
 	if (width > 64u)
 	{
 		Log::info() << "Validation: average error: " << String::toAString(averageAbsError, 2u) << ", maximal error: " << String::toAString(maximalError, 2u);
 
-		if (!allSucceeded)
+		if (!validation.succeededSoFar())
 		{
 			Log::info() << "Validation: FAILED!";
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker)

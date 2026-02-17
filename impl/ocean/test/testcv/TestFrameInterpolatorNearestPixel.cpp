@@ -20,6 +20,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -442,12 +443,12 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 {
 	ocean_assert(channels >= 1u && channels <= 4u);
 
-	bool allSucceeded = true;
 	const bool randomImageSize = width0 == 0u || height0 == 0u;
 	const unsigned int maxRandomImageWidth = 1920u;
 	const unsigned int maxRandomImageHeight = 1080u;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	if (randomImageSize)
 	{
@@ -566,7 +567,7 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 			validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.constdata<uint8_t>(), targetFrame.width(), targetFrame.height(), targetFrame.paddingElements(), sourceFrame.channels(), randomAffine, backgroundColor.data(), targetFrameOriginOffset, &maximalAbsError, &averageAbsError);
 
 			globalMaximalAbsError = std::max(globalMaximalAbsError, maximalAbsError);
-			allSucceeded = maximalAbsError <= maxErrorThreshold && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, maximalAbsError <= maxErrorThreshold);
 
 			if (maximalAbsError > maxErrorThreshold)
 			{
@@ -592,9 +593,9 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 		}
 	}
 
-	Log::info() << "Validation: " << (allSucceeded ? "successful" : "FAILED") << ", max error: " << globalMaximalAbsError;
+	Log::info() << "Validation: " << validation << ", max error: " << globalMaximalAbsError;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -650,6 +651,7 @@ bool TestFrameInterpolatorNearestPixel::testHomography(const unsigned int width,
 	std::vector<T> backgroundColor(channels);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	double sumAverageError = 0.0;
 	double maximalError = 0.0;
@@ -739,16 +741,11 @@ bool TestFrameInterpolatorNearestPixel::testHomography(const unsigned int width,
 	ocean_assert(measurements != 0ull);
 	const double averageAbsError = sumAverageError / double(measurements);
 
-	const bool allSucceeded = averageAbsError <= averageErrorThreshold;
+	OCEAN_EXPECT_TRUE(validation, averageAbsError <= averageErrorThreshold);
 
-	Log::info() << "Validation: average error: " << averageAbsError;
+	Log::info() << "Validation: " << validation << ", average error: " << averageAbsError;
 
-	if (!allSucceeded)
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorNearestPixel::testHomographyMask(const double testDuration, Worker& worker)
@@ -799,9 +796,8 @@ bool TestFrameInterpolatorNearestPixel::testHomographyMask(const unsigned int wi
 
 	Log::info() << "... for a " << width << "x" << height << " frame with " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -877,12 +873,12 @@ bool TestFrameInterpolatorNearestPixel::testHomographyMask(const unsigned int wi
 
 				if (!validateHomographyMask8BitPerChannel(inputFrame, outputFrame, outputMask, input_H_output, outputFrameOriginOffset))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -895,7 +891,9 @@ bool TestFrameInterpolatorNearestPixel::testHomographyMask(const unsigned int wi
 		Log::info() << "Median performance (multicore): " << performanceMulticore.medianMseconds() << "ms";
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorNearestPixel::testResize(const double testDuration, Worker& worker)
@@ -967,8 +965,7 @@ bool TestFrameInterpolatorNearestPixel::testResize(const unsigned int sourceWidt
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1016,7 +1013,7 @@ bool TestFrameInterpolatorNearestPixel::testResize(const unsigned int sourceWidt
 
 				if (!validateResizedFrame<T>(sourceFrame.constdata<T>(), targetFrame.constdata<T>(), sourceFrame.width(), sourceFrame.height(), targetFrame.width(), targetFrame.height(), tChannels, sourceFrame.paddingElements(), targetFrame.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -1031,27 +1028,19 @@ bool TestFrameInterpolatorNearestPixel::testResize(const unsigned int sourceWidt
 		Log::info() << "Multi-core boost factor: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, median: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorNearestPixel::testSpecialCasesResize400x400To224x224_8BitPerChannel(const double testDuration)
 {
 	Log::info() << "Testing special case resize 400x400 to 224x224, FORMAT_Y8:";
 
-	bool allSucceeded = true;
-
 	unsigned int iterations = 0u;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceGeneral;
 	HighPerformanceStatistic performanceSpecial;
@@ -1096,7 +1085,7 @@ bool TestFrameInterpolatorNearestPixel::testSpecialCasesResize400x400To224x224_8
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrameSpecial, copyTargetFrameSpecial))
 		{
 			ocean_assert(false && "Invalid padding memory!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -1104,7 +1093,7 @@ bool TestFrameInterpolatorNearestPixel::testSpecialCasesResize400x400To224x224_8
 		{
 			if (memcmp(targetFrameSpecial.constrow<void>(y), targetFrameGeneral.constrow<void>(y), targetFrameSpecial.planeWidthBytes(0u)) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -1118,16 +1107,9 @@ bool TestFrameInterpolatorNearestPixel::testSpecialCasesResize400x400To224x224_8
 	Log::info() << "Special boost: " << String::toAString(performanceGeneral.medianMseconds() / performanceSpecial.medianMseconds(), 2u) << "x";
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tOffset>
@@ -1139,6 +1121,7 @@ bool TestFrameInterpolatorNearestPixel::testTransform(const unsigned int width, 
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	CV::FrameInterpolatorNearestPixel::LookupTable lookupTable(width, height, 20u, 20u);
 
@@ -1160,8 +1143,6 @@ bool TestFrameInterpolatorNearestPixel::testTransform(const unsigned int width, 
 	}
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
-
-	bool allSucceeded = true;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -1211,7 +1192,7 @@ bool TestFrameInterpolatorNearestPixel::testTransform(const unsigned int width, 
 
 				if (!validateTransformation<tOffset>(frame, target, lookupTable, borderColor.data()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -1228,16 +1209,9 @@ bool TestFrameInterpolatorNearestPixel::testTransform(const unsigned int width, 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tOffset>
@@ -1249,6 +1223,7 @@ bool TestFrameInterpolatorNearestPixel::testTransformMask(const unsigned int wid
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	CV::FrameInterpolatorNearestPixel::LookupTable lookupTable(width, height, 20u, 20u);
 
@@ -1270,8 +1245,6 @@ bool TestFrameInterpolatorNearestPixel::testTransformMask(const unsigned int wid
 	}
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
-
-	bool allSucceeded = true;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -1326,7 +1299,7 @@ bool TestFrameInterpolatorNearestPixel::testTransformMask(const unsigned int wid
 
 				if (!validateTransformationMask<tOffset>(frame, target, targetMask, lookupTable, maskValue))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -1343,16 +1316,9 @@ bool TestFrameInterpolatorNearestPixel::testTransformMask(const unsigned int wid
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameInterpolatorNearestPixel::testRotate90(const double testDuration, Worker& worker)
@@ -1409,8 +1375,6 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 
 	constexpr FrameType::DataType pixelFormatDataType = FrameType::dataType<TElementType>();
 
-	bool allSucceeded = true;
-
 	HighPerformanceStatistic performanceClockwiseSinglecore;
 	HighPerformanceStatistic performanceClockwiseMulticore;
 
@@ -1418,6 +1382,7 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 	HighPerformanceStatistic performanceCounterClockwiseMulticore;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int workerIteration = 0u; workerIteration < 2u; ++workerIteration)
 	{
@@ -1455,13 +1420,13 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 					performanceClockwise.startIf(performanceIteration);
 						if (!CV::FrameInterpolatorNearestPixel::Comfort::rotate90(frame, clockwiseFrame, true /*clockwise*/, useWorker))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					performanceClockwise.stopIf(performanceIteration);
 
 					if (frame.width() != clockwiseFrame.height() || frame.height() != clockwiseFrame.width())
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					Frame counterClockwiseFrame;
@@ -1474,20 +1439,20 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 					performanceCounterClockwise.startIf(performanceIteration);
 						if (!CV::FrameInterpolatorNearestPixel::Comfort::rotate90(frame, counterClockwiseFrame, false /*clockwise*/, useWorker))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					performanceCounterClockwise.stopIf(performanceIteration);
 
 					if (frame.width() != clockwiseFrame.height() || frame.height() != clockwiseFrame.width())
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					if (clockwiseFrame && counterClockwiseFrame)
 					{
 						if (!validateRotate90(frame.constdata<TElementType>(), tChannels, frame.width(), frame.height(), clockwiseFrame.constdata<TElementType>(), counterClockwiseFrame.constdata<TElementType>(), frame.paddingElements(), clockwiseFrame.paddingElements(), counterClockwiseFrame.paddingElements()))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -1566,7 +1531,7 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 
 				if (!validateRotate90(frame.constdata<TElementType>(), tChannels, frame.width(), frame.height(), clockwiseFrame.constdata<TElementType>(), counterClockwiseFrame.constdata<TElementType>(), frame.paddingElements(), clockwiseFrame.paddingElements(), counterClockwiseFrame.paddingElements()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -1589,16 +1554,9 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
