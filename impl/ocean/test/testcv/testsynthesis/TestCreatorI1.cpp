@@ -9,6 +9,7 @@
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -172,9 +173,8 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -204,7 +204,7 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 					const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 					CV::PixelBoundingBox boundingBox;
-					if (RandomI::random(randomGenerator, 1u) == 0u)
+					if (RandomI::boolean(randomGenerator))
 					{
 						boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 						ocean_assert(boundingBox.isValid());
@@ -278,19 +278,13 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 
 								ocean_assert(mask.constpixel<uint8_t>(sourcePixel.x(), sourcePixel.y())[0] == 0xFFu);
 
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(sourcePixel.x(), sourcePixel.y()), sizeof(uint8_t) * channels) != 0)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(sourcePixel.x(), sourcePixel.y()), sizeof(uint8_t) * channels), 0);
 							}
 							else
 							{
 								// we do not expect any change
 
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * channels) != 0)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * channels), 0);
 							}
 						}
 					}
@@ -310,16 +304,9 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -328,8 +315,6 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing spatial cost information for " << width << "x" << height << ":";
-
-	bool allSucceeded = true;
 
 	const CV::PixelPositionsI offsets =
 	{
@@ -340,6 +325,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 	};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -368,7 +354,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 						const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 						CV::PixelBoundingBox boundingBox;
-						if (RandomI::random(randomGenerator, 1u) == 0u)
+						if (RandomI::boolean(randomGenerator))
 						{
 							boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 							ocean_assert(boundingBox.isValid());
@@ -518,7 +504,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 							default:
 							{
 								ocean_assert(false && "Invalid neighborhood!");
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 								break;
 							}
 						}
@@ -584,10 +570,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 
 								const uint8_t result = frame.constpixel<uint8_t>(x, y)[0];
 
-								if (result != value)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, result, value);
 							}
 						}
 
@@ -599,16 +582,9 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -654,9 +630,8 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 
 	Log::info() << "... for " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -686,7 +661,7 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 					CV::PixelBoundingBox boundingBox;
-					if (RandomI::random(randomGenerator, 1u) == 0u)
+					if (RandomI::boolean(randomGenerator))
 					{
 						boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 						ocean_assert(boundingBox.isValid());
@@ -820,10 +795,7 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 						}
 					}
 
-					if (cost != testCost)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, cost, testCost);
 
 					break;
 				}
@@ -840,16 +812,9 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

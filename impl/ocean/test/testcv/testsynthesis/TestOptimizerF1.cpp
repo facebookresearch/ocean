@@ -9,6 +9,7 @@
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -155,9 +156,8 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -301,19 +301,19 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 								{
 									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 
 									if (mapping.position(x, y) != copyMapping.position(x, y))
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 							}
 						}
 						else
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 
@@ -334,16 +334,9 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -387,9 +380,8 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -533,19 +525,19 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 
 								if (mapping.position(x, y) != copyMapping.position(x, y))
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 						}
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -563,16 +555,9 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tBorderFactor>

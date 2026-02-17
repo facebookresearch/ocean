@@ -9,6 +9,7 @@
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -158,9 +159,8 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -188,7 +188,7 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -266,10 +266,7 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 									}
 								}
 
-								if (mapping.position(x, y) != bestPosition)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), bestPosition);
 							}
 						}
 					}
@@ -291,13 +288,13 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 
 								if (xPosition < 0 || xPosition >= int(mask.width()) || yPosition < 0 || yPosition >= int(mask.height()))
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 								else
 								{
 									if (mask.constpixel<uint8_t>((unsigned int)(xPosition), (unsigned int)(yPosition))[0] != 0xFFu)
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 							}
@@ -319,16 +316,9 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -372,9 +362,8 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -402,7 +391,7 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -417,8 +406,8 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), &randomGenerator);
 
-				const unsigned int coarserMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					;
+				const unsigned int maxCoarserMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int coarserMaskPaddingElements = maxCoarserMaskPaddingElements * RandomI::random(randomGenerator, 1u);
 
 				// creating a coarser mask which has a mask pixel whenever the corresponding finder mask has a mask pixel
 
@@ -496,7 +485,7 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 				performance.startIf(performanceIteration);
 					if (!CV::Synthesis::InitializerCoarserMappingAdaptionF1<factor>(layer, randomGenerator, coarserLayer).invoke(useWorker))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				performance.stopIf(performanceIteration);
 
@@ -532,7 +521,7 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 								if (xFinerPosition < 0 || xFinerPosition >= int(mask.width()) || yFinerPosition < 0 || yFinerPosition >= int(mask.height()))
 								{
 									ocean_assert(false && "This should never happen!");
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 								else
 								{
@@ -540,10 +529,7 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 									if (mask.constpixel<uint8_t>((unsigned int)(xFinerPosition), (unsigned int)(yFinerPosition))[0] == 0xFFu)
 									{
-										if (position != finerPosition)
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, position, finerPosition);
 									}
 									else
 									{
@@ -556,10 +542,7 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 											if (mask.constpixel<uint8_t>((unsigned int)(Numeric::round32(xFiner)), (unsigned int)(Numeric::round32(yFiner)))[0] == 0xFFu)
 											{
-												if (position != Vector2(xFiner, yFiner))
-												{
-													allSucceeded = false;
-												}
+												OCEAN_EXPECT_EQUAL(validation, position, Vector2(xFiner, yFiner));
 
 												break;
 											}
@@ -587,13 +570,13 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 								if (xPosition < 0 || xPosition >= int(mask.width()) || yPosition < 0 || yPosition >= int(mask.height()))
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 								else
 								{
 									if (mask.constpixel<uint8_t>((unsigned int)(xPosition), (unsigned int)(yPosition))[0] != 0xFFu)
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 							}
@@ -615,16 +598,9 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

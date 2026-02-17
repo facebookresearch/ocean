@@ -9,6 +9,7 @@
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -122,9 +123,8 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 
 	Log::info() << "... for " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -154,7 +154,7 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 					const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 					CV::PixelBoundingBox boundingBox;
-					if (RandomI::random(randomGenerator, 1u) == 0u)
+					if (RandomI::boolean(randomGenerator))
 					{
 						boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 						ocean_assert(boundingBox.isValid());
@@ -254,19 +254,13 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 
 								CV::FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<tChannels, CV::PC_TOP_LEFT>(copyFrame.constdata<uint8_t>(), copyFrame.width(), copyFrame.height(), copyFrame.paddingElements(), sourcePixel, result);
 
-								if (memcmp(frame.constpixel<uint8_t>(x, y), result, sizeof(uint8_t) * tChannels) != 0)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, memcmp(frame.constpixel<uint8_t>(x, y), result, sizeof(uint8_t) * tChannels), 0);
 							}
 							else
 							{
 								// we do not expect any change
 
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * tChannels) != 0)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * tChannels), 0);
 							}
 						}
 					}
@@ -286,16 +280,9 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

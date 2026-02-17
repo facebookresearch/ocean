@@ -9,6 +9,7 @@
 #include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -597,9 +598,8 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -627,7 +627,7 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -700,10 +700,7 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 									}
 								}
 
-								if (mapping.position(x, y) != bestPosition)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), bestPosition);
 							}
 						}
 					}
@@ -720,10 +717,7 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								if (mask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu || filterMask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu && filterMask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
 							}
 						}
 					}
@@ -743,16 +737,9 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -796,9 +783,8 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -826,7 +812,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -897,10 +883,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 									}
 								}
 
-								if (mapping.position(x, y) != bestPosition)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), bestPosition);
 							}
 						}
 					}
@@ -917,10 +900,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								if (mask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
 							}
 						}
 					}
@@ -940,16 +920,9 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -993,9 +966,8 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1023,7 +995,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -1104,10 +1076,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 									if (mask.constpixel<uint8_t>(xPosition, yPosition)[0] == 0xFFu)
 									{
-										if (mapping.position(x, y) != CV::PixelPosition(xPosition, yPosition))
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), CV::PixelPosition(xPosition, yPosition));
 
 										continue;
 									}
@@ -1120,10 +1089,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 									if (mask.constpixel<uint8_t>(xCandidate, yCandidate)[0] == 0xFFu)
 									{
-										if (mapping.position(x, y) != CV::PixelPosition(xCandidate, yCandidate))
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), CV::PixelPosition(xCandidate, yCandidate));
 
 										break;
 									}
@@ -1144,10 +1110,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								if (mask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
 							}
 						}
 					}
@@ -1167,16 +1130,9 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1220,9 +1176,8 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1250,7 +1205,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -1335,10 +1290,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 									if (mask.constpixel<uint8_t>(xPosition, yPosition)[0] == 0xFFu && filterMask.constpixel<uint8_t>(xPosition, yPosition)[0] == 0xFFu)
 									{
-										if (mapping.position(x, y) != CV::PixelPosition(xPosition, yPosition))
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), CV::PixelPosition(xPosition, yPosition));
 
 										continue;
 									}
@@ -1351,10 +1303,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 									if (mask.constpixel<uint8_t>(xCandidate, yCandidate)[0] == 0xFFu && filterMask.constpixel<uint8_t>(xCandidate, yCandidate)[0] == 0xFFu)
 									{
-										if (mapping.position(x, y) != CV::PixelPosition(xCandidate, yCandidate))
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), CV::PixelPosition(xCandidate, yCandidate));
 
 										break;
 									}
@@ -1375,10 +1324,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								if (mask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu || filterMask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu && filterMask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
 							}
 						}
 					}
@@ -1398,16 +1344,9 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1451,9 +1390,8 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1481,7 +1419,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -1575,37 +1513,28 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 					}
 				}
 
-				const unsigned int neighborhood = RandomI::random(randomGenerator, 1u) == 0u ? 1u : 9u;
+				const unsigned int neighborhood = RandomI::boolean(randomGenerator) ? 1u : 9u;
 
 				const unsigned int randomSeed = randomGenerator.seed();
 
 				Frame coarserLayerSpatialCost(coarserMask.frameType());
-				if (!CV::Synthesis::CreatorInformationSpatialCostI1<4u, true>(coarserLayer, coarserLayerSpatialCost).invoke(useWorker))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, bool(CV::Synthesis::CreatorInformationSpatialCostI1<4u, true>(coarserLayer, coarserLayerSpatialCost).invoke(useWorker)));
 
 				Frame costMask;
 
 				performance.startIf(performanceIteration);
 					if (neighborhood == 1u)
 					{
-						if (!CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 1u>(layer, randomGenerator, coarserLayer, costMask).invoke(useWorker))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, bool(CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 1u>(layer, randomGenerator, coarserLayer, costMask).invoke(useWorker)));
 					}
 					else if (neighborhood == 9u)
 					{
-						if (!CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 9u>(layer, randomGenerator, coarserLayer, costMask).invoke(useWorker))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, bool(CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 9u>(layer, randomGenerator, coarserLayer, costMask).invoke(useWorker)));
 					}
 					else
 					{
 						ocean_assert(false && "Invalid neighborhood!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				performance.stopIf(performanceIteration);
 
@@ -1647,26 +1576,17 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 									if (mask.constpixel<uint8_t>(xPosition, yPosition)[0] == 0xFFu)
 									{
-										if (mapping.position(x, y) != CV::PixelPosition(xPosition, yPosition))
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), CV::PixelPosition(xPosition, yPosition));
 
 										const uint8_t costValue = costMask.constpixel<uint8_t>(x, y)[0];
 
 										if (allValueSame(coarserLayerSpatialCost, xCoarser, yCoarser, 0x80u, neighborhood))
 										{
-											if (costValue != 0xFFu)
-											{
-												allSucceeded = false;
-											}
+											OCEAN_EXPECT_EQUAL(validation, costValue, uint8_t(0xFFu));
 										}
 										else
 										{
-											if (costValue != 0x00u)
-											{
-												allSucceeded = false;
-											}
+											OCEAN_EXPECT_EQUAL(validation, costValue, uint8_t(0x00u));
 										}
 
 										continue;
@@ -1680,10 +1600,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 									if (mask.constpixel<uint8_t>(xCandidate, yCandidate)[0] == 0xFFu)
 									{
-										if (mapping.position(x, y) != CV::PixelPosition(xCandidate, yCandidate))
-										{
-											allSucceeded = false;
-										}
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), CV::PixelPosition(xCandidate, yCandidate));
 
 										break;
 									}
@@ -1704,10 +1621,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								if (mask.constpixel<uint8_t>(position.x(), position.y())[0] != 0xFFu)
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
 							}
 						}
 					}
@@ -1727,16 +1641,9 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& worker)
@@ -1745,9 +1652,8 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 
 	Log::info() << "Testing random mapping:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1769,7 +1675,7 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 			const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 			CV::PixelBoundingBox boundingBox;
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 				ocean_assert(boundingBox.isValid());
@@ -1777,10 +1683,7 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 
 			CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
-			if (!CV::Synthesis::InitializerRandomMappingI1(layer, randomGenerator).invoke(useWorker))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, bool(CV::Synthesis::InitializerRandomMappingI1(layer, randomGenerator).invoke(useWorker)));
 
 			for (unsigned int y = 0u; y < mask.height(); ++y)
 			{
@@ -1792,14 +1695,11 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 
 						if (sourcePosition.isValid() && sourcePosition.x() < mask.width() && sourcePosition.y() < mask.height())
 						{
-							if (mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] != 0xFFu)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] == 0xFFu);
 						}
 						else
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 					}
@@ -1809,16 +1709,9 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDuration, Worker& worker)
@@ -1827,9 +1720,8 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 
 	Log::info() << "Testing area constrained random mapping:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1879,7 +1771,7 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 			}
 
 			CV::PixelBoundingBox boundingBox;
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 				ocean_assert(boundingBox.isValid());
@@ -1887,10 +1779,7 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 
 			CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
-			if (!CV::Synthesis::InitializerRandomMappingAreaConstrainedI1(layer, randomGenerator, filter).invoke(useWorker))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, bool(CV::Synthesis::InitializerRandomMappingAreaConstrainedI1(layer, randomGenerator, filter).invoke(useWorker)));
 
 			for (unsigned int y = 0u; y < mask.height(); ++y)
 			{
@@ -1902,19 +1791,13 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 
 						if (sourcePosition.isValid() && sourcePosition.x() < mask.width() && sourcePosition.y() < mask.height())
 						{
-							if (mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] != 0xFFu)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] == 0xFFu);
 
-							if (filter.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] != 0xFFu)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, filter.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] == 0xFFu);
 						}
 						else
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 					}
@@ -1924,16 +1807,9 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1977,9 +1853,8 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -2008,7 +1883,7 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -2052,22 +1927,16 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 
 							for (unsigned int n = 0u; n < testFrame.channels(); ++n)
 							{
-								if (testPixel[n] != initializedPixel[n])
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, testPixel[n], initializedPixel[n]);
 							}
 
-							if (testMask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, testMask.constpixel<uint8_t>(x, y)[0] == 0xFFu);
 						}
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -2084,16 +1953,9 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -2137,9 +1999,8 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -2168,7 +2029,7 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -2212,22 +2073,16 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 
 							for (unsigned int n = 0u; n < testFrame.channels(); ++n)
 							{
-								if (testPixel[n] != initializedPixel[n])
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_EQUAL(validation, testPixel[n], initializedPixel[n]);
 							}
 
-							if (testMask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_TRUE(validation, testMask.constpixel<uint8_t>(x, y)[0] == 0xFFu);
 						}
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -2244,16 +2099,9 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::testShrinkingPatchMatching(const double testDuration, Worker& worker)
@@ -2299,9 +2147,8 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -2330,7 +2177,7 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 					ocean_assert(boundingBox.isValid());
@@ -2340,10 +2187,10 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				const unsigned int initializationIterations = RandomI::random(randomGenerator, 1u, 2u);
-				const bool useHeuristic = RandomI::random(randomGenerator, 1u) == 0u;
+				const bool useHeuristic = RandomI::boolean(randomGenerator);
 				unsigned int maximalBoundingBoxOffset = (unsigned int)(-1);
 
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					maximalBoundingBoxOffset = RandomI::random(randomGenerator, 1u, 100u);
 				}
@@ -2379,7 +2226,7 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 
 					if (!shrinkPatchMatchingIteration(testFrame, testMask, copyMapping, useHeuristic, maximalBoundingBoxOffset, localGenerator, useMaskForSSD, worker))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 
@@ -2394,16 +2241,10 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 
 						for (unsigned int n = 0u; n < testFrame.channels(); ++n)
 						{
-							if (testPixel[n] != initializedPixel[n])
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, testPixel[n], initializedPixel[n]);
 						}
 
-						if (copyMapping.position(x, y) != layer.mapping().position(x, y))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, copyMapping.position(x, y), layer.mapping().position(x, y));
 					}
 				}
 			}
@@ -2421,16 +2262,9 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInitializerI1::shrinkPatchMatchingIteration(Frame& frame, Frame& mask, CV::Synthesis::MappingI1& mapping, const bool useHeuristic, const unsigned int maximalRadius, RandomGenerator& randomGenerator, const bool useMaskForSSD, Worker& worker)
