@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Java Library - Shared MSBuild Targets
+
+  This file provides common properties and targets for Ocean Android Java Library projects.
+  It handles AAR output management, property page registration, and exposes public API
+  targets (GetGradleModulePath, GetJavaStagingPath, GetAarOutputPath) for project references.
+
+  To use in your project, add this import after Microsoft.Cpp.targets:
+    <Import Project="$(OceanJavaLibTargetsPath)"
+            Condition="'$(OceanJavaLibTargetsPath)' != '' AND Exists('$(OceanJavaLibTargetsPath)')" />
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================
+       Property Page Registration
+
+       Registers the OceanJavaLib property page so library-specific
+       settings appear in VS Project Properties.
+       ============================================================ -->
+  <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)OceanJavaLib.General.xml')">
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)OceanJavaLib.General.xml" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Lib-specific Property Defaults
+
+       Path properties for Gradle module, AAR output, and NMake output.
+       Each property is conditional so individual projects can override.
+       ============================================================ -->
+  <PropertyGroup>
+    <GradleModuleDir Condition="'$(GradleModuleDir)' == ''">$(MSBuildProjectDirectory)\lib</GradleModuleDir>
+    <AarOutputDir Condition="'$(AarOutputDir)' == ''">$(GradleBuildDir)\outputs\aar</AarOutputDir>
+    <AarOutputFile Condition="'$(Configuration)' == 'Debug'">$(AarOutputDir)\lib-debug.aar</AarOutputFile>
+    <AarOutputFile Condition="'$(Configuration)' == 'Release'">$(AarOutputDir)\lib-release.aar</AarOutputFile>
+    <FinalAarPath Condition="'$(FinalAarPath)' == ''">$(OutDir)$(ProjectName).aar</FinalAarPath>
+    <NMakeOutput Condition="'$(NMakeOutput)' == ''">$(FinalAarPath)</NMakeOutput>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Public API Targets for Project References
+
+       These targets are called by referencing projects (e.g., App
+       projects) to discover this library's paths. They must remain
+       stable as they form the cross-project reference contract.
+       ============================================================ -->
+
+  <Target Name="GetGradleModulePath" Returns="$(GradleModuleDir)">
+    <Message Text="[$(ProjectName)] Gradle module path: $(GradleModuleDir)" Importance="low" />
+  </Target>
+
+  <Target Name="GetJavaStagingPath" DependsOnTargets="StageJavaSources" Returns="$(JavaStagingDir)">
+    <Message Text="[$(ProjectName)] Java staging path: $(JavaStagingDir)" Importance="low" />
+  </Target>
+
+  <Target Name="GetAarOutputPath" Returns="$(FinalAarPath)">
+    <Message Text="[$(ProjectName)] AAR output path: $(FinalAarPath)" Importance="low" />
+  </Target>
+
+  <!-- ============================================================
+       AAR Output Management
+
+       Copies the AAR from Gradle's build output to the project's
+       output directory after Build, and cleans it during Clean.
+       ============================================================ -->
+
+  <Target Name="_CopyAarOutput" AfterTargets="Build;Rebuild">
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+    <Copy SourceFiles="$(AarOutputFile)"
+          DestinationFiles="$(FinalAarPath)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(AarOutputFile)')" />
+    <Message Text="$(MSBuildProjectFile) -> $([System.IO.Path]::GetFullPath('$(FinalAarPath)'))" Importance="high" />
+  </Target>
+
+  <Target Name="_CleanAarOutput" AfterTargets="Clean">
+    <Delete Files="$(FinalAarPath)" Condition="Exists('$(FinalAarPath)')" />
+  </Target>
+
+</Project>

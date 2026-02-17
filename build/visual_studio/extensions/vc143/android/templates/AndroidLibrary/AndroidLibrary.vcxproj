@@ -98,19 +98,6 @@
     <ProjectCapability Include="AndroidJavaLibrary" />
   </ItemGroup>
 
-  <!-- Path Configuration -->
-  <PropertyGroup>
-    <GradleModuleDir>$(MSBuildProjectDirectory)\lib</GradleModuleDir>
-
-    <!-- AAR output path (Gradle's output location - in intermediate dir) -->
-    <AarOutputDir>$(GradleBuildDir)\outputs\aar</AarOutputDir>
-    <AarOutputFile Condition="'$(Configuration)' == 'Debug'">$(AarOutputDir)\lib-debug.aar</AarOutputFile>
-    <AarOutputFile Condition="'$(Configuration)' == 'Release'">$(AarOutputDir)\lib-release.aar</AarOutputFile>
-
-    <!-- Final output location (copied after Gradle build) -->
-    <FinalAarPath>$(OutDir)$(ProjectName).aar</FinalAarPath>
-  </PropertyGroup>
-
   <PropertyGroup>
     <!-- Gradle task based on configuration -->
     <GradleTask Condition="'$(Configuration)' == 'Release'">:lib:assembleRelease</GradleTask>
@@ -119,11 +106,6 @@
     <!-- Gradle properties to pass (from VS project settings) -->
     <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
     <ProjectGradleProperties>-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk)</ProjectGradleProperties>
-  </PropertyGroup>
-
-  <!-- Makefile project commands -->
-  <PropertyGroup>
-    <NMakeOutput>$(FinalAarPath)</NMakeOutput>
   </PropertyGroup>
 
   <!-- Java source files -->
@@ -145,36 +127,23 @@
     <None Include="lib\src\$safeprojectname$.java" />
   </ItemGroup>
 
-  <!-- GetGradleModulePath - returns the path to this library's Gradle module -->
-  <Target Name="GetGradleModulePath" Returns="$(GradleModuleDir)">
-    <Message Text="[$(ProjectName)] Gradle module path: $(GradleModuleDir)" Importance="low" />
-  </Target>
-
-  <!-- GetJavaStagingPath - returns the path to staged Java sources -->
-  <Target Name="GetJavaStagingPath" DependsOnTargets="StageJavaSources" Returns="$(JavaStagingDir)">
-    <Message Text="[$(ProjectName)] Java staging path: $(JavaStagingDir)" Importance="low" />
-  </Target>
-
-  <!-- GetAarOutputPath - returns the path to the built AAR -->
-  <Target Name="GetAarOutputPath" Returns="$(FinalAarPath)">
-    <Message Text="[$(ProjectName)] AAR output path: $(FinalAarPath)" Importance="low" />
-  </Target>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 
   <ImportGroup Label="ExtensionTargets" />
 
   <!-- ============================================================
-       Property Page Registration
+       Ocean Java Library Extension Targets
+
+       Imports OceanJavaLib.targets for property page registration,
+       AAR output properties, public API targets (GetGradleModulePath,
+       GetJavaStagingPath, GetAarOutputPath), and build hooks.
        ============================================================ -->
   <PropertyGroup>
     <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
-    <_OceanJavaLibPropsPath Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.General.xml</_OceanJavaLibPropsPath>
+    <_OceanJavaLibTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets')">$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets</_OceanJavaLibTargetsPath>
   </PropertyGroup>
-
-  <ItemGroup Condition="Exists('$(_OceanJavaLibPropsPath)')">
-    <PropertyPageSchema Include="$(_OceanJavaLibPropsPath)" />
-  </ItemGroup>
+  <Import Project="$(_OceanJavaLibTargetsPath)"
+          Condition="'$(_OceanJavaLibTargetsPath)' != '' AND Exists('$(_OceanJavaLibTargetsPath)')" />
 
   <!-- Import shared targets (Java staging, Gradle wrapper verification, Java validation) -->
   <PropertyGroup>
@@ -183,24 +152,7 @@
   <Import Project="$(_OceanCommonTargetsPath)"
           Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
-  <!-- ============================================================
-       Project-Specific Build Hooks
-       Build, Clean, and Rebuild targets are provided by OceanAndroidCommon.targets.
-       ============================================================ -->
-
-  <!-- Copy AAR to output directory after Gradle build -->
-  <Target Name="_CopyAarOutput" AfterTargets="Build;Rebuild">
-    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
-    <Copy SourceFiles="$(AarOutputFile)"
-          DestinationFiles="$(FinalAarPath)"
-          SkipUnchangedFiles="true"
-          Condition="Exists('$(AarOutputFile)')" />
-    <Message Text="$(MSBuildProjectFile) -> $([System.IO.Path]::GetFullPath('$(FinalAarPath)'))" Importance="high" />
-  </Target>
-
-  <!-- Delete AAR from output directory during Clean -->
-  <Target Name="_CleanAarOutput" AfterTargets="Clean">
-    <Delete Files="$(FinalAarPath)" Condition="Exists('$(FinalAarPath)')" />
-  </Target>
+  <!-- Build, Clean, Rebuild targets provided by OceanAndroidCommon.targets. -->
+  <!-- AAR output management, property page, and public API targets provided by OceanJavaLib.targets. -->
 
 </Project>
