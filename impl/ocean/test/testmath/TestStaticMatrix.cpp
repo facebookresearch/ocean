@@ -11,6 +11,8 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Matrix.h"
 #include "ocean/math/Numeric.h"
@@ -210,134 +212,120 @@ bool TestStaticMatrix::testConstructorIdentity()
 {
 	Log::info() << "Identity Constructor test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 1, 1>(true), 1, 1) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 1, 1>(false), 1, 1) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 1, 1>(true), 1, 1) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 1, 1>(false), 1, 1) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 1, 1>(true), 1, 1));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 1, 1>(false), 1, 1));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 1, 1>(true), 1, 1));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 1, 1>(false), 1, 1));
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 1, 1>(true), 1, 1) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 1, 1>(false), 1, 1) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 1, 1>(true), 1, 1) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 1, 1>(false), 1, 1) && allSucceeded;
-
-
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 1, 2>(true), 1, 2) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 1, 2>(false), 1, 2) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 1, 2>(true), 1, 2) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 1, 2>(false), 1, 2) && allSucceeded;
-
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 1, 2>(true), 1, 2) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 1, 2>(false), 1, 2) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 1, 2>(true), 1, 2) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 1, 2>(false), 1, 2) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 1, 1>(true), 1, 1));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 1, 1>(false), 1, 1));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 1, 1>(true), 1, 1));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 1, 1>(false), 1, 1));
 
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 2, 1>(true), 2, 1) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 2, 1>(false), 2, 1) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 2, 1>(true), 2, 1) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 2, 1>(false), 2, 1) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 1, 2>(true), 1, 2));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 1, 2>(false), 1, 2));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 1, 2>(true), 1, 2));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 1, 2>(false), 1, 2));
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 2, 1>(true), 2, 1) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 2, 1>(false), 2, 1) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 2, 1>(true), 2, 1) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 2, 1>(false), 2, 1) && allSucceeded;
-
-
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 5, 5>(true), 5, 5) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 5, 5>(false), 5, 5) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 5, 5>(true), 5, 5) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 5, 5>(false), 5, 5) && allSucceeded;
-
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 5, 5>(true), 5, 5) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 5, 5>(false), 5, 5) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 5, 5>(true), 5, 5) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 5, 5>(false), 5, 5) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 1, 2>(true), 1, 2));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 1, 2>(false), 1, 2));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 1, 2>(true), 1, 2));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 1, 2>(false), 1, 2));
 
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 31, 19>(true), 31, 19) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 31, 19>(false), 31, 19) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 31, 19>(true), 31, 19) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 31, 19>(false), 31, 19) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 2, 1>(true), 2, 1));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 2, 1>(false), 2, 1));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 2, 1>(true), 2, 1));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 2, 1>(false), 2, 1));
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 31, 19>(true), 31, 19) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 31, 19>(false), 31, 19) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 31, 19>(true), 31, 19) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 31, 19>(false), 31, 19) && allSucceeded;
-
-
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 24, 18>(true), 24, 18) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 24, 18>(false), 24, 18) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 24, 18>(true), 24, 18) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 24, 18>(false), 24, 18) && allSucceeded;
-
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 24, 18>(true), 24, 18) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 24, 18>(false), 24, 18) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 24, 18>(true), 24, 18) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 24, 18>(false), 24, 18) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 2, 1>(true), 2, 1));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 2, 1>(false), 2, 1));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 2, 1>(true), 2, 1));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 2, 1>(false), 2, 1));
 
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 16, 9>(true), 16, 9) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 16, 9>(false), 16, 9) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 16, 9>(true), 16, 9) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 16, 9>(false), 16, 9) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 5, 5>(true), 5, 5));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 5, 5>(false), 5, 5));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 5, 5>(true), 5, 5));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 5, 5>(false), 5, 5));
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 16, 9>(true), 16, 9) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 16, 9>(false), 16, 9) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 16, 9>(true), 16, 9) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 16, 9>(false), 16, 9) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 5, 5>(true), 5, 5));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 5, 5>(false), 5, 5));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 5, 5>(true), 5, 5));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 5, 5>(false), 5, 5));
 
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<float, 7, 22>(true), 7, 22) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<float, 7, 22>(false), 7, 22) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<float, 7, 22>(true), 7, 22) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<float, 7, 22>(false), 7, 22) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 31, 19>(true), 31, 19));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 31, 19>(false), 31, 19));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 31, 19>(true), 31, 19));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 31, 19>(false), 31, 19));
 
-	allSucceeded = isIdentityMatrix(StaticMatrix<double, 7, 22>(true), 7, 22) && allSucceeded;
-	allSucceeded = !isIdentityMatrix(StaticMatrix<double, 7, 22>(false), 7, 22) && allSucceeded;
-	allSucceeded = !isNullMatrix(StaticMatrix<double, 7, 22>(true), 7, 22) && allSucceeded;
-	allSucceeded = isNullMatrix(StaticMatrix<double, 7, 22>(false), 7, 22) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 31, 19>(true), 31, 19));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 31, 19>(false), 31, 19));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 31, 19>(true), 31, 19));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 31, 19>(false), 31, 19));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
 
-	return allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 24, 18>(true), 24, 18));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 24, 18>(false), 24, 18));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 24, 18>(true), 24, 18));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 24, 18>(false), 24, 18));
+
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 24, 18>(true), 24, 18));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 24, 18>(false), 24, 18));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 24, 18>(true), 24, 18));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 24, 18>(false), 24, 18));
+
+
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 16, 9>(true), 16, 9));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 16, 9>(false), 16, 9));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 16, 9>(true), 16, 9));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 16, 9>(false), 16, 9));
+
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 16, 9>(true), 16, 9));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 16, 9>(false), 16, 9));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 16, 9>(true), 16, 9));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 16, 9>(false), 16, 9));
+
+
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<float, 7, 22>(true), 7, 22));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<float, 7, 22>(false), 7, 22));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<float, 7, 22>(true), 7, 22));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<float, 7, 22>(false), 7, 22));
+
+	OCEAN_EXPECT_TRUE(validation, isIdentityMatrix(StaticMatrix<double, 7, 22>(true), 7, 22));
+	OCEAN_EXPECT_FALSE(validation, isIdentityMatrix(StaticMatrix<double, 7, 22>(false), 7, 22));
+	OCEAN_EXPECT_FALSE(validation, isNullMatrix(StaticMatrix<double, 7, 22>(true), 7, 22));
+	OCEAN_EXPECT_TRUE(validation, isNullMatrix(StaticMatrix<double, 7, 22>(false), 7, 22));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestStaticMatrix::testConstructorData()
 {
 	Log::info() << "Data constructor test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testConstructorData<1, 1>() && allSucceeded;
-	allSucceeded = testConstructorData<1, 2>() && allSucceeded;
-	allSucceeded = testConstructorData<2, 1>() && allSucceeded;
-	allSucceeded = testConstructorData<2, 2>() && allSucceeded;
-	allSucceeded = testConstructorData<5, 5>() && allSucceeded;
-	allSucceeded = testConstructorData<12, 12>() && allSucceeded;
-	allSucceeded = testConstructorData<12, 13>() && allSucceeded;
-	allSucceeded = testConstructorData<13, 12>() && allSucceeded;
-	allSucceeded = testConstructorData<5, 10>() && allSucceeded;
-	allSucceeded = testConstructorData<31, 31>() && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<1, 1>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<1, 2>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<2, 1>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<2, 2>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<5, 5>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<12, 12>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<12, 13>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<13, 12>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<5, 10>());
+	OCEAN_EXPECT_TRUE(validation, testConstructorData<31, 31>());
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -423,7 +411,8 @@ bool TestStaticMatrix::testTranspose(const double testDuration)
 {
 	Log::info() << "Transpose test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -431,30 +420,23 @@ bool TestStaticMatrix::testTranspose(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			allSucceeded = testTranspose<1, 1>() && allSucceeded;
-			allSucceeded = testTranspose<1, 2>() && allSucceeded;
-			allSucceeded = testTranspose<2, 1>() && allSucceeded;
-			allSucceeded = testTranspose<5, 5>() && allSucceeded;
-			allSucceeded = testTranspose<9, 10>() && allSucceeded;
-			allSucceeded = testTranspose<10, 9>() && allSucceeded;
-			allSucceeded = testTranspose<1, 11>() && allSucceeded;
-			allSucceeded = testTranspose<11, 1>() && allSucceeded;
-			allSucceeded = testTranspose<4, 16>() && allSucceeded;
-			allSucceeded = testTranspose<25, 25>() && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testTranspose<1, 1>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<1, 2>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<2, 1>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<5, 5>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<9, 10>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<10, 9>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<1, 11>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<11, 1>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<4, 16>());
+			OCEAN_EXPECT_TRUE(validation, testTranspose<25, 25>());
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -495,8 +477,8 @@ bool TestStaticMatrix::testMatrixAdd(const double testDuration)
 {
 	Log::info() << "Add operator test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -504,86 +486,102 @@ bool TestStaticMatrix::testMatrixAdd(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixAdd<1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if ( testMatrixAdd<1, 2>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<1, 2>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<2, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<2, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<9, 10>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<9, 10>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<10, 9>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<10, 9>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<1, 11>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<1, 11>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<11, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<11, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<4, 16>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<4, 16>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAdd<25, 25>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAdd<25, 25>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
-
-			iterations++;
-
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -624,8 +622,8 @@ bool TestStaticMatrix::testMatrixAddTransposed(const double testDuration)
 {
 	Log::info() << "Transposed add test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -633,92 +631,111 @@ bool TestStaticMatrix::testMatrixAddTransposed(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixAddTransposed<1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<1, 2>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<1, 2>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<2, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<2, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<1, 11>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<1, 11>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<11, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<11, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<4, 16>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<4, 16>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<25, 25>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<25, 25>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<2, 113>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixAddTransposed<2, 113>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixAddTransposed<3, 82>())
 			{
-				validIterations++;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			iterations++;
+				if (!testMatrixAddTransposed<3, 82>())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -755,8 +772,8 @@ bool TestStaticMatrix::testScalarMultiplication(const double testDuration)
 {
 	Log::info() << "Scalar multiplication test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -764,71 +781,84 @@ bool TestStaticMatrix::testScalarMultiplication(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testScalarMultiplication<1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<1, 2>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<1, 2>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<2, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<2, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<1, 11>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<1, 11>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<11, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<11, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<4, 16>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testScalarMultiplication<4, 16>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testScalarMultiplication<25, 25>())
 			{
-				validIterations++;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			iterations++;
+				if (!testScalarMultiplication<25, 25>())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -874,22 +904,19 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 
 	Log::info() << "Vector multiplication test for " << sizeof(T) * 8 << "bit floating point values:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testVectorMultiplication<T, 3>(testDuration) && allSucceeded;
-	allSucceeded = testVectorMultiplication<T, 4>(testDuration) && allSucceeded;
-	allSucceeded = testVectorMultiplication<T, 5>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testVectorMultiplication<T, 3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testVectorMultiplication<T, 4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testVectorMultiplication<T, 5>(testDuration));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, size_t tSize>
 bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 {
 	Log::info() << "... with " << tSize << "x" << tSize << " matrix:";
-
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
 
 	const unsigned int constNumber = 100000u;
 
@@ -901,6 +928,7 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 	HighPerformanceStatistic performance;
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -934,43 +962,33 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 
 		for (unsigned int n = 0u; n < constNumber; ++n)
 		{
-			const MatrixT<T> result(testMatrix * MatrixT<T>(tSize, 1, vectors[n].data()));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			bool localSucceeded = true;
+			const MatrixT<T> result(testMatrix * MatrixT<T>(tSize, 1, vectors[n].data()));
 
 			for (size_t i = 0; i < tSize; ++i)
 			{
 				if (NumericT<T>::isNotEqual(results[n][i], result(i), NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance for " << String::insertCharacter(String::toAString(constNumber), ',', 3, false) << " repetitions: " << String::toAString(performance.averageMseconds()) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestStaticMatrix::testMatrixMultiplication(const double testDuration)
 {
 	Log::info() << "Matrix multiplication test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -978,78 +996,93 @@ bool TestStaticMatrix::testMatrixMultiplication(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixMultiplication<1, 1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<1, 1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<1, 2, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<1, 2, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<2, 1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<2, 1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<5, 5, 2>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<5, 5, 2>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<5, 5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<5, 5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<1, 11, 7>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<1, 11, 7>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<11, 1, 11>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<11, 1, 11>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<4, 16, 9>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplication<4, 16, 9>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplication<25, 25, 4>())
 			{
-				validIterations++;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			iterations++;
+				if (!testMatrixMultiplication<25, 25, 4>())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns, size_t tColumns2>
@@ -1123,8 +1156,8 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft(const double testD
 {
 	Log::info() << "Left transposed matrix multiplication test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1132,92 +1165,111 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft(const double testD
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixMultiplicationTransposedLeft<1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<1, 2>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<1, 2>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<2, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<2, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<1, 11>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<1, 11>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<11, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<11, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<4, 16>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<4, 16>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<25, 25>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<25, 25>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<2, 113>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<2, 113>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<3, 82>())
 			{
-				validIterations++;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			iterations++;
+				if (!testMatrixMultiplicationTransposedLeft<3, 82>())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -1267,8 +1319,8 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight(const double test
 {
 	Log::info() << "Right transposed matrix multiplication test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1276,92 +1328,111 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight(const double test
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixMultiplicationTransposedLeft<1, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<1, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<1, 2>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<1, 2>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<2, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<2, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<5, 5>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<1, 11>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<1, 11>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<11, 1>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<11, 1>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<4, 16>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<4, 16>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<25, 25>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<25, 25>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<2, 113>())
 			{
-				validIterations++;
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				if (!testMatrixMultiplicationTransposedLeft<2, 113>())
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			iterations++;
-
-			if (testMatrixMultiplicationTransposedLeft<3, 82>())
 			{
-				validIterations++;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			iterations++;
+				if (!testMatrixMultiplicationTransposedLeft<3, 82>())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <size_t tRows, size_t tColumns>
@@ -1491,25 +1562,25 @@ bool TestStaticMatrix::testSolveCholesky(const double testDuration)
 	Log::info() << "Test solving symmetric Matrix using cholesky decomposition:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testSolveCholeskyMatrix<4>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testSolveCholeskyMatrix<6>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSolveCholeskyMatrix<4>(testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testSolveCholeskyMatrix<9>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSolveCholeskyMatrix<6>(testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testSolveCholeskyMatrix<100>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSolveCholeskyMatrix<9>(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	OCEAN_EXPECT_TRUE(validation, testSolveCholeskyMatrix<100>(testDuration));
+
+	Log::info() << " ";
+
+	if (validation.succeededSoFar())
 	{
 		Log::info() << "Cholesky decomposition test succeeded.";
 	}
@@ -1518,7 +1589,7 @@ bool TestStaticMatrix::testSolveCholesky(const double testDuration)
 		Log::info() << "Cholesky decomposition test FAILED!";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <size_t tSize>
@@ -1528,14 +1599,12 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 
 	// generate random values
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	Matrix matrix(10000, tSize);
 	Matrix vectorX(tSize, 1u);
 
 	const Scalar epsilon = Numeric::eps() * 100;
-
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
@@ -1563,6 +1632,8 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 		StaticMatrix<Scalar, tSize, 1> staticMatrixX(vectorX.data());
 		StaticMatrix<Scalar, tSize, tSize> symmetricStaticMatrix(symmetricMatrix.data());
 
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		if (symmetricStaticMatrix.isSymmetric())
 		{
 			StaticMatrix<Scalar, tSize, 1> staticMatrixSolve;
@@ -1571,23 +1642,22 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 			const bool success = symmetricStaticMatrix.solveCholesky(staticMatrixY, staticMatrixSolve);
 			performance.stop();
 
-			if (success && staticMatrixX.isEqual(staticMatrixSolve, epsilon))
+			if (!success || !staticMatrixX.isEqual(staticMatrixSolve, epsilon))
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

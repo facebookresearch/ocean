@@ -16,6 +16,7 @@
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -95,14 +96,10 @@ bool TestAnyCamera::testConstructor(const double testDuration)
 
 	Log::info() << "AnyCamera constructor test with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.90, randomGenerator);
 
 	const Timestamp startTimestamp(true);
-
-	uint64_t lowPrecision = 0u;
-	uint64_t iterations = 0u;
 
 	do
 	{
@@ -131,45 +128,36 @@ bool TestAnyCamera::testConstructor(const double testDuration)
 
 			const VerificationResult verificationResult = verifyAnyCamera(anyCamera, &randomGenerator);
 
-			if (verificationResult == VR_FAILED)
 			{
-				allSucceeded = false;
-			}
-			else if (verificationResult == VR_LOW_PRECISION)
-			{
-				++lowPrecision;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			++iterations;
+				if (verificationResult == VR_FAILED)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+				else if (verificationResult == VR_LOW_PRECISION)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 
 			const typename AnyCameraPinholeT<T>::WrappedCamera& wrappedCamera = dynamic_cast<const typename AnyCameraPinholeT<T>::WrappedCamera&>(anyCamera);
 
 			const PinholeCameraT<T>& actualCamera = wrappedCamera.actualCamera();
 
-			if (actualCamera.width() != width || actualCamera.height() != height)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, actualCamera.width(), width);
+			OCEAN_EXPECT_EQUAL(validation, actualCamera.height(), height);
 
-			if (NumericT<T>::isNotEqual(actualCamera.principalPointX(), principalPointX) || NumericT<T>::isNotEqual(actualCamera.principalPointY(), principalPointY))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(actualCamera.principalPointX(), principalPointX));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(actualCamera.principalPointY(), principalPointY));
 
-			if (NumericT<T>::isNotEqual(actualCamera.fovX(), anyCamera.fovX(), T(0.01)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(actualCamera.fovX(), anyCamera.fovX(), T(0.01)));
 
-			if (anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width + RandomI::random(randomGenerator, 1u, 10u), height, fovX, principalPointX, principalPointY)))
+			OCEAN_EXPECT_FALSE(validation, anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width + RandomI::random(randomGenerator, 1u, 10u), height, fovX, principalPointX, principalPointY)))
 					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height + RandomI::random(randomGenerator, 1u, 10u), fovX, principalPointX, principalPointY)))
 					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, std::max(T(0.01), fovX + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator)), principalPointX, principalPointY)))
 					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, fovX, principalPointX + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator), principalPointY)))
-					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, fovX, principalPointX, principalPointY + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator)))))
-			{
-				allSucceeded = false;
-			}
-		}
+					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, fovX, principalPointX, principalPointY + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator)))));		}
 
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 640u, 1920u);
@@ -181,78 +169,47 @@ bool TestAnyCamera::testConstructor(const double testDuration)
 
 			const VerificationResult verificationResult = verifyAnyCamera(anyCamera, &randomGenerator);
 
-			if (verificationResult == VR_FAILED)
 			{
-				allSucceeded = false;
-			}
-			else if (verificationResult == VR_LOW_PRECISION)
-			{
-				++lowPrecision;
-			}
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			++iterations;
+				if (verificationResult == VR_FAILED)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+				else if (verificationResult == VR_LOW_PRECISION)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 
 			const typename AnyCameraFisheyeT<T>::WrappedCamera& wrappedCamera = dynamic_cast<const typename AnyCameraFisheyeT<T>::WrappedCamera&>(anyCamera);
 
 			const FisheyeCameraT<T>& actualCamera = wrappedCamera.actualCamera();
 
-			if (anyCamera.width() != width)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, anyCamera.width(), width);
 
-			if (anyCamera.height() != height)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, anyCamera.height(), height);
 
-			if (NumericT<T>::isNotEqual(actualCamera.fovX(), anyCamera.fovX(), T(0.01)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(actualCamera.fovX(), anyCamera.fovX(), T(0.01)));
 
 			const unsigned int differentWidth = width + RandomI::random(randomGenerator, 1u, 10u);
 
-			if (anyCamera.isEqual(AnyCameraFisheyeT<T>(FisheyeCameraT<T>(differentWidth, height, fovX))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, anyCamera.isEqual(AnyCameraFisheyeT<T>(FisheyeCameraT<T>(differentWidth, height, fovX))));
 
 			const unsigned int differentHeight = height + RandomI::random(randomGenerator, 1u, 10u);
 
-			if (anyCamera.isEqual(AnyCameraFisheyeT<T>(FisheyeCameraT<T>(width, differentHeight, fovX))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, anyCamera.isEqual(AnyCameraFisheyeT<T>(FisheyeCameraT<T>(width, differentHeight, fovX))));
 
 			const T differentFovX = fovX + RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(1), NumericT<T>::deg2rad(30)) * RandomT<T>::sign(randomGenerator);
 
-			if (anyCamera.isEqual(AnyCameraFisheyeT<T>(FisheyeCameraT<T>(width, height, differentFovX))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, anyCamera.isEqual(AnyCameraFisheyeT<T>(FisheyeCameraT<T>(width, height, differentFovX))));
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0u);
-	const double percent = double(lowPrecision) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	if (percent > 0.1) // 10%
-	{
-		allSucceeded = false;
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -260,9 +217,8 @@ bool TestAnyCamera::testPrincipalPoint(const double testDuration)
 {
 	Log::info() << "Principal point test with " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -292,29 +248,16 @@ bool TestAnyCamera::testPrincipalPoint(const double testDuration)
 
 			const VectorT2<T> offset = offsetImagePoint - perfectImagePoint;
 
-			if (NumericT<T>::isNotEqual(offset.x(), principalPointOffsetX, T(0.01)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offset.x(), principalPointOffsetX, T(0.01)));
 
-			if (NumericT<T>::isNotEqual(offset.y(), principalPointOffsetY, T(0.01)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offset.y(), principalPointOffsetY, T(0.01)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

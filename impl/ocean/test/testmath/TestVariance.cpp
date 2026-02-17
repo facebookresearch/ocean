@@ -10,6 +10,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/math/Random.h"
 #include "ocean/math/Variance.h"
@@ -110,13 +111,14 @@ bool TestVariance::testAverage(const double testDuration)
 
 	Log::info() << "Average test, with '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int size = RandomI::random(1000u);
+		const unsigned int size = RandomI::random(randomGenerator, 1000u);
 
 		std::vector<T> elements;
 		elements.reserve(size);
@@ -125,7 +127,7 @@ bool TestVariance::testAverage(const double testDuration)
 
 		for (unsigned int n = 0u; n < size; ++n)
 		{
-			const T element = RandomT<T>::scalar(-10, 10);
+			const T element = RandomT<T>::scalar(randomGenerator, -10, 10);
 
 			elements.emplace_back(element);
 
@@ -144,17 +146,11 @@ bool TestVariance::testAverage(const double testDuration)
 
 			if (size != 0)
 			{
-				if (NumericT<T>::isNotWeakEqual(object.average(), average))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(object.average(), average));
 			}
 			else
 			{
-				if (object)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !object);
 			}
 		}
 
@@ -163,32 +159,19 @@ bool TestVariance::testAverage(const double testDuration)
 
 			if (size != 0)
 			{
-				if (NumericT<T>::isNotWeakEqual(object.average(), average))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(object.average(), average));
 			}
 			else
 			{
-				if (object)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !object);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -198,20 +181,21 @@ bool TestVariance::testDeviation(const double testDuration)
 
 	Log::info() << "Deviation test, with '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int size = RandomI::random(1000u);
+		const unsigned int size = RandomI::random(randomGenerator, 1000u);
 
 		std::vector<T> elements;
 		elements.reserve(size);
 
 		for (unsigned int n = 0u; n < size; ++n)
 		{
-			const T element = RandomT<T>::scalar(-10, 10);
+			const T element = RandomT<T>::scalar(randomGenerator, -10, 10);
 
 			elements.emplace_back(element);
 		}
@@ -237,24 +221,15 @@ bool TestVariance::testDeviation(const double testDuration)
 
 				const T variance = sumSqrDifferences / T(size);
 
-				if (NumericT<T>::isNotWeakEqual(object.variance(), variance))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(object.variance(), variance));
 
 				const T deviation = NumericT<T>::sqrt(variance);
 
-				if (NumericT<T>::isNotWeakEqual(object.deviation(), deviation))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(object.deviation(), deviation));
 			}
 			else
 			{
-				if (object)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !object);
 			}
 		}
 
@@ -274,39 +249,23 @@ bool TestVariance::testDeviation(const double testDuration)
 
 				const T variance = sumSqrDifferences / T(size);
 
-				if (NumericT<T>::isNotWeakEqual(object.variance(), variance))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(object.variance(), variance));
 
 				const T deviation = NumericT<T>::sqrt(variance);
 
-				if (NumericT<T>::isNotWeakEqual(object.deviation(), deviation))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(object.deviation(), deviation));
 			}
 			else
 			{
-				if (object)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !object);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -316,20 +275,21 @@ bool TestVariance::testRemove(const double testDuration)
 
 	Log::info() << "Remove test, with '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int initialSize = RandomI::random(1u, 1000u);
+		const unsigned int initialSize = RandomI::random(randomGenerator, 1u, 1000u);
 
 		std::vector<T> elements;
 		elements.reserve(initialSize);
 
 		for (unsigned int n = 0u; n < initialSize; ++n)
 		{
-			const T element = RandomT<T>::scalar(-10, 10);
+			const T element = RandomT<T>::scalar(randomGenerator, -10, 10);
 
 			elements.emplace_back(element);
 		}
@@ -341,13 +301,13 @@ bool TestVariance::testRemove(const double testDuration)
 			object.add(elements[n]);
 		}
 
-		const unsigned int numberRemove = RandomI::random(1u, initialSize);
+		const unsigned int numberRemove = RandomI::random(randomGenerator, 1u, initialSize);
 
 		for (unsigned int n = 0u; n < numberRemove; ++n)
 		{
 			ocean_assert(!elements.empty());
 
-			const unsigned int index = RandomI::random((unsigned int)(elements.size()) - 1u);
+			const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(elements.size()) - 1u);
 
 			object.remove(elements[index]);
 
@@ -355,19 +315,13 @@ bool TestVariance::testRemove(const double testDuration)
 			elements.pop_back();
 		}
 
-		if (object.size() != elements.size())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, object.size(), elements.size());
 
 		if (elements.empty())
 		{
 			ocean_assert(initialSize == numberRemove);
 
-			if (object)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !object);
 		}
 		else
 		{
@@ -392,31 +346,18 @@ bool TestVariance::testRemove(const double testDuration)
 
 			constexpr T eps = std::is_same<T, float>::value ? T(0.1) : T(0.001);
 
-			if (NumericT<T>::isNotEqual(object.variance(), variance, eps))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(object.variance(), variance, eps));
 
 			const T deviation = NumericT<T>::sqrt(variance);
 
-			if (NumericT<T>::isNotEqual(object.deviation(), deviation, NumericT<T>::sqrt(eps)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(object.deviation(), deviation, NumericT<T>::sqrt(eps)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
