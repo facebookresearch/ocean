@@ -13,6 +13,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -97,146 +98,115 @@ bool TestStaticBuffer::testConstructor()
 {
 	Log::info() << "Testing constructor:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testConstructor<int32_t, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<int32_t, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<int32_t, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testConstructor<int32_t, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<int32_t, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<int32_t, 10>(randomGenerator));
 
-	allSucceeded = testConstructor<uint8_t, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<uint8_t, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<uint8_t, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testConstructor<uint8_t, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<uint8_t, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<uint8_t, 10>(randomGenerator));
 
-	allSucceeded = testConstructor<float, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<float, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<float, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testConstructor<float, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<float, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<float, 10>(randomGenerator));
 
-	allSucceeded = testConstructor<std::string, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<std::string, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<std::string, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testConstructor<std::string, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<std::string, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testConstructor<std::string, 10>(randomGenerator));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStaticBuffer::testAccess()
 {
 	Log::info() << "Testing access:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testAccess<int32_t, 1>() && allSucceeded;
-	allSucceeded = testAccess<int32_t, 2>() && allSucceeded;
-	allSucceeded = testAccess<int32_t, 10>() && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testAccess<int32_t, 1>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<int32_t, 2>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<int32_t, 10>());
 
-	allSucceeded = testAccess<uint8_t, 1>() && allSucceeded;
-	allSucceeded = testAccess<uint8_t, 2>() && allSucceeded;
-	allSucceeded = testAccess<uint8_t, 10>() && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testAccess<uint8_t, 1>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<uint8_t, 2>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<uint8_t, 10>());
 
-	allSucceeded = testAccess<float, 1>() && allSucceeded;
-	allSucceeded = testAccess<float, 2>() && allSucceeded;
-	allSucceeded = testAccess<float, 10>() && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testAccess<float, 1>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<float, 2>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<float, 10>());
 
-	allSucceeded = testAccess<std::string, 1>() && allSucceeded;
-	allSucceeded = testAccess<std::string, 2>() && allSucceeded;
-	allSucceeded = testAccess<std::string, 10>() && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testAccess<std::string, 1>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<std::string, 2>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<std::string, 10>());
 
-	allSucceeded = testAccess<Frame, 1>() && allSucceeded;
-	allSucceeded = testAccess<Frame, 2>() && allSucceeded;
-	allSucceeded = testAccess<Frame, 10>() && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testAccess<Frame, 1>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<Frame, 2>());
+	OCEAN_EXPECT_TRUE(validation, testAccess<Frame, 10>());
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStaticBuffer::testClear()
 {
 	Log::info() << "Testing clear:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testClear<int32_t, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<int32_t, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<int32_t, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testClear<int32_t, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<int32_t, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<int32_t, 10>(randomGenerator));
 
-	allSucceeded = testClear<uint8_t, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<uint8_t, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<uint8_t, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testClear<uint8_t, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<uint8_t, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<uint8_t, 10>(randomGenerator));
 
-	allSucceeded = testClear<float, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<float, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<float, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testClear<float, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<float, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<float, 10>(randomGenerator));
 
-	allSucceeded = testClear<std::string, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<std::string, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testClear<std::string, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testClear<std::string, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<std::string, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testClear<std::string, 10>(randomGenerator));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStaticBuffer::testComparison()
 {
 	Log::info() << "Testing comparison:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testComparison<int32_t, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<int32_t, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<int32_t, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testComparison<int32_t, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<int32_t, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<int32_t, 10>(randomGenerator));
 
-	allSucceeded = testComparison<uint8_t, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<uint8_t, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<uint8_t, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testComparison<uint8_t, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<uint8_t, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<uint8_t, 10>(randomGenerator));
 
-	allSucceeded = testComparison<float, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<float, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<float, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testComparison<float, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<float, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<float, 10>(randomGenerator));
 
-	allSucceeded = testComparison<std::string, 1>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<std::string, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testComparison<std::string, 10>(randomGenerator) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testComparison<std::string, 1>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<std::string, 2>(randomGenerator));
+	OCEAN_EXPECT_TRUE(validation, testComparison<std::string, 10>(randomGenerator));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, size_t tCapacity>

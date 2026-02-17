@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -67,26 +68,13 @@ bool TestSingleton::testInstance()
 {
 	Log::info() << "Test instance:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (SingletonUser::get().value() != (unsigned int)(-1))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, SingletonUser::get().value(), (unsigned int)(-1));
 
-	Log::info() << "Validation: succeeded;";
-	Log::info() << " ";
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Singleton test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Singleton test FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -88,22 +89,15 @@ bool TestSubset::testSubset(const double testDuration)
 
 	Log::info() << "Normal subset test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testSubset<unsigned short>(testDuration) && allSucceeded;
-	allSucceeded = testSubset<unsigned int>(testDuration) && allSucceeded;
-	allSucceeded = testSubset<unsigned long long>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSubset<unsigned short>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSubset<unsigned int>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSubset<unsigned long long>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSubset::testInvertedSubset(const double testDuration)
@@ -112,22 +106,15 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 	Log::info() << "Inverted subset test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testInvertedSubset<unsigned short>(testDuration) && allSucceeded;
-	allSucceeded = testInvertedSubset<unsigned int>(testDuration) && allSucceeded;
-	allSucceeded = testInvertedSubset<unsigned long long>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInvertedSubset<unsigned short>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInvertedSubset<unsigned int>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInvertedSubset<unsigned long long>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TIndex>
@@ -144,14 +131,16 @@ bool TestSubset::testSubset(const double testDuration)
 	Indices64 setInteger64;
 	Strings setString;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	bool firstIteration = true;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int setSize = RandomI::random(1u, 5000u);
+		const unsigned int setSize = RandomI::random(randomGenerator, 1u, 5000u);
 
 		setInteger32.resize(setSize);
 		setInteger64.resize(setSize);
@@ -165,12 +154,12 @@ bool TestSubset::testSubset(const double testDuration)
 		}
 
 		ocean_assert(setSize >= 1u);
-		const unsigned int subsetSize = firstIteration ? setSize : RandomI::random(setSize - 1u);
+		const unsigned int subsetSize = firstIteration ? setSize : RandomI::random(randomGenerator, setSize - 1u);
 
 		IndexSet subsetIndicesSet;
 		while (subsetIndicesSet.size() < subsetSize)
 		{
-			subsetIndicesSet.insert(TIndex(RandomI::random(setSize - 1u)));
+			subsetIndicesSet.insert(TIndex(RandomI::random(randomGenerator, setSize - 1u)));
 		}
 
 		const Indices subsetIndicesArray(subsetIndicesSet.begin(), subsetIndicesSet.end());
@@ -178,81 +167,51 @@ bool TestSubset::testSubset(const double testDuration)
 		{
 			const Indices32 subset32 = Subset::subset(setInteger32, subsetIndicesSet);
 
-			if (subset32.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset32.size(), subsetIndicesSet.size());
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices32 subset32 = Subset::subset(setInteger32.data(), setInteger32.size(), subsetIndicesSet);
 
-			if (subset32.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset32.size(), subsetIndicesSet.size());
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices32 subset32 = Subset::subset(setInteger32, subsetIndicesArray);
 
-			if (subset32.size() != subsetIndicesArray.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset32.size(), subsetIndicesArray.size());
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices32 subset32 = Subset::subset(setInteger32.data(), setInteger32.size(), subsetIndicesArray);
 
-			if (subset32.size() != subsetIndicesArray.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset32.size(), subsetIndicesArray.size());
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices32 subset32 = Subset::subset(setInteger32.data(), setInteger32.size(), subsetIndicesArray.data(), subsetIndicesArray.size());
 
-			if (subset32.size() != subsetIndicesArray.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset32.size(), subsetIndicesArray.size());
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 
@@ -261,81 +220,51 @@ bool TestSubset::testSubset(const double testDuration)
 		{
 			const Indices64 subset64 = Subset::subset(setInteger64, subsetIndicesSet);
 
-			if (subset64.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset64.size(), subsetIndicesSet.size());
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices64 subset64 = Subset::subset(setInteger64.data(), setInteger64.size(), subsetIndicesSet);
 
-			if (subset64.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset64.size(), subsetIndicesSet.size());
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices64 subset64 = Subset::subset(setInteger64, subsetIndicesArray);
 
-			if (subset64.size() != subsetIndicesArray.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset64.size(), subsetIndicesArray.size());
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices64 subset64 = Subset::subset(setInteger64.data(), setInteger64.size(), subsetIndicesArray);
 
-			if (subset64.size() != subsetIndicesArray.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset64.size(), subsetIndicesArray.size());
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Indices64 subset64 = Subset::subset(setInteger64.data(), setInteger64.size(), subsetIndicesArray.data(), subsetIndicesArray.size());
 
-			if (subset64.size() != subsetIndicesArray.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, subset64.size(), subsetIndicesArray.size());
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				if (subsetIndicesSet.find(TIndex(*i)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
 			}
 		}
 
@@ -344,91 +273,61 @@ bool TestSubset::testSubset(const double testDuration)
 		{
 			const Strings strings = Subset::subset(setString, subsetIndicesSet);
 
-			if (strings.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), subsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Strings strings = Subset::subset(setString.data(), setString.size(), subsetIndicesSet);
 
-			if (strings.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), subsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Strings strings = Subset::subset(setString, subsetIndicesArray);
 
-			if (strings.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), subsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Strings strings = Subset::subset(setString.data(), setString.size(), subsetIndicesArray);
 
-			if (strings.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), subsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 		{
 			const Strings strings = Subset::subset(setString.data(), setString.size(), subsetIndicesArray.data(), subsetIndicesArray.size());
 
-			if (strings.size() != subsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), subsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || subsetIndicesSet.find(TIndex(value)) == subsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && subsetIndicesSet.find(TIndex(value)) != subsetIndicesSet.end());
 			}
 		}
 
@@ -437,16 +336,9 @@ bool TestSubset::testSubset(const double testDuration)
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TIndex>
@@ -463,14 +355,16 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 	Indices64 setInteger64;
 	Strings setString;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
 	bool firstIteration = true;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int setSize = RandomI::random(1u, 5000u);
+		const unsigned int setSize = RandomI::random(randomGenerator, 1u, 5000u);
 
 		setInteger32.resize(setSize);
 		setInteger64.resize(setSize);
@@ -484,12 +378,12 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 		}
 
 		ocean_assert(setSize >= 1u);
-		const unsigned int subsetSize = firstIteration ? setSize : RandomI::random(setSize - 1u);
+		const unsigned int subsetSize = firstIteration ? setSize : RandomI::random(randomGenerator, setSize - 1u);
 
 		IndexSet subsetIndicesSet;
 		while (subsetIndicesSet.size() < subsetSize)
 		{
-			subsetIndicesSet.insert(TIndex(RandomI::random(setSize - 1u)));
+			subsetIndicesSet.insert(TIndex(RandomI::random(randomGenerator, setSize - 1u)));
 		}
 
 		const Indices subsetIndicesArray(subsetIndicesSet.begin(), subsetIndicesSet.end());
@@ -506,140 +400,92 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 		{
 			const IndexSet invertedSet = Subset::invertedIndices(subsetIndicesSet, setSize);
 
-			if (invertedSet.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, invertedSet.size(), invertedSubsetIndicesSet.size());
 
 			for (typename IndexSet::const_iterator i = invertedSet.begin(); i != invertedSet.end(); ++i)
 			{
-				if (invertedSubsetIndicesSet.find(*i) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(*i) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Indices invertedArray = Subset::invertedIndices(subsetIndicesArray, setSize);
 
-			if (invertedArray.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, invertedArray.size(), invertedSubsetIndicesSet.size());
 
 			for (typename Indices::const_iterator i = invertedArray.begin(); i != invertedArray.end(); ++i)
 			{
-				if (invertedSubsetIndicesSet.find(*i) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(*i) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Indices32 integers32 = Subset::invertedSubset(setInteger32, subsetIndicesSet);
 
-			if (integers32.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, integers32.size(), invertedSubsetIndicesSet.size());
 
 			for (Indices32::const_iterator i = integers32.begin(); i != integers32.end(); ++i)
 			{
-				if (invertedSubsetIndicesSet.find(TIndex(*i)) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Indices32 integers32 = Subset::invertedSubset(setInteger32.data(), setInteger32.size(), subsetIndicesSet);
 
-			if (integers32.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, integers32.size(), invertedSubsetIndicesSet.size());
 
 			for (Indices32::const_iterator i = integers32.begin(); i != integers32.end(); ++i)
 			{
-				if (invertedSubsetIndicesSet.find(TIndex(*i)) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Indices64 integers64 = Subset::invertedSubset(setInteger64, subsetIndicesSet);
 
-			if (integers64.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, integers64.size(), invertedSubsetIndicesSet.size());
 
 			for (Indices64::const_iterator i = integers64.begin(); i != integers64.end(); ++i)
 			{
-				if (invertedSubsetIndicesSet.find(TIndex(*i)) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Indices64 integers64 = Subset::invertedSubset(setInteger64.data(), setInteger64.size(), subsetIndicesSet);
 
-			if (integers64.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, integers64.size(), invertedSubsetIndicesSet.size());
 
 			for (Indices64::const_iterator i = integers64.begin(); i != integers64.end(); ++i)
 			{
-				if (invertedSubsetIndicesSet.find(TIndex(*i)) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Strings strings = Subset::invertedSubset(setString, subsetIndicesSet);
 
-			if (strings.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), invertedSubsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || invertedSubsetIndicesSet.find(TIndex(value)) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && invertedSubsetIndicesSet.find(TIndex(value)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
 		{
 			const Strings strings = Subset::invertedSubset(setString.data(), setString.size(), subsetIndicesSet);
 
-			if (strings.size() != invertedSubsetIndicesSet.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, strings.size(), invertedSubsetIndicesSet.size());
 
 			int value = -1;
 
 			for (Strings::const_iterator i = strings.begin(); i != strings.end(); ++i)
 			{
-				if (!String::isInteger32(*i, &value) || value < 0 || invertedSubsetIndicesSet.find(TIndex(value)) == invertedSubsetIndicesSet.end())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, String::isInteger32(*i, &value) && value >= 0 && invertedSubsetIndicesSet.find(TIndex(value)) != invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -648,16 +494,9 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSubset::hasIntersectingElement(const double testDuration)
@@ -666,9 +505,8 @@ bool TestSubset::hasIntersectingElement(const double testDuration)
 
 	Log::info() << "Test hasIntersectingElement():";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -722,29 +560,16 @@ bool TestSubset::hasIntersectingElement(const double testDuration)
 			std::sort(vectorA.begin(), vectorA.end());
 			std::sort(vectorB.begin(), vectorB.end());
 
-			if (Subset::hasIntersectingElement(vectorA, vectorB) != hasIntersectionIteration)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Subset::hasIntersectingElement(vectorA, vectorB), hasIntersectionIteration);
 
-			if (Subset::hasIntersectingElement(setA, setB) != hasIntersectionIteration)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Subset::hasIntersectingElement(setA, setB), hasIntersectionIteration);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

@@ -187,7 +187,6 @@ bool TestStaticVector::testConstructor(const double testDuration)
 	Log::info() << "Testing constructor:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -224,7 +223,6 @@ bool TestStaticVector::testAccess(const double testDuration)
 	Log::info() << "Testing access:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -261,7 +259,6 @@ bool TestStaticVector::testClear(const double testDuration)
 	Log::info() << "Testing clear:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -298,7 +295,6 @@ bool TestStaticVector::testResize(const double testDuration)
 	Log::info() << "Testing resize:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -335,7 +331,6 @@ bool TestStaticVector::testComparison(const double testDuration)
 	Log::info() << "Testing comparison:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -837,7 +832,6 @@ bool TestStaticVector::testPushBack(const double testDuration)
 	Log::info() << "Testing pushBack:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -874,7 +868,6 @@ bool TestStaticVector::testEmplaceBack(const double testDuration)
 	Log::info() << "Testing emplaceBack:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -911,7 +904,6 @@ bool TestStaticVector::testPopBack(const double testDuration)
 	Log::info() << "Testing popBack:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -948,7 +940,6 @@ bool TestStaticVector::testErase(const double testDuration)
 	Log::info() << "Testing erase:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -1488,7 +1479,6 @@ bool TestStaticVector::testIterator(const double testDuration)
 	Log::info() << "Testing iterator:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);

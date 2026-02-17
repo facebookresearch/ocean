@@ -314,30 +314,23 @@ bool TestStackHeapVector::testDefaultConstructor(const double testDuration)
 
 	Log::info() << "Testing default constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testDefaultConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testDefaultConstructor<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testDefaultConstructor<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testSizeConstructor(const double testDuration)
@@ -346,30 +339,23 @@ bool TestStackHeapVector::testSizeConstructor(const double testDuration)
 
 	Log::info() << "Testing size constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testSizeConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testSizeConstructor<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeConstructor<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testSizeElementConstructor(const double testDuration)
@@ -378,30 +364,23 @@ bool TestStackHeapVector::testSizeElementConstructor(const double testDuration)
 
 	Log::info() << "Testing size-element constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testSizeElementConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testSizeElementConstructor<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testSizeElementConstructor<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testMoveConstructorFromVector(const double testDuration)
@@ -410,30 +389,23 @@ bool TestStackHeapVector::testMoveConstructorFromVector(const double testDuratio
 
 	Log::info() << "Testing move constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testMoveConstructorFromVector<1>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<2>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<3>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<4>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<5>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<6>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<7>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<8>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<31>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<32>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructorFromVector<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructorFromVector<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testCopyConstructorFromVector(const double testDuration)
@@ -442,30 +414,23 @@ bool TestStackHeapVector::testCopyConstructorFromVector(const double testDuratio
 
 	Log::info() << "Testing copy constructor from vector:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testCopyConstructorFromVector<1>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<2>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<3>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<4>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<5>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<6>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<7>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<8>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<31>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<32>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructorFromVector<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructorFromVector<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testInitializerListConstructor(const double testDuration)
@@ -474,30 +439,23 @@ bool TestStackHeapVector::testInitializerListConstructor(const double testDurati
 
 	Log::info() << "Testing initializer list constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testInitializerListConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testInitializerListConstructor<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testInitializerListConstructor<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testCopyConstructor(const double testDuration)
@@ -506,30 +464,23 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 
 	Log::info() << "Testing copy constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testCopyConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testCopyConstructor<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyConstructor<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testMoveConstructor(const double testDuration)
@@ -538,30 +489,23 @@ bool TestStackHeapVector::testMoveConstructor(const double testDuration)
 
 	Log::info() << "Testing move constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testMoveConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveConstructor<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testCopyAssignment(const double testDuration)
@@ -570,30 +514,23 @@ bool TestStackHeapVector::testCopyAssignment(const double testDuration)
 
 	Log::info() << "Testing copy assignment:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testCopyAssignment<1>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<2>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<3>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<4>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<5>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<6>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<7>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<8>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<31>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<32>(testDuration) && allSucceeded;
-	allSucceeded = testCopyAssignment<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testCopyAssignment<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testMoveAssignment(const double testDuration)
@@ -602,30 +539,23 @@ bool TestStackHeapVector::testMoveAssignment(const double testDuration)
 
 	Log::info() << "Testing move assignment:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testMoveAssignment<1>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<2>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<3>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<4>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<5>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<6>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<7>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<8>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<31>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<32>(testDuration) && allSucceeded;
-	allSucceeded = testMoveAssignment<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testMoveAssignment<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testEquality(const double testDuration)
@@ -634,30 +564,23 @@ bool TestStackHeapVector::testEquality(const double testDuration)
 
 	Log::info() << "Testing equality:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testEquality<1>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<2>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<3>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<4>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<5>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<6>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<7>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<8>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<31>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<32>(testDuration) && allSucceeded;
-	allSucceeded = testEquality<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testEquality<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEquality<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testAssign(const double testDuration)
@@ -666,30 +589,23 @@ bool TestStackHeapVector::testAssign(const double testDuration)
 
 	Log::info() << "Testing assign:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testAssign<1>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<2>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<3>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<4>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<5>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<6>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<7>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<8>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<31>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<32>(testDuration) && allSucceeded;
-	allSucceeded = testAssign<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testAssign<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testAssign<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testPushBack(const double testDuration)
@@ -698,30 +614,23 @@ bool TestStackHeapVector::testPushBack(const double testDuration)
 
 	Log::info() << "Testing push back:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testPushBack<1>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<2>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<3>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<4>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<5>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<6>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<7>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<8>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<31>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<32>(testDuration) && allSucceeded;
-	allSucceeded = testPushBack<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPushBack<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPushBack<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testResize(const double testDuration)
@@ -730,30 +639,23 @@ bool TestStackHeapVector::testResize(const double testDuration)
 
 	Log::info() << "Testing resize:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testResize<1>(testDuration) && allSucceeded;
-	allSucceeded = testResize<2>(testDuration) && allSucceeded;
-	allSucceeded = testResize<3>(testDuration) && allSucceeded;
-	allSucceeded = testResize<4>(testDuration) && allSucceeded;
-	allSucceeded = testResize<5>(testDuration) && allSucceeded;
-	allSucceeded = testResize<6>(testDuration) && allSucceeded;
-	allSucceeded = testResize<7>(testDuration) && allSucceeded;
-	allSucceeded = testResize<8>(testDuration) && allSucceeded;
-	allSucceeded = testResize<31>(testDuration) && allSucceeded;
-	allSucceeded = testResize<32>(testDuration) && allSucceeded;
-	allSucceeded = testResize<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testResize<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testResize<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testEmplaceBack(const double testDuration)
@@ -762,30 +664,23 @@ bool TestStackHeapVector::testEmplaceBack(const double testDuration)
 
 	Log::info() << "Testing emplace back:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testEmplaceBack<1>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<2>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<3>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<4>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<5>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<6>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<7>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<8>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<31>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<32>(testDuration) && allSucceeded;
-	allSucceeded = testEmplaceBack<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testEmplaceBack<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testPopBack(const double testDuration)
@@ -794,30 +689,23 @@ bool TestStackHeapVector::testPopBack(const double testDuration)
 
 	Log::info() << "Testing pop back:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testPopBack<1>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<2>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<3>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<4>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<5>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<6>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<7>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<8>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<31>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<32>(testDuration) && allSucceeded;
-	allSucceeded = testPopBack<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPopBack<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPopBack<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testFrontBack(const double testDuration)
@@ -826,30 +714,23 @@ bool TestStackHeapVector::testFrontBack(const double testDuration)
 
 	Log::info() << "Testing front/back:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testFrontBack<1>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<2>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<3>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<4>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<5>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<6>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<7>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<8>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<31>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<32>(testDuration) && allSucceeded;
-	allSucceeded = testFrontBack<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testFrontBack<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testReserve(const double testDuration)
@@ -858,30 +739,23 @@ bool TestStackHeapVector::testReserve(const double testDuration)
 
 	Log::info() << "Testing reserve:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testReserve<1>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<2>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<3>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<4>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<5>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<6>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<7>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<8>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<31>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<32>(testDuration) && allSucceeded;
-	allSucceeded = testReserve<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testReserve<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testReserve<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestStackHeapVector::testPerformance(const double testDuration)
@@ -890,30 +764,23 @@ bool TestStackHeapVector::testPerformance(const double testDuration)
 
 	Log::info() << "Testing performance:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testPerformance<1>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<2>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<3>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<4>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<5>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<6>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<7>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<8>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<31>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<32>(testDuration) && allSucceeded;
-	allSucceeded = testPerformance<64>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testPerformance<1>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<2>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<3>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<4>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<5>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<6>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<7>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<8>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<31>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<32>(testDuration));
+	OCEAN_EXPECT_TRUE(validation, testPerformance<64>(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <size_t tStackCapacity>
