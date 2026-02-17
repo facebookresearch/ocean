@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -275,31 +276,22 @@ bool TestFrameFilterMin::testMin(const unsigned int width, const unsigned int he
 	ocean_assert(channels >= 1u && channels <= 4u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int filterSize : {3u, 5u, 11u, 25u})
 	{
 		Log::info().newLine(filterSize != 3u);
 		Log::info().newLine(filterSize != 3u);
 
-		if (!testMin<T>(width, height, channels, filterSize, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testMin<T>(width, height, channels, filterSize, testDuration, worker));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -310,11 +302,10 @@ bool TestFrameFilterMin::testMin(const unsigned int width, const unsigned int he
 	ocean_assert(filterSize >= 1u && filterSize <= std::min(width, height) && filterSize % 2u == 1u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
-
-	RandomGenerator randomGenerator;
 
 	Log::info() << "Testing frame size " << width << "x" << height << " with " << channels << " channels, data type '" << TypeNamer::name<T>() << "', and with filter size " << filterSize << ":";
 	Log::info() << " ";
@@ -354,13 +345,11 @@ bool TestFrameFilterMin::testMin(const unsigned int width, const unsigned int he
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					return false;
+					OCEAN_SET_FAILED(validation);
+					return validation.succeeded();
 				}
 
-				if (!validateMin<T>(frame, target, filterSize))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateMin<T>(frame, target, filterSize));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -374,18 +363,9 @@ bool TestFrameFilterMin::testMin(const unsigned int width, const unsigned int he
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-		allSucceeded = false;
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -395,31 +375,22 @@ bool TestFrameFilterMin::testMinInPlace(const unsigned int width, const unsigned
 	ocean_assert(channels >= 1u && channels <= 4u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int filterSize : {3u, 5u, 11u, 25u})
 	{
 		Log::info().newLine(filterSize != 3u);
 		Log::info().newLine(filterSize != 3u);
 
-		if (!testMinInPlace<T>(width, height, channels, filterSize, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testMinInPlace<T>(width, height, channels, filterSize, testDuration, worker));
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -430,11 +401,10 @@ bool TestFrameFilterMin::testMinInPlace(const unsigned int width, const unsigned
 	ocean_assert(filterSize >= 1u && filterSize <= std::min(width, height) && filterSize % 2u == 1u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
-
-	RandomGenerator randomGenerator;
 
 	Log::info() << "Testing frame size " << width << "x" << height << " with " << channels << " channels, data type '" << TypeNamer::name<T>() << "', and with filter size " << filterSize << ", in place:";
 	Log::info() << " ";
@@ -485,20 +455,18 @@ bool TestFrameFilterMin::testMinInPlace(const unsigned int width, const unsigned
 
 						default:
 							ocean_assert(false && "Invalid channel number!");
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 					}
 				performance.stopIf(performanceIteration);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					return false;
+					OCEAN_SET_FAILED(validation);
+					return validation.succeeded();
 				}
 
-				if (!validateMin<T>(copyFrame, frame, filterSize))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateMin<T>(copyFrame, frame, filterSize));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -512,16 +480,9 @@ bool TestFrameFilterMin::testMinInPlace(const unsigned int width, const unsigned
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -64,7 +65,8 @@ bool TestFrameFilterMean::testFilterSizeArbitrary(const unsigned int width, cons
 
 	Log::info() << "Testing mean filter with arbitrary size:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -107,7 +109,7 @@ bool TestFrameFilterMean::testFilterSizeArbitrary(const unsigned int width, cons
 					performance.startIf(performanceIteration);
 					if (!CV::FrameFilterMean::filter(source, target, filterSize, useWorker))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 					performance.stopIf(performanceIteration);
 
@@ -119,7 +121,7 @@ bool TestFrameFilterMean::testFilterSizeArbitrary(const unsigned int width, cons
 
 					if (!validationFilter8BitPerChannel(source.constdata<uint8_t>(), target.constdata<uint8_t>(), source.width(), source.height(), source.channels(), filterSize, filterSize, source.paddingElements(), target.paddingElements()))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -137,16 +139,9 @@ bool TestFrameFilterMean::testFilterSizeArbitrary(const unsigned int width, cons
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterMean::validationFilter8BitPerChannel(const uint8_t* source, const uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int filterWidth, const unsigned int filterHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements)

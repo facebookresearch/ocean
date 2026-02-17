@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -200,7 +201,8 @@ bool TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel(const uns
 		Log::info() << "Testing 8 bit horizontal and vertical Scharr filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -242,7 +244,7 @@ bool TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel(const uns
 					if (!CV::FrameFilterScharr::Comfort::filterHorizontalVertical(source, target, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -255,7 +257,7 @@ bool TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel(const uns
 
 					if (!validateHorizontalVerticalFilter8BitPerChannel(source, target))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -273,16 +275,9 @@ bool TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel(const uns
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -301,7 +296,8 @@ bool TestFrameFilterScharr::testDiagonalFilter8BitPerChannel(const unsigned int 
 		Log::info() << "Testing 8 bit diagonal Scharr filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -343,7 +339,7 @@ bool TestFrameFilterScharr::testDiagonalFilter8BitPerChannel(const unsigned int 
 					if (!CV::FrameFilterScharr::Comfort::filterDiagonal(source, target, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -356,7 +352,7 @@ bool TestFrameFilterScharr::testDiagonalFilter8BitPerChannel(const unsigned int 
 
 					if (!validateDiagonalFilter8BitPerChannel(source, target))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -374,16 +370,9 @@ bool TestFrameFilterScharr::testDiagonalFilter8BitPerChannel(const unsigned int 
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -402,7 +391,8 @@ bool TestFrameFilterScharr::testFilter8BitPerChannel(const unsigned int width, c
 		Log::info() << "Testing 8 bit horizontal, vertical, and diagonal Scharr filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -444,7 +434,7 @@ bool TestFrameFilterScharr::testFilter8BitPerChannel(const unsigned int width, c
 					if (!CV::FrameFilterScharr::Comfort::filter(source, target, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -457,7 +447,7 @@ bool TestFrameFilterScharr::testFilter8BitPerChannel(const unsigned int width, c
 
 					if (!validateFilter8BitPerChannel(source, target))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -475,16 +465,9 @@ bool TestFrameFilterScharr::testFilter8BitPerChannel(const unsigned int width, c
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -503,7 +486,8 @@ bool TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerCh
 		Log::info() << "Testing 8 bit horizontal and vertical maximum absolute Scharr filter, with response range [0, 65535]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -545,7 +529,7 @@ bool TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerCh
 					if (!CV::FrameFilterScharr::Comfort::filterHorizontalVerticalMaximumAbsolute(source, target, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -558,7 +542,7 @@ bool TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerCh
 
 					if (!validateHorizontalVerticalMaximumAbsoluteFilter8BitPerChannel(source, target))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -576,16 +560,9 @@ bool TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerCh
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
@@ -604,7 +581,8 @@ bool TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel(const unsign
 		Log::info() << "Testing 8 bit horizontal, vertical, and diagonal maximum absolute Scharr filter, with response range [0, 65535]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -646,7 +624,7 @@ bool TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel(const unsign
 					if (!CV::FrameFilterScharr::Comfort::filterMaximumAbsolute(source, target, useWorker))
 					{
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					performance.stopIf(performanceIteration);
@@ -659,7 +637,7 @@ bool TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel(const unsign
 
 					if (!validateMaximumAbsoluteFilter8BitPerChannel(source, target))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -677,16 +655,9 @@ bool TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel(const unsign
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterScharr::validateHorizontalVerticalFilter8BitPerChannel(const Frame& frame, const Frame& response)

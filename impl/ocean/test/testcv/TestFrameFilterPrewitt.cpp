@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -81,7 +82,8 @@ bool TestFrameFilterPrewitt::testHorizontalVerticalFilter8BitPerChannel(const un
 		Log::info() << "Testing 8 bit horizontal and vertical Prewitt filter, with response range [-32768, 32767]:";
 	}
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
 	{
@@ -140,7 +142,7 @@ bool TestFrameFilterPrewitt::testHorizontalVerticalFilter8BitPerChannel(const un
 
 						default:
 							ocean_assert(false && "Invalid channel number!");
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 					}
 
@@ -152,10 +154,7 @@ bool TestFrameFilterPrewitt::testHorizontalVerticalFilter8BitPerChannel(const un
 						return false;
 					}
 
-					if (!validateHorizontalVerticalFilter8BitPerChannel<TTarget>(source, target))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateHorizontalVerticalFilter8BitPerChannel<TTarget>(source, target));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -172,16 +171,9 @@ bool TestFrameFilterPrewitt::testHorizontalVerticalFilter8BitPerChannel(const un
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
