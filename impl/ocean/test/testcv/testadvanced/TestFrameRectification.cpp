@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestFrameRectification.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -153,6 +154,7 @@ bool TestFrameRectification::testPlanarRectangleObject(const unsigned int width,
 	const IndexPairs32 objectResolutions = {IndexPair32(128u, 128u), IndexPair32(100u, 164u), IndexPair32(164u, 100u)};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool lookup : {false, true})
 	{
@@ -256,18 +258,11 @@ bool TestFrameRectification::testPlanarRectangleObject(const unsigned int width,
 
 	constexpr double threshold = 10.0;
 
-	const bool allSucceeded = maximalAverageError < threshold;
+	OCEAN_EXPECT_LESS(validation, maximalAverageError, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (" << String::toAString(maximalAverageError, 1u) << " color error).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED (" << String::toAString(maximalAverageError, 1u) << " color error)!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -282,6 +277,7 @@ bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int wid
 	const IndexPairs32 objectResolutions = {IndexPair32(128u, 128u), IndexPair32(100u, 164u), IndexPair32(164u, 100u)};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool lookup : {false, true})
 	{
@@ -385,18 +381,11 @@ bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int wid
 
 	constexpr double threshold = 10.0;
 
-	const bool allSucceeded = maximalAverageError < threshold;
+	OCEAN_EXPECT_LESS(validation, maximalAverageError, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (" << String::toAString(maximalAverageError, 1u) << " color error).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED (" << String::toAString(maximalAverageError, 1u) << " color error)!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameRectification::testTriangleObject(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -411,6 +400,7 @@ bool TestFrameRectification::testTriangleObject(const unsigned int width, const 
 	const IndexPairs32 objectResolutions = {IndexPair32(128u, 128u), IndexPair32(100u, 164u), IndexPair32(164u, 100u)};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool lookup : {false, true})
 	{
@@ -531,18 +521,11 @@ bool TestFrameRectification::testTriangleObject(const unsigned int width, const 
 
 	constexpr double threshold = 10.0;
 
-	const bool allSucceeded = maximalAverageError < threshold;
+	OCEAN_EXPECT_LESS(validation, maximalAverageError, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (" << String::toAString(maximalAverageError, 1u) << " color error).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED (" << String::toAString(maximalAverageError, 1u) << " color error)!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameRectification::testPlanarRectangleObjectMask(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -557,6 +540,7 @@ bool TestFrameRectification::testPlanarRectangleObjectMask(const unsigned int wi
 	const IndexPairs32 objectResolutions = {IndexPair32(128u, 128u), IndexPair32(100u, 164u), IndexPair32(164u, 100u)};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool lookup : {false, true})
 	{
@@ -707,18 +691,11 @@ bool TestFrameRectification::testPlanarRectangleObjectMask(const unsigned int wi
 
 	constexpr double threshold = 10.0;
 
-	const bool allSucceeded = maximalAverageError < threshold;
+	OCEAN_EXPECT_LESS(validation, maximalAverageError, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (" << String::toAString(maximalAverageError, 1u) << " color error).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED (" << String::toAString(maximalAverageError, 1u) << " color error)!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameRectification::testArbitraryRectangleObjectMask(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -733,6 +710,7 @@ bool TestFrameRectification::testArbitraryRectangleObjectMask(const unsigned int
 	const IndexPairs32 objectResolutions = {IndexPair32(128u, 128u), IndexPair32(100u, 164u), IndexPair32(164u, 100u)};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool lookup : {false, true})
 	{
@@ -883,18 +861,11 @@ bool TestFrameRectification::testArbitraryRectangleObjectMask(const unsigned int
 
 	constexpr double threshold = 10.0;
 
-	const bool allSucceeded = maximalAverageError < threshold;
+	OCEAN_EXPECT_LESS(validation, maximalAverageError, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (" << String::toAString(maximalAverageError, 1u) << " color error).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED (" << String::toAString(maximalAverageError, 1u) << " color error)!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -909,6 +880,7 @@ bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, co
 	const IndexPairs32 objectResolutions = {IndexPair32(128u, 128u), IndexPair32(100u, 164u), IndexPair32(164u, 100u)};
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const bool lookup : {false, true})
 	{
@@ -1076,18 +1048,11 @@ bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, co
 
 	constexpr double threshold = 10.0;
 
-	const bool allSucceeded = maximalAverageError < threshold;
+	OCEAN_EXPECT_LESS(validation, maximalAverageError, threshold);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded (" << String::toAString(maximalAverageError, 1u) << " color error).";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED (" << String::toAString(maximalAverageError, 1u) << " color error)!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 double TestFrameRectification::determineFrameError(const Frame& frame0, const Frame& frame1, const uint8_t* skipColor0, const uint8_t* skipColor1)

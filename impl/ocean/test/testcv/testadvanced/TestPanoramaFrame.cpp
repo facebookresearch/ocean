@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testadvanced/TestPanoramaFrame.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -199,7 +201,7 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const double testDuration, W
 {
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const bool useApproximation : {false, true})
 	{
@@ -207,14 +209,14 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const double testDuration, W
 		{
 			for (unsigned int numberChannels = 1u; numberChannels <= 4u; ++numberChannels)
 			{
-				allSucceeded = TestPanoramaFrame::testCameraFrame2cameraFrame(1920u, 1080u, useApproximation, useSourceMask, numberChannels, testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, TestPanoramaFrame::testCameraFrame2cameraFrame(1920u, 1080u, useApproximation, useSourceMask, numberChannels, testDuration, worker));
 
 				Log::info() << " ";
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performanceWidth, const unsigned int performanceHeight, const bool useApproximation, const bool useSourceMask, const unsigned int numberChannels, const double testDuration, Worker& worker)
@@ -228,8 +230,7 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -271,8 +272,10 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 				const SquareMatrix3 world_R_target = SquareMatrix3(Random::euler(randomGenerator, Numeric::deg2rad(Scalar(5))));
 
 				performance.startIf(performanceIteration);
-					allSucceeded = CV::Advanced::PanoramaFrame::cameraFrame2cameraFrame(pinholeCamera, world_R_source, source, sourceMask, pinholeCamera, world_R_target, target, targetMask, maskValue, approximationBinSize, useWorker) && allSucceeded;
+					const bool localResult = CV::Advanced::PanoramaFrame::cameraFrame2cameraFrame(pinholeCamera, world_R_source, source, sourceMask, pinholeCamera, world_R_target, target, targetMask, maskValue, approximationBinSize, useWorker);
 				performance.stopIf(performanceIteration);
+
+				OCEAN_EXPECT_TRUE(validation, localResult);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, clonedTarget) || !CV::CVUtilities::isPaddingMemoryIdentical(targetMask, clonedTargetMask))
 				{
@@ -282,10 +285,7 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 					return false;
 				}
 
-				if (!validateCameraFrame2cameraFrame(pinholeCamera, world_R_source, source, sourceMask, pinholeCamera, world_R_target, target, targetMask, maskValue, approximationBinSize))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateCameraFrame2cameraFrame(pinholeCamera, world_R_source, source, sourceMask, pinholeCamera, world_R_target, target, targetMask, maskValue, approximationBinSize));
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
 		}
@@ -299,16 +299,9 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 		Log::info() << "Multi-core boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPanoramaFrame::testCameraFrame2panoramaSubFrame(const double testDuration, Worker& worker)
@@ -317,7 +310,8 @@ bool TestPanoramaFrame::testCameraFrame2panoramaSubFrame(const double testDurati
 
 	Log::info() << "Testing creation of panorama sub-frame:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	CV::Advanced::PanoramaFrame panoramaFrame(1920u * 4u, 1920u * 2u, 0xFF, CV::Advanced::PanoramaFrame::UM_SET_ALL);
 
@@ -330,8 +324,7 @@ bool TestPanoramaFrame::testCameraFrame2panoramaSubFrame(const double testDurati
 		Log::info() << " ";
 		Log::info() << "... for " << channels << " channels";
 
-		uint64_t iterations = 0ull;
-		uint64_t validIterations = 0ull;
+		ValidationPrecision validationPrecision(0.99, randomGenerator);
 
 		HighPerformanceStatistic performanceCreation;
 		HighPerformanceStatistic performanceReconstruction;
@@ -340,15 +333,19 @@ bool TestPanoramaFrame::testCameraFrame2panoramaSubFrame(const double testDurati
 
 		do
 		{
-			const unsigned int cameraFramePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-			const unsigned int cameraMaskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
+
+			const unsigned int maxCameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int cameraFramePaddingElements = maxCameraFramePaddingElements * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxCameraMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int cameraMaskPaddingElements = maxCameraMaskPaddingElements * RandomI::random(randomGenerator, 1u);
 
 			Frame cameraFrame(FrameType(pinholeCamera.width(), pinholeCamera.height(), FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
 
 			Frame cameraMask(FrameType(cameraFrame, FrameType::FORMAT_Y8), cameraMaskPaddingElements);
 			cameraMask.setValue(0xFF);
 
-			const SquareMatrix3 orientation(Random::euler(Numeric::deg2rad(8)));
+			const SquareMatrix3 orientation(Random::euler(randomGenerator, Numeric::deg2rad(8)));
 
 			CV::CVUtilities::randomizeFrame(cameraFrame, false);
 			CV::FrameFilterGaussian::filter(cameraFrame, 5u, &worker);
@@ -373,29 +370,21 @@ bool TestPanoramaFrame::testCameraFrame2panoramaSubFrame(const double testDurati
 			const double errorFrame = averageFrameError(cameraFrame, reconstructedCameraFrame);
 			const double errorMask = averageFrameError(cameraMask, reconstructedMaskFrame);
 
-			if (errorFrame <= 5.0 && errorMask <= 0.05)
+			if (errorFrame > 5.0 || errorMask > 0.05)
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations > 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validationPrecision.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Average performance creation: " << String::toAString(performanceCreation.averageMseconds(), 1u) << "ms";
 		Log::info() << "AVerage performance reconstruction: " << String::toAString(performanceReconstruction.averageMseconds(), 1u) << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
+		Log::info() << "Validation: " << validationPrecision;
 
-		if (percent < 0.99)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationPrecision.succeeded());
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPanoramaFrame::testRecreation(Worker& worker)
@@ -403,7 +392,7 @@ bool TestPanoramaFrame::testRecreation(Worker& worker)
 	Log::info() << "Testing re-creation:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int c = 1u; c <= 4u; ++c)
 	{
@@ -413,43 +402,37 @@ bool TestPanoramaFrame::testRecreation(Worker& worker)
 		for (unsigned int a = 0u; a <= 1u; ++a)
 		{
 			Log::info().newLine(a != 0u);
-			allSucceeded = testRecreation(c, a == 1u, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testRecreation(c, a == 1u, worker));
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Re-creation validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Re-creation validation: FAILED!";
-	}
+	Log::info() << "Re-creation validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool approximate, Worker& worker)
 {
 	Log::info() << "... with " << channels << " channels, " << (approximate ? "approximated" : "non-approximated") << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
 
 	const unsigned int approximateBinSize = approximate ? 20u : 0u;
 
-	const unsigned int cameraWidth = (unsigned int)(640 + RandomI::random(-10, 10));
-	const unsigned int cameraHeight = (unsigned int)(480 + RandomI::random(-10, 10));
+	const unsigned int cameraWidth = (unsigned int)(640 + RandomI::random(randomGenerator, -10, 10));
+	const unsigned int cameraHeight = (unsigned int)(480 + RandomI::random(randomGenerator, -10, 10));
 
-	const Scalar cameraFovX = Numeric::deg2rad(Scalar(60) + Random::scalar(-5, 5));
+	const Scalar cameraFovX = Numeric::deg2rad(Scalar(60) + Random::scalar(randomGenerator, -5, 5));
 
 	const PinholeCamera pinholeCamera(cameraWidth, cameraHeight, cameraFovX);
 
-	const unsigned int panoramaDimensionWidth = (unsigned int)(640 * 10 + RandomI::random(-100, 100));
-	const unsigned int panoramaDimensionHeight = (unsigned int)(int(panoramaDimensionWidth) / 2 + RandomI::random(-20, 20));
+	const unsigned int panoramaDimensionWidth = (unsigned int)(640 * 10 + RandomI::random(randomGenerator, -100, 100));
+	const unsigned int panoramaDimensionHeight = (unsigned int)(int(panoramaDimensionWidth) / 2 + RandomI::random(randomGenerator, -20, 20));
 
 	CV::Advanced::PanoramaFrame panoramaFrame(panoramaDimensionWidth, panoramaDimensionHeight, 0xFF, CV::Advanced::PanoramaFrame::UM_AVERAGE_LOCAL);
 
@@ -457,7 +440,8 @@ bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool a
 	{
 		for (Scalar yaw = 0; yaw <= Numeric::pi2(); yaw += Numeric::deg2rad(30))
 		{
-			const unsigned int framePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+			const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 1u);
 
 			Frame frame(FrameType(pinholeCamera.width(), pinholeCamera.height(), pixelFormat, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 			CV::CVUtilities::randomizeFrame(frame, false);
@@ -474,9 +458,9 @@ bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool a
 	{
 		for (Scalar yaw = 0; yaw <= Numeric::pi2(); yaw += Numeric::deg2rad(30))
 		{
-			const Scalar randomYaw = yaw + Numeric::deg2rad(Random::scalar(-2, 2));
-			const Scalar randomPitch = pitch + Numeric::deg2rad(Random::scalar(-2, 2));
-			const Scalar randomRoll = Numeric::deg2rad(Random::scalar(-5, 5));
+			const Scalar randomYaw = yaw + Numeric::deg2rad(Random::scalar(randomGenerator, -2, 2));
+			const Scalar randomPitch = pitch + Numeric::deg2rad(Random::scalar(randomGenerator, -2, 2));
+			const Scalar randomRoll = Numeric::deg2rad(Random::scalar(randomGenerator, -5, 5));
 
 			const Euler randomEuler(randomYaw, randomPitch, randomRoll);
 
@@ -486,8 +470,8 @@ bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool a
 
 	for (size_t n = 0; n < eulers.size(); ++n)
 	{
-		const size_t indexA = RandomI::random((unsigned int)(eulers.size()) - 1u);
-		const size_t indexB = RandomI::random((unsigned int)(eulers.size()) - 1u);
+		const size_t indexA = RandomI::random(randomGenerator, (unsigned int)(eulers.size()) - 1u);
+		const size_t indexB = RandomI::random(randomGenerator, (unsigned int)(eulers.size()) - 1u);
 
 		std::swap(eulers[indexA], eulers[indexB]);
 	}
@@ -511,7 +495,7 @@ bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool a
 
 	if (averageFrameError(panoramaFrame.frame(), newPanoramaFrame.frame()) >= 20.0)
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 
 #ifdef OCEAN_DEBUG
 		Frame distanceFrame(newPanoramaFrame.frame().frameType());
@@ -548,7 +532,7 @@ bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool a
 
 		if (averageFrameError(panoramaFrame.frame(), newPanoramaFrame.frame()) >= 20.0)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 
 #ifdef OCEAN_DEBUG
 			Frame distanceFrame(newPanoramaFrame.frame().frameType());
@@ -569,16 +553,9 @@ bool TestPanoramaFrame::testRecreation(const unsigned int channels, const bool a
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 double TestPanoramaFrame::averageFrameError(const Frame& frameA, const Frame& frameB)

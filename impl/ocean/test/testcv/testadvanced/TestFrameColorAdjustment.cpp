@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestFrameColorAdjustment.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -138,8 +139,7 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 	constexpr Scalar threshold = 3;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -187,10 +187,7 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 					const bool localResult = CV::Advanced::FrameColorAdjustment::adjustFrameBilinear(frame, Frame(), modifiedFrame, modifiedFrameMask, horizontalBins, verticalBins, Scalar(40), 0xFFu, useWorker);
 				performance.stopIf(performanceIteration);
 
-				if (!localResult)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, localResult);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(modifiedFrame, copyModifiedFrame))
 				{
@@ -202,7 +199,7 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 				{
 					if (performanceIteration || (testWidth >= 400u && testHeight >= 400u))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -218,16 +215,9 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -243,8 +233,7 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 	constexpr Scalar threshold = 3;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -289,7 +278,8 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 
 				if (maskIteration == 0u || maskIteration == 2u)
 				{
-					const unsigned int frameMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int maxFrameMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int frameMaskPaddingElements = maxFrameMaskPaddingElements * RandomI::random(randomGenerator, 1u);
 
 					frameMask = Frame(FrameType(frame, FrameType::FORMAT_Y8), frameMaskPaddingElements);
 					frameMask.setValue(0xFFu);
@@ -301,7 +291,8 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 
 				if (maskIteration == 1u || maskIteration == 2u)
 				{
-					const unsigned int modifiedFrameMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int maxModifiedFrameMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int modifiedFrameMaskPaddingElements = maxModifiedFrameMaskPaddingElements * RandomI::random(randomGenerator, 1u);
 
 					modifiedFrameMask = Frame(FrameType(frame, FrameType::FORMAT_Y8), modifiedFrameMaskPaddingElements);
 					modifiedFrameMask.setValue(0xFFu);
@@ -316,10 +307,7 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 					const bool localResult = CV::Advanced::FrameColorAdjustment::adjustFrameBilinear(frame, frameMask, modifiedFrame, modifiedFrameMask, horizontalBins, verticalBins, Scalar(400), 0xFFu, useWorker);
 				performance.stopIf(performanceIteration);
 
-				if (!localResult)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, localResult);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(modifiedFrame, copyModifiedFrame))
 				{
@@ -331,7 +319,7 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 				{
 					if (performanceIteration || (testWidth >= 400u && testHeight >= 400u))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -347,16 +335,9 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
