@@ -22,17 +22,17 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_base_BaseJni_initialize(JNIEnv* env, jobject javaThis, jstring messageOutputType)
+jboolean Java_com_meta_ocean_base_BaseJni_initialize(JNIEnv* env, jobject /*javaThis*/, jstring messageOutputType)
 {
 	return JNI::BaseJni::initialize(Platform::Android::Utilities::toAString(env, messageOutputType));
 }
 
-jboolean Java_com_meta_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* env, jobject javaThis, jint messageOutputType, jstring outputFile)
+jboolean Java_com_meta_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* env, jobject /*javaThis*/, jint messageOutputType, jstring outputFile)
 {
 	return JNI::BaseJni::initialize(Messenger::MessageOutput(messageOutputType), Platform::Android::Utilities::toAString(env, outputFile));
 }
 
-jboolean Java_com_meta_ocean_base_BaseJni_setCurrentActivity(JNIEnv* env, jobject javaThis, jobject activity)
+jboolean Java_com_meta_ocean_base_BaseJni_setCurrentActivity(JNIEnv* env, jobject /*javaThis*/, jobject activity)
 {
 	ocean_assert(env != nullptr);
 
@@ -41,42 +41,42 @@ jboolean Java_com_meta_ocean_base_BaseJni_setCurrentActivity(JNIEnv* env, jobjec
 	return true;
 }
 
-jboolean Java_com_meta_ocean_base_BaseJni_forceProcessorCoreNumber(JNIEnv* env, jobject javaThis, jint cores)
+jboolean Java_com_meta_ocean_base_BaseJni_forceProcessorCoreNumber(JNIEnv* /*env*/, jobject /*javaThis*/, jint cores)
 {
-	return JNI::BaseJni::forceProcessorCoreNumber((unsigned int)cores);
+	return JNI::BaseJni::forceProcessorCoreNumber((unsigned int)(cores));
 }
 
-jboolean Java_com_meta_ocean_base_BaseJni_setWorkerPoolCapacity(JNIEnv* env, jobject javaThis, jint capacity)
+jboolean Java_com_meta_ocean_base_BaseJni_setWorkerPoolCapacity(JNIEnv* /*env*/, jobject /*javaThis*/, jint capacity)
 {
-	return JNI::BaseJni::setWorkerPoolCapacity((unsigned int)capacity);
+	return JNI::BaseJni::setWorkerPoolCapacity((unsigned int)(capacity));
 }
 
-void Java_com_meta_ocean_base_BaseJni_debug(JNIEnv* env, jobject javaThis, jstring message)
+void Java_com_meta_ocean_base_BaseJni_debug(JNIEnv* env, jobject /*javaThis*/, jstring message)
 {
 	JNI::BaseJni::debug(Platform::Android::Utilities::toAString(env, message));
 }
 
-void Java_com_meta_ocean_base_BaseJni_information(JNIEnv* env, jobject javaThis, jstring message)
+void Java_com_meta_ocean_base_BaseJni_information(JNIEnv* env, jobject /*javaThis*/, jstring message)
 {
 	JNI::BaseJni::information(Platform::Android::Utilities::toAString(env, message));
 }
 
-void Java_com_meta_ocean_base_BaseJni_warning(JNIEnv* env, jobject javaThis, jstring message)
+void Java_com_meta_ocean_base_BaseJni_warning(JNIEnv* env, jobject /*javaThis*/, jstring message)
 {
 	JNI::BaseJni::warning(Platform::Android::Utilities::toAString(env, message));
 }
 
-void Java_com_meta_ocean_base_BaseJni_error(JNIEnv* env, jobject javaThis, jstring message)
+void Java_com_meta_ocean_base_BaseJni_error(JNIEnv* env, jobject /*javaThis*/, jstring message)
 {
 	JNI::BaseJni::error(Platform::Android::Utilities::toAString(env, message));
 }
 
-jstring Java_com_meta_ocean_base_BaseJni_popMessages(JNIEnv* env, jobject javaThis)
+jstring Java_com_meta_ocean_base_BaseJni_popMessages(JNIEnv* env, jobject /*javaThis*/)
 {
 	return Platform::Android::Utilities::toJavaString(env, JNI::BaseJni::popMessages());
 }
 
-jboolean Java_com_meta_ocean_base_BaseJni_isDebug(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_base_BaseJni_isDebug(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_DEBUG
 	return true;
@@ -85,7 +85,7 @@ jboolean Java_com_meta_ocean_base_BaseJni_isDebug(JNIEnv* env, jobject javaThis)
 #endif
 }
 
-void Java_com_meta_ocean_base_BaseJni_exit(JNIEnv* env, jobject javaThis, jint exitValue)
+void Java_com_meta_ocean_base_BaseJni_exit(JNIEnv* /*env*/, jobject /*javaThis*/, jint exitValue)
 {
 	std::exit(exitValue);
 }
