@@ -196,11 +196,14 @@ PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
 }
 
 
-def get_all_supported_platforms() -> List[tuple[OS, Arch]]:
+def get_all_supported_platforms() -> (
+    tuple[List[tuple[OS, Arch]], List[tuple[str, str]]]
+):
     """Get all target platforms supported by the current host.
 
-    Returns platforms that can be built on the current host, including
-    cross-compilation targets when the required toolchains are available.
+    Returns a tuple of:
+        - platforms: list of (OS, Arch) that can be built
+        - skipped: list of (platform_group, reason) for platforms that were skipped
 
     On macOS:
         - macos_arm64 or macos_x86_64 (native)
@@ -223,6 +226,7 @@ def get_all_supported_platforms() -> List[tuple[OS, Arch]]:
     )
 
     platforms = []
+    skipped = []
     host_os = detect_host_os()
     host_arch = detect_host_arch()
 
@@ -233,6 +237,8 @@ def get_all_supported_platforms() -> List[tuple[OS, Arch]]:
         # macOS can cross-compile to iOS if Xcode is available
         if get_ios_sdk_path("iphoneos"):
             platforms.append((OS.IOS, Arch.ARM64))
+        else:
+            skipped.append(("ios", "Xcode not found (install Xcode from the App Store)"))
 
         # Also support x86_64 on arm64 Mac (and vice versa)
         if host_arch == Arch.ARM64:
@@ -260,8 +266,10 @@ def get_all_supported_platforms() -> List[tuple[OS, Arch]]:
                 (OS.ANDROID, Arch.X86),
             ]
         )
+    else:
+        skipped.append(("android", "Android NDK not found (set ANDROID_NDK_HOME or ANDROID_NDK_ROOT)"))
 
-    return platforms
+    return platforms, skipped
 
 
 def get_equivalent_command(
@@ -271,7 +279,7 @@ def get_equivalent_command(
     parts = [f"python {script_name}"]
 
     # Targets
-    platforms = parse_platforms(args.target) if args.target else get_all_supported_platforms()
+    platforms = parse_platforms(args.target) if args.target else get_all_supported_platforms()[0]
     target_strs = [f"{os.value}_{arch.value}" for os, arch in platforms]
     parts.append(f"--target {','.join(target_strs)}")
 
@@ -1617,7 +1625,15 @@ def main() -> int:  # noqa: C901
     # Determine targets
     configs = parse_configs(args.config)
     link_types = parse_link_types(args.link)
-    platforms = parse_platforms(args.target) if args.target else get_all_supported_platforms()
+    if args.target:
+        platforms = parse_platforms(args.target)
+    else:
+        platforms, skipped_platforms = get_all_supported_platforms()
+        if skipped_platforms:
+            print("Skipped platforms:")
+            for group, reason in skipped_platforms:
+                print(f"  - {group}: {reason}")
+            print()
 
     # Determine MSVC toolset based on --vs-version (for Windows targets)
     msvc_toolset = None
