@@ -6,6 +6,8 @@
 
 # @noautodeps
 
+# @nolint
+
 """Ocean Third-Party Build System - Main Orchestrator.
 
 This script builds third-party libraries for Ocean with:
@@ -18,22 +20,20 @@ This script builds third-party libraries for Ocean with:
 - Build statistics with timing information
 
 Usage:
-    # Build all required libraries for host platform (debug + release, static)
+    # Build all required libraries for all supported platforms (default)
     ./build_ocean_3p.py
 
-    # Build for specific target platform
+    # Build for a specific target platform
     ./build_ocean_3p.py --target ios_arm64
 
-    # Build for multiple platforms (both styles work)
-    ./build_ocean_3p.py --target ios_arm64 --target macos_arm64
-    ./build_ocean_3p.py --target ios_arm64,macos_arm64
+    # Build for an OS group (all architectures for that OS)
+    ./build_ocean_3p.py --target android
+    ./build_ocean_3p.py --target macos
 
-    # Build for Android (requires ANDROID_NDK_HOME)
-    ./build_ocean_3p.py --target android_arm64
-    ./build_ocean_3p.py --target android_arm64,android_armv7
-
-    # Build for all Android ABIs
-    ./build_ocean_3p.py --target android_arm64,android_armv7,android_x86_64,android_x86
+    # Build for multiple platforms or groups (both styles work)
+    ./build_ocean_3p.py --target ios --target macos
+    ./build_ocean_3p.py --target android,ios
+    ./build_ocean_3p.py --target android,macos_arm64
 
     # Build release only
     ./build_ocean_3p.py --config release
@@ -46,7 +46,7 @@ Usage:
     ./build_ocean_3p.py --link static,shared
 
     # Combining options
-    ./build_ocean_3p.py -t ios_arm64,macos_arm64 -l static,shared -c release
+    ./build_ocean_3p.py -t ios,macos -l static,shared -c release
 
     # Include optional libraries
     ./build_ocean_3p.py --with opencv --with openssl
@@ -56,7 +56,7 @@ Usage:
     ./build_ocean_3p.py -L libpng,freetype
 
     # Rebuild a single library (dependencies already built)
-    ./build_ocean_3p.py --library curl --target ios_arm64
+    ./build_ocean_3p.py --library curl --target ios
 
     # Show build plan without building
     ./build_ocean_3p.py --dry-run
@@ -168,25 +168,31 @@ DEFAULT_BUILD_DIR = Path("ocean_build_thirdparty")
 DEFAULT_INSTALL_DIR = Path("ocean_install_thirdparty")
 DEFAULT_SOURCE_DIR = Path("ocean_source_thirdparty")
 
-
-def get_default_platforms() -> List[tuple[OS, Arch]]:
-    """Get default target platforms based on host OS.
-
-    On macOS: builds for both iOS and macOS (arm64)
-    On Linux: builds for host architecture
-    On Windows: builds for host architecture
-    """
-    from lib.platform import detect_host_arch, detect_host_os
-
-    host_os = detect_host_os()
-    host_arch = detect_host_arch()
-
-    if host_os == OS.MACOS:
-        # On macOS, build for both iOS and macOS
-        return [(OS.IOS, Arch.ARM64), (OS.MACOS, host_arch)]
-    else:
-        # On other platforms, build for host only
-        return [(host_os, host_arch)]
+# Platform group shortcuts: map OS group name to all (OS, Arch) tuples
+PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
+    "android": [
+        (OS.ANDROID, Arch.ARM64),
+        (OS.ANDROID, Arch.ARMV7),
+        (OS.ANDROID, Arch.X86_64),
+        (OS.ANDROID, Arch.X86),
+    ],
+    "ios": [
+        (OS.IOS, Arch.ARM64),
+    ],
+    "macos": [
+        (OS.MACOS, Arch.ARM64),
+        (OS.MACOS, Arch.X86_64),
+    ],
+    "linux": [
+        (OS.LINUX, Arch.ARM64),
+        (OS.LINUX, Arch.X86_64),
+    ],
+    "windows": [
+        (OS.WINDOWS, Arch.X86_64),
+        (OS.WINDOWS, Arch.X86),
+        (OS.WINDOWS, Arch.ARM64),
+    ],
+}
 
 
 def get_all_supported_platforms() -> List[tuple[OS, Arch]]:
@@ -264,7 +270,7 @@ def get_equivalent_command(
     parts = [f"python {script_name}"]
 
     # Targets
-    platforms = parse_platforms(args.target) if args.target else get_default_platforms()
+    platforms = parse_platforms(args.target) if args.target else get_all_supported_platforms()
     target_strs = [f"{os.value}_{arch.value}" for os, arch in platforms]
     parts.append(f"--target {','.join(target_strs)}")
 
@@ -1280,12 +1286,11 @@ def parse_args() -> argparse.Namespace:
         type=str,
         action="append",
         help=(
-            "Target platform (e.g., ios_arm64, macos_arm64, android_arm64). "
+            "Target platform(s). Accepts specific targets (e.g., ios_arm64, macos_arm64), "
+            "OS group names (android, ios, macos, linux, windows) to build all architectures "
+            "for that OS, or 'all_supported' for everything the host can build. "
             "Comma-separated or multiple flags. "
-            "Use 'all_supported' to build for all platforms supported by the current host. "
-            "Default on macOS: ios_arm64,macos_arm64. Default on other platforms: host. "
-            "Android targets (android_arm64, android_armv7, android_x86_64, android_x86) "
-            "require ANDROID_NDK_HOME to be set."
+            "Default: all platforms supported by the current host."
         ),
     )
 
@@ -1494,6 +1499,8 @@ def parse_platforms(
 
     Special values:
         - "all_supported": Returns all platforms supported by the current host
+        - Group names ("android", "ios", "macos", "linux", "windows"):
+          Expands to all architectures for that OS
     """
     if not target_args:
         return None
@@ -1507,7 +1514,10 @@ def parse_platforms(
             if t.lower() == "all_supported":
                 # Return all platforms supported by the current host
                 return get_all_supported_platforms()
-            platforms.append(parse_platform_string(t))
+            if t.lower() in PLATFORM_GROUPS:
+                platforms.extend(PLATFORM_GROUPS[t.lower()])
+            else:
+                platforms.append(parse_platform_string(t))
     return platforms or None
 
 
@@ -1599,7 +1609,7 @@ def main() -> int:  # noqa: C901
     # Determine targets
     configs = parse_configs(args.config)
     link_types = parse_link_types(args.link)
-    platforms = parse_platforms(args.target) if args.target else get_default_platforms()
+    platforms = parse_platforms(args.target) if args.target else get_all_supported_platforms()
 
     # Determine MSVC toolset based on --vs-version (for Windows targets)
     msvc_toolset = None
