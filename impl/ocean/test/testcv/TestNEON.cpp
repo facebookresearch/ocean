@@ -260,8 +260,17 @@ bool TestNEON::testMultiply(const double testDuration)
 
 	do
 	{
-		const uint64_t values64[2] = {RandomI::random64(randomGenerator), RandomI::random64(randomGenerator)};
-		const uint32_t values32[2] = {RandomI::random32(randomGenerator), RandomI::random32(randomGenerator)};
+		const uint64_t values64[2] =
+		{
+			RandomI::random64(randomGenerator),
+			RandomI::random64(randomGenerator)
+		};
+
+		const uint32_t values32[2] =
+		{
+			RandomI::random32(randomGenerator),
+			RandomI::random32(randomGenerator)
+		};
 
 		const uint64x2_t values64_u_64x2 = vld1q_u64(values64);
 		const uint32x2_t values32_u_32x2 = vld1_u32(values32);

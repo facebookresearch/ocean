@@ -501,13 +501,17 @@ bool TestPinholeCamera::testDistortion(const unsigned int width, const unsigned 
 			T p1 = (n <= 1) ? 0 : RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
 			T p2 = (n <= 1) ? 0 : RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
 
-			const PinholeCameraT<T> pinholeCamera(width, height, RandomT<T>::scalar(randomGenerator, 500, 600), RandomT<T>::scalar(randomGenerator, 500, 600),
-								RandomT<T>::scalar(randomGenerator, T(width) * T(0.5) - 50, T(width) * T(0.5) + 50),
-								RandomT<T>::scalar(randomGenerator, T(height) * T(0.5) - 50, T(height) * T(0.5) + 50),
+			const T focalLengthX = RandomT<T>::scalar(randomGenerator, 500, 600);
+			const T focalLengthY = RandomT<T>::scalar(randomGenerator, 500, 600);
+			const T principalX = RandomT<T>::scalar(randomGenerator, T(width) * T(0.5) - 50, T(width) * T(0.5) + 50);
+			const T principalY = RandomT<T>::scalar(randomGenerator, T(height) * T(0.5) - 50, T(height) * T(0.5) + 50);
+
+			const PinholeCameraT<T> pinholeCamera(width, height, focalLengthX, focalLengthY,
+								principalX, principalY,
 								typename PinholeCameraT<T>::DistortionPair(k1, k2),
 								typename PinholeCameraT<T>::DistortionPair(p1, p2));
 
-			const VectorT2<T> undistortedPoint(RandomT<T>::scalar(randomGenerator, 0, T(width - 1)), RandomT<T>::scalar(randomGenerator, 0, T(height - 1)));
+			const VectorT2<T> undistortedPoint = RandomT<T>::vector2(randomGenerator, T(0), T(width - 1), T(0), T(height - 1));
 
 			const VectorT2<T> distortedPoint = pinholeCamera.template distort<true>(undistortedPoint);
 			if (distortedPoint.x() > 0 && distortedPoint.x() <= T(width - 1) && distortedPoint.y() > 0 && distortedPoint.y() <= T(height - 1))
@@ -561,7 +565,7 @@ bool TestPinholeCamera::testVectorDistortionFree(const unsigned int width, const
 
 		const PinholeCameraT<T> pinholeCamera(width, height, NumericT<T>::deg2rad(T(55.1)), principalPointX, principalPointY);
 
-		const VectorT2<T> imagePoint(RandomT<T>::scalar(randomGenerator, 0, T(width - 1)), RandomT<T>::scalar(randomGenerator, 0, T(height - 1)));
+		const VectorT2<T> imagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width - 1), T(0), T(height - 1));
 		const VectorT3<T> rayVector(pinholeCamera.vector(imagePoint));
 
 		// the vector must have length 1
@@ -617,10 +621,16 @@ bool TestPinholeCamera::testVectorDistorted(const unsigned int width, const unsi
 		ocean_assert_and_suppress_unused(principalPointY > 0 && principalPointY < T(height), principalPointY);
 
 		PinholeCameraT<T> pinholeCamera(width, height, NumericT<T>::deg2rad(T(55.1)));
-		pinholeCamera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1)), RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1))));
-		pinholeCamera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(RandomT<T>::scalar(randomGenerator, T(-0.05), T(0.05)), RandomT<T>::scalar(randomGenerator, T(-0.05), T(0.05))));
 
-		const VectorT2<T> distortedImagePoint(RandomT<T>::scalar(randomGenerator, 0, T(width - 1)), RandomT<T>::scalar(randomGenerator, 0, T(height - 1)));
+		const T radialK1 = RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1));
+		const T radialK2 = RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1));
+		pinholeCamera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(radialK1, radialK2));
+
+		const T tangentialP1 = RandomT<T>::scalar(randomGenerator, T(-0.05), T(0.05));
+		const T tangentialP2 = RandomT<T>::scalar(randomGenerator, T(-0.05), T(0.05));
+		pinholeCamera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(tangentialP1, tangentialP2));
+
+		const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width - 1), T(0), T(height - 1));
 		const VectorT2<T> undistortedImagePoint(pinholeCamera.template undistort<true>(distortedImagePoint));
 
 		const VectorT3<T> rayVector(pinholeCamera.vector(undistortedImagePoint));

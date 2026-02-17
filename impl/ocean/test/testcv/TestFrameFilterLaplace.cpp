@@ -122,17 +122,20 @@ bool TestFrameFilterLaplace::test1Channel(const unsigned int width, const unsign
 		{
 			for (bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, 500u);
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, 500u);
+				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 500u);
+				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 500u);
 
-				const unsigned int framePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+				const unsigned int framePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int framePaddingElements = framePaddingBase * RandomI::random(randomGenerator, 1u);
+
+				const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
 
 				Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 				Frame target(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<TResponse, 1u>(), FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
 
-				CV::CVUtilities::randomizeFrame(frame, false);
-				CV::CVUtilities::randomizeFrame(target, false);
+				CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+				CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 				const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

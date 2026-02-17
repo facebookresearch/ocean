@@ -181,7 +181,7 @@ bool TestTimestamp::testMilliseconds(const double testDuration)
 
 		constexpr double threshold = 1.0 / double(second_in_milliseconds);
 
-		OCEAN_EXPECT_TRUE(validation, std::fabs(timestamp_in_seconds - test_seconds) <= threshold);
+		OCEAN_EXPECT_LESS_EQUAL(validation, std::fabs(timestamp_in_seconds - test_seconds), threshold);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
@@ -221,7 +221,7 @@ bool TestTimestamp::testMicroseconds(const double testDuration)
 
 		constexpr double threshold = 1.0 / double(second_in_microseconds);
 
-		OCEAN_EXPECT_TRUE(validation, std::fabs(timestamp_in_seconds - test_seconds) <= threshold);
+		OCEAN_EXPECT_LESS_EQUAL(validation, std::fabs(timestamp_in_seconds - test_seconds), threshold);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
@@ -262,7 +262,7 @@ bool TestTimestamp::testNanoseconds(const double testDuration)
 
 		constexpr double threshold = 1.0 / double(second_in_nanoseconds);
 
-		OCEAN_EXPECT_TRUE(validation, std::fabs(timestamp_in_seconds - test_seconds) <= threshold);
+		OCEAN_EXPECT_LESS_EQUAL(validation, std::fabs(timestamp_in_seconds - test_seconds), threshold);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

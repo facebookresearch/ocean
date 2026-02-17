@@ -275,7 +275,10 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 
 				for (size_t n = 0; n < numberTransformations; ++n)
 				{
-					leftWorld_T_transformations[n] = HomogenousMatrix4(Random::vector3(randomGenerator, -100, 100), Random::quaternion(randomGenerator));
+					const Vector3 randomLeftTranslation = Random::vector3(randomGenerator, -100, 100);
+					const Quaternion randomLeftRotation = Random::quaternion(randomGenerator);
+
+					leftWorld_T_transformations[n] = HomogenousMatrix4(randomLeftTranslation, randomLeftRotation);
 					rightWorld_T_transformations[n] = rightWorld_T_leftWorld * leftWorld_T_transformations[n];
 				}
 
@@ -407,7 +410,10 @@ bool TestAbsoluteTransformation::testAbsoluteTransformationBasedOnTransformation
 
 				for (size_t n = 0; n < numberTransformations; ++n)
 				{
-					leftWorld_T_transformations[n] = HomogenousMatrix4(Random::vector3(randomGenerator, -100, 100), Random::quaternion(randomGenerator));
+					const Vector3 randomLeftTranslation = Random::vector3(randomGenerator, -100, 100);
+					const Quaternion randomLeftRotation = Random::quaternion(randomGenerator);
+
+					leftWorld_T_transformations[n] = HomogenousMatrix4(randomLeftTranslation, randomLeftRotation);
 					rightWorld_T_transformations[n] = rightWorld_T_leftWorld * leftWorld_T_transformations[n];
 				}
 

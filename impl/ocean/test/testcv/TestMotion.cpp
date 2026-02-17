@@ -317,8 +317,11 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 			const unsigned int testWidth1 = performanceIteration ? width1 : RandomI::random(randomGenerator, tPatchSize, width1);
 			const unsigned int testHeight1 = performanceIteration ? height1 : RandomI::random(randomGenerator, tPatchSize, height1);
 
-			const unsigned int frame0PaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int frame1PaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int frame0PaddingValue = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int frame0PaddingElements = frame0PaddingValue * RandomI::random(randomGenerator, 1u);
+
+			const unsigned int frame1PaddingValue = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int frame1PaddingElements = frame1PaddingValue * RandomI::random(randomGenerator, 1u);
 
 			Frame frame0(FrameType(testWidth0, testHeight0, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), frame0PaddingElements);
 			Frame frame1(FrameType(frame0, testWidth1, testHeight1), frame1PaddingElements);
@@ -334,8 +337,13 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 
 			while (positions0.size() < constIterations)
 			{
-				positions0.emplace_back(RandomI::random(randomGenerator, frame0.width() - 1u), RandomI::random(randomGenerator, frame0.height() - 1u));
-				roughPositions1.emplace_back(RandomI::random(randomGenerator, frame1.width() - 1u), RandomI::random(randomGenerator, frame1.height() - 1u));
+				const unsigned int position0X = RandomI::random(randomGenerator, frame0.width() - 1u);
+				const unsigned int position0Y = RandomI::random(randomGenerator, frame0.height() - 1u);
+				positions0.emplace_back(position0X, position0Y);
+
+				const unsigned int roughPosition1X = RandomI::random(randomGenerator, frame1.width() - 1u);
+				const unsigned int roughPosition1Y = RandomI::random(randomGenerator, frame1.height() - 1u);
+				roughPositions1.emplace_back(roughPosition1X, roughPosition1Y);
 			}
 
 			Indices32 metrics(constIterations);

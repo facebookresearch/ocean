@@ -170,7 +170,7 @@ bool TestLocalizedObjectPoint::testConstructor(const double testDuration)
 
 		for (size_t n = 0; n < numberObservations; ++n)
 		{
-			imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+			imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
 		}
 
 		Tracking::SLAM::PointTrack pointTrack(firstFrameIndex, std::move(imagePoints));
@@ -224,12 +224,12 @@ bool TestLocalizedObjectPoint::testConstructorWithPosition(const double testDura
 		const Index32 firstFrameIndex = RandomI::random(randomGenerator, 0u, 1000u);
 
 		Vectors2 imagePoints;
-		imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
-		imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+		imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
+		imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
 
 		Tracking::SLAM::PointTrack pointTrack(firstFrameIndex, std::move(imagePoints));
 
-		const Vector3 position(Random::scalar(randomGenerator, -100, 100), Random::scalar(randomGenerator, -100, 100), Random::scalar(randomGenerator, -100, 100));
+		const Vector3 position = Random::vector3(randomGenerator, -100, 100);
 
 		const Tracking::SLAM::LocalizedObjectPoint::LocalizationPrecision precision = Tracking::SLAM::LocalizedObjectPoint::LocalizationPrecision(RandomI::random(randomGenerator, 1u, 4u));
 
@@ -268,8 +268,8 @@ bool TestLocalizedObjectPoint::testAddObservation(const double testDuration)
 		const Index32 firstFrameIndex = RandomI::random(randomGenerator, 0u, 1000u);
 
 		Vectors2 imagePoints;
-		imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
-		imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+		imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
+		imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
 
 		Tracking::SLAM::PointTrack pointTrack(firstFrameIndex, std::move(imagePoints));
 		Tracking::SLAM::LocalizedObjectPoint localizedObjectPoint(pointTrack);
@@ -285,7 +285,7 @@ bool TestLocalizedObjectPoint::testAddObservation(const double testDuration)
 		for (unsigned int n = 0u; n < additionalObservations; ++n)
 		{
 			const Index32 newFrameIndex = localizedObjectPoint.lastObservationFrameIndex() + 1u;
-			const Vector2 newImagePoint(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+			const Vector2 newImagePoint = Random::vector2(randomGenerator, 0, 1920, 0, 1080);
 
 			addedImagePoints.push_back(newImagePoint);
 
@@ -334,7 +334,7 @@ bool TestLocalizedObjectPoint::testRemoveObservation(const double testDuration)
 		Vectors2 imagePoints;
 		for (size_t n = 0; n < 5; ++n)
 		{
-			imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+			imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
 		}
 
 		Vectors2 imagePointsCopy = imagePoints;
@@ -390,8 +390,8 @@ bool TestLocalizedObjectPoint::testHasObservation(const double testDuration)
 	{
 		const Index32 firstFrameIndex = RandomI::random(randomGenerator, 10u, 1000u);
 
-		const Vector2 imagePoint0(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
-		const Vector2 imagePoint1(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+		const Vector2 imagePoint0 = Random::vector2(randomGenerator, 0, 1920, 0, 1080);
+		const Vector2 imagePoint1 = Random::vector2(randomGenerator, 0, 1920, 0, 1080);
 
 		Vectors2 imagePoints;
 		imagePoints.push_back(imagePoint0);
@@ -442,7 +442,7 @@ bool TestLocalizedObjectPoint::testObservation(const double testDuration)
 
 		for (size_t n = 0; n < numberObservations; ++n)
 		{
-			imagePoints.emplace_back(Random::scalar(randomGenerator, 0, 1920), Random::scalar(randomGenerator, 0, 1080));
+			imagePoints.emplace_back(Random::vector2(randomGenerator, 0, 1920, 0, 1080));
 		}
 
 		Vectors2 imagePointsCopy = imagePoints;

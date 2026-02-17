@@ -514,7 +514,7 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 		{
 			const uint8_t foregroundColor = uint8_t(RandomI::random(randomGenerator, 0u, 50u));
 
-			paintNoise(yFrame, noiseLocation, foregroundColor);
+			paintNoise(yFrame, noiseLocation, foregroundColor, randomGenerator);
 		}
 
 		if (filterSize != 0u)
@@ -869,7 +869,7 @@ void TestMessengerCodeDetector::paintBullseye(unsigned char* frame, const unsign
 	CV::Canvas::ellipse8BitPerChannel<1u>(frame, width, height, pixelPosition, dotDiameter, dotDiameter, &foregroundColor, framePaddingElements);
 }
 
-void TestMessengerCodeDetector::paintNoise(Frame& yFrame, const Vector2& location, const uint8_t foregroundColor)
+void TestMessengerCodeDetector::paintNoise(Frame& yFrame, const Vector2& location, const uint8_t foregroundColor, RandomGenerator& randomGenerator)
 {
 	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);
@@ -884,8 +884,8 @@ void TestMessengerCodeDetector::paintNoise(Frame& yFrame, const Vector2& locatio
 
 	for (unsigned int n = 0u; n < 5u; ++n)
 	{
-		const int xOffset = RandomI::random(-3, 3);
-		const int yOffset = RandomI::random(-3, 3);
+		const int xOffset = RandomI::random(randomGenerator, -3, 3);
+		const int yOffset = RandomI::random(randomGenerator, -3, 3);
 
 		CV::PixelPosition offsetPosition((unsigned int)(int(pixelPosition.x()) + xOffset), (unsigned int)(int(pixelPosition.y()) + yOffset));
 		ocean_assert(offsetPosition.x() < yFrame.width() && offsetPosition.y() < yFrame.height());

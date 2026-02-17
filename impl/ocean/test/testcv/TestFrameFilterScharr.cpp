@@ -225,17 +225,20 @@ bool TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel(const uns
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(2u * nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -320,17 +323,20 @@ bool TestFrameFilterScharr::testDiagonalFilter8BitPerChannel(const unsigned int 
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(2u * nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -415,17 +421,20 @@ bool TestFrameFilterScharr::testFilter8BitPerChannel(const unsigned int width, c
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(4u * nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -510,17 +519,20 @@ bool TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerCh
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -605,17 +617,20 @@ bool TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel(const unsign
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

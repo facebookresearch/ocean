@@ -164,7 +164,7 @@ bool TestUtilities::testCreateObjectPoints(const double testDuration)
 
 				const Vector2 projectedObjectPoint = camera->projectToImageIF(flippedCamera_T_world, objectPoints[n]);
 
-				OCEAN_EXPECT_TRUE(validation, projectedObjectPoint.distance(imagePoints[n]) <= 1);
+				OCEAN_EXPECT_LESS_EQUAL(validation, projectedObjectPoint.distance(imagePoints[n]), Scalar(1));
 			}
 		}
 		else
@@ -193,8 +193,13 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 	do
 	{
 		// 2D coordinate system: x-right, y-up
-		const Vector2 cornerBL(Scalar(RandomI::random(randomGenerator, -10, 10)), Scalar(RandomI::random(randomGenerator, -10, 10)));
-		const Vector2 cornerTR = cornerBL + Vector2(Scalar(RandomI::random(randomGenerator, 1, 10)), Scalar(RandomI::random(randomGenerator, 1, 10)));
+		const Scalar cornerBLx = Scalar(RandomI::random(randomGenerator, -10, 10));
+		const Scalar cornerBLy = Scalar(RandomI::random(randomGenerator, -10, 10));
+		const Vector2 cornerBL(cornerBLx, cornerBLy);
+
+		const Scalar cornerOffsetX = Scalar(RandomI::random(randomGenerator, 1, 10));
+		const Scalar cornerOffsetY = Scalar(RandomI::random(randomGenerator, 1, 10));
+		const Vector2 cornerTR = cornerBL + Vector2(cornerOffsetX, cornerOffsetY);
 
 		const Vector2 cornerTL = Vector2(cornerBL.x(), cornerTR.y());
 		const Vector2 cornerBR = Vector2(cornerTR.x(), cornerBL.y());
@@ -257,9 +262,9 @@ bool TestUtilities::testComputePolygonArea(const double testDuration)
 		const Triangle2 triangle2CW(cornerTL, cornerTR, midPointBottom);
 		ocean_assert((triangle2CW.area() - triangle2CCW.area()) < Numeric::eps());
 
-		OCEAN_EXPECT_TRUE(validation, Geometry::Utilities::computePolygonAreaSigned(triangleCCW, 3) - triangle2CCW.area() <= Numeric::eps());
+		OCEAN_EXPECT_LESS_EQUAL(validation, Geometry::Utilities::computePolygonAreaSigned(triangleCCW, 3) - triangle2CCW.area(), Numeric::eps());
 
-		OCEAN_EXPECT_TRUE(validation, Geometry::Utilities::computePolygonAreaSigned(triangleCW, 3) - triangle2CW.area() <= Numeric::eps());
+		OCEAN_EXPECT_LESS_EQUAL(validation, Geometry::Utilities::computePolygonAreaSigned(triangleCW, 3) - triangle2CW.area(), Numeric::eps());
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

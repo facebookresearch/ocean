@@ -198,11 +198,14 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilter8BitPerChannel(c
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
 
-					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int responsePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+
+					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements * framePaddingMultiplier);
+					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements * responsePaddingMultiplier);
 
 					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
 					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
@@ -290,11 +293,14 @@ bool TestFrameFilterSobelMagnitude::testDiagonalFilter8BitPerChannel(const unsig
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
 
-					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int responsePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+
+					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements * framePaddingMultiplier);
+					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements * responsePaddingMultiplier);
 
 					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
 					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
@@ -382,11 +388,14 @@ bool TestFrameFilterSobelMagnitude::testFilter8BitPerChannel(const unsigned int 
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
 
-					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 4u>()), responsePaddingElements);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int responsePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+
+					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements * framePaddingMultiplier);
+					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 4u>()), responsePaddingElements * responsePaddingMultiplier);
 
 					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
 					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);
@@ -474,11 +483,14 @@ bool TestFrameFilterSobelMagnitude::testHorizontalVerticalFilterTo1Response8Bit(
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
 
-					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 1u>()), responsePaddingElements);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u);
+					const unsigned int responsePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+
+					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements * framePaddingMultiplier);
+					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 1u>()), responsePaddingElements * responsePaddingMultiplier);
 
 					CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ true, &randomGenerator);
 					CV::CVUtilities::randomizeFrame(response, /* skipPaddingArea */ true, &randomGenerator);

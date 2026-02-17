@@ -148,7 +148,10 @@ bool TestLine3::testIsOnLine(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const LineT3<T> line(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> linePoint = RandomT<T>::vector3(randomGenerator, -range, range);
+			const VectorT3<T> lineDirection = RandomT<T>::vector3(randomGenerator);
+
+			const LineT3<T> line(linePoint, lineDirection);
 			ocean_assert(NumericT<T>::isEqual(line.direction().length(), 1));
 
 			VectorT3<T> perpendicular(line.direction().perpendicular());
@@ -176,7 +179,10 @@ bool TestLine3::testIsOnLine(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 
-			const VectorT3<T> pointOffset2(pointOnLine + perpendicular * RandomT<T>::scalar(randomGenerator, T(0.5), range) * RandomT<T>::sign(randomGenerator));
+			const T perpendicularDistance = RandomT<T>::scalar(randomGenerator, T(0.5), range);
+			const T sign = RandomT<T>::sign(randomGenerator);
+
+			const VectorT3<T> pointOffset2(pointOnLine + perpendicular * perpendicularDistance * sign);
 
 			if (line.isOnLine(pointOffset2) == true)
 			{
@@ -213,8 +219,14 @@ bool TestLine3::testNearestPoints(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const LineT3<T> lineA(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
-			const LineT3<T> lineB(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> linePointA = RandomT<T>::vector3(randomGenerator, -range, range);
+			const VectorT3<T> lineDirectionA = RandomT<T>::vector3(randomGenerator);
+
+			const VectorT3<T> linePointB = RandomT<T>::vector3(randomGenerator, -range, range);
+			const VectorT3<T> lineDirectionB = RandomT<T>::vector3(randomGenerator);
+
+			const LineT3<T> lineA(linePointA, lineDirectionA);
+			const LineT3<T> lineB(linePointB, lineDirectionB);
 
 			ocean_assert(lineA.direction().isUnit() && lineB.direction().isUnit());
 
@@ -302,8 +314,14 @@ bool TestLine3::testDistance(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const LineT3<T> lineA(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
-			const LineT3<T> lineB(RandomT<T>::vector3(randomGenerator, -range, range), RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> linePointA = RandomT<T>::vector3(randomGenerator, -range, range);
+			const VectorT3<T> lineDirectionA = RandomT<T>::vector3(randomGenerator);
+
+			const VectorT3<T> linePointB = RandomT<T>::vector3(randomGenerator, -range, range);
+			const VectorT3<T> lineDirectionB = RandomT<T>::vector3(randomGenerator);
+
+			const LineT3<T> lineA(linePointA, lineDirectionA);
+			const LineT3<T> lineB(linePointB, lineDirectionB);
 
 			ocean_assert(lineA.direction().isUnit() && lineB.direction().isUnit());
 

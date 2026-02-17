@@ -213,7 +213,7 @@ bool TestDataSample::testPlaybackTimestamp(const double testDuration)
 		const double expectedPlaybackTimestamp = double(sampleCreationTimestamp - serializationStartTimestamp);
 
 		OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(playbackTimestamp, expectedPlaybackTimestamp, 0.001));
-		OCEAN_EXPECT_TRUE(validation, playbackTimestamp >= 0.0);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, playbackTimestamp, 0.0);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

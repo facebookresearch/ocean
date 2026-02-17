@@ -10,6 +10,8 @@
 
 #include "ocean/test/testgeometry/TestGeometry.h"
 
+#include "ocean/base/RandomGenerator.h"
+
 #include "ocean/math/PinholeCamera.h"
 
 #include "ocean/test/TestSelector.h"
@@ -80,12 +82,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestMultipleViewGeometry
 		 * @param pinholeCamera The pinhole camera profile to be used, must be valid
 		 * @param points Number of point correspondences, with range [1, infinity)
 		 * @param views Number of views, with range [2, infinity)
+		 * @param randomGenerator The random generator to be used
 		 * @param imagePointsPerPose Resulting groups of corresponding image points, one group for each camera pose
 		 * @param gaussSigma Additional Gaussian noise will be added [0, infinity), 0 disable noise
 		 * @param objectPoints Optional resulting 3d object points
 		 * @return True, if succeeded
 		 */
-		static bool generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma = Scalar(0), Vectors3* objectPoints = nullptr);
+		static bool generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, RandomGenerator& randomGenerator, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma = Scalar(0), Vectors3* objectPoints = nullptr);
 
 		/**
 		 * Evaluates the (squared) re-projection error for given camera intrinsics and camera poses.<br>

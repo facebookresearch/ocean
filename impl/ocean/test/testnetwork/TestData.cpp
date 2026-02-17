@@ -63,7 +63,6 @@ bool TestData::testEndian(const double testDuration)
 	Log::info() << "Endian conversion test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);

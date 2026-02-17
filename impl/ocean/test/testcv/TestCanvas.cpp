@@ -271,7 +271,8 @@ bool TestCanvas::testLinePixelAccuracy(const double testDuration)
 		const unsigned int height = RandomI::random(randomGenerator, 5u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElementsFactor = RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingElementsFactor;
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
 
@@ -292,7 +293,7 @@ bool TestCanvas::testLinePixelAccuracy(const double testDuration)
 			color[n] = uint8_t(RandomI::random(randomGenerator, 0u, 254u /* 255 - 1 */));
 		}
 
-		const bool useColor = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool useColor = RandomI::boolean(randomGenerator);
 
 		switch (channels)
 		{

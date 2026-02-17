@@ -1741,7 +1741,6 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 	Log::info() << "for data types " <<  TypeNamer::name<T>() << ", " << TypeNamer::name<TIntegral>() << ", " << TypeNamer::name<TIntegralSquared>() << ", " << TypeNamer::name<TVariance>() << ":";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.985, randomGenerator);
 
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);

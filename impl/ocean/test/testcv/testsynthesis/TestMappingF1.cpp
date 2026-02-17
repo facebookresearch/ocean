@@ -263,7 +263,6 @@ bool TestMappingF1::testApplyMapping(const unsigned int width, const unsigned in
 	Log::info() << "... for " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
@@ -284,8 +283,8 @@ bool TestMappingF1::testApplyMapping(const unsigned int width, const unsigned in
 			{
 				while (true)
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
 					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
@@ -311,8 +310,8 @@ bool TestMappingF1::testApplyMapping(const unsigned int width, const unsigned in
 								{
 									positionAccepted = true;
 
-									sourceX = Random::scalar(Scalar(0), Scalar(mask.width() - 1u));
-									sourceY = Random::scalar(Scalar(0), Scalar(mask.height() - 1u));
+									sourceX = Random::scalar(randomGenerator, Scalar(0), Scalar(mask.width() - 1u));
+									sourceY = Random::scalar(randomGenerator, Scalar(0), Scalar(mask.height() - 1u));
 
 									const int xInt = Numeric::round32(sourceX);
 									const int yInt = Numeric::round32(sourceY);
@@ -591,7 +590,6 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 	Log::info() << "... for " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	constexpr unsigned int patchSize = 5u;
@@ -627,7 +625,10 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 				for (unsigned int i = 0u; i < 1000u; ++i)
 				{
-					target = CV::PixelPosition(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+					const unsigned int targetX = RandomI::random(randomGenerator, 2u, frame.width() - 3u);
+					const unsigned int targetY = RandomI::random(randomGenerator, 2u, frame.height() - 3u);
+
+					target = CV::PixelPosition(targetX, targetY);
 
 					if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
 					{
@@ -739,7 +740,6 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 	Log::info() << "... for " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	constexpr unsigned int patchSize = 5u;
@@ -776,7 +776,10 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 
 				for (unsigned int i = 0u; i < 1000u; ++i)
 				{
-					target = CV::PixelPosition(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+					const unsigned int targetX = RandomI::random(randomGenerator, 2u, frame.width() - 3u);
+					const unsigned int targetY = RandomI::random(randomGenerator, 2u, frame.height() - 3u);
+
+					target = CV::PixelPosition(targetX, targetY);
 
 					if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
 					{
@@ -888,7 +891,6 @@ bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const
 	constexpr Scalar threshold = std::is_same<double, Scalar>::value ? Scalar(0.00001) : Scalar(0.1);
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -1105,7 +1107,6 @@ bool TestMappingF1::testTwoPixelPatchOneSubPixelPatch8BitPerChannel(const unsign
 	constexpr unsigned int tPatchSize_2 = tPatchSize / 2u;
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;

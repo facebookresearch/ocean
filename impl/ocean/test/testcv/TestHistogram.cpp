@@ -1798,14 +1798,21 @@ bool TestHistogram::testContrastLimitedAdaptiveHistogramTileLookupTables(const u
 			const unsigned int tileCount = horizontalTiles * verticalTiles;
 
 			// Random image size; make it a multiple of the tile size and subtract a few pixels
-			const unsigned int randomWidth = RandomI::random(randomGenerator, 16u, 128u) * horizontalTiles - RandomI::random(randomGenerator, 5u);
-			const unsigned int randomHeight = RandomI::random(randomGenerator, 16u, 128u) * verticalTiles - RandomI::random(randomGenerator, 5u);
+			const unsigned int randomWidthBase = RandomI::random(randomGenerator, 16u, 128u) * horizontalTiles;
+			const unsigned int randomWidthOffset = RandomI::random(randomGenerator, 5u);
+			const unsigned int randomWidth = randomWidthBase - randomWidthOffset;
+
+			const unsigned int randomHeightBase = RandomI::random(randomGenerator, 16u, 128u) * verticalTiles;
+			const unsigned int randomHeightOffset = RandomI::random(randomGenerator, 5u);
+			const unsigned int randomHeight = randomHeightBase - randomHeightOffset;
 
 			const unsigned int sourceImageWidth = useRandomWidth ? randomWidth : width0;
 			const unsigned int sourceImageHeight = useRandomHeight ? randomHeight : height0;
 			ocean_assert(sourceImageWidth != 0u && sourceImageHeight != 0u);
 
-			const unsigned int sourceImagePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int sourceImagePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int sourceImagePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int sourceImagePaddingElements = sourceImagePaddingBase * sourceImagePaddingMultiplier;
 
 			// Generate random test images, value range: [0, 255] as in the original
 			const unsigned int randomFrameWidth = sourceImageWidth + gaussianFilterSize + sourceImagePaddingElements;
@@ -1910,7 +1917,9 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const unsigned int 
 			const unsigned int sourceImageHeight = useRandomHeight ? RandomI::random(randomGenerator, 16u * verticalTiles, 2000u) : height0;
 			ocean_assert(sourceImageWidth != 0u && sourceImageHeight != 0u);
 
-			const unsigned int sourceImagePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int sourceImagePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int sourceImagePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int sourceImagePaddingElements = sourceImagePaddingBase * sourceImagePaddingMultiplier;
 
 			// Generate random test images, value range: [0, 255] as in the original
 			const unsigned int randomFrameWidth = sourceImageWidth + gaussianFilterSize + sourceImagePaddingElements;
@@ -1922,7 +1931,9 @@ bool TestHistogram::testContrastLimitedHistogramEqualization(const unsigned int 
 			Frame sourceImage(FrameType(sourceImageWidth, sourceImageHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u), FrameType::ORIGIN_UPPER_LEFT), sourceImagePaddingElements);
 			CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(randomFrame.constdata<uint8_t>(), sourceImage.data<uint8_t>(), sourceImage.width(), sourceImage.height(), 1u, randomFrame.paddingElements(), sourceImage.paddingElements(), gaussianFilterSize, gaussianFilterSize, -1.0f);
 
-			const unsigned int targetImagePadding = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int targetImagePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int targetImagePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int targetImagePadding = targetImagePaddingBase * targetImagePaddingMultiplier;
 
 			Frame targetImage(sourceImage.frameType(), targetImagePadding);
 
@@ -1988,10 +1999,10 @@ bool TestHistogram::testDetermineHistogram8BitPerChannel(const double testDurati
 
 		do
 		{
-			const unsigned int sourceImageWidth = width != 0u ? width : RandomI::random(gaussianFilterSize, 2000u);
-			const unsigned int sourceImageHeight = height != 0u ? height : RandomI::random(gaussianFilterSize, 2000u);
+			const unsigned int sourceImageWidth = width != 0u ? width : RandomI::random(randomGenerator, gaussianFilterSize, 2000u);
+			const unsigned int sourceImageHeight = height != 0u ? height : RandomI::random(randomGenerator, gaussianFilterSize, 2000u);
 			ocean_assert(sourceImageWidth != 0u && sourceImageHeight != 0u);
-			const unsigned int sourceImagePaddingElements = RandomI::random(0u, 50u);
+			const unsigned int sourceImagePaddingElements = RandomI::random(randomGenerator, 0u, 50u);
 
 			Frame randomFrame(FrameType(sourceImageWidth, sourceImageHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, tChannels), FrameType::ORIGIN_UPPER_LEFT), sourceImagePaddingElements);
 			CV::CVUtilities::randomizeFrame(randomFrame, false, &randomGenerator);
@@ -2053,20 +2064,19 @@ bool TestHistogram::testDetermineHistogram8BitPerChannelSubFrame(const double te
 
 		do
 		{
-			const unsigned int sourceImageWidth = width != 0u ? width : RandomI::random(gaussianFilterSize, 2000u);
-			const unsigned int sourceImageHeight = height != 0u ? height : RandomI::random(gaussianFilterSize, 2000u);
+			const unsigned int sourceImageWidth = width != 0u ? width : RandomI::random(randomGenerator, gaussianFilterSize, 2000u);
+			const unsigned int sourceImageHeight = height != 0u ? height : RandomI::random(randomGenerator, gaussianFilterSize, 2000u);
 			ocean_assert(sourceImageWidth != 0u && sourceImageHeight != 0u);
-			const unsigned int sourceImagePaddingElements = RandomI::random(0u, 50u);
+			const unsigned int sourceImagePaddingElements = RandomI::random(randomGenerator, 0u, 50u);
 
 			Frame randomFrame(FrameType(sourceImageWidth, sourceImageHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, tChannels), FrameType::ORIGIN_UPPER_LEFT), sourceImagePaddingElements);
 			CV::CVUtilities::randomizeFrame(randomFrame, false, &randomGenerator);
 
+			const unsigned int subFrameX = RandomI::random(randomGenerator, 0u, sourceImageWidth - 1u);
+			const unsigned int subFrameY = RandomI::random(randomGenerator, 0u, sourceImageHeight - 1u);
 
-			const unsigned int subFrameX = RandomI::random(0u, sourceImageWidth - 1u);
-			const unsigned int subFrameY = RandomI::random(0u, sourceImageHeight - 1u);
-
-			unsigned int subFrameWidth = RandomI::random(1u, sourceImageWidth);
-			unsigned int subFrameHeight = RandomI::random(1u, sourceImageHeight);
+			unsigned int subFrameWidth = RandomI::random(randomGenerator, 1u, sourceImageWidth);
+			unsigned int subFrameHeight = RandomI::random(randomGenerator, 1u, sourceImageHeight);
 
 			if (subFrameX + subFrameWidth > sourceImageWidth)
 			{

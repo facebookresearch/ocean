@@ -349,7 +349,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 		{
 			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
-				const uint32_t value = RandomI::random32();
+				const uint32_t value = RandomI::random32(randomGenerator);
 
 				for (unsigned int nBit = 0u; nBit < numberBits; ++nBit)
 				{
@@ -562,7 +562,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 		{
 			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
-				const uint64_t value = RandomI::random64();
+				const uint64_t value = RandomI::random64(randomGenerator);
 
 				for (unsigned int nBit = 0u; nBit < numberBits; ++nBit)
 				{
@@ -781,7 +781,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 		{
 			for (unsigned int n = 0u; n < valueRange * 1000u; ++n)
 			{
-				const unsigned int value = RandomI::random(valueRange - 1u);
+				const unsigned int value = RandomI::random(randomGenerator, valueRange - 1u);
 
 				if (value < valueRange)
 				{
@@ -925,7 +925,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 		{
 			for (unsigned int n = 0u; n < valueRange * 1000u; ++n)
 			{
-				const unsigned int value = RandomI::random(minRange, maxRange);
+				const unsigned int value = RandomI::random(randomGenerator, minRange, maxRange);
 
 				if (value >= minRange && value <= maxRange)
 				{
@@ -1079,7 +1079,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 		{
 			for (unsigned int n = 0u; n < valueRange * 1000u; ++n)
 			{
-				const int value = RandomI::random(minRange, maxRange);
+				const int value = RandomI::random(randomGenerator, minRange, maxRange);
 
 				if (value >= minRange && value <= maxRange)
 				{
@@ -1313,7 +1313,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 		{
 			for (unsigned int n = 0u; n < bins * 1000u; ++n)
 			{
-				const unsigned int value = RandomI::random(largeValueRange - 1u);
+				const unsigned int value = RandomI::random(randomGenerator, largeValueRange - 1u);
 
 				if (value < largeValueRange)
 				{
@@ -1456,7 +1456,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 		{
 			for (unsigned int n = 0u; n < bins * 1000u; ++n)
 			{
-				const unsigned int value = RandomI::random(minRange, maxRange);
+				const unsigned int value = RandomI::random(randomGenerator, minRange, maxRange);
 
 				if (value >= minRange && value <= maxRange)
 				{
@@ -1614,7 +1614,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 		{
 			for (unsigned int n = 0u; n < bins * 1000u; ++n)
 			{
-				const int value = RandomI::random(minRange, maxRange);
+				const int value = RandomI::random(randomGenerator, minRange, maxRange);
 
 				if (value >= minRange && value <= maxRange)
 				{
@@ -1832,7 +1832,7 @@ bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
-		const unsigned int value = RandomI::random(0u);
+		const unsigned int value = RandomI::random(randomGenerator, 0u);
 
 		OCEAN_EXPECT_EQUAL(validation, value, 0u);
 	}
@@ -1846,7 +1846,7 @@ bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
-		const int value = RandomI::random(-5, -5);
+		const int value = RandomI::random(randomGenerator, -5, -5);
 
 		OCEAN_EXPECT_EQUAL(validation, value, -5);
 	}
@@ -1860,7 +1860,7 @@ bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
-		const int value = RandomI::random(5, 5);
+		const int value = RandomI::random(randomGenerator, 5, 5);
 
 		OCEAN_EXPECT_EQUAL(validation, value, 5);
 	}
@@ -1874,7 +1874,7 @@ bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
-		const unsigned int value = RandomI::random(5u, 5u);
+		const unsigned int value = RandomI::random(randomGenerator, 5u, 5u);
 
 		OCEAN_EXPECT_EQUAL(validation, value, 5u);
 	}
@@ -1905,7 +1905,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const unsigned int value = RandomI::random(1u);
+			const unsigned int value = RandomI::random(randomGenerator, 1u);
 
 			if (value == 0u)
 			{
@@ -1965,7 +1965,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const int value = RandomI::random(-6, -5);
+			const int value = RandomI::random(randomGenerator, -6, -5);
 
 			if (value == -6)
 			{
@@ -2026,7 +2026,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const int value = RandomI::random(900, 901);
+			const int value = RandomI::random(randomGenerator, 900, 901);
 
 			if (value == 900)
 			{
@@ -2086,7 +2086,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const unsigned int value = RandomI::random(900u, 901u);
+			const unsigned int value = RandomI::random(randomGenerator, 900u, 901u);
 
 			if (value == 900u)
 			{
@@ -2160,7 +2160,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const unsigned int value = RandomI::random(2u);
+			const unsigned int value = RandomI::random(randomGenerator, 2u);
 
 			if (value == 0u)
 			{
@@ -2238,7 +2238,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const int value = RandomI::random(-7, -5);
+			const int value = RandomI::random(randomGenerator, -7, -5);
 
 			if (value == -7)
 			{
@@ -2316,7 +2316,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			const int value = RandomI::random(900, 902);
+			const int value = RandomI::random(randomGenerator, 900, 902);
 
 			if (value == 900)
 			{
@@ -2414,7 +2414,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 			for (unsigned int n = 0u; n < iterations; ++n)
 			{
-				const int value = RandomI::random(start, stop);
+				const int value = RandomI::random(randomGenerator, start, stop);
 
 				if (value < start || value > stop)
 				{
@@ -2438,10 +2438,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 				maxValue = max(maxValue, values[n]);
 			}
 
-			if (std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)) > 1)
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)), 1);
 		}
 	}
 
@@ -2459,7 +2456,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 			for (unsigned int n = 0u; n < iterations; ++n)
 			{
-				const unsigned int value = RandomI::random(start, stop);
+				const unsigned int value = RandomI::random(randomGenerator, start, stop);
 
 				if (value < start || value > stop)
 				{
@@ -2483,10 +2480,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 				maxValue = max(maxValue, values[n]);
 			}
 
-			if (std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)) > 1)
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)), 1);
 		}
 	}
 
@@ -2526,10 +2520,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 				maxValue = max(maxValue, values[n]);
 			}
 
-			if (std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)) > 1)
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)), 1);
 		}
 	}
 
@@ -2557,7 +2548,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 
 		// first, we check for 1 as maximal value:
 
-		RandomI::random(1u, first, second);
+		RandomI::random(randomGenerator, 1u, first, second);
 
 		Utilities::sortLowestToFront2(first, second);
 		if (first != 0u || second != 1u)
@@ -2585,7 +2576,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 		{
 			first = 0u;
 			second = 0u;
-			RandomI::random(maxValue, first, second);
+			RandomI::random(randomGenerator, maxValue, first, second);
 
 			if (first == second || first > maxValue || second > maxValue)
 			{
@@ -2632,7 +2623,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 
 		// first, we check for 2 as maximal value:
 
-		RandomI::random(2u, first, second, third);
+		RandomI::random(randomGenerator, 2u, first, second, third);
 
 		Utilities::sortLowestToFront3(first, second, third);
 		if (first != 0u || second != 1u || third != 2u)
@@ -2662,7 +2653,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 			first = 0u;
 			second = 0u;
 			third = 0u;
-			RandomI::random(maxValue, first, second, third);
+			RandomI::random(randomGenerator, maxValue, first, second, third);
 
 			if (first == second || first == third || second == third || first > maxValue || second > maxValue || third > maxValue)
 			{
@@ -2709,7 +2700,7 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 
 			for (unsigned int n = 0u; n < iterations; ++n)
 			{
-				const bool value = RandomI::boolean();
+				const bool value = RandomI::boolean(randomGenerator);
 
 				if (value == false)
 				{
@@ -2723,10 +2714,7 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 
 			const unsigned int difference = (unsigned int)(std::abs(int(histogram[0]) - int(histogram[1])));
 
-			if (difference > iterations * 5u / 100u) // 5%
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, difference, iterations * 5u / 100u); // 5%
 		}
 
 		{
@@ -2748,10 +2736,7 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 
 			const unsigned int difference = (unsigned int)(std::abs(int(histogram[0]) - int(histogram[1])));
 
-			if (difference > iterations * 5u / 100u) // 5%
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, difference, iterations * 5u / 100u); // 5%
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -2789,7 +2774,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 
 			for (size_t n = 0; n < iterations; ++n)
 			{
-				const int element = RandomI::random(elements);
+				const int element = RandomI::random(randomGenerator, elements);
 
 				ocean_assert(element < int(histogram.size()));
 				if (element < int(histogram.size()))
@@ -2806,10 +2791,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 
 			const unsigned int difference = (unsigned int)(std::abs(int(histogram.front()) - int(histogram.back())));
 
-			if (difference > iterations * 5u / 100u) // 5%
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, difference, iterations * 5u / 100u); // 5%
 		}
 
 		{
@@ -2834,10 +2816,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 
 			const unsigned int difference = (unsigned int)(std::abs(int(histogram.front()) - int(histogram.back())));
 
-			if (difference > iterations * 5u / 100u) // 5%
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, difference, iterations * 5u / 100u); // 5%
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -2868,7 +2847,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 
 			for (size_t n = 0; n < iterations; ++n)
 			{
-				const int element = RandomI::random(initializerList);
+				const int element = RandomI::random(randomGenerator, initializerList);
 
 				ocean_assert(element < int(histogram.size()));
 				if (element < int(histogram.size()))
@@ -2885,10 +2864,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 
 			const unsigned int difference = (unsigned int)(std::abs(int(histogram.front()) - int(histogram.back())));
 
-			if (difference > iterations * 5u / 100u) // 5%
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, difference, iterations * 5u / 100u); // 5%
 		}
 
 		{
@@ -2913,10 +2889,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 
 			const unsigned int difference = (unsigned int)(std::abs(int(histogram.front()) - int(histogram.back())));
 
-			if (difference > iterations * 5u / 100u) // 5%
-			{
-				OCEAN_SET_FAILED(validation);
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, difference, iterations * 5u / 100u); // 5%
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -2937,10 +2910,10 @@ bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
 	const int offset = RandomI::random(randomGenerator, 1, 100000);
 
 	{
-		const unsigned int valueA = RandomI::random((unsigned int)(-1));
-		const unsigned int valueB = RandomI::random(0u, (unsigned int)(-1));
-		const int valueC = RandomI::random(0, 2147483647);
-		const int valueD = RandomI::random(0 - offset, 2147483647 - offset);
+		const unsigned int valueA = RandomI::random(randomGenerator, (unsigned int)(-1));
+		const unsigned int valueB = RandomI::random(randomGenerator, 0u, (unsigned int)(-1));
+		const int valueC = RandomI::random(randomGenerator, 0, 2147483647);
+		const int valueD = RandomI::random(randomGenerator, 0 - offset, 2147483647 - offset);
 
 		if (uint64_t(valueA) > uint64_t(uint32_t(-1)) // dummy test
 			|| uint64_t(valueB) > uint64_t(uint32_t(-1))

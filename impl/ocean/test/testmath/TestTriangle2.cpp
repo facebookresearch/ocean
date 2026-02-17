@@ -117,7 +117,10 @@ bool TestTriangle2::testIntersects(const double testDuration)
 		{
 			{
 				// two identical (valid) triangles have always an intersection
-				const Triangle2 triangle(Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10));
+				const Vector2 point0 = Random::vector2(randomGenerator, -10, 10);
+				const Vector2 point1 = Random::vector2(randomGenerator, -10, 10);
+				const Vector2 point2 = Random::vector2(randomGenerator, -10, 10);
+				const Triangle2 triangle(point0, point1, point2);
 
 				if (triangle.isValid())
 				{
@@ -127,8 +130,15 @@ bool TestTriangle2::testIntersects(const double testDuration)
 
 			{
 				// two triangles lying in different areas do not have an intersection
-				const Triangle2 triangleA(Random::vector2(randomGenerator, -10, Scalar(-0.01)), Random::vector2(randomGenerator, -10, Scalar(-0.01)), Random::vector2(randomGenerator, -10, Scalar(-0.01)));
-				const Triangle2 triangleB(Random::vector2(randomGenerator, Scalar(0.01), 10), Random::vector2(randomGenerator, Scalar(0.01), 10), Random::vector2(randomGenerator, Scalar(0.01), 10));
+				const Vector2 pointA0 = Random::vector2(randomGenerator, -10, Scalar(-0.01));
+				const Vector2 pointA1 = Random::vector2(randomGenerator, -10, Scalar(-0.01));
+				const Vector2 pointA2 = Random::vector2(randomGenerator, -10, Scalar(-0.01));
+				const Triangle2 triangleA(pointA0, pointA1, pointA2);
+
+				const Vector2 pointB0 = Random::vector2(randomGenerator, Scalar(0.01), 10);
+				const Vector2 pointB1 = Random::vector2(randomGenerator, Scalar(0.01), 10);
+				const Vector2 pointB2 = Random::vector2(randomGenerator, Scalar(0.01), 10);
+				const Triangle2 triangleB(pointB0, pointB1, pointB2);
 
 				if (triangleA.isValid() && triangleB.isValid())
 				{
@@ -139,8 +149,15 @@ bool TestTriangle2::testIntersects(const double testDuration)
 			{
 				// random triangles
 
-				const Triangle2 triangleA(Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10));
-				const Triangle2 triangleB(Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10));
+				const Vector2 pointA0 = Random::vector2(randomGenerator, -10, 10);
+				const Vector2 pointA1 = Random::vector2(randomGenerator, -10, 10);
+				const Vector2 pointA2 = Random::vector2(randomGenerator, -10, 10);
+				const Triangle2 triangleA(pointA0, pointA1, pointA2);
+
+				const Vector2 pointB0 = Random::vector2(randomGenerator, -10, 10);
+				const Vector2 pointB1 = Random::vector2(randomGenerator, -10, 10);
+				const Vector2 pointB2 = Random::vector2(randomGenerator, -10, 10);
+				const Triangle2 triangleB(pointB0, pointB1, pointB2);
 
 				if (triangleA.isValid() && triangleB.isValid())
 				{
@@ -399,7 +416,8 @@ bool TestTriangle2::testPadded(const double testDuration)
 		const Triangle2 triangle((similarity * hPoint0).xy(), (similarity * hPoint1).xy(), (similarity * hPoint2).xy());
 		ocean_assert(triangle.isValid());
 
-		const Scalar padWidth = Random::scalar(randomGenerator, Scalar(0.001), Scalar(20)) * Random::sign(randomGenerator);
+		const Scalar padWidthAbs = Random::scalar(randomGenerator, Scalar(0.001), Scalar(20));
+		const Scalar padWidth = padWidthAbs * Random::sign(randomGenerator);
 
 		const Triangle2 paddedTriangle = triangle.padded(padWidth);
 

@@ -166,7 +166,7 @@ bool TestThreadPool::testInvokeFunctions(const double testDuration)
 		{
 			for (const Index32 id : ids)
 			{
-				OCEAN_EXPECT_TRUE(validation, executedIds.find(id) != executedIds.cend());
+				OCEAN_EXPECT_NOT_EQUAL(validation, executedIds.find(id), executedIds.cend());
 			}
 		}
 

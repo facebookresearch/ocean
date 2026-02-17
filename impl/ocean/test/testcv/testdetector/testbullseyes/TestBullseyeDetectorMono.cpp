@@ -565,7 +565,9 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 	do
 	{
 		constexpr std::array<AnyCameraType, 2> anyCameraTypes = {AnyCameraType::PINHOLE, AnyCameraType::FISHEYE};
-		const SharedAnyCamera realisticCamera = TestGeometry::Utilities::realisticAnyCamera(anyCameraTypes[RandomI::random(randomGenerator, 1u)], RandomI::random(randomGenerator, 1u));
+		const unsigned int cameraTypeIndex = RandomI::random(randomGenerator, 1u);
+		const unsigned int cameraIndex = RandomI::random(randomGenerator, 1u);
+		const SharedAnyCamera realisticCamera = TestGeometry::Utilities::realisticAnyCamera(anyCameraTypes[cameraTypeIndex], cameraIndex);
 		ocean_assert(realisticCamera != nullptr && realisticCamera->isValid());
 
 		const unsigned int width = RandomI::random(randomGenerator, 21u, 2048u);
@@ -590,7 +592,6 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 		ocean_assert(parameters.isValid());
 
 		const bool useWorker = RandomI::boolean(randomGenerator);
-
 
 		Bullseyes bullseyes;
 		if (!BullseyeDetectorMono::detectBullseyes(yFrame, bullseyes, parameters, (useWorker ? WorkerPool::get().scopedWorker()() : nullptr)))

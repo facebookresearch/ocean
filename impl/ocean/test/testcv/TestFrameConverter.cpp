@@ -1093,14 +1093,16 @@ bool TestFrameConverter::testCast(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 100u);
-		const unsigned int height = RandomI::random(1u, 100u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 100u);
 
-		const unsigned int channels = RandomI::random(1u, 31u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 31u);
 
 		allSucceeded = testCast<uint8_t>(width, height, channels) && allSucceeded;
 
@@ -1138,26 +1140,48 @@ bool TestFrameConverter::testNormalizedCast(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 100u);
-		const unsigned int height = RandomI::random(1u, 100u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 100u);
 
-		const unsigned int channels = RandomI::random(1u, 31u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 31u);
 
-		allSucceeded = testNormalizedCast<float>(width, height, channels, RandomF::scalar(-1.0f, 1.0f), RandomF::scalar(-100.0f, 100.0f)) && allSucceeded;
-		allSucceeded = testNormalizedCast<double>(width, height, channels, RandomD::scalar(-1.0, 1.0), RandomF::scalar(-100.0, 100.0)) && allSucceeded;
+		const float floatNormalization = RandomF::scalar(randomGenerator, -1.0f, 1.0f);
+		const float floatOffset = RandomF::scalar(randomGenerator, -100.0f, 100.0f);
+		allSucceeded = testNormalizedCast<float>(width, height, channels, floatNormalization, floatOffset) && allSucceeded;
 
-		allSucceeded = testNormalizedCast<int16_t>(width, height, channels, int16_t(RandomI::random(-3, 3)), int16_t(RandomI::random(-100, 100))) && allSucceeded;
-		allSucceeded = testNormalizedCast<uint16_t>(width, height, channels, uint16_t(RandomI::random(0u, 3u)), uint16_t(RandomI::random(0u, 100u))) && allSucceeded;
+		const double doubleNormalization = RandomD::scalar(randomGenerator, -1.0, 1.0);
+		const double doubleOffset = RandomD::scalar(randomGenerator, -100.0, 100.0);
+		allSucceeded = testNormalizedCast<double>(width, height, channels, doubleNormalization, doubleOffset) && allSucceeded;
 
-		allSucceeded = testNormalizedCast<int32_t>(width, height, channels, RandomI::random(-10, 10), RandomI::random(-100, 100)) && allSucceeded;
-		allSucceeded = testNormalizedCast<uint32_t>(width, height, channels, RandomI::random(0u, 10u), RandomI::random(0, 100)) && allSucceeded;
+		const int16_t int16Normalization = int16_t(RandomI::random(randomGenerator, -3, 3));
+		const int16_t int16Offset = int16_t(RandomI::random(randomGenerator, -100, 100));
+		allSucceeded = testNormalizedCast<int16_t>(width, height, channels, int16Normalization, int16Offset) && allSucceeded;
 
-		allSucceeded = testNormalizedCast<int64_t>(width, height, channels, RandomI::random(-100, 100), RandomI::random(-1000, 1000)) && allSucceeded;
-		allSucceeded = testNormalizedCast<uint64_t>(width, height, channels, RandomI::random(0u, 100u), RandomI::random(0, 1000)) && allSucceeded;
+		const uint16_t uint16Normalization = uint16_t(RandomI::random(randomGenerator, 0u, 3u));
+		const uint16_t uint16Offset = uint16_t(RandomI::random(randomGenerator, 0u, 100u));
+		allSucceeded = testNormalizedCast<uint16_t>(width, height, channels, uint16Normalization, uint16Offset) && allSucceeded;
+
+		const int32_t int32Normalization = RandomI::random(randomGenerator, -10, 10);
+		const int32_t int32Offset = RandomI::random(randomGenerator, -100, 100);
+		allSucceeded = testNormalizedCast<int32_t>(width, height, channels, int32Normalization, int32Offset) && allSucceeded;
+
+		const uint32_t uint32Normalization = RandomI::random(randomGenerator, 0u, 10u);
+		const int32_t uint32Offset = RandomI::random(randomGenerator, 0, 100);
+		allSucceeded = testNormalizedCast<uint32_t>(width, height, channels, uint32Normalization, uint32Offset) && allSucceeded;
+
+		const int64_t int64Normalization = RandomI::random(randomGenerator, -100, 100);
+		const int64_t int64Offset = RandomI::random(randomGenerator, -1000, 1000);
+		allSucceeded = testNormalizedCast<int64_t>(width, height, channels, int64Normalization, int64Offset) && allSucceeded;
+
+		const uint64_t uint64Normalization = RandomI::random(randomGenerator, 0u, 100u);
+		const int64_t uint64Offset = RandomI::random(randomGenerator, 0, 1000);
+		allSucceeded = testNormalizedCast<uint64_t>(width, height, channels, uint64Normalization, uint64Offset) && allSucceeded;
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
@@ -1223,8 +1247,13 @@ bool TestFrameConverter::testSubFrameMask(const double testDuration)
 		const unsigned int targetWidth = measurePerformance ? sourceWidth : RandomI::random(randomGenerator, 200u, 1000u);
 		const unsigned int targetHeight = measurePerformance ? sourceHeight : RandomI::random(randomGenerator, 200u, 1000u);
 
-		const CV::PixelPosition sourceTopLeft(measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, sourceWidth / 2u), measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, sourceHeight / 2u));
-		const CV::PixelPosition targetTopLeft(measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, targetWidth / 2u), measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, targetHeight / 2u));
+		const unsigned int sourceTopLeftX = measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, sourceWidth / 2u);
+		const unsigned int sourceTopLeftY = measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, sourceHeight / 2u);
+		const CV::PixelPosition sourceTopLeft(sourceTopLeftX, sourceTopLeftY);
+
+		const unsigned int targetTopLeftX = measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, targetWidth / 2u);
+		const unsigned int targetTopLeftY = measurePerformance ? 0u : RandomI::random(randomGenerator, 0u, targetHeight / 2u);
+		const CV::PixelPosition targetTopLeft(targetTopLeftX, targetTopLeftY);
 
 		const unsigned int widthRemaining = std::min(sourceWidth - sourceTopLeft.x(), targetWidth - targetTopLeft.x());
 		const unsigned int heightRemaining = std::min(sourceHeight - sourceTopLeft.y(), targetHeight - targetTopLeft.y());
@@ -1407,7 +1436,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd1Plane2ChannelsDowns
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -1657,7 +1686,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd1Plane2ChannelsDowns
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -1894,7 +1923,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDown
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -2125,7 +2154,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDown
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -2344,7 +2373,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		constexpr unsigned int height = 2u;
 
 		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
@@ -2493,7 +2522,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		constexpr unsigned int height = 2u;
 
 		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
@@ -2885,7 +2914,7 @@ bool TestFrameConverter::testMapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		constexpr unsigned int height = 1u;
 
 		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
@@ -2975,7 +3004,7 @@ bool TestFrameConverter::testMapOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampl
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -3216,7 +3245,7 @@ bool TestFrameConverter::testMapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsamp
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -3444,7 +3473,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd2Planes1ChannelDowns
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -3687,7 +3716,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -3930,7 +3959,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -4197,7 +4226,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -4428,7 +4457,7 @@ bool TestFrameConverter::testMapOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampl
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -4677,7 +4706,7 @@ bool TestFrameConverter::testMapTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsamp
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u);
@@ -4915,11 +4944,15 @@ bool TestFrameConverter::testConvertOneRow_3Planes1Channel_To_1Plane3Channels_8B
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u);
-		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int source0PaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 0u, 100u) * source0PaddingMultiplier;
+		const unsigned int source1PaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 0u, 100u) * source1PaddingMultiplier;
+		const unsigned int source2PaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int source2PaddingElements = RandomI::random(randomGenerator, 0u, 100u) * source2PaddingMultiplier;
+		const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u) * targetPaddingMultiplier;
 
 		const unsigned int source0StrideElements = width + source0PaddingElements;
 		const unsigned int source1StrideElements = width + source1PaddingElements;
@@ -5069,7 +5102,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane3ChannelsWith2ChannelsDownsampl
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 
@@ -5209,7 +5242,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane3ChannelsWith2ChannelsDownsampl
 
 	do
 	{
-		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 

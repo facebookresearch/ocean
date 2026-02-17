@@ -263,7 +263,6 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 	Log::info() << "... for " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
@@ -465,7 +464,6 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 	Log::info() << "... for " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
@@ -665,7 +663,6 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 	Log::info() << "... for " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
@@ -865,7 +862,6 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 	Log::info() << "... for " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
@@ -1067,7 +1063,6 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 	Log::info() << "... for " << channels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;

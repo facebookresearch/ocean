@@ -200,7 +200,7 @@ bool TestOutputDataSerializer::testAddChannel(const double testDuration)
 
 		if (!scopedDirectory.exists())
 		{
-			OCEAN_EXPECT_TRUE(validation, false);
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -254,7 +254,7 @@ bool TestOutputDataSerializer::testAddSample(const double testDuration)
 
 		if (!scopedDirectory.exists())
 		{
-			OCEAN_EXPECT_TRUE(validation, false);
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -318,7 +318,7 @@ bool TestOutputDataSerializer::testStartStop(const double testDuration)
 
 		if (!scopedDirectory.exists())
 		{
-			OCEAN_EXPECT_TRUE(validation, false);
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -368,7 +368,7 @@ bool TestOutputDataSerializer::testFileOutput(const double testDuration)
 
 		if (!scopedDirectory.exists())
 		{
-			OCEAN_EXPECT_TRUE(validation, false);
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -415,7 +415,7 @@ bool TestOutputDataSerializer::testFileOutput(const double testDuration)
 		std::ifstream testStream(tempFilename.c_str(), std::ios::binary | std::ios::ate);
 		const size_t fileSize = size_t(testStream.tellg());
 
-		OCEAN_EXPECT_TRUE(validation, fileSize > 0u);
+		OCEAN_EXPECT_GREATER(validation, fileSize, size_t(0));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

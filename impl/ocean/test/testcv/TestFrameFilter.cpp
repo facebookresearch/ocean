@@ -406,7 +406,7 @@ bool TestFrameFilter::testMagnitude(RandomGenerator& randomGenerator, Worker& wo
 		return false;
 	}
 
-	Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+	Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 	CV::FrameFilter::template magnitude<T, TMagnitude>(frame.constdata<T>(), magnitude.data<TMagnitude>(), frame.channels(), frame.width(), frame.height(), frame.paddingElements(), magnitude.paddingElements(), useWorker);
 

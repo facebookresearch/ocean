@@ -288,7 +288,7 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 
 		// Test 2: Parameterized Constructor with valid data
 		{
-			const Vector3 center(Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, 0.1, 10));
+			const Vector3 center = Random::vector3(randomGenerator, Scalar(-10), Scalar(10), Scalar(-10), Scalar(10), Scalar(0.1), Scalar(10));
 			const Scalar errorA = Random::scalar(randomGenerator, 0, 10);
 			const Scalar errorB = Random::scalar(randomGenerator, 0, 10);
 
@@ -349,7 +349,7 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 
 		// Test 6: Copy semantics
 		{
-			const Vector3 center(Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, 0.1, 10));
+			const Vector3 center = Random::vector3(randomGenerator, Scalar(-10), Scalar(10), Scalar(-10), Scalar(10), Scalar(0.1), Scalar(10));
 			const Scalar errorA = Random::scalar(randomGenerator, 0, 5);
 			const Scalar errorB = Random::scalar(randomGenerator, 0, 5);
 
@@ -398,9 +398,9 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 			// Verify values match exactly
 			OCEAN_EXPECT_TRUE(validation, centerRef.isEqual(center, Numeric::weakEps()));
 
-			OCEAN_EXPECT_TRUE(validation, std::abs(candidate.reprojectionErrorA() - errorA) <= Numeric::weakEps());
+			OCEAN_EXPECT_LESS_EQUAL(validation, std::abs(candidate.reprojectionErrorA() - errorA), Numeric::weakEps());
 
-			OCEAN_EXPECT_TRUE(validation, std::abs(candidate.reprojectionErrorB() - errorB) <= Numeric::weakEps());
+			OCEAN_EXPECT_LESS_EQUAL(validation, std::abs(candidate.reprojectionErrorB() - errorB), Numeric::weakEps());
 		}
 
 		// Test 8: Const correctness
@@ -453,7 +453,9 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 		const SharedAnyCamera& camera1 = realisticCamera;
 
 		// Random camera pose - uses y/z offsets for more varied stereo configurations
-		const HomogenousMatrix4 world_T_device(Random::vector3(randomGenerator, Scalar(-1), Scalar(1)), Random::quaternion(randomGenerator));
+		const Vector3 randomTranslation = Random::vector3(randomGenerator, Scalar(-1), Scalar(1));
+		const Quaternion randomRotation = Random::quaternion(randomGenerator);
+		const HomogenousMatrix4 world_T_device(randomTranslation, randomRotation);
 
 		const Scalar baseline = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5));
 		const Scalar yOffset = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
@@ -467,10 +469,7 @@ bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDurati
 		// Test random points (in front of 0, 1, or both cameras)
 		for (size_t i = 0; i < 10; ++i)
 		{
-			const Scalar x = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5));
-			const Scalar y = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5));
-			const Scalar z = Scalar(-1) * Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5));
-			const Vector3 groundtruthDevicePoint = Vector3(x, y, z);
+			const Vector3 groundtruthDevicePoint = Random::vector3(randomGenerator, Scalar(0.1), Scalar(0.5), Scalar(0.1), Scalar(0.5), Scalar(-0.5), Scalar(-0.1));
 			const Vector3 groundtruthWorldPoint = world_T_device * groundtruthDevicePoint;
 
 			const bool isPointInFront0 = AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera0), groundtruthWorldPoint);
@@ -555,7 +554,9 @@ bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDura
 		constexpr std::array<AnyCameraType, 2> anyCameraTypes = {AnyCameraType::PINHOLE, AnyCameraType::FISHEYE};
 
 		// Create two realistic cameras for stereo setup
-		const SharedAnyCamera realisticCamera = TestGeometry::Utilities::realisticAnyCamera(anyCameraTypes[RandomI::random(randomGenerator, 1u)], RandomI::random(randomGenerator, 1u));
+		const AnyCameraType cameraType = anyCameraTypes[RandomI::random(randomGenerator, 1u)];
+		const unsigned int cameraIndex = RandomI::random(randomGenerator, 1u);
+		const SharedAnyCamera realisticCamera = TestGeometry::Utilities::realisticAnyCamera(cameraType, cameraIndex);
 		ocean_assert(realisticCamera != nullptr && realisticCamera->isValid());
 
 		const unsigned int widthA = RandomI::random(randomGenerator, 21u, 2048u);
@@ -586,11 +587,18 @@ bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDura
 		Frames yFrames = {std::move(yFrameA), std::move(yFrameB)};
 
 		// Create random transformations
-		const HomogenousMatrix4 world_T_device(Random::vector3(randomGenerator, -10, 10), Random::euler(randomGenerator));
+		const Vector3 randomTranslation = Random::vector3(randomGenerator, -10, 10);
+		const Euler randomEuler = Random::euler(randomGenerator);
+		const HomogenousMatrix4 world_T_device(randomTranslation, randomEuler);
 
 		HomogenousMatrices4 device_T_cameras(2);
-		device_T_cameras[0] = HomogenousMatrix4(Random::vector3(randomGenerator, -1, 1), Random::euler(randomGenerator));
-		device_T_cameras[1] = HomogenousMatrix4(Random::vector3(randomGenerator, -1, 1), Random::euler(randomGenerator));
+		const Vector3 randomTranslation0 = Random::vector3(randomGenerator, -1, 1);
+		const Euler randomEuler0 = Random::euler(randomGenerator);
+		device_T_cameras[0] = HomogenousMatrix4(randomTranslation0, randomEuler0);
+
+		const Vector3 randomTranslation1 = Random::vector3(randomGenerator, -1, 1);
+		const Euler randomEuler1 = Random::euler(randomGenerator);
+		device_T_cameras[1] = HomogenousMatrix4(randomTranslation1, randomEuler1);
 
 		BullseyeDetectorStereo::Parameters parameters = BullseyeDetectorStereo::Parameters::defaultParameters();
 		parameters.setFramePyramidPixelThreshold((unsigned int)(Scalar(yFrames[0].pixels()) * Random::scalar(randomGenerator, 0.1, 2.0) + Scalar(0.5)));
@@ -648,13 +656,13 @@ bool TestBullseyeDetectorStereo::testExtractBullseyeCandidates(const double test
 
 		// Test 2: One empty, one non-empty should return empty map
 		{
-			const Vector2 randomPoint(Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraA->width() - 100)), Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraA->height() - 100)));
+			const Vector2 randomPoint = Random::vector2(randomGenerator, Scalar(100), Scalar(setup.cameraA->width() - 100), Scalar(100), Scalar(setup.cameraA->height() - 100));
 
 			Bullseyes bullseyesA;
 			Bullseyes bullseyesB;
 
 			// Randomly add bullseye to either A or B, leaving the other empty
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				bullseyesA.emplace_back(createRandomBullseyeAtPosition(randomGenerator, randomPoint));
 			}
@@ -734,8 +742,9 @@ bool TestBullseyeDetectorStereo::testExtractBullseyes(const double testDuration,
 
 		// Test 2: Non-empty bullseyes but empty candidate map should return false
 		{
-			const Vector2 randomPointA(Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraA->width() - 100)), Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraA->height() - 100)));
-			const Vector2 randomPointB(Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraB->width() - 100)), Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraB->height() - 100)));
+			const Vector2 randomPointA = Random::vector2(randomGenerator, Scalar(100), Scalar(setup.cameraA->width() - 100), Scalar(100), Scalar(setup.cameraA->height() - 100));
+
+			const Vector2 randomPointB = Random::vector2(randomGenerator, Scalar(100), Scalar(setup.cameraB->width() - 100), Scalar(100), Scalar(setup.cameraB->height() - 100));
 
 			Bullseyes bullseyesA;
 			bullseyesA.emplace_back(createRandomBullseyeAtPosition(randomGenerator, randomPointA));
@@ -824,8 +833,9 @@ bool TestBullseyeDetectorStereo::testComputeCostMatrix(const double testDuration
 
 		// Test 2: Non-empty bullseyes but empty candidate map should return false
 		{
-			const Vector2 randomPointA(Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraA->width() - 100)), Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraA->height() - 100)));
-			const Vector2 randomPointB(Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraB->width() - 100)), Random::scalar(randomGenerator, Scalar(100), Scalar(setup.cameraB->height() - 100)));
+			const Vector2 randomPointA = Random::vector2(randomGenerator, Scalar(100), Scalar(setup.cameraA->width() - 100), Scalar(100), Scalar(setup.cameraA->height() - 100));
+
+			const Vector2 randomPointB = Random::vector2(randomGenerator, Scalar(100), Scalar(setup.cameraB->width() - 100), Scalar(100), Scalar(setup.cameraB->height() - 100));
 
 			Bullseyes bullseyesA;
 			bullseyesA.emplace_back(createRandomBullseyeAtPosition(randomGenerator, randomPointA));
@@ -918,7 +928,9 @@ TestBullseyeDetectorStereo::StereoTestSetup TestBullseyeDetectorStereo::createRa
 	setup.cameraB = realisticCamera;
 
 	// Create random device pose
-	setup.world_T_device = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-1), Scalar(1)), Random::quaternion(randomGenerator));
+	const Vector3 randomTranslation = Random::vector3(randomGenerator, Scalar(-1), Scalar(1));
+	const Quaternion randomRotation = Random::quaternion(randomGenerator);
+	setup.world_T_device = HomogenousMatrix4(randomTranslation, randomRotation);
 
 	// Create random stereo baseline
 	const Scalar baseline = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5));
@@ -934,10 +946,7 @@ TestBullseyeDetectorStereo::StereoTestSetup TestBullseyeDetectorStereo::createRa
 bool TestBullseyeDetectorStereo::createRandomVisibleWorldPoint(RandomGenerator& randomGenerator, const StereoTestSetup& setup, Vector3& worldPoint, Vector2& imagePointA, Vector2& imagePointB)
 {
 	// Create a random 3D point in front of both cameras (negative z in device frame = in front)
-	const Vector3 randomDevicePoint(
-		Random::scalar(randomGenerator, Scalar(-0.3), Scalar(0.3)),
-		Random::scalar(randomGenerator, Scalar(-0.3), Scalar(0.3)),
-		Random::scalar(randomGenerator, Scalar(-2), Scalar(-0.5)));
+	const Vector3 randomDevicePoint = Random::vector3(randomGenerator, Scalar(-0.3), Scalar(0.3), Scalar(-0.3), Scalar(0.3), Scalar(-2), Scalar(-0.5));
 
 	worldPoint = setup.world_T_device * randomDevicePoint;
 

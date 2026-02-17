@@ -164,11 +164,11 @@ bool TestPixelPosition::testIsNeighbor8(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int x0 = RandomI::random(width - 1u);
-			const unsigned int y0 = RandomI::random(height - 1u);
+			const unsigned int x0 = RandomI::random(randomGenerator, width - 1u);
+			const unsigned int y0 = RandomI::random(randomGenerator, height - 1u);
 
-			const unsigned int x1 = RandomI::random(width - 1u);
-			const unsigned int y1 = RandomI::random(height - 1u);
+			const unsigned int x1 = RandomI::random(randomGenerator, width - 1u);
+			const unsigned int y1 = RandomI::random(randomGenerator, height - 1u);
 
 			const CV::PixelPosition position0(x0, y0);
 			const CV::PixelPosition position1(x1, y1);
@@ -180,11 +180,11 @@ bool TestPixelPosition::testIsNeighbor8(const double testDuration)
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const int x0 = RandomI::random(-int(width), int(width - 1u));
-			const int y0 = RandomI::random(-int(height), int(height - 1u));
+			const int x0 = RandomI::random(randomGenerator, -int(width), int(width - 1u));
+			const int y0 = RandomI::random(randomGenerator, -int(height), int(height - 1u));
 
-			const int x1 = RandomI::random(-int(width), int(width - 1u));
-			const int y1 =RandomI::random(-int(height), int(height - 1u));
+			const int x1 = RandomI::random(randomGenerator, -int(width), int(width - 1u));
+			const int y1 = RandomI::random(randomGenerator, -int(height), int(height - 1u));
 
 			const CV::PixelPositionI position0(x0, y0);
 			const CV::PixelPositionI position1(x1, y1);
@@ -218,11 +218,11 @@ bool TestPixelPosition::testInArea9(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int x0 = RandomI::random(width - 1u);
-			const unsigned int y0 = RandomI::random(height - 1u);
+			const unsigned int x0 = RandomI::random(randomGenerator, width - 1u);
+			const unsigned int y0 = RandomI::random(randomGenerator, height - 1u);
 
-			const unsigned int x1 = RandomI::random(width - 1u);
-			const unsigned int y1 = RandomI::random(height - 1u);
+			const unsigned int x1 = RandomI::random(randomGenerator, width - 1u);
+			const unsigned int y1 = RandomI::random(randomGenerator, height - 1u);
 
 			const CV::PixelPosition position0(x0, y0);
 			const CV::PixelPosition position1(x1, y1);
@@ -234,11 +234,11 @@ bool TestPixelPosition::testInArea9(const double testDuration)
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const int x0 = RandomI::random(-int(width), int(width - 1u));
-			const int y0 = RandomI::random(-int(height), int(height - 1u));
+			const int x0 = RandomI::random(randomGenerator, -int(width), int(width - 1u));
+			const int y0 = RandomI::random(randomGenerator, -int(height), int(height - 1u));
 
-			const int x1 = RandomI::random(-int(width), int(width - 1u));
-			const int y1 =RandomI::random(-int(height), int(height - 1u));
+			const int x1 = RandomI::random(randomGenerator, -int(width), int(width - 1u));
+			const int y1 = RandomI::random(randomGenerator, -int(height), int(height - 1u));
 
 			const CV::PixelPositionI position0(x0, y0);
 			const CV::PixelPositionI position1(x1, y1);
@@ -353,12 +353,12 @@ bool TestPixelPosition::testMultiplication(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int x = RandomI::random(1920u);
-			const unsigned int y = RandomI::random(1080u);
+			const unsigned int x = RandomI::random(randomGenerator, 1920u);
+			const unsigned int y = RandomI::random(randomGenerator, 1080u);
 
 			const CV::PixelPosition position(x, y);
 
-			const unsigned int factor = RandomI::random(10u);
+			const unsigned int factor = RandomI::random(randomGenerator, 10u);
 
 			const CV::PixelPosition multpliedPositionA = position * factor;
 
@@ -375,12 +375,12 @@ bool TestPixelPosition::testMultiplication(const double testDuration)
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const int x = RandomI::random(-1920, 1920);
-			const int y = RandomI::random(-1080, 1080);
+			const int x = RandomI::random(randomGenerator, -1920, 1920);
+			const int y = RandomI::random(randomGenerator, -1080, 1080);
 
 			const CV::PixelPositionI position(x, y);
 
-			const int factor = RandomI::random(-10, 10);
+			const int factor = RandomI::random(randomGenerator, -10, 10);
 
 			const CV::PixelPositionI multpliedPositionA = position * factor;
 
@@ -416,12 +416,12 @@ bool TestPixelPosition::testDivision(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int x = RandomI::random(1920u);
-			const unsigned int y = RandomI::random(1080u);
+			const unsigned int x = RandomI::random(randomGenerator, 1920u);
+			const unsigned int y = RandomI::random(randomGenerator, 1080u);
 
 			const CV::PixelPosition position(x, y);
 
-			const unsigned int factor = RandomI::random(1u, 10u);
+			const unsigned int factor = RandomI::random(randomGenerator, 1u, 10u);
 			ocean_assert(factor != 0u);
 
 			const CV::PixelPosition multpliedPositionA = position / factor;
@@ -439,12 +439,13 @@ bool TestPixelPosition::testDivision(const double testDuration)
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const int x = RandomI::random(-1920, 1920);
-			const int y = RandomI::random(-1080, 1080);
+			const int x = RandomI::random(randomGenerator, -1920, 1920);
+			const int y = RandomI::random(randomGenerator, -1080, 1080);
 
 			const CV::PixelPositionI position(x, y);
 
-			const int factor = RandomI::random(1, 10) * (RandomI::random(1u) == 0u ? 1 : -1);
+			const int sign = RandomI::boolean(randomGenerator) ? 1 : -1;
+			const int factor = RandomI::random(randomGenerator, 1, 10) * sign;
 			ocean_assert(factor != 0);
 
 			const CV::PixelPositionI multpliedPositionA = position / factor;

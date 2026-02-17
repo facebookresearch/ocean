@@ -150,13 +150,15 @@ bool TestCamera::testObjectPointInFront(const double testDuration)
 				// pose with default orientation
 
 				const SquareMatrixT3<T> world_R_camera(true);
-				const HomogenousMatrixT4<T> world_T_camera(VectorT3<T>(RandomT<T>::scalar(randomGenerator, -10, 10), RandomT<T>::scalar(randomGenerator, -10, -10), 0));
+				const T translationX = RandomT<T>::scalar(randomGenerator, -10, 10);
+				const T translationY = RandomT<T>::scalar(randomGenerator, -10, -10);
+				const HomogenousMatrixT4<T> world_T_camera(VectorT3<T>(translationX, translationY, 0));
 
 				const SquareMatrixT3<T> flippedCamera_R_world(CameraT<T>::standard2InvertedFlipped(world_R_camera));
 				const HomogenousMatrixT4<T> flippedCamera_T_world(CameraT<T>::standard2InvertedFlipped(world_T_camera));
 
-				const VectorT3<T> frontObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, -NumericT<T>::eps() * T(100)));
-				const VectorT3<T> backObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, 0, 100));
+				const VectorT3<T> frontObjectPoint = RandomT<T>::vector3(randomGenerator, T(-100), T(100), T(-100), T(100), T(-100), -NumericT<T>::eps() * T(100));
+				const VectorT3<T> backObjectPoint = RandomT<T>::vector3(randomGenerator, T(-100), T(100), T(-100), T(100), T(0), T(100));
 
 				if (!CameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, frontObjectPoint) || !CameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, frontObjectPoint) || CameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, backObjectPoint) || CameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, backObjectPoint))
 				{
@@ -175,8 +177,8 @@ bool TestCamera::testObjectPointInFront(const double testDuration)
 				const HomogenousMatrixT4<T> flippedCamera_T_world(CameraT<T>::standard2InvertedFlipped(world_T_camera));
 				const SquareMatrixT3<T> flippedCamera_R_world(CameraT<T>::standard2InvertedFlipped(world_R_camera));
 
-				const VectorT3<T> localFrontObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, -NumericT<T>::eps() * T(100)));
-				const VectorT3<T> localBackObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, 0, 100));
+				const VectorT3<T> localFrontObjectPoint = RandomT<T>::vector3(randomGenerator, T(-100), T(100), T(-100), T(100), T(-100), -NumericT<T>::eps() * T(100));
+				const VectorT3<T> localBackObjectPoint = RandomT<T>::vector3(randomGenerator, T(-100), T(100), T(-100), T(100), T(0), T(100));
 
 				const VectorT3<T> orientationFrontObjectPoint(world_R_camera * localFrontObjectPoint);
 				const VectorT3<T> orientationBackObjectPoint(world_R_camera * localBackObjectPoint);

@@ -128,8 +128,11 @@ bool TestFrameFilterCanny::testFilterCannyScharr(const unsigned int performanceW
 				const unsigned int width = performanceIteration ? performanceWidth : RandomI::random(randomGenerator, 3u, 2048u);
 				const unsigned int height  = performanceIteration ? performanceHeight : RandomI::random(randomGenerator, 3u, 2048u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u) * sourcePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * targetPaddingMultiplier;
 
 				Frame source(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame target(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);

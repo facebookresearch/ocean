@@ -344,7 +344,7 @@ bool TestDataTimestamp::testSerialization(const double testDuration)
 					OCEAN_EXPECT_TRUE(validation, readTimestamp.isValid());
 					OCEAN_EXPECT_TRUE(validation, readTimestamp.isDouble());
 					OCEAN_EXPECT_EQUAL(validation, readTimestamp.asDouble(), originalValue);
-					OCEAN_EXPECT_TRUE(validation, readTimestamp == originalTimestamp);
+					OCEAN_EXPECT_EQUAL(validation, readTimestamp, originalTimestamp);
 				}
 			}
 		}
@@ -376,7 +376,7 @@ bool TestDataTimestamp::testSerialization(const double testDuration)
 					OCEAN_EXPECT_TRUE(validation, readTimestamp.isValid());
 					OCEAN_EXPECT_TRUE(validation, readTimestamp.isInt());
 					OCEAN_EXPECT_EQUAL(validation, readTimestamp.asInt(), originalValue);
-					OCEAN_EXPECT_TRUE(validation, readTimestamp == originalTimestamp);
+					OCEAN_EXPECT_EQUAL(validation, readTimestamp, originalTimestamp);
 				}
 			}
 		}
@@ -406,26 +406,26 @@ bool TestDataTimestamp::testEquality(const double testDuration)
 		const IO::Serialization::DataTimestamp doubleTimestamp1(doubleValue);
 		const IO::Serialization::DataTimestamp doubleTimestamp2(doubleValue);
 
-		OCEAN_EXPECT_TRUE(validation, doubleTimestamp1 == doubleTimestamp2);
+		OCEAN_EXPECT_EQUAL(validation, doubleTimestamp1, doubleTimestamp2);
 
 		// Test inequality with different double values
 		const double differentDoubleValue = doubleValue + 1.0;
 		const IO::Serialization::DataTimestamp differentDoubleTimestamp(differentDoubleValue);
 
-		OCEAN_EXPECT_FALSE(validation, doubleTimestamp1 == differentDoubleTimestamp);
+		OCEAN_EXPECT_NOT_EQUAL(validation, doubleTimestamp1, differentDoubleTimestamp);
 
 		// Test equality with same int64 values
 		const int64_t intValue = int64_t(RandomI::random32(randomGenerator));
 		const IO::Serialization::DataTimestamp intTimestamp1(intValue);
 		const IO::Serialization::DataTimestamp intTimestamp2(intValue);
 
-		OCEAN_EXPECT_TRUE(validation, intTimestamp1 == intTimestamp2);
+		OCEAN_EXPECT_EQUAL(validation, intTimestamp1, intTimestamp2);
 
 		// Test inequality with different int64 values
 		const int64_t differentIntValue = intValue + 1;
 		const IO::Serialization::DataTimestamp differentIntTimestamp(differentIntValue);
 
-		OCEAN_EXPECT_FALSE(validation, intTimestamp1 == differentIntTimestamp);
+		OCEAN_EXPECT_NOT_EQUAL(validation, intTimestamp1, differentIntTimestamp);
 
 		// Test inequality between double and int64 timestamps (even if numerically equal)
 		const double numericValue = 42.0;
@@ -434,15 +434,15 @@ bool TestDataTimestamp::testEquality(const double testDuration)
 		const IO::Serialization::DataTimestamp doubleFortyTwo(numericValue);
 		const IO::Serialization::DataTimestamp intFortyTwo(sameNumericValue);
 
-		OCEAN_EXPECT_FALSE(validation, doubleFortyTwo == intFortyTwo);
+		OCEAN_EXPECT_NOT_EQUAL(validation, doubleFortyTwo, intFortyTwo);
 
 		// Test invalid timestamps
 		IO::Serialization::DataTimestamp invalidTimestamp1;
 		IO::Serialization::DataTimestamp invalidTimestamp2;
 
-		OCEAN_EXPECT_TRUE(validation, invalidTimestamp1 == invalidTimestamp2);
-		OCEAN_EXPECT_FALSE(validation, invalidTimestamp1 == doubleTimestamp1);
-		OCEAN_EXPECT_FALSE(validation, invalidTimestamp1 == intTimestamp1);
+		OCEAN_EXPECT_EQUAL(validation, invalidTimestamp1, invalidTimestamp2);
+		OCEAN_EXPECT_NOT_EQUAL(validation, invalidTimestamp1, doubleTimestamp1);
+		OCEAN_EXPECT_NOT_EQUAL(validation, invalidTimestamp1, intTimestamp1);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

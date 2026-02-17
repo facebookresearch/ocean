@@ -94,7 +94,7 @@ bool TestP4P::testPose(const double testDuration)
 			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(0), Scalar(camera->width() - 1u), Scalar(0), Scalar(camera->height() - 1u));
 
 			const Line3 ray = camera->ray(imagePoint, world_T_camera);
-			const Vector3 objectPoint = ray.point(Random::scalar(Scalar(0.1), Scalar(10)));
+			const Vector3 objectPoint = ray.point(Random::scalar(randomGenerator, Scalar(0.1), Scalar(10)));
 
 			ocean_assert(AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera), objectPoint));
 			ocean_assert(imagePoint.distance(camera->projectToImage(world_T_camera, objectPoint)) < Scalar(1));

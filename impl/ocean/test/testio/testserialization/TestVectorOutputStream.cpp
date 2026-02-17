@@ -151,14 +151,14 @@ bool TestVectorOutputStream::testBasicWrite(const double testDuration)
 		const std::string testString = "Hello World!";
 		stream << testString;
 
-		OCEAN_EXPECT_TRUE(validation, stream.size() > testString.size());
+		OCEAN_EXPECT_GREATER(validation, stream.size(), testString.size());
 
 		// Test writing integers
 		const int32_t intValue = int32_t(RandomI::random32(randomGenerator));
 		stream << intValue;
 
 		const size_t finalSize = stream.size();
-		OCEAN_EXPECT_TRUE(validation, finalSize > 0);
+		OCEAN_EXPECT_GREATER(validation, finalSize, size_t(0));
 
 		// Verify data is accessible
 		const void* data = stream.data();
@@ -198,14 +198,14 @@ bool TestVectorOutputStream::testTellPosition(const double testDuration)
 		stream << testData;
 
 		const std::streampos posAfterWrite = stream.tellp();
-		OCEAN_EXPECT_TRUE(validation, posAfterWrite > 0);
+		OCEAN_EXPECT_GREATER(validation, posAfterWrite, std::streampos(0));
 
 		// Write more data
 		const int value = 42;
 		stream << value;
 
 		const std::streampos posAfterSecondWrite = stream.tellp();
-		OCEAN_EXPECT_TRUE(validation, posAfterSecondWrite > posAfterWrite);
+		OCEAN_EXPECT_GREATER(validation, posAfterSecondWrite, posAfterWrite);
 
 		// Clear and check position
 		stream.clear();

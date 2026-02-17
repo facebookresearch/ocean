@@ -319,7 +319,7 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 		const Scalar right = left + width;
 		const Scalar bottom = top + height;
 
-		const Vector2 lineStartPoint(Random::scalar(randomGenerator, -200, 200), Random::scalar(randomGenerator, -200, 200));
+		const Vector2 lineStartPoint = Random::vector2(randomGenerator, -200, 200);
 		const Vector2 lineDirection = Vector2(Random::sign(randomGenerator), 0);
 
 		const Line2 line(lineStartPoint, lineDirection);
@@ -354,7 +354,7 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 		const Scalar right = left + width;
 		const Scalar bottom = top + height;
 
-		const Vector2 lineStartPoint(Random::scalar(randomGenerator, -200, 200), Random::scalar(randomGenerator, -200, 200));
+		const Vector2 lineStartPoint = Random::vector2(randomGenerator, -200, 200);
 		const Vector2 lineDirection = Vector2(0, Random::sign(randomGenerator));
 
 		const Line2 line(lineStartPoint, lineDirection);
@@ -394,12 +394,12 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 			const Scalar borderRight = borderLeft + width;
 			const Scalar borderBottom = borderTop + height;
 
-			const Vector2 point0(Random::scalar(randomGenerator, Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(randomGenerator, Scalar(borderTop - 100), Scalar(borderBottom + 100)));
-			Vector2 point1(Random::scalar(randomGenerator, Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(randomGenerator, Scalar(borderTop - 100), Scalar(borderBottom + 100)));
+			const Vector2 point0 = Random::vector2(randomGenerator, Scalar(borderLeft - 100), Scalar(borderRight + 100), Scalar(borderTop - 100), Scalar(borderBottom + 100));
+			Vector2 point1 = Random::vector2(randomGenerator, Scalar(borderLeft - 100), Scalar(borderRight + 100), Scalar(borderTop - 100), Scalar(borderBottom + 100));
 
 			while (point0.isEqual(point1, Scalar(1)))
 			{
-				point1 = Vector2(Random::scalar(randomGenerator, Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(randomGenerator, Scalar(borderTop - 100), Scalar(borderBottom + 100)));
+				point1 = Random::vector2(randomGenerator, Scalar(borderLeft - 100), Scalar(borderRight + 100), Scalar(borderTop - 100), Scalar(borderBottom + 100));
 			}
 
 			const Line2 line(point0, (point1 - point0).normalized());
@@ -584,14 +584,14 @@ bool TestBresenham::testCirclePixels(const double testDuration)
 					const int x = pixel.x();
 					const int y = pixel.y();
 
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(x, y)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-x, y)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(x, -y)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-x, -y)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(y, x)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-y, x)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(y, -x)) > 0);
-					OCEAN_EXPECT_TRUE(validation, pixelSet.count(CV::PixelPositionI(-y, -x)) > 0);
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(x, y)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(-x, y)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(x, -y)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(-x, -y)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(y, x)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(-y, x)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(y, -x)), size_t(0));
+					OCEAN_EXPECT_GREATER(validation, pixelSet.count(CV::PixelPositionI(-y, -x)), size_t(0));
 				}
 			}
 

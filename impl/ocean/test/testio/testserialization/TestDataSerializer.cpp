@@ -102,19 +102,19 @@ bool TestDataSerializer::testChannelConfiguration()
 
 	// Test equality operator
 	const IO::Serialization::DataSerializer::ChannelConfiguration sameConfig(sampleType, name, contentType);
-	OCEAN_EXPECT_TRUE(validation, validConfig == sameConfig);
+	OCEAN_EXPECT_EQUAL(validation, validConfig, sameConfig);
 
 	// Test inequality with different sample type
 	const IO::Serialization::DataSerializer::ChannelConfiguration differentSampleType("DifferentType", name, contentType);
-	OCEAN_EXPECT_FALSE(validation, validConfig == differentSampleType);
+	OCEAN_EXPECT_NOT_EQUAL(validation, validConfig, differentSampleType);
 
 	// Test inequality with different name
 	const IO::Serialization::DataSerializer::ChannelConfiguration differentName(sampleType, "DifferentName", contentType);
-	OCEAN_EXPECT_FALSE(validation, validConfig == differentName);
+	OCEAN_EXPECT_NOT_EQUAL(validation, validConfig, differentName);
 
 	// Test inequality with different content type
 	const IO::Serialization::DataSerializer::ChannelConfiguration differentContentType(sampleType, name, "DifferentContent");
-	OCEAN_EXPECT_FALSE(validation, validConfig == differentContentType);
+	OCEAN_EXPECT_NOT_EQUAL(validation, validConfig, differentContentType);
 
 	// Test hash function
 	const IO::Serialization::DataSerializer::ChannelConfiguration::Hash hashFunction;
@@ -171,17 +171,17 @@ bool TestDataSerializer::testChannel()
 
 	// Test equality operator
 	const IO::Serialization::DataSerializer::Channel sameChannel(config, channelId);
-	OCEAN_EXPECT_TRUE(validation, channel == sameChannel);
+	OCEAN_EXPECT_EQUAL(validation, channel, sameChannel);
 
 	// Test inequality with different channel ID
 	const IO::Serialization::DataSerializer::ChannelId differentChannelId = channelId + 1;
 	const IO::Serialization::DataSerializer::Channel differentIdChannel(config, differentChannelId);
-	OCEAN_EXPECT_FALSE(validation, channel == differentIdChannel);
+	OCEAN_EXPECT_NOT_EQUAL(validation, channel, differentIdChannel);
 
 	// Test inequality with different configuration
 	const IO::Serialization::DataSerializer::ChannelConfiguration differentConfig("DifferentType", name, contentType);
 	const IO::Serialization::DataSerializer::Channel differentConfigChannel(differentConfig, channelId);
-	OCEAN_EXPECT_FALSE(validation, channel == differentConfigChannel);
+	OCEAN_EXPECT_NOT_EQUAL(validation, channel, differentConfigChannel);
 
 	// Test hash function
 	const IO::Serialization::DataSerializer::Channel::Hash hashFunction;

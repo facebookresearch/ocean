@@ -149,9 +149,7 @@ bool TestFrustum::testIsInsidePoint(const double testDuration)
 		OCEAN_EXPECT_TRUE(validation, frustum.isInside(Vector3(0, 0, -Random::scalar(randomGenerator, nearDistance + Scalar(0.1), farDistance - Scalar(0.1)))));
 
 		{
-			const Scalar insideImagePointX = Random::scalar(randomGenerator, Scalar(0.1), Scalar(width) - Scalar(0.1));
-			const Scalar insideImagePointY = Random::scalar(randomGenerator, Scalar(0.1), Scalar(height) - Scalar(0.1));
-			const Vector2 insideImagePoint = Vector2(insideImagePointX, insideImagePointY);
+			const Vector2 insideImagePoint = Random::vector2(randomGenerator, Scalar(0.1), Scalar(width) - Scalar(0.1), Scalar(0.1), Scalar(height) - Scalar(0.1));
 			const Vector3 insideRay = pinholeCamera.vectorToPlane(insideImagePoint, Scalar(1));
 
 			OCEAN_EXPECT_FALSE(validation, frustum.isInside(insideRay * Random::scalar(randomGenerator, -10, nearDistance - Scalar(0.1))));
@@ -163,10 +161,14 @@ bool TestFrustum::testIsInsidePoint(const double testDuration)
 
 		{
 			const bool xIsNegative = RandomI::boolean(randomGenerator);
-			const Scalar xOutsideImagePoint = xIsNegative ? Random::scalar(randomGenerator, -100, Scalar(-0.1)) : Scalar(width) + Random::scalar(randomGenerator, Scalar(0.1), 100);
+			const Scalar xOutsideNegative = Random::scalar(randomGenerator, -100, Scalar(-0.1));
+			const Scalar xOutsidePositive = Scalar(width) + Random::scalar(randomGenerator, Scalar(0.1), 100);
+			const Scalar xOutsideImagePoint = xIsNegative ? xOutsideNegative : xOutsidePositive;
 
 			const bool yIsNegative = RandomI::boolean(randomGenerator);
-			const Scalar yOutsideImagePoint = yIsNegative ? Random::scalar(randomGenerator, -100, Scalar(-0.1)) : Scalar(height) + Random::scalar(randomGenerator, Scalar(0.1), 100);
+			const Scalar yOutsideNegative = Random::scalar(randomGenerator, -100, Scalar(-0.1));
+			const Scalar yOutsidePositive = Scalar(height) + Random::scalar(randomGenerator, Scalar(0.1), 100);
+			const Scalar yOutsideImagePoint = yIsNegative ? yOutsideNegative : yOutsidePositive;
 			const Vector2 outsideImagePoint = Vector2(xOutsideImagePoint, yOutsideImagePoint);
 			const Vector3 outsideRay = pinholeCamera.vectorToPlane(outsideImagePoint, Scalar(1));
 

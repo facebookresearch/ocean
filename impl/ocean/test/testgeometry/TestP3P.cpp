@@ -474,7 +474,6 @@ bool TestP3P::testP3PWithPointsStressTest(const double testDuration)
 	Log::info() << "Stress testing P3P for 3D points for '" << TypeNamer::name<T>() << "':";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);

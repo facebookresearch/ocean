@@ -351,8 +351,8 @@ bool TestFiniteLine2::testIsLeftOfLine(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector2 point0 = Vector2(Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range));
-			const Vector2 point1 = Vector2(Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range));
+			const Vector2 point0 = Random::vector2(randomGenerator, -range, range);
+			const Vector2 point1 = Random::vector2(randomGenerator, -range, range);
 
 			if ((point0 - point1).length() < Numeric::eps())
 			{
@@ -363,7 +363,7 @@ bool TestFiniteLine2::testIsLeftOfLine(const double testDuration)
 
 			const FiniteLine2 finiteLine(point0, point1);
 			const Line2 line(finiteLine.point0(), finiteLine.direction());
-			const Vector2 testPoint = Vector2(Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range));
+			const Vector2 testPoint = Random::vector2(randomGenerator, -range, range);
 
 			if (finiteLine.isLeftOfLine(testPoint) != line.isLeftOfLine(testPoint))
 			{
@@ -398,8 +398,8 @@ bool TestFiniteLine2::testIsCollinear(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector2 point0 = Vector2(Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range));
-			const Vector2 point1 = Vector2(Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range));
+			const Vector2 point0 = Random::vector2(randomGenerator, -range, range);
+			const Vector2 point1 = Random::vector2(randomGenerator, -range, range);
 
 			if ((point0 - point1).length() < distanceEpsilon)
 			{
@@ -427,8 +427,14 @@ bool TestFiniteLine2::testIsCollinear(const double testDuration)
 			//
 			{
 				const Scalar distanceOffset = Random::scalar(randomGenerator, Scalar(0.0), Scalar(range));
-				const Vector2 endpoint0 = point0 + randomLine.direction() * Random::scalar(randomGenerator, -range, range) + Vector2(Random::scalar(randomGenerator, -distanceOffset, distanceOffset), Random::scalar(randomGenerator, -distanceOffset, distanceOffset));
-				const Vector2 endpoint1 = point1 + randomLine.direction() * Random::scalar(randomGenerator, -range, range) + Vector2(Random::scalar(randomGenerator, -distanceOffset, distanceOffset), Random::scalar(randomGenerator, -distanceOffset, distanceOffset));
+
+				const Scalar directionScalar0 = Random::scalar(randomGenerator, -range, range);
+				const Vector2 offset0 = Random::vector2(randomGenerator, -distanceOffset, distanceOffset);
+				const Vector2 endpoint0 = point0 + randomLine.direction() * directionScalar0 + offset0;
+
+				const Scalar directionScalar1 = Random::scalar(randomGenerator, -range, range);
+				const Vector2 offset1 = Random::vector2(randomGenerator, -distanceOffset, distanceOffset);
+				const Vector2 endpoint1 = point1 + randomLine.direction() * directionScalar1 + offset1;
 
 				if ((endpoint0 - endpoint1).length() < Numeric::eps())
 				{
@@ -567,8 +573,15 @@ bool TestFiniteLine2::testIsEqual(const double testDuration)
 
 			// we crate a similar line to ensure that isEqual() is identifying the line as equal
 
-			const VectorT2<T> similarOffset0 = RandomT<T>::vector2(randomGenerator) * (RandomT<T>::scalar(randomGenerator, 0, epsilon - NumericT<T>::eps() * 10) * RandomT<T>::sign(randomGenerator));
-			const VectorT2<T> similarOffset1 = RandomT<T>::vector2(randomGenerator) * (RandomT<T>::scalar(randomGenerator, 0, epsilon - NumericT<T>::eps() * 10) * RandomT<T>::sign(randomGenerator));
+			const VectorT2<T> similarDirection0 = RandomT<T>::vector2(randomGenerator);
+			const T similarMagnitude0 = RandomT<T>::scalar(randomGenerator, 0, epsilon - NumericT<T>::eps() * 10);
+			const T similarSign0 = RandomT<T>::sign(randomGenerator);
+			const VectorT2<T> similarOffset0 = similarDirection0 * similarMagnitude0 * similarSign0;
+
+			const VectorT2<T> similarDirection1 = RandomT<T>::vector2(randomGenerator);
+			const T similarMagnitude1 = RandomT<T>::scalar(randomGenerator, 0, epsilon - NumericT<T>::eps() * 10);
+			const T similarSign1 = RandomT<T>::sign(randomGenerator);
+			const VectorT2<T> similarOffset1 = similarDirection1 * similarMagnitude1 * similarSign1;
 
 			const VectorT2<T> similarPoint0 = point0 + similarOffset0;
 			const VectorT2<T> similarPoint1 = point1 + similarOffset1;
@@ -581,8 +594,15 @@ bool TestFiniteLine2::testIsEqual(const double testDuration)
 
 			// now we create a different line to ensure that isEqual() is identifying the line as not equal
 
-			const VectorT2<T> differentOffset0 = RandomT<T>::vector2(randomGenerator) * (RandomT<T>::scalar(randomGenerator, epsilon + NumericT<T>::eps() * 10, 100) * RandomT<T>::sign(randomGenerator));
-			const VectorT2<T> differentOffset1 = RandomT<T>::vector2(randomGenerator) * (RandomT<T>::scalar(randomGenerator, epsilon + NumericT<T>::eps() * 10, 100) * RandomT<T>::sign(randomGenerator));
+			const VectorT2<T> differentDirection0 = RandomT<T>::vector2(randomGenerator);
+			const T differentMagnitude0 = RandomT<T>::scalar(randomGenerator, epsilon + NumericT<T>::eps() * 10, 100);
+			const T differentSign0 = RandomT<T>::sign(randomGenerator);
+			const VectorT2<T> differentOffset0 = differentDirection0 * differentMagnitude0 * differentSign0;
+
+			const VectorT2<T> differentDirection1 = RandomT<T>::vector2(randomGenerator);
+			const T differentMagnitude1 = RandomT<T>::scalar(randomGenerator, epsilon + NumericT<T>::eps() * 10, 100);
+			const T differentSign1 = RandomT<T>::sign(randomGenerator);
+			const VectorT2<T> differentOffset1 = differentDirection1 * differentMagnitude1 * differentSign1;
 
 			const VectorT2<T> differentPoint0 = point0 + differentOffset0;
 			const VectorT2<T> differentPoint1 = point1 + differentOffset1;
@@ -720,11 +740,15 @@ bool TestFiniteLine2::testIntersection(const double testDuration)
 				const VectorT2<T> pointOnLineA = lineAPoint0 + lineDirection * RandomT<T>::scalar(randomGenerator, -area, area);
 				ocean_assert(lineA.isOnInfiniteLine(pointOnLineA));
 
-				const VectorT2<T> pointNotOnLineA = pointOnLineA + lineDirection.perpendicular() * RandomT<T>::scalar(randomGenerator, T(0.01), area) * RandomT<T>::sign(randomGenerator);
+				const T perpendicularScale = RandomT<T>::scalar(randomGenerator, T(0.01), area);
+				const T perpendicularSign = RandomT<T>::sign(randomGenerator);
+				const VectorT2<T> pointNotOnLineA = pointOnLineA + lineDirection.perpendicular() * perpendicularScale * perpendicularSign;
 				ocean_assert(!lineA.isOnInfiniteLine(pointNotOnLineA));
 
 				const VectorT2<T>& lineBPoint0 = pointNotOnLineA;
-				const VectorT2<T> lineBPoint1 = lineBPoint0 + lineDirection * RandomT<T>::scalar(randomGenerator, T(0.01), area) * RandomT<T>::sign(randomGenerator);
+				const T lineBScale = RandomT<T>::scalar(randomGenerator, T(0.01), area);
+				const T lineBSign = RandomT<T>::sign(randomGenerator);
+				const VectorT2<T> lineBPoint1 = lineBPoint0 + lineDirection * lineBScale * lineBSign;
 
 				// testing intersection with finite line
 
@@ -862,10 +886,10 @@ bool TestFiniteLine2::testNearestPointOnInfiniteLine(const double testDuration)
 			ocean_assert(line.isValid());
 
 			T outOfBoundaryDistance = T(0);
-			T* useOutOfBoundaryDistance = RandomI::random(randomGenerator, 1u) % 2u == 0u ? &outOfBoundaryDistance : nullptr;
+			T* useOutOfBoundaryDistance = RandomI::boolean(randomGenerator) ? &outOfBoundaryDistance : nullptr;
 
 			T finiteLineLocation = T(0);
-			T* useFiniteLineLocation = RandomI::random(randomGenerator, 1u) % 2u == 0u ? &finiteLineLocation : nullptr;
+			T* useFiniteLineLocation = RandomI::boolean(randomGenerator) ? &finiteLineLocation : nullptr;
 
 			// testing some fixed points
 

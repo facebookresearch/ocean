@@ -257,7 +257,6 @@ bool TestMappingI1::testApplyMapping(const unsigned int width, const unsigned in
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
@@ -425,7 +424,6 @@ bool TestMappingI1::testSumSquaredDifference5x5MaskNoCenter(const unsigned int w
 	Log::info() << "... for " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
@@ -436,8 +434,8 @@ bool TestMappingI1::testSumSquaredDifference5x5MaskNoCenter(const unsigned int w
 	{
 		for (const bool performanceIteration : {true, false})
 		{
-			const unsigned int testWidth = performanceIteration ? width : RandomI::random(5u, width);
-			const unsigned int testHeight = performanceIteration ? height : RandomI::random(5u, height);
+			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 5u, width);
+			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 5u, height);
 
 			const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 			const Frame frame1 = CV::CVUtilities::randomizedFrame(frame0.frameType(), &randomGenerator);
@@ -449,8 +447,8 @@ bool TestMappingI1::testSumSquaredDifference5x5MaskNoCenter(const unsigned int w
 
 			while (topLeftPositions0.size() < iterations)
 			{
-				const unsigned int x = RandomI::random(frame0.width() - 5u);
-				const unsigned int y = RandomI::random(frame0.height() - 5u);
+				const unsigned int x = RandomI::random(randomGenerator, frame0.width() - 5u);
+				const unsigned int y = RandomI::random(randomGenerator, frame0.height() - 5u);
 
 				topLeftPositions0.emplace_back(x, y);
 			}
@@ -460,8 +458,8 @@ bool TestMappingI1::testSumSquaredDifference5x5MaskNoCenter(const unsigned int w
 
 			while (topLeftPositions1.size() < iterations)
 			{
-				const unsigned int x = RandomI::random(frame1.width() - 5u);
-				const unsigned int y = RandomI::random(frame1.height() - 5u);
+				const unsigned int x = RandomI::random(randomGenerator, frame1.width() - 5u);
+				const unsigned int y = RandomI::random(randomGenerator, frame1.height() - 5u);
 
 				topLeftPositions1.emplace_back(x, y);
 			}
@@ -561,7 +559,6 @@ bool TestMappingI1::testAppearanceCost5x5(const unsigned int width, const unsign
 	Log::info() << "... for " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	constexpr unsigned int patchSize = 5u;
@@ -595,7 +592,10 @@ bool TestMappingI1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 				for (unsigned int i = 0u; i < 1000u; ++i)
 				{
-					source = CV::PixelPosition(RandomI::random(randomGenerator, frame.width() - 1u), RandomI::random(randomGenerator, frame.height() - 1u));
+					const unsigned int sourceX = RandomI::random(randomGenerator, frame.width() - 1u);
+					const unsigned int sourceY = RandomI::random(randomGenerator, frame.height() - 1u);
+
+					source = CV::PixelPosition(sourceX, sourceY);
 
 					if (mask.constpixel<uint8_t>(source.x(), source.y())[0] == 0xFFu)
 					{
@@ -611,7 +611,10 @@ bool TestMappingI1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 				for (unsigned int i = 0u; i < 1000u; ++i)
 				{
-					target = CV::PixelPosition(RandomI::random(randomGenerator, frame.width() - 1u), RandomI::random(randomGenerator, frame.height() - 1u));
+					const unsigned int targetX = RandomI::random(randomGenerator, frame.width() - 1u);
+					const unsigned int targetY = RandomI::random(randomGenerator, frame.height() - 1u);
+
+					target = CV::PixelPosition(targetX, targetY);
 
 					if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
 					{
@@ -629,10 +632,7 @@ bool TestMappingI1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 				const uint64_t testCost = determineAppearanceCost(frame, mask, source, target, patchSize, borderFactor, normalizationFactor);
 
-				if (uint64_t(cost) != testCost)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
+				OCEAN_EXPECT_EQUAL(validation, uint64_t(cost), testCost);
 			}
 
 			if (!validTestData)
@@ -700,7 +700,6 @@ bool TestMappingI1::testSpatialCost4Neighborhood(const unsigned int width, const
 	Log::info() << "... for " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -730,8 +729,8 @@ bool TestMappingI1::testSpatialCost4Neighborhood(const unsigned int width, const
 
 						for (unsigned int n = 0u; n < 1000u; ++n)
 						{
-							sourceX = RandomI::random(mask.width() - 1u);
-							sourceY = RandomI::random(mask.height() - 1u);
+							sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+							sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
 
 							if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
 							{
@@ -846,7 +845,6 @@ bool TestMappingI1::testSpatialCost8Neighborhood(const unsigned int width, const
 	Log::info() << "... for " << tChannels << " channels:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -876,8 +874,8 @@ bool TestMappingI1::testSpatialCost8Neighborhood(const unsigned int width, const
 
 						for (unsigned int n = 0u; n < 1000u; ++n)
 						{
-							sourceX = RandomI::random(mask.width() - 1u);
-							sourceY = RandomI::random(mask.height() - 1u);
+							sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+							sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
 
 							if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
 							{

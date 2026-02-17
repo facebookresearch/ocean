@@ -222,7 +222,6 @@ bool TestHomogenousMatrix4::testConstructor(const double testDuration)
 	HighPerformanceStatistic performanceZero;
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -282,7 +281,6 @@ bool TestHomogenousMatrix4::testElementConstructor(const double testDuration)
 	Log::info() << "Element-based constructor test for " << TypeNamer::name<T>() << ":";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -669,7 +667,6 @@ bool TestHomogenousMatrix4::testVectorConversion(const double testDuration)
 	Log::info() << "HomogenousMatrix4::matrices2matrices() test for " << TypeNamer::name<T>() << ":";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -752,7 +749,6 @@ bool TestHomogenousMatrix4::testCopyElements(const double testDuration)
 	Log::info() << "HomogenousMatrix4::copyElements() test for " << TypeNamer::name<T>() << ":";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);

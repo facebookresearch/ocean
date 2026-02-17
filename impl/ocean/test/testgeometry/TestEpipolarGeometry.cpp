@@ -648,7 +648,6 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);

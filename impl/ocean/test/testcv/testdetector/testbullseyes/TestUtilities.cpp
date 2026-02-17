@@ -636,7 +636,7 @@ bool TestUtilities::testDrawBullseyes(const double testDuration, RandomGenerator
 
 Bullseye TestUtilities::createRandomValidBullseye(RandomGenerator& randomGenerator)
 {
-	const Vector2 position(Random::scalar(randomGenerator, Scalar(0), Scalar(4096)), Random::scalar(randomGenerator, Scalar(0), Scalar(4096)));
+	const Vector2 position = Random::vector2(randomGenerator, Scalar(0), Scalar(4096));
 	const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), Scalar(1024));
 	const unsigned int grayThreshold = RandomI::random(randomGenerator, 1u, 255u);
 

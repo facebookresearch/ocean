@@ -112,7 +112,7 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 
 		while (points.size() < pointNumber)
 		{
-			const Vector2 candidate = Random::vector2(-range, range);
+			const Vector2 candidate = Random::vector2(randomGenerator, -range, range);
 
 			if (!occupancyArray.isOccupiedNeighborhood9(candidate)) // let's ensure that we have some space between all points
 			{

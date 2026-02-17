@@ -134,7 +134,8 @@ bool TestUtilities::testContainsCode(const double testDuration)
 		const bool useUniqueTestCode = RandomI::boolean(randomGenerator);
 
 		// The number of reference codes that will be tested against; will be 0 in 10% of the cases, if the test code is unique (i.e. not in the list of existing codes)
-		const size_t numberReferenceCodes = size_t(useUniqueTestCode && RandomI::random(randomGenerator, 0u, 9u) == 0u ? 0u : RandomI::random(randomGenerator, 1u, 100u));
+		const bool useZeroReferenceCodes = useUniqueTestCode && RandomI::random(randomGenerator, 0u, 9u) == 0u;
+		const size_t numberReferenceCodes = size_t(useZeroReferenceCodes ? 0u : RandomI::random(randomGenerator, 1u, 100u));
 
 		// The total number of unique and random codes required for this test iteration.
 		const size_t totalNumberCodes = numberReferenceCodes + (useUniqueTestCode ? 1 : 0);
@@ -316,25 +317,29 @@ bool TestUtilities::testParseWifiConfig(const double testDuration)
 			}
 
 			// All fields: either omit a field entirely or add it multiple times.
-			const unsigned int numberSsidFields = RandomI::random(randomGenerator, 4u) < 4u ? 0u : RandomI::random(randomGenerator, 2u, 5u);
+			const bool omitSsidFields = RandomI::random(randomGenerator, 4u) < 4u;
+			const unsigned int numberSsidFields = omitSsidFields ? 0u : RandomI::random(randomGenerator, 2u, 5u);
 			for (unsigned int iteration = 0u; iteration < numberSsidFields; ++iteration)
 			{
 				fieldTypes.push_back(FT_SSID);
 			}
 
-			const unsigned int numberPasswordFields = RandomI::random(randomGenerator, 4u) < 4u ? 0u : RandomI::random(randomGenerator, 2u, 5u);
+			const bool omitPasswordFields = RandomI::random(randomGenerator, 4u) < 4u;
+			const unsigned int numberPasswordFields = omitPasswordFields ? 0u : RandomI::random(randomGenerator, 2u, 5u);
 			for (unsigned int iteration = 0u; iteration < numberPasswordFields; ++iteration)
 			{
 				fieldTypes.push_back(FT_PASSWORD);
 			}
 
-			const unsigned int numberEncryptionFields = RandomI::random(randomGenerator, 4u) < 4u ? 0u : RandomI::random(randomGenerator, 2u, 5u);
+			const bool omitEncryptionFields = RandomI::random(randomGenerator, 4u) < 4u;
+			const unsigned int numberEncryptionFields = omitEncryptionFields ? 0u : RandomI::random(randomGenerator, 2u, 5u);
 			for (unsigned int iteration = 0u; iteration < numberEncryptionFields; ++iteration)
 			{
 				fieldTypes.push_back(FT_ENCRYPTION);
 			}
 
-			const unsigned int numberIsHiddenSsidFields = RandomI::random(randomGenerator, 4u) < 4u ? 0u : RandomI::random(randomGenerator, 2u, 5u);
+			const bool omitIsHiddenSsidFields = RandomI::random(randomGenerator, 4u) < 4u;
+			const unsigned int numberIsHiddenSsidFields = omitIsHiddenSsidFields ? 0u : RandomI::random(randomGenerator, 2u, 5u);
 			for (unsigned int iteration = 0u; iteration < numberIsHiddenSsidFields; ++iteration)
 			{
 				fieldTypes.push_back(FT_HIDDEN);

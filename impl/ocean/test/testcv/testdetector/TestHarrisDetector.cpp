@@ -655,7 +655,7 @@ bool TestHarrisDetector::testCheckerboardDetection(const double testDuration, Wo
 				// center between both elements: elementWidth - 0.5
 				const Vector2 idealLocation = Vector2(Scalar(elementWidth * xIndex) - Scalar(0.5), Scalar(elementHeight * yIndex) - Scalar(0.5));
 
-				OCEAN_EXPECT_TRUE(validation, location.distance(idealLocation) < 2);
+				OCEAN_EXPECT_LESS(validation, location.distance(idealLocation), Scalar(2));
 			}
 
 			OCEAN_EXPECT_EQUAL(validation, indexPairs.size(), corners.size());

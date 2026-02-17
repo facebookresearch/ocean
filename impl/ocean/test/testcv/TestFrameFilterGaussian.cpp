@@ -308,10 +308,10 @@ bool TestFrameFilterGaussian::testFilterFactors()
 		{
 			Indices32 integerFilter(filterSize + 1u);
 
-			integerFilter.back() = RandomI::random32();
+			integerFilter.back() = RandomI::random32(randomGenerator);
 			const unsigned int lastElement = integerFilter.back();
 
-			unsigned int normalization = RandomI::random32();
+			unsigned int normalization = RandomI::random32(randomGenerator);
 			CV::FrameFilterGaussian::determineFilterFactors(filterSize, integerFilter.data(), &normalization);
 
 			if (lastElement != integerFilter.back())
@@ -367,10 +367,10 @@ bool TestFrameFilterGaussian::testFilterFactors()
 		{
 			std::vector<float> floatFilter(filterSize + 1u);
 
-			floatFilter.back() = RandomF::scalar(-1000.0f, 1000.0f);
+			floatFilter.back() = RandomF::scalar(randomGenerator, -1000.0f, 1000.0f);
 			const float lastElement = floatFilter.back();
 
-			float normalization = RandomF::scalar(-1000.0f, 1000.0f);
+			float normalization = RandomF::scalar(randomGenerator, -1000.0f, 1000.0f);
 			CV::FrameFilterGaussian::determineFilterFactors(filterSize, floatFilter.data(), &normalization);
 
 			if (lastElement != floatFilter.back())

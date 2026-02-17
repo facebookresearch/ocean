@@ -900,7 +900,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
+								OCEAN_EXPECT_EQUAL(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0], uint8_t(0xFFu));
 							}
 						}
 					}
@@ -1028,8 +1028,8 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 							do
 							{
-								sourceX = RandomI::random(coarserMask.width() - 1u);
-								sourceY = RandomI::random(coarserMask.height() - 1u);
+								sourceX = RandomI::random(randomGenerator, coarserMask.width() - 1u);
+								sourceY = RandomI::random(randomGenerator, coarserMask.height() - 1u);
 							}
 							while (coarserMask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
 
@@ -1110,7 +1110,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
+								OCEAN_EXPECT_EQUAL(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0], uint8_t(0xFFu));
 							}
 						}
 					}
@@ -1240,8 +1240,8 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 							do
 							{
-								sourceX = RandomI::random(coarserMask.width() - 1u);
-								sourceY = RandomI::random(coarserMask.height() - 1u);
+								sourceX = RandomI::random(randomGenerator, coarserMask.width() - 1u);
+								sourceY = RandomI::random(randomGenerator, coarserMask.height() - 1u);
 							}
 							while (coarserMask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
 
@@ -1454,8 +1454,8 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 							do
 							{
-								sourceX = RandomI::random(coarserMask.width() - 1u);
-								sourceY = RandomI::random(coarserMask.height() - 1u);
+								sourceX = RandomI::random(randomGenerator, coarserMask.width() - 1u);
+								sourceY = RandomI::random(randomGenerator, coarserMask.height() - 1u);
 							}
 							while (coarserMask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
 
@@ -1621,7 +1621,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 							{
 								const CV::PixelPosition& position = mapping.position(x, y);
 
-								OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0] == 0xFFu);
+								OCEAN_EXPECT_EQUAL(validation, mask.constpixel<uint8_t>(position.x(), position.y())[0], uint8_t(0xFFu));
 							}
 						}
 					}
@@ -1695,7 +1695,7 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 
 						if (sourcePosition.isValid() && sourcePosition.x() < mask.width() && sourcePosition.y() < mask.height())
 						{
-							OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] == 0xFFu);
+							OCEAN_EXPECT_EQUAL(validation, mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0], uint8_t(0xFFu));
 						}
 						else
 						{
@@ -1791,9 +1791,9 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 
 						if (sourcePosition.isValid() && sourcePosition.x() < mask.width() && sourcePosition.y() < mask.height())
 						{
-							OCEAN_EXPECT_TRUE(validation, mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] == 0xFFu);
+							OCEAN_EXPECT_EQUAL(validation, mask.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0], uint8_t(0xFFu));
 
-							OCEAN_EXPECT_TRUE(validation, filter.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0] == 0xFFu);
+							OCEAN_EXPECT_EQUAL(validation, filter.constpixel<uint8_t>(sourcePosition.x(), sourcePosition.y())[0], uint8_t(0xFFu));
 						}
 						else
 						{
@@ -1930,7 +1930,7 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 								OCEAN_EXPECT_EQUAL(validation, testPixel[n], initializedPixel[n]);
 							}
 
-							OCEAN_EXPECT_TRUE(validation, testMask.constpixel<uint8_t>(x, y)[0] == 0xFFu);
+							OCEAN_EXPECT_EQUAL(validation, testMask.constpixel<uint8_t>(x, y)[0], uint8_t(0xFFu));
 						}
 					}
 				}
@@ -2076,7 +2076,7 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 								OCEAN_EXPECT_EQUAL(validation, testPixel[n], initializedPixel[n]);
 							}
 
-							OCEAN_EXPECT_TRUE(validation, testMask.constpixel<uint8_t>(x, y)[0] == 0xFFu);
+							OCEAN_EXPECT_EQUAL(validation, testMask.constpixel<uint8_t>(x, y)[0], uint8_t(0xFFu));
 						}
 					}
 				}

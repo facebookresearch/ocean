@@ -10,6 +10,8 @@
 
 #include "ocean/test/testgeometry/TestGeometry.h"
 
+#include "ocean/base/RandomGenerator.h"
+
 #include "ocean/geometry/Estimator.h"
 
 #include "ocean/test/TestSelector.h"
@@ -69,9 +71,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPlane
 		 * @param testDuration Number of seconds for each test
 		 * @param type Estimator type to be used
 		 * @param outliers Number of outlier correspondences
+		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 */
-		static bool testOptimizePlaneIdeal(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const unsigned int outliers = 0);
+		static bool testOptimizePlaneIdeal(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const unsigned int outliers, RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the non linear optimization function for a 3D plane with noisy 3D object points in combination with a RANSAC algorithm.
@@ -80,18 +83,20 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPlane
 		 * @param type Estimator type to be used
 		 * @param standardDeviation Optional standard deviation of the Gaussian normal distribution for noised image points, with range [0, infinity)
 		 * @param outliers Number of outlier correspondences
+		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 */
-		static bool testOptimizePlaneNoisy(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0);
+		static bool testOptimizePlaneNoisy(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers, RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the non linear optimization function for two cameras capturing 3D object points lying on a plane.
 		 * @param correspondences Number of point correspondences
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param type Estimator type to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 */
-		static bool testOptimizeOnePoseOnePlane(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type);
+		static bool testOptimizeOnePoseOnePlane(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the non linear optimization function for several cameras capturing 3D object points lying on a plane.
@@ -99,9 +104,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPlane
 		 * @param correspondences Number of point correspondences
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param type Estimator type to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 */
-		static bool testOptimizePosesOnePlane(const unsigned int numberPoses, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type);
+		static bool testOptimizePosesOnePlane(const unsigned int numberPoses, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, RandomGenerator& randomGenerator);
 };
 
 }

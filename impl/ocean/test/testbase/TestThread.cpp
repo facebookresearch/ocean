@@ -75,7 +75,6 @@ bool TestThread::testWaitForValueWithoutLock(const double testDuration)
 	constexpr double timeoutThreshold = 0.05;
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -204,7 +203,6 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 #endif
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);

@@ -108,10 +108,14 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 			const Frame yFrameA = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 			const Frame yFrameB = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 
-			const HomogenousMatrix4 world_T_device = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-5), Scalar(5)), Random::quaternion(randomGenerator));
+			const Vector3 world_translation_device = Random::vector3(randomGenerator, Scalar(-5), Scalar(5));
+			const HomogenousMatrix4 world_T_device = HomogenousMatrix4(world_translation_device, Random::quaternion(randomGenerator));
 
-			const HomogenousMatrix4 device_T_cameraA = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05)), Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
-			const HomogenousMatrix4 device_T_cameraB = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05)), Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
+			const Vector3 device_translation_cameraA = Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05));
+			const HomogenousMatrix4 device_T_cameraA = HomogenousMatrix4(device_translation_cameraA, Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
+
+			const Vector3 device_translation_cameraB = Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05));
+			const HomogenousMatrix4 device_T_cameraB = HomogenousMatrix4(device_translation_cameraB, Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
 
 			OculusTags tags;
 

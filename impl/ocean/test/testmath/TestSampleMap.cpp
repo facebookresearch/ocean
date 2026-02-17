@@ -337,7 +337,10 @@ bool TestSampleMap::testStressTest(const double testDuration)
 
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			sampleMap.insert(Random::quaternion(randomGenerator), RandomD::scalar(randomGenerator, -1000, 1000));
+			const Quaternion quaternion = Random::quaternion(randomGenerator);
+			const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
+
+			sampleMap.insert(quaternion, timestamp);
 
 			switch (RandomI::random(randomGenerator, 10u))
 			{

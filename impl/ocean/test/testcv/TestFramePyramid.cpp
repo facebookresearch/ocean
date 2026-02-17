@@ -1211,7 +1211,7 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned in
 
 						const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(1u, 0xFFFFFFFFu);
+						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(randomGenerator, 1u, 0xFFFFFFFFu);
 
 						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
 
@@ -1409,7 +1409,7 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int wi
 
 						const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(1u, 0xFFFFFFFFu);
+						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(randomGenerator, 1u, 0xFFFFFFFFu);
 
 						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
 
@@ -2447,7 +2447,7 @@ bool TestFramePyramid::testReduceLayers(const double testDuration)
 
 		if (RandomI::boolean(randomGenerator))
 		{
-			layers = RandomI::random(1u, 10u);
+			layers = RandomI::random(randomGenerator, 1u, 10u);
 		}
 
 		CV::FramePyramid framePyramid(layers, FrameType(width, height, pixelFormat, pixelOrigin));

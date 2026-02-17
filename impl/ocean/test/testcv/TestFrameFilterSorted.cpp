@@ -305,7 +305,7 @@ bool TestFrameFilterSorted::testSortedElements(const double testDuration)
 				}
 			}
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				if (std::is_floating_point<T>::value)
 				{

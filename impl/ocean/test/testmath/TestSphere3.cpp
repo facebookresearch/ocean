@@ -144,13 +144,13 @@ bool TestSphere3::testHasIntersection(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const VectorT3<T> center(RandomT<T>::vector3(-100, 100));
-			const T radius = RandomT<T>::scalar(T(0.01), 100);
+			const VectorT3<T> center(RandomT<T>::vector3(randomGenerator, -100, 100));
+			const T radius = RandomT<T>::scalar(randomGenerator, T(0.01), 100);
 			const SphereT3<T> sphere(center, radius);
 
-			const VectorT3<T> rayDirection(RandomT<T>::vector3());
-			const VectorT3<T> offsetDirection(RandomT<T>::vector3());
-			const VectorT3<T> rayPosition((center + offsetDirection * (radius * T(0.5))) + rayDirection * RandomT<T>::scalar(radius * -T(2), radius * T(2)));
+			const VectorT3<T> rayDirection(RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> offsetDirection(RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> rayPosition((center + offsetDirection * (radius * T(0.5))) + rayDirection * RandomT<T>::scalar(randomGenerator, radius * -T(2), radius * T(2)));
 
 			const LineT3<T> intersectingRay(rayPosition, rayDirection);
 
@@ -159,7 +159,9 @@ bool TestSphere3::testHasIntersection(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 
-			const LineT3<T> arbitraryRay(RandomT<T>::vector3(-100, 100), RandomT<T>::vector3());
+			const VectorT3<T> arbitraryRayOrigin(RandomT<T>::vector3(randomGenerator, -100, 100));
+			const VectorT3<T> arbitraryRayDirection(RandomT<T>::vector3(randomGenerator));
+			const LineT3<T> arbitraryRay(arbitraryRayOrigin, arbitraryRayDirection);
 			if (sphere.hasIntersection(arbitraryRay))
 			{
 				const VectorT3<T> nearestPoint(arbitraryRay.nearestPoint(center));
@@ -202,15 +204,20 @@ bool TestSphere3::testHasIntersectionTransformed(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const VectorT3<T> center(RandomT<T>::vector3(-100, 100));
-			const T radius = RandomT<T>::scalar(T(0.01), 100);
+			const VectorT3<T> center(RandomT<T>::vector3(randomGenerator, -100, 100));
+			const T radius = RandomT<T>::scalar(randomGenerator, T(0.01), 100);
 			const SphereT3<T> sphere(center, radius);
 
 			// transformation transforming sphere-points to world-points
-			const HomogenousMatrixT4<T> world_T_sphere(RandomT<T>::vector3(-100, 100), RandomT<T>::rotation(), RandomT<T>::vector3(T(0.01), 10));
+			const VectorT3<T> world_T_sphere_translation(RandomT<T>::vector3(randomGenerator, -100, 100));
+			const RotationT<T> world_T_sphere_rotation(RandomT<T>::rotation(randomGenerator));
+			const VectorT3<T> world_T_sphere_scale(RandomT<T>::vector3(randomGenerator, T(0.01), 10));
+			const HomogenousMatrixT4<T> world_T_sphere(world_T_sphere_translation, world_T_sphere_rotation, world_T_sphere_scale);
 			const HomogenousMatrixT4<T> sphere_T_world(world_T_sphere.inverted());
 
-			const LineT3<T> worldRay(RandomT<T>::vector3(-100, 100), RandomT<T>::vector3());
+			const VectorT3<T> worldRayOrigin(RandomT<T>::vector3(randomGenerator, -100, 100));
+			const VectorT3<T> worldRayDirection(RandomT<T>::vector3(randomGenerator));
+			const LineT3<T> worldRay(worldRayOrigin, worldRayDirection);
 
 			const VectorT3<T> sphereRayPoint(sphere_T_world * worldRay.point());
 			const VectorT3<T> sphereRayDirection((sphere_T_world.rotationMatrix() * worldRay.direction()).normalizedOrZero());
@@ -265,8 +272,8 @@ bool TestSphere3::testCoordinateVectorConversion(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const T latitude = RandomT<T>::scalar(-NumericT<T>::pi_2(), NumericT<T>::pi_2());
-			const T longitude = RandomT<T>::scalar(-NumericT<T>::pi(), NumericT<T>::pi());
+			const T latitude = RandomT<T>::scalar(randomGenerator, -NumericT<T>::pi_2(), NumericT<T>::pi_2());
+			const T longitude = RandomT<T>::scalar(randomGenerator, -NumericT<T>::pi(), NumericT<T>::pi());
 
 			const VectorT3<T> coordinateVector = SphereT3<T>::coordinateToVector(latitude, longitude);
 
@@ -322,11 +329,11 @@ bool TestSphere3::testShortestDistance(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const T latitudeA = RandomT<T>::scalar(-NumericT<T>::pi_2(), NumericT<T>::pi_2());
-			const T longitudeA = RandomT<T>::scalar(-NumericT<T>::pi(), NumericT<T>::pi());
+			const T latitudeA = RandomT<T>::scalar(randomGenerator, -NumericT<T>::pi_2(), NumericT<T>::pi_2());
+			const T longitudeA = RandomT<T>::scalar(randomGenerator, -NumericT<T>::pi(), NumericT<T>::pi());
 
-			const T latitudeB = RandomT<T>::scalar(-NumericT<T>::pi_2(), NumericT<T>::pi_2());
-			const T longitudeB = RandomT<T>::scalar(-NumericT<T>::pi(), NumericT<T>::pi());
+			const T latitudeB = RandomT<T>::scalar(randomGenerator, -NumericT<T>::pi_2(), NumericT<T>::pi_2());
+			const T longitudeB = RandomT<T>::scalar(randomGenerator, -NumericT<T>::pi(), NumericT<T>::pi());
 
 			const T distance = SphereT3<T>::shortestDistance(latitudeA, longitudeA, latitudeB, longitudeB);
 

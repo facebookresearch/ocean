@@ -674,6 +674,8 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 	const Scalar tolerance = Numeric::eps() * Scalar(500);
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 
+	RandomGenerator randomGenerator;
+
 	std::vector<size_t> dimensions = {10, 20};
 	if (std::is_same<Scalar, double>::value)
 	{
@@ -696,7 +698,7 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 			Matrix matrix(dimension, dimension);
 			for (size_t n = 0; n < matrix.elements(); ++n)
 			{
-				matrix(n) = Random::scalar(-valueRange, valueRange);
+				matrix(n) = Random::scalar(randomGenerator, -valueRange, valueRange);
 			}
 
 			performance.start();
@@ -713,7 +715,6 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 
 	const double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.90;
 
-	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -821,6 +822,8 @@ bool TestMatrix::testRank(const double testDuration)
 
 	constexpr unsigned int size = 100;
 
+	RandomGenerator randomGenerator;
+
 	Timestamp startTimestamp(true);
 
 	HighPerformanceStatistic performance;
@@ -831,7 +834,7 @@ bool TestMatrix::testRank(const double testDuration)
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
 		{
-			matrix(n) = Random::scalar(-100, 100);
+			matrix(n) = Random::scalar(randomGenerator, -100, 100);
 		}
 
 		performance.start();
@@ -843,7 +846,7 @@ bool TestMatrix::testRank(const double testDuration)
 
 	Log::info() << "Performance (" << size << "^2): " << performance.averageMseconds() << "ms";
 
-	Validation validation;
+	Validation validation(randomGenerator);
 	{
 		const Matrix zeroMatrix1(1, 1, false);
 		OCEAN_EXPECT_EQUAL(validation, zeroMatrix1.rank(), size_t(0));
@@ -896,10 +899,12 @@ bool TestMatrix::testNonNegativeMatrixFactorization(const double testDuration, c
 	const unsigned int rangeMin = std::max(maxComponents, std::is_same<float, Scalar>::value ? 5u : 10u);
 	const unsigned int rangeMax = std::is_same<float, Scalar>::value ? 10u : 100u;
 
-	const unsigned int rows = Random::random(rangeMin, rangeMax);
-	const unsigned int columns = Random::random(rangeMin, rangeMax);
+	RandomGenerator randomGenerator;
 
-	Validation validation;
+	const unsigned int rows = RandomI::random(randomGenerator, rangeMin, rangeMax);
+	const unsigned int columns = RandomI::random(randomGenerator, rangeMin, rangeMax);
+
+	Validation validation(randomGenerator);
 
 	Log::info() << "Non-negative matrix factorization test with " << rows << " x " << columns << " matrix";
 
@@ -909,7 +914,7 @@ bool TestMatrix::testNonNegativeMatrixFactorization(const double testDuration, c
 	{
 		for (size_t col = 0u; col < columns; ++col)
 		{
-			matrix[row][col] = Random::scalar(Scalar(1), Scalar(row * col + 1));
+			matrix[row][col] = Random::scalar(randomGenerator, Scalar(1), Scalar(row * col + 1));
 		}
 	}
 
@@ -969,6 +974,8 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 	Log::info() << "Matrix multiplication test:\n";
 
+	RandomGenerator randomGenerator;
+
 #ifdef OCEAN_USE_GTEST
 	const Indices32 sizes = {10u, 20u, 50u, 97u, 203u};
 #else
@@ -991,12 +998,12 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 			for (unsigned int n = 0u; n < a.elements(); ++n)
 			{
-				a(n) = Random::scalar(-100, 100);
+				a(n) = Random::scalar(randomGenerator, -100, 100);
 			}
 
 			for (unsigned int n = 0u; n < b.elements(); ++n)
 			{
-				b(n) = Random::scalar(-100, 100);
+				b(n) = Random::scalar(randomGenerator, -100, 100);
 			}
 
 			performance.start();
@@ -1025,12 +1032,12 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 			for (unsigned int n = 0u; n < a.elements(); ++n)
 			{
-				a(n) = Random::scalar(-100, 100);
+				a(n) = Random::scalar(randomGenerator, -100, 100);
 			}
 
 			for (unsigned int n = 0u; n < b.elements(); ++n)
 			{
-				b(n) = Random::scalar(-100, 100);
+				b(n) = Random::scalar(randomGenerator, -100, 100);
 			}
 
 			performance.start();
@@ -1047,7 +1054,7 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 	constexpr unsigned int size = 100u;
 
-	Validation validation;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -1058,12 +1065,12 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 		for (unsigned int n = 0u; n < a.elements(); ++n)
 		{
-			a(n) = Random::scalar(-1, 1);
+			a(n) = Random::scalar(randomGenerator, -1, 1);
 		}
 
 		for (unsigned int n = 0u; n < b.elements(); ++n)
 		{
-			b(n) = Random::scalar(-1, 1);
+			b(n) = Random::scalar(randomGenerator, -1, 1);
 		}
 
 		Matrix c(size, size);

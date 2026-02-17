@@ -107,13 +107,15 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 
 	HighPerformanceStatistic performance;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const Scalar environmentRadius = Random::scalar(Scalar(0.01), 10);
+		const Scalar environmentRadius = Random::scalar(randomGenerator, Scalar(0.01), 10);
 
-		const Vector2 linePosition = Random::vector2(-environmentRadius * 10, environmentRadius * 10);
-		const Vector2 lineDirection = Random::vector2();
+		const Vector2 linePosition = Random::vector2(randomGenerator, -environmentRadius * 10, environmentRadius * 10);
+		const Vector2 lineDirection = Random::vector2(randomGenerator);
 
 		const Line2 line(linePosition, lineDirection);
 
@@ -121,7 +123,7 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Vector2 point = linePosition + Random::vector2(-environmentRadius, environmentRadius);
+			const Vector2 point = linePosition + Random::vector2(randomGenerator, -environmentRadius, environmentRadius);
 			const Vector2 projectedPoint = line.nearestPoint(point);
 			ocean_assert(projectedPoint.distance(linePosition) < environmentRadius * 2);
 
@@ -131,19 +133,25 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 		IndexSet32 outlierIndices;
 		while (outlierIndices.size() < outliers)
 		{
-			outlierIndices.insert(RandomI::random(numberPoints - 1u));
+			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 		}
 
 		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
 		{
-			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * Random::scalar(Scalar(0.5), 1000) * Random::sign();
+			const Scalar outlierScale = Random::scalar(randomGenerator, Scalar(0.5), 1000);
+			const Scalar outlierSign = Random::sign(randomGenerator);
+
+			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * outlierScale * outlierSign;
 		}
 
-		const Rotation offsetRotation(0, 0, 1, Random::scalar(Numeric::deg2rad(5), Numeric::deg2rad(20)) * Random::sign());
+		const Scalar offsetAngle = Random::scalar(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(20));
+		const Scalar offsetSign = Random::sign(randomGenerator);
+
+		const Rotation offsetRotation(0, 0, 1, offsetAngle * offsetSign);
 		const Vector3 faultyLineDirection3(offsetRotation * Vector3(lineDirection, 0));
 
 		const Vector2 faultyLineDirection(faultyLineDirection3.x(), faultyLineDirection3.y());
-		const Vector2 faultyLinePosition(linePosition + Random::vector2(-environmentRadius * Scalar(0.1), environmentRadius * Scalar(0.1)));
+		const Vector2 faultyLinePosition(linePosition + Random::vector2(randomGenerator, -environmentRadius * Scalar(0.1), environmentRadius * Scalar(0.1)));
 
 		const Line2 faultyLine(faultyLinePosition, faultyLineDirection);
 
@@ -203,10 +211,10 @@ bool TestNonLinearOptimizationLine::testOptimizeLineNoisy(const unsigned int num
 
 	do
 	{
-		const Scalar environmentRadius = Random::scalar(Scalar(0.01), 10);
+		const Scalar environmentRadius = Random::scalar(randomGenerator, Scalar(0.01), 10);
 
-		const Vector2 linePosition = Random::vector2(-environmentRadius * 10, environmentRadius * 10);
-		const Vector2 lineDirection = Random::vector2();
+		const Vector2 linePosition = Random::vector2(randomGenerator, -environmentRadius * 10, environmentRadius * 10);
+		const Vector2 lineDirection = Random::vector2(randomGenerator);
 
 		const Line2 line(linePosition, lineDirection);
 
@@ -214,7 +222,7 @@ bool TestNonLinearOptimizationLine::testOptimizeLineNoisy(const unsigned int num
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Vector2 point = linePosition + Random::vector2(-environmentRadius, environmentRadius);
+			const Vector2 point = linePosition + Random::vector2(randomGenerator, -environmentRadius, environmentRadius);
 			const Vector2 projectedPoint = line.nearestPoint(point);
 			ocean_assert(projectedPoint.distance(linePosition) < environmentRadius * 2);
 
@@ -222,7 +230,7 @@ bool TestNonLinearOptimizationLine::testOptimizeLineNoisy(const unsigned int num
 
 			if (standardDeviation > 0)
 			{
-				linePoint += line.normal() * Random::gaussianNoise(environmentRadius * standardDeviation);
+				linePoint += line.normal() * Random::gaussianNoise(randomGenerator, environmentRadius * standardDeviation);
 			}
 
 			linePoints.push_back(linePoint);
@@ -231,19 +239,25 @@ bool TestNonLinearOptimizationLine::testOptimizeLineNoisy(const unsigned int num
 		IndexSet32 outlierIndices;
 		while (outlierIndices.size() < outliers)
 		{
-			outlierIndices.insert(RandomI::random(numberPoints - 1u));
+			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 		}
 
 		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
 		{
-			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * Random::scalar(0.5, 1000) * Random::sign();
+			const Scalar outlierScale = Random::scalar(randomGenerator, Scalar(0.5), 1000);
+			const Scalar outlierSign = Random::sign(randomGenerator);
+
+			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * outlierScale * outlierSign;
 		}
 
-		const Rotation offsetRotation(0, 0, 1, Random::scalar(Numeric::deg2rad(5), Numeric::deg2rad(20)) * Random::sign());
+		const Scalar offsetAngle = Random::scalar(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(20));
+		const Scalar offsetSign = Random::sign(randomGenerator);
+
+		const Rotation offsetRotation(0, 0, 1, offsetAngle * offsetSign);
 		const Vector3 faultyLineDirection3(offsetRotation * Vector3(lineDirection, 0));
 
 		const Vector2 faultyLineDirection(faultyLineDirection3.x(), faultyLineDirection3.y());
-		const Vector2 faultyLinePosition(linePosition + Random::vector2(-environmentRadius * Scalar(0.1), environmentRadius * Scalar(0.1)));
+		const Vector2 faultyLinePosition(linePosition + Random::vector2(randomGenerator, -environmentRadius * Scalar(0.1), environmentRadius * Scalar(0.1)));
 
 		const Line2 faultyLine(faultyLinePosition, faultyLineDirection);
 

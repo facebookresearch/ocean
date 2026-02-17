@@ -439,7 +439,7 @@ bool TestWorker::testAbortableFunction(Worker& worker)
 
 	const double delay = fabs(double(stopTimestamp - startTimestamp) - resultValue);
 
-	OCEAN_EXPECT_TRUE(validation, delay < threshold);
+	OCEAN_EXPECT_LESS(validation, delay, threshold);
 
 	Log::info() << "Validation: " << validation;
 
@@ -475,7 +475,7 @@ bool TestWorker::testSeparableAndAbortableFunction(Worker& worker)
 
 	const double delay = fabs(double(stopTimestamp - startTimestamp) - resultValue);
 
-	OCEAN_EXPECT_TRUE(validation, delay < threshold);
+	OCEAN_EXPECT_LESS(validation, delay, threshold);
 
 	Log::info() << "Validation: " << validation;
 

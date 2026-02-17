@@ -75,35 +75,35 @@ bool TestNonLinearOptimizationPlane::testOptimizePlane(const double testDuration
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
 
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_SQUARE, 0u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_SQUARE, 0u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0u, randomGenerator));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_TUKEY, 1u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(5u, testDuration, Geometry::Estimator::ET_TUKEY, 1u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_TUKEY, 3u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(15u, testDuration, Geometry::Estimator::ET_TUKEY, 3u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_TUKEY, 15u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(50u, testDuration, Geometry::Estimator::ET_TUKEY, 15u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_TUKEY, 100u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneIdeal(500u, testDuration, Geometry::Estimator::ET_TUKEY, 100u, randomGenerator));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(10u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 3u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(10u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 3u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(20u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 6u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(20u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 6u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(50u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 10u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(50u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 10u, randomGenerator));
 	Log::info() << " ";
-	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(500u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 100u));
+	OCEAN_EXPECT_TRUE(validation, testOptimizePlaneNoisy(500u, testDuration, Geometry::Estimator::ET_SQUARE, Scalar(0.05), 100u, randomGenerator));
 
 	Log::info() << "Validation: " << validation;
 
@@ -133,7 +133,7 @@ bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const double te
 		{
 			Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-			OCEAN_EXPECT_TRUE(validation, testOptimizeOnePoseOnePlane(numberObjectPoints, testDuration, estimatorType));
+			OCEAN_EXPECT_TRUE(validation, testOptimizeOnePoseOnePlane(numberObjectPoints, testDuration, estimatorType, randomGenerator));
 		}
 	}
 
@@ -167,7 +167,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const double test
 		{
 			Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-			OCEAN_EXPECT_TRUE(validation, testOptimizePosesOnePlane(numberPoses, numberObjectPoints, testDuration, estimatorType));
+			OCEAN_EXPECT_TRUE(validation, testOptimizePosesOnePlane(numberPoses, numberObjectPoints, testDuration, estimatorType, randomGenerator));
 		}
 	}
 
@@ -176,7 +176,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const double test
 	return validation.succeeded();
 }
 
-bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const unsigned int outliers)
+bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const unsigned int outliers, RandomGenerator& randomGenerator)
 {
 	ocean_assert(numberPoints >= 3u);
 
@@ -195,10 +195,10 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int n
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const Scalar environmentRadius = Random::scalar(Scalar(0.01), 10);
+		const Scalar environmentRadius = Random::scalar(randomGenerator, Scalar(0.01), 10);
 
-		const Vector3 planePosition = Random::vector3(-environmentRadius * 10, environmentRadius * 10);
-		const Quaternion planeOrientation = Random::quaternion();
+		const Vector3 planePosition = Random::vector3(randomGenerator, -environmentRadius * 10, environmentRadius * 10);
+		const Quaternion planeOrientation = Random::quaternion(randomGenerator);
 
 		const HomogenousMatrix4 planeTransformation(planePosition, planeOrientation);
 		const Plane3 plane(planeTransformation);
@@ -207,7 +207,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int n
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Vector3 point = planePosition + Random::vector3(-environmentRadius, environmentRadius);
+			const Vector3 point = planePosition + Random::vector3(randomGenerator, -environmentRadius, environmentRadius);
 			const Vector3 projectedPoint = plane.projectOnPlane(point);
 			ocean_assert(projectedPoint.distance(planePosition) < environmentRadius * 2);
 
@@ -216,13 +216,18 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int n
 
 		IndexSet32 outlierIndices;
 		while (outlierIndices.size() < outliers)
-			outlierIndices.insert(RandomI::random(numberPoints - 1u));
+			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 
 		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
-			planePoints[*i] = plane.projectOnPlane(planePoints[*i]) + plane.normal() * environmentRadius * Random::scalar(0.5, 1000) * Random::sign();
+		{
+			const Scalar randomScalar = Random::scalar(randomGenerator, 0.5, 1000);
+			const Scalar randomSign = Random::sign(randomGenerator);
 
-		const Quaternion planeOrientationOffset(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(20)));
-		const Vector3 planePositionOffset(Random::vector3(-environmentRadius * Scalar(0.1), environmentRadius * Scalar(0.1)));
+			planePoints[*i] = plane.projectOnPlane(planePoints[*i]) + plane.normal() * environmentRadius * randomScalar * randomSign;
+		}
+
+		const Quaternion planeOrientationOffset(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(20)));
+		const Vector3 planePositionOffset(Random::vector3(randomGenerator, -environmentRadius * Scalar(0.1), environmentRadius * Scalar(0.1)));
 
 		const HomogenousMatrix4 planeTransformationOffset(planePositionOffset, planeOrientationOffset);
 
@@ -260,7 +265,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneIdeal(const unsigned int n
 	return true;
 }
 
-bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers)
+bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers, RandomGenerator& randomGenerator)
 {
 	ocean_assert(numberPoints >= 3u);
 	ocean_assert(standardDeviation >= 0);
@@ -276,15 +281,14 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int n
 	unsigned long long iterations = 0ull;
 
 	HighPerformanceStatistic performance;
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const Scalar environmentRadius = Random::scalar(Scalar(0.01), 10);
+		const Scalar environmentRadius = Random::scalar(randomGenerator, Scalar(0.01), 10);
 
-		const Vector3 planePosition = Random::vector3(-environmentRadius * 10, environmentRadius * 10);
-		const Quaternion planeOrientation = Random::quaternion();
+		const Vector3 planePosition = Random::vector3(randomGenerator, -environmentRadius * 10, environmentRadius * 10);
+		const Quaternion planeOrientation = Random::quaternion(randomGenerator);
 
 		const HomogenousMatrix4 planeTransformation(planePosition, planeOrientation);
 		const Plane3 plane(planeTransformation);
@@ -293,24 +297,29 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int n
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Vector3 point = planePosition + Random::vector3(-environmentRadius, environmentRadius);
+			const Vector3 point = planePosition + Random::vector3(randomGenerator, -environmentRadius, environmentRadius);
 			const Vector3 projectedPoint = plane.projectOnPlane(point);
 			ocean_assert(projectedPoint.distance(planePosition) < environmentRadius * 2);
 
 			Vector3 planePoint = projectedPoint;
 
 			if (standardDeviation > 0)
-				planePoint += plane.normal() * Random::gaussianNoise(environmentRadius * standardDeviation);
+				planePoint += plane.normal() * Random::gaussianNoise(randomGenerator, environmentRadius * standardDeviation);
 
 			planePoints.push_back(planePoint);
 		}
 
 		IndexSet32 outlierIndices;
 		while (outlierIndices.size() < outliers)
-			outlierIndices.insert(RandomI::random(numberPoints - 1u));
+			outlierIndices.insert(RandomI::random(randomGenerator, numberPoints - 1u));
 
 		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
-			planePoints[*i] = plane.projectOnPlane(planePoints[*i]) + plane.normal() * environmentRadius * Random::scalar(0.5, 1000) * Random::sign();
+		{
+			const Scalar randomScalar = Random::scalar(randomGenerator, 0.5, 1000);
+			const Scalar randomSign = Random::sign(randomGenerator);
+
+			planePoints[*i] = plane.projectOnPlane(planePoints[*i]) + plane.normal() * environmentRadius * randomScalar * randomSign;
+		}
 
 		performance.start();
 
@@ -349,7 +358,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int n
 	return true;
 }
 
-bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type)
+bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, RandomGenerator& randomGenerator)
 {
 	ocean_assert(correspondences >= 4u);
 
@@ -377,24 +386,31 @@ bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const unsigned 
 
 	do
 	{
-		const Vectors3 volumeObjectPoints(Utilities::objectPoints(Box3(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5)), correspondences));
+		const Vectors3 volumeObjectPoints(Utilities::objectPoints(Box3(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5)), correspondences, &randomGenerator));
 
-		const Vector3 viewingDirectionLeft = Quaternion(Random::euler(Numeric::deg2rad(20))) * zeroViewingDirection;
+		const Vector3 viewingDirectionLeft = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(20))) * zeroViewingDirection;
 		const HomogenousMatrix4 poseLeft(Utilities::viewPosition(pinholeCamera, volumeObjectPoints, viewingDirectionLeft));
 
-		const Plane3 plane(Quaternion(Random::euler(Numeric::deg2rad(20))) * Vector3(0, 0, 1), Random::scalar(-5, -1));
+		const Quaternion planeRotation(Random::euler(randomGenerator, Numeric::deg2rad(20)));
+		const Scalar planeDistance = Random::scalar(randomGenerator, -5, -1);
+		const Plane3 plane(planeRotation * Vector3(0, 0, 1), planeDistance);
 
-		const Vectors2 imagePointsLeft(Utilities::imagePoints(pinholeCamera, correspondences));
+		const Vectors2 imagePointsLeft(Utilities::imagePoints(pinholeCamera, correspondences, &randomGenerator));
 		const Vectors3 planeObjectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, poseLeft, plane, imagePointsLeft.data(), imagePointsLeft.size(), pinholeCamera.hasDistortionParameters()));
 
-		const Vector3 viewingDirectionRight = Quaternion(Random::euler(Numeric::deg2rad(20))) * zeroViewingDirection;
+		const Vector3 viewingDirectionRight = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(20))) * zeroViewingDirection;
 		const HomogenousMatrix4 poseRight(Utilities::viewPosition(pinholeCamera, planeObjectPoints, viewingDirectionRight));
 
 		Vectors2 imagePointsRight(planeObjectPoints.size());
 		pinholeCamera.projectToImage<true>(poseRight, planeObjectPoints.data(), planeObjectPoints.size(), pinholeCamera.hasDistortionParameters(), imagePointsRight.data());
 
-		const Plane3 faultyPlane(Quaternion(Random::euler(Numeric::deg2rad(20))) * plane.normal(), Random::scalar(-5, -1));
-		const HomogenousMatrix4 faultyPoseRight(poseRight * HomogenousMatrix4(Random::vector3() * Scalar(0.5), Random::euler(Numeric::deg2rad(30))));
+		const Quaternion faultyPlaneRotation(Random::euler(randomGenerator, Numeric::deg2rad(20)));
+		const Scalar faultyPlaneDistance = Random::scalar(randomGenerator, -5, -1);
+		const Plane3 faultyPlane(faultyPlaneRotation * plane.normal(), faultyPlaneDistance);
+
+		const Vector3 faultyTranslation = Random::vector3(randomGenerator) * Scalar(0.5);
+		const Euler faultyRotation = Random::euler(randomGenerator, Numeric::deg2rad(30));
+		const HomogenousMatrix4 faultyPoseRight(poseRight * HomogenousMatrix4(faultyTranslation, faultyRotation));
 
 		const Vectors3 faultyPlaneObjectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, poseLeft, faultyPlane, imagePointsLeft.data(), imagePointsLeft.size(), pinholeCamera.hasDistortionParameters()));
 
@@ -468,7 +484,7 @@ bool TestNonLinearOptimizationPlane::testOptimizeOnePoseOnePlane(const unsigned 
 	return true;
 }
 
-bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned int numberPoses, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type)
+bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned int numberPoses, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, RandomGenerator& randomGenerator)
 {
 	ocean_assert(numberPoses >= 2u);
 	ocean_assert(correspondences >= 4u);
@@ -497,7 +513,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned in
 
 	do
 	{
-		const Vectors3 volumeObjectPoints(Utilities::objectPoints(Box3(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5)), correspondences));
+		const Vectors3 volumeObjectPoints(Utilities::objectPoints(Box3(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5)), correspondences, &randomGenerator));
 		Vectors3 planeObjectPoints;
 
 		Vectors2 initialImagePoints;
@@ -534,9 +550,9 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned in
 			}
 			else
 			{
-				const Vector3 viewingDirection = Quaternion(Random::euler(Numeric::deg2rad(20))) * zeroViewingDirection;
+				const Vector3 viewingDirection = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(20))) * zeroViewingDirection;
 				const HomogenousMatrix4 pose(Utilities::viewPosition(pinholeCamera, volumeObjectPoints, viewingDirection));
-				const HomogenousMatrix4 faultyPose(Utilities::viewPosition(pinholeCamera, volumeObjectPoints, Quaternion(Random::euler(Numeric::deg2rad(30))) * viewingDirection));
+				const HomogenousMatrix4 faultyPose(Utilities::viewPosition(pinholeCamera, volumeObjectPoints, Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * viewingDirection));
 
 				Vectors2 imagePoints;
 				for (Vectors3::const_iterator i = planeObjectPoints.begin(); i != planeObjectPoints.end(); ++i)
@@ -552,7 +568,9 @@ bool TestNonLinearOptimizationPlane::testOptimizePosesOnePlane(const unsigned in
 			}
 		}
 
-		const Plane3 faultyPlane(Quaternion(Random::euler(Numeric::deg2rad(20))) * plane.normal(), plane.distance() + Random::scalar(Scalar(-5.1), Scalar(-1.1)));
+		const Quaternion faultyPlaneRotation(Random::euler(randomGenerator, Numeric::deg2rad(20)));
+		const Scalar faultyPlaneDistanceOffset = Random::scalar(randomGenerator, Scalar(-5.1), Scalar(-1.1));
+		const Plane3 faultyPlane(faultyPlaneRotation * plane.normal(), plane.distance() + faultyPlaneDistanceOffset);
 		const Vectors3 faultyPlaneObjectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, initialPose, faultyPlane, initialImagePoints.data(), initialImagePoints.size(), pinholeCamera.hasDistortionParameters()));
 
 		// ensure that all object points are located in front of all cameras

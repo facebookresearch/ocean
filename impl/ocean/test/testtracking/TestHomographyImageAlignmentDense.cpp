@@ -267,7 +267,7 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 				{
 					if constexpr (std::is_same<double, Scalar>::value)
 					{
-						OCEAN_EXPECT_TRUE(validation, averageErrorFinal <= averageErrorInitial * double(0.1));
+						OCEAN_EXPECT_LESS_EQUAL(validation, averageErrorFinal, averageErrorInitial * double(0.1));
 					}
 				}
 				else
@@ -485,7 +485,7 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const unsigned int c
 			{
 				if constexpr (std::is_same<double, Scalar>::value)
 				{
-					OCEAN_EXPECT_TRUE(validation, averageErrorFinal <= averageErrorInitial * double(0.1));
+					OCEAN_EXPECT_LESS_EQUAL(validation, averageErrorFinal, averageErrorInitial * double(0.1));
 				}
 			}
 			else
@@ -531,7 +531,7 @@ bool TestHomographyImageAlignmentDense::createRandomData(const FrameType& frameT
 			value = uint8_t(RandomI::random(randomGenerator, 255u));
 		}
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			const unsigned int xCenter = RandomI::random(randomGenerator, templateFrame.width() - 1u);
 			const unsigned int yCenter = RandomI::random(randomGenerator, templateFrame.height() - 1u);

@@ -102,7 +102,7 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// all points identical
-			const Vector3 objectPoint(Random::vector3(-range, range));
+			const Vector3 objectPoint(Random::vector3(randomGenerator, -range, range));
 
 			const Plane3 plane(objectPoint, objectPoint, objectPoint);
 
@@ -119,8 +119,8 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// first and second point identical
-			const Vector3 objectPoint0(Random::vector3(-range, range));
-			const Vector3 objectPoint1(Random::vector3(-range, range));
+			const Vector3 objectPoint0(Random::vector3(randomGenerator, -range, range));
+			const Vector3 objectPoint1(Random::vector3(randomGenerator, -range, range));
 
 			const Plane3 plane(objectPoint0, objectPoint0, objectPoint1);
 
@@ -137,8 +137,8 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// first and third point identical
-			const Vector3 objectPoint0(Random::vector3(-range, range));
-			const Vector3 objectPoint1(Random::vector3(-range, range));
+			const Vector3 objectPoint0(Random::vector3(randomGenerator, -range, range));
+			const Vector3 objectPoint1(Random::vector3(randomGenerator, -range, range));
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint0);
 
@@ -155,8 +155,8 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// second and third point identical
-			const Vector3 objectPoint0(Random::vector3(-range, range));
-			const Vector3 objectPoint1(Random::vector3(-range, range));
+			const Vector3 objectPoint0(Random::vector3(randomGenerator, -range, range));
+			const Vector3 objectPoint1(Random::vector3(randomGenerator, -range, range));
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint1);
 
@@ -175,18 +175,18 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			constexpr Scalar equalEps = std::is_same<Scalar, float>::value ? Scalar(0.01) : Numeric::weakEps();
 
 			// non-collinear test
-			const Vector3 objectPoint0(Random::vector3(-range, range));
+			const Vector3 objectPoint0(Random::vector3(randomGenerator, -range, range));
 
-			Vector3 objectPoint1(Random::vector3(-range, range));
+			Vector3 objectPoint1(Random::vector3(randomGenerator, -range, range));
 
 			while (objectPoint0.isEqual(objectPoint1, equalEps))
 			{
-				objectPoint1 = Random::vector3(-range, range);
+				objectPoint1 = Random::vector3(randomGenerator, -range, range);
 			}
 
 			const Line3 line(objectPoint0, (objectPoint1 - objectPoint0).normalized());
 
-			const Vector3 objectPoint2(line.point(Random::scalar(-range, range)));
+			const Vector3 objectPoint2(line.point(Random::scalar(randomGenerator, -range, range)));
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint2);
 
@@ -202,9 +202,9 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(5) : Scalar(100);
 			constexpr Scalar equalEps = std::is_same<Scalar, float>::value ? Scalar(0.01) : Numeric::weakEps();
 
-			const Vector3 objectPoint0(Random::vector3(-range, range));
-			const Vector3 objectPoint1(Random::vector3(-range, range));
-			const Vector3 objectPoint2(Random::vector3(-range, range));
+			const Vector3 objectPoint0(Random::vector3(randomGenerator, -range, range));
+			const Vector3 objectPoint1(Random::vector3(randomGenerator, -range, range));
+			const Vector3 objectPoint2(Random::vector3(randomGenerator, -range, range));
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint2);
 
@@ -246,8 +246,13 @@ bool TestPlane3::testIntersectionLine(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Plane3 plane(Random::vector3(), Random::scalar(-100, 100));
-			const Line3 line(Random::vector3(-100, 100), Random::vector3());
+			const Vector3 planeNormal(Random::vector3(randomGenerator));
+			const Scalar planeDistance = Random::scalar(randomGenerator, -100, 100);
+			const Plane3 plane(planeNormal, planeDistance);
+
+			const Vector3 linePoint(Random::vector3(randomGenerator, -100, 100));
+			const Vector3 lineDirection(Random::vector3(randomGenerator));
+			const Line3 line(linePoint, lineDirection);
 
 			Vector3 point;
 			if (plane.intersection(line, point))
@@ -295,8 +300,13 @@ bool TestPlane3::testIntersectionPlane(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Plane3 planeA(Random::vector3(), Random::scalar(-10, 10));
-			const Plane3 planeB(Random::vector3(), Random::scalar(-10, 10));
+			const Vector3 normalA(Random::vector3(randomGenerator));
+			const Scalar distanceA = Random::scalar(randomGenerator, -10, 10);
+			const Plane3 planeA(normalA, distanceA);
+
+			const Vector3 normalB(Random::vector3(randomGenerator));
+			const Scalar distanceB = Random::scalar(randomGenerator, -10, 10);
+			const Plane3 planeB(normalB, distanceB);
 
 			Line3 line;
 			if (planeA.intersection(planeB, line))

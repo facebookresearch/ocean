@@ -311,7 +311,7 @@ bool TestUtilities::testModulo(const double testDuration)
 			const double ringSize = RandomI::random(randomGenerator, 1u, 2000u) / 200.0;
 			ocean_assert(ringSize > 0 && ringSize <= 10.0);
 
-			const double value = (double(RandomI::random32()) - double(2147483648)) / double(67108864);
+			const double value = (double(RandomI::random32(randomGenerator)) - double(2147483648)) / double(67108864);
 			ocean_assert(value >= -32.0 && value <= 32.0);
 
 			const double moduloValue = modulo(value, ringSize);
@@ -326,7 +326,7 @@ bool TestUtilities::testModulo(const double testDuration)
 				}
 				else
 				{
-					OCEAN_EXPECT_TRUE(validation, double(int(value / ringSize)) * ringSize + moduloValue - value <= 1e-12);
+					OCEAN_EXPECT_LESS_EQUAL(validation, double(int(value / ringSize)) * ringSize + moduloValue - value, 1e-12);
 				}
 			}
 			else
@@ -338,14 +338,14 @@ bool TestUtilities::testModulo(const double testDuration)
 					const double testValue = ringSize - absValue;
 					ocean_assert(testValue > 0 && testValue < ringSize);
 
-					OCEAN_EXPECT_TRUE(validation, testValue - moduloValue <= 1e-12);
+					OCEAN_EXPECT_LESS_EQUAL(validation, testValue - moduloValue, 1e-12);
 				}
 				else
 				{
 					const double testValue = fmod(ringSize - fmod(absValue, ringSize), ringSize);
 					ocean_assert(testValue >= 0 && testValue < ringSize);
 
-					OCEAN_EXPECT_TRUE(validation, testValue - moduloValue <= 1e-12);
+					OCEAN_EXPECT_LESS_EQUAL(validation, testValue - moduloValue, 1e-12);
 				}
 			}
 		}
@@ -384,7 +384,7 @@ bool TestUtilities::testRingDistance(const double testDuration)
 
 		const unsigned int result = ringDistance(value0, value1, ringSize);
 
-		OCEAN_EXPECT_TRUE(validation, int(result) <= abs(int(value0) - int(value1)));
+		OCEAN_EXPECT_LESS_EQUAL(validation, int(result), abs(int(value0) - int(value1)));
 
 		const unsigned int valueLow = value0 <= value1 ? value0 : value1;
 		const unsigned int valueHigh = value0 <= value1 ? value1 : value0;
@@ -479,13 +479,13 @@ bool TestUtilities::testDivisionBy2(const double testDuration)
 
 		// 16 bit integers
 		{
-			const short value = short(RandomI::random32());
+			const short value = short(RandomI::random32(randomGenerator));
 			const short value_2 = Utilities::divideBy2(value);
 
 			OCEAN_EXPECT_EQUAL(validation, int(value_2), int(value) / 2);
 		}
 		{
-			const unsigned short value = (unsigned short)RandomI::random32();
+			const unsigned short value = (unsigned short)RandomI::random32(randomGenerator);
 			const unsigned short value_2 = Utilities::divideBy2(value);
 
 			OCEAN_EXPECT_EQUAL(validation, (unsigned int)(value_2), (unsigned int)(value) / 2u);
@@ -493,13 +493,13 @@ bool TestUtilities::testDivisionBy2(const double testDuration)
 
 		// 32 bit integers
 		{
-			const int value = int(RandomI::random32());
+			const int value = int(RandomI::random32(randomGenerator));
 			const int value_2 = Utilities::divideBy2(value);
 
 			OCEAN_EXPECT_EQUAL(validation, (long long)(value_2), (long long)(value) / 2ll);
 		}
 		{
-			const unsigned int value = RandomI::random32();
+			const unsigned int value = RandomI::random32(randomGenerator);
 			const unsigned int value_2 = Utilities::divideBy2(value);
 
 			OCEAN_EXPECT_EQUAL(validation, (unsigned long long)(value_2), (unsigned long long)(value) / 2ull);
@@ -507,13 +507,13 @@ bool TestUtilities::testDivisionBy2(const double testDuration)
 
 		// 64 bit integers
 		{
-			const long long value = (long long)(RandomI::random64());
+			const long long value = (long long)(RandomI::random64(randomGenerator));
 			const long long value_2 = Utilities::divideBy2(value);
 
 			OCEAN_EXPECT_EQUAL(validation, (long long)(value_2), (long long)(value) / 2ll);
 		}
 		{
-			const unsigned long long value = RandomI::random64();
+			const unsigned long long value = RandomI::random64(randomGenerator);
 			const unsigned long long value_2 = Utilities::divideBy2(value);
 
 			OCEAN_EXPECT_EQUAL(validation, (unsigned long long)(value_2), (unsigned long long)(value) / 2ull);
@@ -521,12 +521,12 @@ bool TestUtilities::testDivisionBy2(const double testDuration)
 
 		// 32 bit floating point
 		{
-			const int nominator = int(RandomI::random32());
-			int denominator = int(RandomI::random32());
+			const int nominator = int(RandomI::random32(randomGenerator));
+			int denominator = int(RandomI::random32(randomGenerator));
 
 			while (denominator == 0)
 			{
-				denominator = int(RandomI::random32());
+				denominator = int(RandomI::random32(randomGenerator));
 			}
 
 			const float value = float(nominator) / float(denominator);
@@ -537,12 +537,12 @@ bool TestUtilities::testDivisionBy2(const double testDuration)
 
 		// 64 bit floating point
 		{
-			const long long nominator = (long long)(RandomI::random64());
-			long long denominator = (long long)(RandomI::random64());
+			const long long nominator = (long long)(RandomI::random64(randomGenerator));
+			long long denominator = (long long)(RandomI::random64(randomGenerator));
 
 			while (denominator == 0ll)
 			{
-				denominator = (long long)(RandomI::random64());
+				denominator = (long long)(RandomI::random64(randomGenerator));
 			}
 
 			const double value = double(nominator) / double(denominator);
@@ -580,7 +580,7 @@ bool TestUtilities::testIsPowerOfTwo(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int value = RandomI::random32();
+			const unsigned int value = RandomI::random32(randomGenerator);
 
 			unsigned int testBits = 0u;
 			unsigned int testValue = value;

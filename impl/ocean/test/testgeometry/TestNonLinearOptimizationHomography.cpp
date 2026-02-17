@@ -313,12 +313,15 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 		Vectors3 objectPoints;
 		for (size_t i = 0; i < correspondences; i++)
 		{
-			objectPoints.push_back(Vector3(Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, -10, 10), 0));
+			const Scalar x = Random::scalar(randomGenerator, -10, 10);
+			const Scalar y = Random::scalar(randomGenerator, -10, 10);
+
+			objectPoints.push_back(Vector3(x, y, 0));
 		}
 
 		// viewing direction onto plane
-		const Vector3 viewdirectionLeft(Quaternion(Random::euler(Numeric::deg2rad(30))) * Vector3(0, 0, -1));
-		const Vector3 viewdirectionRight(Quaternion(Random::euler(Numeric::deg2rad(30))) * Vector3(0, 0, -1));
+		const Vector3 viewdirectionLeft(Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * Vector3(0, 0, -1));
+		const Vector3 viewdirectionRight(Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * Vector3(0, 0, -1));
 
 		// determine camera pose ensuring that all object points are visible
 		const HomogenousMatrix4 poseLeft(Utilities::viewPosition(pinholeCamera, objectPoints, viewdirectionLeft, true));
@@ -341,7 +344,10 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 			Vector2 imagePointNoise(0, 0);
 			if (standardDeviation > 0)
 			{
-				imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePointNoise = Vector2(noiseX, noiseY);
 
 				if (useCovariances)
 				{
@@ -370,17 +376,20 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 		ocean_assert(Numeric::isWeakEqualEps(determineHomographyError(homography, pointsLeft, perfectImagePointsRight)));
 
 		// add outliers to the right points
-		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 		{
-			const Vector2 outlierNoise(Random::gaussianNoise(100), Random::gaussianNoise(100));
+			const Scalar noiseX = Random::gaussianNoise(randomGenerator, 100);
+			const Scalar noiseY = Random::gaussianNoise(randomGenerator, 100);
+
+			const Vector2 outlierNoise(noiseX, noiseY);
 			pointsRightNoised[*i] += outlierNoise;
 		}
 
 		// creating a faulty pose of the right camera
 
-		const Vector3 errorTranslation(Random::vector3(Scalar(-0.1), Scalar(0.1)));
-		const Euler errorEuler(Random::euler(Numeric::deg2rad(10)));
+		const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
+		const Euler errorEuler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
 		const Quaternion errorRotation(errorEuler);
 
 		const Vector3 faultyTranslation(poseRight.translation() + errorTranslation);
@@ -496,9 +505,9 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector2 translation = Random::vector2(-100, 100);
-		const Scalar rotation = Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30));
-		const Scalar scale = Random::scalar(Scalar(0.25), Scalar(1.75));
+		const Vector2 translation = Random::vector2(randomGenerator, -100, 100);
+		const Scalar rotation = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+		const Scalar scale = Random::scalar(randomGenerator, Scalar(0.25), Scalar(1.75));
 
 		const Vector2 xAxis(Numeric::cos(rotation) * scale, Numeric::sin(rotation) * scale);
 		const Vector2 yAxis(-xAxis.y(), xAxis.x());
@@ -513,7 +522,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 		for (unsigned int n = 0u; n < correspondences; ++n)
 		{
-			const Vector2 imagePointLeft = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			const Vector2 imagePointLeft = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
 			const Vector2 imagePointRight = similarity * imagePointLeft;
 
 			SquareMatrix2 invertedCovariance;
@@ -521,7 +530,10 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 			Vector2 imagePointNoise(0, 0);
 			if (standardDeviation > 0)
 			{
-				imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, standardDeviation);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, standardDeviation);
+
+				imagePointNoise = Vector2(noiseX, noiseY);
 
 				if (useCovariances)
 				{
@@ -546,18 +558,21 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 		}
 
 		// add outliers to the right points
-		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers));
+		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, numberOutliers, &randomGenerator));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 		{
-			const Vector2 outlierNoise(Random::gaussianNoise(100), Random::gaussianNoise(100));
+			const Scalar noiseX = Random::gaussianNoise(randomGenerator, 100);
+			const Scalar noiseY = Random::gaussianNoise(randomGenerator, 100);
+
+			const Vector2 outlierNoise(noiseX, noiseY);
 			pointsRightNoised[*i] += outlierNoise;
 		}
 
 		// creating a faulty pose of the right camera
 
 		const Vector2 errorTranslation(Vector2(-50, 50));
-		const Scalar errorRotation = Random::scalar(Numeric::deg2rad(-15), Numeric::deg2rad(15));
-		const Scalar errorScale = Random::scalar(Scalar(0.5), Scalar(1.5));
+		const Scalar errorRotation = Random::scalar(randomGenerator, Numeric::deg2rad(-15), Numeric::deg2rad(15));
+		const Scalar errorScale = Random::scalar(randomGenerator, Scalar(0.5), Scalar(1.5));
 
 		const Vector2 faultyTranslation(translation + errorTranslation);
 		const Scalar faultyRotation(rotation + errorRotation);

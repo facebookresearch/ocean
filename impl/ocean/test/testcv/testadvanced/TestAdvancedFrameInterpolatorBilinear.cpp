@@ -1573,8 +1573,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 
 			for (Vector2& position : positions)
 			{
-				position.x() = Random::scalar(randomGenerator, Scalar(0), Scalar(frame.width()) - Numeric::weakEps());
-				position.y() = Random::scalar(randomGenerator, Scalar(0), Scalar(frame.height()) - Numeric::weakEps());
+				position = Random::vector2(randomGenerator, Scalar(0), Scalar(frame.width()) - Numeric::weakEps(), Scalar(0), Scalar(frame.height()) - Numeric::weakEps());
 			}
 
 			const uint8_t* const frameData = frame.constdata<uint8_t>();

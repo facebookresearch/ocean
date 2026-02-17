@@ -256,7 +256,7 @@ bool TestBox3::testPoint(const double testDuration)
 
 		OCEAN_EXPECT_FALSE(validation, box.isValid());
 
-		box += RandomT<T>::vector3(-10, 10);
+		box += RandomT<T>::vector3(randomGenerator, -10, 10);
 
 		OCEAN_EXPECT_TRUE(validation, box.isValid());
 
@@ -290,11 +290,15 @@ bool TestBox3::testIsInside(const double testDuration)
 
 	do
 	{
-		const VectorT3<T> lower(RandomT<T>::vector3(-1000, 1000));
-		const VectorT3<T> higher(RandomT<T>::scalar(lower.x(), 1000), RandomT<T>::scalar(lower.y(), 1000), RandomT<T>::scalar(lower.z(), 1000));
+		const VectorT3<T> lower(RandomT<T>::vector3(randomGenerator, -1000, 1000));
+
+		const T higherX = RandomT<T>::scalar(randomGenerator, lower.x(), 1000);
+		const T higherY = RandomT<T>::scalar(randomGenerator, lower.y(), 1000);
+		const T higherZ = RandomT<T>::scalar(randomGenerator, lower.z(), 1000);
+		const VectorT3<T> higher(higherX, higherY, higherZ);
 
 		const BoxT3<T> box(lower, higher);
-		const VectorT3<T> point(RandomT<T>::vector3(-1000, 1000));
+		const VectorT3<T> point(RandomT<T>::vector3(randomGenerator, -1000, 1000));
 
 		bool testInside = true;
 
@@ -346,25 +350,25 @@ bool TestBox3::testAddition(const double testDuration)
 	const Timestamp startTimestamp(true);
 	do
 	{
-		T x0 = RandomT<T>::scalar(-1000, 1000);
-		T y0 = RandomT<T>::scalar(-1000, 1000);
-		T z0 = RandomT<T>::scalar(-1000, 1000);
+		T x0 = RandomT<T>::scalar(randomGenerator, -1000, 1000);
+		T y0 = RandomT<T>::scalar(randomGenerator, -1000, 1000);
+		T z0 = RandomT<T>::scalar(randomGenerator, -1000, 1000);
 
-		T x1 = x0 + RandomT<T>::scalar(0, 1000);
-		T y1 = y0 + RandomT<T>::scalar(0, 1000);
-		T z1 = z0 + RandomT<T>::scalar(0, 1000);
+		T x1 = x0 + RandomT<T>::scalar(randomGenerator, 0, 1000);
+		T y1 = y0 + RandomT<T>::scalar(randomGenerator, 0, 1000);
+		T z1 = z0 + RandomT<T>::scalar(randomGenerator, 0, 1000);
 
 		BoxT3<T> box(VectorT3<T>(x0, y0, z0), VectorT3<T>(x1, y1, z1));
 
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const T newX0 = RandomT<T>::scalar(-1000, 1000);
-			const T newY0 = RandomT<T>::scalar(-1000, 1000);
-			const T newZ0 = RandomT<T>::scalar(-1000, 1000);
+			const T newX0 = RandomT<T>::scalar(randomGenerator, -1000, 1000);
+			const T newY0 = RandomT<T>::scalar(randomGenerator, -1000, 1000);
+			const T newZ0 = RandomT<T>::scalar(randomGenerator, -1000, 1000);
 
-			const T newX1 = newX0 + RandomT<T>::scalar(0, 1000);
-			const T newY1 = newY0 + RandomT<T>::scalar(0, 1000);
-			const T newZ1 = newZ0 + RandomT<T>::scalar(0, 1000);
+			const T newX1 = newX0 + RandomT<T>::scalar(randomGenerator, 0, 1000);
+			const T newY1 = newY0 + RandomT<T>::scalar(randomGenerator, 0, 1000);
+			const T newZ1 = newZ0 + RandomT<T>::scalar(randomGenerator, 0, 1000);
 
 			const BoxT3<T> newBox(VectorT3<T>(newX0, newY0, newZ0), VectorT3<T>(newX1, newY1, newZ1));
 

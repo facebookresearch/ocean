@@ -1025,7 +1025,7 @@ bool TestSpecial::testPfmDecodeStressTest()
 				value = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				data[0] = 'P';
 				data[1] = 'F';

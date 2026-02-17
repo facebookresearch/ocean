@@ -277,7 +277,6 @@ bool TestMedian::testMedian2(const double testDuration)
 	Log::info() << "Median test with two parameters:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -313,7 +312,6 @@ bool TestMedian::testMedian3(const double testDuration)
 	Log::info() << "Median test with three parameters:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -350,7 +348,6 @@ bool TestMedian::testMedian4(const double testDuration)
 	Log::info() << "Median test with four parameters:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -388,7 +385,6 @@ bool TestMedian::testMedian5(const double testDuration)
 	Log::info() << "Median test with five parameters:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -453,7 +449,6 @@ bool TestMedian::testMedian(const unsigned int number, const double testDuration
 	Elements elements(number);
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;

@@ -216,7 +216,7 @@ bool TestSparseMatrix::testInvertDiagonal(const double testDuration)
 
 	do
 	{
-		const size_t dimension = RandomI::random(1, 100);
+		const size_t dimension = RandomI::random(randomGenerator, 1u, 100u);
 
 		SparseMatrix sparseMatrix(dimension, dimension);
 		Matrix matrix(dimension, dimension, false);

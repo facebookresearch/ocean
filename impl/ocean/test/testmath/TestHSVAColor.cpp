@@ -136,25 +136,27 @@ bool TestHSVAColor::testIsEqual(const double testDuration)
 
 	Log::info() << "IsEqual test:";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		const float hue = RandomF::scalar(0.0f, NumericF::pi2() - NumericF::weakEps());
-		const float saturation = RandomF::scalar(0.0f, 1.0f);
-		const float value = RandomF::scalar(0.0f, 1.0f);
-		const float alpha = RandomF::scalar(0.0f, 1.0f);
+		const float hue = RandomF::scalar(randomGenerator, 0.0f, NumericF::pi2() - NumericF::weakEps());
+		const float saturation = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+		const float value = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+		const float alpha = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
 
 		const HSVAColor color(hue, saturation, value, alpha);
 
-		const float eps = RandomF::scalar(0.0f, 1.0f - NumericF::weakEps());
+		const float eps = RandomF::scalar(randomGenerator, 0.0f, 1.0f - NumericF::weakEps());
 
 		{
 			// hue
 
-			const float otherHue = RandomF::scalar(0.0f, NumericF::pi2() - NumericF::weakEps());
+			const float otherHue = RandomF::scalar(randomGenerator, 0.0f, NumericF::pi2() - NumericF::weakEps());
 
 			const HSVAColor otherColor(otherHue, saturation, value, alpha);
 
@@ -172,7 +174,7 @@ bool TestHSVAColor::testIsEqual(const double testDuration)
 		{
 			// saturation
 
-			const float otherSaturation = RandomF::scalar(0.0f, 1.0f);
+			const float otherSaturation = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
 
 			const HSVAColor otherColor(hue, otherSaturation, value, alpha);
 
@@ -190,7 +192,7 @@ bool TestHSVAColor::testIsEqual(const double testDuration)
 		{
 			// value
 
-			const float otherValue = RandomF::scalar(0.0f, 1.0f);
+			const float otherValue = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
 
 			const HSVAColor otherColor(hue, saturation, otherValue, alpha);
 
@@ -208,7 +210,7 @@ bool TestHSVAColor::testIsEqual(const double testDuration)
 		{
 			// alpha
 
-			const float otherAlpha = RandomF::scalar(0.0f, 1.0f);
+			const float otherAlpha = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
 
 			const HSVAColor otherColor(hue, saturation, value, otherAlpha);
 
@@ -245,15 +247,17 @@ bool TestHSVAColor::testAccessors(const double testDuration)
 
 	Log::info() << "Accessors test:";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		const float hue = RandomF::scalar(0.0f, NumericF::pi2() - NumericF::weakEps());
-		const float saturation = RandomF::scalar(0.0f, 1.0f);
-		const float value = RandomF::scalar(0.0f, 1.0f);
+		const float hue = RandomF::scalar(randomGenerator, 0.0f, NumericF::pi2() - NumericF::weakEps());
+		const float saturation = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+		const float value = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
 
 		{
 			// no alpha
@@ -286,7 +290,7 @@ bool TestHSVAColor::testAccessors(const double testDuration)
 		{
 			// with alpha
 
-			const float alpha = RandomF::scalar(0.0f, 1.0f);
+			const float alpha = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
 
 			const HSVAColor color(hue, saturation, value, alpha);
 
@@ -334,7 +338,6 @@ bool TestHSVAColor::testConversionRGBA(const double testDuration)
 	Log::info() << "Conversion with HSVA test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	{
@@ -417,7 +420,6 @@ bool TestHSVAColor::testInterpolate(const double testDuration)
 	Log::info() << "Interpolate test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);

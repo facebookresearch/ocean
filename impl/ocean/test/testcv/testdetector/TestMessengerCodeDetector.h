@@ -167,8 +167,9 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestMessengerCodeDetector : protected CV::De
 		 * @param yFrame The frame in which the bullseye will be painted, with pixel format FORMAT_Y8, must be valid
 		 * @param location The center location of the noise within the frame
 		 * @param foregroundColor The foreground color to be used
+		 * @param randomGenerator The random generator to be used
 		 */
-		static void paintNoise(Frame& yFrame, const Vector2& location, const uint8_t foregroundColor);
+		static void paintNoise(Frame& yFrame, const Vector2& location, const uint8_t foregroundColor, RandomGenerator& randomGenerator);
 };
 
 #ifdef OCEAN_USE_TEST_DATA_COLLECTION

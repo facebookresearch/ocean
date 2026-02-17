@@ -210,7 +210,7 @@ bool TestLookup2::testCenterLookupBinPositions(const double testDuration)
 					const Vector2 testCenter((Scalar(right) + Scalar(left)) * Scalar(0.5), (Scalar(top) + Scalar(bottom)) * Scalar(0.5));
 					const Vector2 center = lookupObject.binCenterPosition(xBin, yBin);
 
-					OCEAN_EXPECT_TRUE(validation, testCenter.sqrDistance(center) < Numeric::sqr(Scalar(0.001)));
+					OCEAN_EXPECT_LESS(validation, testCenter.sqrDistance(center), Numeric::sqr(Scalar(0.001)));
 				}
 			}
 		}
@@ -347,7 +347,10 @@ bool TestLookup2::testAdvancedCenterLookupClampedValues(const double testDuratio
 		{
 			for (unsigned int xBin = 0u; xBin < lookupObject.binsX(); ++xBin)
 			{
-				lookupObject.setBinCenterValue(xBin, yBin, Random::scalar(randomGenerator, -100, 100), RandomI::boolean(randomGenerator));
+				const Scalar value = Random::scalar(randomGenerator, -100, 100);
+				const bool isValid = RandomI::boolean(randomGenerator);
+
+				lookupObject.setBinCenterValue(xBin, yBin, value, isValid);
 			}
 		}
 
@@ -590,7 +593,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			{
 				const Scalar error = valuesRows[n].distance(valuesIndividuals[n]);
 
-				OCEAN_EXPECT_TRUE(validation, error < Scalar(0.001));
+				OCEAN_EXPECT_LESS(validation, error, Scalar(0.001));
 			}
 		}
 
@@ -642,7 +645,7 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			{
 				const Scalar error = valuesRows[n].distance(valuesIndividuals[n]);
 
-				OCEAN_EXPECT_TRUE(validation, error < Scalar(0.001));
+				OCEAN_EXPECT_LESS(validation, error, Scalar(0.001));
 			}
 		}
 	}
@@ -713,7 +716,7 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 				{
 					const Scalar error = valuesRows[n - x].distance(valuesIndividuals[y * sizeX + n]);
 
-					OCEAN_EXPECT_TRUE(validation, error < Scalar(0.001));
+					OCEAN_EXPECT_LESS(validation, error, Scalar(0.001));
 				}
 			}
 		}

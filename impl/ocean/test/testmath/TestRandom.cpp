@@ -362,8 +362,8 @@ bool TestRandom::testStandardRandomVector3(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 range(Random::scalar(0, 1000), Random::scalar(0, 1000), Random::scalar(0, 1000));
-			const Vector3 vector = Random::vector3(range);
+			const Vector3 range = Random::vector3(randomGenerator, Scalar(0), Scalar(1000));
+			const Vector3 vector = Random::vector3(randomGenerator, range);
 
 			if (!(vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z()))
 			{
@@ -396,7 +396,7 @@ bool TestRandom::testOceanRandomVector3(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 range(Random::scalar(randomGenerator, 0, 1000), Random::scalar(randomGenerator, 0, 1000), Random::scalar(randomGenerator, 0, 1000));
+			const Vector3 range = Random::vector3(randomGenerator, Scalar(0), Scalar(1000));
 			const Vector3 vector = Random::vector3(randomGenerator, range);
 
 			if (!(vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z()))
@@ -430,8 +430,8 @@ bool TestRandom::testStandardRandomEuler(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Scalar range = Random::scalar(0, Numeric::pi_2() - Numeric::eps());
-			const Euler euler = Random::euler(range);
+			const Scalar range = Random::scalar(randomGenerator, 0, Numeric::pi_2() - Numeric::eps());
+			const Euler euler = Random::euler(randomGenerator, range);
 
 			if (!(euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range))
 			{

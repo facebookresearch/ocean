@@ -715,15 +715,15 @@ bool TestJacobian::testOrientationalJacobian2x3(const double testDuration)
 
 			if ((distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION)
 			{
-				const T k1 = RandomT<T>::scalar(T(-0.5), T(0.5));
-				const T k2 = RandomT<T>::scalar(T(-0.5), T(0.5));
+				const T k1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+				const T k2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
 				pinholeCamera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(k1, k2));
 			}
 
 			if ((distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION)
 			{
-				const T p1 = RandomT<T>::scalar(T(-0.01), T(0.01));
-				const T p2 = RandomT<T>::scalar(T(-0.01), T(0.01));
+				const T p1 = RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
+				const T p2 = RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
 				pinholeCamera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(p1, p2));
 			}
 
@@ -928,15 +928,15 @@ bool TestJacobian::testOrientationJacobian2nx3(const double testDuration)
 
 			if ((distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION)
 			{
-				const T k1 = RandomT<T>::scalar(T(-0.5), T(0.5));
-				const T k2 = RandomT<T>::scalar(T(-0.5), T(0.5));
+				const T k1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+				const T k2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
 				pinholeCamera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(k1, k2));
 			}
 
 			if ((distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION)
 			{
-				const T p1 = RandomT<T>::scalar(T(-0.01), T(0.01));
-				const T p2 = RandomT<T>::scalar(T(-0.01), T(0.01));
+				const T p1 = RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
+				const T p2 = RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
 				pinholeCamera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(p1, p2));
 			}
 
@@ -1085,7 +1085,6 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 	Log::info() << "Testing pinhole camera pose Jacobian Rodrigues 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -1106,13 +1105,13 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 world_t_camera(Random::vector3(-10, 10));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -10, 10));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const Pose world_P_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
@@ -1124,15 +1123,15 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar k2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar p2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -1142,12 +1141,12 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			Vector2 tmpImagePoint(Random::vector2(0, 1));
+			Vector2 tmpImagePoint(Random::vector2(randomGenerator, 0, 1));
 			tmpImagePoint.x() *= Scalar(camera.width());
 			tmpImagePoint.y() *= Scalar(camera.height());
 
 			const Line3 ray(camera.ray(tmpImagePoint, world_t_camera, world_Q_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 5)));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -1327,7 +1326,6 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 	Log::info() << "Testing fisheye camera pose Jacobian Rodrigues 2x6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -1339,10 +1337,10 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
+		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(randomGenerator, 1u));
 
-		const Vector3 world_t_camera(Random::vector3(-10, 10));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -10, 10));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const Pose world_P_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
@@ -1354,10 +1352,10 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			const Vector2 imagePoint(Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u)));
+			const Vector2 imagePoint(Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u)));
 
 			const Line3 ray(fisheyeCamera.ray(imagePoint, world_T_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 5)));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -1686,7 +1684,6 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 	Log::info() << "Testing pose Jacobian with damped distortion Rodrigues 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -1705,13 +1702,13 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 world_t_camera(Random::vector3(-10, 10));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -10, 10));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const Pose world_P_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
@@ -1723,15 +1720,15 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 		if (validation.iterations() % 3ull == 1ull || validation.iterations() % 3ull == 2ull)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar k2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (validation.iterations() % 3ull == 2ull)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar p2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -1739,12 +1736,12 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			Vector2 tmpImagePoint(Random::vector2(-1, 2));
+			Vector2 tmpImagePoint(Random::vector2(randomGenerator, -1, 2));
 			tmpImagePoint.x() *= Scalar(camera.width());
 			tmpImagePoint.y() *= Scalar(camera.height());
 
 			const Line3 ray(camera.ray(tmpImagePoint, world_t_camera, world_Q_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 5)));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -1921,15 +1918,15 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Scalar zoom = Random::scalar(0.25, 20);
+		const Scalar zoom = Random::scalar(randomGenerator, 0.25, 20);
 
-		const Vector3 world_t_camera(Random::vector3(-10, 10));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -10, 10));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const Pose world_P_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
@@ -1941,15 +1938,15 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar k2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar p2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -1959,12 +1956,12 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			Vector2 tmpImagePoint(Random::vector2(0, 1));
+			Vector2 tmpImagePoint(Random::vector2(randomGenerator, 0, 1));
 			tmpImagePoint.x() *= Scalar(camera.width());
 			tmpImagePoint.y() *= Scalar(camera.height());
 
 			const Line3 ray(camera.ray(tmpImagePoint, world_t_camera, world_Q_camera, zoom));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 5)));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -2138,7 +2135,6 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Testing pinhole camera object transformation Jacobian 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -2156,20 +2152,20 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 world_t_object(Random::vector3(-5, 5));
-		const Quaternion world_Q_object(Random::quaternion());
+		const Vector3 world_t_object(Random::vector3(randomGenerator, -5, 5));
+		const Quaternion world_Q_object(Random::quaternion(randomGenerator));
 
 		const Pose world_P_object(world_t_object, world_Q_object);
 		const HomogenousMatrix4 world_T_object(world_t_object, world_Q_object);
 		const HomogenousMatrix4 object_T_world(world_T_object.inverted());
 
-		const Vector3 world_t_camera(Random::vector3(-5, 5));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -5, 5));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
@@ -2181,10 +2177,10 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			const Vector2 imagePoint(Random::vector2(Scalar(0), Scalar(camera.width()), Scalar(0), Scalar(camera.height())));
+			const Vector2 imagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(camera.width()), Scalar(0), Scalar(camera.height())));
 
 			const Line3 ray(camera.ray(imagePoint, world_T_camera));
-			const Vector3 objectPoint = object_T_world * ray.point(Random::scalar(1, 5));
+			const Vector3 objectPoint = object_T_world * ray.point(Random::scalar(randomGenerator, 1, 5));
 
 			ocean_assert(camera.projectToImage<false>(world_T_camera, world_T_object * objectPoint, false).isEqual(imagePoint, 1));
 
@@ -2367,7 +2363,6 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Testing fisheye camera object transformation Jacobian 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -2379,17 +2374,17 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
+		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(randomGenerator, 1u));
 
-		const Vector3 world_t_object(Random::vector3(-5, 5));
-		const Quaternion world_Q_object(Random::quaternion());
+		const Vector3 world_t_object(Random::vector3(randomGenerator, -5, 5));
+		const Quaternion world_Q_object(Random::quaternion(randomGenerator));
 
 		const Pose world_P_object(world_t_object, world_Q_object);
 		const HomogenousMatrix4 world_T_object(world_t_object, world_Q_object);
 		const HomogenousMatrix4 object_T_world(world_T_object.inverted());
 
-		const Vector3 world_t_camera(Random::vector3(-5, 5));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -5, 5));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
@@ -2399,10 +2394,10 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			const Vector2 imagePoint(Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u)));
+			const Vector2 imagePoint(Random::vector2(randomGenerator, Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u)));
 
 			const Line3 ray(fisheyeCamera.ray(imagePoint, world_T_camera));
-			const Vector3 objectPoint = object_T_world * ray.point(Random::scalar(1, 5));
+			const Vector3 objectPoint = object_T_world * ray.point(Random::scalar(randomGenerator, 1, 5));
 
 			ocean_assert(fisheyeCamera.projectToImage(world_T_camera, world_T_object * objectPoint).isEqual(imagePoint, 1));
 
@@ -2541,7 +2536,6 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 	constexpr Scalar eps = Numeric::weakEps();
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	unsigned int distortionIteration = 0u;
@@ -2562,13 +2556,13 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 world_t_camera(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -1, 1));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
@@ -2577,15 +2571,15 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-0.2), Scalar(0.2));
-			const Scalar k2 = Random::scalar(Scalar(-0.2), Scalar(0.2));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.2), Scalar(0.2));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.2), Scalar(0.2));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-0.1), Scalar(0.1));
-			const Scalar p2 = Random::scalar(Scalar(-0.1), Scalar(0.1));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -2596,9 +2590,12 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 		while (objectPoints.size() < numberPoints)
 		{
-			const Vector2 imagePoint(Random::scalar(Scalar(0u), Scalar(camera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(camera.height() - 1u)));
+			const Scalar imagePointX = Random::scalar(randomGenerator, Scalar(0u), Scalar(camera.width() - 1u));
+			const Scalar imagePointY = Random::scalar(randomGenerator, Scalar(0u), Scalar(camera.height() - 1u));
+
+			const Vector2 imagePoint(imagePointX, imagePointY);
 			const Line3 ray(camera.ray(camera.undistort<true>(imagePoint), world_T_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 100)));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 100)));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -2746,7 +2743,6 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 	constexpr Scalar eps = Numeric::weakEps();
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -2758,10 +2754,10 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
+		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(randomGenerator, 1u));
 
-		const Vector3 world_t_camera(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
-		const Quaternion world_Q_camera(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(randomGenerator, -1, 1));
+		const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
 
 		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
@@ -2771,9 +2767,9 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 		while (objectPoints.size() < numberPoints)
 		{
-			const Vector2 imagePoint = Random::vector2(Scalar(5u), Scalar(fisheyeCamera.width() - 5u), Scalar(5u), Scalar(fisheyeCamera.height() - 5u));
+			const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5u), Scalar(fisheyeCamera.width() - 5u), Scalar(5u), Scalar(fisheyeCamera.height() - 5u));
 			const Line3 ray(fisheyeCamera.ray(imagePoint, world_T_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 10)));
+			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 10)));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -3055,7 +3051,6 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 	Log::info() << "Testing poses jacobian Rodrigues 2nx12 for several points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -3073,24 +3068,24 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar k2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-2.5), Scalar(2.5));
-			const Scalar p2 = Random::scalar(Scalar(-2.5), Scalar(2.5));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-2.5), Scalar(2.5));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -3100,7 +3095,10 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			objectPoints.push_back(Vector3(Random::scalar(-5, 5), 0, Random::scalar(-5, 5)));
+			const Scalar objectPointX = Random::scalar(randomGenerator, -5, 5);
+			const Scalar objectPointZ = Random::scalar(randomGenerator, -5, 5);
+
+			objectPoints.push_back(Vector3(objectPointX, 0, objectPointZ));
 		}
 
 		const HomogenousMatrix4 world_T_cameraFirst(Utilities::viewPosition(camera, objectPoints));
@@ -3277,7 +3275,6 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 	Log::info() << "Testing spherical object point jacobian 3x3:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Vector3 defaultRotationDirection(0, 0, -1);
@@ -3292,10 +3289,10 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Scalar radius = Random::scalar(Scalar(0.001), 100);
+		const Scalar radius = Random::scalar(randomGenerator, Scalar(0.001), 100);
 		const Vector3 defaultObjectPoint(defaultRotationDirection * radius);
 
-		const Vector3 rotationDirection(Random::vector3());
+		const Vector3 rotationDirection(Random::vector3(randomGenerator));
 		ocean_assert(Numeric::isEqual(rotationDirection.length(), 1));
 
 		const ExponentialMap sphericalObjectPoint(Rotation(defaultRotationDirection, rotationDirection));
@@ -3425,7 +3422,17 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
-			const T radius = std::is_same<T, double>::value ? RandomT<T>::scalar(randomGenerator, T(0.001), T(100)) : RandomT<T>::scalar(randomGenerator, T(0.1), T(10));
+			T radius;
+
+			if constexpr (std::is_same<T, double>::value)
+			{
+				radius = RandomT<T>::scalar(randomGenerator, T(0.001), T(100));
+			}
+			else
+			{
+				radius = RandomT<T>::scalar(randomGenerator, T(0.1), T(10));
+			}
+
 			const VectorT3<T> defaultObjectPoint(defaultRotationDirection * radius);
 
 			const SquareMatrixT3<T> world_R_camera(RandomT<T>::rotation(randomGenerator));
@@ -3547,7 +3554,6 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 	Log::info() << "Testing camera distortion jacobian 2x4:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -3562,16 +3568,16 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Scalar k1 = Random::scalar(Scalar(-0.1), Scalar(0.1));
-		const Scalar k2 = Random::scalar(Scalar(-0.1), Scalar(0.1));
+		const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+		const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
 
-		const Scalar p1 = Random::scalar(Scalar(-0.1), Scalar(0.1));
-		const Scalar p2 = Random::scalar(Scalar(-0.1), Scalar(0.1));
+		const Scalar p1 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+		const Scalar p2 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 		camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
@@ -3587,7 +3593,10 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 		const Vector2 lower(camera.imagePoint2normalizedImagePoint<true>(Vector2(0, 0), false));
 		const Vector2 higher(camera.imagePoint2normalizedImagePoint<true>(Vector2(Scalar(width), Scalar(height)), false));
 
-		const Vector2 normalizedImagePoint(Random::scalar(lower.x(), higher.x()), Random::scalar(lower.y(), higher.y()));
+		const Scalar normalizedImagePointX = Random::scalar(randomGenerator, lower.x(), higher.x());
+		const Scalar normalizedImagePointY = Random::scalar(randomGenerator, lower.y(), higher.y());
+
+		const Vector2 normalizedImagePoint(normalizedImagePointX, normalizedImagePointY);
 		Geometry::Jacobian::calculateCameraDistortionJacobian2x4(jacobianX, jacobianY, camera, normalizedImagePoint);
 
 		const DerivativeCalculatorPinholeCameraDistortionJacobian2x4 derivativeCalculator(camera, normalizedImagePoint);
@@ -3685,7 +3694,6 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 	Log::info() << "Testing pinhole camera jacobian 2x6:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -3700,13 +3708,13 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Scalar k1 = Random::scalar(Scalar(-0.1), Scalar(0.1));
-		const Scalar k2 = Random::scalar(Scalar(-0.1), Scalar(0.1));
+		const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
+		const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1));
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 		camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
@@ -3722,7 +3730,10 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 		const Vector2 lower(camera.imagePoint2normalizedImagePoint<true>(Vector2(0, 0), false));
 		const Vector2 higher(camera.imagePoint2normalizedImagePoint<true>(Vector2(Scalar(width), Scalar(height)), false));
 
-		const Vector2 normalizedImagePoint(Random::scalar(lower.x(), higher.x()), Random::scalar(lower.y(), higher.y()));
+		const Scalar normalizedImagePointX = Random::scalar(randomGenerator, lower.x(), higher.x());
+		const Scalar normalizedImagePointY = Random::scalar(randomGenerator, lower.y(), higher.y());
+
+		const Vector2 normalizedImagePoint(normalizedImagePointX, normalizedImagePointY);
 		Geometry::Jacobian::calculateCameraJacobian2x6(jacobianX, jacobianY, camera, normalizedImagePoint);
 
 		const DerivativeCalculatorPinholeCameraJacobian2x6 derivativeCalculator(camera, normalizedImagePoint);
@@ -3827,7 +3838,6 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 	Log::info() << "Testing pinhole camera jacobian 2x7:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -3839,13 +3849,13 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 		constexpr unsigned int width = 640u;
 		constexpr unsigned int height = 480u;
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar k1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-		const Scalar k2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+		const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
+		const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
 
-		const Scalar p1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-		const Scalar p2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+		const Scalar p1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
+		const Scalar p2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
 
 		PinholeCamera camera(width, height, fovX);
 		camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
@@ -3861,7 +3871,10 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 		const Vector2 lower(camera.imagePoint2normalizedImagePoint<true>(Vector2(0, 0), false));
 		const Vector2 higher(camera.imagePoint2normalizedImagePoint<true>(Vector2(Scalar(width), Scalar(height)), false));
 
-		const Vector2 normalizedImagePoint(Random::scalar(lower.x(), higher.x()), Random::scalar(lower.y(), higher.y()));
+		const Scalar normalizedImagePointX = Random::scalar(randomGenerator, lower.x(), higher.x());
+		const Scalar normalizedImagePointY = Random::scalar(randomGenerator, lower.y(), higher.y());
+
+		const Vector2 normalizedImagePoint(normalizedImagePointX, normalizedImagePointY);
 		Geometry::Jacobian::calculateCameraJacobian2x7(jacobianX, jacobianY, camera, normalizedImagePoint);
 
 		const DerivativeCalculatorPinholeCameraJacobian2x7 derivativeCalculator(camera, normalizedImagePoint);
@@ -4260,7 +4273,6 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 	Log::info() << "Testing camera orientation jacobian 2x11 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -4280,13 +4292,13 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 world_t_camera = Random::vector3(-1, 1);
-		const Quaternion world_Q_camera = Random::quaternion();
+		const Vector3 world_t_camera = Random::vector3(randomGenerator, -1, 1);
+		const Quaternion world_Q_camera = Random::quaternion(randomGenerator);
 
 		const HomogenousMatrix4 flippedCamera_T_world(world_t_camera, world_Q_camera);
 		const Pose flippedCamera_P_world(flippedCamera_T_world);
@@ -4295,15 +4307,15 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			const Scalar k2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			const Scalar p2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -4313,7 +4325,10 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(1, 10)));
+			const Scalar imagePointX = Random::scalar(randomGenerator, 40u, width - 40u);
+			const Scalar imagePointY = Random::scalar(randomGenerator, 40u, height - 40u);
+
+			objectPoints.push_back(camera.ray(Vector2(imagePointX, imagePointY), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(randomGenerator, 1, 10)));
 		}
 
 		/**
@@ -4552,7 +4567,6 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 	Log::info() << "Testing camera pose jacobian 2x12 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -4572,13 +4586,13 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
 		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
+		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 world_t_camera = Random::vector3(-1, 1);
-		const Quaternion world_Q_camera = Random::quaternion();
+		const Vector3 world_t_camera = Random::vector3(randomGenerator, -1, 1);
+		const Quaternion world_Q_camera = Random::quaternion(randomGenerator);
 
 		const HomogenousMatrix4 flippedCamera_T_world(world_t_camera, world_Q_camera);
 		const Pose flippedCamera_P_world(flippedCamera_T_world);
@@ -4587,15 +4601,15 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			const Scalar k2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
+			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
 			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			const Scalar p2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
+			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
 			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 		}
 
@@ -4605,7 +4619,10 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(1, 10)));
+			const Scalar imagePointX = Random::scalar(randomGenerator, 40u, width - 40u);
+			const Scalar imagePointY = Random::scalar(randomGenerator, 40u, height - 40u);
+
+			objectPoints.push_back(camera.ray(Vector2(imagePointX, imagePointY), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(randomGenerator, 1, 10)));
 		}
 
 
@@ -4861,7 +4878,6 @@ bool TestJacobian::testPosePinholeCameraJacobian2x14(const double testDuration)
 	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -5164,7 +5180,6 @@ bool TestJacobian::testPoseFisheyeCameraJacobian2x18(const double testDuration)
 	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -5361,7 +5376,6 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 	Log::info() << "Testing homography Jacobian 2x8 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -5385,19 +5399,22 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 
 		for (unsigned int n = 0u; n < 9u; ++n)
 		{
-			homography[n] = Random::scalar(-10, 10);
+			homography[n] = Random::scalar(randomGenerator, -10, 10);
 		}
 
 		while (Numeric::isEqualEps(homography[8]))
 		{
-			homography[8] = Random::scalar(-10, 10);
+			homography[8] = Random::scalar(randomGenerator, -10, 10);
 		}
 
 		Geometry::Homography::normalizeHomography(homography);
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			points[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			const Scalar pointX = Random::scalar(randomGenerator, 0, Scalar(width));
+			const Scalar pointY = Random::scalar(randomGenerator, 0, Scalar(height));
+
+			points[n] = Vector2(pointX, pointY);
 		}
 
 		performance.start();
@@ -5536,19 +5553,22 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 		for (unsigned int n = 0u; n < 9u; ++n)
 		{
-			homography[n] = Random::scalar(-10, 10);
+			homography[n] = Random::scalar(randomGenerator, -10, 10);
 		}
 
 		while (Numeric::isEqualEps(homography[8]))
 		{
-			homography[8] = Random::scalar(-10, 10);
+			homography[8] = Random::scalar(randomGenerator, -10, 10);
 		}
 
 		Geometry::Homography::normalizeHomography(homography);
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			points[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			const Scalar pointX = Random::scalar(randomGenerator, 0, Scalar(width));
+			const Scalar pointY = Random::scalar(randomGenerator, 0, Scalar(height));
+
+			points[n] = Vector2(pointX, pointY);
 		}
 
 		performance.start();
@@ -5661,7 +5681,6 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 	Log::info() << "Testing identity homography Jacobian 2x8 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -5685,7 +5704,10 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			points[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			const Scalar pointX = Random::scalar(randomGenerator, 0, Scalar(width));
+			const Scalar pointY = Random::scalar(randomGenerator, 0, Scalar(height));
+
+			points[n] = Vector2(pointX, pointY);
 		}
 
 		performance.start();
@@ -5799,7 +5821,6 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 	Log::info() << "Testing identity homography Jacobian 2x9 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -5823,7 +5844,10 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			points[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			const Scalar pointX = Random::scalar(randomGenerator, 0, Scalar(width));
+			const Scalar pointY = Random::scalar(randomGenerator, 0, Scalar(height));
+
+			points[n] = Vector2(pointX, pointY);
 		}
 
 		performance.start();
@@ -5965,7 +5989,6 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 	Log::info() << "Testing similarity Jacobian 2x4 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
@@ -5985,9 +6008,9 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 		unsigned int width = 1920u;
 		unsigned int height = 1080u;
 
-		const Vector2 translation = Random::vector2(-10, 10);
-		const Scalar rotation = Random::scalar(0, Numeric::pi2());
-		const Scalar scale = Random::scalar(Scalar(0.01), 5);
+		const Vector2 translation = Random::vector2(randomGenerator, -10, 10);
+		const Scalar rotation = Random::scalar(randomGenerator, 0, Numeric::pi2());
+		const Scalar scale = Random::scalar(randomGenerator, Scalar(0.01), 5);
 
 		const Vector2 xAxis(Numeric::cos(rotation), Numeric::sin(rotation));
 
@@ -6001,7 +6024,10 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			points[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			const Scalar pointX = Random::scalar(randomGenerator, 0, Scalar(width));
+			const Scalar pointY = Random::scalar(randomGenerator, 0, Scalar(height));
+
+			points[n] = Vector2(pointX, pointY);
 		}
 
 		performance.start();
@@ -6160,19 +6186,19 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 
 		for (T& radialDistortion : radialDistortions)
 		{
-			radialDistortion = RandomT<T>::scalar(T(-0.001), T(0.001));
+			radialDistortion = RandomT<T>::scalar(randomGenerator, T(-0.001), T(0.001));
 		}
 
 		for (T& tangentialDistortion : tangentialDistortions)
 		{
-			tangentialDistortion = RandomT<T>::scalar(T(-0.001), T(0.001));
+			tangentialDistortion = RandomT<T>::scalar(randomGenerator, T(-0.001), T(0.001));
 		}
 
 		const FisheyeCameraT<T> fisheyeCamera(1920u, 1080u, T(1000.0), T(1000.0), T(960.0), T(540.0), radialDistortions.data(), tangentialDistortions.data());
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			points[n] = RandomT<T>::vector2(T(-1.0), T(1.0), T(-1.0), T(1.0));
+			points[n] = RandomT<T>::vector2(randomGenerator, T(-1.0), T(1.0), T(-1.0), T(1.0));
 		}
 
 		performance.start();

@@ -193,9 +193,7 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 	const PinholeCamera patternCamera(1280, 720, Numeric::deg2rad(60));
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.95 : 0.99;
-
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);

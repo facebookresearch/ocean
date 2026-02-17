@@ -454,8 +454,8 @@ bool TestFramePyramidManager::testIdealPyramidLayers(const double testDuration)
 		const unsigned int layers = Tracking::SLAM::FramePyramidManager::idealPyramidLayers(width, height, patchSize, maximalTrackingDistance, coarseLayerRadius);
 
 		// Verify the result is valid
-		OCEAN_EXPECT_TRUE(validation, layers >= 1u);
-		OCEAN_EXPECT_TRUE(validation, layers <= 20u);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, layers, 1u);
+		OCEAN_EXPECT_LESS_EQUAL(validation, layers, 20u);
 
 		// Verify the algorithm correctness:
 		// The actual tracking distance must be >= the requested tracking distance (no warning condition)
@@ -463,7 +463,7 @@ bool TestFramePyramidManager::testIdealPyramidLayers(const double testDuration)
 		const unsigned int requestedTrackingDistance = (unsigned int)(diagonal * maximalTrackingDistance + 0.5f);
 		const unsigned int actualTrackingDistance = coarseLayerRadius * (1u << (layers - 1u));
 
-		OCEAN_EXPECT_TRUE(validation, actualTrackingDistance >= requestedTrackingDistance);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, actualTrackingDistance, requestedTrackingDistance);
 
 		// Verify the coarsest layer resolution is valid (>= max(patchSize * 2, 32))
 		const unsigned int coarsestSizeFactor = CV::FramePyramid::sizeFactor(layers - 1u);
@@ -471,8 +471,8 @@ bool TestFramePyramidManager::testIdealPyramidLayers(const double testDuration)
 		const unsigned int coarsestHeight = height / coarsestSizeFactor;
 		const unsigned int invalidLayerResolution = std::max(patchSize * 2u, 32u);
 
-		OCEAN_EXPECT_TRUE(validation, coarsestWidth >= invalidLayerResolution);
-		OCEAN_EXPECT_TRUE(validation, coarsestHeight >= invalidLayerResolution);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, coarsestWidth, invalidLayerResolution);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, coarsestHeight, invalidLayerResolution);
 
 		// Verify that one fewer layer would have been insufficient for tracking distance
 		// (i.e., the function returns the minimal number of layers needed)

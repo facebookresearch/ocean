@@ -413,7 +413,7 @@ bool TestFrameFilterTemplate::testFilterWithFactor8BitPerChannelTo32BitFloat(con
 
 					const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-					normalizationFactor = float(Random::scalar(Scalar(0.0001), 5));
+					normalizationFactor = float(Random::scalar(randomGenerator, Scalar(0.0001), 5));
 
 					performance.start();
 					CV::FrameFilterTemplate<int32_t, -1, 4, 3, -2, -4, 2, 1, 7, -6>::filterWithFactor<uint8_t, float, float>(frame.constdata<uint8_t>(), target.data<float>(), frame.width(), frame.height(), normalizationFactor, channels, directions()[nOrientation], frame.paddingElements(), target.paddingElements(), useWorker);

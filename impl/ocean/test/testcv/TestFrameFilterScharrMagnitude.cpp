@@ -168,8 +168,11 @@ bool TestFrameFilterScharrMagnitude::testHorizontalVerticalFilter8BitPerChannel(
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingRandomValue = RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * framePaddingRandomValue;
+
+					const unsigned int responsePaddingRandomValue = RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * responsePaddingRandomValue;
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
@@ -260,8 +263,11 @@ bool TestFrameFilterScharrMagnitude::testDiagonalFilter8BitPerChannel(const unsi
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingRandomValue = RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * framePaddingRandomValue;
+
+					const unsigned int responsePaddingRandomValue = RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * responsePaddingRandomValue;
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 2u>()), responsePaddingElements);
@@ -352,8 +358,11 @@ bool TestFrameFilterScharrMagnitude::testFilter8BitPerChannel(const unsigned int
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingRandomValue = RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 100u) * framePaddingRandomValue;
+
+					const unsigned int responsePaddingRandomValue = RandomI::random(randomGenerator, 1u);
+					const unsigned int responsePaddingElements = RandomI::random(randomGenerator, 100u) * responsePaddingRandomValue;
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 					Frame response(FrameType(frame, FrameType::genericPixelFormat<TTarget, 4u>()), responsePaddingElements);

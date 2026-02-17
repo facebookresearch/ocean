@@ -330,7 +330,6 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 	// we simply ensure that the SimilarityTracker does not crash
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -342,12 +341,19 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 
 		Frame initialFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		const CV::PixelPosition initialSubRegionPoint0(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
-		CV::PixelPosition initialSubRegionPoint1(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
+		const unsigned int initialSubRegionPointX0 = RandomI::random(randomGenerator, width - 1u);
+		const unsigned int initialSubRegionPointY0 = RandomI::random(randomGenerator, height - 1u);
+		const CV::PixelPosition initialSubRegionPoint0(initialSubRegionPointX0, initialSubRegionPointY0);
+
+		unsigned int initialSubRegionPointX1 = RandomI::random(randomGenerator, width - 1u);
+		unsigned int initialSubRegionPointY1 = RandomI::random(randomGenerator, height - 1u);
+		CV::PixelPosition initialSubRegionPoint1(initialSubRegionPointX1, initialSubRegionPointY1);
 
 		while (initialSubRegionPoint0.sqrDistance(initialSubRegionPoint1) == 0u)
 		{
-			 initialSubRegionPoint1 = CV::PixelPosition(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
+			initialSubRegionPointX1 = RandomI::random(randomGenerator, width - 1u);
+			initialSubRegionPointY1 = RandomI::random(randomGenerator, height - 1u);
+			 initialSubRegionPoint1 = CV::PixelPosition(initialSubRegionPointX1, initialSubRegionPointY1);
 		}
 
 		const CV::PixelBoundingBox initialSubRegion(initialSubRegionPoint0, initialSubRegionPoint1);
@@ -418,12 +424,19 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 			{
 				// we simply randomize the image again
 
-				const CV::PixelPosition subRegionPoint0(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
-				CV::PixelPosition subRegionPoint1(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
+				const unsigned int subRegionPointX0 = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int subRegionPointY0 = RandomI::random(randomGenerator, height - 1u);
+				const CV::PixelPosition subRegionPoint0(subRegionPointX0, subRegionPointY0);
+
+				unsigned int subRegionPointX1 = RandomI::random(randomGenerator, width - 1u);
+				unsigned int subRegionPointY1 = RandomI::random(randomGenerator, height - 1u);
+				CV::PixelPosition subRegionPoint1(subRegionPointX1, subRegionPointY1);
 
 				while (subRegionPoint0.sqrDistance(subRegionPoint1) == 0u)
 				{
-					 subRegionPoint1 = CV::PixelPosition(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
+					subRegionPointX1 = RandomI::random(randomGenerator, width - 1u);
+					subRegionPointY1 = RandomI::random(randomGenerator, height - 1u);
+					 subRegionPoint1 = CV::PixelPosition(subRegionPointX1, subRegionPointY1);
 				}
 
 				subRegion = CV::PixelBoundingBox(subRegionPoint0, subRegionPoint1);
@@ -438,7 +451,7 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 
 			Vector2 predictedTranslation(0, 0);
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				predictedTranslation = Random::vector2(randomGenerator, Scalar(-0.25) * Scalar(width), Scalar(0.25) * Scalar(width), Scalar(-0.25) * Scalar(height), Scalar(0.25) * Scalar(height));
 			}
@@ -446,7 +459,7 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 			Tracking::Point::SimilarityTracker::TrackerConfidence trackerConfidence = Tracking::Point::SimilarityTracker::TC_NONE;
 			Tracking::Point::SimilarityTracker::RegionTextureness regionTextureness = Tracking::Point::SimilarityTracker::RT_UNKNOWN;
 
-			Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? nullptr : &worker;
+			Worker* useWorker = RandomI::boolean(randomGenerator) ? nullptr : &worker;
 
 			const bool result = similarityTracker.determineSimilarity(frame, subRegion, &similarity, &translation, &rotation, &scale, predictedTranslation, &trackerConfidence, &regionTextureness, useWorker);
 			OCEAN_SUPPRESS_UNUSED_WARNING(result);

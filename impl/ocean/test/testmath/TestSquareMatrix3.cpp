@@ -400,9 +400,7 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 			}
 
-			const T vectorX = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			const T vectorY = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			const VectorT2<T> vector(vectorX, vectorY);
+			const VectorT2<T> vector(RandomT<T>::vector2(randomGenerator, -valueRange, valueRange));
 
 			VectorT3<T> testResult3;
 			testResult3[0] = matrix(0, 0) * vector[0] + matrix(0, 1) * vector[1] + matrix(0, 2);
@@ -989,10 +987,7 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 				(Vector3&)*(matrices[n]() + 3) = matrices[n].xAxis() * factorA + matrices[n].zAxis() * factorB;
 			}
 
-			const Scalar trueX = Random::scalar(randomGenerator, -valueRange, valueRange);
-			const Scalar trueY = Random::scalar(randomGenerator, -valueRange, valueRange);
-			const Scalar trueZ = Random::scalar(randomGenerator, -valueRange, valueRange);
-			trueVectors[n] = Vector3(trueX, trueY, trueZ);
+			trueVectors[n] = Random::vector3(randomGenerator, -valueRange, valueRange);
 			bVectors[n] = matrices[n] * trueVectors[n];
 		}
 

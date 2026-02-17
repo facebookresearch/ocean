@@ -161,7 +161,9 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const VectorT2<TScalar> position(RandomT<TScalar>::scalar(randomGenerator, TScalar(0), xMax), RandomT<TScalar>::scalar(randomGenerator, TScalar(0), yMax));
+			const TScalar positionX = RandomT<TScalar>::scalar(randomGenerator, TScalar(0), xMax);
+			const TScalar positionY = RandomT<TScalar>::scalar(randomGenerator, TScalar(0), yMax);
+			const VectorT2<TScalar> position(positionX, positionY);
 
 			{
 				constexpr bool tAlphaAtFront = true;
@@ -363,14 +365,17 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolateInfiniteBorder8BitPerCha
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 2u, width);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 2u, height);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 			Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
 
 			for (unsigned int iteration = 0u; iteration < 100u; ++iteration)
 			{
-				const Vector2 position(Random::scalar(randomGenerator, -20, Scalar(frame.width() + 20u)), Random::scalar(randomGenerator, -20, Scalar(frame.height() + 20u)));
+				const Scalar positionX = Random::scalar(randomGenerator, -20, Scalar(frame.width() + 20u));
+				const Scalar positionY = Random::scalar(randomGenerator, -20, Scalar(frame.height() + 20u));
+				const Vector2 position(positionX, positionY);
 
 				{
 					constexpr bool tAlphaAtFront = true;

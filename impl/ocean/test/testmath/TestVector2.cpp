@@ -161,7 +161,7 @@ bool TestVector2::testIsUnit(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector2 vector(Random::vector2(-valueRange, valueRange));
+			const Vector2 vector(Random::vector2(randomGenerator, -valueRange, valueRange));
 			const Scalar length = vector.length();
 
 			if (Numeric::isEqual(length, Scalar(1)))
@@ -204,8 +204,8 @@ bool TestVector2::testAngle(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			Vector2 vectorA(Random::vector2(-10, 10));
-			Vector2 vectorB(Random::vector2(-10, 10));
+			Vector2 vectorA(Random::vector2(randomGenerator, -10, 10));
+			Vector2 vectorB(Random::vector2(randomGenerator, -10, 10));
 
 			if (!vectorA.isNull() && !vectorB.isNull())
 			{
@@ -320,8 +320,8 @@ bool TestVector2::testLessOperator(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector2 first = Vector2(Random::vector2(-100, 100));
-			const Vector2 second = Vector2(Random::vector2(-100, 100));
+			const Vector2 first = Vector2(Random::vector2(randomGenerator, -100, 100));
+			const Vector2 second = Vector2(Random::vector2(randomGenerator, -100, 100));
 
 			const bool less = first < second;
 
@@ -381,8 +381,8 @@ bool TestVector2::testVectorConversion(const double testDuration)
 
 		for (size_t n = 0; n < size; ++n)
 		{
-			vectorsD.push_back(RandomD::vector2(-10, 10));
-			vectorsF.push_back(RandomF::vector2(-10, 10));
+			vectorsD.push_back(RandomD::vector2(randomGenerator, -10, 10));
+			vectorsF.push_back(RandomF::vector2(randomGenerator, -10, 10));
 		}
 
 		const std::vector<VectorD2> convertedD2D_0(VectorD2::vectors2vectors(vectorsD));

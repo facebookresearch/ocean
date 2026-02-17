@@ -222,7 +222,6 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 	Log::info() << "Stress test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -289,7 +288,6 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 	Log::info() << "Detect QR codes test using synthetic data (" << testLabel << ", " << (gaussianFilterSize == 0u ? "no Gaussian filter" : "Gaussian filter:" + String::toAString(gaussianFilterSize)) << ")";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision detectionValidation(detectionValidationThreshold, randomGenerator, 50u);
 	ValidationPrecision groundtruthComparisonValidation(groundtruthComparisonValidationThreshold, randomGenerator, 50u);
 

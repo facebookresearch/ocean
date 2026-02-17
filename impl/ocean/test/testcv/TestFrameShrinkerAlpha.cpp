@@ -125,8 +125,11 @@ bool TestFrameShrinkerAlpha::testFrameDivideByTwo(const unsigned int width, cons
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 2u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 2u, height);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 				Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame target(FrameType(source, source.width() / 2u, source.height() / 2u), targetPaddingElements);

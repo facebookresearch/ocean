@@ -143,9 +143,14 @@ bool TestFrameOperations::testSubtraction(const unsigned int performanceWidth, c
 		const unsigned int width = performanceIteration ? performanceWidth : RandomI::random(randomGenerator, 1u, 2048u);
 		const unsigned int height = performanceIteration ? performanceHeight : RandomI::random(randomGenerator, 1u, 2048u);
 
-		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int source0PaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int source0PaddingElements = RandomI::random(randomGenerator, 1u, 256u) * source0PaddingMultiplier;
+
+		const unsigned int source1PaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int source1PaddingElements = RandomI::random(randomGenerator, 1u, 256u) * source1PaddingMultiplier;
+
+		const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * targetPaddingMultiplier;
 
 		Frame source0(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), source0PaddingElements);
 		Frame source1(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), source1PaddingElements);

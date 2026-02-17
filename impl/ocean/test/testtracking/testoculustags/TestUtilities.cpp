@@ -182,7 +182,8 @@ bool TestUtilities::testSerializeDeserializeTagSizeMap(const double testDuration
 		const Scalar defaultTagSize = Random::scalar(randomGenerator, Scalar(0.01), Scalar(1));
 
 		TagSizeMap tagSizeMap;
-		const unsigned int numberEntries = RandomI::random(randomGenerator, 0u, 9u) == 0u ? 0u : RandomI::random(randomGenerator, 1u, 100u); // 10% chance of the value 0
+		const bool useZeroEntries = RandomI::random(randomGenerator, 0u, 9u) == 0u; // 10% chance of the value 0
+		const unsigned int numberEntries = useZeroEntries ? 0u : RandomI::random(randomGenerator, 1u, 100u);
 		bool isValidTestData = true;
 
 		for (unsigned int i = 0u; i < numberEntries; ++i)

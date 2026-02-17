@@ -451,7 +451,7 @@ Tracking::Database TestDatabase::createDatabaseWithRandomTopology(RandomGenerato
 
 	while (databasePoseIds.size() < numberPoses)
 	{
-		databasePoseIds.insert(RandomI::random(lowerPoseId, upperPoseId));
+		databasePoseIds.insert(RandomI::random(randomGenerator, lowerPoseId, upperPoseId));
 	}
 
 	for (IndexSet32::const_iterator i = databasePoseIds.cbegin(); i != databasePoseIds.cend(); ++i)
@@ -493,10 +493,10 @@ Tracking::Database TestDatabase::createDatabaseWithRandomTopology(RandomGenerato
 
 			// we seek for an unused object point (unsued for this pose)
 
-			Index32 objectPointId = datbaseObjectPointIds[RandomI::random((unsigned int)datbaseObjectPointIds.size() - 1)];
+			Index32 objectPointId = datbaseObjectPointIds[RandomI::random(randomGenerator, (unsigned int)datbaseObjectPointIds.size() - 1)];
 			while (usedObjectPoints.find(objectPointId) != usedObjectPoints.cend())
 			{
-				objectPointId = datbaseObjectPointIds[RandomI::random((unsigned int)datbaseObjectPointIds.size() - 1)];
+				objectPointId = datbaseObjectPointIds[RandomI::random(randomGenerator, (unsigned int)datbaseObjectPointIds.size() - 1)];
 			}
 
 			usedObjectPoints.insert(objectPointId);

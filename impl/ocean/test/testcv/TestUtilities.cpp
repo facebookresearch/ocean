@@ -301,7 +301,8 @@ bool TestUtilities::testCopyPixel(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
@@ -310,11 +311,11 @@ bool TestUtilities::testCopyPixel(const double testDuration)
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const unsigned int xTarget = RandomI::random(width - 1u);
-				const unsigned int yTarget = RandomI::random(height - 1u);
+				const unsigned int xTarget = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int yTarget = RandomI::random(randomGenerator, height - 1u);
 
-				const unsigned int xSource = RandomI::random(width - 1u);
-				const unsigned int ySource = RandomI::random(height - 1u);
+				const unsigned int xSource = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int ySource = RandomI::random(randomGenerator, height - 1u);
 
 				CV::CVUtilities::copyPixel<T, tChannels>(frame.pixel<T>(xTarget, yTarget), frame.constpixel<T>(xSource, ySource));
 
@@ -403,11 +404,11 @@ bool TestUtilities::testCopyPixelWithIndex(const double testDuration)
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const unsigned int xTarget = RandomI::random(width - 1u);
-				const unsigned int yTarget = RandomI::random(height - 1u);
+				const unsigned int xTarget = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int yTarget = RandomI::random(randomGenerator, height - 1u);
 
-				const unsigned int xSource = RandomI::random(width - 1u);
-				const unsigned int ySource = RandomI::random(height - 1u);
+				const unsigned int xSource = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int ySource = RandomI::random(randomGenerator, height - 1u);
 
 				const unsigned int indexTarget = yTarget * target.width() + xTarget;
 				const unsigned int indexSource = ySource * source.width() + xSource;
@@ -483,7 +484,8 @@ bool TestUtilities::testCopyPixelWithPosition(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * paddingMultiplier;
 
 			Frame source(FrameType(width, height, FrameType::genericPixelFormat<T, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 			Frame target(FrameType(width, height, FrameType::genericPixelFormat<T, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
@@ -495,11 +497,11 @@ bool TestUtilities::testCopyPixelWithPosition(const double testDuration)
 
 			for (unsigned int n = 0u; n < 1000u; ++n)
 			{
-				const unsigned int xTarget = RandomI::random(width - 1u);
-				const unsigned int yTarget = RandomI::random(height - 1u);
+				const unsigned int xTarget = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int yTarget = RandomI::random(randomGenerator, height - 1u);
 
-				const unsigned int xSource = RandomI::random(width - 1u);
-				const unsigned int ySource = RandomI::random(height - 1u);
+				const unsigned int xSource = RandomI::random(randomGenerator, width - 1u);
+				const unsigned int ySource = RandomI::random(randomGenerator, height - 1u);
 
 				CV::CVUtilities::copyPixel<T, tChannels>(target.data<T>(), source.constdata<T>(), xTarget, yTarget, xSource, ySource, target.width(), source.width(), target.paddingElements(), source.paddingElements());
 

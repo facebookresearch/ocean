@@ -158,8 +158,12 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
-			const Vector3 translation(Random::vector3());
-			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+			const Vector3 translation(Random::vector3(randomGenerator));
+
+			const Scalar eulerX = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+			const Scalar eulerY = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+			const Scalar eulerZ = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+			const Euler euler(eulerX, eulerY, eulerZ);
 			const Quaternion quaternion(euler);
 			const HomogenousMatrix4 transformation(translation, quaternion);
 
@@ -172,7 +176,7 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 
 			for (unsigned int n = 0u; n < number; ++n)
 			{
-				const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(pinholeCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
+				const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0u), Scalar(pinholeCamera.width() - 1u), Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
 				const Line3 ray(pinholeCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
 
 				Vector3 objectPoint;
@@ -304,8 +308,12 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 		do
 		{
-			const Vector3 translation(Random::vector3());
-			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+			const Vector3 translation(Random::vector3(randomGenerator));
+
+			const Scalar eulerX = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+			const Scalar eulerY = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+			const Scalar eulerZ = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+			const Euler euler(eulerX, eulerY, eulerZ);
 			const Quaternion quaternion(euler);
 			const HomogenousMatrix4 transformation(translation, quaternion);
 
@@ -316,14 +324,17 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 			for (unsigned int n = 0u; n < number; ++n)
 			{
-				const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(pinholeCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
+				const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0u), Scalar(pinholeCamera.width() - 1u), Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
 				const Line3 ray(pinholeCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
 
 				Vector3 objectPoint;
 				if (plane.intersection(ray, objectPoint))
 				{
 					const Vector2 rightImagePoint(pinholeCamera.projectToImage<true>(transformation, objectPoint, false));
-					const Vector2 leftNoise(Random::gaussianNoise(1), Random::gaussianNoise(1));
+
+					const Scalar noiseX = Random::gaussianNoise(randomGenerator, 1);
+					const Scalar noiseY = Random::gaussianNoise(randomGenerator, 1);
+					const Vector2 leftNoise(noiseX, noiseY);
 
 					leftImagePoints.push_back(leftImagePoint + leftNoise);
 					rightImagePoints.push_back(rightImagePoint);
@@ -451,14 +462,18 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 				{
 					const Scalar sectionDiv(Scalar(width * i) / Scalar(h));
 
-					const Vector3 translation(Random::vector3());
-					const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+					const Vector3 translation(Random::vector3(randomGenerator));
+
+					const Scalar eulerX = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+					const Scalar eulerY = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+					const Scalar eulerZ = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+					const Euler euler(eulerX, eulerY, eulerZ);
 					const Quaternion quaternion(euler);
 					const HomogenousMatrix4 transformation(translation, quaternion);
 
 					for (unsigned int n = 0u; n < number; ++n)
 					{
-						const Vector2 leftImagePoint(Random::scalar(sectionDiv, sectionDiv + sectionWidth), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
+						const Vector2 leftImagePoint(Random::vector2(randomGenerator, sectionDiv, sectionDiv + sectionWidth, Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
 						const Line3 ray(pinholeCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
 
 						Vector3 objectPoint;
@@ -596,9 +611,9 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 				for (unsigned int i = 0u; i < l; i++)
 				{
-					const Vector2 linePoint(Random::vector2(0, Scalar(size)));
+					const Vector2 linePoint(Random::vector2(randomGenerator, 0, Scalar(size)));
 
-					Vector2 lineDirection(Random::vector2(1, Scalar(size)));
+					Vector2 lineDirection(Random::vector2(randomGenerator, 1, Scalar(size)));
 					lineDirection.normalize();
 
 					const Line2 currentLine(linePoint, lineDirection);
@@ -619,7 +634,7 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 
 					while (imagePoints.size() < (i + 1u) * number)
 					{
-						const Scalar distance(Random::scalar(-linePoint.length(), linePoint.length()));
+						const Scalar distance(Random::scalar(randomGenerator, -linePoint.length(), linePoint.length()));
 
 						const Vector2 point(currentLine.point(distance));
 

@@ -290,7 +290,6 @@ bool TestRANSAC::testIterations(const double testDuration)
 	Log::info() << "Testing Iterations:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	{
@@ -483,7 +482,8 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 
 				const AnyCamera& camera = *sharedCamera;
 
-				const HomogenousMatrix4 world_T_camera(Random::vector3(randomGenerator, -10, 10), Random::quaternion(randomGenerator));
+				const Vector3 translation = Random::vector3(randomGenerator, -10, 10);
+				const HomogenousMatrix4 world_T_camera(translation, Random::quaternion(randomGenerator));
 				const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
 
 				Vectors3 objectPoints;
@@ -663,7 +663,7 @@ bool TestRANSAC::testP3PZoom(const double testDuration)
 
 			for (unsigned int n = 0u; n < 30u; ++n)
 			{
-				objectPoints.emplace_back(Random::scalar(randomGenerator, -1, 1), Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1)), Random::scalar(randomGenerator, -1, 1));
+				objectPoints.emplace_back(Random::vector3(randomGenerator, Scalar(-1), Scalar(1), Scalar(-0.1), Scalar(0.1), Scalar(-1), Scalar(1)));
 			}
 
 			const Euler euler(Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
@@ -771,7 +771,8 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const HomogenousMatrix4 world_T_object(Random::vector3(randomGenerator, -5, 5), Random::quaternion(randomGenerator));
+			const Vector3 objectTranslation = Random::vector3(randomGenerator, -5, 5);
+			const HomogenousMatrix4 world_T_object(objectTranslation, Random::quaternion(randomGenerator));
 			const HomogenousMatrix4 object_T_world = world_T_object.inverted();
 
 			std::vector<Vectors3> objectPointGroups(2);
@@ -789,7 +790,8 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 
 				const AnyCamera& anyCamera = nCamera == 0u ? *anyCameraA : *anyCameraB;
 
-				world_T_camera = HomogenousMatrix4(Random::vector3(randomGenerator, -5, 5), Random::quaternion(randomGenerator));
+				const Vector3 cameraTranslation = Random::vector3(randomGenerator, -5, 5);
+				world_T_camera = HomogenousMatrix4(cameraTranslation, Random::quaternion(randomGenerator));
 
 				const unsigned int correspondences = RandomI::random(randomGenerator, 20u, 200u);
 
@@ -944,8 +946,11 @@ bool TestRANSAC::testHomographyMatrix(const double testDuration, const bool refi
 
 				const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
 
-				const HomogenousMatrix4 world_leftCamera(Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2)), Random::euler(randomGenerator, 0, Numeric::deg2rad(10)));
-				const HomogenousMatrix4 world_rightCamera(Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2)), Random::euler(randomGenerator, 0, Numeric::deg2rad(10)));
+				const Vector3 leftTranslation = Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2));
+				const HomogenousMatrix4 world_leftCamera(leftTranslation, Random::euler(randomGenerator, 0, Numeric::deg2rad(10)));
+
+				const Vector3 rightTranslation = Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2));
+				const HomogenousMatrix4 world_rightCamera(rightTranslation, Random::euler(randomGenerator, 0, Numeric::deg2rad(10)));
 
 				const SquareMatrix3 left_T_right = Geometry::Homography::homographyMatrix(world_leftCamera, world_rightCamera, pinholeCamera, pinholeCamera, plane);
 				ocean_assert_and_suppress_unused(!left_T_right.isSingular(), left_T_right);

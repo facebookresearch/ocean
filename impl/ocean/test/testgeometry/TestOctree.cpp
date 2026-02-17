@@ -127,7 +127,8 @@ bool TestOctree::testConstructor(const double testDuration)
 
 			for (Vector3& point : points)
 			{
-				point = Random::vector3(randomGenerator) * Random::scalar(randomGenerator, -1000, 1000);
+				const Scalar scalar = Random::scalar(randomGenerator, -1000, 1000);
+				point = Random::vector3(randomGenerator) * scalar;
 			}
 
 			for (const bool useTightBoundingBoxes : {false, true})
@@ -242,13 +243,15 @@ bool TestOctree::testClosestPoints(const double testDuration)
 			Vectors3 treePoints(numberTreePoints);
 			for (Vector3& treePoint : treePoints)
 			{
-				treePoint = Random::vector3(randomGenerator) * Random::scalar(randomGenerator, -1000, 1000);
+				const Scalar scalar = Random::scalar(randomGenerator, -1000, 1000);
+				treePoint = Random::vector3(randomGenerator) * scalar;
 			}
 
 			Vectors3 queryPoints(numberQueryPoints);
 			for (Vector3& queryPoint : queryPoints)
 			{
-				queryPoint = Random::vector3(randomGenerator) * Random::scalar(randomGenerator, -1000, 1000);
+				const Scalar scalar = Random::scalar(randomGenerator, -1000, 1000);
+				queryPoint = Random::vector3(randomGenerator) * scalar;
 			}
 
 			const Scalar maximalDistance = benchmarkIteration ? Scalar(5) : Random::scalar(randomGenerator, Scalar(0.1), 20);
@@ -392,7 +395,8 @@ bool TestOctree::testIntersectingLeavesForRays(const double testDuration)
 			Vectors3 treePoints(numberTreePoints);
 			for (Vector3& treePoint : treePoints)
 			{
-				treePoint = Random::vector3(randomGenerator) * Random::scalar(randomGenerator, -1000, 1000);
+				const Scalar scalar = Random::scalar(randomGenerator, -1000, 1000);
+				treePoint = Random::vector3(randomGenerator) * scalar;
 			}
 
 			Lines3 queryRays;

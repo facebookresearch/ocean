@@ -671,8 +671,8 @@ bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double 
 
 		for (unsigned int n = 0u; n < elements; ++n)
 		{
-			const unsigned int binX = RandomI::random(0u, horizontalBins - 1u);
-			const unsigned int binY = RandomI::random(0u, verticalBins - 1u);
+			const unsigned int binX = RandomI::random(randomGenerator, 0u, horizontalBins - 1u);
+			const unsigned int binY = RandomI::random(randomGenerator, 0u, verticalBins - 1u);
 
 			distributionArray(binX, binY).push_back(n);
 		}

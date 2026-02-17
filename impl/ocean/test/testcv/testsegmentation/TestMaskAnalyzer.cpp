@@ -1517,7 +1517,7 @@ bool TestMaskAnalyzer::testDetectBoundingBoxes(const double testDuration)
 		{
 			for (const CV::PixelBoundingBox& box : boxesSet)
 			{
-				OCEAN_EXPECT_TRUE(validation, detectedBoxesSet.find(box) != detectedBoxesSet.cend());
+				OCEAN_EXPECT_NOT_EQUAL(validation, detectedBoxesSet.find(box), detectedBoxesSet.cend());
 			}
 		}
 		else

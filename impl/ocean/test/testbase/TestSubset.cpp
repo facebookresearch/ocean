@@ -171,7 +171,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -181,7 +181,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -191,7 +191,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -201,7 +201,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -211,7 +211,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = subset32.begin(); i != subset32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 
@@ -224,7 +224,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -234,7 +234,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -244,7 +244,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -254,7 +254,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 		{
@@ -264,7 +264,7 @@ bool TestSubset::testSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = subset64.begin(); i != subset64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, subsetIndicesSet.find(TIndex(*i)) != subsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, subsetIndicesSet.find(TIndex(*i)), subsetIndicesSet.end());
 			}
 		}
 
@@ -404,7 +404,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			for (typename IndexSet::const_iterator i = invertedSet.begin(); i != invertedSet.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(*i) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, invertedSubsetIndicesSet.find(*i), invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -415,7 +415,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			for (typename Indices::const_iterator i = invertedArray.begin(); i != invertedArray.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(*i) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, invertedSubsetIndicesSet.find(*i), invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -426,7 +426,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = integers32.begin(); i != integers32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, invertedSubsetIndicesSet.find(TIndex(*i)), invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -437,7 +437,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			for (Indices32::const_iterator i = integers32.begin(); i != integers32.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, invertedSubsetIndicesSet.find(TIndex(*i)), invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -448,7 +448,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = integers64.begin(); i != integers64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, invertedSubsetIndicesSet.find(TIndex(*i)), invertedSubsetIndicesSet.end());
 			}
 		}
 
@@ -459,7 +459,7 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 			for (Indices64::const_iterator i = integers64.begin(); i != integers64.end(); ++i)
 			{
-				OCEAN_EXPECT_TRUE(validation, invertedSubsetIndicesSet.find(TIndex(*i)) != invertedSubsetIndicesSet.end());
+				OCEAN_EXPECT_NOT_EQUAL(validation, invertedSubsetIndicesSet.find(TIndex(*i)), invertedSubsetIndicesSet.end());
 			}
 		}
 

@@ -231,7 +231,10 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 
 								for (unsigned int n = 0u; n < maxIterations; ++n)
 								{
-									const CV::PixelPosition sourcePixel(RandomI::random(randomGenerator, frame.width() - 1u), RandomI::random(randomGenerator, frame.height() - 1u));
+									const unsigned int sourceX = RandomI::random(randomGenerator, frame.width() - 1u);
+									const unsigned int sourceY = RandomI::random(randomGenerator, frame.height() - 1u);
+
+									const CV::PixelPosition sourcePixel(sourceX, sourceY);
 
 									if (mask.constpixel<uint8_t>(sourcePixel.x(), sourcePixel.y())[0] == 0xFFu)
 									{
@@ -381,7 +384,10 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 
 									for (unsigned int n = 0u; n < maxIterations; ++n)
 									{
-										const CV::PixelPosition sourcePixel(RandomI::random(randomGenerator, frame.width() - 1u), RandomI::random(randomGenerator, frame.height() - 1u));
+										const unsigned int sourceX = RandomI::random(randomGenerator, frame.width() - 1u);
+										const unsigned int sourceY = RandomI::random(randomGenerator, frame.height() - 1u);
+
+										const CV::PixelPosition sourcePixel(sourceX, sourceY);
 
 										if (mask.constpixel<uint8_t>(sourcePixel.x(), sourcePixel.y())[0] == 0xFFu)
 										{
@@ -692,7 +698,10 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 
 								for (unsigned int n = 0u; n < maxIterations; ++n)
 								{
-									const CV::PixelPosition sourcePixel(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+									const unsigned int sourceX = RandomI::random(randomGenerator, 2u, frame.width() - 3u);
+									const unsigned int sourceY = RandomI::random(randomGenerator, 2u, frame.height() - 3u);
+
+									const CV::PixelPosition sourcePixel(sourceX, sourceY);
 
 									if (mask.constpixel<uint8_t>(sourcePixel.x(), sourcePixel.y())[0] == 0xFFu)
 									{

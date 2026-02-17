@@ -137,7 +137,7 @@ bool TestEuler::testConversionToMatrix(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			rotations[n] = Random::rotation();
+			rotations[n] = Random::rotation(randomGenerator);
 		}
 
 		performance.start();
@@ -191,9 +191,9 @@ bool TestEuler::testConversionFromRotation(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Rotation yRotation(0, 1, 0, Random::scalar(-Numeric::pi(), Numeric::pi()));
-			const Rotation xRotation(1, 0, 0, Random::scalar(-Numeric::pi_2(), Numeric::pi_2()));
-			const Rotation zRotation(0, 0, 1, Random::scalar(-Numeric::pi(), Numeric::pi()));
+			const Rotation yRotation(0, 1, 0, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
+			const Rotation xRotation(1, 0, 0, Random::scalar(randomGenerator, -Numeric::pi_2(), Numeric::pi_2()));
+			const Rotation zRotation(0, 0, 1, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
 
 			const Rotation rotation(yRotation * xRotation * zRotation);
 			const Euler euler(rotation);
@@ -208,7 +208,7 @@ bool TestEuler::testConversionFromRotation(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = rotation * vector;
 				const Vector3 vectorB = eulerRotation * vector;
@@ -248,9 +248,9 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 		{
 			// here we create the rotation matrix by three angle-axis rotations with correct value ranges
 
-			const Rotation yRotation(0, 1, 0, Random::scalar(-Numeric::pi(), Numeric::pi()));
-			const Rotation xRotation(1, 0, 0, Random::scalar(-Numeric::pi_2(), Numeric::pi_2()));
-			const Rotation zRotation(0, 0, 1, Random::scalar(-Numeric::pi(), Numeric::pi()));
+			const Rotation yRotation(0, 1, 0, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
+			const Rotation xRotation(1, 0, 0, Random::scalar(randomGenerator, -Numeric::pi_2(), Numeric::pi_2()));
+			const Rotation zRotation(0, 0, 1, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
 
 			const SquareMatrix3 yMatrix(yRotation);
 			const SquareMatrix3 xMatrix(xRotation);
@@ -270,7 +270,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = matrix * vector;
 				const Vector3 vectorB = eulerMatrix * vector;
@@ -305,7 +305,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 		{
 			// here we create the rotation matrix by a random quaternion
 
-			const SquareMatrix3 matrix(Random::quaternion());
+			const SquareMatrix3 matrix(Random::quaternion(randomGenerator));
 
 			const Euler euler(matrix);
 
@@ -319,7 +319,7 @@ bool TestEuler::testConversionFromMatrix(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = matrix * vector;
 				const Vector3 vectorB = eulerMatrix * vector;
@@ -376,9 +376,9 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 		{
 			// here we create the rotation matrix by three angle-axis rotations with correct value ranges
 
-			const Rotation yRotation(1, 0, 0, Random::scalar(-Numeric::pi(), Numeric::pi()));
-			const Rotation xRotation(0, 1, 0, Random::scalar(-Numeric::pi_2(), Numeric::pi_2()));
-			const Rotation zRotation(0, 0, 1, Random::scalar(-Numeric::pi(), Numeric::pi()));
+			const Rotation yRotation(1, 0, 0, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
+			const Rotation xRotation(0, 1, 0, Random::scalar(randomGenerator, -Numeric::pi_2(), Numeric::pi_2()));
+			const Rotation zRotation(0, 0, 1, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
 
 			const SquareMatrix3 xMatrix(xRotation);
 			const SquareMatrix3 yMatrix(yRotation);
@@ -402,7 +402,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = matrix * vector;
 				const Vector3 vectorB = decomposeMatrix * vector;
@@ -437,7 +437,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 		{
 			// here we create the rotation matrix by a random quaternion
 
-			const SquareMatrix3 matrix(Random::quaternion());
+			const SquareMatrix3 matrix(Random::quaternion(randomGenerator));
 
 			Scalar xAngle = Numeric::minValue();
 			Scalar yAngle = Numeric::minValue();
@@ -455,7 +455,7 @@ bool TestEuler::testDecomposeRotationMatrixToYXZ(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = matrix * vector;
 				const Vector3 vectorB = decomposeMatrix * vector;
@@ -512,9 +512,9 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 		{
 			// here we create the rotation matrix by three angle-axis rotations with correct value ranges
 
-			const Rotation xRotation(1, 0, 0, Random::scalar(-Numeric::pi(), Numeric::pi()));
-			const Rotation yRotation(0, 1, 0, Random::scalar(-Numeric::pi_2(), Numeric::pi_2()));
-			const Rotation zRotation(0, 0, 1, Random::scalar(-Numeric::pi(), Numeric::pi()));
+			const Rotation xRotation(1, 0, 0, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
+			const Rotation yRotation(0, 1, 0, Random::scalar(randomGenerator, -Numeric::pi_2(), Numeric::pi_2()));
+			const Rotation zRotation(0, 0, 1, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi()));
 
 			const SquareMatrix3 xMatrix(xRotation);
 			const SquareMatrix3 yMatrix(yRotation);
@@ -538,7 +538,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = matrix * vector;
 				const Vector3 vectorB = decomposeMatrix * vector;
@@ -573,7 +573,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 		{
 			// here we create the rotation matrix by a random quaternion
 
-			const SquareMatrix3 matrix(Random::quaternion());
+			const SquareMatrix3 matrix(Random::quaternion(randomGenerator));
 
 			Scalar xAngle = Numeric::minValue();
 			Scalar yAngle = Numeric::minValue();
@@ -591,7 +591,7 @@ bool TestEuler::testDecomposeRotationMatrixToXYZ(const double testDuration)
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				const Vector3 vector(Random::vector3());
+				const Vector3 vector(Random::vector3(randomGenerator));
 
 				const Vector3 vectorA = matrix * vector;
 				const Vector3 vectorB = decomposeMatrix * vector;

@@ -472,11 +472,15 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 		// Sizes of random input and output (and intermediate blurring image)
 		const unsigned int width = randomImageSize ? RandomI::random(randomGenerator, 1u, maxRandomImageWidth) : width0;
 		const unsigned int height = randomImageSize ? RandomI::random(randomGenerator, 1u, maxRandomImageHeight) : height0;
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
 
 		const unsigned int targetFrameWidth = std::max(1u, RandomI::random(randomGenerator, (unsigned int)(Scalar(0.75) * Scalar(width)), (unsigned int)(Scalar(1.25) * Scalar(width))));
 		const unsigned int targetFrameHeight = std::max(1u, RandomI::random(randomGenerator, (unsigned int)(Scalar(0.75) * Scalar(height)), (unsigned int)(Scalar(1.25) * Scalar(height))));
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 		const unsigned int gaussianFilterSize = 11u;
 		const unsigned int randomFrameWidth = width + gaussianFilterSize + sourcePaddingElements;
@@ -503,12 +507,14 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 			Worker* currentWorker = isSingleCore ? nullptr : &worker;
 			HighPerformanceStatistic& performance = isSingleCore ? performanceSinglecore : performanceMulticore;
 
-			const unsigned int randomFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int randomFramePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int randomFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * randomFramePaddingMultiplier;
 
 			Frame randomFrame(FrameType(randomFrameWidth, randomFrameHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), randomFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(randomFrame, false, &randomGenerator);
 
-			const unsigned int blurredRandomFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int blurredRandomFramePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int blurredRandomFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * blurredRandomFramePaddingMultiplier;
 			Frame blurredRandomFrame(randomFrame.frameType(), blurredRandomFramePaddingElements);
 
 			CV::FrameFilterGaussian::filter(randomFrame, blurredRandomFrame, gaussianFilterSize);
@@ -527,7 +533,9 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 				backgroundColor[n] = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
-			CV::PixelPositionI targetFrameOriginOffset(RandomI::random(randomGenerator, -5, 5), RandomI::random(randomGenerator, -5, 5));
+			const int targetFrameOriginOffsetX = RandomI::random(randomGenerator, -5, 5);
+			const int targetFrameOriginOffsetY = RandomI::random(randomGenerator, -5, 5);
+			CV::PixelPositionI targetFrameOriginOffset(targetFrameOriginOffsetX, targetFrameOriginOffsetY);
 
 			// Performance
 			performance.start();
@@ -567,7 +575,7 @@ bool TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width0, co
 			validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.constdata<uint8_t>(), targetFrame.width(), targetFrame.height(), targetFrame.paddingElements(), sourceFrame.channels(), randomAffine, backgroundColor.data(), targetFrameOriginOffset, &maximalAbsError, &averageAbsError);
 
 			globalMaximalAbsError = std::max(globalMaximalAbsError, maximalAbsError);
-			OCEAN_EXPECT_TRUE(validation, maximalAbsError <= maxErrorThreshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, maximalAbsError, maxErrorThreshold);
 
 			if (maximalAbsError > maxErrorThreshold)
 			{
@@ -680,17 +688,22 @@ bool TestFrameInterpolatorNearestPixel::testHomography(const unsigned int width,
 
 				const SquareMatrix3 transformation = Geometry::Utilities::createRandomHomography(testWidth, testHeight, maxTranslation);
 
-				const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourceFramePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourceFramePaddingMultiplier;
 
 				Frame sourceFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), sourceFramePaddingElements);
 				CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator, true);
 
 				CV::FrameFilterGaussian::filter(sourceFrame, 7u, &worker);
 
-				const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int targetFramePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetFramePaddingMultiplier;
 
 				ocean_assert(sourceFrame.width() > 10u);
-				Frame targetFrame(FrameType(sourceFrame, RandomI::random(sourceFrame.width() - 10u, sourceFrame.width() + 10u), RandomI::random(sourceFrame.height() - 10u, sourceFrame.height() + 10u)), targetFramePaddingElements);
+				const unsigned int targetWidth = RandomI::random(randomGenerator, sourceFrame.width() - 10u, sourceFrame.width() + 10u);
+				const unsigned int targetHeight = RandomI::random(randomGenerator, sourceFrame.height() - 10u, sourceFrame.height() + 10u);
+
+				Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetFramePaddingElements);
 				CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator, true);
 
 				const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -700,7 +713,9 @@ bool TestFrameInterpolatorNearestPixel::testHomography(const unsigned int width,
 					backgroundColor[n] = T(RandomI::random(randomGenerator, 255));
 				}
 
-				CV::PixelPositionI targetFrameOriginOffset(RandomI::random(-5, 5), RandomI::random(-5, 5));
+				const int targetFrameOriginOffsetX = RandomI::random(randomGenerator, -5, 5);
+				const int targetFrameOriginOffsetY = RandomI::random(randomGenerator, -5, 5);
+				CV::PixelPositionI targetFrameOriginOffset(targetFrameOriginOffsetX, targetFrameOriginOffsetY);
 
 				performance.startIf(performanceIteration);
 				CV::FrameInterpolatorNearestPixel::Comfort::homography(sourceFrame, targetFrame, transformation, backgroundColor.data(), useWorker, targetFrameOriginOffset);
@@ -741,7 +756,7 @@ bool TestFrameInterpolatorNearestPixel::testHomography(const unsigned int width,
 	ocean_assert(measurements != 0ull);
 	const double averageAbsError = sumAverageError / double(measurements);
 
-	OCEAN_EXPECT_TRUE(validation, averageAbsError <= averageErrorThreshold);
+	OCEAN_EXPECT_LESS_EQUAL(validation, averageAbsError, averageErrorThreshold);
 
 	Log::info() << "Validation: " << validation << ", average error: " << averageAbsError;
 
@@ -814,7 +829,8 @@ bool TestFrameInterpolatorNearestPixel::testHomographyMask(const unsigned int wi
 
 		do
 		{
-			const unsigned int inputFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int inputFramePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int inputFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * inputFramePaddingMultiplier;
 
 			Frame inputFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), inputFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(inputFrame, false, &randomGenerator);
@@ -823,12 +839,14 @@ bool TestFrameInterpolatorNearestPixel::testHomographyMask(const unsigned int wi
 			const unsigned int outputWidth = RandomI::random(randomGenerator, inputFrame.width() - 10u, inputFrame.width() + 10u);
 			const unsigned int outputHeight = RandomI::random(randomGenerator, inputFrame.height() - 10u, inputFrame.height() + 10u);
 
-			const unsigned int outputFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int outputFramePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int outputFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * outputFramePaddingMultiplier;
 
 			Frame outputFrame(FrameType(inputFrame, outputWidth, outputHeight), outputFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(outputFrame, false, &randomGenerator);
 
-			const unsigned int outputMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int outputMaskPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+			const unsigned int outputMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * outputMaskPaddingMultiplier;
 
 			Frame outputMask(FrameType(outputFrame, FrameType::FORMAT_Y8), outputMaskPaddingElements);
 			CV::CVUtilities::randomizeFrame(outputMask, false, &randomGenerator);
@@ -855,7 +873,9 @@ bool TestFrameInterpolatorNearestPixel::testHomographyMask(const unsigned int wi
 			SquareMatrix3 input_H_output(false);
 			if (Geometry::Homography::homographyMatrix(cornersOutput, cornersInput, 4, input_H_output))
 			{
-				CV::PixelPositionI outputFrameOriginOffset(RandomI::random(-5, 5), RandomI::random(-5, 5));
+				const int outputFrameOriginOffsetX = RandomI::random(randomGenerator, -5, 5);
+				const int outputFrameOriginOffsetY = RandomI::random(randomGenerator, -5, 5);
+				CV::PixelPositionI outputFrameOriginOffset(outputFrameOriginOffsetX, outputFrameOriginOffsetY);
 
 				performance.start();
 					CV::FrameInterpolatorNearestPixel::Comfort::homographyMask(inputFrame, outputFrame, outputMask, input_H_output, useWorker, 0xFF, outputFrameOriginOffset);
@@ -990,8 +1010,11 @@ bool TestFrameInterpolatorNearestPixel::testResize(const unsigned int sourceWidt
 				const unsigned int testTargetWidth = performanceIteration ? targetWidth : RandomI::random(randomGenerator, 1u, 2000u);
 				const unsigned int testTargetHeight = performanceIteration ? targetHeight : RandomI::random(randomGenerator, 1u, 2000u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 				Frame sourceFrame(FrameType(testSourceWidth, testSourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame targetFrame(FrameType(testTargetWidth, testTargetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
@@ -1052,8 +1075,11 @@ bool TestFrameInterpolatorNearestPixel::testSpecialCasesResize400x400To224x224_8
 
 	do
 	{
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+		const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 		Frame sourceFrame(sourceFrameType, sourcePaddingElements);
 
@@ -1162,8 +1188,11 @@ bool TestFrameInterpolatorNearestPixel::testTransform(const unsigned int width, 
 
 			do
 			{
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 				Frame frame(frameType, framePaddingElements);
 				Frame target(frameType, targetPaddingElements);
@@ -1264,9 +1293,14 @@ bool TestFrameInterpolatorNearestPixel::testTransformMask(const unsigned int wid
 
 			do
 			{
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
+
+				const unsigned int targetMaskPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetMaskPaddingMultiplier;
 
 				Frame frame(frameType, framePaddingElements);
 				Frame target(frameType, targetPaddingElements);
@@ -1402,9 +1436,14 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 
 				if constexpr (pixelFormatDataType == FrameType::DT_UNSIGNED_INTEGER_8 || pixelFormatDataType == FrameType::DT_SIGNED_INTEGER_8)
 				{
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int clockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int counterClockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingMultiplier;
+
+					const unsigned int clockwisePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int clockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * clockwisePaddingMultiplier;
+
+					const unsigned int counterClockwisePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int counterClockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * counterClockwisePaddingMultiplier;
 
 					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat(pixelFormatDataType, tChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -1457,9 +1496,14 @@ bool TestFrameInterpolatorNearestPixel::testRotate90(const unsigned int width, c
 					}
 				}
 
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int clockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int counterClockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingMultiplier;
+
+				const unsigned int clockwisePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int clockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * clockwisePaddingMultiplier;
+
+				const unsigned int counterClockwisePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int counterClockwisePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * counterClockwisePaddingMultiplier;
 
 				Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat(pixelFormatDataType, tChannels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 				Frame clockwiseFrame(FrameType(frame, frame.height(), frame.width()), clockwisePaddingElements);

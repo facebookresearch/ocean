@@ -168,7 +168,6 @@ bool TestSquareMatrix2::testElementConstructor(const double testDuration)
 	Log::info() << "Element-based constructor test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const double epsilon = 0.0001;
@@ -730,7 +729,6 @@ bool TestSquareMatrix2::testSolve(const double testDuration)
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);

@@ -220,6 +220,8 @@ bool TestFrameFilterSobel::testHorizontalVerticalFilter8BitPerChannel(const unsi
 		Log::info() << "Testing 8 bit horizontal and vertical Sobel filter, with response range [-32768, 32767]:";
 	}
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
@@ -243,17 +245,20 @@ bool TestFrameFilterSobel::testHorizontalVerticalFilter8BitPerChannel(const unsi
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(2u * nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -469,6 +474,8 @@ bool TestFrameFilterSobel::testHorizontalVerticalMaximumAbsolute8BitPerChannel(c
 		Log::info() << "Testing uint16 maximum absolute horizontal and vertical Sobel filter, with response range [0, 255 * 4]:";
 	}
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
@@ -492,17 +499,20 @@ bool TestFrameFilterSobel::testHorizontalVerticalMaximumAbsolute8BitPerChannel(c
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -588,6 +598,8 @@ bool TestFrameFilterSobel::testDiagonalFilter8BitPerChannel(const unsigned int w
 		Log::info() << "Testing 8 bit diagonal 45 and 135 degree Sobel filter, with response range [-32768, 32767]:";
 	}
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
@@ -611,17 +623,20 @@ bool TestFrameFilterSobel::testDiagonalFilter8BitPerChannel(const unsigned int w
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(2u * nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -707,6 +722,8 @@ bool TestFrameFilterSobel::testFilter8BitPerChannel(const unsigned int width, co
 		Log::info() << "Testing 8 bit horizontal, vertical, and diagonal Sobel filter, with response range [-32768, 32767]:";
 	}
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (unsigned int nChannels = 1u; nChannels <= 4u; ++nChannels)
@@ -730,17 +747,20 @@ bool TestFrameFilterSobel::testFilter8BitPerChannel(const unsigned int width, co
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source, FrameType::genericPixelFormat<TTarget>(4u * nChannels)), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(source, false);
-					CV::CVUtilities::randomizeFrame(target, false);
+					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -814,23 +834,25 @@ bool TestFrameFilterSobel::testComfort(const double testDuration, Worker& worker
 {
 	Log::info() << "Testing comfort functions:";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		Worker* useWorker = RandomI::random(1u) == 0u ? nullptr : &worker;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? nullptr : &worker;
 
-		const unsigned int width = RandomI::random(3u, 1000u);
-		const unsigned int height = RandomI::random(3u, 1000u);
+		const unsigned int width = RandomI::random(randomGenerator, 3u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 3u, 1000u);
 
-		const unsigned int channels = RandomI::random(1u, 4u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-		const FrameType::DataType responseDataType = RandomI::random(1u) == 0u ? FrameType::DT_SIGNED_INTEGER_8 : FrameType::DT_SIGNED_INTEGER_16;
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::DataType responseDataType = RandomI::boolean(randomGenerator) ? FrameType::DT_SIGNED_INTEGER_8 : FrameType::DT_SIGNED_INTEGER_16;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), pixelOrigin));
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), pixelOrigin), &randomGenerator);
 
 		{
 			// Comfort::filterHorizontalVertical

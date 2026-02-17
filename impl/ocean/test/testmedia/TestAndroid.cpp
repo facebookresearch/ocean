@@ -62,14 +62,13 @@ bool TestAndroid::testVideoEncoderDecoder(const double testDuration)
 
 	Log::info() << "Video encoder/decoder test:";
 
-	Validation validation;
-
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	constexpr unsigned int bitrate = 2000000u; // 2 Mbps
 	constexpr double frameRate = 30.0;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 

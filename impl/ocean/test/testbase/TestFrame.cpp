@@ -2639,27 +2639,27 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 
 			OCEAN_EXPECT_EQUAL(validation, testPointer, constRowPointer);
 
-			OCEAN_EXPECT_TRUE(validation, (uint8_t*)(testPointer) == rowPointer);
+			OCEAN_EXPECT_EQUAL(validation, (uint8_t*)(testPointer), rowPointer);
 
-			OCEAN_EXPECT_TRUE(validation, (const int8_t*)(testPointer) == constRowPointerInt8);
+			OCEAN_EXPECT_EQUAL(validation, (const int8_t*)(testPointer), constRowPointerInt8);
 
 			OCEAN_EXPECT_EQUAL(validation, testPointer, constRowPointerUint8);
 
-			OCEAN_EXPECT_TRUE(validation, (const int16_t*)(testPointer) == constRowPointerInt16);
+			OCEAN_EXPECT_EQUAL(validation, (const int16_t*)(testPointer), constRowPointerInt16);
 
-			OCEAN_EXPECT_TRUE(validation, (const uint16_t*)(testPointer) == constRowPointerUint16);
+			OCEAN_EXPECT_EQUAL(validation, (const uint16_t*)(testPointer), constRowPointerUint16);
 
-			OCEAN_EXPECT_TRUE(validation, (const int32_t*)(testPointer) == constRowPointerInt32);
+			OCEAN_EXPECT_EQUAL(validation, (const int32_t*)(testPointer), constRowPointerInt32);
 
-			OCEAN_EXPECT_TRUE(validation, (const uint32_t*)(testPointer) == constRowPointerUint32);
+			OCEAN_EXPECT_EQUAL(validation, (const uint32_t*)(testPointer), constRowPointerUint32);
 
-			OCEAN_EXPECT_TRUE(validation, (const float*)(testPointer) == constRowPointerFloat);
+			OCEAN_EXPECT_EQUAL(validation, (const float*)(testPointer), constRowPointerFloat);
 
-			OCEAN_EXPECT_TRUE(validation, (const double*)(testPointer) == constRowPointerDouble);
+			OCEAN_EXPECT_EQUAL(validation, (const double*)(testPointer), constRowPointerDouble);
 
-			OCEAN_EXPECT_TRUE(validation, (const int64_t*)(testPointer) == constRowPointerInt64);
+			OCEAN_EXPECT_EQUAL(validation, (const int64_t*)(testPointer), constRowPointerInt64);
 
-			OCEAN_EXPECT_TRUE(validation, (const uint64_t*)(testPointer) == constRowPointerUint64);
+			OCEAN_EXPECT_EQUAL(validation, (const uint64_t*)(testPointer), constRowPointerUint64);
 		}
 
 
@@ -2680,7 +2680,7 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 
 				uint8_t* const pixelPointer = frame.pixel<uint8_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((uint8_t*)(testRowPointer) + x * channels) == pixelPointer);
+				OCEAN_EXPECT_EQUAL(validation, ((uint8_t*)(testRowPointer) + x * channels), pixelPointer);
 
 				const uint8_t* const constPixelPointerUint8 = frame.constpixel<uint8_t>(x, y);
 
@@ -2691,63 +2691,63 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 			{
 				const int8_t* const constPixelPointerInt8 = frame.constpixel<int8_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const int8_t*)(testRowPointer) + x * channels) == constPixelPointerInt8);
+				OCEAN_EXPECT_EQUAL(validation, ((const int8_t*)(testRowPointer) + x * channels), constPixelPointerInt8);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_16)
 			{
 				const int16_t* const constPixelPointerInt16 = frame.constpixel<int16_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const int16_t*)(testRowPointer) + x * channels) == constPixelPointerInt16);
+				OCEAN_EXPECT_EQUAL(validation, ((const int16_t*)(testRowPointer) + x * channels), constPixelPointerInt16);
 			}
 
 			if (dataType == FrameType::DT_UNSIGNED_INTEGER_16)
 			{
 				const uint16_t* const constPixelPointerUint16 = frame.constpixel<uint16_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const uint16_t*)(testRowPointer) + x * channels) == constPixelPointerUint16);
+				OCEAN_EXPECT_EQUAL(validation, ((const uint16_t*)(testRowPointer) + x * channels), constPixelPointerUint16);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_32)
 			{
 				const int32_t* const constPixelPointerInt32 = frame.constpixel<int32_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const int32_t*)(testRowPointer) + x * channels) == constPixelPointerInt32);
+				OCEAN_EXPECT_EQUAL(validation, ((const int32_t*)(testRowPointer) + x * channels), constPixelPointerInt32);
 			}
 
 			if (dataType == FrameType::DT_UNSIGNED_INTEGER_32)
 			{
 				const uint32_t* const constPixelPointerUint32 = frame.constpixel<uint32_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const uint32_t*)(testRowPointer) + x * channels) == constPixelPointerUint32);
+				OCEAN_EXPECT_EQUAL(validation, ((const uint32_t*)(testRowPointer) + x * channels), constPixelPointerUint32);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_FLOAT_32)
 			{
 				const float* const constFloatPixelPointer = frame.constpixel<float>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const float*)(testRowPointer) + x * channels) == constFloatPixelPointer);
+				OCEAN_EXPECT_EQUAL(validation, ((const float*)(testRowPointer) + x * channels), constFloatPixelPointer);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_FLOAT_64)
 			{
 				const double* const constDoublePixelPointer = frame.constpixel<double>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const double*)(testRowPointer) + x * channels) == constDoublePixelPointer);
+				OCEAN_EXPECT_EQUAL(validation, ((const double*)(testRowPointer) + x * channels), constDoublePixelPointer);
 			}
 
 			if (dataType == FrameType::DT_SIGNED_INTEGER_64)
 			{
 				const int64_t* const constPixelPointerInt64 = frame.constpixel<int64_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const int64_t*)(testRowPointer) + x * channels) == constPixelPointerInt64);
+				OCEAN_EXPECT_EQUAL(validation, ((const int64_t*)(testRowPointer) + x * channels), constPixelPointerInt64);
 			}
 
 			if (dataType == FrameType::DT_UNSIGNED_INTEGER_64)
 			{
 				const uint64_t* const constPixelPointerUint64 = frame.constpixel<uint64_t>(x, y);
 
-				OCEAN_EXPECT_TRUE(validation, ((const uint64_t*)(testRowPointer) + x * channels) == constPixelPointerUint64);
+				OCEAN_EXPECT_EQUAL(validation, ((const uint64_t*)(testRowPointer) + x * channels), constPixelPointerUint64);
 			}
 		}
 	}
@@ -2838,14 +2838,14 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 					OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-					OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y, planeIndex) == (const void*)(frame.row<void>(y, planeIndex)));
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<void>(y, planeIndex), (const void*)(frame.row<void>(y, planeIndex)));
 
 					const void* const testPixel = (const void*)((const uint8_t*)(testRow) + (x * planeChannels) * bytesPerDataType);
 					const void* const pixel = frame.constpixel<void>(x, y, planeIndex);
 
 					OCEAN_EXPECT_EQUAL(validation, pixel, testPixel);
 
-					OCEAN_EXPECT_TRUE(validation, frame.constpixel<void>(x, y, planeIndex) == (const void*)(frame.pixel<void>(x, y, planeIndex)));
+					OCEAN_EXPECT_EQUAL(validation, frame.constpixel<void>(x, y, planeIndex), (const void*)(frame.pixel<void>(x, y, planeIndex)));
 				}
 			}
 		}
@@ -2891,14 +2891,14 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 							OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-							OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y) == (const void*)(frame.row<void>(y)));
+							OCEAN_EXPECT_EQUAL(validation, frame.constrow<void>(y), (const void*)(frame.row<void>(y)));
 
 							const void* const testPixel = (const void*)((const uint8_t*)(testRow) + (x * elementsPerPixel) * bytesPerElement);
 							const void* const pixel = frame.constpixel<void>(x, y);
 
 							OCEAN_EXPECT_EQUAL(validation, pixel, testPixel);
 
-							OCEAN_EXPECT_TRUE(validation, frame.constpixel<void>(x, y) == (const void*)(frame.pixel<void>(x, y)));
+							OCEAN_EXPECT_EQUAL(validation, frame.constpixel<void>(x, y), (const void*)(frame.pixel<void>(x, y)));
 						}
 
 						break;
@@ -2930,14 +2930,14 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 							OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-							OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y) == (const void*)(frame.row<void>(y)));
+							OCEAN_EXPECT_EQUAL(validation, frame.constrow<void>(y), (const void*)(frame.row<void>(y)));
 
 							const void* const testPixel = (const void*)((const uint8_t*)(testRow) + (x * elementsPerPixel) * bytesPerElement);
 							const void* const pixel = frame.constpixel<void>(x, y);
 
 							OCEAN_EXPECT_EQUAL(validation, pixel, testPixel);
 
-							OCEAN_EXPECT_TRUE(validation, frame.constpixel<void>(x, y) == (const void*)(frame.pixel<void>(x, y)));
+							OCEAN_EXPECT_EQUAL(validation, frame.constpixel<void>(x, y), (const void*)(frame.pixel<void>(x, y)));
 						}
 
 						break;
@@ -2967,7 +2967,7 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 
 							OCEAN_EXPECT_EQUAL(validation, row, testRow);
 
-							OCEAN_EXPECT_TRUE(validation, frame.constrow<void>(y) == (const void*)(frame.row<void>(y)));
+							OCEAN_EXPECT_EQUAL(validation, frame.constrow<void>(y), (const void*)(frame.row<void>(y)));
 
 #if 0 // Frame::pixel() is currently not supported for packed pixel formats
 
@@ -3211,7 +3211,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 				}
 			}
 
-			const Timestamp sourceTimestamp = Timestamp(double(RandomI::random32()));
+			const Timestamp sourceTimestamp = Timestamp(double(RandomI::random32(randomGenerator)));
 
 			const Frame owningSourceFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElementsPerPlane, sourceTimestamp);
 			const Frame notOwningSourceFrame(owningSourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
@@ -3243,7 +3243,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			{
 				// testing to copy the source frame (which is owning the memory) to a valid target frame (with identical frame type as the source frame)
 
-				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32()));
+				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32(randomGenerator)));
 
 				Frame validTargetFrame(owningSourceFrame.frameType());
 				validTargetFrame.setTimestamp(previousTimestamp);
@@ -3258,7 +3258,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			{
 				// testing to copy the source frame (which is not owning the memory) to a valid target frame (with identical frame type as the source frame)
 
-				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32()));
+				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32(randomGenerator)));
 
 				Frame validTargetFrame(notOwningSourceFrame.frameType());
 				validTargetFrame.setTimestamp(previousTimestamp);
@@ -3280,7 +3280,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			{
 				// testing to copy the source frame (which is owning the memory) to a valid target frame (with arbitrary frame type)
 
-				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32()));
+				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32(randomGenerator)));
 
 				Frame validTargetFrame(FrameType(previousTargetWidth, previousTargetHeight, previousTargetPixelFormat, previousTargetPixelOrigin));
 				validTargetFrame.setTimestamp(previousTimestamp);
@@ -3295,7 +3295,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			{
 				// testing to copy the source frame (which is not owning the memory) to a valid target frame (with arbitrary frame type)
 
-				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32()));
+				const Timestamp previousTimestamp = Timestamp(double(RandomI::random32(randomGenerator)));
 
 				Frame validTargetFrame(FrameType(previousTargetWidth, previousTargetHeight, previousTargetPixelFormat, previousTargetPixelOrigin));
 				validTargetFrame.setTimestamp(previousTimestamp);

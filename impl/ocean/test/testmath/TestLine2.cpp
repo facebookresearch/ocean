@@ -148,7 +148,9 @@ bool TestLine2::testIsOnLine(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 
-			const Vector2 pointOffset2(pointOnLine + perpendicular * Random::scalar(randomGenerator, Scalar(0.5), range) * Random::sign(randomGenerator));
+			const Scalar pointOffset2Distance = Random::scalar(randomGenerator, Scalar(0.5), range);
+			const Scalar pointOffset2Sign = Random::sign(randomGenerator);
+			const Vector2 pointOffset2(pointOnLine + perpendicular * pointOffset2Distance * pointOffset2Sign);
 
 			if (line.isOnLine(pointOffset2) == true)
 			{
@@ -187,7 +189,7 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 			const Line2 referenceLine(Vector2(0, 0), Vector2(0, Random::scalar(randomGenerator, 1, range)));
 			ocean_assert(referenceLine.direction().length() > Numeric::eps());
 
-			const Vector2 pointLeftOfReferenceLine(Random::scalar(randomGenerator, -range, Scalar(-0.1)), Random::scalar(randomGenerator, -range, range));
+			const Vector2 pointLeftOfReferenceLine = Random::vector2(randomGenerator, -range, Scalar(-0.1), -range, range);
 			const Vector2 pointRightOfReferenceLine(-pointLeftOfReferenceLine.x(), pointLeftOfReferenceLine.y());
 			const Vector2 pointOnReferenceLine(referenceLine.point() + referenceLine.direction().normalized() * pointLeftOfReferenceLine.y());
 
@@ -207,7 +209,9 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 			}
 
 			const SquareMatrix3 randomRotation = SquareMatrix3(Rotation(0, 0, 1, Random::scalar(randomGenerator, -Numeric::pi(), Numeric::pi())));
-			const SquareMatrix3 randomTranslation = SquareMatrix3(1, 0, 0, 0, 1, 0, Random::scalar(randomGenerator, -range, range), Random::scalar(randomGenerator, -range, range), 1);
+			const Scalar randomTranslationX = Random::scalar(randomGenerator, -range, range);
+			const Scalar randomTranslationY = Random::scalar(randomGenerator, -range, range);
+			const SquareMatrix3 randomTranslation = SquareMatrix3(1, 0, 0, 0, 1, 0, randomTranslationX, randomTranslationY, 1);
 			const SquareMatrix3 randomTransformation = randomTranslation * randomRotation;
 
 			const Line2 transformedLine = Line2(randomTranslation * referenceLine.point(), randomRotation * referenceLine.direction());
@@ -264,7 +268,7 @@ bool TestLine2::testDecomposeNormalDistance(const double testDuration)
 		const Line2 line(linePoint, lineDirection);
 		ocean_assert(line.isValid());
 
-		const bool forcePositiveDistanceValue = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool forcePositiveDistanceValue = RandomI::boolean(randomGenerator);
 
 		const Vector3 implicitLine = line.decomposeNormalDistance(forcePositiveDistanceValue);
 

@@ -182,8 +182,11 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const unsigned int width, const 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 2u, 1920u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 2u, 1080u);
 
-				const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourceFramePaddingElementsFactor = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourceFramePaddingElementsFactor;
+
+				const unsigned int targetFramePaddingElementsFactor = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetFramePaddingElementsFactor;
 
 				Frame sourceFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), sourceFramePaddingElements);
 				Frame targetFrame(FrameType(sourceFrame, sourceFrame.width() / 2u, sourceFrame.height() / 2u), targetFramePaddingElements);
@@ -191,8 +194,11 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const unsigned int width, const 
 				CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
 				CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
 
-				const unsigned int sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourceMaskPaddingElementsFactor = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourceMaskPaddingElementsFactor;
+
+				const unsigned int targetMaskPaddingElementsFactor = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetMaskPaddingElementsFactor;
 
 				Frame sourceMask(FrameType(sourceFrame, FrameType::FORMAT_Y8), sourceMaskPaddingElements);
 				Frame targetMask(FrameType(targetFrame, FrameType::FORMAT_Y8), targetMaskPaddingElements);
@@ -218,7 +224,7 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const unsigned int width, const 
 					const unsigned int xPosition = RandomI::random(randomGenerator, sourceMask.width() - 1u);
 					const unsigned int yPosition = RandomI::random(randomGenerator, sourceMask.height() - 1u);
 
-					const uint8_t color = RandomI::random(randomGenerator, 1u) == 0u ? maskValue : nonMaskValue;
+					const uint8_t color = RandomI::boolean(randomGenerator) ? maskValue : nonMaskValue;
 
 					sourceMask.pixel<uint8_t>(xPosition, yPosition)[0] = color;
 				}

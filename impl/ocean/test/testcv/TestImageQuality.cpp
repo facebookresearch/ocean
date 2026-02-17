@@ -88,8 +88,11 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 		const unsigned int height = RandomI::random(randomGenerator, 11u, 1920u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-		const unsigned int frameXPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int frameYPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int frameXPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int frameXPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * frameXPaddingMultiplier;
+
+		const unsigned int frameYPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int frameYPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * frameYPaddingMultiplier;
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
 
@@ -99,7 +102,7 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 		// we toggle between a similar image, and a completely random image
 		// similar images should have a ssim >= 0.97 while random images should have a ssim <= 0.03
 
-		const bool similarImage = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool similarImage = RandomI::boolean(randomGenerator);
 
 		CV::CVUtilities::randomizeFrame(frameX, false, &randomGenerator);
 
@@ -125,7 +128,7 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 			CV::CVUtilities::randomizeFrame(frameY, false, &randomGenerator);
 		}
 
-		Worker* useWorker = (worker && RandomI::random(randomGenerator, 1u) == 1u) ? &worker : nullptr;
+		Worker* useWorker = (worker && RandomI::boolean(randomGenerator)) ? &worker : nullptr;
 
 		double meanSSIM = -1.0;
 		double meanContrast = -1.0;
@@ -152,11 +155,11 @@ bool TestImageQuality::testStructuralSimilarityStressTest(const double testDurat
 
 			if (similarImage)
 			{
-				OCEAN_EXPECT_TRUE(validation, meanSSIM >= 0.97);
+				OCEAN_EXPECT_GREATER_EQUAL(validation, meanSSIM, 0.97);
 			}
 			else
 			{
-				OCEAN_EXPECT_TRUE(validation, meanSSIM <= 0.03);
+				OCEAN_EXPECT_LESS_EQUAL(validation, meanSSIM, 0.03);
 			}
 		}
 	}
@@ -184,9 +187,11 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 		const unsigned int height = RandomI::random(randomGenerator, 11u, 1920u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-		const unsigned int frameXPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int frameYPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int frameXPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int frameXPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * frameXPaddingMultiplier;
 
+		const unsigned int frameYPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int frameYPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * frameYPaddingMultiplier;
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
 
@@ -196,7 +201,7 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 		// we toggle between a similar image, and a completely random image
 		// similar images should have a ssim >= 0.85 while random images should have a ssim <= 0.15
 
-		const bool similarImage = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool similarImage = RandomI::boolean(randomGenerator);
 
 		CV::CVUtilities::randomizeFrame(frameX, false, &randomGenerator);
 
@@ -222,7 +227,7 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 			CV::CVUtilities::randomizeFrame(frameY, false, &randomGenerator);
 		}
 
-		Worker* useWorker = (worker && RandomI::random(randomGenerator, 1u) == 1u) ? &worker : nullptr;
+		Worker* useWorker = (worker && RandomI::boolean(randomGenerator)) ? &worker : nullptr;
 
 		double msssim = -1.0;
 		if (CV::ImageQuality::multiScaleStructuralSimilarity8BitPerChannel(frameX.constdata<uint8_t>(), frameY.constdata<uint8_t>(), width, height, channels, frameX.paddingElements(), frameY.paddingElements(), msssim, useWorker))
@@ -246,11 +251,11 @@ bool TestImageQuality::testMultiScaleStructuralSimilarityStressTest(const double
 
 			if (similarImage)
 			{
-				OCEAN_EXPECT_TRUE(validation, msssim >= 0.85);
+				OCEAN_EXPECT_GREATER_EQUAL(validation, msssim, 0.85);
 			}
 			else
 			{
-				OCEAN_EXPECT_TRUE(validation, msssim <= 0.15);
+				OCEAN_EXPECT_LESS_EQUAL(validation, msssim, 0.15);
 			}
 		}
 	}

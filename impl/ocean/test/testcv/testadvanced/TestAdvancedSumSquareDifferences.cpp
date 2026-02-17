@@ -2355,8 +2355,8 @@ bool TestAdvancedSumSquareDifferences::testTwoPixelPatchWithRejectingMask8BitPer
 			centersX0[n] = RandomI::random(randomGenerator, width0 - 1u);
 			centersY0[n] = RandomI::random(randomGenerator, height0 - 1u);
 
-			centersX1[n] = Random::random(randomGenerator, width1 - 1u);
-			centersY1[n] = Random::random(randomGenerator, height1 - 1u);
+			centersX1[n] = RandomI::random(randomGenerator, width1 - 1u);
+			centersY1[n] = RandomI::random(randomGenerator, height1 - 1u);
 		}
 
 		const uint8_t* const frameData0 = frame0.constdata<uint8_t>();

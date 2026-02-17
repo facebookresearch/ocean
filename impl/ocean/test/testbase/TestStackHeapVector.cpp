@@ -1081,7 +1081,7 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 				originalVector[0] = "modified";
 
 				OCEAN_EXPECT_EQUAL(validation, copiedVector[0], originalFirstValue);
-				OCEAN_EXPECT_FALSE(validation, copiedVector[0] == originalVector[0]);
+				OCEAN_EXPECT_NOT_EQUAL(validation, copiedVector[0], originalVector[0]);
 			}
 		}
 
@@ -1196,7 +1196,7 @@ bool TestStackHeapVector::testCopyAssignment(const double testDuration)
 			vector1[0] = "modified";
 
 			OCEAN_EXPECT_EQUAL(validation, vector2[0], originalValue);
-			OCEAN_EXPECT_FALSE(validation, vector2[0] == vector1[0]);
+			OCEAN_EXPECT_NOT_EQUAL(validation, vector2[0], vector1[0]);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -1276,8 +1276,8 @@ bool TestStackHeapVector::testEquality(const double testDuration)
 				vector2.pushBack(value);
 			}
 
-			OCEAN_EXPECT_TRUE(validation, vector1 == vector2);
-			OCEAN_EXPECT_TRUE(validation, vector2 == vector1);
+			OCEAN_EXPECT_EQUAL(validation, vector1, vector2);
+			OCEAN_EXPECT_EQUAL(validation, vector2, vector1);
 
 			OCEAN_EXPECT_EQUAL(validation, vector1, vector2);
 			OCEAN_EXPECT_EQUAL(validation, vector2, vector1);
@@ -1294,7 +1294,7 @@ bool TestStackHeapVector::testEquality(const double testDuration)
 				StackHeapVector<uint64_t, tStackCapacity> vector1(size1, uint64_t(0));
 				StackHeapVector<uint64_t, tStackCapacity> vector2(size2, uint64_t(0));
 
-				OCEAN_EXPECT_FALSE(validation, vector1 == vector2);
+				OCEAN_EXPECT_NOT_EQUAL(validation, vector1, vector2);
 
 				OCEAN_EXPECT_NOT_EQUAL(validation, vector1, vector2);
 			}
@@ -1318,7 +1318,7 @@ bool TestStackHeapVector::testEquality(const double testDuration)
 			const size_t modifyIndex = size_t(RandomI::random(randomGenerator, (unsigned int)(numberElements - 1)));
 			vector2[modifyIndex] = "different";
 
-			OCEAN_EXPECT_FALSE(validation, vector1 == vector2);
+			OCEAN_EXPECT_NOT_EQUAL(validation, vector1, vector2);
 
 			OCEAN_EXPECT_NOT_EQUAL(validation, vector1, vector2);
 		}
@@ -1329,7 +1329,7 @@ bool TestStackHeapVector::testEquality(const double testDuration)
 			const StackHeapVector<uint64_t, tStackCapacity> emptyVector1;
 			const StackHeapVector<uint64_t, tStackCapacity> emptyVector2;
 
-			OCEAN_EXPECT_TRUE(validation, emptyVector1 == emptyVector2);
+			OCEAN_EXPECT_EQUAL(validation, emptyVector1, emptyVector2);
 
 			OCEAN_EXPECT_EQUAL(validation, emptyVector1, emptyVector2);
 		}
@@ -1346,7 +1346,7 @@ bool TestStackHeapVector::testEquality(const double testDuration)
 				vector.pushBack(RandomI::random64(randomGenerator));
 			}
 
-			OCEAN_EXPECT_TRUE(validation, vector == vector);
+			OCEAN_EXPECT_EQUAL(validation, vector, vector);
 
 			OCEAN_EXPECT_EQUAL(validation, vector, vector);
 		}

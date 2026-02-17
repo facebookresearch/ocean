@@ -135,9 +135,11 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 			Vectors3 centerObjectPoints;
 			centerObjectPoints.reserve(points);
 
-			const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
+			const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+			const unsigned int height = RandomI::random(randomGenerator, 600u, 800u);
+			const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(Random::scalar(randomGenerator, 30, 70)));
 
-			if (!generatedImagePointGroups(pinholeCamera, points, 3u, imagePointsPerPose, sigma, &centerObjectPoints))
+			if (!generatedImagePointGroups(pinholeCamera, points, 3u, randomGenerator, imagePointsPerPose, sigma, &centerObjectPoints))
 			{
 				continue;
 			}
@@ -254,9 +256,11 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 		Vectors3 centerObjectPoints;
 		centerObjectPoints.reserve(points);
 
-		const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
+		const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int height = RandomI::random(randomGenerator, 600u, 800u);
+		const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(Random::scalar(randomGenerator, 30, 70)));
 
-		if (!generatedImagePointGroups(pinholeCamera, points, 3u, imagePointsPerPose, sigma, &centerObjectPoints))
+		if (!generatedImagePointGroups(pinholeCamera, points, 3u, randomGenerator, imagePointsPerPose, sigma, &centerObjectPoints))
 		{
 			continue;
 		}
@@ -352,9 +356,11 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 		Vectors3 centerObjectPoints;
 		centerObjectPoints.reserve(points);
 
-		const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
+		const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int height = RandomI::random(randomGenerator, 600u, 800u);
+		const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(Random::scalar(randomGenerator, 30, 70)));
 
-		if (!generatedImagePointGroups(pinholeCamera, points, views, imagePointsPerPose, sigma, &centerObjectPoints))
+		if (!generatedImagePointGroups(pinholeCamera, points, views, randomGenerator, imagePointsPerPose, sigma, &centerObjectPoints))
 		{
 			continue;
 		}
@@ -435,9 +441,11 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 			Vectors3 centerObjectPoints;
 			centerObjectPoints.reserve(points);
 
-			const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
+			const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+			const unsigned int height = RandomI::random(randomGenerator, 600u, 800u);
+			const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(Random::scalar(randomGenerator, 30, 70)));
 
-			if (!generatedImagePointGroups(pinholeCamera, points, views, imagePointsPerPose, 0, &centerObjectPoints))
+			if (!generatedImagePointGroups(pinholeCamera, points, views, randomGenerator, imagePointsPerPose, 0, &centerObjectPoints))
 			{
 				continue;
 			}
@@ -456,7 +464,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 			while (indexSetDisturbPoints.size() < numberInvalidFeatures)
 			{
-				indexSetDisturbPoints.insert(Random::random(points - 1));
+				indexSetDisturbPoints.insert(RandomI::random(randomGenerator, points - 1));
 			}
 
 			for (std::set<unsigned int>::const_iterator i = indexSetDisturbPoints.begin(); i != indexSetDisturbPoints.end(); ++i)
@@ -466,7 +474,10 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 				for (size_t iView = 0; iView < views; iView++)
 				{
 					Vector2& imagePoint = distortedImagePointsPerPose[iView][*i];
-					imagePoint += Vector2(Random::scalar(-15, 15), Random::scalar(-15, 15));
+
+					const Scalar noiseX = Random::scalar(randomGenerator, -15, 15);
+					const Scalar noiseY = Random::scalar(randomGenerator, -15, 15);
+					imagePoint += Vector2(noiseX, noiseY);
 					imagePoint.x() = max(Scalar(0), min(Scalar(pinholeCamera.width() - 1u), imagePoint.x()));
 					imagePoint.y() = max(Scalar(0), min(Scalar(pinholeCamera.height() - 1u), imagePoint.y()));
 				}
@@ -526,7 +537,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 	return validation.succeeded();
 }
 
-bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma, Vectors3* objectPoints)
+bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, RandomGenerator& randomGenerator, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma, Vectors3* objectPoints)
 {
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(views >= 2 && points != 0 && gaussSigma >= 0);
@@ -538,7 +549,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 	/*NOTE: results in lower performance */
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 
-	const Quaternion orientation0(Random::quaternion());
+	const Quaternion orientation0(Random::quaternion(randomGenerator));
 	const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
 	const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, points));
@@ -549,7 +560,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 	while (poses.size() < views)
 	{
-		const Quaternion offsetRotation(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(35)));
+		const Quaternion offsetRotation(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(35)));
 
 		const Quaternion newOrientation(orientation0 * offsetRotation);
 		const Vector3 newViewDirection(newOrientation * Vector3(0, 0, -1));
@@ -572,7 +583,9 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 			Vector2 imagePointNoise(0, 0);
 			if (gaussSigma > 0)
 			{
-				imagePointNoise = Vector2(Random::gaussianNoise(gaussSigma), Random::gaussianNoise(gaussSigma));
+				const Scalar noiseX = Random::gaussianNoise(randomGenerator, gaussSigma);
+				const Scalar noiseY = Random::gaussianNoise(randomGenerator, gaussSigma);
+				imagePointNoise = Vector2(noiseX, noiseY);
 				imagePoints.push_back(imagePoint + imagePointNoise);
 			}
 			else
@@ -595,8 +608,11 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 	{
 		imagePointsPerPose[iView].reserve(points);
 
-		const Vector3 translation(Random::vector3(Scalar(-0.1), Scalar(0.1)));
-		const Euler euler(Random::scalar(Numeric::deg2rad(-10), Numeric::deg2rad(10)), Random::scalar(Numeric::deg2rad(-10), Numeric::deg2rad(10)), Random::scalar(Numeric::deg2rad(-10), Numeric::deg2rad(10)));
+		const Vector3 translation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
+		const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-10), Numeric::deg2rad(10));
+		const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-10), Numeric::deg2rad(10));
+		const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-10), Numeric::deg2rad(10));
+		const Euler euler(yaw, pitch, roll);
 		const Quaternion quaternion(euler);
 
 		poses.push_back(HomogenousMatrix4(translation, quaternion));
@@ -604,8 +620,8 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 	for (size_t iterations = 0; iterations < points; ++iterations)
 	{
-		const Vector2 imagePoint(Random::scalar(0, Scalar(pinholeCamera.width())), Random::scalar(0, Scalar(pinholeCamera.height())));
-		const Vector3 objectPoint(pinholeCamera.vector(imagePoint) * Random::scalar(1, 3));
+		const Vector2 imagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height())));
+		const Vector3 objectPoint(pinholeCamera.vector(imagePoint) * Random::scalar(randomGenerator, 1, 3));
 
 		Vectors2 candidates;
 		candidates.reserve(views);
@@ -615,8 +631,8 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 			if (gaussSigma > 0)
 			{
-				imagePointView.x() += Random::gaussianNoise(gaussSigma);
-				imagePointView.y() += Random::gaussianNoise(gaussSigma);
+				imagePointView.x() += Random::gaussianNoise(randomGenerator, gaussSigma);
+				imagePointView.y() += Random::gaussianNoise(randomGenerator, gaussSigma);
 			}
 
 			candidates.push_back(imagePointView);

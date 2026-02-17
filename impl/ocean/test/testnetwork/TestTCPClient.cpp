@@ -84,7 +84,6 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 	Log::info() << "TCPClient & TCPServer test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -135,7 +134,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 		Thread::sleep(50u);
 
-		const bool disconnectClient = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool disconnectClient = RandomI::boolean(randomGenerator);
 
 		if (disconnectClient)
 		{
@@ -193,7 +192,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 			ocean_assert(sourceBuffer.size() == targetBuffer.size());
 
-			OCEAN_EXPECT_TRUE(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) == 0);
+			OCEAN_EXPECT_EQUAL(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()), 0);
 		}
 
 #ifdef OCEAN_USE_GTEST

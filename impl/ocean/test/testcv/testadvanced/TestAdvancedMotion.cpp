@@ -1927,11 +1927,11 @@ bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorde
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-		const unsigned int sourceWidth = RandomI::random(tPatchSize * 2u, 2000u);
-		const unsigned int sourceHeight = RandomI::random(tPatchSize * 2u, 2000u);
+		const unsigned int sourceWidth = RandomI::random(randomGenerator, tPatchSize * 2u, 2000u);
+		const unsigned int sourceHeight = RandomI::random(randomGenerator, tPatchSize * 2u, 2000u);
 
-		const unsigned int targetWidth = RandomI::random(tPatchSize * 2u, 2000u);
-		const unsigned int targetHeight = RandomI::random(tPatchSize * 2u, 2000u);
+		const unsigned int targetWidth = RandomI::random(randomGenerator, tPatchSize * 2u, 2000u);
+		const unsigned int targetHeight = RandomI::random(randomGenerator, tPatchSize * 2u, 2000u);
 
 		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		const Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
@@ -2016,8 +2016,7 @@ Frame TestAdvancedMotion::createRandomTrackableFrame(const FrameType& frameType,
 
 	for (unsigned int n = 0u; n < numberPoints; ++n)
 	{
-		const Scalar x = Random::scalar(randomGenerator, Scalar(0), Scalar(frameType.width()));
-		const Scalar y = Random::scalar(randomGenerator, Scalar(0), Scalar(frameType.width()));
+		const Vector2 point = Random::vector2(randomGenerator, Scalar(0), Scalar(frameType.width()));
 
 		for (uint8_t& value : pixelColor)
 		{
@@ -2027,19 +2026,19 @@ Frame TestAdvancedMotion::createRandomTrackableFrame(const FrameType& frameType,
 		switch (RandomI::random(randomGenerator, 3u))
 		{
 			case 0u:
-				CV::Canvas::point<1u>(frame, Vector2(x, y), pixelColor.data());
+				CV::Canvas::point<1u>(frame, point, pixelColor.data());
 				break;
 
 			case 1u:
-				CV::Canvas::point<3u>(frame, Vector2(x, y), pixelColor.data());
+				CV::Canvas::point<3u>(frame, point, pixelColor.data());
 				break;
 
 			case 2u:
-				CV::Canvas::point<5u>(frame, Vector2(x, y), pixelColor.data());
+				CV::Canvas::point<5u>(frame, point, pixelColor.data());
 				break;
 
 			case 3u:
-				CV::Canvas::point<7u>(frame, Vector2(x, y), pixelColor.data());
+				CV::Canvas::point<7u>(frame, point, pixelColor.data());
 				break;
 
 			default:

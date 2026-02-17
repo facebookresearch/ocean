@@ -110,8 +110,11 @@ bool TestFrameInverter::testInvert8BitPerChannel(const unsigned int width, const
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 				Frame sourceFrame(FrameType(testWidth, testHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);

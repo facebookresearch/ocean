@@ -583,7 +583,7 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			quaternions[n] = RandomT<T>::quaternion();
+			quaternions[n] = RandomT<T>::quaternion(randomGenerator);
 		}
 
 		performance.start();
@@ -636,8 +636,8 @@ bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const VectorT3<T> reference(RandomT<T>::vector3());
-			const VectorT3<T> offset(RandomT<T>::vector3());
+			const VectorT3<T> reference(RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> offset(RandomT<T>::vector3(randomGenerator));
 
 			// identity test
 			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(1, 0, 0), VectorT3<T>(1, 0, 0)) * reference, reference);
@@ -799,10 +799,10 @@ bool TestQuaternion::testAngle(const double testDuration)
 
 	do
 	{
-		const VectorT3<T> axis = RandomT<T>::vector3();
+		const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
 		ocean_assert(NumericT<T>::isEqual(axis.length(), 1));
 
-		const T angle = RandomT<T>::scalar(0, NumericT<T>::pi());
+		const T angle = RandomT<T>::scalar(randomGenerator, 0, NumericT<T>::pi());
 
 		// we create a quaternion based on axis/angle and check whether the calculated angle is correct
 
@@ -842,8 +842,8 @@ bool TestQuaternion::testSlerp(const double testDuration)
 
 	do
 	{
-		const VectorT3<T> vectorA = RandomT<T>::vector3();
-		const VectorT3<T> vectorB = RandomT<T>::vector3();
+		const VectorT3<T> vectorA = RandomT<T>::vector3(randomGenerator);
+		const VectorT3<T> vectorB = RandomT<T>::vector3(randomGenerator);
 
 		const QuaternionT<T> vectorB_Q_vectorA(vectorA, vectorB);
 

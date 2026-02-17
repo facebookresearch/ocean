@@ -861,7 +861,10 @@ bool TestNumeric::testAngleIsEqual(const double testDuration)
 				continue;
 			}
 
-			if (Numeric::angleIsWeakEqual(value + Random::scalar(randomGenerator, Scalar(0.1), 1), value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
+			const Scalar scalarOffset0 = Random::scalar(randomGenerator, Scalar(0.1), 1);
+			const int randomMultiplier0 = Random::random(randomGenerator, -100, 100);
+
+			if (Numeric::angleIsWeakEqual(value + scalarOffset0, value + Numeric::pi2() * Scalar(randomMultiplier0)))
 			{
 				scopedIteration.setInaccurate();
 				continue;
@@ -879,13 +882,20 @@ bool TestNumeric::testAngleIsEqual(const double testDuration)
 				continue;
 			}
 
-			if (!Numeric::angleIsWeakEqual(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value - Numeric::pi2() + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
+			const int randomMultiplier1 = Random::random(randomGenerator, -100, 100);
+			const int randomMultiplier2 = Random::random(randomGenerator, -100, 100);
+
+			if (!Numeric::angleIsWeakEqual(value + Numeric::pi2() * Scalar(randomMultiplier1), value - Numeric::pi2() + Numeric::pi2() * Scalar(randomMultiplier2)))
 			{
 				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (Numeric::angleIsWeakEqual(value + Random::scalar(randomGenerator, Scalar(0.1), 1) + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::pi2() - value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
+			const Scalar scalarOffset1 = Random::scalar(randomGenerator, Scalar(0.1), 1);
+			const int randomMultiplier3 = Random::random(randomGenerator, -100, 100);
+			const int randomMultiplier4 = Random::random(randomGenerator, -100, 100);
+
+			if (Numeric::angleIsWeakEqual(value + scalarOffset1 + Numeric::pi2() * Scalar(randomMultiplier3), Numeric::pi2() - value + Numeric::pi2() * Scalar(randomMultiplier4)))
 			{
 				scopedIteration.setInaccurate();
 				continue;
@@ -933,7 +943,10 @@ bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
 				continue;
 			}
 
-			if (!Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::deg2rad(20)))
+			const int randomMultiplierA0 = Random::random(randomGenerator, -100, 100);
+			const int randomMultiplierA1 = Random::random(randomGenerator, -100, 100);
+
+			if (!Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(randomMultiplierA0), value + offset + Numeric::pi2() * Scalar(randomMultiplierA1), Numeric::deg2rad(20)))
 			{
 				scopedIteration.setInaccurate();
 				continue;
@@ -947,7 +960,10 @@ bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
 				continue;
 			}
 
-			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::deg2rad(20)))
+			const int randomMultiplierB0 = Random::random(randomGenerator, -100, 100);
+			const int randomMultiplierB1 = Random::random(randomGenerator, -100, 100);
+
+			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(randomMultiplierB0), value + offset + Numeric::pi2() * Scalar(randomMultiplierB1), Numeric::deg2rad(20)))
 			{
 				scopedIteration.setInaccurate();
 				continue;
@@ -961,7 +977,10 @@ bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
 				continue;
 			}
 
-			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::deg2rad(20)))
+			const int randomMultiplierC0 = Random::random(randomGenerator, -100, 100);
+			const int randomMultiplierC1 = Random::random(randomGenerator, -100, 100);
+
+			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(randomMultiplierC0), value + offset + Numeric::pi2() * Scalar(randomMultiplierC1), Numeric::deg2rad(20)))
 			{
 				scopedIteration.setInaccurate();
 				continue;

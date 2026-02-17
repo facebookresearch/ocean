@@ -152,7 +152,6 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -232,7 +231,6 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -362,8 +360,7 @@ bool TestORBDetector::testHammingDistanceDetermination(const double testDuration
 	HighPerformanceStatistic performanceBitset;
 
 	RandomGenerator randomGenerator;
-
-	Validation validation(randomGenerator);;
+	Validation validation(randomGenerator);
 
 	unsigned int dummy = 0u;
 
@@ -523,7 +520,7 @@ bool TestORBDetector::testDescriptorMatching(const double testDuration, Worker& 
 
 	Log::info() << "Validation: " << validation;
 
-	return validation.succeeded();;
+	return validation.succeeded();
 }
 
 double TestORBDetector::validateOrientation(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, CV::Detector::ORBFeatures& features)

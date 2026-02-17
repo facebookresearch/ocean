@@ -190,7 +190,7 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 			const bool decoded = MicroQRCodeDecoder::decodeMicroQRCode(code.modules(), testCode);
 			OCEAN_EXPECT_TRUE(validation, decoded && testCode.isValid());
 
-			OCEAN_EXPECT_TRUE(validation, code == testCode);
+			OCEAN_EXPECT_EQUAL(validation, code, testCode);
 		}
 		while (Timestamp(true) < start + testDuration);
 	}

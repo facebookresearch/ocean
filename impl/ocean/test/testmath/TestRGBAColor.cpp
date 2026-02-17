@@ -412,7 +412,6 @@ bool TestRGBAColor::testConversionHSVA(const double testDuration)
 	Log::info() << "Conversion with HSVA test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	{

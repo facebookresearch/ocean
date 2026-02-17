@@ -65,16 +65,16 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 	Log::info() << "Harris corner detection test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
 	do
 	{
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingFactor = RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements = RandomI::random(randomGenerator, 100u) * paddingFactor;
 
 		Frame yFrame;
 		if (testFrame.isValid())

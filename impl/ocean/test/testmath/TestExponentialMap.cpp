@@ -73,7 +73,7 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Rotation rotation = Random::rotation();
+			const Rotation rotation = Random::rotation(randomGenerator);
 
 			const ExponentialMap exponentialMap(rotation);
 
@@ -90,10 +90,10 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 axis = Random::vector3();
+			const Vector3 axis = Random::vector3(randomGenerator);
 			ocean_assert(axis.isUnit());
 
-			const Scalar angle = Random::scalar(0, Numeric::pi2());
+			const Scalar angle = Random::scalar(randomGenerator, 0, Numeric::pi2());
 
 			const ExponentialMap exponentialMap(axis, angle);
 
@@ -108,7 +108,7 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 		{
 			// non-normalized axis
 
-			const Vector3 rotationValue = Random::vector3(-10, 10);
+			const Vector3 rotationValue = Random::vector3(randomGenerator, -10, 10);
 
 			const ExponentialMap exponentialMap(rotationValue.x(), rotationValue.y(), rotationValue.z());
 
@@ -148,7 +148,7 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Quaternion quaternion = Random::quaternion();
+			const Quaternion quaternion = Random::quaternion(randomGenerator);
 
 			const ExponentialMap exponentialMap(quaternion);
 
@@ -165,7 +165,7 @@ bool TestExponentialMap::testConstructors(const double testDuration)
 
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Quaternion quaternion = Random::quaternion();
+			const Quaternion quaternion = Random::quaternion(randomGenerator);
 
 			const ExponentialMap exponentialMap = ExponentialMap(SquareMatrix3(quaternion));
 

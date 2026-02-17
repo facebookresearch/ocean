@@ -394,6 +394,8 @@ bool TestLinearAlgebra::testCholeskyDecomposition(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	Log::info() << "Cholesky decomposition of random matrices with different sizes, with '" << TypeNamer::name<T>() << "':";
@@ -417,7 +419,7 @@ bool TestLinearAlgebra::testCholeskyDecomposition(const double testDuration)
 
 			for (size_t n = 0; n < matrix.elements(); ++n)
 			{
-				matrix(n) = RandomT<T>::scalar(-1, 1);
+				matrix(n) = RandomT<T>::scalar(randomGenerator, -1, 1);
 			}
 
 			const MatrixT<T> squaredMatrix = matrix.transposedMultiply(matrix);
@@ -474,6 +476,8 @@ bool TestLinearAlgebra::testSolve(const double testDuration)
 
 	Log::info() << "Solve test, with '" << TypeNamer::name<T>() << "':";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	Indices32 dimensions = {5u, 10u, 20u};
@@ -504,12 +508,12 @@ bool TestLinearAlgebra::testSolve(const double testDuration)
 
 			for (unsigned int n = 0; n < a0.elements(); ++n)
 			{
-				a0(n) = RandomT<T>::scalar(0, 1);
+				a0(n) = RandomT<T>::scalar(randomGenerator, 0, 1);
 			}
 
 			for (unsigned int n = 0; n < x0.elements(); ++n)
 			{
-				x0(n) = RandomT<T>::scalar(0, 1);
+				x0(n) = RandomT<T>::scalar(randomGenerator, 0, 1);
 			}
 
 			const MatrixT<T> b0 = a0 * x0;
@@ -692,6 +696,8 @@ bool TestLinearAlgebra::testSingularValueDecompositionDynamic(const double testD
 
 	Log::info() << "... with random matrix:";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (const size_t dimension : {5u, 10u, 20u, 50u, 100u})
@@ -716,7 +722,7 @@ bool TestLinearAlgebra::testSingularValueDecompositionDynamic(const double testD
 
 			for (size_t n = 0; n < rows * colums; ++n)
 			{
-				matrix(n) = RandomT<T>::scalar(-1, 1);
+				matrix(n) = RandomT<T>::scalar(randomGenerator, -1, 1);
 			}
 
 			MatrixT<T> uMatrix, wVector, vMatrix;
@@ -855,6 +861,8 @@ bool TestLinearAlgebra::testQrDecompositionStatic(const double testDuration)
 template <typename T>
 bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
 {
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (const size_t dimension : {5u, 10u, 20u, 50u, 100u})
@@ -879,7 +887,7 @@ bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
 
 			for (size_t n = 0; n < rows * columns; ++n)
 			{
-				matrix(n) = RandomT<T>::scalar(-1, 1);
+				matrix(n) = RandomT<T>::scalar(randomGenerator, -1, 1);
 			}
 
 			MatrixT<T> matrixQ, matrixR;

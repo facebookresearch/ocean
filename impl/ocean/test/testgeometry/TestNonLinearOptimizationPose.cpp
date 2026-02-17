@@ -81,9 +81,11 @@ TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPosePinholeCamera_100Po
 
 TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points_NoNoise_NoCovariances)
 {
+	RandomGenerator randomGenerator;
+
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCamera);
 
 		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
@@ -95,9 +97,11 @@ TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points
 
 TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points_NoNoise_Covariances)
 {
+	RandomGenerator randomGenerator;
+
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCamera);
 
 		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
@@ -229,9 +233,7 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 
 		for (unsigned int n = 0; n < correspondences; ++n)
 		{
-			const Scalar imagePointX = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.width() - 41));
-			const Scalar imagePointY = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.height() - 41));
-			Vector2 imagePoint(imagePointX, imagePointY);
+			Vector2 imagePoint(Random::vector2(randomGenerator, 40, Scalar(pinholeCamera.width() - 41), 40, Scalar(pinholeCamera.height() - 41)));
 
 			const Line3 ray(pinholeCamera.ray(imagePoint, world_T_camera));
 			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.9), Scalar(1.1))));
@@ -377,9 +379,11 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 
 	bool result = true;
 
+	RandomGenerator randomGenerator;
+
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCamera);
 
 		Log::info() << " ";
@@ -491,7 +495,6 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 		HighPerformanceStatistic performance;
 
 		RandomGenerator randomGenerator;
-
 		ValidationPrecision validation(0.95, randomGenerator);
 
 		const Timestamp startTimestamp(true);
@@ -809,9 +812,7 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 
 		for (unsigned int n = 0; n < correspondences; ++n)
 		{
-			const Scalar imagePointX = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.width() - 41));
-			const Scalar imagePointY = Random::scalar(randomGenerator, 40, Scalar(pinholeCamera.height() - 41));
-			Vector2 imagePoint(imagePointX, imagePointY);
+			Vector2 imagePoint(Random::vector2(randomGenerator, 40, Scalar(pinholeCamera.width() - 41), 40, Scalar(pinholeCamera.height() - 41)));
 
 			const Line3 ray(pinholeCamera.ray(imagePoint, pose, zoom));
 			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.9), Scalar(1.1))));

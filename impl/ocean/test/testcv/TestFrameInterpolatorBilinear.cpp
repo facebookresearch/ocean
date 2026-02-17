@@ -669,7 +669,8 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 
 		constexpr unsigned int channels = 3u;
 
-		const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int sourceFramePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourceFramePaddingElements = sourceFramePaddingBase * RandomI::random(randomGenerator, 1u);
 
 		Frame sourceFrame(FrameType(2u, 2u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), sourceFramePaddingElements);
 		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
@@ -872,7 +873,10 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const VectorT2<TScalar> position(RandomT<TScalar>::scalar(randomGenerator, TScalar(0), xMax), RandomT<TScalar>::scalar(randomGenerator, TScalar(0), yMax));
+			const TScalar positionX = RandomT<TScalar>::scalar(randomGenerator, TScalar(0), xMax);
+			const TScalar positionY = RandomT<TScalar>::scalar(randomGenerator, TScalar(0), yMax);
+
+			const VectorT2<TScalar> position(positionX, positionY);
 
 			for (uint8_t& value : interpolationResult)
 			{
@@ -1157,7 +1161,10 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const VectorT2<TScalar> position(RandomT<TScalar>::scalar(randomGenerator, TScalar(0), xMax), RandomT<TScalar>::scalar(randomGenerator, TScalar(0), yMax));
+			const TScalar positionX = RandomT<TScalar>::scalar(randomGenerator, TScalar(0), xMax);
+			const TScalar positionY = RandomT<TScalar>::scalar(randomGenerator, TScalar(0), yMax);
+
+			const VectorT2<TScalar> position(positionX, positionY);
 
 			for (TTarget& value : interpolationResult)
 			{
@@ -1316,22 +1323,22 @@ bool TestFrameInterpolatorBilinear::testResizeExtremeResolutions(const double te
 
 	do
 	{
-		const unsigned int sourceWidth = RandomI::random(1u, 64u);
-		const unsigned int sourceHeight = RandomI::random(1u, 64u);
+		const unsigned int sourceWidth = RandomI::random(randomGenerator, 1u, 64u);
+		const unsigned int sourceHeight = RandomI::random(randomGenerator, 1u, 64u);
 
-		unsigned int targetWidth = RandomI::random(1u, 64u);
-		unsigned int targetHeight = RandomI::random(1u, 64u);
+		unsigned int targetWidth = RandomI::random(randomGenerator, 1u, 64u);
+		unsigned int targetHeight = RandomI::random(randomGenerator, 1u, 64u);
 
-		const unsigned int sourcePaddingElements = RandomI::random(0u, 100u);
-		const unsigned int targetPaddingElements = RandomI::random(0u, 100u);
+		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
+		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 
 		for (unsigned int channels = 1u; channels <= 4u; ++channels)
 		{
 			Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetPaddingElements);
 
-			CV::CVUtilities::randomizeFrame(sourceFrame, false);
-			CV::CVUtilities::randomizeFrame(targetFrame, false);
+			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
 
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1628,8 +1635,11 @@ bool TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 				const unsigned int useWidth = performanceIteration ? width : RandomI::random(randomGenerator, 32u, 2048u);
 				const unsigned int useHeight = performanceIteration ? height : RandomI::random(randomGenerator, 32u, 2048u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 128u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 128u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingBase = RandomI::random(randomGenerator, 128u);
+				const unsigned int sourcePaddingElements = sourcePaddingBase * RandomI::random(randomGenerator, 1u);
+
+				const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 128u);
+				const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
 
 				Frame source(FrameType(useWidth, useHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame target(FrameType(useWidth, useHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
@@ -1661,7 +1671,10 @@ bool TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 					backgroundColor[n] = (unsigned char)(RandomI::random(randomGenerator, 255u));
 				}
 
-				CV::PixelPositionI targetFrameOriginOffset(RandomI::random(randomGenerator, -5, -5), RandomI::random(randomGenerator, -5, 5));
+				const int targetFrameOriginOffsetX = RandomI::random(randomGenerator, -5, -5);
+				const int targetFrameOriginOffsetY = RandomI::random(randomGenerator, -5, 5);
+
+				CV::PixelPositionI targetFrameOriginOffset(targetFrameOriginOffsetX, targetFrameOriginOffsetY);
 
 				performance.start();
 				CV::FrameInterpolatorBilinear::Comfort::affine(source, target, source_A_target, backgroundColor.data(), useWorker, targetFrameOriginOffset);
@@ -1743,15 +1756,21 @@ bool TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 				maximalError = NumericD::maxValue();
 			}
 
-			const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int sourceFramePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int sourceFramePaddingElements = sourceFramePaddingBase * RandomI::random(randomGenerator, 1u);
 
 			Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), sourceFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator, true);
 
-			const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int targetFramePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int targetFramePaddingElements = targetFramePaddingBase * RandomI::random(randomGenerator, 1u);
 
 			ocean_assert(sourceFrame.width() > 10u);
-			Frame targetFrame(FrameType(sourceFrame, RandomI::random(sourceFrame.width() - 10u, sourceFrame.width() + 10u), RandomI::random(sourceFrame.height() - 10u, sourceFrame.height() + 10u)), targetFramePaddingElements);
+
+			const unsigned int targetWidth = RandomI::random(randomGenerator, sourceFrame.width() - 10u, sourceFrame.width() + 10u);
+			const unsigned int targetHeight = RandomI::random(randomGenerator, sourceFrame.height() - 10u, sourceFrame.height() + 10u);
+
+			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator, true);
 
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -1768,7 +1787,10 @@ bool TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 				}
 			}
 
-			const CV::PixelPositionI targetFrameOriginOffset(RandomI::random(randomGenerator, -5, 5), RandomI::random(randomGenerator, -5, 5));
+			const int targetFrameOriginOffsetX = RandomI::random(randomGenerator, -5, 5);
+			const int targetFrameOriginOffsetY = RandomI::random(randomGenerator, -5, 5);
+
+			const CV::PixelPositionI targetFrameOriginOffset(targetFrameOriginOffsetX, targetFrameOriginOffsetY);
 
 			performance.start();
 			switch (channels)
@@ -1901,7 +1923,8 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width,
 				allSucceeded = false;
 			}
 
-			const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int sourceFramePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int sourceFramePaddingElements = sourceFramePaddingBase * RandomI::random(randomGenerator, 1u);
 
 			Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourceFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
@@ -1910,12 +1933,14 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width,
 			const unsigned int targetWidth = RandomI::random(randomGenerator, sourceFrame.width() - 10u, sourceFrame.width() + 10u);
 			const unsigned int targetHeight = RandomI::random(randomGenerator, sourceFrame.height() - 10u, sourceFrame.height() + 10u);
 
-			const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int targetFramePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int targetFramePaddingElements = targetFramePaddingBase * RandomI::random(randomGenerator, 1u);
 
 			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetFramePaddingElements);
 			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
 
-			const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int targetMaskPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int targetMaskPaddingElements = targetMaskPaddingBase * RandomI::random(randomGenerator, 1u);
 
 			Frame targetMask(FrameType(targetFrame, FrameType::FORMAT_Y8), targetMaskPaddingElements);
 			CV::CVUtilities::randomizeFrame(targetMask, false, &randomGenerator);
@@ -1923,7 +1948,10 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width,
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 			const Frame copyTargetMask(targetMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-			const CV::PixelPositionI targetFrameOriginOffset(RandomI::random(randomGenerator, -5, 5), RandomI::random(randomGenerator, -5, 5));
+			const int targetFrameOriginOffsetX = RandomI::random(randomGenerator, -5, 5);
+			const int targetFrameOriginOffsetY = RandomI::random(randomGenerator, -5, 5);
+
+			const CV::PixelPositionI targetFrameOriginOffset(targetFrameOriginOffsetX, targetFrameOriginOffsetY);
 
 			constexpr uint8_t maskValue = 0xFF;
 
@@ -1986,6 +2014,8 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, sourceChannels);
 
+	RandomGenerator randomGenerator;
+
 	double sumAverageError = 0.0;
 	unsigned int maximalError = 0u;
 	unsigned long long measurements = 0ull;
@@ -2005,14 +2035,17 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 
 		do
 		{
-			const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-			const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+			const unsigned int sourcePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int sourcePaddingElements = sourcePaddingBase * RandomI::random(randomGenerator, 1u);
+
+			const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
 
 			Frame sourceFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 			Frame targetFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
 
-			CV::CVUtilities::randomizeFrame(sourceFrame, false);
-			CV::CVUtilities::randomizeFrame(targetFrame, false);
+			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
 
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2133,14 +2166,14 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 			{
 				const bool benchmark = benchmarkIteration == 0u;
 
-				const unsigned int sourcePaddingElements = RandomI::random(0u, maximalHorizontalPadding);
-				const unsigned int targetPaddingElements = RandomI::random(0u, maximalHorizontalPadding);
+				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 0u, maximalHorizontalPadding);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, maximalHorizontalPadding);
 
-				const unsigned int sourceTestWidth = benchmark ? sourceWidth : RandomI::random(1u, sourceWidth);
-				const unsigned int sourceTestHeight = benchmark ? sourceHeight : RandomI::random(1u, sourceHeight);
+				const unsigned int sourceTestWidth = benchmark ? sourceWidth : RandomI::random(randomGenerator, 1u, sourceWidth);
+				const unsigned int sourceTestHeight = benchmark ? sourceHeight : RandomI::random(randomGenerator, 1u, sourceHeight);
 
-				const unsigned int targetTestWidth = benchmark ? targetWidth : RandomI::random(1u, targetWidth);
-				const unsigned int targetTestHeight = benchmark ? targetHeight : RandomI::random(1u, targetHeight);
+				const unsigned int targetTestWidth = benchmark ? targetWidth : RandomI::random(randomGenerator, 1u, targetWidth);
+				const unsigned int targetTestHeight = benchmark ? targetHeight : RandomI::random(randomGenerator, 1u, targetHeight);
 
 				Frame sourceFrame(FrameType(sourceTestWidth, sourceTestHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame targetFrame(FrameType(targetTestWidth, targetTestHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
@@ -2148,13 +2181,13 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 				T* sourceFrameData = sourceFrame.data<T>();
 				for (size_t n = 0; n < sourceFrame.strideElements() * sourceFrame.height(); ++n)
 				{
-					sourceFrameData[n] = T(RandomI::random(-255, 255));
+					sourceFrameData[n] = T(RandomI::random(randomGenerator, -255, 255));
 				}
 
 				T* targetFrameData = targetFrame.data<T>();
 				for (size_t n = 0; n < targetFrame.strideElements() * targetFrame.height(); ++n)
 				{
-					targetFrameData[n] = T(RandomI::random(-255, 255));
+					targetFrameData[n] = T(RandomI::random(randomGenerator, -255, 255));
 				}
 
 				const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -2256,8 +2289,11 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To224x224_8BitP
 
 	do
 	{
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int sourcePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourcePaddingElements = sourcePaddingBase * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
 
 		Frame sourceFrame(sourceFrameType, sourcePaddingElements);
 
@@ -2368,8 +2404,11 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 
 	do
 	{
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int sourcePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourcePaddingElements = sourcePaddingBase * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
 
 		Frame sourceFrame(sourceFrameType, sourcePaddingElements);
 
@@ -2494,7 +2533,7 @@ bool TestFrameInterpolatorBilinear::testLookup(const unsigned int width, const u
 
 			CV::FrameInterpolatorBilinear::LookupTable lookupTable(testWidth, testHeight, 20u, 20u);
 
-			const bool offset = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool offset = RandomI::boolean(randomGenerator);
 
 			for (unsigned int yBin = 0u; yBin <= lookupTable.binsY(); ++yBin)
 			{
@@ -2742,6 +2781,8 @@ bool TestFrameInterpolatorBilinear::testLookupMask(const unsigned int width, con
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
@@ -2760,7 +2801,7 @@ bool TestFrameInterpolatorBilinear::testLookupMask(const unsigned int width, con
 
 			do
 			{
-				const bool offset = RandomI::random(1u) == 1u;
+				const bool offset = RandomI::boolean(randomGenerator);
 
 				CV::FrameInterpolatorBilinear::LookupTable lookupTable(width, height, 20u, 20u);
 
@@ -2768,7 +2809,7 @@ bool TestFrameInterpolatorBilinear::testLookupMask(const unsigned int width, con
 				{
 					for (unsigned int xBin = 0u; xBin <= lookupTable.binsX(); ++xBin)
 					{
-						Vector2 value = Random::vector2(-10, 10);
+						Vector2 value = Random::vector2(randomGenerator, -10, 10);
 
 						if (!offset)
 						{
@@ -2779,17 +2820,22 @@ bool TestFrameInterpolatorBilinear::testLookupMask(const unsigned int width, con
 					}
 				}
 
-				const unsigned int framePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				const unsigned int targetMaskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+				const unsigned int framePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int framePaddingElements = framePaddingBase * RandomI::random(randomGenerator, 1u);
+
+				const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
+
+				const unsigned int targetMaskPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int targetMaskPaddingElements = targetMaskPaddingBase * RandomI::random(randomGenerator, 1u);
 
 				Frame sourceFrame(FrameType(width, height, FrameType::findPixelFormat(n * 8), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 				Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);
 				Frame targetMask(FrameType(targetFrame, FrameType::FORMAT_Y8), targetMaskPaddingElements);
 
-				CV::CVUtilities::randomizeFrame(sourceFrame, false);
-				CV::CVUtilities::randomizeFrame(targetFrame, false);
-				CV::CVUtilities::randomizeFrame(targetMask, false);
+				CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+				CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+				CV::CVUtilities::randomizeFrame(targetMask, false, &randomGenerator);
 
 				const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				const Frame copyTargetMask(targetMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -2849,6 +2895,8 @@ bool TestFrameInterpolatorBilinear::testRotateFrame(const unsigned int width, co
 	Log::info() << "Test rotation of frame with resolution " << width << "x" << height << ":";
 	Log::info() << " ";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
@@ -2873,24 +2921,27 @@ bool TestFrameInterpolatorBilinear::testRotateFrame(const unsigned int width, co
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(1u, 100u);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(1u, 100u);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 100u);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int sourcePaddingElements = sourcePaddingBase * RandomI::random(randomGenerator, 1u);
+
+					const unsigned int targetPaddingBase = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int targetPaddingElements = targetPaddingBase * RandomI::random(randomGenerator, 1u);
 
 					Frame sourceFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);
 
-					CV::CVUtilities::randomizeFrame(sourceFrame, false);
-					CV::CVUtilities::randomizeFrame(targetFrame, false);
+					CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+					CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
 
 					const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-					const Scalar anchorX = Random::scalar(-20, Scalar(sourceFrame.width()) + 20);
-					const Scalar anchorY = Random::scalar(-20, Scalar(sourceFrame.height()) + 20);
+					const Scalar anchorX = Random::scalar(randomGenerator, -20, Scalar(sourceFrame.width()) + 20);
+					const Scalar anchorY = Random::scalar(randomGenerator, -20, Scalar(sourceFrame.height()) + 20);
 
-					const Scalar angle = Random::scalar(0, Numeric::pi2());
+					const Scalar angle = Random::scalar(randomGenerator, 0, Numeric::pi2());
 
 					performance.startIf(performanceIteration);
 					if (!CV::FrameInterpolatorBilinear::Comfort::rotate(sourceFrame, targetFrame, anchorX, anchorY, angle, useWorker, nullptr))
@@ -2945,6 +2996,11 @@ bool TestFrameInterpolatorBilinear::testPatchIntensitySum1Channel(const unsigned
 	Log::info() << "Testing intensity sum of interpolated patch:";
 	Log::info() << " ";
 
+	RandomGenerator randomGenerator;
+
+	const unsigned int randomPatchWidth = RandomI::random(randomGenerator, 1u, 64u);
+	const unsigned int randomPatchHeight = RandomI::random(randomGenerator, 1u, 64u);
+
 	const IndexPairs32 patchSizes =
 	{
 		{1u, 1u},
@@ -2954,7 +3010,7 @@ bool TestFrameInterpolatorBilinear::testPatchIntensitySum1Channel(const unsigned
 		{10u, 10u},
 		{31u, 31u},
 		{64u, 64u},
-		{RandomI::random(1u, 64u), RandomI::random(1u, 64u)}
+		{randomPatchWidth, randomPatchHeight}
 	};
 
 	bool allSucceeded = true;

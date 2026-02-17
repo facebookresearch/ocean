@@ -202,7 +202,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 			Scalar previousRobustError = Numeric::minValue();
 
-			const Scalar sigma = Estimator::needSigma(estimatorType) ? Random::scalar(Numeric::weakEps(), 100) : Scalar(0);
+			const Scalar sigma = Estimator::needSigma(estimatorType) ? Random::scalar(randomGenerator, Numeric::weakEps(), 100) : Scalar(0);
 
 			for (const Scalar& value : values)
 			{
@@ -321,7 +321,6 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 	Log::info() << "Testing robust weight function:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -344,7 +343,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 			Scalar previousRobustWeight = Numeric::maxValue();
 
-			const Scalar sigma = Estimator::needSigma(estimatorType) ? Random::scalar(Numeric::weakEps(), 100) : Scalar(0);
+			const Scalar sigma = Estimator::needSigma(estimatorType) ? Random::scalar(randomGenerator, Numeric::weakEps(), 100) : Scalar(0);
 
 			for (const Scalar& value : values)
 			{

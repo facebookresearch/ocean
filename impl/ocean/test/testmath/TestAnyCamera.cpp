@@ -581,7 +581,11 @@ TestAnyCamera::VerificationResult TestAnyCamera::verifyAnyCamera(const AnyCamera
 			{
 				// un-projecting and re-projecting a distorted image point with random camera pose
 
-				const HomogenousMatrixT4<T> world_T_camera(RandomT<T>::vector3(randomGenerator) * RandomT<T>::scalar(randomGenerator, -10, 10), RandomT<T>::quaternion(randomGenerator));
+				const VectorT3<T> randomTranslationDirection = RandomT<T>::vector3(randomGenerator);
+				const T randomTranslationScale = RandomT<T>::scalar(randomGenerator, -10, 10);
+				const QuaternionT<T> randomRotation = RandomT<T>::quaternion(randomGenerator);
+
+				const HomogenousMatrixT4<T> world_T_camera(randomTranslationDirection * randomTranslationScale, randomRotation);
 
 				const LineT3<T> ray = anyCamera.ray(distortedImagePoint, world_T_camera);
 

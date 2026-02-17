@@ -710,8 +710,10 @@ bool TestZeroMeanSumSquareDifferences::testPatch8BitPerChannel(const unsigned in
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const unsigned int paddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int paddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements0Random = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements0 = paddingElements0Random * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements1Random = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements1 = paddingElements1Random * RandomI::random(randomGenerator, 1u);
 
 		Frame frame0(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements0);
 		Frame frame1(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements1);
@@ -1251,8 +1253,10 @@ bool TestZeroMeanSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsig
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const unsigned int paddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int paddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements0Random = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements0 = paddingElements0Random * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements1Random = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements1 = paddingElements1Random * RandomI::random(randomGenerator, 1u);
 
 		Frame frame0(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements0);
 		Frame frame1(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements1);
@@ -1531,8 +1535,10 @@ bool TestZeroMeanSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(con
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const unsigned int paddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int paddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements0Random = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements0 = paddingElements0Random * RandomI::random(randomGenerator, 1u);
+		const unsigned int paddingElements1Random = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int paddingElements1 = paddingElements1Random * RandomI::random(randomGenerator, 1u);
 
 		Frame frame0(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements0);
 		Frame frame1(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements1);

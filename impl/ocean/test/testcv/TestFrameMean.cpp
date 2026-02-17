@@ -209,10 +209,15 @@ bool TestFrameMean::testAddToFrameIndividually(const unsigned int performanceWid
 				const unsigned int width = performanceIteration ? performanceWidth : RandomI::random(randomGenerator, 1u, 2048u);
 				const unsigned int height = performanceIteration ? performanceHeight : RandomI::random(randomGenerator, 1u, 2048u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int denominatorsPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
+				unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u);
+				unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u);
+				unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 256u);
+				unsigned int denominatorsPaddingElements = RandomI::random(randomGenerator, 1u, 256u);
+
+				sourcePaddingElements *= RandomI::random(randomGenerator, 1u);
+				targetPaddingElements *= RandomI::random(randomGenerator, 1u);
+				maskPaddingElements *= RandomI::random(randomGenerator, 1u);
+				denominatorsPaddingElements *= RandomI::random(randomGenerator, 1u);
 
 				const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 				const uint8_t nonMaskValue = 0xFFu - maskValue;
@@ -351,13 +356,13 @@ bool TestFrameMean::testMeanValue(const unsigned int width, const unsigned int h
 		{
 			const bool performanceIteration = iterations % 2u == 0u;
 
-			const unsigned int testWidth = performanceIteration ? width : RandomI::random(1u, width);
-			const unsigned int testHeight = performanceIteration ? height : RandomI::random(1u, height);
+			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, height);
 
-			const unsigned int paddingElements = RandomI::random(0u, 100u);
+			const unsigned int paddingElements = RandomI::random(randomGenerator, 0u, 100u);
 
 			Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false);
+			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
 
 			std::vector<TMean> meanValues(channels, TMean(0));
 

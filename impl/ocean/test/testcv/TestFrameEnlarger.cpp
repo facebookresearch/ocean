@@ -275,8 +275,11 @@ bool TestFrameEnlarger::testAddBorder(const double testDuration)
 		const unsigned int borderSizeRight = RandomI::random(randomGenerator, 20u);
 		const unsigned int borderSizeBottom = RandomI::random(randomGenerator, 20u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int enlargedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingElementsMultiplier;
+
+		const unsigned int enlargedFramePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int enlargedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * enlargedFramePaddingElementsMultiplier;
 
 		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 		Frame enlargedFrame(FrameType(frame, frame.width() + borderSizeLeft + borderSizeRight, frame.height() + borderSizeTop + borderSizeBottom), enlargedFramePaddingElements);
@@ -333,8 +336,11 @@ bool TestFrameEnlarger::testAddBorderNearestPixel(const double testDuration)
 		const unsigned int borderSizeRight = RandomI::random(randomGenerator, 20u);
 		const unsigned int borderSizeBottom = RandomI::random(randomGenerator, 20u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int enlargedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingElementsMultiplier;
+
+		const unsigned int enlargedFramePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int enlargedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * enlargedFramePaddingElementsMultiplier;
 
 		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 		Frame enlargedFrame(FrameType(frame, frame.width() + borderSizeLeft + borderSizeRight, frame.height() + borderSizeTop + borderSizeBottom), enlargedFramePaddingElements);
@@ -384,8 +390,11 @@ bool TestFrameEnlarger::testAddBorderMirrored(const double testDuration)
 		const unsigned int height = RandomI::random(randomGenerator, std::max(borderSizeTop, borderSizeBottom), 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int enlargedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingElementsMultiplier;
+
+		const unsigned int enlargedFramePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int enlargedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * enlargedFramePaddingElementsMultiplier;
 
 		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 		Frame enlargedFrame(FrameType(frame, frame.width() + borderSizeLeft + borderSizeRight, frame.height() + borderSizeTop + borderSizeBottom), enlargedFramePaddingElements);
@@ -478,12 +487,13 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const u
 				const unsigned int useWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 2048u);
 				const unsigned int useHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 2048u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u) * sourcePaddingElementsMultiplier;
 
 				Frame source(FrameType(useWidth, useHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame target;
 
-				CV::CVUtilities::randomizeFrame(source);
+				CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
 
 				performance.startIf(performanceIteration);
 				CV::FrameEnlarger::Comfort::multiplyByTwo(source, target, useWorker);
@@ -546,7 +556,8 @@ bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
 		const unsigned int borderSizeRight = zeroBorder ? 0u : RandomI::random(randomGenerator, 0u, 20u);
 		const unsigned int borderSizeBottom = zeroBorder ? 0u : RandomI::random(randomGenerator, 0u, 20u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingElementsMultiplier;
 
 		const FrameType::PixelFormat pixelFormat = pixelFormats8BitsPerChannel[RandomI::random(randomGenerator, (unsigned int)(numberPixelFormats - 1))];
 
@@ -555,7 +566,7 @@ bool TestFrameEnlarger::testAddTransparentBorder(const double testDuration)
 
 		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
 
-		const bool transparentIs0xFF = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool transparentIs0xFF = RandomI::boolean(randomGenerator);
 
 		if (transparentIs0xFF)
 		{

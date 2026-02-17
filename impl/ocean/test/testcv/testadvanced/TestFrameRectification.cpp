@@ -197,14 +197,22 @@ bool TestFrameRectification::testPlanarRectangleObject(const unsigned int width,
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					PinholeCamera pinholeCamera(cameraFrame.width(), cameraFrame.height(), Numeric::deg2rad(60));
-					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.01), Random::scalar(randomGenerator, -1, 1) * Scalar(0.01)));
-					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.001), Random::scalar(randomGenerator, -1, 1) * Scalar(0.001)));
+					const Scalar radialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					const Scalar radialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(radialDistortion0, radialDistortion1));
+
+					const Scalar tangentialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					const Scalar tangentialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(tangentialDistortion0, tangentialDistortion1));
 
 					const AnyCameraPinhole camera(pinholeCamera);
 
 					const Vector2 objectDimension(1, Scalar(objectFrame.height()) / Scalar(objectFrame.width()));
 
-					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50))));
+					const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(yaw, pitch, roll));
 
 					const HomogenousMatrix4 world_T_camera = determineCameraPose(camera, Box3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y())), world_R_camera);
 
@@ -320,14 +328,22 @@ bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int wid
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					PinholeCamera pinholeCamera(cameraFrame.width(), cameraFrame.height(), Numeric::deg2rad(60));
-					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.01), Random::scalar(randomGenerator, -1, 1) * Scalar(0.01)));
-					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.001), Random::scalar(randomGenerator, -1, 1) * Scalar(0.001)));
+					const Scalar radialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					const Scalar radialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(radialDistortion0, radialDistortion1));
+
+					const Scalar tangentialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					const Scalar tangentialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(tangentialDistortion0, tangentialDistortion1));
 
 					const AnyCameraPinhole camera(pinholeCamera);
 
 					const Vector2 objectDimension(1, Scalar(objectFrame.height()) / Scalar(objectFrame.width()));
 
-					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50))));
+					const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(yaw, pitch, roll));
 
 					const HomogenousMatrix4 world_T_camera = determineCameraPose(camera, Box3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y())), world_R_camera);
 
@@ -348,7 +364,7 @@ bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int wid
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					performance.start();
-						CV::Advanced::FrameRectification::Comfort::arbitraryRectangleObject(cameraFrame, camera, world_T_camera, Vector3(0, 0, 0), Vector3(0, 0, objectDimension.y()), Vector3(objectDimension.x(), 0, objectDimension.y()), Vector3(objectDimension.x(), 0, 0), resultFrame, useWorker, nullptr,  lookup ? 20u : 0u);
+						CV::Advanced::FrameRectification::Comfort::arbitraryRectangleObject(cameraFrame, camera, world_T_camera, Vector3(0, 0, 0), Vector3(0, 0, objectDimension.y()), Vector3(objectDimension.x(), 0, objectDimension.y()), Vector3(objectDimension.x(), 0, 0), resultFrame, useWorker, nullptr, lookup ? 20u : 0u);
 					performance.stop();
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(resultFrame, copyResultFrame))
@@ -443,8 +459,13 @@ bool TestFrameRectification::testTriangleObject(const unsigned int width, const 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					PinholeCamera pinholeCamera(cameraFrame.width(), cameraFrame.height(), Numeric::deg2rad(60));
-					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.01), Random::scalar(randomGenerator, -1, 1) * Scalar(0.01)));
-					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.001), Random::scalar(randomGenerator, -1, 1) * Scalar(0.001)));
+					const Scalar radialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					const Scalar radialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(radialDistortion0, radialDistortion1));
+
+					const Scalar tangentialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					const Scalar tangentialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(tangentialDistortion0, tangentialDistortion1));
 
 					const AnyCameraPinhole camera(pinholeCamera);
 
@@ -464,7 +485,10 @@ bool TestFrameRectification::testTriangleObject(const unsigned int width, const 
 						Triangle3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y()), Vector3(objectDimension.x(), 0, 0))
 					};
 
-					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50))));
+					const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(yaw, pitch, roll));
 
 					const HomogenousMatrix4 world_T_camera = determineCameraPose(camera, Box3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y())), world_R_camera);
 
@@ -584,14 +608,22 @@ bool TestFrameRectification::testPlanarRectangleObjectMask(const unsigned int wi
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					PinholeCamera pinholeCamera(cameraFrame.width(), cameraFrame.height(), Numeric::deg2rad(60));
-					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.01), Random::scalar(randomGenerator, -1, 1) * Scalar(0.01)));
-					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.001), Random::scalar(randomGenerator, -1, 1) * Scalar(0.001)));
+					const Scalar radialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					const Scalar radialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(radialDistortion0, radialDistortion1));
+
+					const Scalar tangentialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					const Scalar tangentialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(tangentialDistortion0, tangentialDistortion1));
 
 					const AnyCameraPinhole camera(pinholeCamera);
 
 					const Vector2 objectDimension(1, Scalar(objectFrame.height()) / Scalar(objectFrame.width()));
 
-					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50))));
+					const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(yaw, pitch, roll));
 
 					const HomogenousMatrix4 world_T_camera = determineCameraPose(camera, Box3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y())), world_R_camera) * HomogenousMatrix4(Random::euler(randomGenerator, Numeric::deg2rad(20)));
 
@@ -754,14 +786,22 @@ bool TestFrameRectification::testArbitraryRectangleObjectMask(const unsigned int
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					PinholeCamera pinholeCamera(cameraFrame.width(), cameraFrame.height(), Numeric::deg2rad(60));
-					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.01), Random::scalar(randomGenerator, -1, 1) * Scalar(0.01)));
-					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.001), Random::scalar(randomGenerator, -1, 1) * Scalar(0.001)));
+					const Scalar radialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					const Scalar radialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(radialDistortion0, radialDistortion1));
+
+					const Scalar tangentialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					const Scalar tangentialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(tangentialDistortion0, tangentialDistortion1));
 
 					const AnyCameraPinhole camera(pinholeCamera);
 
 					const Vector2 objectDimension(1, Scalar(objectFrame.height()) / Scalar(objectFrame.width()));
 
-					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50))));
+					const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(yaw, pitch, roll));
 
 					const HomogenousMatrix4 world_T_camera = determineCameraPose(camera, Box3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y())), world_R_camera) * HomogenousMatrix4(Random::euler(randomGenerator, Numeric::deg2rad(20)));
 
@@ -924,8 +964,13 @@ bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, co
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					PinholeCamera pinholeCamera(cameraFrame.width(), cameraFrame.height(), Numeric::deg2rad(60));
-					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.01), Random::scalar(randomGenerator, -1, 1) * Scalar(0.01)));
-					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(Random::scalar(randomGenerator, -1, 1) * Scalar(0.001), Random::scalar(randomGenerator, -1, 1) * Scalar(0.001)));
+					const Scalar radialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					const Scalar radialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.01);
+					pinholeCamera.setRadialDistortion(PinholeCamera::DistortionPair(radialDistortion0, radialDistortion1));
+
+					const Scalar tangentialDistortion0 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					const Scalar tangentialDistortion1 = Random::scalar(randomGenerator, -1, 1) * Scalar(0.001);
+					pinholeCamera.setTangentialDistortion(PinholeCamera::DistortionPair(tangentialDistortion0, tangentialDistortion1));
 
 					const AnyCameraPinhole camera(pinholeCamera);
 
@@ -945,7 +990,10 @@ bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, co
 						Triangle3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y()), Vector3(objectDimension.x(), 0, 0))
 					};
 
-					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50)), Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50))));
+					const Scalar yaw = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar pitch = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Scalar roll = Random::scalar(randomGenerator, Numeric::deg2rad(-50), Numeric::deg2rad(50));
+					const Quaternion world_R_camera = Quaternion(Vector3(1, 0, 0), -Numeric::pi_2()) * Quaternion(Euler(yaw, pitch, roll));
 
 					const HomogenousMatrix4 world_T_camera = determineCameraPose(camera, Box3(Vector3(0, 0, 0), Vector3(objectDimension.x(), 0, objectDimension.y())), world_R_camera) * HomogenousMatrix4(Random::euler(randomGenerator, Numeric::deg2rad(20)));
 

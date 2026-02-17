@@ -175,22 +175,22 @@ bool TestVector3::testIsParallel(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 vector(Random::vector3(-valueRange, valueRange));
+			const Vector3 vector(Random::vector3(randomGenerator, -valueRange, valueRange));
 
-			const Vector3 parallelVector(vector * Random::scalar(-valueRange, valueRange));
+			const Vector3 parallelVector(vector * Random::scalar(randomGenerator, -valueRange, valueRange));
 
-			Scalar offsetX = Random::scalar(-valueRange, valueRange);
-			Scalar offsetY = Random::scalar(-valueRange, valueRange);
-			Scalar offsetZ = Random::scalar(-valueRange, valueRange);
+			Scalar offsetX = Random::scalar(randomGenerator, -valueRange, valueRange);
+			Scalar offsetY = Random::scalar(randomGenerator, -valueRange, valueRange);
+			Scalar offsetZ = Random::scalar(randomGenerator, -valueRange, valueRange);
 
 			while (Numeric::isWeakEqualEps(offsetX) && Numeric::isWeakEqualEps(offsetY) && Numeric::isWeakEqualEps(offsetZ))
 			{
-				offsetX = Random::scalar(-valueRange, valueRange);
-				offsetY = Random::scalar(-valueRange, valueRange);
-				offsetZ = Random::scalar(-valueRange, valueRange);
+				offsetX = Random::scalar(randomGenerator, -valueRange, valueRange);
+				offsetY = Random::scalar(randomGenerator, -valueRange, valueRange);
+				offsetZ = Random::scalar(randomGenerator, -valueRange, valueRange);
 			}
 
-			const Vector3 notParallelVector(vector + Vector3(offsetX, offsetY, offsetZ) * Random::scalar(-valueRange, valueRange));
+			const Vector3 notParallelVector(vector + Vector3(offsetX, offsetY, offsetZ) * Random::scalar(randomGenerator, -valueRange, valueRange));
 
 			if (vector.isNull())
 			{
@@ -269,7 +269,7 @@ bool TestVector3::testIsUnit(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 vector(Random::vector3(-valueRange, valueRange));
+			const Vector3 vector(Random::vector3(randomGenerator, -valueRange, valueRange));
 			const Scalar length = vector.length();
 
 			if (Numeric::isEqual(length, Scalar(1)))
@@ -312,8 +312,8 @@ bool TestVector3::testAngle(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector3 vectorA(Random::vector3(-10, 10));
-			const Vector3 vectorB(Random::vector3(-10, 10));
+			const Vector3 vectorA(Random::vector3(randomGenerator, -10, 10));
+			const Vector3 vectorB(Random::vector3(randomGenerator, -10, 10));
 
 			if (!vectorA.isNull() && !vectorB.isNull())
 			{
@@ -428,8 +428,8 @@ bool TestVector3::testLessOperator(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector3 first = Vector3(Random::vector3(-100, 100));
-			const Vector3 second = Vector3(Random::vector3(-100, 100));
+			const Vector3 first = Vector3(Random::vector3(randomGenerator, -100, 100));
+			const Vector3 second = Vector3(Random::vector3(randomGenerator, -100, 100));
 
 			const bool less = first < second;
 
@@ -493,8 +493,8 @@ bool TestVector3::testVectorConversion(const double testDuration)
 
 		for (size_t n = 0; n < size; ++n)
 		{
-			vectorsD.push_back(RandomD::vector3(-10, 10));
-			vectorsF.push_back(RandomF::vector3(-10, 10));
+			vectorsD.push_back(RandomD::vector3(randomGenerator, -10, 10));
+			vectorsF.push_back(RandomF::vector3(randomGenerator, -10, 10));
 		}
 
 		const std::vector<VectorD3> convertedD2D_0(VectorD3::vectors2vectors(vectorsD));

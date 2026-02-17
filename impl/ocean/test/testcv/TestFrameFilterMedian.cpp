@@ -332,8 +332,11 @@ bool TestFrameFilterMedian::testMedian(const unsigned int width, const unsigned 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, filterSize, 1024u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, filterSize, 1024u);
 
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingMultiplier;
+
+				const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 				Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 				Frame target(frame.frameType(), targetPaddingElements);
@@ -430,7 +433,8 @@ bool TestFrameFilterMedian::testMedianInPlace(const unsigned int width, const un
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, filterSize, 1024u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, filterSize, 1024u);
 
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * framePaddingMultiplier;
 
 				Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 

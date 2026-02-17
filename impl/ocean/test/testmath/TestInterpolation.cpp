@@ -144,13 +144,13 @@ bool TestInterpolation::testLinear(const double /*testDuration*/)
 
 	// Quaternion
 
-	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.5f), QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.7f), float(0.5)) == QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.6f));
+	OCEAN_EXPECT_EQUAL(validation, Interpolation::linear(QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.5f), QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.7f), float(0.5)), QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.6f));
 
-	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), float(0.5)) == QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6));
+	OCEAN_EXPECT_EQUAL(validation, Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), float(0.5)), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6));
 
-	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), double(0.5)) == QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6));
+	OCEAN_EXPECT_EQUAL(validation, Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), double(0.5)), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6));
 
-	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.5)), Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.7)), Scalar(0.5)) == Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.6)));
+	OCEAN_EXPECT_EQUAL(validation, Interpolation::linear(Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.5)), Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.7)), Scalar(0.5)), Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.6)));
 
 	Log::info() << "Validation: " << validation;
 
@@ -242,10 +242,10 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 			const Scalar tx = Random::scalar(randomGenerator, 0, 1);
 			const Scalar ty = Random::scalar(randomGenerator, 0, 1);
 
-			bool b00 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
-			const bool b01 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
-			const bool b10 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
-			const bool b11 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
+			bool b00 = RandomI::boolean(randomGenerator);
+			const bool b01 = RandomI::boolean(randomGenerator);
+			const bool b10 = RandomI::boolean(randomGenerator);
+			const bool b11 = RandomI::boolean(randomGenerator);
 
 			if (!b00 && !b01 && !b10 && !b11)
 			{

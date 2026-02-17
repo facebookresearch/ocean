@@ -733,7 +733,7 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			rotations[n] = RandomT<T>::rotation();
+			rotations[n] = RandomT<T>::rotation(randomGenerator);
 		}
 
 		performance.start();
@@ -796,7 +796,7 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			rotations[n] = RandomT<T>::rotation();
+			rotations[n] = RandomT<T>::rotation(randomGenerator);
 		}
 
 		performance.start();
@@ -847,8 +847,8 @@ bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const VectorT3<T> reference(RandomT<T>::vector3());
-			const VectorT3<T> offset(RandomT<T>::vector3());
+			const VectorT3<T> reference(RandomT<T>::vector3(randomGenerator));
+			const VectorT3<T> offset(RandomT<T>::vector3(randomGenerator));
 
 			// identity test
 			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(1, 0, 0), VectorT3<T>(1, 0, 0)) * reference, reference);
@@ -1012,7 +1012,7 @@ bool TestRotation::testInversion(const double testDuration)
 			OCEAN_EXPECT_EQUAL(validation, rotationCopy.angle(), rotation.angle());
 
 			// Should be the same as inverted()
-			OCEAN_EXPECT_TRUE(validation, rotationCopy == rotation.inverted());
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy, rotation.inverted());
 		}
 
 		{
@@ -1021,7 +1021,7 @@ bool TestRotation::testInversion(const double testDuration)
 			const RotationT<T> inverse = -rotation;
 
 			OCEAN_EXPECT_TRUE(validation, inverse.isValid());
-			OCEAN_EXPECT_TRUE(validation, inverse == rotation.inverted());
+			OCEAN_EXPECT_EQUAL(validation, inverse, rotation.inverted());
 		}
 
 		{
@@ -1029,7 +1029,7 @@ bool TestRotation::testInversion(const double testDuration)
 
 			const RotationT<T> doubleInverted = rotation.inverted().inverted();
 
-			OCEAN_EXPECT_TRUE(validation, doubleInverted == rotation);
+			OCEAN_EXPECT_EQUAL(validation, doubleInverted, rotation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -1101,7 +1101,7 @@ bool TestRotation::testComparisonOperators(const double testDuration)
 			}
 			else
 			{
-				OCEAN_EXPECT_TRUE(validation, rotation1 != rotation2);
+				OCEAN_EXPECT_NOT_EQUAL(validation, rotation1, rotation2);
 			}
 		}
 	}

@@ -237,12 +237,15 @@ bool TestFisheyeCamera::testDistortion(const unsigned int width, const unsigned 
 			tangentialDistortion[0] = (n <= 1) ? T(0) : RandomT<T>::scalar(randomGenerator, T(-0.001), T(0.001));
 			tangentialDistortion[1] = (n <= 1) ? T(0) : RandomT<T>::scalar(randomGenerator, T(-0.001), T(0.001));
 
-			const FisheyeCameraT<T> fisheyeCamera(width, height, RandomT<T>::scalar(randomGenerator, 500, 600), RandomT<T>::scalar(randomGenerator, 500, 600),
-								RandomT<T>::scalar(randomGenerator, T(width) * T(0.5) - 50, T(width) * T(0.5) + 50),
-								RandomT<T>::scalar(randomGenerator, T(height) * T(0.5) - 50, T(height) * T(0.5) + 50),
-								radialDistortion, tangentialDistortion);
+			const T focalLengthX = RandomT<T>::scalar(randomGenerator, 500, 600);
+			const T focalLengthY = RandomT<T>::scalar(randomGenerator, 500, 600);
 
-			const VectorT2<T> distortedImagePoint(RandomT<T>::scalar(randomGenerator, 0, T(width - 1)), RandomT<T>::scalar(randomGenerator, 0, T(height - 1)));
+			const T principalX = RandomT<T>::scalar(randomGenerator, T(width) * T(0.5) - 50, T(width) * T(0.5) + 50);
+			const T principalY = RandomT<T>::scalar(randomGenerator, T(height) * T(0.5) - 50, T(height) * T(0.5) + 50);
+
+			const FisheyeCameraT<T> fisheyeCamera(width, height, focalLengthX, focalLengthY, principalX, principalY, radialDistortion, tangentialDistortion);
+
+			const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width - 1), T(0), T(height - 1));
 
 			const VectorT2<T> distortedNormalized((distortedImagePoint.x() - fisheyeCamera.principalPointX()) * fisheyeCamera.inverseFocalLengthX(),
 													(distortedImagePoint.y() - fisheyeCamera.principalPointY()) * fisheyeCamera.inverseFocalLengthY());
@@ -308,7 +311,7 @@ bool TestFisheyeCamera::testVectorDistorted(const unsigned int width, const unsi
 
 		const FisheyeCameraT<T> fisheyeCamera(width, height, focalLengthX, focalLengthY, principalPointX, principalPointY, radialDistortion, tangentialDistortion);
 
-		const VectorT2<T> distortedImagePoint(RandomT<T>::scalar(randomGenerator, 0, T(width - 1)), RandomT<T>::scalar(randomGenerator, 0, T(height - 1)));
+		const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width - 1), T(0), T(height - 1));
 
 		const VectorT3<T> rayVector(fisheyeCamera.vector(distortedImagePoint));
 

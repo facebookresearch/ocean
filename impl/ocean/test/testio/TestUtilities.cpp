@@ -102,7 +102,7 @@ bool TestUtilities::testReadFile(const double testDuration)
 
 				if (readBuffer.size() == writeBuffer.size() && !readBuffer.empty())
 				{
-					OCEAN_EXPECT_TRUE(validation, memcmp(readBuffer.data(), writeBuffer.data(), readBuffer.size()) == 0);
+					OCEAN_EXPECT_EQUAL(validation, memcmp(readBuffer.data(), writeBuffer.data(), readBuffer.size()), 0);
 				}
 			}
 		}

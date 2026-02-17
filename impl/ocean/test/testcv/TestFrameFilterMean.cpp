@@ -89,14 +89,17 @@ bool TestFrameFilterMean::testFilterSizeArbitrary(const unsigned int width, cons
 			{
 				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int filterSize = RandomI::random(3u, 11u) | 0x01u;
+					const unsigned int filterSize = RandomI::random(randomGenerator, 3u, 11u) | 0x01u;
 					ocean_assert(filterSize % 2u == 1u);
 
-					const unsigned int testWidth = performanceIteration ? width : RandomI::random(filterSize, width);
-					const unsigned int testHeight = performanceIteration ? height : RandomI::random(filterSize, height);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, filterSize, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, filterSize, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-					const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+					const unsigned int sourcePaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * sourcePaddingMultiplier;
+
+					const unsigned int targetPaddingMultiplier = RandomI::random(randomGenerator, 1u);
+					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * targetPaddingMultiplier;
 
 					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(nChannels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 					Frame target(FrameType(source.frameType()), targetPaddingElements);

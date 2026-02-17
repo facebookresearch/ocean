@@ -346,7 +346,6 @@ bool TestHomography::testRotationalHomographyOnePose(const double testDuration)
 	Log::info() << "Rotational homography determination for one pose test:";
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.99;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -405,7 +404,6 @@ bool TestHomography::testRotationalHomographyTwoPoses(const double testDuration)
 	Log::info() << "Rotational homography determination for two poses test:";
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.95;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -479,7 +477,6 @@ bool TestHomography::testPlanarHomographyOnePose(const double testDuration)
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.99;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -544,7 +541,6 @@ bool TestHomography::testPlanarHomographyTwoPoses(const double testDuration)
 	const Box2 largeCameraBoundingBox(Scalar(pinholeCamera.width()) * Scalar(-5), Scalar(pinholeCamera.height()) * Scalar(-5), Scalar(pinholeCamera.width() * 6), Scalar(pinholeCamera.height() * 6));
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.95;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -625,7 +621,6 @@ bool TestHomography::testFactorizationPlanarHomographyOnePose(const double testD
 	constexpr unsigned int correspondences = 50;
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.95;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -764,7 +759,6 @@ bool TestHomography::testFactorizationPlanarHomographyTwoPoses(const double test
 	constexpr unsigned int correspondences = 50u;
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.95;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -1117,10 +1111,9 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Plane3 zPlane(Vector3(0, 0, 0), Vector3(0, 0, 1));
-
-	Validation validation(randomGenerator);
 
 	for (const unsigned int correspondences : {10u, 20u, 30u, 100u})
 	{
@@ -1349,7 +1342,10 @@ bool TestHomography::testIntrinsic(const double testDuration)
 			for (unsigned int i = 0u; i < images; ++i)
 			{
 				const Vector3 translation = Random::vector3(randomGenerator, Scalar(-10), Scalar(10), Scalar(-10), Scalar(10), Scalar(0.1), Scalar(10));
-				const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+				const Scalar eulerYaw = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+				const Scalar eulerPitch = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+				const Scalar eulerRoll = Random::scalar(randomGenerator, Numeric::deg2rad(-30), Numeric::deg2rad(30));
+				const Euler euler(eulerYaw, eulerPitch, eulerRoll);
 				const Quaternion quaternion(euler);
 
 				const HomogenousMatrix4 extrinsic(translation, quaternion);
@@ -1359,7 +1355,9 @@ bool TestHomography::testIntrinsic(const double testDuration)
 
 				for (unsigned int n = 0u; n < correspondences; ++n)
 				{
-					const Vector2 imagePoint(Scalar(Random::random(width - 1)), Scalar(Random::random(height - 1)));
+					const Scalar imagePointX = Scalar(RandomI::random(randomGenerator, width - 1));
+					const Scalar imagePointY = Scalar(RandomI::random(randomGenerator, height - 1));
+					const Vector2 imagePoint(imagePointX, imagePointY);
 					const Line3 ray = pinholeCamera.ray(imagePoint, extrinsic);
 
 					Vector3 objectPoint(0, 0, 0);
@@ -1506,7 +1504,6 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 	constexpr unsigned int height = 1080u;
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performance;
@@ -1624,7 +1621,6 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 	constexpr unsigned int height = 1080u;
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performance;
@@ -1743,7 +1739,6 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 	constexpr unsigned int height = 1080u;
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performance;
@@ -1892,9 +1887,7 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 	Vectors2 pointsRightNoised(points);
 
 	RandomGenerator randomGenerator;
-
 	const double successThreshold = useSVD ? 0.99 : 0.95;
-
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
@@ -1909,8 +1902,11 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 
 		const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
 
-		const HomogenousMatrix4 leftPose(Random::vector3(randomGenerator, -0.5, 0.5), Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
-		const HomogenousMatrix4 rightPose(Random::vector3(randomGenerator, -0.5, 0.5), Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
+		const Vector3 leftTranslation = Random::vector3(randomGenerator, -0.5, 0.5);
+		const HomogenousMatrix4 leftPose(leftTranslation, Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
+
+		const Vector3 rightTranslation = Random::vector3(randomGenerator, -0.5, 0.5);
+		const HomogenousMatrix4 rightPose(rightTranslation, Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
 
 		const SquareMatrix3 left_T_right = Geometry::Homography::homographyMatrix(leftPose, rightPose, pinholeCamera, pinholeCamera, plane);
 		ocean_assert_and_suppress_unused(!left_T_right.isSingular(), left_T_right);
@@ -1976,7 +1972,6 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
 	RandomGenerator randomGenerator;
-
 	constexpr double successThreshold = 0.99;
 	ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -1991,8 +1986,11 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 
 		const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
 
-		const HomogenousMatrix4 leftPose(Random::vector3(randomGenerator, -0.5, 0.5), Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
-		const HomogenousMatrix4 rightPose(Random::vector3(randomGenerator, -0.5, 0.5), Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
+		const Vector3 leftTranslation = Random::vector3(randomGenerator, -0.5, 0.5);
+		const HomogenousMatrix4 leftPose(leftTranslation, Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
+
+		const Vector3 rightTranslation = Random::vector3(randomGenerator, -0.5, 0.5);
+		const HomogenousMatrix4 rightPose(rightTranslation, Random::euler(randomGenerator, 0, Numeric::deg2rad(20)));
 
 		Vectors2 pointsLeft;
 		Vectors2 pointsRight;

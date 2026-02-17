@@ -128,7 +128,7 @@ TestJSONParser::JSONTestData TestJSONParser::JSONTestData::randomValue(RandomGen
 
 			case 1u:
 			{
-				const bool boolValue = RandomI::random(randomGenerator, 0u, 1u) == 1u;
+				const bool boolValue = RandomI::boolean(randomGenerator);
 				result.jsonString_ = boolValue ? "true" : "false";
 				result.expectedValue_ = IO::JSONParser::JSONValue(boolValue);
 				break;
@@ -169,7 +169,7 @@ TestJSONParser::JSONTestData TestJSONParser::JSONTestData::randomValue(RandomGen
 
 		case 1u:
 		{
-			const bool boolValue = RandomI::random(randomGenerator, 0u, 1u) == 1u;
+			const bool boolValue = RandomI::boolean(randomGenerator);
 			result.jsonString_ = boolValue ? "true" : "false";
 			result.expectedValue_ = IO::JSONParser::JSONValue(boolValue);
 			break;

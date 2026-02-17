@@ -1366,6 +1366,8 @@ bool TestSSE::testSumInterleave1Channel8Bit15Elements(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	uint8_t elements15[15];
 	uint8_t elements16Front[16];
 	uint8_t elements16Back[16];
@@ -1380,7 +1382,7 @@ bool TestSSE::testSumInterleave1Channel8Bit15Elements(const double testDuration)
 
 			for (unsigned int n = 0u; n < 15u; ++n)
 			{
-				const uint8_t randomValue = uint8_t(RandomI::random(255u));
+				const uint8_t randomValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
 				elements15[n] = randomValue;
 				elements16Front[n] = randomValue;
@@ -1389,8 +1391,8 @@ bool TestSSE::testSumInterleave1Channel8Bit15Elements(const double testDuration)
 				test += randomValue;
 			}
 
-			elements16Front[15] = uint8_t(RandomI::random(255u));
-			elements16Back[0] = uint8_t(RandomI::random(255u));
+			elements16Front[15] = uint8_t(RandomI::random(randomGenerator, 255u));
+			elements16Back[0] = uint8_t(RandomI::random(randomGenerator, 255u));
 
 			__m128i sums = CV::SSE::sum1Channel8BitFront15Elements<false>(elements15);
 			if (CV::SSE::value_u32<0u>(sums) != test)
@@ -1503,6 +1505,8 @@ bool TestSSE::testInterpolation1Channel8Bit15Elements(const double testDuration)
 
 	Log::info() << "Test interpolation of 15 elements of a 1 channel 8 bit image information:";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = false;
 
 	uint8_t row0[16];
@@ -1517,13 +1521,13 @@ bool TestSSE::testInterpolation1Channel8Bit15Elements(const double testDuration)
 
 	do
 	{
-		const Scalar xFactor = Random::scalar(0, 1);
-		const Scalar yFactor = Random::scalar(0, 1);
+		const Scalar xFactor = Random::scalar(randomGenerator, 0, 1);
+		const Scalar yFactor = Random::scalar(randomGenerator, 0, 1);
 
 		for (unsigned int n = 0u; n < 16u; ++n)
 		{
-			row0[n] = uint8_t(RandomI::random(0u, 255u));
-			row1[n] = uint8_t(RandomI::random(0u, 255u));
+			row0[n] = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
+			row1[n] = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
 		}
 
 		const unsigned int fx = (unsigned int)(xFactor * Scalar(128) + Scalar(0.5));
@@ -1582,6 +1586,8 @@ bool TestSSE::testInterpolation3Channel24Bit12Elements(const double testDuration
 
 	Log::info() << "Test interpolation of 12 elements of a 3 channel 24 bit image information:";
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = false;
 
 	uint8_t row0[16];
@@ -1595,13 +1601,13 @@ bool TestSSE::testInterpolation3Channel24Bit12Elements(const double testDuration
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const Scalar xFactor = Random::scalar(0, 1);
-		const Scalar yFactor = Random::scalar(0, 1);
+		const Scalar xFactor = Random::scalar(randomGenerator, 0, 1);
+		const Scalar yFactor = Random::scalar(randomGenerator, 0, 1);
 
 		for (unsigned int n = 0u; n < 16u; ++n)
 		{
-			row0[n] = uint8_t(RandomI::random(0u, 255u));
-			row1[n] = uint8_t(RandomI::random(0u, 255u));
+			row0[n] = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
+			row1[n] = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
 		}
 
 		const unsigned int fx = (unsigned int)(xFactor * Scalar(128) + Scalar(0.5));

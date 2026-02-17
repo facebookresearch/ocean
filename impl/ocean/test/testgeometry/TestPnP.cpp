@@ -130,7 +130,7 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 			imagePoints[n] = Random::vector2(randomGenerator, Scalar(10), Scalar(camera->width() - 10u), Scalar(10), Scalar(camera->height() - 10u));
 
 			const Line3 ray = camera->ray(imagePoints[n], world_T_camera);
-			objectPoints[n] = ray.point(Random::scalar(Scalar(0.25), Scalar(10)));
+			objectPoints[n] = ray.point(Random::scalar(randomGenerator, Scalar(0.25), Scalar(10)));
 
 			ocean_assert_and_suppress_unused(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[n]), flippedCamera_T_world);
 

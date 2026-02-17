@@ -874,7 +874,9 @@ bool TestSumAbsoluteDifferences::testPatchMirroredBorder8BitPerChannel(const dou
 template <typename T>
 bool TestSumAbsoluteDifferences::testDifferenceBetweenFramesWithOnePlane()
 {
-	const unsigned int channels = RandomI::random(1u, 5u);
+	RandomGenerator randomGenerator;
+
+	const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
 	switch (channels)
 	{

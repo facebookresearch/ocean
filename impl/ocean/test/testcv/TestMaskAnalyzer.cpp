@@ -119,7 +119,8 @@ bool TestMaskAnalyzer::testDetectBoundingBox(const unsigned int width, const uns
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u)
+				* RandomI::random(randomGenerator, 1u);
 
 			Frame frame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8_FULL_RANGE, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -182,7 +183,8 @@ bool TestMaskAnalyzer::testDetectBoundingBoxWithRoughGuess(const unsigned int wi
 			const unsigned int testWidth = randomIteration ? RandomI::random(randomGenerator, 1u, 1920u) : width;
 			const unsigned int testHeight = randomIteration ? RandomI::random(randomGenerator, 1u, 1080u) : height;
 
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u)
+				* RandomI::random(randomGenerator, 1u);
 
 			Frame frame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8_FULL_RANGE, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -272,11 +274,12 @@ bool TestMaskAnalyzer::testDetectOpaqueBoundingBox(const unsigned int width, con
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u)
+						* RandomI::random(randomGenerator, 1u);
 
 					Frame frame(FrameType(testWidth, testHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
-					const uint8_t fullTransparentValue = RandomI::random(randomGenerator, 1u) == 0u ? uint8_t(0xFFu) : uint8_t(0x00u);
+					const uint8_t fullTransparentValue = RandomI::boolean(randomGenerator) ? uint8_t(0xFFu) : uint8_t(0x00u);
 
 					std::vector<uint8_t> transparentColor(frame.channels(), uint8_t(RandomI::random(randomGenerator, 255u)));
 
@@ -386,7 +389,7 @@ bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int
 				randomValue = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
-			const bool placeValue = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool placeValue = RandomI::boolean(randomGenerator);
 
 			CV::PixelBoundingBox valueBoundingBox;
 
@@ -404,7 +407,7 @@ bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int
 
 			CV::PixelBoundingBox boundingBox;
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				const unsigned int subFrameLeft = RandomI::random(randomGenerator, 0u, testWidth - 1u);
 				const unsigned int subFrameTop = RandomI::random(randomGenerator, 0u, testHeight - 1u);

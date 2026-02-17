@@ -245,7 +245,9 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 
 			do
 			{
-				const unsigned int approximationBinSize = useApproximation ? RandomI::random(randomGenerator, 2u, 20u) : RandomI::random(randomGenerator, 1u);
+				const unsigned int approximationBinSizeApproximated = RandomI::random(randomGenerator, 2u, 20u);
+				const unsigned int approximationBinSizeExact = RandomI::random(randomGenerator, 1u);
+				const unsigned int approximationBinSize = useApproximation ? approximationBinSizeApproximated : approximationBinSizeExact;
 
 				const unsigned int width = performanceIteration ? performanceWidth : RandomI::random(randomGenerator, 128u, 2048u);
 				const unsigned int height = performanceIteration ? performanceHeight : RandomI::random(randomGenerator, 128u, 2048u);

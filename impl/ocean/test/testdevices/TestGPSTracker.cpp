@@ -143,11 +143,11 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 
 			std::string locationString = "GPS Location " + String::toAString(latitude, 10u) + ", " + String::toAString(longitude, 10u);
 
-			double parsedLatitude = RandomD::scalar(-1000.0, 1000.0);
-			double parsedLongitude = RandomD::scalar(-1000.0, 1000.0);
+			double parsedLatitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
+			double parsedLongitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
 			double parsedAltitude = NumericD::maxValue();
 
-			double* usedParsedAltitude = Random::random(randomGenerator, 1u) == 0u ? &parsedAltitude : nullptr;
+			double* usedParsedAltitude = RandomI::boolean(randomGenerator) ? &parsedAltitude : nullptr;
 
 			if (Devices::GPSTracker::parseGPSLocation(locationString, parsedLatitude, parsedLongitude, usedParsedAltitude))
 			{
@@ -163,8 +163,8 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 
 			// invalid string
 
-			parsedLatitude = RandomD::scalar(-1000.0, 1000.0);
-			parsedLongitude = RandomD::scalar(-1000.0, 1000.0);
+			parsedLatitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
+			parsedLongitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
 			parsedAltitude = NumericD::maxValue();
 
 			const unsigned int randomIndex = RandomI::random(randomGenerator, (unsigned int)(locationString.size()) - 1u);
@@ -186,11 +186,11 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 
 			std::string locationString = "GPS Location " + String::toAString(latitude, 10u) + ", " + String::toAString(longitude, 10u)  + ", " + String::toAString(altitude, 10u);
 
-			double parsedLatitude = RandomD::scalar(-1000.0, 1000.0);
-			double parsedLongitude = RandomD::scalar(-1000.0, 1000.0);
-			double parsedAltitude = RandomD::scalar(-1000.0, 1000.0);
+			double parsedLatitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
+			double parsedLongitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
+			double parsedAltitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
 
-			double* usedParsedAltitude = Random::random(randomGenerator, 1u) == 0u ? &parsedAltitude : nullptr;
+			double* usedParsedAltitude = RandomI::boolean(randomGenerator) ? &parsedAltitude : nullptr;
 
 			if (Devices::GPSTracker::parseGPSLocation(locationString, parsedLatitude, parsedLongitude, usedParsedAltitude))
 			{
@@ -213,9 +213,9 @@ bool TestGPSTracker::testParseGPSLocation(const double testDuration)
 
 			// invalid string
 
-			parsedLatitude = RandomD::scalar(-1000.0, 1000.0);
-			parsedLongitude = RandomD::scalar(-1000.0, 1000.0);
-			parsedAltitude = RandomD::scalar(-1000.0, 1000.0);
+			parsedLatitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
+			parsedLongitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
+			parsedAltitude = RandomD::scalar(randomGenerator, -1000.0, 1000.0);
 
 			const unsigned int randomIndex = RandomI::random(randomGenerator, (unsigned int)(locationString.size()) - 1u);
 			const char randomChar = char(RandomI::random(randomGenerator, 255));
@@ -308,7 +308,6 @@ bool TestGPSTracker::testDecodePolyline()
 		}
 		else
 		{
-
 			OCEAN_SET_FAILED(validation);
 		}
 	}
@@ -332,7 +331,6 @@ bool TestGPSTracker::testApproximatedDistanceBetweenLocations(const double testD
 	constexpr double earthCircumference = earthRadius * NumericD::pi2();
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);

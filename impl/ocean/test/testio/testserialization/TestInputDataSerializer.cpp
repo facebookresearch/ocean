@@ -178,7 +178,7 @@ bool TestInputDataSerializer::testFactoryFunction()
 
 	if (!scopedDirectory.exists())
 	{
-		OCEAN_EXPECT_TRUE(validation, false);
+		OCEAN_SET_FAILED(validation);
 	}
 	else
 	{
@@ -221,7 +221,7 @@ bool TestInputDataSerializer::testStartStop(const double testDuration)
 
 		if (!scopedDirectory.exists())
 		{
-			OCEAN_EXPECT_TRUE(validation, false);
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 
@@ -299,7 +299,7 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 
 		if (!scopedDirectory.exists())
 		{
-			OCEAN_EXPECT_TRUE(validation, false);
+			OCEAN_SET_FAILED(validation);
 			continue;
 		}
 

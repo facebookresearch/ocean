@@ -93,7 +93,6 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 	Log::info() << "PackagedTCPClient & PackagedTCPServer test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -176,7 +175,7 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 
 		Thread::sleep(50u);
 
-		const bool disconnectClient = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool disconnectClient = RandomI::boolean(randomGenerator);
 
 		if (disconnectClient)
 		{
@@ -209,7 +208,7 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 
 				if (sourceBuffer.size() == targetBuffer.size())
 				{
-					OCEAN_EXPECT_TRUE(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) == 0);
+					OCEAN_EXPECT_EQUAL(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()), 0);
 				}
 			}
 		}
@@ -227,7 +226,7 @@ bool TestPackagedTCPClient::testSendReceive(const double testDuration)
 
 				if (sourceBuffer.size() == targetBuffer.size())
 				{
-					OCEAN_EXPECT_TRUE(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) == 0);
+					OCEAN_EXPECT_EQUAL(validation, memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()), 0);
 				}
 			}
 		}

@@ -823,7 +823,7 @@ bool TestSquareMatrix4::testInvert(const double testDuration)
 				factor = Random::scalar(randomGenerator, -1, 1);
 			}
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				unsigned int rowIndex0, rowIndex1;
 				RandomI::random(randomGenerator, 3u, rowIndex0, rowIndex1);
@@ -1043,7 +1043,7 @@ bool TestSquareMatrix4::testProjectionMatrixFieldOfView(const double testDuratio
 
 		for (unsigned int n = 0u; n < 10u; ++n)
 		{
-			const VectorT3<T> objectPoint(RandomT<T>::scalar(randomGenerator, T(-10), T(10)), RandomT<T>::scalar(randomGenerator, T(-10), T(10)), RandomT<T>::scalar(randomGenerator, T(0.05), T(10))); // allowing to have points behind the camera
+			const VectorT3<T> objectPoint = RandomT<T>::vector3(randomGenerator, T(-10), T(10), T(-10), T(10), T(0.05), T(10)); // allowing to have points behind the camera
 
 			const VectorT2<T> imagePoint = anyCamera.projectToImage(objectPoint); // with visible range [0, width]x[0, height]
 
@@ -1098,7 +1098,7 @@ bool TestSquareMatrix4::testProjectionMatrixCameraMatrix(const double testDurati
 
 		for (unsigned int n = 0u; n < 10u; ++n)
 		{
-			const VectorT3<T> objectPoint(RandomT<T>::scalar(randomGenerator, T(-10), T(10)), RandomT<T>::scalar(randomGenerator, T(-10), T(10)), RandomT<T>::scalar(randomGenerator, T(0.05), T(10))); // allowing to have points behind the camera
+			const VectorT3<T> objectPoint = RandomT<T>::vector3(randomGenerator, T(-10), T(10), T(-10), T(10), T(0.05), T(10)); // allowing to have points behind the camera
 
 			const VectorT2<T> imagePoint = anyCamera.projectToImage(objectPoint); // with visible range [0, width]x[0, height]
 
@@ -1153,11 +1153,11 @@ bool TestSquareMatrix4::testTranspose(const double testDuration)
 		SquareMatrixT4<T> matrix2(matrix);
 		matrix2.transpose();
 
-		OCEAN_EXPECT_TRUE(validation, transposedMatrix == matrix2);
+		OCEAN_EXPECT_EQUAL(validation, transposedMatrix, matrix2);
 
 		SquareMatrixT4<T> doubleTransposed = transposedMatrix.transposed();
 
-		OCEAN_EXPECT_TRUE(validation, matrix == doubleTransposed);
+		OCEAN_EXPECT_EQUAL(validation, matrix, doubleTransposed);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
@@ -1326,10 +1326,10 @@ bool TestSquareMatrix4::testMatrixAddition(const double testDuration)
 
 		SquareMatrixT4<T> matrixC(matrixA);
 		matrixC += matrixB;
-		OCEAN_EXPECT_TRUE(validation, sum == matrixC);
+		OCEAN_EXPECT_EQUAL(validation, sum, matrixC);
 
 		const SquareMatrixT4<T> sumBA = matrixB + matrixA;
-		OCEAN_EXPECT_TRUE(validation, sum == sumBA);
+		OCEAN_EXPECT_EQUAL(validation, sum, sumBA);
 
 		SquareMatrixT4<T> matrixD;
 		for (unsigned int i = 0u; i < 16u; ++i)
@@ -1377,7 +1377,7 @@ bool TestSquareMatrix4::testMatrixSubtraction(const double testDuration)
 
 		SquareMatrixT4<T> matrixC(matrixA);
 		matrixC -= matrixB;
-		OCEAN_EXPECT_TRUE(validation, diff == matrixC);
+		OCEAN_EXPECT_EQUAL(validation, diff, matrixC);
 
 		const SquareMatrixT4<T> negA = -matrixA;
 		for (unsigned int i = 0u; i < 16u; ++i)
@@ -1460,7 +1460,7 @@ bool TestSquareMatrix4::testAccessor(const double testDuration)
 		{
 			matrix2[i] = values[i];
 		}
-		OCEAN_EXPECT_TRUE(validation, matrix == matrix2);
+		OCEAN_EXPECT_EQUAL(validation, matrix, matrix2);
 
 		// Test modification via operator()(row, col)
 		SquareMatrix4 matrix3;
@@ -1473,7 +1473,7 @@ bool TestSquareMatrix4::testAccessor(const double testDuration)
 				++index;
 			}
 		}
-		OCEAN_EXPECT_TRUE(validation, matrix == matrix3);
+		OCEAN_EXPECT_EQUAL(validation, matrix, matrix3);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

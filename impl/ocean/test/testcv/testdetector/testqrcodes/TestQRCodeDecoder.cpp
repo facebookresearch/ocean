@@ -163,7 +163,7 @@ bool TestQRCodeDecoder::testQRCodeDecoding(const double testDuration)
 			QRCode testCode;
 			OCEAN_EXPECT_TRUE(validation, QRCodeDecoder::decodeQRCode(code.modules(), testCode));
 
-			OCEAN_EXPECT_TRUE(validation, code == testCode);
+			OCEAN_EXPECT_EQUAL(validation, code, testCode);
 		}
 		while (Timestamp(true) < start + testDuration);
 	}

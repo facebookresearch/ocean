@@ -211,7 +211,6 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 
 	constexpr unsigned int kRandomSeed = 3u;
 	RandomGenerator randomGenerator(kRandomSeed);
-
 	constexpr double kRatioThreshold = std::is_same<T, float>::value ? 0.90 : 0.9999;
 	ValidationPrecision validation(kRatioThreshold, randomGenerator);
 

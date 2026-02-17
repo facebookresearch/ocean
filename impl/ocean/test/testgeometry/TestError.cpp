@@ -119,7 +119,6 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 	Log::info() << "Testing separate pose error determination with pinhole camera:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
@@ -155,7 +154,7 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 				perfectImagePoints.emplace_back(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, false));
 				distortedImagePoints.emplace_back(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, true));
 
-				noisedImagePoints.emplace_back(distortedImagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
+				noisedImagePoints.emplace_back(distortedImagePoints.back() + Random::gaussianNoiseVector2(randomGenerator, Scalar(5), Scalar(5)));
 			}
 
 			for (const bool distortImagePoints : {false, true})
@@ -215,10 +214,9 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 	Log::info() << "Testing separate pose error determination with any camera:";
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	uint64_t distortionIteration = 0ull;
-
-	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
 
@@ -259,7 +257,7 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 			for (const Vector3& objectPoint : objectPoints)
 			{
 				imagePoints.push_back(anyCamera->projectToImage(world_T_camera, objectPoint));
-				noisedImagePoints.push_back(imagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
+				noisedImagePoints.push_back(imagePoints.back() + Random::gaussianNoiseVector2(randomGenerator, Scalar(5), Scalar(5)));
 			}
 
 			for (const Vectors2& currentImagePoints : {imagePoints, noisedImagePoints})
@@ -318,7 +316,6 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 	Log::info() << "Testing combined pose error determination with pinhole camera:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
@@ -354,7 +351,7 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 				perfectImagePoints.push_back(pinholeCamera.projectToImage<true>(pose, objectPoint, false));
 				distortedImagePoints.push_back(pinholeCamera.projectToImage<true>(pose, objectPoint, true));
 
-				noisedImagePoints.push_back(distortedImagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
+				noisedImagePoints.push_back(distortedImagePoints.back() + Random::gaussianNoiseVector2(randomGenerator, Scalar(5), Scalar(5)));
 			}
 
 			for (const bool distortImagePoints : {false, true})
@@ -418,10 +415,9 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 	Log::info() << "Testing combined pose error determination with any camera:";
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
-
-	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -448,10 +444,10 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 			ocean_assert(imagePoint.isEqual(camera->projectToImage(world_T_camera, objectPoint), Scalar(1)));
 
 			perfectImagePoints.push_back(imagePoint);
-			noisedImagePoints.emplace_back(imagePoint + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
+			noisedImagePoints.emplace_back(imagePoint + Random::gaussianNoiseVector2(randomGenerator, Scalar(5), Scalar(5)));
 		}
 
-		const bool placeObjectPointsBehindCamera = RandomI::random(randomGenerator, 1u);
+		const bool placeObjectPointsBehindCamera = RandomI::boolean(randomGenerator);
 
 		if (placeObjectPointsBehindCamera)
 		{
@@ -472,7 +468,7 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 			}
 		}
 
-		const bool allowOnlyFrontObjectPoints = RandomI::random(randomGenerator, 1u);
+		const bool allowOnlyFrontObjectPoints = RandomI::boolean(randomGenerator);
 
 		for (const Vectors2& imagePoints : {perfectImagePoints, noisedImagePoints})
 		{
@@ -552,7 +548,6 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 	Log::info() << "Testing separate homography error determination:";
 
 	RandomGenerator randomGenerator;
-
 	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Timestamp startTimestamp(true);

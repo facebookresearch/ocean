@@ -176,7 +176,9 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 		std::vector<Vectors2> imagePointGroups(poses);
 		HomogenousMatrices4 world_T_cameras(poses);
 
-		const HomogenousMatrix4 objectTransformation(Random::vector3(-5, 5), Random::quaternion());
+		const Vector3 objectTranslation = Random::vector3(randomGenerator, -5, 5);
+		const Quaternion objectRotation = Random::quaternion(randomGenerator);
+		const HomogenousMatrix4 objectTransformation(objectTranslation, objectRotation);
 		const HomogenousMatrix4 iObjectTransformation = objectTransformation.inverted();
 
 		for (unsigned int n = 0u; n < poses; ++n)
@@ -185,23 +187,25 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 			Vectors2& imagePoints = imagePointGroups[n];
 			HomogenousMatrix4& world_T_camera = world_T_cameras[n];
 
-			world_T_camera = HomogenousMatrix4(Random::vector3(-5, 5), Random::quaternion());
+			const Vector3 cameraTranslation = Random::vector3(randomGenerator, -5, 5);
+			const Quaternion cameraRotation = Random::quaternion(randomGenerator);
+			world_T_camera = HomogenousMatrix4(cameraTranslation, cameraRotation);
 
 			imagePoints.resize(correspondences);
 
 			for (Vector2& imagePoint : imagePoints)
 			{
-				imagePoint = Random::vector2(Scalar(20), Scalar(camera.width() - 20u), Scalar(20), Scalar(camera.height() - 20u));
+				imagePoint = Random::vector2(randomGenerator, Scalar(20), Scalar(camera.width() - 20u), Scalar(20), Scalar(camera.height() - 20u));
 
-				const Vector3 objectPoint = iObjectTransformation * camera.ray(imagePoint, world_T_camera).point(Random::scalar(1, 5));
+				const Vector3 objectPoint = iObjectTransformation * camera.ray(imagePoint, world_T_camera).point(Random::scalar(randomGenerator, 1, 5));
 				ocean_assert(camera.projectToImage(world_T_camera, objectTransformation * objectPoint).isEqual(imagePoint, 1));
 
 				objectPoints.push_back(objectPoint);
 			}
 		}
 
-		const Vector3 faultyTranslation = Random::vector3(Scalar(-0.05), Scalar(0.05));
-		const Quaternion faultyOrientation = Quaternion(Random::euler(Numeric::deg2rad(0), Numeric::deg2rad(2)));
+		const Vector3 faultyTranslation = Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05));
+		const Quaternion faultyOrientation = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(2)));
 
 		const HomogenousMatrix4 faultyObjectTransformation = objectTransformation * HomogenousMatrix4(faultyTranslation, faultyOrientation);
 
@@ -302,7 +306,9 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const HomogenousMatrix4 objectTransformation(Random::vector3(-5, 5), Random::quaternion());
+		const Vector3 objectTranslation = Random::vector3(randomGenerator, -5, 5);
+		const Quaternion objectRotation = Random::quaternion(randomGenerator);
+		const HomogenousMatrix4 objectTransformation(objectTranslation, objectRotation);
 		const HomogenousMatrix4 iObjectTransformation = objectTransformation.inverted();
 
 		std::vector<Vectors3> objectPointGroupsA(poses);
@@ -315,15 +321,17 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 			Vectors2& imagePoints = imagePointGroupsA[n];
 			HomogenousMatrix4& extrinsic = extrinsicsA[n];
 
-			extrinsic = HomogenousMatrix4(Random::vector3(-5, 5), Random::quaternion());
+			const Vector3 extrinsicTranslation = Random::vector3(randomGenerator, -5, 5);
+			const Quaternion extrinsicRotation = Random::quaternion(randomGenerator);
+			extrinsic = HomogenousMatrix4(extrinsicTranslation, extrinsicRotation);
 
 			imagePoints.resize(correspondences);
 
 			for (Vector2& imagePoint : imagePoints)
 			{
-				imagePoint = Random::vector2(Scalar(20), Scalar(cameraA.width() - 20u), Scalar(20), Scalar(cameraA.height() - 20u));
+				imagePoint = Random::vector2(randomGenerator, Scalar(20), Scalar(cameraA.width() - 20u), Scalar(20), Scalar(cameraA.height() - 20u));
 
-				const Vector3 objectPoint = iObjectTransformation * cameraA.ray(imagePoint, extrinsic).point(Random::scalar(1, 5));
+				const Vector3 objectPoint = iObjectTransformation * cameraA.ray(imagePoint, extrinsic).point(Random::scalar(randomGenerator, 1, 5));
 				ocean_assert(cameraA.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
 
 				objectPoints.push_back(objectPoint);
@@ -340,23 +348,25 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 			Vectors2& imagePoints = imagePointGroupsB[n];
 			HomogenousMatrix4& extrinsic = extrinsicsB[n];
 
-			extrinsic = HomogenousMatrix4(Random::vector3(-5, 5), Random::quaternion());
+			const Vector3 extrinsicTranslationB = Random::vector3(randomGenerator, -5, 5);
+			const Quaternion extrinsicRotationB = Random::quaternion(randomGenerator);
+			extrinsic = HomogenousMatrix4(extrinsicTranslationB, extrinsicRotationB);
 
 			imagePoints.resize(correspondences);
 
 			for (Vector2& imagePoint : imagePoints)
 			{
-				imagePoint = Random::vector2(Scalar(20), Scalar(cameraB.width() - 20u), Scalar(20), Scalar(cameraB.height() - 20u));
+				imagePoint = Random::vector2(randomGenerator, Scalar(20), Scalar(cameraB.width() - 20u), Scalar(20), Scalar(cameraB.height() - 20u));
 
-				const Vector3 objectPoint = iObjectTransformation * cameraB.ray(imagePoint, extrinsic).point(Random::scalar(1, 5));
+				const Vector3 objectPoint = iObjectTransformation * cameraB.ray(imagePoint, extrinsic).point(Random::scalar(randomGenerator, 1, 5));
 				ocean_assert(cameraB.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
 
 				objectPoints.push_back(objectPoint);
 			}
 		}
 
-		const Vector3 faultyTranslation = Random::vector3(Scalar(-0.05), Scalar(0.05));
-		const Quaternion faultyOrientation = Quaternion(Random::euler(Numeric::deg2rad(0), Numeric::deg2rad(2)));
+		const Vector3 faultyTranslation = Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05));
+		const Quaternion faultyOrientation = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(2)));
 
 		const HomogenousMatrix4 faultyObjectTransformation = objectTransformation * HomogenousMatrix4(faultyTranslation, faultyOrientation);
 

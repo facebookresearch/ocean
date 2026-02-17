@@ -75,7 +75,6 @@ bool TestUnidirectionalCorrespondences::testCountBijectiveCorrespondences(const 
 	Log::info() << "Count bijective correspondences test:";
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
@@ -132,7 +131,6 @@ bool TestUnidirectionalCorrespondences::testRemoveNonBijectiveCorrespondences(co
 	const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 	RandomGenerator randomGenerator;
-
 	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);

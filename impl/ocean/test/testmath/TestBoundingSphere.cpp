@@ -122,8 +122,8 @@ bool TestBoundingSphere::testConstructor(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 lower(Random::vector3(-range, range));
-			const Vector3 higher(lower + Random::vector3(Scalar(0.05), range));
+			const Vector3 lower(Random::vector3(randomGenerator, -range, range));
+			const Vector3 higher(lower + Random::vector3(randomGenerator, Scalar(0.05), range));
 			const Vector3 center((lower + higher) * Scalar(0.5));
 
 			ocean_assert(Numeric::isEqual(center.distance(lower), center.distance(higher), epsilon));
@@ -174,14 +174,14 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.05), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.05), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
-			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(radius * -2, radius * 2));
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
+			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(randomGenerator, radius * -2, radius * 2));
 
 			const Line3 intersectingRay(rayPosition, rayDirection);
 
@@ -233,7 +233,9 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 
-			const Line3 arbitraryRay(Random::vector3(-range, range), Random::vector3());
+			const Vector3 arbitraryRayPosition(Random::vector3(randomGenerator, -range, range));
+			const Vector3 arbitraryRayDirection(Random::vector3(randomGenerator));
+			const Line3 arbitraryRay(arbitraryRayPosition, arbitraryRayDirection);
 			if (sphere.intersections(arbitraryRay, position0, distance0, normal0, position1, distance1, normal1))
 			{
 				ocean_assert(arbitraryRay.isOnLine(position0));
@@ -280,15 +282,20 @@ bool TestBoundingSphere::testIntersectionsTransformed(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.01), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), range);
 			const BoundingSphere sphere(center, radius);
 
 			// transformation transforming sphere-points to world-points
-			const HomogenousMatrix4 world_T_sphere(Random::vector3(-range, range), Random::rotation(), Random::vector3(Scalar(0.05), 10));
+			const Vector3 worldTranslation(Random::vector3(randomGenerator, -range, range));
+			const Rotation worldRotation(Random::rotation(randomGenerator));
+			const Vector3 worldScale(Random::vector3(randomGenerator, Scalar(0.05), 10));
+			const HomogenousMatrix4 world_T_sphere(worldTranslation, worldRotation, worldScale);
 			const HomogenousMatrix4 sphere_T_world(world_T_sphere.inverted());
 
-			const Line3 worldRay(Random::vector3(-range, range), Random::vector3());
+			const Vector3 worldRayPosition(Random::vector3(randomGenerator, -range, range));
+			const Vector3 worldRayDirection(Random::vector3(randomGenerator));
+			const Line3 worldRay(worldRayPosition, worldRayDirection);
 
 			const Vector3 sphereRayPoint(sphere_T_world * worldRay.point());
 			const Vector3 sphereRayDirection((sphere_T_world.rotationMatrix() * worldRay.direction()).normalizedOrZero());
@@ -380,14 +387,14 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.01), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
-			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(radius * -10, radius * -2));
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
+			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(randomGenerator, radius * -10, radius * -2));
 
 			ocean_assert(!sphere.isInside(rayPosition));
 
@@ -447,13 +454,13 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.01), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
 			const Vector3 rayPosition(center + offsetDirection * (radius * Scalar(0.9)));
 
 			ocean_assert(sphere.isInside(rayPosition));
@@ -474,14 +481,14 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.01), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
-			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(radius * 2, radius * 10));
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
+			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(randomGenerator, radius * 2, radius * 10));
 
 			ocean_assert(!sphere.isInside(rayPosition));
 
@@ -524,14 +531,14 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.05), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.05), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
-			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(radius * -10, radius * -2));
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
+			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(randomGenerator, radius * -10, radius * -2));
 
 			ocean_assert(!sphere.isInside(rayPosition));
 
@@ -586,13 +593,13 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.01), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
 			const Vector3 rayPosition(center + offsetDirection * (radius * Scalar(0.9)));
 
 			ocean_assert(sphere.isInside(rayPosition));
@@ -648,14 +655,14 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 center(Random::vector3(-range, range));
-			const Scalar radius = Random::scalar(Scalar(0.01), range);
+			const Vector3 center(Random::vector3(randomGenerator, -range, range));
+			const Scalar radius = Random::scalar(randomGenerator, Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
-			const Vector3 rayDirection(Random::vector3());
-			const Vector3 offsetDirection(Random::vector3());
-			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(radius * 2, radius * 10));
+			const Vector3 rayDirection(Random::vector3(randomGenerator));
+			const Vector3 offsetDirection(Random::vector3(randomGenerator));
+			const Vector3 rayPosition((center + offsetDirection * (radius * Scalar(0.5))) + rayDirection * Random::scalar(randomGenerator, radius * 2, radius * 10));
 
 			ocean_assert(!sphere.isInside(rayPosition));
 

@@ -319,14 +319,14 @@ bool TestValue::testComparison(const double testDuration)
 			static_assert(sizeof(intValue) == sizeof(floatValue), "Invalid data type!");
 			memcpy(&floatValue, &intValue, sizeof(floatValue));
 
-			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(floatValue)) == (floatValue == floatValue)); // handling edge cases like nan
+			OCEAN_EXPECT_EQUAL(validation, Value(floatValue) == Value(floatValue), floatValue == floatValue); // handling edge cases like nan
 
 			const uint32_t otherIntValue = RandomI::random32(randomGenerator);
 
 			float otherFloatValue;
 			memcpy(&otherFloatValue, &otherIntValue, sizeof(otherFloatValue));
 
-			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(otherFloatValue)) == (floatValue == otherFloatValue));
+			OCEAN_EXPECT_EQUAL(validation, Value(floatValue) == Value(otherFloatValue), floatValue == otherFloatValue);
 		}
 
 		{
@@ -338,14 +338,14 @@ bool TestValue::testComparison(const double testDuration)
 			static_assert(sizeof(intValue) == sizeof(floatValue), "Invalid data type!");
 			memcpy(&floatValue, &intValue, sizeof(floatValue));
 
-			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(floatValue)) == (floatValue == floatValue)); // handling edge cases like nan
+			OCEAN_EXPECT_EQUAL(validation, Value(floatValue) == Value(floatValue), floatValue == floatValue); // handling edge cases like nan
 
 			const uint64_t otherIntValue = RandomI::random64(randomGenerator);
 
 			double otherFloatValue;
 			memcpy(&otherFloatValue, &otherIntValue, sizeof(otherFloatValue));
 
-			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(otherFloatValue)) == (floatValue == otherFloatValue));
+			OCEAN_EXPECT_EQUAL(validation, Value(floatValue) == Value(otherFloatValue), floatValue == otherFloatValue);
 		}
 
 		{
@@ -371,7 +371,7 @@ bool TestValue::testComparison(const double testDuration)
 				otherStringValue += char(RandomI::random(randomGenerator, 255));
 			}
 
-			OCEAN_EXPECT_TRUE(validation, (Value(stringValue) == Value(otherStringValue)) == (stringValue == otherStringValue));
+			OCEAN_EXPECT_EQUAL(validation, Value(stringValue) == Value(otherStringValue), stringValue == otherStringValue);
 		}
 
 		{
@@ -399,7 +399,7 @@ bool TestValue::testComparison(const double testDuration)
 
 			const bool expected = bufferValue.size() == otherBufferValue.size() && (bufferValue.empty() || memcmp(bufferValue.data(), otherBufferValue.data(), bufferValue.size()) == 0);
 
-			OCEAN_EXPECT_TRUE(validation, (Value(bufferValue.data(), bufferValue.size()) == Value(otherBufferValue.data(), otherBufferValue.size())) == expected);
+			OCEAN_EXPECT_EQUAL(validation, Value(bufferValue.data(), bufferValue.size()) == Value(otherBufferValue.data(), otherBufferValue.size()), expected);
 		}
 
 		{
@@ -1243,7 +1243,7 @@ Value TestValue::createRandomValue(RandomGenerator& randomGenerator)
 
 		case Value::VT_BOOL:
 		{
-			const bool boolValue = RandomI::random(randomGenerator, 1u) == 0u;
+			const bool boolValue = RandomI::boolean(randomGenerator);
 
 			return Value(boolValue);
 		}
@@ -1278,7 +1278,8 @@ Value TestValue::createRandomValue(RandomGenerator& randomGenerator)
 
 		case Value::VT_STRING:
 		{
-			const std::string stringValue(RandomI::random(randomGenerator, 1u, 100u), char(RandomI::random(randomGenerator, int('a'), int('z'))));
+			const unsigned int stringLength = RandomI::random(randomGenerator, 1u, 100u);
+			const std::string stringValue(stringLength, char(RandomI::random(randomGenerator, int('a'), int('z'))));
 
 			switch (RandomI::random(randomGenerator, 2u))
 			{

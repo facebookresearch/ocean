@@ -272,9 +272,9 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 				standardDeviation[i] = NumericD::maxValue();
 			}
 
-			double* returnMean = RandomI::random(randomGenerator, 1u) == 0u ? mean : nullptr;
-			double* returnVariance = RandomI::random(randomGenerator, 1u) == 0u ? variance : nullptr;
-			double* returnStandardDeviation = RandomI::random(randomGenerator, 1u) == 0u ? standardDeviation : nullptr;
+			double* returnMean = RandomI::boolean(randomGenerator) ? mean : nullptr;
+			double* returnVariance = RandomI::boolean(randomGenerator) ? variance : nullptr;
+			double* returnStandardDeviation = RandomI::boolean(randomGenerator) ? standardDeviation : nullptr;
 
 			performance.startIf(benchmark);
 				CV::FrameVariance::imageStatistics<TElementType, TSummationType, TMultiplicationType, tChannels>(frame.constdata<TElementType>(), frame.width(), frame.height(), frame.paddingElements(), returnMean, returnVariance, standardDeviation);
