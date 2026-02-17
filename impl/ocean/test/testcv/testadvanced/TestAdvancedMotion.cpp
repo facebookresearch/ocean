@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedMotion.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -1096,25 +1097,18 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		if (!testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
@@ -1123,16 +1117,9 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1151,29 +1138,17 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!testTrackPointSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker)));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>
@@ -1185,37 +1160,25 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 	Log::info() << "... with " << tChannels << " channels:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels, unsigned int tPatchSize>
@@ -1229,8 +1192,7 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1344,7 +1306,7 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 					{
 						if (pointB.x() < Scalar(0) || pointB.x() > Scalar(widthB) || pointB.y() < Scalar(0) || pointB.y() > Scalar(heightB))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -1374,30 +1336,17 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 
 	if constexpr (tPatchSize >= 7u)
 	{
-		if (minPercentAccuratePoints < 0.70)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentAccuratePoints, 0.70);
 	}
 
 	if constexpr (tPatchSize >= 15u)
 	{
-		if (minPercentAccuratePoints < 0.85)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentAccuratePoints, 0.85);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1408,25 +1357,18 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		if (!testTrackPointsSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTrackPointsSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!testTrackPointsSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTrackPointsSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
@@ -1435,16 +1377,9 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1463,29 +1398,17 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker)));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>
@@ -1497,37 +1420,25 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 	Log::info() << "... with " << tChannels << " channels:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointsSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels, unsigned int tPatchSize>
@@ -1541,8 +1452,7 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1628,12 +1538,12 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -1661,30 +1571,17 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 
 	if constexpr (tPatchSize >= 7u)
 	{
-		if (minPercentAccuratePoints < 0.70)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentAccuratePoints, 0.70);
 	}
 
 	if constexpr (tPatchSize >= 15u)
 	{
-		if (minPercentAccuratePoints < 0.85)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentAccuratePoints, 0.85);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1695,25 +1592,18 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		if (!testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
 
-		if (!testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker));
 
 		Log::info() << " ";
 		Log::info() << " ";
@@ -1722,16 +1612,9 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1750,29 +1633,17 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker)));
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker)));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels>
@@ -1784,37 +1655,25 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 	Log::info() << "... with " << tChannels << " channels:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	if (!testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (testTrackPointsBidirectionalSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker)));
 
 	Log::info() << " ";
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannels, unsigned int tPatchSize>
@@ -1828,8 +1687,7 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 	HighPerformanceStatistic performanceMulticore;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1878,7 +1736,7 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 				constexpr unsigned int coarsestLayerRadius = 8u;
 
 				Indices32 indices;
-				Indices32* useIndices = RandomI::random(randomGenerator, 1u) == 0u ? &indices : nullptr;
+				Indices32* useIndices = RandomI::boolean(randomGenerator) ? &indices : nullptr;
 
 				Vectors2 pointsB;
 
@@ -1920,7 +1778,7 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 									}
 									else
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 
@@ -1956,12 +1814,12 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -1996,30 +1854,19 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 
 	if constexpr (tPatchSize >= 7u)
 	{
-		if (minPercentTrackedPoints < 0.80 || minPercentAccuratePoints < 0.90)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentTrackedPoints, 0.80);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentAccuratePoints, 0.90);
 	}
 
 	if constexpr (tPatchSize >= 15u)
 	{
-		if (minPercentTrackedPoints < 0.90 || minPercentAccuratePoints < 0.95)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentTrackedPoints, 0.90);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, minPercentAccuratePoints, 0.95);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorder(const double testDuration, Worker& worker)
@@ -2030,65 +1877,39 @@ bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorde
 	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		if (!stressTestTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(randomGenerator, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, stressTestTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(randomGenerator, worker));
 
-		if (!stressTestTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(randomGenerator, worker))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, stressTestTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(randomGenerator, worker));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
 bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorder(RandomGenerator& randomGenerator, Worker& worker)
 {
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (!stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 5u>(randomGenerator, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 5u>(randomGenerator, worker)));
 
-	if (!stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 7u>(randomGenerator, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 7u>(randomGenerator, worker)));
 
-	if (!stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 15u>(randomGenerator, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 15u>(randomGenerator, worker)));
 
-	if (!stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 31u>(randomGenerator, worker))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, (stressTestTrackPointsBidirectionalSubPixelMirroredBorder<T, 31u>(randomGenerator, worker)));
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tPatchSize>
@@ -2116,7 +1937,7 @@ bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorde
 		const Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		Indices32 indices;
-		Indices32* useIndices = RandomI::random(randomGenerator, 1u) == 0u ? &indices : nullptr;
+		Indices32* useIndices = RandomI::boolean(randomGenerator) ? &indices : nullptr;
 
 		const unsigned int baseline = RandomI::random(randomGenerator, 1u, std::min(sourceWidth / 4u, sourceHeight / 4u));
 		const unsigned int coarsestLayerRadius = RandomI::random(randomGenerator, 2u, tPatchSize * 2u);

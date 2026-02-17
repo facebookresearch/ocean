@@ -8,6 +8,8 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameInterpolatorBilinear.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
@@ -557,27 +559,20 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 	Log::info() << "Pixel interpolation with mask test using 7bit precision:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testInterpolatePixelWithMask8BitPerChannel<float>(CV::PC_TOP_LEFT, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixelWithMask8BitPerChannel<float>(CV::PC_TOP_LEFT, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixelWithMask8BitPerChannel<float>(CV::PC_CENTER, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixelWithMask8BitPerChannel<float>(CV::PC_CENTER, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixelWithMask8BitPerChannel<double>(CV::PC_TOP_LEFT, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixelWithMask8BitPerChannel<double>(CV::PC_TOP_LEFT, testDuration));
 	Log::info() << " ";
-	allSucceeded = testInterpolatePixelWithMask8BitPerChannel<double>(CV::PC_CENTER, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testInterpolatePixelWithMask8BitPerChannel<double>(CV::PC_CENTER, testDuration));
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Pixel interpolation with mask test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Pixel interpolation with mask test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TScalar>
@@ -596,11 +591,10 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 		Log::info() << "... with '" << TypeNamer::name<TScalar>() << "' and with pixel center at (0.5, 0.5):";
 	}
 
-	bool allSucceeded = true;
-
 	constexpr TScalar threshold = TScalar(2.5);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -634,7 +628,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 			if (!CV::Advanced::AdvancedFrameInterpolatorBilinear::Comfort::interpolatePixelWithMask8BitPerChannel(frame.constdata<uint8_t>(), mask.constdata<uint8_t>(), frame.channels(), frame.width(), frame.height(), frame.paddingElements(), mask.paddingElements(), pixelCenter, position, interpolationResult.data(), maskResult, validPixelValue))
 			{
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (lastValue != interpolationResult.back())
@@ -645,22 +639,15 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 
 			if (!validateInterpolatePixel8BitPerChannel<TScalar>(frame, mask, position, pixelCenter, validPixelValue, interpolationResult.data(), maskResult, threshold))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const double testDuration)
@@ -673,132 +660,132 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const double t
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testInterpolateSquare<1u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<1u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<2u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<2u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<3u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<3u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<4u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<4u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<1u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<1u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<2u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<2u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<3u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<3u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<4u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<4u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<1u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<1u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<2u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<2u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<3u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<3u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<4u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<4u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<1u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<1u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<2u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<2u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<3u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<3u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquare<4u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<4u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<1u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<1u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<2u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<2u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<3u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<3u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<4u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<4u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<1u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<1u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<2u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<2u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<3u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<3u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquare<4u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolateSquare<4u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<1u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<2u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<3u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquare<4u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const double testDuration)
@@ -811,153 +798,153 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const d
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testInterpolatePatchWithMask<1u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<2u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<3u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<4u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 1u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<1u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<2u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<3u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<4u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 3u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 1u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 1u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<1u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<2u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<3u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<4u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 5u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<1u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<2u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<3u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<4u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 7u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 3u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 3u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<1u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 8u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<2u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 8u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<3u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 8u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<4u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 8u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<1u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<2u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<3u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolatePatchWithMask<4u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 15u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 5u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 5u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<1u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<1u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<2u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<2u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<3u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<3u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolatePatchWithMask<4u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration) && allSucceeded;
-	allSucceeded = testInterpolatePatchWithMask<4u, 31u, CV::PC_CENTER>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 7u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 7u, CV::PC_CENTER>(width, height, testDuration)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 8u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 8u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 8u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 8u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 8u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 15u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 15u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<1u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<2u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<3u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 31u, CV::PC_TOP_LEFT>(width, height, testDuration)));
+	OCEAN_EXPECT_TRUE(validation, (testInterpolatePatchWithMask<4u, 31u, CV::PC_CENTER>(width, height, testDuration)));
+
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(const double testDuration)
@@ -970,108 +957,108 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testInterpolateSquareMirroredBorder<1u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<2u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<1u, 1u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<3u, 1u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<2u, 1u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<4u, 1u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<1u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<3u, 1u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<2u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<3u, 3u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<4u, 3u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<4u, 1u>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<1u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<1u, 3u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<2u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<2u, 3u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<3u, 5u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<3u, 3u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<4u, 5u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<1u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<2u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<3u, 7u>(width, height, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testInterpolateSquareMirroredBorder<4u, 7u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<4u, 3u>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<1u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<1u, 5u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<2u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<2u, 5u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<3u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<3u, 5u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<4u, 15u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<4u, 5u>(width, height, testDuration)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<1u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<1u, 7u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<2u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<2u, 7u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<3u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<3u, 7u>(width, height, testDuration)));
 
 	Log::info() << " ";
 
-	allSucceeded = testInterpolateSquareMirroredBorder<4u, 31u>(width, height, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<4u, 7u>(width, height, testDuration)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<1u, 15u>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<2u, 15u>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<3u, 15u>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<4u, 15u>(width, height, testDuration)));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<1u, 31u>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<2u, 31u>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<3u, 31u>(width, height, testDuration)));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testInterpolateSquareMirroredBorder<4u, 31u>(width, height, testDuration)));
+
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize, CV::PixelCenter tPixelCenter>
@@ -1094,15 +1081,13 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 	Vectors2 positions(locations);
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.995, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
 	HighPerformanceStatistic performanceSSE;
 	HighPerformanceStatistic performanceNEON;
 	HighPerformanceStatistic performanceDefault;
-
-	uint64_t iterations = 0u;
-	uint64_t succeeded = 0u;
 
 	const Timestamp startTimestamp(true);
 
@@ -1246,26 +1231,22 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 
 				for (unsigned int n = 0u; n < locations; ++n)
 				{
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 					if (interpolatePatch8BitPerChannel(frame, tPatchSize, tPatchSize, positions[n], tPixelCenter, testBuffer))
 					{
-						if (memcmp(buffer.constrow<void>(n), testBuffer, size_t(tChannels * tPatchSize * tPatchSize) * sizeof(uint8_t)) == 0)
+						if (memcmp(buffer.constrow<void>(n), testBuffer, size_t(tChannels * tPatchSize * tPatchSize) * sizeof(uint8_t)) != 0)
 						{
-							++succeeded;
+							scopedIteration.setInaccurate();
 						}
 					}
-
-					++iterations;
 				}
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0u, "Invalid number of locations!");
-
-	ocean_assert(iterations != 0ull);
-
-	const double percent = double(succeeded) / double(iterations);
 
 	if (performanceNaive.measurements() != 0u)
 	{
@@ -1290,18 +1271,9 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	const bool allSucceeded = percent >= 0.995;
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize, CV::PixelCenter tPixelCenter>
@@ -1322,15 +1294,13 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 	Vectors2 positions(locations);
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.995, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
 	HighPerformanceStatistic performanceSSE;
 	HighPerformanceStatistic performanceNEON;
 	HighPerformanceStatistic performanceDefault;
-
-	uint64_t iterations = 0u;
-	uint64_t succeeded = 0u;
 
 	const Timestamp startTimestamp(true);
 
@@ -1486,6 +1456,8 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 
 				for (unsigned int n = 0u; n < locations; ++n)
 				{
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 					if (interpolatePatchWithMask8BitPerChannel(frame, mask, tPatchSize, tPatchSize, positions[n], tPixelCenter, testPatchBuffer, testPatchMaskBuffer, validMaskValue))
 					{
 						bool patchValid = true;
@@ -1516,25 +1488,23 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 								}
 							}
 
-							if (patchValid)
+							if (!patchValid)
 							{
-								++succeeded;
+								scopedIteration.setInaccurate();
 							}
 						}
+						else
+						{
+							scopedIteration.setInaccurate();
+						}
 					}
-
-					++iterations;
 				}
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0u, "Invalid number of locations!");
-
-	ocean_assert(iterations != 0ull);
-
-	const double percent = double(succeeded) / double(iterations);
 
 	if (performanceNaive.measurements() != 0u)
 	{
@@ -1559,18 +1529,9 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	const bool allSucceeded = percent >= 0.995;
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>
@@ -1591,15 +1552,13 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 	Vectors2 positions(locations);
 
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.995, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceTemplate;
 	HighPerformanceStatistic performanceSSE;
 	HighPerformanceStatistic performanceNEON;
 	HighPerformanceStatistic performanceDefault;
-
-	uint64_t iterations = 0u;
-	uint64_t succeeded = 0u;
 
 	const Timestamp startTimestamp(true);
 
@@ -1727,25 +1686,21 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 
 				for (unsigned int n = 0u; n < locations; ++n)
 				{
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 					interpolateSquarePatchMirroredBorder8BitPerChannel(frame, tPatchSize, positions[n], testBuffer);
 
-					if (memcmp(buffer.constrow<void>(n), testBuffer, size_t(tChannels * tPatchSize * tPatchSize) * sizeof(uint8_t)) == 0)
+					if (memcmp(buffer.constrow<void>(n), testBuffer, size_t(tChannels * tPatchSize * tPatchSize) * sizeof(uint8_t)) != 0)
 					{
-						++succeeded;
+						scopedIteration.setInaccurate();
 					}
-
-					++iterations;
 				}
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	static_assert(locations != 0u, "Invalid number of locations!");
-
-	ocean_assert(iterations != 0u);
-
-	const double percent = double(succeeded) / double(iterations);
 
 	if (performanceNaive.measurements() != 0u)
 	{
@@ -1770,18 +1725,9 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 	ocean_assert(performanceDefault.measurements() != 0u);
 	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
 
-	const bool allSucceeded = percent >= 0.995;
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameInterpolatorBilinear::interpolatePatch8BitPerChannel(const Frame& frame, const unsigned int patchWidth, const unsigned int patchHeight, const Vector2& position, const CV::PixelCenter pixelCenter, uint8_t* buffer)
@@ -1982,29 +1928,22 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const doubl
 	Log::info() << "Homography interpolation test (with binary filter mask):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const IndexPair32& dimension : dimensions)
 	{
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testHomographyFilterMask(dimension.first, dimension.second, channel, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHomographyFilterMask(dimension.first, dimension.second, channel, testDuration, worker));
 			Log::info() << " ";
 		}
 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Homography mask interpolation validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Homography mask interpolation validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker)
@@ -2014,8 +1953,6 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "... for a " << width << "x" << height << " frame with " << channels << " channels:";
-
-	bool allSucceeded = true;
 
 	const Vectors2 outputPoints =
 	{
@@ -2029,6 +1966,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 	const Scalar maximalOffsetY = Scalar(height) * Scalar(0.075);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -2056,7 +1994,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 			if (!Geometry::Homography::homographyMatrixLinear(outputPoints.data(), inputPoints.data(), inputPoints.size(), input_H_output, 10u))
 			{
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
@@ -2075,7 +2013,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 
 			CV::PixelBoundingBox boundingBox;
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				const unsigned int left = RandomI::random(randomGenerator, targetWidth - 1u);
 				const unsigned int right = RandomI::random(randomGenerator, left, targetWidth - 1u);
@@ -2089,7 +2027,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 			performance.start();
 				if (!CV::Advanced::AdvancedFrameInterpolatorBilinear::Comfort::homographyFilterMask(sourceFrame, targetFilterMask, targetFrame, input_H_output, boundingBox, useWorker))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			performance.stop();
 
@@ -2100,7 +2038,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 
 			if (!validateHomographyFilterMask8BitPerChannel(sourceFrame, targetFilterMask, copyTargetFrame, targetFrame, input_H_output, boundingBox))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -2113,7 +2051,9 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 		Log::info() << "Median performance (multicore): " << performanceMulticore.medianMseconds() << "ms";
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename TScalar>
