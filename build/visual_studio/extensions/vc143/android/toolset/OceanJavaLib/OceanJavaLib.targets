@@ -22,6 +22,19 @@
     <PropertyPageSchema Include="$(MSBuildThisFileDirectory)OceanJavaLib.General.xml" />
   </ItemGroup>
 
+  <!-- Project Capabilities for VS extension integration -->
+  <ItemGroup>
+    <ProjectCapability Include="AndroidJavaLibrary" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Gradle Task Default
+       ============================================================ -->
+  <PropertyGroup>
+    <GradleTask Condition="'$(Configuration)' == 'Release'">:$(GradleModuleName):assembleRelease</GradleTask>
+    <GradleTask Condition="'$(GradleTask)' == ''">:$(GradleModuleName):assembleDebug</GradleTask>
+  </PropertyGroup>
+
   <!-- ============================================================
        Lib-specific Property Defaults
 

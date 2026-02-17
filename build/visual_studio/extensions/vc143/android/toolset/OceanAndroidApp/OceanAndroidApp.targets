@@ -52,6 +52,16 @@
     <PropertyPageSchema Include="$(MSBuildThisFileDirectory)PropertyPages\OceanAndroidApp.General.xml" />
   </ItemGroup>
 
+  <!-- Project Capabilities for VS extension integration (AndroidDeployHandler) -->
+  <ItemGroup>
+    <ProjectCapability Include="AndroidApplication" />
+  </ItemGroup>
+
+  <!-- Register AndroidManifest as an available item type in VS Property Pages -->
+  <ItemGroup>
+    <AvailableItemName Include="AndroidManifest" />
+  </ItemGroup>
+
   <!-- ============================================================
        Extension Path Detection
        ============================================================ -->
@@ -68,6 +78,15 @@
        ============================================================ -->
   <PropertyGroup>
     <AndroidManifestFile Condition="'$(AndroidManifestFile)' == ''">$(MSBuildProjectDirectory)\app\AndroidManifest.xml</AndroidManifestFile>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Gradle Task and Output Path Defaults
+       ============================================================ -->
+  <PropertyGroup>
+    <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
+    <GradleTask Condition="'$(GradleTask)' == ''">assembleDebug</GradleTask>
+    <OutputPath Condition="'$(OutputPath)' == ''">$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <!-- ============================================================

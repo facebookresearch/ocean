@@ -91,26 +91,7 @@
 
   <PropertyGroup Label="UserMacros" />
 
-  <!-- Project Capabilities for VS extension integration -->
-  <!-- This enables the AndroidDeployHandler to recognize this as an Android project -->
-  <ItemGroup>
-    <ProjectCapability Include="AndroidApplication" />
-  </ItemGroup>
-
-  <!-- Register AndroidManifest as an available item type in VS Property Pages -->
-  <ItemGroup>
-    <AvailableItemName Include="AndroidManifest" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <!-- Gradle task for this project type -->
-    <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
-    <GradleTask Condition="'$(GradleTask)' == ''">assembleDebug</GradleTask>
-
-    <!-- Output path for VS -->
-    <OutputPath>$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutputPath>
-
-    <!-- Gradle properties to pass -->
     <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
     <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
   </PropertyGroup>

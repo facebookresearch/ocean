@@ -93,17 +93,7 @@
 
   <PropertyGroup Label="UserMacros" />
 
-  <!-- Project Capabilities for VS extension integration -->
-  <ItemGroup>
-    <ProjectCapability Include="AndroidJavaLibrary" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <!-- Gradle task based on configuration -->
-    <GradleTask Condition="'$(Configuration)' == 'Release'">:lib:assembleRelease</GradleTask>
-    <GradleTask Condition="'$(GradleTask)' == ''">:lib:assembleDebug</GradleTask>
-
-    <!-- Gradle properties to pass (from VS project settings) -->
     <!-- Project-specific Gradle properties (composed with GradleBaseProperties by shared targets) -->
     <ProjectGradleProperties>-PandroidNamespace="$(AndroidNamespace)" -PandroidMinSdk=$(AndroidMinSdk) -PandroidCompileSdk=$(AndroidCompileSdk)</ProjectGradleProperties>
   </PropertyGroup>
