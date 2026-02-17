@@ -121,7 +121,8 @@
     <!-- OceanAndroidApp Property Pages - General property page for Android app projects -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidApp\PropertyPages\OceanAndroidApp.General.xml" d:VsixSubPath="toolset\OceanAndroidApp\PropertyPages\" />
 
-    <!-- OceanJavaLib Property Pages - General property page for Java library projects -->
+    <!-- OceanJavaLib targets and property pages - for Android Java Library projects -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.targets" d:VsixSubPath="toolset\OceanJavaLib\" />
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.General.xml" d:VsixSubPath="toolset\OceanJavaLib\" />
 
     <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->

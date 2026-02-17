@@ -48,6 +48,10 @@
     </PropertyPageSchema>
   </ItemGroup>
 
+  <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)PropertyPages\OceanAndroidApp.General.xml')">
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)PropertyPages\OceanAndroidApp.General.xml" />
+  </ItemGroup>
+
   <!-- ============================================================
        Extension Path Detection
        ============================================================ -->

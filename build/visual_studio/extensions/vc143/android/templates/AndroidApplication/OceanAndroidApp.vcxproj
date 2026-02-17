@@ -169,44 +169,16 @@
 
   <ImportGroup Label="ExtensionTargets" />
 
-  <!-- ============================================================
-       Ocean Android App Extension Path Detection
-
-       Locates the OceanAndroidApp.targets file from the extension.
-       This provides support for OceanNativeSharedLibrary items.
-
-       The extension writes its install path to a stable registry location
-       during initialization (see OceanAndroidExtensionPackage.cs).
-       ============================================================ -->
-  <PropertyGroup>
-    <!-- Read extension path from registry (set by extension at runtime) -->
-    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
-
-    <!-- Resolve targets path from extension path -->
-    <_OceanAppTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets')">$(_OceanExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets</_OceanAppTargetsPath>
-
-    <!-- Resolve property page schema path -->
-    <_OceanAppPropsPagePath Condition="'$(_OceanExtensionPath)' != ''">$(_OceanExtensionPath)\toolset\OceanAndroidApp\PropertyPages\OceanAndroidApp.General.xml</_OceanAppPropsPagePath>
-  </PropertyGroup>
-
-  <ItemGroup Condition="Exists('$(_OceanAppPropsPagePath)')">
-    <PropertyPageSchema Include="$(_OceanAppPropsPagePath)" />
-  </ItemGroup>
-
-  <!-- Import Ocean Android App shared targets for OceanNativeSharedLibrary support -->
-  <Import Project="$(_OceanAppTargetsPath)"
-          Condition="'$(_OceanAppTargetsPath)' != '' AND Exists('$(_OceanAppTargetsPath)')" />
-
-  <!-- Import shared targets (Java staging, Gradle wrapper verification, Java validation) -->
+  <!-- Import shared targets (Java staging, Gradle wrapper, Java validation, and
+       app-specific targets auto-imported via OutputType=AndroidApplication) -->
   <PropertyGroup>
     <_OceanCommonTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets</_OceanCommonTargetsPath>
   </PropertyGroup>
   <Import Project="$(_OceanCommonTargetsPath)"
           Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
-  <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
   <!-- Build, Clean, Rebuild targets provided by OceanAndroidCommon.targets. -->
   <!-- Android manifest resolution, Deploy target, debug settings, APK output, and
-       NMakeOutput provided by OceanAndroidApp.targets. -->
+       NMakeOutput provided by OceanAndroidApp.targets (auto-imported). -->
 
 </Project>

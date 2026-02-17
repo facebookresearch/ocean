@@ -198,8 +198,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <!-- OceanJavaLib property pages - for Android Java Library projects -->
+  <!-- OceanJavaLib targets and property pages - for Android Java Library projects -->
   <ItemGroup>
+    <Content Include="..\..\toolset\OceanJavaLib\OceanJavaLib.targets">
+      <Link>toolset\OceanJavaLib\OceanJavaLib.targets</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\toolset\OceanJavaLib\OceanJavaLib.General.xml">
       <Link>toolset\OceanJavaLib\OceanJavaLib.General.xml</Link>
       <IncludeInVSIX>true</IncludeInVSIX>

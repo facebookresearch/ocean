@@ -38,6 +38,15 @@
   <Import Project="$(_JavaValidationTargetsPath)"
           Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
 
+  <!-- Auto-import type-specific targets based on project markers.
+       App projects set OutputType=AndroidApplication in Globals.
+       Lib projects set IsAndroidJavaLibrary=true in Globals. -->
+  <Import Project="$(_OceanExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets"
+          Condition="'$(OutputType)' == 'AndroidApplication' AND '$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidApp\OceanAndroidApp.targets')" />
+
+  <Import Project="$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets"
+          Condition="'$(IsAndroidJavaLibrary)' == 'true' AND '$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets')" />
+
   <!-- Compose GradleProperties from base + project-specific properties.
        Projects set $(ProjectGradleProperties) for type-specific -P flags.
        This runs late (after project properties are evaluated) so all values are available. -->

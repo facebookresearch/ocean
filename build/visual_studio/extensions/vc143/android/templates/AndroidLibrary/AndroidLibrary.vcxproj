@@ -131,21 +131,8 @@
 
   <ImportGroup Label="ExtensionTargets" />
 
-  <!-- ============================================================
-       Ocean Java Library Extension Targets
-
-       Imports OceanJavaLib.targets for property page registration,
-       AAR output properties, public API targets (GetGradleModulePath,
-       GetJavaStagingPath, GetAarOutputPath), and build hooks.
-       ============================================================ -->
-  <PropertyGroup>
-    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
-    <_OceanJavaLibTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets')">$(_OceanExtensionPath)\toolset\OceanJavaLib\OceanJavaLib.targets</_OceanJavaLibTargetsPath>
-  </PropertyGroup>
-  <Import Project="$(_OceanJavaLibTargetsPath)"
-          Condition="'$(_OceanJavaLibTargetsPath)' != '' AND Exists('$(_OceanJavaLibTargetsPath)')" />
-
-  <!-- Import shared targets (Java staging, Gradle wrapper verification, Java validation) -->
+  <!-- Import shared targets (Java staging, Gradle wrapper, Java validation, and
+       lib-specific targets auto-imported via IsAndroidJavaLibrary=true) -->
   <PropertyGroup>
     <_OceanCommonTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets</_OceanCommonTargetsPath>
   </PropertyGroup>
@@ -153,6 +140,6 @@
           Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
   <!-- Build, Clean, Rebuild targets provided by OceanAndroidCommon.targets. -->
-  <!-- AAR output management, property page, and public API targets provided by OceanJavaLib.targets. -->
+  <!-- AAR output management, property page, and public API targets provided by OceanJavaLib.targets (auto-imported). -->
 
 </Project>
