@@ -164,9 +164,10 @@ from lib.progress import BuildPhase, ProgressDisplay
 # ============================================================================
 
 # Default output directories (relative to current working directory)
-DEFAULT_BUILD_DIR = Path("ocean_build_thirdparty")
-DEFAULT_INSTALL_DIR = Path("ocean_install_thirdparty")
-DEFAULT_SOURCE_DIR = Path("ocean_source_thirdparty")
+DEFAULT_BASE_DIR = Path("ocean_3rdparty")
+DEFAULT_BUILD_DIR = DEFAULT_BASE_DIR / "build"
+DEFAULT_INSTALL_DIR = DEFAULT_BASE_DIR / "install"
+DEFAULT_SOURCE_DIR = DEFAULT_BASE_DIR / "source"
 
 # Platform group shortcuts: map OS group name to all (OS, Arch) tuples
 PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
@@ -276,11 +277,10 @@ def get_equivalent_command(
 
     # Directories
     cwd = Path.cwd()
-    install_dir = (
-        Path(args.install_dir) if args.install_dir else cwd / DEFAULT_INSTALL_DIR
-    )
-    source_dir = Path(args.source_dir) if args.source_dir else cwd / DEFAULT_SOURCE_DIR
-    build_dir = Path(args.build_dir) if args.build_dir else cwd / DEFAULT_BUILD_DIR
+    base_dir = Path(args.output_dir) if args.output_dir else cwd / DEFAULT_BASE_DIR
+    install_dir = Path(args.install_dir) if args.install_dir else base_dir / "install"
+    source_dir = Path(args.source_dir) if args.source_dir else base_dir / "source"
+    build_dir = Path(args.build_dir) if args.build_dir else base_dir / "build"
     parts.append(f"--install-dir {install_dir}")
     parts.append(f"--source-dir {source_dir}")
     parts.append(f"--build-dir {build_dir}")
@@ -1376,22 +1376,31 @@ def parse_args() -> argparse.Namespace:
         help="Path to manifest file (default: dependencies.yaml)",
     )
     parser.add_argument(
+        "--output-dir",
+        "-o",
+        type=str,
+        default=None,
+        help="Base output directory containing build/, install/, source/ subdirs "
+        "(default: ${PWD}/ocean_3rdparty). Overridden by individual --build-dir, "
+        "--install-dir, --source-dir flags.",
+    )
+    parser.add_argument(
         "--install-dir",
         type=str,
         default=None,
-        help="Install directory for built libraries (default: ${PWD}/ocean_install_thirdparty)",
+        help="Install directory for built libraries (default: <output-dir>/install)",
     )
     parser.add_argument(
         "--source-dir",
         type=str,
         default=None,
-        help="Directory for cached source code (default: ${PWD}/ocean_source_thirdparty)",
+        help="Directory for cached source code (default: <output-dir>/source)",
     )
     parser.add_argument(
         "--build-dir",
         type=str,
         default=None,
-        help="Directory for build artifacts (default: ${PWD}/ocean_build_thirdparty)",
+        help="Directory for build artifacts (default: <output-dir>/build)",
     )
     parser.add_argument(
         "--dry-run",
@@ -1589,13 +1598,12 @@ def main() -> int:  # noqa: C901
     print(f"  {get_equivalent_command(args)}")
     print()
 
-    # Determine directories (default: ${PWD}/ocean_{build,install,source}_thirdparty)
+    # Determine directories
     cwd = Path.cwd()
-    install_dir = (
-        Path(args.install_dir) if args.install_dir else cwd / DEFAULT_INSTALL_DIR
-    )
-    source_dir = Path(args.source_dir) if args.source_dir else cwd / DEFAULT_SOURCE_DIR
-    build_dir = Path(args.build_dir) if args.build_dir else cwd / DEFAULT_BUILD_DIR
+    base_dir = Path(args.output_dir) if args.output_dir else cwd / DEFAULT_BASE_DIR
+    install_dir = Path(args.install_dir) if args.install_dir else base_dir / "install"
+    source_dir = Path(args.source_dir) if args.source_dir else base_dir / "source"
+    build_dir = Path(args.build_dir) if args.build_dir else base_dir / "build"
 
     # Initialize managers
     dir_manager = DirectoryManager(install_dir, source_dir, build_dir)
