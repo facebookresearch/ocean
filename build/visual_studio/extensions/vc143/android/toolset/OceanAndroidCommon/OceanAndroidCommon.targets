@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Common Targets
+  Shared target imports for Android Application and Java Library projects.
+  Resolves the extension path from registry and imports shared targets:
+    - JavaStaging.targets (package-aware Java source staging)
+    - GradleWrapper.targets (SHA-256 wrapper JAR verification)
+    - JavaValidation.targets (Java Home validation and version detection)
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Resolve extension path from registry (set by extension at startup) -->
+  <PropertyGroup>
+    <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
+  </PropertyGroup>
+
+  <!-- Java Source Staging -->
+  <PropertyGroup>
+    <_JavaStagingTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets')"
+      >$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_JavaStagingTargetsPath)"
+          Condition="'$(_JavaStagingTargetsPath)' != '' AND Exists('$(_JavaStagingTargetsPath)')" />
+
+  <!-- Gradle Wrapper Verification -->
+  <PropertyGroup>
+    <_GradleWrapperTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets')"
+      >$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_GradleWrapperTargetsPath)"
+          Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
+
+  <!-- Java Validation -->
+  <PropertyGroup>
+    <_JavaValidationTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets')"
+      >$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(_JavaValidationTargetsPath)"
+          Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
+
+</Project>

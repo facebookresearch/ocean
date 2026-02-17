@@ -118,11 +118,23 @@
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidApp\OceanAndroidApp.targets" d:VsixSubPath="toolset\OceanAndroidApp\" />
     <!-- OceanAndroidApp Property Pages - AndroidManifest item type definition -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidApp\PropertyPages\AndroidManifest.xml" d:VsixSubPath="toolset\OceanAndroidApp\PropertyPages\" />
+    <!-- OceanAndroidApp Property Pages - General property page for Android app projects -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidApp\PropertyPages\OceanAndroidApp.General.xml" d:VsixSubPath="toolset\OceanAndroidApp\PropertyPages\" />
+
+    <!-- OceanJavaLib Property Pages - General property page for Java library projects -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.General.xml" d:VsixSubPath="toolset\OceanJavaLib\" />
 
     <!-- GradleWrapper checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradle-wrapper.jar.sha256" d:VsixSubPath="toolset\GradleWrapper\" />
 
     <!-- Ocean Android Common shared props - SDK/JDK path resolution for Gradle-based projects -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidCommon\OceanAndroidCommon.props" d:VsixSubPath="toolset\OceanAndroidCommon\" />
+    <!-- Ocean Android Common shared targets - imports JavaStaging, GradleWrapper, JavaValidation -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanAndroidCommon\OceanAndroidCommon.targets" d:VsixSubPath="toolset\OceanAndroidCommon\" />
+
+    <!-- Shared targets imported by OceanAndroidCommon.targets -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\JavaStaging\JavaStaging.targets" d:VsixSubPath="toolset\JavaStaging\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\GradleWrapper.targets" d:VsixSubPath="toolset\GradleWrapper\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\JavaValidation\JavaValidation.targets" d:VsixSubPath="toolset\JavaValidation\" />
   </Assets>
 </PackageManifest>

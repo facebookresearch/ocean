@@ -377,44 +377,12 @@
   <Import Project="$(_OceanAppTargetsPath)"
           Condition="'$(_OceanAppTargetsPath)' != '' AND Exists('$(_OceanAppTargetsPath)')" />
 
-  <!-- ============================================================
-       Java Source Staging (shared targets)
-
-       Import the shared StageJavaFile task, StageJavaSources target,
-       and CleanStagedJavaSources target from the extension toolset.
-       ============================================================ -->
+  <!-- Import shared targets (Java staging, Gradle wrapper verification, Java validation) -->
   <PropertyGroup>
-    <_JavaStagingTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets')"
-      >$(_OceanExtensionPath)\toolset\JavaStaging\JavaStaging.targets</_JavaStagingTargetsPath>
+    <_OceanCommonTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets</_OceanCommonTargetsPath>
   </PropertyGroup>
-  <Import Project="$(_JavaStagingTargetsPath)"
-          Condition="'$(_JavaStagingTargetsPath)' != '' AND Exists('$(_JavaStagingTargetsPath)')" />
-
-  <!-- ============================================================
-       Gradle Wrapper Verification (shared targets)
-
-       Import the shared VerifyFileHash task and VerifyGradleWrapper target
-       from the extension toolset.
-       ============================================================ -->
-  <PropertyGroup>
-    <_GradleWrapperTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets')"
-      >$(_OceanExtensionPath)\toolset\GradleWrapper\GradleWrapper.targets</_GradleWrapperTargetsPath>
-  </PropertyGroup>
-  <Import Project="$(_GradleWrapperTargetsPath)"
-          Condition="'$(_GradleWrapperTargetsPath)' != '' AND Exists('$(_GradleWrapperTargetsPath)')" />
-
-  <!-- ============================================================
-       Java Validation (shared targets)
-
-       Import the shared DetectJavaVersion task and _ValidateJavaHome target
-       from the extension toolset.
-       ============================================================ -->
-  <PropertyGroup>
-    <_JavaValidationTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets')"
-      >$(_OceanExtensionPath)\toolset\JavaValidation\JavaValidation.targets</_JavaValidationTargetsPath>
-  </PropertyGroup>
-  <Import Project="$(_JavaValidationTargetsPath)"
-          Condition="'$(_JavaValidationTargetsPath)' != '' AND Exists('$(_JavaValidationTargetsPath)')" />
+  <Import Project="$(_OceanCommonTargetsPath)"
+          Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 
   <!-- Custom Build/Clean/Deploy targets AFTER Microsoft.Cpp.targets to override NMake -->
 

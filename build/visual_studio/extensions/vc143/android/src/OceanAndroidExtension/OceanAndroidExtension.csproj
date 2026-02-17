@@ -235,10 +235,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <!-- OceanAndroidCommon props - shared SDK/JDK path resolution for Gradle-based projects -->
+  <!-- OceanAndroidCommon props and targets - shared SDK/JDK path resolution and targets imports for Gradle-based projects -->
   <ItemGroup>
     <Content Include="..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.props">
       <Link>toolset\OceanAndroidCommon\OceanAndroidCommon.props</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\toolset\OceanAndroidCommon\OceanAndroidCommon.targets">
+      <Link>toolset\OceanAndroidCommon\OceanAndroidCommon.targets</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
