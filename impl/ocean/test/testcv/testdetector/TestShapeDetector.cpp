@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testdetector/TestShapeDetector.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
@@ -1929,14 +1930,13 @@ bool TestShapeDetector::testGradientBasedTShapeDetector(const double testDuratio
 
 	Log::info() << "Gradient-based T-shape detector test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long successful = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.975, randomGenerator);
 
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 100u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 100u, 1080u);
-	const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+	const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+	const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 	Frame yFrame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -1954,22 +1954,26 @@ bool TestShapeDetector::testGradientBasedTShapeDetector(const double testDuratio
 		CV::Canvas::line8BitPerChannel<1u, 5u>(yFrame.data<uint8_t>(), yFrame.width(), yFrame.height(), Vector2(Scalar(x), Scalar(y - 10)), Vector2(Scalar(x), Scalar(y + 20)), CV::Canvas::white(yFrame.pixelFormat()), yFrame.paddingElements());
 	}
 
-	const unsigned int linedIntegralHorizontalSignedPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+	const unsigned int maxLinedIntegralHorizontalSignedPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+	const unsigned int linedIntegralHorizontalSignedPaddingElements = maxLinedIntegralHorizontalSignedPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 	Frame linedIntegralHorizontalSignedGradient(FrameType(yFrame.width(), yFrame.height() + 1u, FrameType::genericPixelFormat<int32_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralHorizontalSignedPaddingElements);
 	CV::FrameFilterGradient::filterHorizontal1x2LinedIntegralImage<uint8_t, int32_t, false>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), linedIntegralHorizontalSignedGradient.data<int32_t>(), yFrame.paddingElements(), linedIntegralHorizontalSignedGradient.paddingElements());
 
-	const unsigned int linedIntegralHorizontalAbsolutePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+	const unsigned int maxLinedIntegralHorizontalAbsolutePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+	const unsigned int linedIntegralHorizontalAbsolutePaddingElements = maxLinedIntegralHorizontalAbsolutePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 	Frame linedIntegralHorizontalAbsoluteGradient(FrameType(yFrame.width(), yFrame.height() + 1u, FrameType::genericPixelFormat<uint32_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralHorizontalAbsolutePaddingElements);
 	CV::FrameFilterGradient::filterHorizontal1x2LinedIntegralImage<uint8_t, uint32_t, true>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), linedIntegralHorizontalAbsoluteGradient.data<uint32_t>(), yFrame.paddingElements(), linedIntegralHorizontalAbsoluteGradient.paddingElements());
 
-	const unsigned int linedIntegralVerticalSignedPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+	const unsigned int maxLinedIntegralVerticalSignedPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+	const unsigned int linedIntegralVerticalSignedPaddingElements = maxLinedIntegralVerticalSignedPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 	Frame linedIntegralVerticalSignedGradient(FrameType(yFrame.width() + 1u, yFrame.height(), FrameType::genericPixelFormat<int32_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralVerticalSignedPaddingElements);
 	CV::FrameFilterGradient::filterVertical2x1LinedIntegralImage<uint8_t, int32_t, false>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), linedIntegralVerticalSignedGradient.data<int32_t>(), yFrame.paddingElements(), linedIntegralVerticalSignedGradient.paddingElements());
 
-	const unsigned int linedIntegralVerticalAbsolutePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+	const unsigned int maxLinedIntegralVerticalAbsolutePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+	const unsigned int linedIntegralVerticalAbsolutePaddingElements = maxLinedIntegralVerticalAbsolutePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 	Frame linedIntegralVerticalAbsoluteGradient(FrameType(yFrame.width() + 1u, yFrame.height(), FrameType::genericPixelFormat<uint32_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralVerticalAbsolutePaddingElements);
 	CV::FrameFilterGradient::filterVertical2x1LinedIntegralImage<uint8_t, uint32_t, true>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), linedIntegralVerticalAbsoluteGradient.data<uint32_t>(), yFrame.paddingElements(), linedIntegralVerticalAbsoluteGradient.paddingElements());
@@ -1992,29 +1996,21 @@ bool TestShapeDetector::testGradientBasedTShapeDetector(const double testDuratio
 
 		const unsigned int minimalDelta = 2u;
 
-		const int sign = RandomI::random(0u, 1u) == 0u ? -1 : 1;
+		const int sign = RandomI::boolean(randomGenerator) ? -1 : 1;
 
 		const double response = CV::Detector::ShapeDetector::PatternDetectorGradientBased::tShapeResponse(linedIntegralHorizontalSignedGradient.constdata<int32_t>(), linedIntegralHorizontalAbsoluteGradient.constdata<uint32_t>(), linedIntegralVerticalSignedGradient.constdata<int32_t>(), linedIntegralVerticalAbsoluteGradient.constdata<uint32_t>(), frameWidth, frameHeight, x, y, sign, shapeWidth, shapeHeight, shapeStepSize, topBand, bottomBand, minimalDelta, linedIntegralHorizontalSignedGradient.paddingElements(), linedIntegralHorizontalAbsoluteGradient.paddingElements(), linedIntegralVerticalSignedGradient.paddingElements(), linedIntegralVerticalAbsoluteGradient.paddingElements());
 
 		const double testResponse = GradientBasedDetector::tShapeDetectorResponse(yFrame, x, y, sign, shapeWidth, shapeHeight, shapeStepSize, topBand, bottomBand, RT_HORIZONTAL_AND_VERTICAL, double(shapeStepSize), minimalDelta, GradientBasedDetector::ERS_GRADIENT_TO_NEIGHBOR, GradientBasedDetector::MRS_IGNORE, GradientBasedDetector::PU_SUBTRACT);
 
-		if (NumericD::isEqual(response, testResponse, 0.01))
-		{
-			++successful;
-		}
-
-		++iterations;
+		validation.addIteration(NumericD::isEqual(response, testResponse, 0.01));
 	}
-	while (Timestamp(true) < start + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(successful) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "%";
-
-	return percent >= 0.975;
+	return validation.succeeded();
 }
 
 bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorHorizontalResponse(const double testDuration)
@@ -2023,10 +2019,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorHorizontalRespons
 
 	Log::info() << "Horizontal response of Gradient & Variance-based T-shape detector test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long successful = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.975, randomGenerator);
 
 	Timestamp start(true);
 
@@ -2037,7 +2031,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorHorizontalRespons
 		const unsigned int maximalFrameHeight = 65536u / width;
 		const unsigned int height = RandomI::random(randomGenerator, 20u, maximalFrameHeight);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+		const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -2082,19 +2077,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorHorizontalRespons
 				const float sqrtAbsResponseF = NumericF::sqrt(NumericF::abs(responseF));
 				const float sqrtAbsResponseI = NumericF::sqrt(NumericF::abs(float(responseJoinedI)));
 
-				if (responseJoinedI == responseSeparateI) // both integer results must be identical
-				{
-					// the floating point-based version applies the sqrt to determine the derivation for normalization,
-					// the integer-based version avoids using sqrt and uses the variance instead (with corresponding adjustments of detection thresholds)
-					// therefore, the response precision can vary slightly for low responses - so that we have skip the precision test for small responses
-
-					if (sqrtAbsResponseF < 15.0f || (NumericF::sign(responseF) == NumericF::sign(float(responseJoinedI)) && NumericF::isEqual(sqrtAbsResponseF, float(sqrtAbsResponseI), 1.0f)))
-					{
-						++successful;
-					}
-				}
-
-				++iterations;
+				const bool accurate = (responseJoinedI == responseSeparateI) && (sqrtAbsResponseF < 15.0f || (NumericF::sign(responseF) == NumericF::sign(float(responseJoinedI)) && NumericF::isEqual(sqrtAbsResponseF, float(sqrtAbsResponseI), 1.0f)));
+				validation.addIteration(accurate);
 			}
 		}
 
@@ -2117,29 +2101,19 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorHorizontalRespons
 				const float sqrtAbsResponseJoinedI = NumericF::sqrt(NumericF::abs(float(responseJoinedI)));
 				const float sqrtAbsNeonResponseSeparateI = NumericF::sqrt(NumericF::abs(float(neonResponseSeparateI)));
 
-				if (neonResponseSeparateI == neonResponseJoinedI)
-				{
-					if (NumericF::isEqual(sqrtAbsResponseJoinedI, sqrtAbsNeonResponseSeparateI, 1.0f))
-					{
-						++successful;
-					}
-				}
-
-				++iterations;
+				const bool accurate = (neonResponseSeparateI == neonResponseJoinedI) && NumericF::isEqual(sqrtAbsResponseJoinedI, sqrtAbsNeonResponseSeparateI, 1.0f);
+				validation.addIteration(accurate);
 			}
 		}
 #endif // defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 	}
-	while (Timestamp(true) < start + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(successful) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "%";
-
-	return percent >= 0.975;
+	return validation.succeeded();
 }
 
 bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorVerticalResponse(const double testDuration)
@@ -2148,10 +2122,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorVerticalResponse(
 
 	Log::info() << "Vertical response of Gradient & Variance-based T-shape detector test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long successful = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.975, randomGenerator);
 
 	Timestamp start(true);
 
@@ -2162,7 +2134,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorVerticalResponse(
 		const unsigned int maximalFrameHeight = 65536u / width;
 		const unsigned int height = RandomI::random(randomGenerator, 20u, maximalFrameHeight);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+		const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -2207,19 +2180,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorVerticalResponse(
 				const float sqrtAbsResponseF = NumericF::sqrt(NumericF::abs(responseF));
 				const float sqrtAbsResponseI = NumericF::sqrt(NumericF::abs(float(responseJoinedI)));
 
-				if (responseJoinedI == responseSeparateI) // both integer results must be identical
-				{
-					// the floating point-based version applies the sqrt to determine the derivation for normalization,
-					// the integer-based version avoids using sqrt and uses the variance instead (with corresponding adjustments of detection thresholds)
-					// therefore, the response precision can vary slightly for low responses - so that we have skip the precision test for small responses
-
-					if (sqrtAbsResponseF < 15.0f || (NumericF::sign(responseF) == NumericF::sign(float(responseF)) && NumericF::isEqual(sqrtAbsResponseF, float(sqrtAbsResponseI), 1.0f)))
-					{
-						++successful;
-					}
-				}
-
-				++iterations;
+				const bool accurate = (responseJoinedI == responseSeparateI) && (sqrtAbsResponseF < 15.0f || (NumericF::sign(responseF) == NumericF::sign(float(responseF)) && NumericF::isEqual(sqrtAbsResponseF, float(sqrtAbsResponseI), 1.0f)));
+				validation.addIteration(accurate);
 			}
 		}
 
@@ -2242,29 +2204,19 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetectorVerticalResponse(
 				const float sqrtAbsResponseJoinedI = NumericF::sqrt(NumericF::abs(float(responseJoinedI)));
 				const float sqrtAbsNeonResponseSeparateI = NumericF::sqrt(NumericF::abs(float(neonResponseSeparateI)));
 
-				if (neonResponseSeparateI == neonResponseJoinedI)
-				{
-					if (NumericF::isEqual(sqrtAbsResponseJoinedI, sqrtAbsNeonResponseSeparateI, responseJoinedI == 0u ? 2.0f : 1.0f))
-					{
-						++successful;
-					}
-				}
-
-				++iterations;
+				const bool accurate = (neonResponseSeparateI == neonResponseJoinedI) && NumericF::isEqual(sqrtAbsResponseJoinedI, sqrtAbsNeonResponseSeparateI, responseJoinedI == 0u ? 2.0f : 1.0f);
+				validation.addIteration(accurate);
 			}
 		}
 #endif // defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 	}
-	while (Timestamp(true) < start + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(successful) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "%";
-
-	return percent >= 0.975;
+	return validation.succeeded();
 }
 
 bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double testDuration)
@@ -2273,10 +2225,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double tes
 
 	Log::info() << "Gradient & Variance-based T-shape detector test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long successful = 0ull;
-
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.975, randomGenerator);
 
 	Timestamp start(true);
 
@@ -2287,7 +2237,8 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double tes
 		const unsigned int maximalFrameHeight = 65536u / width;
 		const unsigned int height = RandomI::random(randomGenerator, 20u, maximalFrameHeight);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(0u, 1u);
+		const unsigned int maxFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int framePaddingElements = maxFramePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
 
@@ -2334,7 +2285,7 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double tes
 		constexpr GradientVarianceBasedDetector::BandStrategy bandStrategy = GradientVarianceBasedDetector::BS_SUBTRACT_AND_DIVIDE;
 		constexpr GradientVarianceBasedDetector::OptimizationStrategy optimizationStrategy = GradientVarianceBasedDetector::OS_SYMMETRIC_RESPONSES_FOUR_HORIZONTAL_SAME_VERTICAL;
 
-		const int sign = RandomI::random(-1, 1); // {-1, 0, 1}
+		const int sign = RandomI::random(randomGenerator, -1, 1); // {-1, 0, 1}
 
 		const float minimalThreshold = 2.2f;
 
@@ -2359,10 +2310,7 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double tes
 
 					const float topDownResponse = topDownResponseFrame.constpixel<float>(x, y)[0];
 
-					if (NumericF::isWeakEqual(float(testTopDownResponse), topDownResponse))
-					{
-						++successful;
-					}
+					validation.addIteration(NumericF::isWeakEqual(float(testTopDownResponse), topDownResponse));
 
 					ocean_assert(linedIntegralRotatedFrame.isContinuous() && linedIntegralSquaredRotatedFrame.isContinuous());
 
@@ -2370,12 +2318,7 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double tes
 
 					const float bottomUpResponse = bottomUpResponseFrame.constpixel<float>(x, y)[0];
 
-					if (NumericF::isWeakEqual(float(testBottomUpResponse), bottomUpResponse))
-					{
-						++successful;
-					}
-
-					iterations += 2u;
+					validation.addIteration(NumericF::isWeakEqual(float(testBottomUpResponse), bottomUpResponse));
 				}
 			}
 		}
@@ -2389,16 +2332,13 @@ bool TestShapeDetector::testGradientVarianceBasedTShapeDetector(const double tes
 			CV::Detector::ShapeDetector::PatternDetectorGradientVarianceBased::detectShapesI(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), lShapes, tShapes, xShapes, sign, minimalThreshold, yFrame.paddingElements());
 		}
 	}
-	while (Timestamp(true) < start + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < start + testDuration);
 
 	Log::info() << " ";
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(successful) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "%";
-
-	return percent >= 0.975;
+	return validation.succeeded();
 }
 
 } // namespace TestDetector

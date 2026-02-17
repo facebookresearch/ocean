@@ -8,8 +8,10 @@
 #include "ocean/test/testcv/testdetector/TestPointTracking.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 
 #include "ocean/cv/CVUtilities.h"
@@ -129,7 +131,8 @@ bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channe
 	constexpr unsigned int maximalOffset = 64u;
 	constexpr unsigned int coarestLayerRadius = 2u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int patchSize : {7u, 15u, 31u})
 	{
@@ -186,7 +189,7 @@ bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channe
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -202,7 +205,7 @@ bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channe
 
 		if (minPercent < 0.90 || minPercent == NumericD::maxValue())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 
 			Log::info() << "Validation: FAILED!";
 		}
@@ -212,7 +215,7 @@ bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channe
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 double TestPointTracking::validateAccuracy(const Vectors2& points0, const Vectors2& points1, const SquareMatrix3& frame0_H_frame1, const Scalar maxDistance)
