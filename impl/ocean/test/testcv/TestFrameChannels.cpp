@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/cv/CVUtilities.h"
 
@@ -983,11 +984,12 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 	Log::info() << "Testing separate to 1 channel for " << width << "x" << height << " images:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<uint8_t, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<uint8_t, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -995,7 +997,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<int16_t, int16_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<int16_t, int16_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1003,7 +1005,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<float, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<float, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1011,7 +1013,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<uint64_t, uint64_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<uint64_t, uint64_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1019,7 +1021,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<float, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<float, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1027,22 +1029,15 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<uint8_t, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<uint8_t, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Separate to 1 channel test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Separate to 1 channel test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1052,11 +1047,12 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 	Log::info() << "Testing zip channels for " << width << "x" << height << " images:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<uint8_t, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<uint8_t, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1064,7 +1060,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<int16_t, int16_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<int16_t, int16_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1072,7 +1068,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<float, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<float, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1080,7 +1076,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<uint64_t, uint64_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<uint64_t, uint64_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1088,7 +1084,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<float, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<float, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -1096,22 +1092,15 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<uint8_t, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<uint8_t, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Zip channels test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Zip channels test FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testAddFirstChannel(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1121,38 +1110,39 @@ bool TestFrameChannels::testAddFirstChannel(const unsigned int width, const unsi
 	Log::info() << "Testing first channel add function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testAddFirstChannel<unsigned char, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<unsigned char, 1u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddFirstChannel<short, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testAddFirstChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testAddFirstChannel<short, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<short, 1u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddFirstChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddFirstChannel<short, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<short, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddFirstChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddFirstChannel<short, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<short, 3u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannel<short, 4u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testAddFirstChannelValue(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1162,38 +1152,39 @@ bool TestFrameChannels::testAddFirstChannelValue(const unsigned int width, const
 	Log::info() << "Testing add first channel value function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testAddFirstChannelValue<unsigned char, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<unsigned char, 1u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddFirstChannelValue<short, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testAddFirstChannelValue<unsigned char, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testAddFirstChannelValue<short, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<short, 1u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddFirstChannelValue<unsigned char, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<unsigned char, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddFirstChannelValue<short, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<short, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddFirstChannelValue<unsigned char, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<unsigned char, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddFirstChannelValue<short, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<short, 3u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<unsigned char, 4u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testAddFirstChannelValue<short, 4u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testAddLastChannel(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1203,38 +1194,39 @@ bool TestFrameChannels::testAddLastChannel(const unsigned int width, const unsig
 	Log::info() << "Testing last channel add function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testAddLastChannel<unsigned char, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<unsigned char, 1u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddLastChannel<short, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testAddLastChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testAddLastChannel<short, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<short, 1u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddLastChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddLastChannel<short, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<short, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddLastChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddLastChannel<short, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<short, 3u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannel<short, 4u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testAddLastChannelValue(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1244,38 +1236,39 @@ bool TestFrameChannels::testAddLastChannelValue(const unsigned int width, const 
 	Log::info() << "Testing add last channel value function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testAddLastChannelValue<unsigned char, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<unsigned char, 1u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddLastChannelValue<short, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testAddLastChannelValue<unsigned char, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testAddLastChannelValue<short, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<short, 1u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddLastChannelValue<unsigned char, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<unsigned char, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddLastChannelValue<short, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<short, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testAddLastChannelValue<unsigned char, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<unsigned char, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testAddLastChannelValue<short, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<short, 3u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<unsigned char, 4u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testAddLastChannelValue<short, 4u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRemoveFirstChannel(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1286,38 +1279,39 @@ bool TestFrameChannels::testRemoveFirstChannel(const unsigned int width, const u
 	Log::info() << "Testing remove first channel function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testRemoveFirstChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testRemoveFirstChannel<short, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testRemoveFirstChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testRemoveFirstChannel<short, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<short, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testRemoveFirstChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testRemoveFirstChannel<short, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<short, 3u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testRemoveFirstChannel<unsigned char, 5u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testRemoveFirstChannel<short, 5u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<short, 4u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<unsigned char, 5u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testRemoveFirstChannel<short, 5u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRemoveLastChannel(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1328,38 +1322,39 @@ bool TestFrameChannels::testRemoveLastChannel(const unsigned int width, const un
 	Log::info() << "Testing remove last channel function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testRemoveLastChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<unsigned char, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testRemoveLastChannel<short, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testRemoveLastChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testRemoveLastChannel<short, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<short, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testRemoveLastChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<unsigned char, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testRemoveLastChannel<short, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<short, 3u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testRemoveLastChannel<unsigned char, 5u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<unsigned char, 4u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testRemoveLastChannel<short, 5u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<short, 4u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<unsigned char, 5u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testRemoveLastChannel<short, 5u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testCopyChannel(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1370,38 +1365,39 @@ bool TestFrameChannels::testCopyChannel(const unsigned int width, const unsigned
 	Log::info() << "Testing copy channel function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testCopyChannel<unsigned char, 1u, 2u, 0u, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<unsigned char, 1u, 2u, 0u, 1u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testCopyChannel<short, 1u, 2u, 0u, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testCopyChannel<unsigned char, 3u, 3u, 2u, 0u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testCopyChannel<short, 3u, 3u, 2u, 0u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<short, 1u, 2u, 0u, 1u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testCopyChannel<unsigned char, 3u, 1u, 1u, 0u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<unsigned char, 3u, 3u, 2u, 0u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testCopyChannel<short, 3u, 1u, 1u, 0u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<short, 3u, 3u, 2u, 0u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testCopyChannel<unsigned char, 5u, 2u, 4u, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<unsigned char, 3u, 1u, 1u, 0u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testCopyChannel<short, 5u, 2u, 4u, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<short, 3u, 1u, 1u, 0u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<unsigned char, 5u, 2u, 4u, 1u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testCopyChannel<short, 5u, 2u, 4u, 1u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testSetChannel(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1412,38 +1408,39 @@ bool TestFrameChannels::testSetChannel(const unsigned int width, const unsigned 
 	Log::info() << "Testing set channel function for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testSetChannel<uint8_t, 0u, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<uint8_t, 0u, 1u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testSetChannel<int16_t, 0u, 1u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testSetChannel<uint8_t, 0u, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
-	Log::info() << " ";
-	Log::info() << " ";
-	allSucceeded = testSetChannel<int16_t, 1u, 2u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<int16_t, 0u, 1u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testSetChannel<uint8_t, 0u, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<uint8_t, 0u, 2u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testSetChannel<int16_t, 2u, 3u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<int16_t, 1u, 2u>(width, height, testDuration / 4.0, worker)));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testSetChannel<uint8_t, 1u, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<uint8_t, 0u, 3u>(width, height, testDuration / 4.0, worker)));
 	Log::info() << " ";
 	Log::info() << " ";
-	allSucceeded = testSetChannel<int16_t, 2u, 4u>(width, height, testDuration / 4.0, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<int16_t, 2u, 3u>(width, height, testDuration / 4.0, worker)));
 
-	return allSucceeded;
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<uint8_t, 1u, 4u>(width, height, testDuration / 4.0, worker)));
+	Log::info() << " ";
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, (testSetChannel<int16_t, 2u, 4u>(width, height, testDuration / 4.0, worker)));
+
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget>
@@ -1455,12 +1452,11 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 	constexpr bool noComfortSupport = !std::is_same<TSource, TTarget>::value;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
-
-	RandomGenerator randomGenerator;
 
 	Timestamp startTimestamp(true);
 
@@ -1549,7 +1545,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 
 						default:
 							ocean_assert(false && "This should never happen!");
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 					}
 
@@ -1561,43 +1557,28 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 				switch (sourceChannels)
 				{
 					case 1u:
-						if (!CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0]}))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0]}));
 						break;
 
 					case 2u:
-						if (!CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1]}))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1]}));
 						break;
 
 					case 3u:
-						if (!CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1], &targetFrames[2]}))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1], &targetFrames[2]}));
 						break;
 
 					case 4u:
-						if (!CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1], &targetFrames[2], &targetFrames[3]}))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1], &targetFrames[2], &targetFrames[3]}));
 						break;
 
 					case 5u:
-						if (!CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1], &targetFrames[2], &targetFrames[3], &targetFrames[4]}))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::separateTo1Channel(sourceFrame, {&targetFrames[0], &targetFrames[1], &targetFrames[2], &targetFrames[3], &targetFrames[4]}));
 						break;
 
 					default:
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 				}
 			}
@@ -1607,7 +1588,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrames[n], copyTargetFrames[n]))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 			}
@@ -1623,7 +1604,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 					{
 						if (targetFrame.constpixel<TTarget>(x, y)[0] != TTarget(sourceFrame.constpixel<TSource>(x, y)[c]))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -1666,7 +1647,7 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 						{
 							if (targetFramesAsBlock.constpixel<TTarget>(x, y + c * sourceFrame.height())[0] != TTarget(sourceFrame.constpixel<TSource>(x, y)[c]))
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
@@ -1680,16 +1661,9 @@ bool TestFrameChannels::testSeparateTo1Channel(const unsigned int width, const u
 	Log::info() << "Naive: Best: " << String::toAString(performanceNaive.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceNaive.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceNaive.averageMseconds(), 3u) << "ms";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 3u) << "ms, average: " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget>
@@ -1701,12 +1675,11 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 
 	constexpr bool noComfortSupport = !std::is_same<TSource, TTarget>::value;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
-
-	RandomGenerator randomGenerator;
 
 	Timestamp startTimestamp(true);
 
@@ -1769,10 +1742,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 							}
 							else
 							{
-								if (!CV::FrameChannels::Comfort::zipChannels({sourceFrames[0]}, targetFrame, targetPixelFormatToUse))
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::zipChannels({sourceFrames[0]}, targetFrame, targetPixelFormatToUse));
 							}
 
 							break;
@@ -1788,10 +1758,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 							}
 							else
 							{
-								if (!CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1]}, targetFrame, targetPixelFormatToUse))
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1]}, targetFrame, targetPixelFormatToUse));
 							}
 
 							break;
@@ -1807,10 +1774,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 							}
 							else
 							{
-								if (!CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1], sourceFrames[2]}, targetFrame, targetPixelFormatToUse))
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1], sourceFrames[2]}, targetFrame, targetPixelFormatToUse));
 							}
 
 							break;
@@ -1826,10 +1790,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 							}
 							else
 							{
-								if (!CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1], sourceFrames[2], sourceFrames[3]}, targetFrame, targetPixelFormatToUse))
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1], sourceFrames[2], sourceFrames[3]}, targetFrame, targetPixelFormatToUse));
 							}
 
 							break;
@@ -1845,10 +1806,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 							}
 							else
 							{
-								if (!CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1], sourceFrames[2], sourceFrames[3], sourceFrames[4]}, targetFrame, targetPixelFormatToUse))
-								{
-									allSucceeded = false;
-								}
+								OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::zipChannels({sourceFrames[0], sourceFrames[1], sourceFrames[2], sourceFrames[3], sourceFrames[4]}, targetFrame, targetPixelFormatToUse));
 							}
 
 							break;
@@ -1858,17 +1816,14 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 						{
 							ocean_assert(false && "This should never happen!");
 
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 						}
 					}
 				}
 				else
 				{
-					if (!CV::FrameChannels::Comfort::zipChannels(sourceFrames, targetFrame, targetPixelFormatToUse))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, CV::FrameChannels::Comfort::zipChannels(sourceFrames, targetFrame, targetPixelFormatToUse));
 				}
 
 				if (copyTargetFrame.isValid())
@@ -1891,7 +1846,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 						{
 							if (TTarget(sourceFrame.constpixel<TSource>(x, y)[0]) != targetFrame.constpixel<TTarget>(x, y)[c])
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
@@ -1935,7 +1890,7 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 						{
 							if (TTarget(sourceFramesAsBlock.constpixel<TSource>(x, y + c * targetFrame.height())[0]) != targetFrame.constpixel<TTarget>(x, y)[c])
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
@@ -1949,16 +1904,9 @@ bool TestFrameChannels::testZipChannels(const unsigned int width, const unsigned
 	Log::info() << "Naive: Best: " << String::toAString(performanceNaive.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceNaive.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceNaive.averageMseconds(), 3u) << "ms";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 3u) << "ms, average: " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels>
@@ -1977,7 +1925,8 @@ bool TestFrameChannels::testAddFirstChannel(const unsigned int width, const unsi
 
 	const auto conversionFlags = CV::FrameConverter::conversionFlags();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
 	{
@@ -2034,14 +1983,11 @@ bool TestFrameChannels::testAddFirstChannel(const unsigned int width, const unsi
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateAddFirstChannel<T>(sourceFrame.constdata<T>(), sourceNewChannelFrame.constdata<T>(), targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), sourceNewChannelFrame.paddingElements(), targetFrame.paddingElements()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateAddFirstChannel<T>(sourceFrame.constdata<T>(), sourceNewChannelFrame.constdata<T>(), targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), sourceNewChannelFrame.paddingElements(), targetFrame.paddingElements()));
 				}
 			}
 			while (startTimestamp + testDuration_4 > Timestamp(true));
@@ -2058,16 +2004,9 @@ bool TestFrameChannels::testAddFirstChannel(const unsigned int width, const unsi
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels>
@@ -2085,7 +2024,8 @@ bool TestFrameChannels::testAddFirstChannelValue(const unsigned int width, const
 
 	const auto conversionFlags = CV::FrameConverter::conversionFlags();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
 	{
@@ -2141,14 +2081,11 @@ bool TestFrameChannels::testAddFirstChannelValue(const unsigned int width, const
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateAddFirstChannelValue<T>(sourceFrame.constdata<T>(), newChannelValue, targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), targetFrame.paddingElements()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateAddFirstChannelValue<T>(sourceFrame.constdata<T>(), newChannelValue, targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), targetFrame.paddingElements()));
 				}
 			}
 			while (startTimestamp + testDuration_4 > Timestamp(true));
@@ -2165,16 +2102,9 @@ bool TestFrameChannels::testAddFirstChannelValue(const unsigned int width, const
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels>
@@ -2191,7 +2121,8 @@ bool TestFrameChannels::testAddLastChannel(const unsigned int width, const unsig
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameChannels::ConversionFlag& conversionFlag : CV::FrameConverter::conversionFlags())
 	{
@@ -2248,14 +2179,11 @@ bool TestFrameChannels::testAddLastChannel(const unsigned int width, const unsig
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateAddLastChannel<T>(sourceFrame.constdata<T>(), sourceNewChannelFrame.constdata<T>(), targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), sourceNewChannelFrame.paddingElements(), targetFrame.paddingElements()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateAddLastChannel<T>(sourceFrame.constdata<T>(), sourceNewChannelFrame.constdata<T>(), targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), sourceNewChannelFrame.paddingElements(), targetFrame.paddingElements()));
 				}
 			}
 			while (startTimestamp + testDuration_4 > Timestamp(true));
@@ -2272,16 +2200,9 @@ bool TestFrameChannels::testAddLastChannel(const unsigned int width, const unsig
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels>
@@ -2297,7 +2218,8 @@ bool TestFrameChannels::testAddLastChannelValue(const unsigned int width, const 
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameChannels::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
@@ -2353,14 +2275,11 @@ bool TestFrameChannels::testAddLastChannelValue(const unsigned int width, const 
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateAddLastChannelValue<T>(sourceFrame.constdata<T>(), newChannelValue, targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), targetFrame.paddingElements()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateAddLastChannelValue<T>(sourceFrame.constdata<T>(), newChannelValue, targetFrame.constdata<T>(), tSourceChannels, sourceFrame.width(), sourceFrame.height(), conversionFlag, sourceFrame.paddingElements(), targetFrame.paddingElements()));
 				}
 			}
 			while (startTimestamp + testDuration_4 > Timestamp(true));
@@ -2377,16 +2296,9 @@ bool TestFrameChannels::testAddLastChannelValue(const unsigned int width, const 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels>
@@ -2402,7 +2314,8 @@ bool TestFrameChannels::testRemoveFirstChannel(const unsigned int width, const u
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameChannels::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
@@ -2456,14 +2369,11 @@ bool TestFrameChannels::testRemoveFirstChannel(const unsigned int width, const u
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateRemoveFirstChannel<T>(source.constdata<T>(), target.constdata<T>(), source.channels(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateRemoveFirstChannel<T>(source.constdata<T>(), target.constdata<T>(), source.channels(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements()));
 				}
 			}
 			while (startTimestamp + testDuration_4 > Timestamp(true));
@@ -2482,16 +2392,9 @@ bool TestFrameChannels::testRemoveFirstChannel(const unsigned int width, const u
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels>
@@ -2507,7 +2410,8 @@ bool TestFrameChannels::testRemoveLastChannel(const unsigned int width, const un
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameChannels::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
@@ -2561,14 +2465,11 @@ bool TestFrameChannels::testRemoveLastChannel(const unsigned int width, const un
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateRemoveLastChannel<T>(source.constdata<T>(), target.constdata<T>(), source.channels(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements()))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateRemoveLastChannel<T>(source.constdata<T>(), target.constdata<T>(), source.channels(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements()));
 				}
 			}
 			while (startTimestamp + testDuration_4 > Timestamp(true));
@@ -2587,16 +2488,9 @@ bool TestFrameChannels::testRemoveLastChannel(const unsigned int width, const un
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tSourceChannels, unsigned int tTargetChannels, unsigned int tSourceChannelIndex, unsigned int tTargetChannelIndex>
@@ -2614,7 +2508,8 @@ bool TestFrameChannels::testCopyChannel(const unsigned int width, const unsigned
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tSourceChannels>();
 	const FrameType::PixelFormat targetPixelFormat = FrameType::genericPixelFormat<T, tTargetChannels>();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << "Testing " << tSourceChannelIndex << " of " << tSourceChannels << " channels to " << tSourceChannelIndex << " of " << tSourceChannels << " channels (" << TypeNamer::name<T>() << "):";
 
@@ -2666,14 +2561,11 @@ bool TestFrameChannels::testCopyChannel(const unsigned int width, const unsigned
 				{
 					ocean_assert(false && "Invalid padding memory!");
 
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
-				if (!validateCopyChannel<T>(source.constdata<T>(), copyTarget.constdata<T>(), target.constdata<T>(), source.channels(), target.channels(), tSourceChannelIndex, tTargetChannelIndex, source.width(), source.height(), source.paddingElements(), target.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateCopyChannel<T>(source.constdata<T>(), copyTarget.constdata<T>(), target.constdata<T>(), source.channels(), target.channels(), tSourceChannelIndex, tTargetChannelIndex, source.width(), source.height(), source.paddingElements(), target.paddingElements()));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -2689,16 +2581,9 @@ bool TestFrameChannels::testCopyChannel(const unsigned int width, const unsigned
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, unsigned int tChannelIndex, unsigned int tChannels>
@@ -2712,7 +2597,8 @@ bool TestFrameChannels::testSetChannel(const unsigned int width, const unsigned 
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << "Testing " << tChannelIndex << " of " << tChannels << " channels (" << TypeNamer::name<T>() << "):";
 
@@ -2762,14 +2648,11 @@ bool TestFrameChannels::testSetChannel(const unsigned int width, const unsigned 
 				{
 					ocean_assert(false && "Invalid padding memory!");
 
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
-				if (!validateSetChannel<T>(copyFrame.constdata<T>(), frame.constdata<T>(), frame.width(), frame.height(), value, tChannelIndex, tChannels, frame.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateSetChannel<T>(copyFrame.constdata<T>(), frame.constdata<T>(), frame.width(), frame.height(), value, tChannelIndex, tChannels, frame.paddingElements()));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -2785,16 +2668,9 @@ bool TestFrameChannels::testSetChannel(const unsigned int width, const unsigned 
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -2802,28 +2678,29 @@ bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width,
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << "Test for advanced pixel modifier:";
 	Log::info().newLine();
 
-	allSucceeded = testApplyAdvancedPixelModifier<uint8_t, 1u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 1u>>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testApplyAdvancedPixelModifier<uint8_t, 1u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 1u>>(width, height, testDuration, worker)));
 
 	Log::info().newLine();
 
-	allSucceeded = testApplyAdvancedPixelModifier<uint8_t, 2u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 2u>>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testApplyAdvancedPixelModifier<uint8_t, 2u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 2u>>(width, height, testDuration, worker)));
 
 	Log::info().newLine();
 
-	allSucceeded = testApplyAdvancedPixelModifier<uint8_t, 3u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 3u>>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testApplyAdvancedPixelModifier<uint8_t, 3u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 3u>>(width, height, testDuration, worker)));
 
 	Log::info().newLine();
 
-	allSucceeded = testApplyAdvancedPixelModifier<uint8_t, 4u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 4u>>(width, height, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, (testApplyAdvancedPixelModifier<uint8_t, 4u, testFunctionApplyAdvancedModifier<uint8_t, uint8_t, 4u>>(width, height, testDuration, worker)));
 
 	Log::info().newLine();
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TElement, unsigned int tChannels, void (*tPixelFunction)(const TElement*, TElement*)>
@@ -2835,8 +2712,7 @@ bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width,
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const CV::FrameConverter::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
@@ -2887,10 +2763,7 @@ bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width,
 						return false;
 					}
 
-					if (!validateApplyAdvancedPixelModifier<TElement, tChannels, tPixelFunction>(source, target, conversionFlag))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (validateApplyAdvancedPixelModifier<TElement, tChannels, tPixelFunction>(source, target, conversionFlag)));
 				}
 				while (!startTimestamp.hasTimePassed(testDuration));
 			}
@@ -2907,18 +2780,9 @@ bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width,
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
-
-	return false;
+	return validation.succeeded();
 }
 
 template <typename TPrecision, unsigned int tChannels>
@@ -2928,12 +2792,11 @@ bool TestFrameChannels::testApplyBivariateOperator(const double testDuration, Wo
 
 	const std::vector<CV::FrameConverter::ConversionFlag> conversionFlags = CV::FrameConverter::conversionFlags();
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int performanceWidth = 1920u;
 	constexpr unsigned int performanceHeight = 1080u;
-
-	RandomGenerator randomGenerator;
 
 	for (unsigned int n = 0u; n < 4u; ++n)
 	{
@@ -2984,15 +2847,12 @@ bool TestFrameChannels::testApplyBivariateOperator(const double testDuration, Wo
 					CV::FrameChannels::applyBivariateOperator<TPrecision, TPrecision, TPrecision, TPrecision, tChannels, tChannels, TestOperations<tChannels>::subtract>(source0.constdata<TPrecision>(), source1.constdata<TPrecision>(), target.data<TPrecision>(), source0.width(), source0.height(), source0.paddingElements(), source1.paddingElements(), target.paddingElements(), conversionFlag, useWorker);
 					performanceMatrix.stopIf(performanceIteration);
 
-					if (!validateApplyBivariateOperatorSubtract<TPrecision, TPrecision, TPrecision>(source0, source1, target, conversionFlag))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (validateApplyBivariateOperatorSubtract<TPrecision, TPrecision, TPrecision>(source0, source1, target, conversionFlag)));
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetClone))
 					{
 						ocean_assert(false && "Invalid padding memory!");
-						return false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				while (!startTimestamp.hasTimePassed(testDuration));
@@ -3010,16 +2870,9 @@ bool TestFrameChannels::testApplyBivariateOperator(const double testDuration, Wo
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testTransformGeneric(const double testDuration, Worker& worker)
@@ -3031,7 +2884,8 @@ bool TestFrameChannels::testTransformGeneric(const double testDuration, Worker& 
 	const std::vector<unsigned int> widths = {64u, 1280u, 1920u};
 	const std::vector<unsigned int> heights = {64u, 720u, 1080u};
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	ocean_assert(widths.size() == heights.size());
 
@@ -3040,56 +2894,56 @@ bool TestFrameChannels::testTransformGeneric(const double testDuration, Worker& 
 		const unsigned int width = widths[i];
 		const unsigned int height = heights[i];
 
-		allSucceeded = testTransformGeneric<uint8_t, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint8_t, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint8_t, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint8_t, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint8_t, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint8_t, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint8_t, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint8_t, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint8_t, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint8_t, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<int8_t, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int8_t, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int8_t, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int8_t, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int8_t, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int8_t, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int8_t, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int8_t, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int8_t, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int8_t, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<uint16_t, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint16_t, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint16_t, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint16_t, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint16_t, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint16_t, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint16_t, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint16_t, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint16_t, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint16_t, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<int16_t, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int16_t, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int16_t, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int16_t, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int16_t, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int16_t, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int16_t, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int16_t, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int16_t, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int16_t, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<uint32_t, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint32_t, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint32_t, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint32_t, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<uint32_t, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint32_t, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint32_t, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint32_t, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint32_t, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<uint32_t, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<int32_t, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int32_t, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int32_t, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int32_t, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<int32_t, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int32_t, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int32_t, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int32_t, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int32_t, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<int32_t, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<float, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<float, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<float, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<float, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<float, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<float, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<float, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<float, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<float, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<float, 5u>(width, height, testDuration, worker)));
 
-		allSucceeded = testTransformGeneric<double, 1u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<double, 2u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<double, 3u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<double, 4u>(width, height, testDuration, worker) && allSucceeded;
-		allSucceeded = testTransformGeneric<double, 5u>(width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<double, 1u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<double, 2u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<double, 3u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<double, 4u>(width, height, testDuration, worker)));
+		OCEAN_EXPECT_TRUE(validation, (testTransformGeneric<double, 5u>(width, height, testDuration, worker)));
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testDuration, Worker& worker)
@@ -3099,9 +2953,8 @@ bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testD
 	Log::info() << "Testing premultiplied to straight alpha:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int benchmarkWidth = 1280u;
 	const unsigned int benchmarkHeight = 720u;
@@ -3188,7 +3041,7 @@ bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testD
 
 						if (memcmp(targetRowA, targetRowB, sourceFrame.planeWidthBytes(0)) != 0)
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						for (unsigned int x = 0u; x < width; ++x)
@@ -3205,7 +3058,7 @@ bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testD
 								{
 									if (sourcePixel[c] != targetPixel[c])
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 								else
@@ -3217,7 +3070,7 @@ bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testD
 
 									if (error > 2)
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 							}
@@ -3253,16 +3106,9 @@ bool TestFrameChannels::testPremultipliedAlphaToStraightAlpha(const double testD
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testDuration, Worker& worker)
@@ -3272,9 +3118,8 @@ bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testD
 	Log::info() << "Testing straight to premultiplied alpha:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int benchmarkWidth = 1280u;
 	const unsigned int benchmarkHeight = 720u;
@@ -3361,7 +3206,7 @@ bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testD
 
 						if (memcmp(targetRowA, targetRowB, sourceFrame.planeWidthBytes(0)) != 0)
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						for (unsigned int x = 0u; x < width; ++x)
@@ -3377,7 +3222,7 @@ bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testD
 								{
 									if (sourcePixel[c] != targetPixel[c])
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 								else
@@ -3389,7 +3234,7 @@ bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testD
 
 									if (error > 2)
 									{
-										allSucceeded = false;
+										OCEAN_SET_FAILED(validation);
 									}
 								}
 							}
@@ -3425,16 +3270,9 @@ bool TestFrameChannels::testStraightAlphaToPremultipliedAlpha(const double testD
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TElementType, unsigned int tChannels>
@@ -3445,9 +3283,8 @@ bool TestFrameChannels::testTransformGeneric(const unsigned int width, const uns
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << " ";
 	Log::info() << "... testing " << width << "x" << height << " '" << TypeNamer::name<TElementType>() << "' image with " << tChannels << " channels:";
@@ -3491,14 +3328,11 @@ bool TestFrameChannels::testTransformGeneric(const unsigned int width, const uns
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateTransformGeneric<TElementType, tChannels>(sourceFrame.constdata<TElementType>(), targetFrame.constdata<TElementType>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), conversionFlag))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (validateTransformGeneric<TElementType, tChannels>(sourceFrame.constdata<TElementType>(), targetFrame.constdata<TElementType>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), conversionFlag)));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -3515,16 +3349,9 @@ bool TestFrameChannels::testTransformGeneric(const unsigned int width, const uns
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testReverseChannelOrder(const double testDuration, Worker& worker)
@@ -3605,9 +3432,8 @@ bool TestFrameChannels::testReverseChannelOrder(const unsigned int width, const 
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Log::info() << " ";
 	Log::info() << "... testing " << width << "x" << height << " '" << TypeNamer::name<T>() << "' image with " << tChannels << " channels:";
@@ -3651,14 +3477,11 @@ bool TestFrameChannels::testReverseChannelOrder(const unsigned int width, const 
 					{
 						ocean_assert(false && "Invalid padding memory!");
 
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
-					if (!validateReverseChannelOrder<T>(sourceFrame.constdata<T>(), targetFrame.constdata<T>(), sourceFrame.width(), sourceFrame.height(), tChannels, sourceFrame.paddingElements(), targetFrame.paddingElements(), conversionFlag))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (validateReverseChannelOrder<T>(sourceFrame.constdata<T>(), targetFrame.constdata<T>(), sourceFrame.width(), sourceFrame.height(), tChannels, sourceFrame.paddingElements(), targetFrame.paddingElements(), conversionFlag)));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -3675,16 +3498,9 @@ bool TestFrameChannels::testReverseChannelOrder(const unsigned int width, const 
 		Log::info() << " ";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double testDuration)
@@ -3693,11 +3509,10 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double t
 
 	Log::info() << "Testing row pixel conversion function 3 channels to 1 channel:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -3771,7 +3586,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double t
 
 			default:
 				ocean_assert(false && "Invalid flag!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 
@@ -3782,7 +3597,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double t
 
 			if (targetValue != targetPixels[x])
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -3791,22 +3606,15 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double t
 		{
 			if (memcmp(targetPixels.data() + width, copyTargetPixels.data() + width, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels6BitPrecision(const double testDuration)
@@ -3815,11 +3623,10 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels6BitPrecision(
 
 	Log::info() << "Testing row pixel conversion function 3 channels to 3 channels with 6 bit precision:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -3893,17 +3700,17 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels6BitPrecision(
 
 			if (abs(targetValue0 - int(targetPixels[x * 3u + 0u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue1 - int(targetPixels[x * 3u + 1u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue2 - int(targetPixels[x * 3u + 2u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -3912,22 +3719,15 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels6BitPrecision(
 		{
 			if (memcmp(targetPixels.data() + width * 3u, copyTargetPixels.data() + width * 3u, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(const double testDuration)
@@ -3936,11 +3736,10 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(
 
 	Log::info() << "Testing row pixel conversion function 3 channels to 3 channels with 7 bit precision:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -4020,17 +3819,17 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(
 
 			if (abs(targetValue0 - int(targetPixels[x * 3u + 0u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue1 - int(targetPixels[x * 3u + 1u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue2 - int(targetPixels[x * 3u + 2u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -4039,22 +3838,15 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(
 		{
 			if (memcmp(targetPixels.data() + width * 3u, copyTargetPixels.data() + width * 3u, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels10BitPrecision(const double testDuration)
@@ -4063,11 +3855,10 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels10BitPrecision
 
 	Log::info() << "Testing row pixel conversion function 3 channels to 3 channels with 10 bit precision:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -4121,17 +3912,17 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels10BitPrecision
 
 			if (abs(targetValue0 - int(targetPixels[x * 3u + 0u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue1 - int(targetPixels[x * 3u + 1u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue2 - int(targetPixels[x * 3u + 2u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -4140,22 +3931,15 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels10BitPrecision
 		{
 			if (memcmp(targetPixels.data() + width * 3u, copyTargetPixels.data() + width * 3u, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double testDuration)
@@ -4164,11 +3948,10 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double t
 
 	Log::info() << "Testing row pixel conversion function 4 channels to 1 channel:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -4274,7 +4057,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double t
 
 			default:
 				ocean_assert(false && "Invalid flag!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 
@@ -4285,7 +4068,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double t
 
 			if (targetValue != targetPixels[x])
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -4294,22 +4077,15 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double t
 		{
 			if (memcmp(targetPixels.data() + width, copyTargetPixels.data() + width, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion4ChannelsTo2Channels(const double testDuration)
@@ -4318,11 +4094,10 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo2Channels(const double 
 
 	Log::info() << "Testing row pixel conversion function 4 channels to 2 channels:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -4379,12 +4154,12 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo2Channels(const double 
 
 			if (targetValue0 != targetPixels[x * 2u + 0u])
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (targetValue1 != targetPixels[x * 2u + 1u])
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -4393,22 +4168,15 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo2Channels(const double 
 		{
 			if (memcmp(targetPixels.data() + width * 2u, copyTargetPixels.data() + width * 2u, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double testDuration)
@@ -4417,11 +4185,10 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double 
 
 	Log::info() << "Testing row pixel conversion function 4 channels to 3 channels with 7 bit precision:";
 
-	bool allSucceeded = true;
-
 	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -4501,17 +4268,17 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double 
 
 			if (abs(targetValue0 - int(targetPixels[x * 3u + 0u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue1 - int(targetPixels[x * 3u + 1u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (abs(targetValue2 - int(targetPixels[x * 3u + 2u])) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -4520,22 +4287,15 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double 
 		{
 			if (memcmp(targetPixels.data() + width * 3u, copyTargetPixels.data() + width * 3u, paddingElements) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testReverseRowPixelOrder(const double testDuration)
@@ -4544,74 +4304,66 @@ bool TestFrameChannels::testReverseRowPixelOrder(const double testDuration)
 
 	Log::info() << "Testing reverse row pixel order function:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		allSucceeded = validateReverseRowPixelOrder<uint8_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint8_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint8_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint8_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint8_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint8_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint8_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint8_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint8_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint8_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<int8_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int8_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int8_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int8_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int8_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int8_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int8_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int8_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int8_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int8_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<uint16_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint16_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint16_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint16_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint16_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint16_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint16_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint16_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint16_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint16_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<int16_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int16_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int16_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int16_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int16_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int16_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int16_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int16_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int16_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int16_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<uint32_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint32_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint32_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint32_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<uint32_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint32_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint32_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint32_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint32_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<uint32_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<int32_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int32_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int32_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int32_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<int32_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int32_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int32_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int32_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int32_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<int32_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<float, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<float, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<float, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<float, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<float, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<float, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<float, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<float, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<float, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<float, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowPixelOrder<double, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<double, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<double, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<double, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowPixelOrder<double, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<double, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<double, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<double, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<double, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowPixelOrder<double, 5u>(randomGenerator)));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testReverseRowChannelOrder(const double testDuration)
@@ -4620,74 +4372,66 @@ bool TestFrameChannels::testReverseRowChannelOrder(const double testDuration)
 
 	Log::info() << "Testing reverse row channel order function:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		allSucceeded = validateReverseRowChannelOrder<uint8_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint8_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint8_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint8_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint8_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint8_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint8_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint8_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint8_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint8_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<int8_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int8_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int8_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int8_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int8_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int8_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int8_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int8_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int8_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int8_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<uint16_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint16_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint16_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint16_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint16_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint16_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint16_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint16_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint16_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint16_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<int16_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int16_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int16_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int16_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int16_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int16_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int16_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int16_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int16_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int16_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<uint32_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint32_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint32_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint32_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<uint32_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint32_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint32_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint32_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint32_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<uint32_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<int32_t, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int32_t, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int32_t, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int32_t, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<int32_t, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int32_t, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int32_t, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int32_t, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int32_t, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<int32_t, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<float, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<float, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<float, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<float, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<float, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<float, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<float, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<float, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<float, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<float, 5u>(randomGenerator)));
 
-		allSucceeded = validateReverseRowChannelOrder<double, 1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<double, 2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<double, 3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<double, 4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateReverseRowChannelOrder<double, 5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<double, 1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<double, 2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<double, 3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<double, 4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateReverseRowChannelOrder<double, 5u>(randomGenerator)));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testShuffleRowChannels(const double testDuration)
@@ -4696,68 +4440,60 @@ bool TestFrameChannels::testShuffleRowChannels(const double testDuration)
 
 	Log::info() << "Testing function shuffling channels in row:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
 		// 1 channel to 3 channels, e.g., for Y to RGB
-		allSucceeded = validateShuffleRowChannels<uint8_t, 1u, 3u, 0x000u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 1u, 3u, 0x000u>(randomGenerator)));
 
 		// 2 channel to 1 channels, e.g., for AY to Y
-		allSucceeded = validateShuffleRowChannels<uint8_t, 2u, 1u, 0x1u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 2u, 1u, 0x1u>(randomGenerator)));
 
 		// 2 channel to 3 channels, e.g., for YA to YAA
-		allSucceeded = validateShuffleRowChannels<uint8_t, 2u, 3u, 0x110u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 2u, 3u, 0x110u>(randomGenerator)));
 
 		// 2 channel to 4 channels, e.g., for YA to RGBA
-		allSucceeded = validateShuffleRowChannels<uint8_t, 2u, 4u, 0x1000u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 2u, 4u, 0x1000u>(randomGenerator)));
 
 		// 3 channels to 1 channels, e.g., for YUV to U
-		allSucceeded = validateShuffleRowChannels<uint8_t, 3u, 1u, 0x1u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 3u, 1u, 0x1u>(randomGenerator)));
 
 		// 3 channels to 2 channels, e.g., for RGB to BR
-		allSucceeded = validateShuffleRowChannels<uint8_t, 3u, 2u, 0x02u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 3u, 2u, 0x02u>(randomGenerator)));
 
 		// 3 channels to 3 channels, e.g., for RGB to BGR
-		allSucceeded = validateShuffleRowChannels<uint8_t, 3u, 3u, 0x012u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 3u, 3u, 0x012u>(randomGenerator)));
 
 		// 4 channels to 1 channel, e.g., for ARGB to A
-		allSucceeded = validateShuffleRowChannels<uint8_t, 4u, 1u, 0x0u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 4u, 1u, 0x0u>(randomGenerator)));
 
 		// 4 channels to 2 channels, e.g., for YUVA to YA
-		allSucceeded = validateShuffleRowChannels<uint8_t, 4u, 2u, 0x30u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 4u, 2u, 0x30u>(randomGenerator)));
 
 		// 4 channels to 3 channels, e.g., for AYUV to YVU
-		allSucceeded = validateShuffleRowChannels<uint8_t, 4u, 3u, 0x231u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 4u, 3u, 0x231u>(randomGenerator)));
 
 		// 4 channels to 4 channels, e.g., for YUVA to AYVU
-		allSucceeded = validateShuffleRowChannels<uint8_t, 4u, 4u, 0x1203u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 4u, 4u, 0x1203u>(randomGenerator)));
 
 
-		allSucceeded = validateShuffleRowChannels<uint8_t, 2u, 5u, 0x10110u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint8_t, 2u, 5u, 0x10110u>(randomGenerator)));
 
-		allSucceeded = validateShuffleRowChannels<int16_t, 3u, 3u, 0x120u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<int16_t, 3u, 3u, 0x120u>(randomGenerator)));
 
-		allSucceeded = validateShuffleRowChannels<uint32_t, 4u, 1u, 0x2u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<uint32_t, 4u, 1u, 0x2u>(randomGenerator)));
 
-		allSucceeded = validateShuffleRowChannels<float, 3u, 6u, 0x120021u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowChannels<float, 3u, 6u, 0x120021u>(randomGenerator)));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testShuffleRowChannelsAndSetLastChannelValue(const double testDuration)
@@ -4766,44 +4502,36 @@ bool TestFrameChannels::testShuffleRowChannelsAndSetLastChannelValue(const doubl
 
 	Log::info() << "Testing function shuffling channels and setting the last channel with constant value in row:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
 		// 1 channel to 4 channels, e.g., for Y to RGBA
-		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 1u, 4u, 0x000u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 1u, 4u, 0x000u>(randomGenerator)));
 
 		// 2 channels to 3 channels, e.g., for UV to UVA
-		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 2u, 3u, 0x10u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 2u, 3u, 0x10u>(randomGenerator)));
 
 		// 3 channels to 4 channels, e.g., for RGB to BGRA
-		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 3u, 4u, 0x012u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 3u, 4u, 0x012u>(randomGenerator)));
 
 		// 3 channels to 3 channels, e.g., for RGB to RGA
-		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 3u, 3u, 0x10u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 3u, 3u, 0x10u>(randomGenerator)));
 
 		// 3 channels to 2 channels, e.g., for RGB to RA
-		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 3u, 2u, 0x0u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 3u, 2u, 0x0u>(randomGenerator)));
 
 		// 4 channels to 4 channels, e.g., for BGR32 to RGBA32
-		allSucceeded = validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 4u, 4u, 0x012u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateShuffleRowAndSetLastChannelValueChannels<uint8_t, 4u, 4u, 0x012u>(randomGenerator)));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameChannels::testNarrowRow16BitPerChannels(const double testDuration)
@@ -4812,32 +4540,24 @@ bool TestFrameChannels::testNarrowRow16BitPerChannels(const double testDuration)
 
 	Log::info() << "Testing function narrowing 16 bit channels in row:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		allSucceeded = validateNarrowRow16BitPerChannels<1u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateNarrowRow16BitPerChannels<2u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateNarrowRow16BitPerChannels<3u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateNarrowRow16BitPerChannels<4u>(randomGenerator) && allSucceeded;
-		allSucceeded = validateNarrowRow16BitPerChannels<5u>(randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (validateNarrowRow16BitPerChannels<1u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateNarrowRow16BitPerChannels<2u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateNarrowRow16BitPerChannels<3u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateNarrowRow16BitPerChannels<4u>(randomGenerator)));
+		OCEAN_EXPECT_TRUE(validation, (validateNarrowRow16BitPerChannels<5u>(randomGenerator)));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, unsigned int tChannels>

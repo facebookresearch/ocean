@@ -14,6 +14,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 #include <array>
 
 namespace Ocean
@@ -269,8 +271,6 @@ bool FrameConverterTestUtilities::testFrameConversion(const FrameType::PixelForm
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(thresholdMaximalErrorToInteger < 20u);
 
-	bool allSucceeded = true;
-
 	Log::info() << "... " << translateConversionFlag(conversionFlag) << ":";
 
 	const unsigned int widthMultiple = std::max(FrameType::widthMultiple(sourcePixelFormat), FrameType::widthMultiple(targetPixelFormat));
@@ -284,6 +284,7 @@ bool FrameConverterTestUtilities::testFrameConversion(const FrameType::PixelForm
 	}
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	double averageErrorToFloat = 0.0;
 	double averageErrorToInteger = 0.0;
@@ -326,7 +327,7 @@ bool FrameConverterTestUtilities::testFrameConversion(const FrameType::PixelForm
 
 				if (!functionWrapper.invoke(sourceFrame, targetFrame, conversionFlag, options, useWorker))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				performance.stopIf(benchmarkIteration);
@@ -343,7 +344,7 @@ bool FrameConverterTestUtilities::testFrameConversion(const FrameType::PixelForm
 				unsigned int localMaximalErrorToInteger;
 				if (!validateConversion(sourceFrame, targetFrame, functionSourcePixelValue, functionTargetPixelValue, transformationMatrix, conversionFlag, &localAverageErrorToFloat, &localAverageErrorToInteger, &localMaximalErrorToFloat, &localMaximalErrorToInteger, minimalGroundTruthValue, maximalGroundTruthValue))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				averageErrorToFloat += localAverageErrorToFloat;
@@ -375,14 +376,14 @@ bool FrameConverterTestUtilities::testFrameConversion(const FrameType::PixelForm
 	if (maximalErrorToInteger > thresholdMaximalErrorToInteger)
 	{
 		Log::info() << "Validation FAILED: max error: " << maximalErrorToInteger << ", average error: " << String::toAString(averageErrorToInteger, 2u);
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 	else
 	{
 		Log::info() << "Validation succeeded: max error: " << maximalErrorToInteger << ", average error: " << String::toAString(averageErrorToInteger, 2u);
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool FrameConverterTestUtilities::validateConversion(const Frame& sourceFrame, const Frame& targetFrame, const FunctionPixelValue functionSourcePixelValue, const FunctionPixelValue functionTargetPixelValue, const MatrixD& transformationMatrix, const CV::FrameConverter::ConversionFlag conversionFlag, double* averageAbsErrorToFloat, double* averageAbsErrorToInteger, double* maximalAbsErrorToFloat, unsigned int* maximalAbsErrorToInteger, const double minimalGroundTruthValue, const double maximalGroundTruthValue, const bool skipPlausibilityCheck)

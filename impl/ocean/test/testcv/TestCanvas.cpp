@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
@@ -98,176 +99,169 @@ bool TestCanvas::testColors()
 {
 	Log::info() << "Testing color functions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// BGR24
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGR24)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGR24)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGR24)[2] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGR24)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGR24)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGR24)[2], uint8_t(0x00u));
 
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGR24)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGR24)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGR24)[2] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGR24)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGR24)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGR24)[2], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGR24)[0] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGR24)[1] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGR24)[2] == 0x80u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGR24)[0], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGR24)[1], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGR24)[2], uint8_t(0x80u));
 
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGR24)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGR24)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGR24)[2] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGR24)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGR24)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGR24)[2], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGR24)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGR24)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGR24)[2] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGR24)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGR24)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGR24)[2], uint8_t(0x00u));
 
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGR24)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGR24)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGR24)[2] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGR24)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGR24)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGR24)[2], uint8_t(0x00u));
 
 
 	// BGRA32
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGRA32)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGRA32)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGRA32)[2] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_BGRA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGRA32)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGRA32)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGRA32)[2], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_BGRA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGRA32)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGRA32)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGRA32)[2] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_BGRA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGRA32)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGRA32)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGRA32)[2], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_BGRA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGRA32)[0] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGRA32)[1] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGRA32)[2] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_BGRA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGRA32)[0], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGRA32)[1], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGRA32)[2], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_BGRA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGRA32)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGRA32)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGRA32)[2] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_BGRA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGRA32)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGRA32)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGRA32)[2], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_BGRA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGRA32)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGRA32)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGRA32)[2] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_BGRA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGRA32)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGRA32)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGRA32)[2], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_BGRA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGRA32)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGRA32)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGRA32)[2] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_BGRA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGRA32)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGRA32)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGRA32)[2], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_BGRA32)[3], uint8_t(0xFFu));
 
 
 	// RGB24
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGB24)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGB24)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGB24)[2] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGB24)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGB24)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGB24)[2], uint8_t(0x00u));
 
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGB24)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGB24)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGB24)[2] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGB24)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGB24)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGB24)[2], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGB24)[0] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGB24)[1] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGB24)[2] == 0x80u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGB24)[0], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGB24)[1], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGB24)[2], uint8_t(0x80u));
 
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGB24)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGB24)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGB24)[2] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGB24)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGB24)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGB24)[2], uint8_t(0x00u));
 
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGB24)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGB24)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGB24)[2] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGB24)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGB24)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGB24)[2], uint8_t(0x00u));
 
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGB24)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGB24)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGB24)[2] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGB24)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGB24)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGB24)[2], uint8_t(0xFFu));
 
 
 	// RGBA32
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGBA32)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGBA32)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGBA32)[2] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_RGBA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGBA32)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGBA32)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGBA32)[2], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_RGBA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGBA32)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGBA32)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGBA32)[2] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_RGBA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGBA32)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGBA32)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGBA32)[2], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_RGBA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGBA32)[0] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGBA32)[1] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGBA32)[2] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_RGBA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGBA32)[0], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGBA32)[1], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGBA32)[2], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_RGBA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGBA32)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGBA32)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGBA32)[2] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_RGBA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGBA32)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGBA32)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGBA32)[2], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_RGBA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGBA32)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGBA32)[1] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGBA32)[2] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_RGBA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGBA32)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGBA32)[1], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGBA32)[2], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_RGBA32)[3], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGBA32)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGBA32)[1] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGBA32)[2] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_RGBA32)[3] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGBA32)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGBA32)[1], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGBA32)[2], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_RGBA32)[3], uint8_t(0xFFu));
 
 
 	// Y8
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_Y8)[0] == 0x00u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_Y8)[0], uint8_t(0x00u));
 
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_Y8)[0] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_Y8)[0], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_Y8)[0] == 0x80u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_Y8)[0], uint8_t(0x80u));
 
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_Y8)[0] == 76u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_Y8)[0], uint8_t(76u));
 
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_Y8)[0] == 150u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_Y8)[0], uint8_t(150u));
 
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_Y8)[0] == 29u && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_Y8)[0], uint8_t(29u));
 
 
 	// YA16
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_YA16)[0] == 0x00u && allSucceeded;
-	allSucceeded = CV::Canvas::black(FrameType::FORMAT_YA16)[1] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_YA16)[0], uint8_t(0x00u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::black(FrameType::FORMAT_YA16)[1], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_YA16)[0] == 0xFFu && allSucceeded;
-	allSucceeded = CV::Canvas::white(FrameType::FORMAT_YA16)[1] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_YA16)[0], uint8_t(0xFFu));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::white(FrameType::FORMAT_YA16)[1], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_YA16)[0] == 0x80u && allSucceeded;
-	allSucceeded = CV::Canvas::gray(FrameType::FORMAT_YA16)[1] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_YA16)[0], uint8_t(0x80u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::gray(FrameType::FORMAT_YA16)[1], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_YA16)[0] == 76u && allSucceeded;
-	allSucceeded = CV::Canvas::red(FrameType::FORMAT_YA16)[1] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_YA16)[0], uint8_t(76u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::red(FrameType::FORMAT_YA16)[1], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_YA16)[0] == 150u && allSucceeded;
-	allSucceeded = CV::Canvas::green(FrameType::FORMAT_YA16)[1] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_YA16)[0], uint8_t(150u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::green(FrameType::FORMAT_YA16)[1], uint8_t(0xFFu));
 
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_YA16)[0] == 29u && allSucceeded;
-	allSucceeded = CV::Canvas::blue(FrameType::FORMAT_YA16)[1] == 0xFFu && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_YA16)[0], uint8_t(29u));
+	OCEAN_EXPECT_EQUAL(validation, CV::Canvas::blue(FrameType::FORMAT_YA16)[1], uint8_t(0xFFu));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCanvas::testLinePixelAccuracy(const double testDuration)
 {
 	Log::info() << "Testing line with pixel accuracy:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -369,7 +363,7 @@ bool TestCanvas::testLinePixelAccuracy(const double testDuration)
 
 					if (memcmp(pixel, white.data(), channels) != 0)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				else
@@ -378,7 +372,7 @@ bool TestCanvas::testLinePixelAccuracy(const double testDuration)
 
 					if (memcmp(pixel, color.data(), channels) != 0)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -386,25 +380,17 @@ bool TestCanvas::testLinePixelAccuracy(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCanvas::testPointNoFraction(const double testDuration)
 {
 	Log::info() << "Testing point without fraction:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -475,7 +461,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 					if (!CV::Canvas::Comfort::point(frame, Vector2(xFullWithPixelCenter, yFullWithPixelCenter), pixelCenter, pointSize, foregroundColor.data()))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, frameCopy))
@@ -504,7 +490,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 								if (memcmp(pixel, foregroundColor.data(), sizeof(uint8_t) * foregroundColor.size()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 							else if (std::abs(xOffset) > int(pointSize_2) || std::abs(yOffset) > int(pointSize_2))
@@ -513,7 +499,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 								if (memcmp(pixel, backgroundColor.data(), sizeof(uint8_t) * backgroundColor.size()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 							else
@@ -539,7 +525,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 									{
 										if (iDistance->second[n] != pixel[n])
 										{
-											allSucceeded = false;
+											OCEAN_SET_FAILED(validation);
 										}
 									}
 								}
@@ -567,7 +553,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 								if (ssdPixel < ssdRight)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
@@ -577,7 +563,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 								if (ssdPixel < ssdBottom)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
@@ -587,7 +573,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 								if (ssdPixel < ssdBottomRight)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
@@ -599,14 +585,14 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 					{
 						if (ssds.size() != 2)
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 					else
 					{
 						if (ssds.size() < std::min(pointSize, 7u))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -635,7 +621,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 					if (!CV::Canvas::Comfort::point(subFrame, Vector2(xPartialWithPixelCenter, yPartialWithPixelCenter), pixelCenter, pointSize, foregroundColor.data()))
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(subFrame, copySubFrame))
@@ -659,7 +645,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 							{
 								if (memcmp(subFrame.constpixel<uint8_t>(x, y), frame.constpixel<uint8_t>((unsigned int)(xLookupFull), (unsigned int)(yLookupFull)), sizeof(uint8_t) * channels) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 						}
@@ -670,25 +656,17 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestCanvas::testPointWithFraction(const double testDuration)
 {
 	Log::info() << "Testing point with fraction:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -743,7 +721,7 @@ bool TestCanvas::testPointWithFraction(const double testDuration)
 						|| !CV::Canvas::Comfort::point(frameBottomLeft, Vector2(Scalar(xLeft), Scalar(yTop + 1u)) + pixelCenterOffset, pixelCenter, pointSize, foregroundColor.data())
 						|| !CV::Canvas::Comfort::point(frameBottomRight, Vector2(Scalar(xLeft + 1u), Scalar(yTop + 1u)) + pixelCenterOffset, pixelCenter, pointSize, foregroundColor.data()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				const Scalar xFactor = Random::scalar(randomGenerator, Scalar(0), Scalar(1));
@@ -754,7 +732,7 @@ bool TestCanvas::testPointWithFraction(const double testDuration)
 
 				if (!CV::Canvas::Comfort::point(frame, Vector2(x, y) + pixelCenterOffset, pixelCenter, pointSize, foregroundColor.data()))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				const int radius = int(pointSize / 2u + 2u);
@@ -787,7 +765,7 @@ bool TestCanvas::testPointWithFraction(const double testDuration)
 
 							if (Numeric::isNotEqual(value, Scalar(pixel[n]), 5))
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
@@ -797,16 +775,9 @@ bool TestCanvas::testPointWithFraction(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 unsigned int TestCanvas::ssd(const uint8_t* pixel0, const uint8_t* pixel1, const unsigned int channels)

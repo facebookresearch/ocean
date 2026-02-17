@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/DataType.h"
 #include "ocean/base/RandomI.h"
@@ -115,34 +116,28 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 	Log::info() << "Testing frame2matrix():";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testFrame2Matrix<unsigned char, float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testFrame2Matrix<unsigned char, double>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testFrame2Matrix<unsigned char, float>(testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testFrame2Matrix<float, float>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testFrame2Matrix<unsigned char, double>(testDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testFrame2Matrix<float, double>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testFrame2Matrix<float, float>(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testFrame2Matrix<float, double>(testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEigenUtilities::testToEigenVector(const double testDuration)
@@ -154,54 +149,48 @@ bool TestEigenUtilities::testToEigenVector(const double testDuration)
 	// These tests are very simple and are not required to run for the full test duration
 	const double splitTestDuration = testDuration / 9.0;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testToEigenVector<int, 2, VectorI2>(splitTestDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testToEigenVector<int, 3, VectorI3>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<int, 2, VectorI2>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<int, 4, VectorI4>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<int, 3, VectorI3>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<float, 2, VectorF2>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<int, 4, VectorI4>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<float, 3, VectorF3>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<float, 2, VectorF2>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<float, 4, VectorF4>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<float, 3, VectorF3>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<double, 2, VectorD2>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<float, 4, VectorF4>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<double, 3, VectorD3>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<double, 2, VectorD2>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToEigenVector<double, 4, VectorD4>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<double, 3, VectorD3>(splitTestDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testToEigenVector<double, 4, VectorD4>(splitTestDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEigenUtilities::testToOceanVector(const double testDuration)
@@ -213,54 +202,48 @@ bool TestEigenUtilities::testToOceanVector(const double testDuration)
 
 	Log::info() << "Testing toOceanVector()";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testToOceanVector<int, 2, VectorI2>(splitTestDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testToOceanVector<int, 3, VectorI3>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<int, 2, VectorI2>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<int, 4, VectorI4>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<int, 3, VectorI3>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<float, 2, VectorF2>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<int, 4, VectorI4>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<float, 3, VectorF3>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<float, 2, VectorF2>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<float, 4, VectorF4>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<float, 3, VectorF3>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<double, 2, VectorD2>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<float, 4, VectorF4>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<double, 3, VectorD3>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<double, 2, VectorD2>(splitTestDuration));
 
 	Log::info() << " ";
 
-	allSucceeded = testToOceanVector<double, 4, VectorD4>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<double, 3, VectorD3>(splitTestDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testToOceanVector<double, 4, VectorD4>(splitTestDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEigenUtilities::testToEigenQuaternion(const double testDuration)
@@ -272,26 +255,20 @@ bool TestEigenUtilities::testToEigenQuaternion(const double testDuration)
 
 	Log::info() << "Testing toEigenQuaternion()";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testToEigenQuaternion<float>(splitTestDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testToEigenQuaternion<double>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToEigenQuaternion<float>(splitTestDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testToEigenQuaternion<double>(splitTestDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestEigenUtilities::testToOceanQuaternion(const double testDuration)
@@ -303,26 +280,20 @@ bool TestEigenUtilities::testToOceanQuaternion(const double testDuration)
 
 	Log::info() << "Testing toOceanQuaternion()";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testToOceanQuaternion<float>(splitTestDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testToOceanQuaternion<double>(splitTestDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testToOceanQuaternion<float>(splitTestDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Test FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testToOceanQuaternion<double>(splitTestDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget>
@@ -334,9 +305,8 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<TSource, 1u>();
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -356,7 +326,7 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 			{
 				ocean_assert(false && "This must never happen!");
 
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 
@@ -364,7 +334,7 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 			{
 				ocean_assert(false && "This must never happen!");
 
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				continue;
 			}
 
@@ -374,35 +344,22 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 				{
 					const TTarget testValue = TTarget(frame.constpixel<TSource>(x, y)[0]);
 
-					if (testValue != rowMajorMatrix(y, x))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, testValue, rowMajorMatrix(y, x));
 
-					if (testValue != columnMajorMatrix(y, x))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, testValue, columnMajorMatrix(y, x));
 				}
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TType, size_t tElements, typename TOceanVector>
@@ -424,7 +381,7 @@ bool TestEigenUtilities::testToEigenVector(const double testDuration)
 	static_assert(lowestValue < maxValue, "Invalid data type");
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -448,22 +405,15 @@ bool TestEigenUtilities::testToEigenVector(const double testDuration)
 
 		for (unsigned int i = 0u; i < (unsigned int)tElements; ++i)
 		{
-			allSucceeded = (ocnVector[i] - eigenVector[i] == TType(0)) && allSucceeded;
-			ocean_assert(allSucceeded); // DEBUG
+			OCEAN_EXPECT_EQUAL(validation, ocnVector[i] - eigenVector[i], TType(0));
+			ocean_assert(validation.succeededSoFar()); // DEBUG
 		}
 	}
 	while(!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TType, size_t tElements, typename TOceanVector>
@@ -484,7 +434,7 @@ bool TestEigenUtilities::testToOceanVector(const double testDuration)
 	constexpr TType maxValue = NumericT<TType>::maxValue() / TType(2);
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -508,22 +458,15 @@ bool TestEigenUtilities::testToOceanVector(const double testDuration)
 
 		for (size_t i = 0; i < tElements; ++i)
 		{
-			allSucceeded = (ocnVector[(unsigned int)i] - eigenVector[i] == TType(0)) && allSucceeded;
-			ocean_assert(allSucceeded); // DEBUG
+			OCEAN_EXPECT_EQUAL(validation, ocnVector[(unsigned int)i] - eigenVector[i], TType(0));
+			ocean_assert(validation.succeededSoFar()); // DEBUG
 		}
 	}
 	while(startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TType>
@@ -542,7 +485,7 @@ bool TestEigenUtilities::testToEigenQuaternion(const double testDuration)
 	constexpr TType maxValue = NumericT<TType>::maxValue() / TType(2);
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -557,24 +500,16 @@ bool TestEigenUtilities::testToEigenQuaternion(const double testDuration)
 
 		const Eigen::Quaternion<TType> eigenQuaternion = CV::EigenUtilities::toEigenQuaternion(ocnQuaternion);
 
-		allSucceeded = ocnQuaternion.w() == eigenQuaternion.w()
-			&& ocnQuaternion.x() == eigenQuaternion.x()
-			&& ocnQuaternion.y() == eigenQuaternion.y()
-			&& ocnQuaternion.z() == eigenQuaternion.z()
-			&& allSucceeded;
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.w(), eigenQuaternion.w());
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.x(), eigenQuaternion.x());
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.y(), eigenQuaternion.y());
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.z(), eigenQuaternion.z());
 	}
 	while(startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TType>
@@ -593,7 +528,7 @@ bool TestEigenUtilities::testToOceanQuaternion(const double testDuration)
 	constexpr TType maxValue = NumericT<TType>::maxValue() / TType(2);
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTime(true);
 
@@ -607,24 +542,16 @@ bool TestEigenUtilities::testToOceanQuaternion(const double testDuration)
 
 		const QuaternionT<TType> ocnQuaternion = CV::EigenUtilities::toOceanQuaternion(eigenQuaternion);
 
-		allSucceeded = ocnQuaternion.w() == eigenQuaternion.w()
-			&& ocnQuaternion.x() == eigenQuaternion.x()
-			&& ocnQuaternion.y() == eigenQuaternion.y()
-			&& ocnQuaternion.z() == eigenQuaternion.z()
-			&& allSucceeded;
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.w(), eigenQuaternion.w());
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.x(), eigenQuaternion.x());
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.y(), eigenQuaternion.y());
+		OCEAN_EXPECT_EQUAL(validation, ocnQuaternion.z(), eigenQuaternion.z());
 	}
 	while(startTime + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace CV

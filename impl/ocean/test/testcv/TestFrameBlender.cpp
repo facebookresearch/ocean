@@ -9,6 +9,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -135,9 +136,8 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 	Log::info() << "Test constant alpha value:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -156,7 +156,7 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 
 		const uint8_t alphaValue = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		switch (sourceFrame.channels())
 		{
@@ -182,13 +182,13 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 
 			default:
 				ocean_assert(false && "Invalid channels!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 		}
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 		{
 			ocean_assert(false && "Invalid padding memory!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -204,10 +204,7 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 				{
 					const int value = (int(sourcePixel[c]) * (255 - int(alphaValue)) + int(copyTargetPixel[c]) * int(alphaValue) + 127) / 255;
 
-					if (value != int(targetPixel[c]))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, value, int(targetPixel[c]));
 				}
 			}
 		}
@@ -215,16 +212,9 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -235,15 +225,16 @@ bool TestFrameBlender::testSeparateAlphaChannel(const double testDuration, Worke
 	Log::info() << "Test separate alpha channel function with 0xFF interpreted as fully " << (tTransparentIs0xFF ? "transparent" : "opaque");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testSeparateAlphaChannelFullFrame<tTransparentIs0xFF>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSeparateAlphaChannelFullFrame<tTransparentIs0xFF>(testDuration, worker));
 
-	allSucceeded = testSeparateAlphaChannelSubFrame<tTransparentIs0xFF>(testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSeparateAlphaChannelSubFrame<tTransparentIs0xFF>(testDuration, worker));
 
 	Log::info() << " ";
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -257,7 +248,8 @@ bool TestFrameBlender::testBlend(const double testDuration, Worker& worker)
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats =
 	{
@@ -276,9 +268,9 @@ bool TestFrameBlender::testBlend(const double testDuration, Worker& worker)
 		const FrameType::PixelFormat pixelFormatWithoutAlpha = FrameType::formatRemoveAlphaChannel(pixelFormat);
 
 		// test the YA16 pixel format
-		allSucceeded = testFullFrame<tTransparentIs0xFF>(pixelFormat, pixelFormatWithoutAlpha, width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testFullFrame<tTransparentIs0xFF>(pixelFormat, pixelFormatWithoutAlpha, width, height, testDuration, worker)));
 		Log::info() << " ";
-		allSucceeded = testFullFrame<tTransparentIs0xFF>(pixelFormat, pixelFormat, width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testFullFrame<tTransparentIs0xFF>(pixelFormat, pixelFormat, width, height, testDuration, worker)));
 		Log::info() << " ";
 	}
 
@@ -292,13 +284,13 @@ bool TestFrameBlender::testBlend(const double testDuration, Worker& worker)
 		const FrameType::PixelFormat pixelFormatWithoutAlpha = FrameType::formatRemoveAlphaChannel(pixelFormat);
 
 		// test the YA16 pixel format
-		allSucceeded = testSubFrame<tTransparentIs0xFF>(pixelFormat, pixelFormatWithoutAlpha, width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSubFrame<tTransparentIs0xFF>(pixelFormat, pixelFormatWithoutAlpha, width, height, testDuration, worker)));
 		Log::info() << " ";
-		allSucceeded = testSubFrame<tTransparentIs0xFF>(pixelFormat, pixelFormat, width, height, testDuration, worker) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, (testSubFrame<tTransparentIs0xFF>(pixelFormat, pixelFormat, width, height, testDuration, worker)));
 		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -309,9 +301,8 @@ bool TestFrameBlender::testBlendWithConstantValue(const double testDuration, Wor
 	Log::info() << "Test constant value blend function with 0xFF interpreted as fully " << (tTransparentIs0xFF ? "transparent" : "opaque");
 	Log::info() << " ";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -330,7 +321,7 @@ bool TestFrameBlender::testBlendWithConstantValue(const double testDuration, Wor
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		switch (targetFrame.channels())
 		{
@@ -356,13 +347,13 @@ bool TestFrameBlender::testBlendWithConstantValue(const double testDuration, Wor
 
 			default:
 				ocean_assert(false && "Invalid channels!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 		}
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 		{
 			ocean_assert(false && "Invalid padding memory!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -383,26 +374,16 @@ bool TestFrameBlender::testBlendWithConstantValue(const double testDuration, Wor
 
 					const int value = (int(valuePixel[c]) * (255 - alphaFactor) + int(copyTargetPixel[c]) * alphaFactor + 127) / 255;
 
-					if (value != int(targetPixel[c]))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, value, int(targetPixel[c]));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -412,9 +393,8 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 
 	Log::info() << "... for a sub frame";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -445,7 +425,7 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 		const unsigned int targetLeft = RandomI::random(randomGenerator, targetWidth - width);
 		const unsigned int targetTop = RandomI::random(randomGenerator, targetHeight - height);
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		switch (sourceFrame.channels())
 		{
@@ -471,13 +451,13 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 
 			default:
 				ocean_assert(false && "Invalid channels!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 		}
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 		{
 			ocean_assert(false && "Invalid padding memory!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -503,20 +483,14 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 
 						const int value = (int(sourcePixel[c]) * (255 - alphaFactor) + int(copyTargetPixel[c]) * alphaFactor + 127) / 255;
 
-						if (value != int(targetPixel[c]))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, value, int(targetPixel[c]));
 					}
 				}
 				else
 				{
 					for (unsigned int c = 0u; c < targetFrame.channels(); ++c)
 					{
-						if (targetPixel[c] != copyTargetPixel[c])
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, targetPixel[c], copyTargetPixel[c]);
 					}
 				}
 			}
@@ -525,16 +499,9 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -544,9 +511,8 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 
 	Log::info() << "... for a full frame";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -564,7 +530,7 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 		switch (sourceFrame.channels())
 		{
@@ -590,13 +556,13 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 
 			default:
 				ocean_assert(false && "Invalid channels!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 		}
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 		{
 			ocean_assert(false && "Invalid padding memory!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -615,10 +581,7 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 
 					const int value = (int(sourcePixel[c]) * (255 - alphaFactor) + int(copyTargetPixel[c]) * alphaFactor + 127) / 255;
 
-					if (value != int(targetPixel[c]))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, value, int(targetPixel[c]));
 				}
 			}
 		}
@@ -626,16 +589,9 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -648,8 +604,7 @@ bool TestFrameBlender::testSubFrame(const FrameType::PixelFormat sourcePixelForm
 	ocean_assert(FrameType::formatHasAlphaChannel(sourcePixelFormat));
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -665,42 +620,32 @@ bool TestFrameBlender::testSubFrame(const FrameType::PixelFormat sourcePixelForm
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-			const unsigned int width = RandomI::random(1u, sourceWidth);
-			const unsigned int height = RandomI::random(1u, sourceHeight);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, sourceWidth);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, sourceHeight);
 
-			const unsigned int targetLeft = RandomI::random(0u, targetWidth - width);
-			const unsigned int targetTop = RandomI::random(0u, targetHeight - height);
+			const unsigned int targetLeft = RandomI::random(randomGenerator, 0u, targetWidth - width);
+			const unsigned int targetTop = RandomI::random(randomGenerator, 0u, targetHeight - height);
 
-			const unsigned int sourceLeft = RandomI::random(0u, sourceWidth - width);
-			const unsigned int sourceTop = RandomI::random(0u, sourceHeight - height);
+			const unsigned int sourceLeft = RandomI::random(randomGenerator, 0u, sourceWidth - width);
+			const unsigned int sourceTop = RandomI::random(randomGenerator, 0u, sourceHeight - height);
 
-			allSucceeded = CV::FrameBlender::blend<tTransparentIs0xFF, CV::FrameBlender::ATM_CONSTANT>(sourceFrameWithAlpha, targetFrame, sourceLeft, sourceTop, targetLeft, targetTop, width, height, useWorker ? &worker : nullptr) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, (CV::FrameBlender::blend<tTransparentIs0xFF, CV::FrameBlender::ATM_CONSTANT>(sourceFrameWithAlpha, targetFrame, sourceLeft, sourceTop, targetLeft, targetTop, width, height, useWorker ? &worker : nullptr)));
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, targetFrameCopy))
 			{
 				ocean_assert(false && "Invalid padding memory!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 			}
 
-			if (!validateBlendResult<tTransparentIs0xFF>(sourceFrameWithAlpha, targetFrameCopy, targetFrame, sourceLeft, sourceTop, targetLeft, targetTop, width, height))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (validateBlendResult<tTransparentIs0xFF>(sourceFrameWithAlpha, targetFrameCopy, targetFrame, sourceLeft, sourceTop, targetLeft, targetTop, width, height)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
@@ -711,13 +656,12 @@ bool TestFrameBlender::testFullFrame(const FrameType::PixelFormat sourcePixelFor
 	Log::info() << width << "x" << height << " with " << FrameType::translatePixelFormat(sourcePixelFormat) << " -> " << FrameType::translatePixelFormat(targetPixelFormat);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	ocean_assert(FrameType::formatHasAlphaChannel(sourcePixelFormat));
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
-
-	bool allSucceeded = true;
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -741,23 +685,17 @@ bool TestFrameBlender::testFullFrame(const FrameType::PixelFormat sourcePixelFor
 				const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				performance.startIf(performanceIteration);
-					if (!CV::FrameBlender::blend<tTransparentIs0xFF, CV::FrameBlender::ATM_CONSTANT>(sourceFrameWithAlpha, targetFrame, useWorker))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (CV::FrameBlender::blend<tTransparentIs0xFF, CV::FrameBlender::ATM_CONSTANT>(sourceFrameWithAlpha, targetFrame, useWorker)));
 				performance.stopIf(performanceIteration);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, targetFrameCopy))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
-				if (!validateBlendResult<tTransparentIs0xFF>(sourceFrameWithAlpha, targetFrameCopy, targetFrame, 0u, 0u, 0u, 0u, widthToUse, heightToUse))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, (validateBlendResult<tTransparentIs0xFF>(sourceFrameWithAlpha, targetFrameCopy, targetFrame, 0u, 0u, 0u, 0u, widthToUse, heightToUse)));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -771,16 +709,9 @@ bool TestFrameBlender::testFullFrame(const FrameType::PixelFormat sourcePixelFor
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <bool tTransparentIs0xFF>
