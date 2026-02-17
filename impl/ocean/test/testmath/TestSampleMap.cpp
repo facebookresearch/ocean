@@ -10,6 +10,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
@@ -102,14 +103,14 @@ bool TestSampleMap::testSampleMostRecent(const double testDuration)
 	Log::info() << "Sample test with most recent element:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		const unsigned int capacity = RandomI::random(randomGenerator, 1u, 100u);
-		const unsigned int iterations = RandomI::random(1u, capacity);
+		const unsigned int iterations = RandomI::random(randomGenerator, 1u, capacity);
 
 		Vector2 mostRecentValue(0, 0);
 		double mostRecentTimestamp = NumericD::minValue();
@@ -119,7 +120,7 @@ bool TestSampleMap::testSampleMostRecent(const double testDuration)
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
 			const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
-			const Vector2 value = Random::vector2();
+			const Vector2 value = Random::vector2(randomGenerator);
 
 			if (timestamp >= mostRecentTimestamp)
 			{
@@ -131,23 +132,13 @@ bool TestSampleMap::testSampleMostRecent(const double testDuration)
 		}
 
 		Vector2 value;
-		if (!sampleMap.sample(value) || value != mostRecentValue)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, sampleMap.sample(value) && value == mostRecentValue);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSampleMap::testSampleSpecific(const double testDuration)
@@ -157,14 +148,14 @@ bool TestSampleMap::testSampleSpecific(const double testDuration)
 	Log::info() << "sample test with specific element:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		const unsigned int capacity = RandomI::random(randomGenerator, 1u, 100u);
-		const unsigned int iterations = RandomI::random(1u, capacity);
+		const unsigned int iterations = RandomI::random(randomGenerator, 1u, capacity);
 
 		std::map<double, Vector2> testMap;
 
@@ -173,7 +164,7 @@ bool TestSampleMap::testSampleSpecific(const double testDuration)
 		for (unsigned int n = 0u; n < iterations; ++n)
 		{
 			const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
-			const Vector2 value = Random::vector2();
+			const Vector2 value = Random::vector2(randomGenerator);
 
 			testMap[timestamp] = value; // not using insert to ensure that identical timestamps overwrite previous entries
 			sampleMap.insert(value, timestamp);
@@ -185,10 +176,7 @@ bool TestSampleMap::testSampleSpecific(const double testDuration)
 		{
 
 			Vector2 value;
-			if (!sampleMap.sample(i->first, value) || value != i->second)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, sampleMap.sample(i->first, value) && value == i->second);
 		}
 
 		// let's ensure that an arbitrary timestamp does not produce a corresponding sample
@@ -200,25 +188,15 @@ bool TestSampleMap::testSampleSpecific(const double testDuration)
 			if (testMap.find(timestamp) == testMap.cend())
 			{
 				Vector2 value;
-				if (sampleMap.sample(timestamp, value))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, sampleMap.sample(timestamp, value));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSampleMap::testSampleInterpolation(const double testDuration)
@@ -228,7 +206,7 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 	Log::info() << "Sample test with interpolation:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -257,20 +235,11 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 				float interpolatedValue = NumericF::minValue();
 
 				double timestampDistance = NumericD::maxValue();
-				if (!sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance));
 
-				if (NumericF::isNotWeakEqual(interpolatedValue, lowerValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(interpolatedValue, lowerValue));
 
-				if (NumericD::isNotEqual(timestampDistance, NumericD::abs(timestamp - lowerTimestamp)))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(timestampDistance, NumericD::abs(timestamp - lowerTimestamp)));
 			}
 
 			{
@@ -281,17 +250,11 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 				float interpolatedValue = NumericF::minValue();
 
 				double timestampDistance = NumericD::maxValue();
-				if (!sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance));
 
 				if (interpolationStrategy == SampleMap<float>::IS_TIMESTAMP_NEAREST)
 				{
-					if (interpolatedValue != lowerValue && interpolatedValue != higherValue)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, interpolatedValue == lowerValue || interpolatedValue == higherValue);
 
 					const double lowerDistance = timestamp - lowerTimestamp;
 					const double higherDistance = higherTimestamp - timestamp;
@@ -302,19 +265,13 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 					{
 						if (lowerDistance > higherDistance)
 						{
-							if (interpolatedValue != higherValue)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, interpolatedValue, higherValue);
 						}
 						else
 						{
 							ocean_assert(higherDistance > lowerDistance);
 
-							if (interpolatedValue != lowerValue)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, interpolatedValue, lowerValue);
 						}
 					}
 				}
@@ -325,16 +282,10 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 
 					const float testInterpolatedValue = float(interpolationFactor * double(higherValue) + (1.0 - interpolationFactor) * double(lowerValue));
 
-					if (NumericF::isNotWeakEqual(interpolatedValue, testInterpolatedValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(interpolatedValue, testInterpolatedValue));
 				}
 
-				if (NumericD::isNotEqual(timestampDistance, std::min(NumericD::abs(higherTimestamp - timestamp), NumericD::abs(timestamp - lowerTimestamp))))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(timestampDistance, std::min(NumericD::abs(higherTimestamp - timestamp), NumericD::abs(timestamp - lowerTimestamp))));
 			}
 
 			{
@@ -345,35 +296,19 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 				float interpolatedValue = NumericF::minValue();
 
 				double timestampDistance = NumericD::maxValue();
-				if (!sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance));
 
-				if (NumericF::isNotWeakEqual(interpolatedValue, higherValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(interpolatedValue, higherValue));
 
-				if (NumericD::isNotEqual(timestampDistance, NumericD::abs(timestamp - higherTimestamp)))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(timestampDistance, NumericD::abs(timestamp - higherTimestamp)));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSampleMap::testStressTest(const double testDuration)
@@ -386,7 +321,7 @@ bool TestSampleMap::testStressTest(const double testDuration)
 	// we simply ensure that the SampleMap does not crash
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	unsigned long long dummyValue = 0ull;
 
@@ -422,7 +357,7 @@ bool TestSampleMap::testStressTest(const double testDuration)
 				{
 					Quaternion value;
 
-					if (sampleMap.sample(RandomD::scalar(-1000, 1000), value))
+					if (sampleMap.sample(RandomD::scalar(randomGenerator, -1000, 1000), value))
 					{
 						dummyValue++;
 					}
@@ -434,7 +369,7 @@ bool TestSampleMap::testStressTest(const double testDuration)
 				{
 					Quaternion value;
 
-					if (sampleMap.sample(RandomD::scalar(-1000, 1000), SampleMap<Quaternion>::IS_TIMESTAMP_NEAREST, value))
+					if (sampleMap.sample(RandomD::scalar(randomGenerator, -1000, 1000), SampleMap<Quaternion>::IS_TIMESTAMP_NEAREST, value))
 					{
 						dummyValue++;
 					}
@@ -446,7 +381,7 @@ bool TestSampleMap::testStressTest(const double testDuration)
 				{
 					Quaternion value;
 
-					if (sampleMap.sample(RandomD::scalar(-1000, 1000), SampleMap<Quaternion>::IS_TIMESTAMP_INTERPOLATE, value))
+					if (sampleMap.sample(RandomD::scalar(randomGenerator, -1000, 1000), SampleMap<Quaternion>::IS_TIMESTAMP_INTERPOLATE, value))
 					{
 						dummyValue++;
 					}
@@ -464,36 +399,23 @@ bool TestSampleMap::testStressTest(const double testDuration)
 				sampleMap.clear();
 			}
 
-			if (sampleMap.size() > capacity)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, sampleMap.size(), capacity);
 
-			if (sampleMap.capacity() != capacity)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, sampleMap.capacity(), capacity);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
+	if (dummyValue == 0u)
 	{
-		if (dummyValue == 0u)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: succeeded.";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: " << validation;
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

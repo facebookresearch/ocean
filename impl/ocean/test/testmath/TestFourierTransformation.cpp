@@ -15,6 +15,7 @@
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -124,11 +125,10 @@ bool TestFourierTransformation::testFourierTransform(const double testDuration)
 
 	Log::info() << "Forward and backward Fourier transform test for " << TypeNamer::name<T>() << ", with " << (tSourceIsComplex ? "complex" : "real") << " source signal:";
 
-	bool allSucceeded = true;
-
 	constexpr T epsilon = std::is_same<T, double>::value ? T(0.00001) : T(0.001);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -137,9 +137,14 @@ bool TestFourierTransformation::testFourierTransform(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const unsigned int spatialPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int frequencyPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int reverseSpatialPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxSpatialPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int spatialPaddingElements = maxSpatialPaddingElements * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxFrequencyPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int frequencyPaddingElements = maxFrequencyPaddingElements * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxReverseSpatialPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int reverseSpatialPaddingElements = maxReverseSpatialPaddingElements * RandomI::random(randomGenerator, 1u);
 
 		if constexpr (tSourceIsComplex)
 		{
@@ -195,10 +200,7 @@ bool TestFourierTransformation::testFourierTransform(const double testDuration)
 
 				for (unsigned int x = 0u; x < width; ++x)
 				{
-					if (NumericT<T>::isNotEqual(((const std::complex<T>*)spatialRow)[x], ((const std::complex<T>*)reverseSpatialRow)[x], epsilon))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(((const std::complex<T>*)spatialRow)[x], ((const std::complex<T>*)reverseSpatialRow)[x], epsilon));
 				}
 
 				if (reverseSpatialPaddingElements != 0u)
@@ -267,10 +269,7 @@ bool TestFourierTransformation::testFourierTransform(const double testDuration)
 
 				for (unsigned int x = 0u; x < width; ++x)
 				{
-					if (NumericT<T>::isNotEqual(spatialRow[x], reverseSpatialRow[x], epsilon))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(spatialRow[x], reverseSpatialRow[x], epsilon));
 				}
 
 				if (reverseSpatialPaddingElements != 0u)
@@ -288,16 +287,9 @@ bool TestFourierTransformation::testFourierTransform(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -307,11 +299,10 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 
 	Log::info() << "Elementwise-multiplication test for " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
-
 	constexpr T epsilon = std::is_same<T, double>::value ? T(0.00001) : T(0.001);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using ComplexT = std::complex<T>;
 
@@ -322,9 +313,14 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 100u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 100u);
 
-		const unsigned int horizontalPaddingSource0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int horizontalPaddingSource1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int horizontalPaddingTarget = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxHorizontalPaddingSource0 = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int horizontalPaddingSource0 = maxHorizontalPaddingSource0 * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxHorizontalPaddingSource1 = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int horizontalPaddingSource1 = maxHorizontalPaddingSource1 * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxHorizontalPaddingTarget = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int horizontalPaddingTarget = maxHorizontalPaddingTarget * RandomI::random(randomGenerator, 1u);
 
 		const unsigned int strideSource0 = width * 2u + horizontalPaddingSource0;
 		const unsigned int strideSource1 = width * 2u + horizontalPaddingSource1;
@@ -384,7 +380,7 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 
 			default:
 				ocean_assert(false && "Invalid combination!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 
@@ -412,11 +408,8 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 				const ComplexT groundTruthResult = elementSource0 * elementSource1;
 				const ComplexT& calculatedResult = complexTargetRow[x];
 
-				if (NumericT<T>::isNotEqual(groundTruthResult.real(), calculatedResult.real(), epsilon)
-						|| NumericT<T>::isNotEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(groundTruthResult.real(), calculatedResult.real(), epsilon)
+						&& NumericT<T>::isEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon));
 			}
 
 			// the padding content must be untouched
@@ -436,16 +429,9 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -455,11 +441,10 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 
 	Log::info() << "Elementwise-division test for " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
-
 	constexpr T epsilon = std::is_same<T, double>::value ? T(0.00001) : T(0.001);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	using ComplexT = std::complex<T>;
 
@@ -469,9 +454,15 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 100u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 100u);
-		const unsigned int horizontalPaddingSource0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int horizontalPaddingSource1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int horizontalPaddingTarget = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxHorizontalPaddingSource0 = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int horizontalPaddingSource0 = maxHorizontalPaddingSource0 * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxHorizontalPaddingSource1 = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int horizontalPaddingSource1 = maxHorizontalPaddingSource1 * RandomI::random(randomGenerator, 1u);
+
+		const unsigned int maxHorizontalPaddingTarget = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int horizontalPaddingTarget = maxHorizontalPaddingTarget * RandomI::random(randomGenerator, 1u);
 
 		const unsigned int strideSource0 = width * 2u + horizontalPaddingSource0;
 		const unsigned int strideSource1 = width * 2u + horizontalPaddingSource1;
@@ -535,11 +526,8 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 				const ComplexT groundTruthResult = complexSourceRow0[x] / complexSourceRow1[x];
 				const ComplexT& calculatedResult = complexTargetRow[x];
 
-				if (NumericT<T>::isNotEqual(groundTruthResult.real(), calculatedResult.real(), epsilon)
-						|| NumericT<T>::isNotEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(groundTruthResult.real(), calculatedResult.real(), epsilon)
+						&& NumericT<T>::isEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon));
 			}
 
 			// the padding content must be untouched
@@ -559,16 +547,9 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

@@ -8,6 +8,7 @@
 #include "ocean/test/testmath/TestRateCalculator.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/math/Random.h"
 #include "ocean/math/RateCalculator.h"
@@ -56,9 +57,8 @@ bool TestRateCalculator::testRate(const double testDuration)
 
 	Log::info() << "Rate test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -84,7 +84,7 @@ bool TestRateCalculator::testRate(const double testDuration)
 
 			if (n >= 50u)
 			{
-				const Timestamp queryTimestamp = Timestamp(currentTimestamp + RandomD::scalar(-0.0001, 0.0001));
+				const Timestamp queryTimestamp = Timestamp(currentTimestamp + RandomD::scalar(randomGenerator, -0.0001, 0.0001));
 
 				const double rate = rateCalculator.rate(queryTimestamp);
 
@@ -99,25 +99,15 @@ bool TestRateCalculator::testRate(const double testDuration)
 
 				const double expectedRate = sumQuantity / rateCalculator.window();
 
-				if (!NumericD::isEqual(expectedRate, rate, 0.1))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(expectedRate, rate, 0.1));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

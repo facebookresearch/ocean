@@ -15,6 +15,7 @@
 #include "ocean/math/Random.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -149,9 +150,8 @@ bool TestApproximation::testSqrt8(const double testDuration)
 
 	Log::info() << "Test sqrt() approximation for 8 bit integers:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -159,30 +159,20 @@ bool TestApproximation::testSqrt8(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const uint8_t value = uint8_t(RandomI::random(0u, 255u));
+			const uint8_t value = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
 			const uint32_t valueSqrt = Approximation::sqrt(value);
 
 			const double testValueSqrt = NumericD::sqrt(double(value));
 			const uint32_t roundedTestValueSqrt = uint32_t(testValueSqrt + 0.5);
 
-			if (valueSqrt != roundedTestValueSqrt)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, valueSqrt, roundedTestValueSqrt);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestApproximation::testSqrt16(const double testDuration)
@@ -191,9 +181,8 @@ bool TestApproximation::testSqrt16(const double testDuration)
 
 	Log::info() << "Test sqrt() approximation for 16 bit integers:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -201,7 +190,7 @@ bool TestApproximation::testSqrt16(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const uint16_t value = uint16_t(RandomI::random32() % 0x0000FFFFu);
+			const uint16_t value = uint16_t(RandomI::random32(randomGenerator) % 0x0000FFFFu);
 			const uint32_t valueSqrt = Approximation::sqrt(value);
 
 			const double testValueSqrt = NumericD::sqrt(double(value));
@@ -212,23 +201,16 @@ bool TestApproximation::testSqrt16(const double testDuration)
 				// the approximated result will be accurate within the range [0, 65280]
 				if (value <= 65280u || valueSqrt != 255u || roundedTestValueSqrt != 256u)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestApproximation::testSqrt17(const double testDuration)
@@ -237,9 +219,8 @@ bool TestApproximation::testSqrt17(const double testDuration)
 
 	Log::info() << "Test sqrt() approximation for 32 bit integers:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -247,30 +228,20 @@ bool TestApproximation::testSqrt17(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const uint32_t value = RandomI::random32() % 131072u;
+			const uint32_t value = RandomI::random32(randomGenerator) % 131072u;
 			const uint32_t valueSqrt = Approximation::sqrt(value);
 
 			const double testValueSqrt = NumericD::sqrt(double((value / 2u) * 2u));
 			const uint32_t roundedTestValueSqrt = uint32_t(testValueSqrt + 0.5);
 
-			if (valueSqrt != roundedTestValueSqrt)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, valueSqrt, roundedTestValueSqrt);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestApproximation::testAtan2(const double testDuration)
@@ -350,15 +321,6 @@ bool TestApproximation::testAtan2(const double testDuration)
 
 	const bool succeeded = validateAtan2(testDuration);
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
 	return succeeded;
 }
 
@@ -430,14 +392,7 @@ bool TestApproximation::testExp(const double testDuration)
 
 	const bool succeeded = errors.back() < T(0.1);
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << (succeeded ? "succeeded." : "FAILED!");
 
 	return succeeded;
 }
@@ -448,8 +403,8 @@ bool TestApproximation::validateAtan2(const double testDuration)
 
 	const unsigned int constIterations = 100000u;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -457,6 +412,8 @@ bool TestApproximation::validateAtan2(const double testDuration)
 	{
 		for (unsigned int n = 0; n < constIterations; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			int x = Random::random(-1000, 1000);
 			int y = Random::random(-1000, 1000);
 
@@ -469,10 +426,9 @@ bool TestApproximation::validateAtan2(const double testDuration)
 			const Scalar angle = Numeric::atan2(Scalar(y), Scalar(x));
 			const Scalar angle2 = Approximation::atan2(Scalar(y), Scalar(x));
 
-			++iterations;
-
 			if (angle2 < -Numeric::pi() || angle2 > Numeric::pi())
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
@@ -481,18 +437,17 @@ bool TestApproximation::validateAtan2(const double testDuration)
 
 			const Scalar diffDeg = Numeric::abs(angleDeg - angleDeg2);
 
-			if (Numeric::abs(diffDeg) < 1)
+			if (Numeric::abs(diffDeg) >= 1)
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

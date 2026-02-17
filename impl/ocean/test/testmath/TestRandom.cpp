@@ -12,6 +12,7 @@
 #include "ocean/base/Worker.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Euler.h"
 #include "ocean/math/Random.h"
@@ -349,8 +350,8 @@ bool TestRandom::testStandardRandomVector3(const double testDuration)
 
 	Log::info() << "Standard vector3 rand() with three ranges:";
 
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceTimer timer;
 	const Timestamp startTimestamp(true);
@@ -359,25 +360,22 @@ bool TestRandom::testStandardRandomVector3(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 range(Random::scalar(0, 1000), Random::scalar(0, 1000), Random::scalar(0, 1000));
 			const Vector3 vector = Random::vector3(range);
 
-			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z())
+			if (!(vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z()))
 			{
-				succeeded++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestRandom::testOceanRandomVector3(const double testDuration)
@@ -387,9 +385,7 @@ bool TestRandom::testOceanRandomVector3(const double testDuration)
 	Log::info() << "Ocean vector3 rand() with three ranges:";
 
 	RandomGenerator randomGenerator;
-
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceTimer timer;
 	const Timestamp startTimestamp(true);
@@ -398,25 +394,22 @@ bool TestRandom::testOceanRandomVector3(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 range(Random::scalar(randomGenerator, 0, 1000), Random::scalar(randomGenerator, 0, 1000), Random::scalar(randomGenerator, 0, 1000));
 			const Vector3 vector = Random::vector3(randomGenerator, range);
 
-			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z())
+			if (!(vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z()))
 			{
-				succeeded++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestRandom::testStandardRandomEuler(const double testDuration)
@@ -425,8 +418,8 @@ bool TestRandom::testStandardRandomEuler(const double testDuration)
 
 	Log::info() << "Standard euler rand() with one range:";
 
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceTimer timer;
 	const Timestamp startTimestamp(true);
@@ -435,25 +428,22 @@ bool TestRandom::testStandardRandomEuler(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Scalar range = Random::scalar(0, Numeric::pi_2() - Numeric::eps());
 			const Euler euler = Random::euler(range);
 
-			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range)
+			if (!(euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range))
 			{
-				succeeded++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestRandom::testOceanRandomEuler(const double testDuration)
@@ -463,9 +453,7 @@ bool TestRandom::testOceanRandomEuler(const double testDuration)
 	Log::info() << "Ocean euler rand() with one range:";
 
 	RandomGenerator randomGenerator;
-
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceTimer timer;
 	const Timestamp startTimestamp(true);
@@ -474,25 +462,22 @@ bool TestRandom::testOceanRandomEuler(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Scalar range = Random::scalar(randomGenerator, 0, Numeric::pi_2() - Numeric::eps());
 			const Euler euler = Random::euler(randomGenerator, range);
 
-			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range)
+			if (!(euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range))
 			{
-				succeeded++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 void TestRandom::calculateStandardRandomValues(int* values, const unsigned int firstValue, const unsigned int numberValues)
