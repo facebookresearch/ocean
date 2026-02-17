@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameShrinker.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -112,36 +113,36 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const double testDuration, Worke
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = testDivideByTwo<1u>(width, height, false, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<1u>(width, height, false, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testDivideByTwo<1u>(width, height, true, testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << " ";
-
-	allSucceeded = testDivideByTwo<2u>(width, height, false, testDuration, worker) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testDivideByTwo<2u>(width, height, true, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<1u>(width, height, true, testDuration, worker));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testDivideByTwo<3u>(width, height, false, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<2u>(width, height, false, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testDivideByTwo<3u>(width, height, true, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<2u>(width, height, true, testDuration, worker));
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testDivideByTwo<4u>(width, height, false, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<3u>(width, height, false, testDuration, worker));
 	Log::info() << " ";
-	allSucceeded = testDivideByTwo<4u>(width, height, true, testDuration, worker) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<3u>(width, height, true, testDuration, worker));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<4u>(width, height, false, testDuration, worker));
+	Log::info() << " ";
+	OCEAN_EXPECT_TRUE(validation, testDivideByTwo<4u>(width, height, true, testDuration, worker));
 
 	Log::info() << " ";
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -159,9 +160,8 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const unsigned int width, const 
 		Log::info() << "... for " << width << "x" << height << ", and " << tChannels << " channels:";
 	}
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -244,10 +244,7 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const unsigned int width, const 
 					return false;
 				}
 
-				if (!validateDivideByTwo(sourceFrame, sourceMask, targetFrame, targetMask, handleMask, maskValue, nonMaskValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateDivideByTwo(sourceFrame, sourceMask, targetFrame, targetMask, handleMask, maskValue, nonMaskValue));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -261,16 +258,9 @@ bool TestAdvancedFrameShrinker::testDivideByTwo(const unsigned int width, const 
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameShrinker::validateDivideByTwo(const Frame& sourceFrame, const Frame& sourceMask, const Frame& targetFrame, const Frame& targetMask, const bool handleMaskPixels, const uint8_t maskValue, const uint8_t nonMaskValue)

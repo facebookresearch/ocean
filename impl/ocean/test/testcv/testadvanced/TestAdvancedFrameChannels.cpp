@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameChannels.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -81,11 +82,11 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 	Log::info() << "Testing separate to 1 channel for " << width << "x" << height << " images:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<uint8_t, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<uint8_t, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -93,7 +94,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<int16_t, int16_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<int16_t, int16_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -101,13 +102,13 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<float, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<float, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<float, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<float, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -115,7 +116,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<uint64_t, uint64_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<uint64_t, uint64_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -123,7 +124,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<float, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<float, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -131,22 +132,15 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testSeparateTo1Channel<uint8_t, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testSeparateTo1Channel<uint8_t, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Separate to 1 channel test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Separate to 1 channel test FAILED!";
-	}
+	Log::info() << "Separate to 1 channel test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const unsigned int height, const double testDuration)
@@ -156,11 +150,11 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 	Log::info() << "Testing zip channels for " << width << "x" << height << " images:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<uint8_t, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<uint8_t, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -168,7 +162,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<int16_t, int16_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<int16_t, int16_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -176,7 +170,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<float, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<float, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -184,7 +178,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<uint64_t, uint64_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<uint64_t, uint64_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -192,7 +186,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<float, uint8_t>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<float, uint8_t>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
@@ -200,22 +194,15 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 	for (unsigned int channels = 2u; channels <= 5u; ++channels)
 	{
-		allSucceeded = testZipChannels<uint8_t, float>(width, height, channels, testDuration) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, testZipChannels<uint8_t, float>(width, height, channels, testDuration));
 		Log::info() << " ";
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Zip channels test succeeded.";
-	}
-	else
-	{
-		Log::info() << "Zip channels test FAILED!";
-	}
+	Log::info() << "Zip channels test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget>
@@ -225,12 +212,11 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 	Log::info() << "... for data type " << TypeNamer::name<TSource>() << " -> " << TypeNamer::name<TTarget>() << ", with " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -249,7 +235,8 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1280u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 720u);
 
-			const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+			const unsigned int maxSourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int sourcePaddingElements = maxSourcePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 			Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, pixelOrigin), sourcePaddingElements);
 
@@ -279,7 +266,8 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 			for (unsigned int c = 0u; c < sourceChannels; ++c)
 			{
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+				const unsigned int maxTargetPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int targetPaddingElements = maxTargetPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 				targetFrames[c] = Frame(FrameType(sourceFrame, targetPixelFormat), targetPaddingElements);
 				CV::CVUtilities::randomizeFrame(targetFrames[c], false, &randomGenerator);
@@ -297,7 +285,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 			if (allTargetPaddingElementsZero)
 			{
-				allTargetPaddingElementsZero = RandomI::random(randomGenerator, 0u, 1u) == 0u; // we also want to test this case
+				allTargetPaddingElementsZero = RandomI::boolean(randomGenerator); // we also want to test this case
 			}
 
 			TSource sourceFactor = TSource(0);
@@ -331,7 +319,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 			ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
 
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				CV::Advanced::AdvancedFrameChannels::separateTo1Channel<TSource, TTarget>(sourceFrame.constdata<TSource>(), targetPointers.data(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFactor, targetFactor, sourcePaddingElements, allTargetPaddingElementsZero ? nullptr : targetsPaddingElements.data());
 			}
@@ -363,7 +351,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 
 					default:
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 				}
 
@@ -375,7 +363,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrames[n], copyTargetFrames[n]))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 			}
@@ -398,10 +386,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 						const TTarget controlValue = TTarget(sourceValue * sourceFactor) * targetFactor;
 						ocean_assert_and_suppress_unused(value == controlValue, controlValue);
 
-						if (targetValue != value)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, targetValue, value);
 					}
 				}
 			}
@@ -445,10 +430,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 							const TSource intermediateSourceValue = sourceValue * sourceFactor;
 							const TTarget value = TTarget(intermediateSourceValue) * targetFactor;
 
-							if (targetFramesAsBlock.constpixel<TTarget>(x, y + c * sourceFrame.height())[0] != value)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, targetFramesAsBlock.constpixel<TTarget>(x, y + c * sourceFrame.height())[0], value);
 						}
 					}
 				}
@@ -461,16 +443,9 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 	Log::info() << "Naive: Best: " << String::toAString(performanceNaive.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceNaive.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceNaive.averageMseconds(), 3u) << "ms";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 3u) << "ms, average: " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget>
@@ -480,12 +455,11 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 	Log::info() << "... for data type " << TypeNamer::name<TSource>() << " -> " << TypeNamer::name<TTarget>() << ", with " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -508,7 +482,8 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 
 			for (unsigned int n = 0u; n < targetChannels; ++n)
 			{
-				const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int maxPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int paddingElements = maxPaddingElements * RandomI::random(randomGenerator, 1u);
 				Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, pixelOrigin), paddingElements);
 
 				if constexpr (std::is_floating_point<TSource>::value)
@@ -533,7 +508,8 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 			Frame targetFrame;
 			Frame copyTargetFrame;
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int maxTargetPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+			const unsigned int paddingElements = maxTargetPaddingElements * RandomI::random(randomGenerator, 1u);
 
 			targetFrame = Frame(FrameType(testWidth, testHeight, targetPixelFormat, pixelOrigin), paddingElements);
 
@@ -627,7 +603,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 						{
 							ocean_assert(false && "This should never happen!");
 
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 							break;
 						}
 					}
@@ -680,10 +656,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 							const TTarget controlValue = TTarget(sourceValue * sourceFactor) * targetFactor;
 							ocean_assert_and_suppress_unused(value == controlValue, controlValue);
 
-							if (targetValue != value)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, targetValue, value);
 						}
 					}
 				}
@@ -743,10 +716,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 							const TSource intermediateSourceValue = sourceValue * sourceFactor;
 							const TTarget value = TTarget(intermediateSourceValue) * targetFactor;
 
-							if (targetFrame.constpixel<TTarget>(x, y)[c] != value)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, targetFrame.constpixel<TTarget>(x, y)[c], value);
 						}
 					}
 				}
@@ -759,16 +729,9 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 	Log::info() << "Naive: Best: " << String::toAString(performanceNaive.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceNaive.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceNaive.averageMseconds(), 3u) << "ms";
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 3u) << "ms, average: " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

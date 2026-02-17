@@ -8,11 +8,13 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSobel.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/cv/advanced/AdvancedFrameFilterSobel.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
+#include "ocean/base/RandomGenerator.h"
 
 namespace Ocean
 {
@@ -69,7 +71,8 @@ bool TestAdvancedFrameFilterSobel::testSinglePixel(const unsigned char* frame, c
 
 	Log::info() << "3D sobel filter single pixel test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -77,28 +80,18 @@ bool TestAdvancedFrameFilterSobel::testSinglePixel(const unsigned char* frame, c
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const unsigned int x = RandomI::random(width - 1u);
-			const unsigned int y = RandomI::random(height - 1u);
-			const unsigned int z = RandomI::random(depth - 1u);
+			const unsigned int x = RandomI::random(randomGenerator, width - 1u);
+			const unsigned int y = RandomI::random(randomGenerator, height - 1u);
+			const unsigned int z = RandomI::random(randomGenerator, depth - 1u);
 
-			if (sobel(frame, width, height, depth, x, y, z) != CV::Advanced::AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8BitPixel(frame, width, height, depth, x, y, z))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, sobel(frame, width, height, depth, x, y, z), CV::Advanced::AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8BitPixel(frame, width, height, depth, x, y, z));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAdvancedFrameFilterSobel::testFilterHorizontalVerticalMaximum8Bit(const unsigned char* frame, const unsigned int width, const unsigned int height, const unsigned int depth, const double testDuration, Worker& worker)
@@ -111,7 +104,8 @@ bool TestAdvancedFrameFilterSobel::testFilterHorizontalVerticalMaximum8Bit(const
 	std::vector<unsigned short> buffer(size_t(width) * size_t(height) * size_t(depth));
 	unsigned short* const sobel = (unsigned short*)buffer.data();
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
@@ -126,15 +120,7 @@ bool TestAdvancedFrameFilterSobel::testFilterHorizontalVerticalMaximum8Bit(const
 
 	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
 
-	if (validationHorizontalVerticalMaximum8Bit(frame, sobel, width, height, depth))
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		result = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, validationHorizontalVerticalMaximum8Bit(frame, sobel, width, height, depth));
 
 	if (worker)
 	{
@@ -153,20 +139,14 @@ bool TestAdvancedFrameFilterSobel::testFilterHorizontalVerticalMaximum8Bit(const
 
 		Log::info() << "Multicore performance: Best: " << performanceMulticore.bestMseconds() << "ms, worst: " << performanceMulticore.worstMseconds() << "ms, average: " << performanceMulticore.averageMseconds() << "ms";
 
-		if (validationHorizontalVerticalMaximum8Bit(frame, sobel, width, height, depth))
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: FAILED!";
-			result = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validationHorizontalVerticalMaximum8Bit(frame, sobel, width, height, depth));
 
 		Log::info() << "Multicore boost: Best: " << performance.best() / performanceMulticore.best() << ", worst: " << performance.worst() / performanceMulticore.worst() << ", average: " << performance.average() / performanceMulticore.average();
 	}
 
-	return result;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 unsigned short TestAdvancedFrameFilterSobel::sobel(const unsigned char* frame, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z)

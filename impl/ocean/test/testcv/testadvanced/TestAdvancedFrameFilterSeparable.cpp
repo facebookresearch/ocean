@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSeparable.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -222,27 +223,20 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 	Log::info() << "Testing advanced filter with resolution " << width << "x" << height << " for element type '" << TypeNamer::name<T>() << "' with filter type '" << TypeNamer::name<TFilter>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const unsigned int horizontalFilterSize : {3u, 5u, 7u})
 	{
 		for (const unsigned int verticalFilterSize : {3u, 5u, 7u})
 		{
-			allSucceeded = testFilter<T, TFilter>(width, height, horizontalFilterSize, verticalFilterSize, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, (testFilter<T, TFilter>(width, height, horizontalFilterSize, verticalFilterSize, testDuration, worker)));
 			Log::info() << " ";
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -259,8 +253,7 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -316,7 +309,8 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 
 					const Frame sourceMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 
-					const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int maxTargetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int targetMaskPaddingElements = maxTargetMaskPaddingElements * RandomI::random(randomGenerator, 1u);
 					Frame targetMask(sourceMask.frameType(), targetMaskPaddingElements);
 
 					const Frame targetMaskCopy(targetMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -328,14 +322,14 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
 					{
 						ocean_assert(false && "Invalid padding memory!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(targetMask, targetMaskCopy))
 					{
 						ocean_assert(false && "Invalid padding memory!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
@@ -352,10 +346,7 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 						floatVerticalFilters.emplace_back(float(filterValue));
 					}
 
-					if (!validateFilter<T>(source, sourceMask, target, targetMask, floatHorizontalFilters, floatVerticalFilters, maskValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (validateFilter<T>(source, sourceMask, target, targetMask, floatHorizontalFilters, floatVerticalFilters, maskValue)));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -372,7 +363,7 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -386,27 +377,20 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 	Log::info() << "Testing advanced in-place filter with resolution " << width << "x" << height << " for element type '" << TypeNamer::name<T>() << "' with filter type '" << TypeNamer::name<TFilter>() << "':";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (const unsigned int horizontalFilterSize : {3u, 5u, 7u})
 	{
 		for (const unsigned int verticalFilterSize : {3u, 5u, 7u})
 		{
-			allSucceeded = testFilterInPlace<T, TFilter>(width, height, horizontalFilterSize, verticalFilterSize, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, (testFilterInPlace<T, TFilter>(width, height, horizontalFilterSize, verticalFilterSize, testDuration, worker)));
 			Log::info() << " ";
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -423,8 +407,7 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -488,14 +471,14 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, frameCopy))
 					{
 						ocean_assert(false && "Invalid padding memory!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(mask, maskCopy))
 					{
 						ocean_assert(false && "Invalid padding memory!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 					}
 
@@ -512,10 +495,7 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 						floatVerticalFilters.emplace_back(float(filterValue));
 					}
 
-					if (!validateFilter<T>(frameCopy, maskCopy, frame, mask, floatHorizontalFilters, floatVerticalFilters, maskValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, (validateFilter<T>(frameCopy, maskCopy, frame, mask, floatHorizontalFilters, floatVerticalFilters, maskValue)));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -532,7 +512,7 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>

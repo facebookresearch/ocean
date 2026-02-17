@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testadvanced/TestAdvancedFrameFilterGaussian.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 
@@ -143,8 +144,7 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -178,16 +178,14 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 
 					const Frame sourceMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 
-					const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					const unsigned int maxTargetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+					const unsigned int targetMaskPaddingElements = maxTargetMaskPaddingElements * RandomI::random(randomGenerator, 1u);
 					Frame targetMask(sourceMask.frameType(), targetMaskPaddingElements);
 
 					const Frame targetMaskCopy(targetMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					performance.startIf(performanceIteration);
-						if (!CV::Advanced::AdvancedFrameFilterGaussian::Comfort::filter(source, sourceMask, target, targetMask, filterSize, maskValue, useWorker))
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_TRUE(validation, CV::Advanced::AdvancedFrameFilterGaussian::Comfort::filter(source, sourceMask, target, targetMask, filterSize, maskValue, useWorker));
 					performance.stopIf(performanceIteration);
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
@@ -202,10 +200,7 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 						return false;
 					}
 
-					if (!validateFilter<T>(source, sourceMask, target, targetMask, filterSize, maskValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, validateFilter<T>(source, sourceMask, target, targetMask, filterSize, maskValue));
 				}
 			}
 			while (!startTimestamp.hasTimePassed(testDuration));
@@ -222,7 +217,7 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 		Log::info() << " ";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
