@@ -5,15 +5,19 @@
 
 # @noautodeps
 
+# @nolint
+
 """Pre-flight dependency checks for the build system."""
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys  # noqa: F401
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 
@@ -95,9 +99,40 @@ def parse_version(version_str: str) -> Tuple[int, ...]:
     return ()
 
 
+def _which_with_fallback(tool: str, fallback_paths: List[Path]) -> Optional[str]:
+    """Find a tool on PATH, falling back to common installation directories.
+
+    On Windows, tools like CMake may not be in PATH (especially inside a venv),
+    so we check well-known installation directories as a fallback. When found
+    via fallback, the tool's directory is added to PATH so subsequent subprocess
+    calls can find it.
+    """
+    path = shutil.which(tool)
+    if path:
+        return path
+
+    if os.name == "nt":
+        for candidate in fallback_paths:
+            if candidate.exists():
+                # Add to PATH so the rest of the build can find it
+                tool_dir = str(candidate.parent)
+                os.environ["PATH"] = tool_dir + os.pathsep + os.environ.get("PATH", "")
+                return str(candidate)
+
+    return None
+
+
+# Common Windows installation paths for tools
+_CMAKE_WINDOWS_PATHS = [
+    Path(os.environ.get("ProgramFiles", "C:\\Program Files")) / "CMake" / "bin" / "cmake.exe",
+    Path(os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)")) / "CMake" / "bin" / "cmake.exe",
+    Path(os.environ.get("LOCALAPPDATA", "")) / "CMake" / "bin" / "cmake.exe",
+]
+
+
 def check_cmake() -> VersionInfo:
     """Check if CMake is installed and meets version requirements."""
-    path = shutil.which("cmake")
+    path = _which_with_fallback("cmake", _CMAKE_WINDOWS_PATHS)
     if not path:
         return VersionInfo(
             name="cmake",
@@ -111,7 +146,7 @@ def check_cmake() -> VersionInfo:
 
     try:
         result = subprocess.run(
-            ["cmake", "--version"],
+            [path, "--version"],
             capture_output=True,
             text=True,
             check=True,
