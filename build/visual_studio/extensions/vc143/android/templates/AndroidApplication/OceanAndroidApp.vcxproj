@@ -106,11 +106,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Java sources displayed in Solution Explorer -->
-    <None Include="app\java\MainActivity.java" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- Android manifest - uses AndroidManifest item type for build integration -->
     <AndroidManifest Include="app\AndroidManifest.xml" />
   </ItemGroup>

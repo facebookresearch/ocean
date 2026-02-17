@@ -218,6 +218,12 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <!-- JavaSource property page schema (Item Type dropdown registration) -->
+    <Content Include="..\..\toolset\JavaStaging\PropertyPages\JavaSource.xml">
+      <Link>toolset\JavaStaging\PropertyPages\JavaSource.xml</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <!-- GradleWrapper targets and checksum - SHA-256 hash for gradle-wrapper.jar integrity verification -->
   <ItemGroup>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ocean Android Extension - Java Source Item Type Schema
+
+  Defines the JavaSource item type for Visual Studio Property Pages.
+  This allows users to change a file's item type to "Java Source" via
+  right-click -> Properties -> Item Type dropdown in Solution Explorer.
+
+  A FileExtension mapping for .java is included so that .java files
+  added to the project are automatically assigned the JavaSource item type.
+-->
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <!-- Register JavaSource as a known item type in the Item Type dropdown -->
+  <ItemType Name="JavaSource" DisplayName="Java Source" />
+
+  <!-- Map .java extension to the JavaSource item type -->
+  <FileExtension Name="*.java" ContentType="JavaSource" />
+
+  <!-- Content type linking .java files to the JavaSource item type -->
+  <ContentType Name="JavaSource" DisplayName="Java Source" ItemType="JavaSource" />
+
+  <!-- Rule definition for JavaSource items -->
+  <Rule Name="JavaSource"
+        DisplayName="Java Source"
+        PageTemplate="generic"
+        Order="200">
+
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile"
+                  ItemType="JavaSource"
+                  HasConfigurationCondition="false" />
+    </Rule.DataSource>
+
+    <Rule.Categories>
+      <Category Name="General" DisplayName="General" />
+    </Rule.Categories>
+
+    <!-- Standard hidden properties for file identity tracking -->
+    <StringProperty Name="Identity" Visible="false" />
+    <StringProperty Name="FullPath" Visible="false" />
+    <StringProperty Name="FileNameAndExtension" Visible="false" />
+  </Rule>
+
+</ProjectSchemaDefinitions>

@@ -21,6 +21,13 @@
     <AvailableItemName Include="JavaSource" />
   </ItemGroup>
 
+  <!-- Register JavaSource property page schema for VS Item Type dropdown -->
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)PropertyPages\JavaSource.xml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
   <!-- Inline task for staging Java files based on package declaration -->
   <UsingTask TaskName="StageJavaFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>

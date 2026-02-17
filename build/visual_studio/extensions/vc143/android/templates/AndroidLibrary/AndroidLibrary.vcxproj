@@ -104,11 +104,6 @@
     <None Include="gradle\gradle.properties" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Java sources displayed in Solution Explorer -->
-    <None Include="lib\src\$safeprojectname$.java" />
-  </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 
   <ImportGroup Label="ExtensionTargets" />

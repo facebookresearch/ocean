@@ -139,6 +139,7 @@
 
     <!-- Shared targets imported by OceanAndroidCommon.targets -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\JavaStaging\JavaStaging.targets" d:VsixSubPath="toolset\JavaStaging\" />
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\JavaStaging\PropertyPages\JavaSource.xml" d:VsixSubPath="toolset\JavaStaging\PropertyPages\" />
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\GradleWrapper.targets" d:VsixSubPath="toolset\GradleWrapper\" />
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\JavaValidation\JavaValidation.targets" d:VsixSubPath="toolset\JavaValidation\" />
   </Assets>
