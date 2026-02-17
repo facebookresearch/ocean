@@ -13,6 +13,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <cmath>
 
@@ -182,39 +183,26 @@ bool TestWorker::testConstructor()
 {
 	Log::info() << "Test constructor:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		const Worker defaultWorker;
 
 		const unsigned int expectedThreads = std::min(Processor::get().cores(), 16u);
 
-		if (defaultWorker.threads() != expectedThreads)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, defaultWorker.threads(), expectedThreads);
 	}
 
 	for (unsigned int threads = 1u; threads <= 64u; ++threads)
 	{
 		const Worker customWorker(threads, Worker::TYPE_CUSTOM);
 
-		if (customWorker.threads() != threads)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, customWorker.threads(), threads);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestWorker::testDelay(const double testDuration, Worker& worker)
@@ -428,6 +416,8 @@ bool TestWorker::testAbortableFunction(Worker& worker)
 	Log::info() << "Test validation of abortable function:";
 	Log::info() << " ";
 
+	Validation validation;
+
 	double resultValue = 0.0;
 	bool abortState = false;
 
@@ -449,18 +439,11 @@ bool TestWorker::testAbortableFunction(Worker& worker)
 
 	const double delay = fabs(double(stopTimestamp - startTimestamp) - resultValue);
 
-	const bool result = delay < threshold;
+	OCEAN_EXPECT_TRUE(validation, delay < threshold);
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestWorker::testSeparableAndAbortableFunction(Worker& worker)
@@ -469,6 +452,8 @@ bool TestWorker::testSeparableAndAbortableFunction(Worker& worker)
 
 	Log::info() << "Test validation of separable and abortable function:";
 	Log::info() << " ";
+
+	Validation validation;
 
 	double resultValue = 0.0;
 	bool abortState = false;
@@ -490,18 +475,11 @@ bool TestWorker::testSeparableAndAbortableFunction(Worker& worker)
 
 	const double delay = fabs(double(stopTimestamp - startTimestamp) - resultValue);
 
-	const bool result = delay < threshold;
+	OCEAN_EXPECT_TRUE(validation, delay < threshold);
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 void TestWorker::staticWorkerFunctionDelay(uint64_t* time, const unsigned int first, const unsigned int size)

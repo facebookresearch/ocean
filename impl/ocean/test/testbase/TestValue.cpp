@@ -13,6 +13,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -113,7 +114,8 @@ bool TestValue::testConstructor(const double testDuration)
 
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -124,93 +126,71 @@ bool TestValue::testConstructor(const double testDuration)
 
 			const Value value;
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
-			if (value.isBool() || value.isInt() || value.isInt64() || value.isFloat() || value.isFloat64() || value.isString() || value.isBuffer())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, value.isBool() || value.isInt() || value.isInt64() || value.isFloat() || value.isFloat64() || value.isString() || value.isBuffer());
 		}
 
 		{
 			// bool value
 
-			const bool boolValue = RandomI::random(1u) == 0u;
+			const bool boolValue = RandomI::boolean(randomGenerator);
 
 			const Value value(boolValue);
 
-			if (!verifyValue(value, boolValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, boolValue));
 		}
 
 		{
 			// int32 value
 
-			const int32_t intValue = RandomI::random(-1000, 1000);
+			const int32_t intValue = RandomI::random(randomGenerator, -1000, 1000);
 
 			const Value value(intValue);
 
-			if (!verifyValue(value, intValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, intValue));
 		}
 
 		{
 			// int64 value
 
-			const int64_t intValue64 = RandomI::random(-1000, 1000);
+			const int64_t intValue64 = RandomI::random(randomGenerator, -1000, 1000);
 
 			const Value value(intValue64);
 
-			if (!verifyValue(value, intValue64))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, intValue64));
 		}
 
 		{
 			// float32 value
 
-			const float floatValue = float(RandomI::random(-1000, 1000));
+			const float floatValue = float(RandomI::random(randomGenerator, -1000, 1000));
 
 			const Value value(floatValue);
 
-			if (!verifyValue(value, floatValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, floatValue));
 		}
 
 		{
 			// float64 value
 
-			const double floatValue64 = double(RandomI::random(-1000, 1000));
+			const double floatValue64 = double(RandomI::random(randomGenerator, -1000, 1000));
 
 			const Value value(floatValue64);
 
-			if (!verifyValue(value, floatValue64))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, floatValue64));
 		}
 
 		{
 			// string value
 
-			const std::string stringValue(RandomI::random(1u, 100u), char(RandomI::random(int('a'), int('z'))));
+			const unsigned int stringLength = RandomI::random(randomGenerator, 1u, 100u);
+			const std::string stringValue(stringLength, char(RandomI::random(randomGenerator, int('a'), int('z'))));
 
-			const Value value = RandomI::random(1u) == 0u ? Value(stringValue) : Value(stringValue.c_str());
+			const Value value = RandomI::boolean(randomGenerator) ? Value(stringValue) : Value(stringValue.c_str());
 
-			if (!verifyValue(value, stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, stringValue));
 		}
 
 		{
@@ -220,10 +200,7 @@ bool TestValue::testConstructor(const double testDuration)
 
 			const Value value(stringValue);
 
-			if (!verifyValue(value, stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, stringValue));
 		}
 
 		{
@@ -233,42 +210,31 @@ bool TestValue::testConstructor(const double testDuration)
 
 			const Value value(stringValue);
 
-			if (value || !value.isNull() || value.isString())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
+			OCEAN_EXPECT_FALSE(validation, value.isString());
 		}
 
 		{
 			// buffer value
 
-			std::vector<uint8_t> bufferValue(RandomI::random(100u)); // can also be empty
+			std::vector<uint8_t> bufferValue(RandomI::random(randomGenerator, 100u)); // can also be empty
 
 			for (uint8_t& element : bufferValue)
 			{
-				element = uint8_t(RandomI::random(255u));
+				element = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
 			const Value value(bufferValue.data(), bufferValue.size());
 
-			if (!verifyValue(value, bufferValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(value, bufferValue));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestValue::testComparison(const double testDuration)
@@ -277,7 +243,8 @@ bool TestValue::testComparison(const double testDuration)
 
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const std::vector<Value::ValueType> valueTypes =
 	{
@@ -291,10 +258,7 @@ bool TestValue::testComparison(const double testDuration)
 		Value::VT_BUFFER
 	};
 
-	if (Value() != Value())
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, Value(), Value());
 
 	const Timestamp startTimestamp(true);
 
@@ -303,115 +267,85 @@ bool TestValue::testComparison(const double testDuration)
 		{
 			// test bool
 
-			const bool value = RandomI::random(1u) == 0u;
+			const bool value = RandomI::boolean(randomGenerator);
 
-			if (Value(value) != Value(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Value(value), Value(value));
 
-			if (Value(value) == Value(!value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, Value(value), Value(!value));
 		}
 
 		{
 			// test int32
 
-			const int32_t value = int32_t(RandomI::random32());
+			const int32_t value = int32_t(RandomI::random32(randomGenerator));
 
-			if (Value(value) != Value(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Value(value), Value(value));
 
 			int32_t otherValue;
 
 			do
 			{
-				otherValue = int32_t(RandomI::random32());
+				otherValue = int32_t(RandomI::random32(randomGenerator));
 			}
 			while (value == otherValue);
 
-			if (Value(value) == Value(otherValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, Value(value), Value(otherValue));
 		}
 
 		{
 			// test int64
 
-			const int64_t value = int64_t(RandomI::random64());
+			const int64_t value = int64_t(RandomI::random64(randomGenerator));
 
-			if (Value(value) != Value(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Value(value), Value(value));
 
 			int64_t otherValue;
 
 			do
 			{
-				otherValue = int64_t(RandomI::random64());
+				otherValue = int64_t(RandomI::random64(randomGenerator));
 			}
 			while (value == otherValue);
 
-			if (Value(value) == Value(otherValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, Value(value), Value(otherValue));
 		}
 
 		{
 			// test float
 
-			const uint32_t intValue = RandomI::random32();
+			const uint32_t intValue = RandomI::random32(randomGenerator);
 
 			float floatValue;
 			static_assert(sizeof(intValue) == sizeof(floatValue), "Invalid data type!");
 			memcpy(&floatValue, &intValue, sizeof(floatValue));
 
-			if ((Value(floatValue) == Value(floatValue)) != (floatValue == floatValue)) // handling edge cases like nan
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(floatValue)) == (floatValue == floatValue)); // handling edge cases like nan
 
-			const uint32_t otherIntValue = RandomI::random32();
+			const uint32_t otherIntValue = RandomI::random32(randomGenerator);
 
 			float otherFloatValue;
 			memcpy(&otherFloatValue, &otherIntValue, sizeof(otherFloatValue));
 
-			if ((Value(floatValue) == Value(otherFloatValue)) != (floatValue == otherFloatValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(otherFloatValue)) == (floatValue == otherFloatValue));
 		}
 
 		{
 			// test double
 
-			const uint64_t intValue = RandomI::random64();
+			const uint64_t intValue = RandomI::random64(randomGenerator);
 
 			double floatValue;
 			static_assert(sizeof(intValue) == sizeof(floatValue), "Invalid data type!");
 			memcpy(&floatValue, &intValue, sizeof(floatValue));
 
-			if ((Value(floatValue) == Value(floatValue)) != (floatValue == floatValue)) // handling edge cases like nan
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(floatValue)) == (floatValue == floatValue)); // handling edge cases like nan
 
-			const uint64_t otherIntValue = RandomI::random64();
+			const uint64_t otherIntValue = RandomI::random64(randomGenerator);
 
 			double otherFloatValue;
 			memcpy(&otherFloatValue, &otherIntValue, sizeof(otherFloatValue));
 
-			if ((Value(floatValue) == Value(otherFloatValue)) != (floatValue == otherFloatValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (Value(floatValue) == Value(otherFloatValue)) == (floatValue == otherFloatValue));
 		}
 
 		{
@@ -419,31 +353,25 @@ bool TestValue::testComparison(const double testDuration)
 
 			std::string stringValue;
 
-			const size_t size = size_t(RandomI::random(100u));
+			const size_t size = size_t(RandomI::random(randomGenerator, 100u));
 
 			while (stringValue.size() < size)
 			{
-				stringValue += char(RandomI::random(255));
+				stringValue += char(RandomI::random(randomGenerator, 255));
 			}
 
-			if (Value(stringValue) != Value(stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Value(stringValue), Value(stringValue));
 
 			std::string otherStringValue;
 
-			const size_t otherSize = size_t(RandomI::random(100u));
+			const size_t otherSize = size_t(RandomI::random(randomGenerator, 100u));
 
 			while (otherStringValue.size() < otherSize)
 			{
-				otherStringValue += char(RandomI::random(255));
+				otherStringValue += char(RandomI::random(randomGenerator, 255));
 			}
 
-			if ((Value(stringValue) == Value(otherStringValue)) != (stringValue == otherStringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (Value(stringValue) == Value(otherStringValue)) == (stringValue == otherStringValue));
 		}
 
 		{
@@ -451,33 +379,27 @@ bool TestValue::testComparison(const double testDuration)
 
 			std::vector<uint8_t> bufferValue;
 
-			const size_t size = size_t(RandomI::random(100u));
+			const size_t size = size_t(RandomI::random(randomGenerator, 100u));
 
 			while (bufferValue.size() < size)
 			{
-				bufferValue.emplace_back(uint8_t(RandomI::random(255)));
+				bufferValue.emplace_back(uint8_t(RandomI::random(randomGenerator, 255)));
 			}
 
-			if (Value(bufferValue.data(), bufferValue.size()) != Value(bufferValue.data(), bufferValue.size()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Value(bufferValue.data(), bufferValue.size()), Value(bufferValue.data(), bufferValue.size()));
 
 			std::vector<uint8_t> otherBufferValue;
 
-			const size_t otherSize = size_t(RandomI::random(100u));
+			const size_t otherSize = size_t(RandomI::random(randomGenerator, 100u));
 
 			while (otherBufferValue.size() < otherSize)
 			{
-				otherBufferValue.emplace_back(uint8_t(RandomI::random(255)));
+				otherBufferValue.emplace_back(uint8_t(RandomI::random(randomGenerator, 255)));
 			}
 
 			const bool expected = bufferValue.size() == otherBufferValue.size() && (bufferValue.empty() || memcmp(bufferValue.data(), otherBufferValue.data(), bufferValue.size()) == 0);
 
-			if ((Value(bufferValue.data(), bufferValue.size()) == Value(otherBufferValue.data(), otherBufferValue.size())) != expected)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, (Value(bufferValue.data(), bufferValue.size()) == Value(otherBufferValue.data(), otherBufferValue.size())) == expected);
 		}
 
 		{
@@ -487,7 +409,7 @@ bool TestValue::testComparison(const double testDuration)
 
 			Indices32 valueTypeIndices = {Index32(-1), Index32(-1)};
 
-			RandomI::random((unsigned int)(valueTypes.size()) - 1u, valueTypeIndices[0], valueTypeIndices[1]);
+			RandomI::random(randomGenerator, (unsigned int)(valueTypes.size()) - 1u, valueTypeIndices[0], valueTypeIndices[1]);
 			ocean_assert(valueTypeIndices[0] != valueTypeIndices[1]);
 
 			for (size_t n = 0; n < values.size(); ++n)
@@ -505,28 +427,28 @@ bool TestValue::testComparison(const double testDuration)
 
 					case Value::VT_BOOL:
 					{
-						value = Value(RandomI::random(1u) == 0u);
+						value = Value(RandomI::boolean(randomGenerator));
 						break;
 					}
 
 					case Value::VT_INT_32:
 					{
-						value = Value(int32_t(RandomI::random32()));
+						value = Value(int32_t(RandomI::random32(randomGenerator)));
 						break;
 					}
 
 					case Value::VT_INT_64:
 					{
-						value = Value(int64_t(RandomI::random64()));
+						value = Value(int64_t(RandomI::random64(randomGenerator)));
 						break;
 					}
 
 					case Value::VT_FLOAT_32:
 					{
-						const uint32_t intValue = int32_t(RandomI::random32());
+						const uint32_t floatIntValue = RandomI::random32(randomGenerator);
 
 						float floatValue;
-						memcpy(&floatValue, &intValue, sizeof(floatValue));
+						memcpy(&floatValue, &floatIntValue, sizeof(floatValue));
 
 						value = Value(floatValue);
 						break;
@@ -534,10 +456,10 @@ bool TestValue::testComparison(const double testDuration)
 
 					case Value::VT_FLOAT_64:
 					{
-						const uint64_t intValue = int32_t(RandomI::random64());
+						const uint64_t floatIntValue = RandomI::random64(randomGenerator);
 
 						double floatValue;
-						memcpy(&floatValue, &intValue, sizeof(floatValue));
+						memcpy(&floatValue, &floatIntValue, sizeof(floatValue));
 
 						value = Value(floatValue);
 						break;
@@ -547,11 +469,11 @@ bool TestValue::testComparison(const double testDuration)
 					{
 						std::string stringValue;
 
-						const size_t size = size_t(RandomI::random(100u));
+						const size_t stringSize = size_t(RandomI::random(randomGenerator, 100u));
 
-						while (stringValue.size() < size)
+						while (stringValue.size() < stringSize)
 						{
-							stringValue += char(RandomI::random(255));
+							stringValue += char(RandomI::random(randomGenerator, 255));
 						}
 
 						value = Value(stringValue);
@@ -562,11 +484,11 @@ bool TestValue::testComparison(const double testDuration)
 					{
 						std::vector<uint8_t> bufferValue;
 
-						const size_t size = size_t(RandomI::random(100u));
+						const size_t bufferSize = size_t(RandomI::random(randomGenerator, 100u));
 
-						while (bufferValue.size() < size)
+						while (bufferValue.size() < bufferSize)
 						{
-							bufferValue.emplace_back(uint8_t(RandomI::random(255)));
+							bufferValue.emplace_back(uint8_t(RandomI::random(randomGenerator, 255)));
 						}
 
 						value = Value(bufferValue.data(), bufferValue.size());
@@ -575,34 +497,18 @@ bool TestValue::testComparison(const double testDuration)
 				}
 			}
 
-			if (!values[0] && !values[1])
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, values[0] || values[1]);
 
-			if (values[0].type() == values[1].type())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, values[0].type(), values[1].type());
 
-			if (values[0] == values[1])
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, values[0], values[1]);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestValue::testCopy(const double testDuration)
@@ -611,7 +517,8 @@ bool TestValue::testCopy(const double testDuration)
 
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -625,182 +532,143 @@ bool TestValue::testCopy(const double testDuration)
 			{
 				const Value copiedValue(value);
 
-				if (copiedValue || !copiedValue.isNull())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !copiedValue);
+				OCEAN_EXPECT_TRUE(validation, copiedValue.isNull());
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (assignedValue || !assignedValue.isNull())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !assignedValue);
+				OCEAN_EXPECT_TRUE(validation, assignedValue.isNull());
 			}
 		}
 
 		{
 			// bool value
 
-			const bool boolValue = RandomI::random(1u) == 0u;
+			const bool boolValue = RandomI::boolean(randomGenerator);
 
 			const Value value(boolValue);
 
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, boolValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, boolValue));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, boolValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, boolValue));
 			}
 		}
 
 		{
 			// int32 value
 
-			const int32_t intValue = RandomI::random(-1000, 1000);
+			const int32_t intValue = RandomI::random(randomGenerator, -1000, 1000);
 
 			const Value value(intValue);
 
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, intValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, intValue));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, intValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, intValue));
 			}
 		}
 
 		{
 			// int64 value
 
-			const int64_t intValue64 = RandomI::random(-1000, 1000);
+			const int64_t intValue64 = RandomI::random(randomGenerator, -1000, 1000);
 
 			const Value value(intValue64);
 
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, intValue64))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, intValue64));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, intValue64))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, intValue64));
 			}
 		}
 
 		{
 			// float32 value
 
-			const float floatValue = float(RandomI::random(-1000, 1000));
+			const float floatValue = float(RandomI::random(randomGenerator, -1000, 1000));
 
 			const Value value(floatValue);
 
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, floatValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, floatValue));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, floatValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, floatValue));
 			}
 		}
 
 		{
 			// float64 value
 
-			const double floatValue64 = double(RandomI::random(-1000, 1000));
+			const double floatValue64 = double(RandomI::random(randomGenerator, -1000, 1000));
 
 			const Value value(floatValue64);
 
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, floatValue64))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, floatValue64));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, floatValue64))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, floatValue64));
 			}
 		}
 
 		{
 			// string value
 
-			const std::string stringValue(RandomI::random(1u, 100u), char(RandomI::random(int('a'), int('z'))));
+			const unsigned int stringLength = RandomI::random(randomGenerator, 1u, 100u);
+			const std::string stringValue(stringLength, char(RandomI::random(randomGenerator, int('a'), int('z'))));
 
-			const Value value = RandomI::random(1u) == 0u ? Value(stringValue) : Value(stringValue.c_str());
+			const Value value = RandomI::boolean(randomGenerator) ? Value(stringValue) : Value(stringValue.c_str());
 
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, stringValue));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, stringValue));
 			}
 		}
 
@@ -814,20 +682,14 @@ bool TestValue::testCopy(const double testDuration)
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, stringValue));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, stringValue));
 			}
 		}
 
@@ -841,31 +703,29 @@ bool TestValue::testCopy(const double testDuration)
 			{
 				const Value copiedValue(value);
 
-				if (copiedValue || !copiedValue.isNull() || copiedValue.isString())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !copiedValue);
+				OCEAN_EXPECT_TRUE(validation, copiedValue.isNull());
+				OCEAN_EXPECT_FALSE(validation, copiedValue.isString());
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (assignedValue || !assignedValue.isNull() || assignedValue.isString())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !assignedValue);
+				OCEAN_EXPECT_TRUE(validation, assignedValue.isNull());
+				OCEAN_EXPECT_FALSE(validation, assignedValue.isString());
 			}
 		}
 
 		{
 			// buffer value
 
-			std::vector<uint8_t> bufferValue(RandomI::random(100u)); // can also be empty
+			std::vector<uint8_t> bufferValue(RandomI::random(randomGenerator, 100u)); // can also be empty
 
 			for (uint8_t& element : bufferValue)
 			{
-				element = uint8_t(RandomI::random(255u));
+				element = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
 			const Value value(bufferValue.data(), bufferValue.size());
@@ -873,100 +733,77 @@ bool TestValue::testCopy(const double testDuration)
 			{
 				const Value copiedValue(value);
 
-				if (!verifyValue(copiedValue, bufferValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(copiedValue, bufferValue));
 			}
 
 			{
 				Value assignedValue;
 				assignedValue = value;
 
-				if (!verifyValue(assignedValue, bufferValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, bufferValue));
 			}
 		}
 
 		{
 			// buffer/string/int value
 
-			std::vector<uint8_t> bufferValue(RandomI::random(1u, 100u)); // can also be empty
+			std::vector<uint8_t> bufferValue(RandomI::random(randomGenerator, 1u, 100u)); // can also be empty
 
 			for (uint8_t& element : bufferValue)
 			{
-				element = uint8_t(RandomI::random(255u));
+				element = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
 			Value valueA(bufferValue.data(), bufferValue.size());
 
-			const std::string stringValue(RandomI::random(1u, 100u), char(RandomI::random(int('a'), int('z'))));
+			const unsigned int stringLength = RandomI::random(randomGenerator, 1u, 100u);
+			const std::string stringValue(stringLength, char(RandomI::random(randomGenerator, int('a'), int('z'))));
 
 			Value valueB(stringValue);
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				valueA = valueB;
 
-				if (!verifyValue(valueA, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(valueA, stringValue));
 
-				if (!verifyValue(valueB, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(valueB, stringValue));
 			}
 			else
 			{
 				valueB = valueA;
 
-				if (!verifyValue(valueB, bufferValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(valueB, bufferValue));
 
-				if (!verifyValue(valueA, bufferValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(valueA, bufferValue));
 			}
 
-			const int32_t intValue = RandomI::random(-1000, 1000);
+			const int32_t intValue = RandomI::random(randomGenerator, -1000, 1000);
 
 			Value valueC(intValue);
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// let's use valueC as source
 
-				if (RandomI::random(1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					valueA = valueC;
 
-					if (!verifyValue(valueA, intValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueA, intValue));
 				}
 				else
 				{
 					valueB = valueC;
 
-					if (!verifyValue(valueB, intValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueB, intValue));
 				}
 			}
 			else
 			{
 				// let's use valueC as target
 
-				if (RandomI::random(1u) == 0u)
+				if (RandomI::boolean(randomGenerator))
 				{
 					valueC = valueA;
 				}
@@ -975,30 +812,23 @@ bool TestValue::testCopy(const double testDuration)
 					valueC = valueB;
 				}
 
-				if (valueC.isBuffer() && !verifyValue(valueC, bufferValue))
+				if (valueC.isBuffer())
 				{
-					allSucceeded = false;
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueC, bufferValue));
 				}
 
-				if (valueC.isString() && !verifyValue(valueC, stringValue))
+				if (valueC.isString())
 				{
-					allSucceeded = false;
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueC, stringValue));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestValue::testMove(const double testDuration)
@@ -1007,7 +837,8 @@ bool TestValue::testMove(const double testDuration)
 
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1020,216 +851,153 @@ bool TestValue::testMove(const double testDuration)
 
 			Value constructorValue(std::move(value));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 
 			Value operatorValue;
 			operatorValue = std::move(constructorValue);
 
-			if (operatorValue || !operatorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !operatorValue);
+			OCEAN_EXPECT_TRUE(validation, operatorValue.isNull());
 		}
 
 		{
 			// bool value
 
-			const bool boolValue = RandomI::random(1u) == 0u;
+			const bool boolValue = RandomI::boolean(randomGenerator);
 
 			Value value(boolValue);
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, boolValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, boolValue));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, boolValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, boolValue));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// int32 value
 
-			const int32_t intValue = RandomI::random(-1000, 1000);
+			const int32_t intValue = RandomI::random(randomGenerator, -1000, 1000);
 
 			Value value(intValue);
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, intValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, intValue));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, intValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, intValue));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// int64 value
 
-			const int64_t intValue64 = RandomI::random(-1000, 1000);
+			const int64_t intValue64 = RandomI::random(randomGenerator, -1000, 1000);
 
 			Value value(intValue64);
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, intValue64))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, intValue64));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, intValue64))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, intValue64));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// float32 value
 
-			const float floatValue = float(RandomI::random(-1000, 1000));
+			const float floatValue = float(RandomI::random(randomGenerator, -1000, 1000));
 
 			Value value(floatValue);
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, floatValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, floatValue));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, floatValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, floatValue));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// float64 value
 
-			const double floatValue64 = double(RandomI::random(-1000, 1000));
+			const double floatValue64 = double(RandomI::random(randomGenerator, -1000, 1000));
 
 			Value value(floatValue64);
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, floatValue64))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, floatValue64));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, floatValue64))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, floatValue64));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// string value
 
-			const std::string stringValue(RandomI::random(1u, 100u), char(RandomI::random(int('a'), int('z'))));
+			const unsigned int stringLength = RandomI::random(randomGenerator, 1u, 100u);
+			const std::string stringValue(stringLength, char(RandomI::random(randomGenerator, int('a'), int('z'))));
 
-			Value value = RandomI::random(1u) == 0u ? Value(stringValue) : Value(stringValue.c_str());
+			Value value = RandomI::boolean(randomGenerator) ? Value(stringValue) : Value(stringValue.c_str());
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, stringValue));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, stringValue));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
@@ -1241,28 +1009,18 @@ bool TestValue::testMove(const double testDuration)
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, stringValue));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, stringValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, stringValue));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
@@ -1274,118 +1032,93 @@ bool TestValue::testMove(const double testDuration)
 
 			Value constructorValue(std::move(value));
 
-			if (constructorValue || !constructorValue.isNull() || constructorValue.isString())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
+			OCEAN_EXPECT_FALSE(validation, constructorValue.isString());
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (assignedValue || !assignedValue.isNull() || assignedValue.isString())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !assignedValue);
+			OCEAN_EXPECT_TRUE(validation, assignedValue.isNull());
+			OCEAN_EXPECT_FALSE(validation, assignedValue.isString());
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// buffer value
 
-			std::vector<uint8_t> bufferValue(RandomI::random(100u)); // can also be empty
+			std::vector<uint8_t> bufferValue(RandomI::random(randomGenerator, 100u)); // can also be empty
 
 			for (uint8_t& element : bufferValue)
 			{
-				element = uint8_t(RandomI::random(255u));
+				element = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
 			Value value(bufferValue.data(), bufferValue.size());
 
 			Value constructorValue(std::move(value));
 
-			if (!verifyValue(constructorValue, bufferValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(constructorValue, bufferValue));
 
-			if (value || !value.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !value);
+			OCEAN_EXPECT_TRUE(validation, value.isNull());
 
 			Value assignedValue;
 			assignedValue = std::move(constructorValue);
 
-			if (!verifyValue(assignedValue, bufferValue))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyValue(assignedValue, bufferValue));
 
-			if (constructorValue || !constructorValue.isNull())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, !constructorValue);
+			OCEAN_EXPECT_TRUE(validation, constructorValue.isNull());
 		}
 
 		{
 			// buffer/string/int value
 
-			std::vector<uint8_t> bufferValue(RandomI::random(1u, 100u)); // can also be empty
+			std::vector<uint8_t> bufferValue(RandomI::random(randomGenerator, 1u, 100u)); // can also be empty
 
 			for (uint8_t& element : bufferValue)
 			{
-				element = uint8_t(RandomI::random(255u));
+				element = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
 			Value valueA(bufferValue.data(), bufferValue.size());
 
-			const std::string stringValue(RandomI::random(1u, 100u), char(RandomI::random(int('a'), int('z'))));
+			const unsigned int stringLength = RandomI::random(randomGenerator, 1u, 100u);
+			const std::string stringValue(stringLength, char(RandomI::random(randomGenerator, int('a'), int('z'))));
 
 			Value valueB(stringValue);
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				valueA = std::move(valueB);
 
-				if (!verifyValue(valueA, stringValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(valueA, stringValue));
 
-				if (valueB || !valueB.isNull())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !valueB);
+				OCEAN_EXPECT_TRUE(validation, valueB.isNull());
 			}
 			else
 			{
 				valueB = std::move(valueA);
 
-				if (!verifyValue(valueB, bufferValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, verifyValue(valueB, bufferValue));
 
-				if (valueA || !valueA.isNull())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !valueA);
+				OCEAN_EXPECT_TRUE(validation, valueA.isNull());
 			}
 
-			const int32_t intValue = RandomI::random(-1000, 1000);
+			const int32_t intValue = RandomI::random(randomGenerator, -1000, 1000);
 
 			Value valueC(intValue);
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// let's use valueC as source
 
@@ -1393,26 +1126,18 @@ bool TestValue::testMove(const double testDuration)
 				{
 					valueA = std::move(valueC);
 
-					if (!verifyValue(valueA, intValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueA, intValue));
 				}
 				else
 				{
 					ocean_assert(valueB);
 					valueB = std::move(valueC);
 
-					if (!verifyValue(valueB, intValue))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueB, intValue));
 				}
 
-				if (valueC || !valueC.isNull())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, !valueC);
+				OCEAN_EXPECT_TRUE(validation, valueC.isNull());
 			}
 			else
 			{
@@ -1422,46 +1147,35 @@ bool TestValue::testMove(const double testDuration)
 				{
 					valueC = std::move(valueA);
 
-					if (valueA || !valueA.isNull())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, !valueA);
+					OCEAN_EXPECT_TRUE(validation, valueA.isNull());
 				}
 				else
 				{
 					ocean_assert(valueB);
 					valueC = std::move(valueB);
 
-					if (valueB || !valueB.isNull())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, !valueB);
+					OCEAN_EXPECT_TRUE(validation, valueB.isNull());
 				}
 
-				if (valueC.isBuffer() && !verifyValue(valueC, bufferValue))
+				if (valueC.isBuffer())
 				{
-					allSucceeded = false;
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueC, bufferValue));
 				}
 
-				if (valueC.isString() && !verifyValue(valueC, stringValue))
+				if (valueC.isString())
 				{
-					allSucceeded = false;
+					OCEAN_EXPECT_TRUE(validation, verifyValue(valueC, stringValue));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestValue::testReadWrite(const double testDuration)
@@ -1471,8 +1185,7 @@ bool TestValue::testReadWrite(const double testDuration)
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1482,7 +1195,8 @@ bool TestValue::testReadWrite(const double testDuration)
 		ocean_assert(value);
 
 		std::vector<uint8_t> buffer;
-		const size_t offsetInBuffer = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int maxOffsetInBuffer = RandomI::random(randomGenerator, 1u, 100u);
+		const size_t offsetInBuffer = maxOffsetInBuffer * RandomI::random(randomGenerator, 1u);
 
 		if (Value::writeToBuffer(value, buffer, offsetInBuffer))
 		{
@@ -1492,38 +1206,28 @@ bool TestValue::testReadWrite(const double testDuration)
 
 				if (resultValue)
 				{
-					if (resultValue != value)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, resultValue, value);
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 Value TestValue::createRandomValue(RandomGenerator& randomGenerator)

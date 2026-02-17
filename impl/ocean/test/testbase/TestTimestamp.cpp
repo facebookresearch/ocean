@@ -7,11 +7,13 @@
 
 #include "ocean/test/testbase/TestTimestamp.h"
 
+#include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 #include <cmath>
 
@@ -116,6 +118,8 @@ bool TestTimestamp::testResolution(const double testDuration)
 
 	Log::info() << "Resolution test:";
 
+	Validation validation;
+
 	unsigned int differentTimestamps = 0u;
 
 	const Timestamp startTimestamp(true);
@@ -140,18 +144,11 @@ bool TestTimestamp::testResolution(const double testDuration)
 
 	Log::info() << "Precision: Ticks " << String::insertCharacter(String::toAString(differentTimestampPerSecond), ',', 3, false) << " per second";
 
-	const bool succeeded = differentTimestampPerSecond >= 20u;
+	OCEAN_EXPECT_GREATER_EQUAL(validation, differentTimestampPerSecond, 20u);
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestTimestamp::testMilliseconds(const double testDuration)
@@ -160,7 +157,8 @@ bool TestTimestamp::testMilliseconds(const double testDuration)
 
 	Log::info() << "Milliseconds test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -169,7 +167,7 @@ bool TestTimestamp::testMilliseconds(const double testDuration)
 		constexpr int64_t second_in_milliseconds = 1000ll;
 
 		// random value in range [-1000, 1000] seconds (in milliseconds)
-		const int64_t timestamp_in_milliseconds = int64_t(RandomI::random64() % uint64_t(second_in_milliseconds * 2000ll)) - second_in_milliseconds * 1000ll;
+		const int64_t timestamp_in_milliseconds = int64_t(RandomI::random64(randomGenerator) % uint64_t(second_in_milliseconds * 2000ll)) - second_in_milliseconds * 1000ll;
 
 		const double timestamp_in_seconds = double(timestamp_in_milliseconds) / double(second_in_milliseconds);
 
@@ -177,32 +175,19 @@ bool TestTimestamp::testMilliseconds(const double testDuration)
 
 		const int64_t milliseconds = Timestamp::seconds2milliseconds(double(timestamp));
 
-		if (timestamp_in_milliseconds != milliseconds)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, timestamp_in_milliseconds, milliseconds);
 
 		const double test_seconds = Timestamp::milliseconds2seconds(milliseconds);
 
 		constexpr double threshold = 1.0 / double(second_in_milliseconds);
 
-		if (std::fabs(timestamp_in_seconds - test_seconds) > threshold)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, std::fabs(timestamp_in_seconds - test_seconds) <= threshold);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTimestamp::testMicroseconds(const double testDuration)
@@ -211,7 +196,8 @@ bool TestTimestamp::testMicroseconds(const double testDuration)
 
 	Log::info() << "Microseconds test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -221,7 +207,7 @@ bool TestTimestamp::testMicroseconds(const double testDuration)
 		constexpr int64_t second_in_microseconds = second_in_milliseconds * 1000ll;
 
 		// random value in range [-100, 100] seconds (in microseconds)
-		const int64_t timestamp_in_microseconds = int64_t(RandomI::random64() % uint64_t(second_in_microseconds * 200ll)) - second_in_microseconds * 100ll;
+		const int64_t timestamp_in_microseconds = int64_t(RandomI::random64(randomGenerator) % uint64_t(second_in_microseconds * 200ll)) - second_in_microseconds * 100ll;
 
 		const double timestamp_in_seconds = double(timestamp_in_microseconds) / double(second_in_microseconds);
 
@@ -229,32 +215,19 @@ bool TestTimestamp::testMicroseconds(const double testDuration)
 
 		const int64_t microseconds = Timestamp::seconds2microseconds(double(timestamp));
 
-		if (timestamp_in_microseconds != microseconds)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, timestamp_in_microseconds, microseconds);
 
 		const double test_seconds = Timestamp::microseconds2seconds(microseconds);
 
 		constexpr double threshold = 1.0 / double(second_in_microseconds);
 
-		if (std::fabs(timestamp_in_seconds - test_seconds) > threshold)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, std::fabs(timestamp_in_seconds - test_seconds) <= threshold);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTimestamp::testNanoseconds(const double testDuration)
@@ -263,7 +236,8 @@ bool TestTimestamp::testNanoseconds(const double testDuration)
 
 	Log::info() << "Nanoseconds test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -274,7 +248,7 @@ bool TestTimestamp::testNanoseconds(const double testDuration)
 		constexpr int64_t second_in_nanoseconds = second_in_microseconds * 1000ll;
 
 		// random value in range [-10, 10] seconds (in nanoseconds)
-		const int64_t timestamp_in_nanoseconds = int64_t(RandomI::random64() % uint64_t(second_in_nanoseconds * 20ll)) - second_in_nanoseconds * 10ll;
+		const int64_t timestamp_in_nanoseconds = int64_t(RandomI::random64(randomGenerator) % uint64_t(second_in_nanoseconds * 20ll)) - second_in_nanoseconds * 10ll;
 
 		const double timestamp_in_seconds = double(timestamp_in_nanoseconds) / double(second_in_nanoseconds);
 
@@ -282,32 +256,19 @@ bool TestTimestamp::testNanoseconds(const double testDuration)
 
 		const int64_t nanoseconds = timestamp.nanoseconds();
 
-		if (timestamp_in_nanoseconds != nanoseconds)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, timestamp_in_nanoseconds, nanoseconds);
 
 		const double test_seconds = Timestamp::nanoseconds2seconds(nanoseconds);
 
 		constexpr double threshold = 1.0 / double(second_in_nanoseconds);
 
-		if (std::fabs(timestamp_in_seconds - test_seconds) > threshold)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, std::fabs(timestamp_in_seconds - test_seconds) <= threshold);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTimestamp::testHasTimePassed(const double testDuration)
@@ -316,7 +277,8 @@ bool TestTimestamp::testHasTimePassed(const double testDuration)
 
 	Log::info() << "Has time passed test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp loopStartTimestamp(true);
 
@@ -324,48 +286,32 @@ bool TestTimestamp::testHasTimePassed(const double testDuration)
 	{
 		Timestamp startTimestamp;
 
-		if (!startTimestamp.hasTimePassed(double(RandomI::random(0, 1000)))) // an invalid start timestamp must always return true
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, startTimestamp.hasTimePassed(double(RandomI::random(randomGenerator, 0, 1000)))); // an invalid start timestamp must always return true
 
-		startTimestamp = Timestamp(double(RandomI::random(-1000, 1000)));
+		startTimestamp = Timestamp(double(RandomI::random(randomGenerator, -1000, 1000)));
 
-		const Timestamp currentTimestamp = Timestamp(double(RandomI::random(-1000, 1000)));
+		const Timestamp currentTimestamp = Timestamp(double(RandomI::random(randomGenerator, -1000, 1000)));
 
-		const double seconds = double(RandomI::random(0, 100));
+		const double seconds = double(RandomI::random(randomGenerator, 0, 100));
 
 		const bool result = startTimestamp.hasTimePassed(seconds, currentTimestamp);
 
 		if (currentTimestamp < startTimestamp)
 		{
-			if (result)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, result);
 		}
 		else
 		{
 			const bool expectedResult = currentTimestamp >= startTimestamp + seconds;
 
-			if (result != expectedResult)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, result, expectedResult);
 		}
 	}
 	while (loopStartTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

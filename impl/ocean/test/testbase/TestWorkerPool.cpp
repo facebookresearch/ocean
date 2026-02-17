@@ -14,6 +14,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -82,7 +83,8 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 
 	Log::info() << "Test ScopedWorker acquiring:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceFirst, performanceSecond, performanceThird;
 	HighPerformanceStatistic performanceCreateDestroyFirst, performanceCreateDestroyTwo, performanceCreateDestroyThree;
@@ -91,10 +93,7 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 
 	const size_t capacity = WorkerPool::get().capacity();
 
-	if (capacity != 2)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, capacity, size_t(2));
 
 	const Timestamp startTimestamp(true);
 
@@ -114,18 +113,9 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 				const WorkerPool::ScopedWorker thirdScopedWorker(WorkerPool::get().scopedWorker());
 			performanceThird.stop();
 
-			if (firstScopedWorker() == nullptr)
-			{
-				allSucceeded = false;
-			}
-			if (secondScopedWorker() == nullptr)
-			{
-				allSucceeded = false;
-			}
-			if (thirdScopedWorker() != nullptr)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, firstScopedWorker() != nullptr);
+			OCEAN_EXPECT_TRUE(validation, secondScopedWorker() != nullptr);
+			OCEAN_EXPECT_TRUE(validation, thirdScopedWorker() == nullptr);
 		}
 
 		{
@@ -169,12 +159,11 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 	Log::info() << "Performance acquire and surrender two objects: " << performanceCreateDestroyTwo.averageMseconds() * 1000.0 / double(constIterations) << "mys";
 	Log::info() << "Performance acquire and surrender three objects: " << performanceCreateDestroyThree.averageMseconds() * 1000.0 / double(constIterations) << "mys";
 
-	if (WorkerPool::get().capacity() != 2)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, WorkerPool::get().capacity(), size_t(2));
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }

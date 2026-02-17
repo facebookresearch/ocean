@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -89,44 +90,36 @@ bool TestThreadPool::testInvokeFunctions(const double testDuration)
 
 	Log::info() << "Test invoke functions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// checking default behavior
 
 		const ThreadPool threadPool;
 
-		if (threadPool.capacity() < 1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, threadPool.capacity(), size_t(1));
 
-		if (threadPool.size() != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, threadPool.size(), size_t(0));
 	}
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const size_t numberFunctions = size_t(RandomI::random(1u, 100u));
+		const size_t numberFunctions = size_t(RandomI::random(randomGenerator, 1u, 100u));
 
 		UnorderedIndexSet32 ids;
 
 		while (ids.size() != numberFunctions)
 		{
-			ids.emplace(RandomI::random32());
+			ids.emplace(RandomI::random32(randomGenerator));
 		}
 
-		const size_t capacity = size_t(RandomI::random(1u, 100u));
+		const size_t capacity = size_t(RandomI::random(randomGenerator, 1u, 100u));
 
 		ThreadPool threadPool;
-		if (!threadPool.setCapacity(capacity))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, threadPool.setCapacity(capacity));
 
 		for (const Index32 id : ids)
 		{
@@ -136,9 +129,9 @@ bool TestThreadPool::testInvokeFunctions(const double testDuration)
 		size_t expectedCapacity = capacity;
 
 		size_t reducedCapacity = 0;
-		if (RandomI::random(1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
-			reducedCapacity = size_t(RandomI::random(1u, (unsigned int)(capacity)));
+			reducedCapacity = size_t(RandomI::random(randomGenerator, 1u, (unsigned int)(capacity)));
 		}
 
 		const Timestamp iterationTimestamp(true);
@@ -160,48 +153,32 @@ bool TestThreadPool::testInvokeFunctions(const double testDuration)
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 
 		const UnorderedIndexSet32 executedIds(Executions::get().ids());
 
+		OCEAN_EXPECT_EQUAL(validation, executedIds.size(), ids.size());
+
 		if (executedIds.size() == ids.size())
 		{
 			for (const Index32 id : ids)
 			{
-				if (executedIds.find(id) == executedIds.cend())
-				{
-					allSucceeded = false;
-					break;
-				}
+				OCEAN_EXPECT_TRUE(validation, executedIds.find(id) != executedIds.cend());
 			}
 		}
-		else
-		{
-			allSucceeded = false;
-		}
 
-		if (threadPool.capacity() != expectedCapacity)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, threadPool.capacity(), expectedCapacity);
 
 		Executions::get().clear();
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
