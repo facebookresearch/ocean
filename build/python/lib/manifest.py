@@ -9,11 +9,27 @@
 
 from __future__ import annotations
 
+import os
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
-import yaml
+try:
+    import yaml
+except ImportError:
+    if os.name == "nt":
+        _venv_cmd = "py -3 -m venv .venv && .venv\\Scripts\\activate"
+    else:
+        _venv_cmd = "python3 -m venv .venv && source .venv/bin/activate"
+    print(
+        "Error: PyYAML is required but not installed. Install it with:\n\n"
+        "  pip install pyyaml\n\n"
+        "If you don't have a virtual environment set up yet, create one first:\n\n"
+        f"  {_venv_cmd}\n",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 @dataclass
