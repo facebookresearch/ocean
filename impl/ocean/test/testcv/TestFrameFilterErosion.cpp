@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -202,28 +203,22 @@ bool TestFrameFilterErosion::testShrinkMask4Neighbor(const double testDuration)
 	Log::info() << "Testing mask shrinking with 4-neighborhood:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testShrinkMask4Neighbor<1u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask4Neighbor<1u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMask4Neighbor<2u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask4Neighbor<2u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMask4Neighbor<3u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask4Neighbor<3u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMask4Neighbor<4u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask4Neighbor<4u>(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Mask shrinking with 4-neighborhood succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask shrinking with 4-neighborhood FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -231,9 +226,8 @@ bool TestFrameFilterErosion::testShrinkMask4Neighbor(const double testDuration)
 {
 	Log::info() << "... with " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -267,23 +261,13 @@ bool TestFrameFilterErosion::testShrinkMask4Neighbor(const double testDuration)
 			return false;
 		}
 
-		if (!validateShrinkMask4Neighbor(std::move(frameCopy), std::move(maskCopy), frame, mask))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateShrinkMask4Neighbor(std::move(frameCopy), std::move(maskCopy), frame, mask));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::testShrinkMask8Neighbor(const double testDuration)
@@ -291,28 +275,22 @@ bool TestFrameFilterErosion::testShrinkMask8Neighbor(const double testDuration)
 	Log::info() << "Testing mask shrinking with 8-neighborhood:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testShrinkMask8Neighbor<1u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask8Neighbor<1u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMask8Neighbor<2u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask8Neighbor<2u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMask8Neighbor<3u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask8Neighbor<3u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMask8Neighbor<4u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMask8Neighbor<4u>(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Mask shrinking with 8-neighborhood succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask shrinking with 8-neighborhood FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -320,9 +298,8 @@ bool TestFrameFilterErosion::testShrinkMask8Neighbor(const double testDuration)
 {
 	Log::info() << "... with " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -356,23 +333,13 @@ bool TestFrameFilterErosion::testShrinkMask8Neighbor(const double testDuration)
 			return false;
 		}
 
-		if (!validateShrinkMask8Neighbor(std::move(frameCopy), std::move(maskCopy), frame, mask))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateShrinkMask8Neighbor(std::move(frameCopy), std::move(maskCopy), frame, mask));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::testShrinkMaskRandom8Neighbor(const double testDuration)
@@ -380,28 +347,22 @@ bool TestFrameFilterErosion::testShrinkMaskRandom8Neighbor(const double testDura
 	Log::info() << "Testing random mask shrinking with 8-neighborhood:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testShrinkMaskRandom8Neighbor<1u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMaskRandom8Neighbor<1u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMaskRandom8Neighbor<2u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMaskRandom8Neighbor<2u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMaskRandom8Neighbor<3u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMaskRandom8Neighbor<3u>(testDuration));
 	Log::info() << " ";
-	allSucceeded = testShrinkMaskRandom8Neighbor<4u>(testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testShrinkMaskRandom8Neighbor<4u>(testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Mask random shrinking with 8-neighborhood succeeded.";
-	}
-	else
-	{
-		Log::info() << "Mask random shrinking with 8-neighborhood FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels>
@@ -409,9 +370,8 @@ bool TestFrameFilterErosion::testShrinkMaskRandom8Neighbor(const double testDura
 {
 	Log::info() << "... with " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -446,28 +406,18 @@ bool TestFrameFilterErosion::testShrinkMaskRandom8Neighbor(const double testDura
 				return false;
 			}
 
-			if (!validateShrinkMaskRandom8Neighbor(std::move(frameCopy), std::move(maskCopy), frame, mask, randomNoise, randomSeed))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, validateShrinkMaskRandom8Neighbor(std::move(frameCopy), std::move(maskCopy), frame, mask, randomNoise, randomSeed));
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::test8Bit4Neighbor(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -477,7 +427,8 @@ bool TestFrameFilterErosion::test8Bit4Neighbor(const unsigned int width, const u
 	Log::info() << "Testing 8 bit binary erosion with cross kernel (diameter 3) for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -517,10 +468,7 @@ bool TestFrameFilterErosion::test8Bit4Neighbor(const unsigned int width, const u
 					return false;
 				}
 
-				if (!validate8BitCrossKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validate8BitCrossKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -534,16 +482,9 @@ bool TestFrameFilterErosion::test8Bit4Neighbor(const unsigned int width, const u
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::test8Bit8Neighbor(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -553,7 +494,8 @@ bool TestFrameFilterErosion::test8Bit8Neighbor(const unsigned int width, const u
 	Log::info() << "Testing 8 bit binary erosion with square kernel 3x3 for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -593,10 +535,7 @@ bool TestFrameFilterErosion::test8Bit8Neighbor(const unsigned int width, const u
 					return false;
 				}
 
-				if (!validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 3u, maskValue, mask.paddingElements(), target.paddingElements()));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -610,16 +549,9 @@ bool TestFrameFilterErosion::test8Bit8Neighbor(const unsigned int width, const u
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::test8Bit24Neighbor(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -629,7 +561,8 @@ bool TestFrameFilterErosion::test8Bit24Neighbor(const unsigned int width, const 
 	Log::info() << "Testing 8 bit binary erosion with square kernel 5x5 for " << width << "x" << height << " image:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -669,10 +602,7 @@ bool TestFrameFilterErosion::test8Bit24Neighbor(const unsigned int width, const 
 					return false;
 				}
 
-				if (!validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 5u, maskValue, mask.paddingElements(), target.paddingElements()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validate8BitSquareKernel(mask.constdata<uint8_t>(), target.constdata<uint8_t>(), mask.width(), mask.height(), 5u, maskValue, mask.paddingElements(), target.paddingElements()));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -686,16 +616,9 @@ bool TestFrameFilterErosion::test8Bit24Neighbor(const unsigned int width, const 
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -704,7 +627,8 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 	Log::info() << "Testing 8 bit binary erosion with different kernels for " << width << "x" << height << " image:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -748,10 +672,7 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
 				{
-					if (memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()), 0);
 				}
 			}
 
@@ -787,10 +708,7 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
 				{
-					if (memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()), 0);
 				}
 			}
 
@@ -826,26 +744,16 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
 				{
-					if (memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(mask.constrow<void>(y), validationMask.constrow<void>(y), mask.width()), 0);
 				}
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterErosion::validateShrinkMask4Neighbor(Frame&& frame, Frame&& mask, const Frame& resultFrame, const Frame& resultMask)

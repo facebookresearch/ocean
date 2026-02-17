@@ -19,6 +19,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -102,7 +103,8 @@ bool TestFrameFilterLaplace::test1Channel(const unsigned int width, const unsign
 
 	Log::info() << "Testing '" << TypeNamer::name<T>() << "' -> '" << TypeNamer::name<TResponse>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -157,7 +159,7 @@ bool TestFrameFilterLaplace::test1Channel(const unsigned int width, const unsign
 
 				if (!validate<T, TResponse>(frame, target, borderPixelZero))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -173,16 +175,9 @@ bool TestFrameFilterLaplace::test1Channel(const unsigned int width, const unsign
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterLaplace::testVariance1Channel(const unsigned int width, const unsigned int height, const double testDuration)
@@ -192,9 +187,8 @@ bool TestFrameFilterLaplace::testVariance1Channel(const unsigned int width, cons
 
 	Log::info() << "Testing variance for 1-channel frame " << width << "x" << height << ":";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -237,7 +231,7 @@ bool TestFrameFilterLaplace::testVariance1Channel(const unsigned int width, cons
 
 			if (NumericD::isNotEqual(variance, testVariance, 0.01))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -245,16 +239,9 @@ bool TestFrameFilterLaplace::testVariance1Channel(const unsigned int width, cons
 
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms, first: " << String::toAString(performance.firstMseconds(), 2u) << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TResponse>

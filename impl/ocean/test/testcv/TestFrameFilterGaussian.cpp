@@ -15,6 +15,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -266,7 +267,8 @@ bool TestFrameFilterGaussian::testFilterSizeSigmaConversion()
 {
 	Log::info() << "Testing conversion between filter size and sigma:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 1u; n <= 4321u; n += 2u)
 	{
@@ -274,29 +276,20 @@ bool TestFrameFilterGaussian::testFilterSizeSigmaConversion()
 
 		const unsigned int filterSize = CV::FrameFilterGaussian::sigma2filterSize(sigma);
 
-		if (filterSize != n)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, filterSize, n);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterGaussian::testFilterFactors()
 {
 	Log::info() << "Testing filter factors:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const IndexGroups32 expectedFilterFactorGroups =
 	{
@@ -336,7 +329,7 @@ bool TestFrameFilterGaussian::testFilterFactors()
 
 			if (sumExpectedFilterFactors != normalization)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (filterSize < expectedFilterFactorGroups.size())
@@ -347,15 +340,12 @@ bool TestFrameFilterGaussian::testFilterFactors()
 				{
 					for (unsigned int n = 0u; n < filterSize; ++n)
 					{
-						if (expectedFilterFactors[n] != integerFilter[n])
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, expectedFilterFactors[n], integerFilter[n]);
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
@@ -364,14 +354,11 @@ bool TestFrameFilterGaussian::testFilterFactors()
 
 				for (unsigned int n = 0u; n < filterSize / 2u; ++n)
 				{
-					if (integerFilter[n] != integerFilter[filterSize - n - 1u])
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, integerFilter[n], integerFilter[filterSize - n - 1u]);
 
 					if (n >= 1u && integerFilter[n - 1u] > integerFilter[n])
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -394,7 +381,7 @@ bool TestFrameFilterGaussian::testFilterFactors()
 
 			if (normalization != 1.0f)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			float sumFilterFactors = 0.0;
@@ -406,63 +393,47 @@ bool TestFrameFilterGaussian::testFilterFactors()
 
 			if (NumericF::isNotEqual(sumFilterFactors, 1.0f))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			// just checking for a symmetric filter
 
 			for (unsigned int n = 0u; n < filterSize / 2u; ++n)
 			{
-				if (floatFilter[n] != floatFilter[filterSize - n - 1u])
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, floatFilter[n], floatFilter[filterSize - n - 1u]);
 
 				if (n >= 1u && floatFilter[n - 1u] >= floatFilter[n])
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterGaussian::testExtremeDimensions(Worker& worker)
 {
 	Log::info() << "Testing extreme frame dimensions:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int filterSize = 3u; filterSize <= 15u; filterSize += 2u)
 	{
 		for (unsigned int channels = 1u; channels <= 4u; ++channels)
 		{
-			allSucceeded = testExtremeDimensions<unsigned char, unsigned int>(channels, filterSize, worker) && allSucceeded;
-			allSucceeded = testExtremeDimensions<float, float>(channels, filterSize, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testExtremeDimensions<unsigned char, unsigned int>(channels, filterSize, worker));
+			OCEAN_EXPECT_TRUE(validation, testExtremeDimensions<float, float>(channels, filterSize, worker));
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -487,10 +458,9 @@ bool TestFrameFilterGaussian::testExtremeDimensions(const unsigned int channels,
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr CV::FrameFilterGaussian::ReusableMemory* reusableMemory = nullptr;
-
-	bool allSucceeded = true;
 
 	for (unsigned int y = 0u; y < 15u; ++y)
 	{
@@ -505,7 +475,7 @@ bool TestFrameFilterGaussian::testExtremeDimensions(const unsigned int channels,
 
 				if (!CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, useWorker ? &worker : nullptr, reusableMemory, processorInstructions))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
@@ -519,13 +489,13 @@ bool TestFrameFilterGaussian::testExtremeDimensions(const unsigned int channels,
 				TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), channels, normalizedFloatFilter, normalizedFloatFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 				if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterGaussian::testNormalDimensions(const double testDuration, Worker& worker)
@@ -539,7 +509,8 @@ bool TestFrameFilterGaussian::testNormalDimensions(const double testDuration, Wo
 	const Indices32 heights = {480u, 640u,  720u,  723u, 1080u, 2160u};
 	ocean_assert(widths.size() == heights.size());
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 0u; n < widths.size(); ++n)
 	{
@@ -564,17 +535,19 @@ bool TestFrameFilterGaussian::testNormalDimensions(const double testDuration, Wo
 				Log::info() << " ";
 
 				Log::info() << "... with data type 'unsigned char'";
-				allSucceeded = testFilter<unsigned char, unsigned int>(width, height, channels, filterSize, testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, (testFilter<unsigned char, unsigned int>(width, height, channels, filterSize, testDuration, worker)));
 
 				Log::info() << " ";
 
 				Log::info() << "... with data type 'float'";
-				allSucceeded = testFilter<float, float>(width, height, channels, filterSize, testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, (testFilter<float, float>(width, height, channels, filterSize, testDuration, worker)));
 			}
 		}
 	}
 
 	Log::info() << " ";
+
+	const bool allSucceeded = validation.succeeded();
 
 	if (allSucceeded)
 	{
@@ -610,10 +583,9 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 	CV::FrameFilterGaussian::determineFilterFactors(filterSize, normalizedFloatFilter.data());
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr CV::FrameFilterGaussian::ReusableMemory* reusableMemory = nullptr;
-
-	bool allSucceeded = true;
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -646,7 +618,7 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 
 			if (!localResult)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			double averageAbsError = NumericD::maxValue();
@@ -654,7 +626,7 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), channels, normalizedFloatFilter, normalizedFloatFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -668,16 +640,9 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 		Log::info() << "Multi-core boost factor: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1) << "x, median: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -695,10 +660,9 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 	const double maximalErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 6.0;
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const ProcessorInstructions processorInstructions = Processor::get().instructions();
-
-	bool allSucceeded = true;
 
 	for (const unsigned int filterSize : {3u, 7u})
 	{
@@ -739,7 +703,7 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 
 					if (!localResult)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					double averageAbsError = NumericD::maxValue();
@@ -747,7 +711,7 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 					TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedFloatFilter, normalizedFloatFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 					if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				while (!startTimestamp.hasTimePassed(testDuration));
@@ -761,16 +725,9 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -788,8 +745,7 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 	const double maximalErrorThreshold = std::is_same<T, float>::value ? 0.1 : 6.0;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	for (const unsigned int filterSize : {3u, 7u})
 	{
@@ -830,7 +786,7 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 
 					if (!localResult)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 
 					double averageAbsError = NumericD::maxValue();
@@ -838,7 +794,7 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 					TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedFloatFilter, normalizedFloatFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 					if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				while (!startTimestamp.hasTimePassed(testDuration));
@@ -852,16 +808,9 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TFilter>
@@ -871,9 +820,8 @@ bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& wor
 
 	Log::info() << "Testing in-place filtering '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -898,7 +846,7 @@ bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& wor
 
 		if (!CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), targetFrame.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), targetFrame.paddingElements(), filterSize, filterSize, -1.0f, useWorkerA))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
@@ -911,7 +859,7 @@ bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& wor
 
 		if (!CV::FrameFilterGaussian::filter<T, TFilter>(inplaceFrame.data<T>(), inplaceFrame.width(), inplaceFrame.height(), inplaceFrame.channels(), inplaceFrame.paddingElements(), filterSize, filterSize, -1.0f, useWorkerB))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(inplaceFrame, copyInplaceFrame))
@@ -929,26 +877,16 @@ bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& wor
 
 				for (unsigned int n = 0u; n < frame.channels(); ++n)
 				{
-					if (pixelA[n] != pixelB[n])
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, pixelA[n], pixelB[n]);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

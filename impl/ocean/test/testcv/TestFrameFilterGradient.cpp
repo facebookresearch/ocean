@@ -17,6 +17,7 @@
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -153,7 +154,8 @@ TEST(TestFrameFilterGradient, FilterVertical2x1LinedIntegralImage_uint8_int32)
 
 bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
 {
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -166,19 +168,19 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 			{
 				// the target data type does not allow a factor of 2
 
-				allSucceeded = testHorizontalVertical<uint8_t, int8_t, true>(width, height, channels, int8_t(factor), testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, int8_t, true>(width, height, channels, int8_t(factor), testDuration, worker));
 				Log::info() << " ";
-				allSucceeded = testHorizontalVertical<uint16_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint16_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker));
 				Log::info() << " ";
-				allSucceeded = testHorizontalVertical<uint32_t, int32_t, true>(width, height, channels, int32_t(factor), testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint32_t, int32_t, true>(width, height, channels, int32_t(factor), testDuration, worker));
 			}
 
 			Log::info() << " ";
-			allSucceeded = testHorizontalVertical<uint8_t, float, true>(width, height, channels, float(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, float, true>(width, height, channels, float(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVertical<uint8_t, double, true>(width, height, channels, double(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, double, true>(width, height, channels, double(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVertical<uint8_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker));
 		}
 	}
 
@@ -193,22 +195,23 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 
 		for (unsigned int factor = 1u; factor <= 2u; ++factor)
 		{
-			allSucceeded = testHorizontalVertical<uint8_t, int16_t, false>(width, height, channels, int16_t(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, int16_t, false>(width, height, channels, int16_t(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVertical<uint16_t, int32_t, false>(width, height, channels, factor, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint16_t, int32_t, false>(width, height, channels, factor, testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVertical<uint8_t, float, false>(width, height, channels, float(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, float, false>(width, height, channels, float(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVertical<uint8_t, double, false>(width, height, channels, double(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVertical<uint8_t, double, false>(width, height, channels, double(factor), testDuration, worker));
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
 {
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
@@ -221,19 +224,19 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 			{
 				// the target data type does not allow a factor of 2
 
-				allSucceeded = testHorizontalVerticalSubFrame<uint8_t, int8_t, true>(width, height, channels, int8_t(factor), testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, int8_t, true>(width, height, channels, int8_t(factor), testDuration, worker));
 				Log::info() << " ";
-				allSucceeded = testHorizontalVerticalSubFrame<uint16_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint16_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker));
 				Log::info() << " ";
-				allSucceeded = testHorizontalVerticalSubFrame<uint32_t, int32_t, true>(width, height, channels, factor, testDuration, worker) && allSucceeded;
+				OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint32_t, int32_t, true>(width, height, channels, factor, testDuration, worker));
 			}
 
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalSubFrame<uint8_t, float, true>(width, height, channels, float(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, float, true>(width, height, channels, float(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalSubFrame<uint8_t, double, true>(width, height, channels, double(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, double, true>(width, height, channels, double(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalSubFrame<uint8_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, int16_t, true>(width, height, channels, int16_t(factor), testDuration, worker));
 		}
 	}
 
@@ -248,22 +251,23 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 
 		for (unsigned int factor = 1u; factor <= 2u; ++factor)
 		{
-			allSucceeded = testHorizontalVerticalSubFrame<uint8_t, int16_t, false>(width, height, channels, int16_t(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, int16_t, false>(width, height, channels, int16_t(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalSubFrame<uint16_t, int32_t, false>(width, height, channels, factor, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint16_t, int32_t, false>(width, height, channels, factor, testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalSubFrame<uint8_t, float, false>(width, height, channels, float(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, float, false>(width, height, channels, float(factor), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalSubFrame<uint8_t, double, false>(width, height, channels, double(factor), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalSubFrame<uint8_t, double, false>(width, height, channels, double(factor), testDuration, worker));
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
 {
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	for (unsigned int n = 1u; n <= 4u; ++n)
 	{
@@ -272,17 +276,17 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 
 		for (unsigned int i = 1u; i <= 2; ++i)
 		{
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, uint32_t, true>(width, height, n, i, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, uint32_t, true>(width, height, n, i, testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, float, true>(width, height, n, float(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, float, true>(width, height, n, float(i), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, double, true>(width, height, n, double(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, double, true>(width, height, n, double(i), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, int32_t, true>(width, height, n, i, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, int32_t, true>(width, height, n, i, testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<float, float, true>(width, height, n, float(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<float, float, true>(width, height, n, float(i), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<double, double, true>(width, height, n, double(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<double, double, true>(width, height, n, double(i), testDuration, worker));
 		}
 	}
 
@@ -297,21 +301,21 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 
 		for (unsigned int i = 1u; i <= 2; ++i)
 		{
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, uint32_t, false>(width, height, n, i, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, uint32_t, false>(width, height, n, i, testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, float, false>(width, height, n, float(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, float, false>(width, height, n, float(i), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, double, false>(width, height, n, double(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, double, false>(width, height, n, double(i), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<uint8_t, int32_t, false>(width, height, n, i, testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<uint8_t, int32_t, false>(width, height, n, i, testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<float, float, false>(width, height, n, float(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<float, float, false>(width, height, n, float(i), testDuration, worker));
 			Log::info() << " ";
-			allSucceeded = testHorizontalVerticalMagnitudeSquared<double, double, false>(width, height, n, double(i), testDuration, worker) && allSucceeded;
+			OCEAN_EXPECT_TRUE(validation, testHorizontalVerticalMagnitudeSquared<double, double, false>(width, height, n, double(i), testDuration, worker));
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, bool tNormalizeByTwo>
@@ -322,9 +326,8 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 
 	Log::info() << "Testing " << (tNormalizeByTwo ? "" : "non-") << "normalized horizontal and vertical gradient filter for " << channels << " channels with data types \"" << TypeNamer::name<TSource>() << "\" -> \"" << TypeNamer::name<TTarget>() << "\"" << (multiplicationFactor == 1 ? "" : " with additional multiplication factor") << ":";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -347,8 +350,10 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 				const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 3u, 1920u);
 				const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const unsigned int maxSourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int sourcePaddingElements = maxSourcePaddingElements * RandomI::random(randomGenerator, 1u);
+				const unsigned int maxTargetPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+				const unsigned int targetPaddingElements = maxTargetPaddingElements * RandomI::random(randomGenerator, 1u);
 
 				Frame sourceFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<TSource>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 				Frame targetFrame(FrameType(sourceFrame, FrameType::genericPixelFormat<TTarget>(channels * 2u)), targetPaddingElements);
@@ -380,7 +385,7 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 
 					default:
 						ocean_assert(false && "Invalid channel number!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 				}
 
 				performance.stopIf(benchmarkIteration);
@@ -391,10 +396,7 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 					return false;
 				}
 
-				if (!validationHorizontalVertical<TSource, TTarget, tNormalizeByTwo>(sourceFrame, targetFrame, multiplicationFactor))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validationHorizontalVertical<TSource, TTarget, tNormalizeByTwo>(sourceFrame, targetFrame, multiplicationFactor));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -408,7 +410,9 @@ bool TestFrameFilterGradient::testHorizontalVertical(const unsigned int width, c
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, bool tNormalizeByTwo>
@@ -420,8 +424,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 	Log::info() << "Testing " << (tNormalizeByTwo ? "" : "non-") << "normalized squared magnitude gradient filter for " << channels << " channels with data types \"" << TypeNamer::name<TSource>() << "\" -> \"" << TypeNamer::name<TTarget>() << "\"" << (multiplicationFactor == 1 ? "" : " with additional multiplication factor") << ":";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -441,8 +444,8 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 			{
 				const bool benchmark = benchmarkIteration == 0u;
 
-				const unsigned int testWidth = benchmark ? width : RandomI::random(3u, 1920u);
-				const unsigned int testHeight = benchmark ? height : RandomI::random(3u, 1080u);
+				const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 3u, 1920u);
+				const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
 				constexpr unsigned int sourcePaddingElements = 0u; // not yet supported
 				constexpr unsigned int targetPaddingElements = 0u;
@@ -475,15 +478,12 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 
 					default:
 						ocean_assert(false && "Invalid channel number!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 				}
 
 				performance.stopIf(benchmarkIteration);
 
-				if (!validationHorizontalVerticalMagnitudeSquared<TSource, TTarget, tNormalizeByTwo>(sourceFrame, targetFrame, multiplicationFactor))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validationHorizontalVerticalMagnitudeSquared<TSource, TTarget, tNormalizeByTwo>(sourceFrame, targetFrame, multiplicationFactor));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -497,16 +497,9 @@ bool TestFrameFilterGradient::testHorizontalVerticalMagnitudeSquared(const unsig
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, bool tNormalizeByTwo>
@@ -519,8 +512,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -550,14 +542,14 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 
 			default:
 				ocean_assert(false && "Invalid channel number!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 		}
 
-		const unsigned int subFrameLeft = RandomI::random(width - 3u);
-		const unsigned int subFrameTop = RandomI::random(height - 3u);
+		const unsigned int subFrameLeft = RandomI::random(randomGenerator, width - 3u);
+		const unsigned int subFrameTop = RandomI::random(randomGenerator, height - 3u);
 
-		const unsigned int subFrameWidth = RandomI::random(3u, width - subFrameLeft);
-		const unsigned int subFrameHeight = RandomI::random(3u, height - subFrameTop);
+		const unsigned int subFrameWidth = RandomI::random(randomGenerator, 3u, width - subFrameLeft);
+		const unsigned int subFrameHeight = RandomI::random(randomGenerator, 3u, height - subFrameTop);
 
 		for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
 		{
@@ -585,7 +577,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 
 				default:
 					ocean_assert(false && "Invalid channel number!");
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 			}
 
 			for (unsigned int y = 0u; y < subFrameHeight; ++y)
@@ -597,10 +589,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 
 					for (unsigned int n = 0u; n < channels * 2u; ++n)
 					{
-						if (targetPixel[n] != subFrameTargetPixel[n])
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_EQUAL(validation, targetPixel[n], subFrameTargetPixel[n]);
 					}
 				}
 			}
@@ -608,16 +597,9 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TIntegral>
@@ -628,8 +610,7 @@ bool TestFrameFilterGradient::testFilterHorizontal1x2LinedIntegralImage(const do
 	Log::info() << "Testing lined-based horizontal 1x2 gradient filter '" << TypeNamer::name<T>() << "' and '" << TypeNamer::name<TIntegral>() << "':";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -637,7 +618,9 @@ bool TestFrameFilterGradient::testFilterHorizontal1x2LinedIntegralImage(const do
 	{
 		const unsigned int sourceWidth = RandomI::random(randomGenerator, 2u, 1920u);
 		const unsigned int sourceHeight = RandomI::random(randomGenerator, 1u, 1080u);
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+
+		const unsigned int maxSourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourcePaddingElements = maxSourcePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
@@ -645,14 +628,15 @@ bool TestFrameFilterGradient::testFilterHorizontal1x2LinedIntegralImage(const do
 		const unsigned int linedIntegralWidth = sourceWidth; // +1 for lined integral, -1 for gradient filter
 		const unsigned int linedIntegralHeight = sourceHeight + 1u;
 
-		const unsigned int linedIntegralPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+		const unsigned int maxLinedIntegralPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int linedIntegralPaddingElements = maxLinedIntegralPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame linedIntegralFrame(FrameType(linedIntegralWidth, linedIntegralHeight, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralPaddingElements);
 		CV::CVUtilities::randomizeFrame(linedIntegralFrame, false, &randomGenerator);
 
 		const Frame copyLinedIntegralFrame(linedIntegralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		const bool absoluteGradient = RandomI::random(randomGenerator, 0u, 1u) == 1u;
+		const bool absoluteGradient = RandomI::boolean(randomGenerator);
 
 		if (absoluteGradient)
 		{
@@ -666,26 +650,20 @@ bool TestFrameFilterGradient::testFilterHorizontal1x2LinedIntegralImage(const do
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(linedIntegralFrame, copyLinedIntegralFrame))
 		{
 			ocean_assert(false && "Invalid padding data!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// top line must be zero
 		for (unsigned int x = 0u; x < linedIntegralWidth; ++x)
 		{
-			if (double(*linedIntegralFrame.constpixel<TIntegral>(x, 0u)) != 0.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, double(*linedIntegralFrame.constpixel<TIntegral>(x, 0u)), 0.0);
 		}
 
 		// left column must be zero
 		for (unsigned int y = 0u; y < linedIntegralHeight; ++y)
 		{
-			if (double(*linedIntegralFrame.constpixel<TIntegral>(0u, y)) != 0.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, double(*linedIntegralFrame.constpixel<TIntegral>(0u, y)), 0.0);
 		}
 
 		for (unsigned int n = 0u; n < 10u; ++n)
@@ -712,24 +690,14 @@ bool TestFrameFilterGradient::testFilterHorizontal1x2LinedIntegralImage(const do
 
 			const double integralValue = double(*linedIntegralFrame.constpixel<TIntegral>(xPosition + 1u, yPosition + 1u));
 
-			if (NumericD::isNotEqual(sumGradient, integralValue, 0.1))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(sumGradient, integralValue, 0.1));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, typename TIntegral>
@@ -740,8 +708,7 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 	Log::info() << "Testing lined-based vertical 2x1 gradient filter '" << TypeNamer::name<T>() << "' and '" << TypeNamer::name<TIntegral>() << "':";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -749,7 +716,9 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 	{
 		const unsigned int sourceWidth = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int sourceHeight = RandomI::random(randomGenerator, 2u, 1080u);
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+
+		const unsigned int maxSourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int sourcePaddingElements = maxSourcePaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
 		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
@@ -757,14 +726,15 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 		const unsigned int linedIntegralWidth = sourceWidth + 1u;
 		const unsigned int linedIntegralHeight = sourceHeight; // +1 for lined integral, -1 for gradient filter
 
-		const unsigned int linedIntegralPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+		const unsigned int maxLinedIntegralPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int linedIntegralPaddingElements = maxLinedIntegralPaddingElements * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame linedIntegralFrame(FrameType(linedIntegralWidth, linedIntegralHeight, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralPaddingElements);
 		CV::CVUtilities::randomizeFrame(linedIntegralFrame, false, &randomGenerator);
 
 		const Frame copyLinedIntegralFrame(linedIntegralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		const bool absoluteGradient = RandomI::random(randomGenerator, 0u, 1u) == 1u;
+		const bool absoluteGradient = RandomI::boolean(randomGenerator);
 
 		if (absoluteGradient)
 		{
@@ -778,26 +748,20 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(linedIntegralFrame, copyLinedIntegralFrame))
 		{
 			ocean_assert(false && "Invalid padding data!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
 		// top line must be zero
 		for (unsigned int x = 0u; x < linedIntegralWidth; ++x)
 		{
-			if (double(*linedIntegralFrame.constpixel<TIntegral>(x, 0u)) != 0.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, double(*linedIntegralFrame.constpixel<TIntegral>(x, 0u)), 0.0);
 		}
 
 		// left column must be zero
 		for (unsigned int y = 0u; y < linedIntegralHeight; ++y)
 		{
-			if (double(*linedIntegralFrame.constpixel<TIntegral>(0u, y)) != 0.0)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, double(*linedIntegralFrame.constpixel<TIntegral>(0u, y)), 0.0);
 		}
 
 		for (unsigned int n = 0u; n < 10u; ++n)
@@ -824,24 +788,14 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 
 			const double integralValue = double(*linedIntegralFrame.constpixel<TIntegral>(xPosition + 1u, yPosition + 1u));
 
-			if (NumericD::isNotEqual(sumGradient, integralValue, 0.1))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(sumGradient, integralValue, 0.1));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TSource, typename TTarget, bool tNormalizeByTwo>
