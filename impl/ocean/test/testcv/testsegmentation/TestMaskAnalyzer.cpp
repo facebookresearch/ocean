@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testsegmentation/TestMaskAnalyzer.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
@@ -348,9 +349,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor4(const double testDuration)
 
 	Log::info() << "Has mask neighbor-4 test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const CV::PixelPositionsI offsets =
 	{
@@ -415,26 +415,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor4(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor4Center(const double testDuration)
@@ -443,9 +433,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor4Center(const double testDuration)
 
 	Log::info() << "Has mask neighbor-4 center test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const CV::PixelPositionsI offsets =
 	{
@@ -510,26 +499,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor4Center(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor5(const double testDuration)
@@ -538,9 +517,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor5(const double testDuration)
 
 	Log::info() << "Has mask neighbor-5 test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const CV::PixelPositionsI offsets =
 	{
@@ -606,26 +584,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor5(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor5Center(const double testDuration)
@@ -634,9 +602,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor5Center(const double testDuration)
 
 	Log::info() << "Has mask neighbor-5 center test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const CV::PixelPositionsI offsets =
 	{
@@ -702,26 +669,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor5Center(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor8(const double testDuration)
@@ -730,9 +687,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor8(const double testDuration)
 
 	Log::info() << "Has mask neighbor-8 test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -795,26 +751,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor8(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor8Center(const double testDuration)
@@ -823,9 +769,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor8Center(const double testDuration)
 
 	Log::info() << "Has mask neighbor-8 center test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -888,26 +833,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor8Center(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor9(const double testDuration)
@@ -916,9 +851,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor9(const double testDuration)
 
 	Log::info() << "Has mask neighbor-9 test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -978,26 +912,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor9(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testHasMaskNeighbor9Center(const double testDuration)
@@ -1006,9 +930,8 @@ bool TestMaskAnalyzer::testHasMaskNeighbor9Center(const double testDuration)
 
 	Log::info() << "Has mask neighbor-9 center test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1068,26 +991,16 @@ bool TestMaskAnalyzer::testHasMaskNeighbor9Center(const double testDuration)
 						}
 					}
 
-					if (result != test)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, result, test);
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Testing validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Testing validation: FAILED";
-	}
+	Log::info() << "Testing validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testDetermineDistancesToBorder(const double testDuration, Worker& worker)
@@ -1120,8 +1033,7 @@ bool TestMaskAnalyzer::testDetermineDistancesToBorder(const unsigned int width, 
 	constexpr uint8_t nonMaskValue = 0xFFu;
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	Log::info() << " ";
 	Log::info() << "... with maximal distance: " << maximalDistance;
@@ -1159,13 +1071,12 @@ bool TestMaskAnalyzer::testDetermineDistancesToBorder(const unsigned int width, 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(maskFrame, distanceFrame))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					return false;
+					OCEAN_SET_FAILED(validation);
+
+					return validation.succeeded();
 				}
 
-				if (!validateDetermineDistancesToBorder(maskFrame, distanceFrame, maximalDistance, assignFinal))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, validateDetermineDistancesToBorder(maskFrame, distanceFrame, maximalDistance, assignFinal));
 			}
 
 		}
@@ -1180,16 +1091,9 @@ bool TestMaskAnalyzer::testDetermineDistancesToBorder(const unsigned int width, 
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testFindBorderPixels4(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1200,8 +1104,7 @@ bool TestMaskAnalyzer::testFindBorderPixels4(const unsigned int width, const uns
 	Log::info() << "Find border pixels in 4-neighborhood test:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1242,10 +1145,7 @@ bool TestMaskAnalyzer::testFindBorderPixels4(const unsigned int width, const uns
 					CV::Segmentation::MaskAnalyzer::findBorderPixels4(mask.constdata<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), borderPixels, boundingBox, useWorker);
 				performance.stopIf(performanceIteration);
 
-				if (!validateFindBorderPixels4(mask, boundingBox, borderPixels))
-				{
-					allSucceeded = false;
-				}
+					OCEAN_EXPECT_TRUE(validation, validateFindBorderPixels4(mask, boundingBox, borderPixels));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -1259,16 +1159,9 @@ bool TestMaskAnalyzer::testFindBorderPixels4(const unsigned int width, const uns
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, average: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testFindBorderPixels8(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -1278,9 +1171,8 @@ bool TestMaskAnalyzer::testFindBorderPixels8(const unsigned int width, const uns
 
 	Log::info() << "Find border pixels in 8-neighborhood test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1321,10 +1213,7 @@ bool TestMaskAnalyzer::testFindBorderPixels8(const unsigned int width, const uns
 					CV::Segmentation::MaskAnalyzer::findBorderPixels8(mask.constdata<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), borderPixels, boundingBox, useWorker);
 				performance.stopIf(performanceIteration);
 
-				if (!validateFindBorderPixels8(mask, boundingBox, borderPixels))
-				{
-					allSucceeded = false;
-				}
+					OCEAN_EXPECT_TRUE(validation, validateFindBorderPixels8(mask, boundingBox, borderPixels));
 			}
 		}
 		while (!startTimestamp.hasTimePassed(testDuration));
@@ -1338,16 +1227,9 @@ bool TestMaskAnalyzer::testFindBorderPixels8(const unsigned int width, const uns
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x, average: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testFindNonUniquePixels4(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/)
@@ -1357,9 +1239,8 @@ bool TestMaskAnalyzer::testFindNonUniquePixels4(const unsigned int width, const 
 
 	Log::info() << "Find non unique pixels in 4-neighborhood test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1392,26 +1273,16 @@ bool TestMaskAnalyzer::testFindNonUniquePixels4(const unsigned int width, const 
 				CV::Segmentation::MaskAnalyzer::findNonUniquePixels4(mask.constdata<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), nonUniquePixels, boundingBox);
 			performance.stopIf(performanceIteration);
 
-			if (!validateFindNonUniquePixels4(mask, boundingBox, nonUniquePixels))
-			{
-				allSucceeded = false;
-			}
+				OCEAN_EXPECT_TRUE(validation, validateFindNonUniquePixels4(mask, boundingBox, nonUniquePixels));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Singlecore performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testFindNonUniquePixels8(const unsigned int width, const unsigned int height, const double testDuration, Worker& /*worker*/)
@@ -1421,9 +1292,8 @@ bool TestMaskAnalyzer::testFindNonUniquePixels8(const unsigned int width, const 
 
 	Log::info() << "Find non unique pixels in 8-neighborhood test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1456,26 +1326,16 @@ bool TestMaskAnalyzer::testFindNonUniquePixels8(const unsigned int width, const 
 				CV::Segmentation::MaskAnalyzer::findNonUniquePixels8(mask.constdata<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), nonUniquePixels, boundingBox);
 			performance.stopIf(performanceIteration);
 
-			if (!validateFindNonUniquePixels8(mask, boundingBox, nonUniquePixels))
-			{
-				allSucceeded = false;
-			}
+				OCEAN_EXPECT_TRUE(validation, validateFindNonUniquePixels8(mask, boundingBox, nonUniquePixels));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Singlecore performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testFindOutlinePixels4(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1485,9 +1345,8 @@ bool TestMaskAnalyzer::testFindOutlinePixels4(const unsigned int width, const un
 
 	Log::info() << "Find outline pixels in 4-neighborhood test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1508,7 +1367,7 @@ bool TestMaskAnalyzer::testFindOutlinePixels4(const unsigned int width, const un
 			CV::PixelPositions outlinePixels;
 			CV::PixelBoundingBox boundingBox;
 
-			if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+			if (!performanceIteration && RandomI::boolean(randomGenerator))
 			{
 				const unsigned int left = RandomI::random(randomGenerator, mask.width() - 1u);
 				const unsigned int top = RandomI::random(randomGenerator, mask.height() - 1u);
@@ -1523,26 +1382,16 @@ bool TestMaskAnalyzer::testFindOutlinePixels4(const unsigned int width, const un
 				CV::Segmentation::MaskAnalyzer::findOutline4(mask.constdata<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), outlinePixels, boundingBox, nonMaskValue);
 			performance.stopIf(performanceIteration);
 
-			if (!validateFindOutlinePixels4(mask, boundingBox, outlinePixels, nonMaskValue))
-			{
-				allSucceeded = false;
-			}
+				OCEAN_EXPECT_TRUE(validation, validateFindOutlinePixels4(mask, boundingBox, outlinePixels, nonMaskValue));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Singlecore performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms, median: " << performance.medianMseconds() << "ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testComputeChessboardDistanceTransform8Bit(const uint32_t width, const uint32_t height, const double testDuration)
@@ -1575,9 +1424,8 @@ bool TestMaskAnalyzer::testDetectBoundingBoxes(const double testDuration)
 
 	Log::info() << "Determine bounding boxes test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1609,7 +1457,7 @@ bool TestMaskAnalyzer::testDetectBoundingBoxes(const double testDuration)
 			yFrame.subFrame(box.left(), box.top(), box.width(), box.height(), Frame::CM_USE_KEEP_LAYOUT).setValue(0x00);
 		}
 
-		const bool useNeighborhood4 = RandomI::random(randomGenerator, 1u) == 1u;
+		const bool useNeighborhood4 = RandomI::boolean(randomGenerator);
 		const bool useNeighborhood8 = !useNeighborhood4;
 
 		// determine unions of all box groups
@@ -1669,29 +1517,19 @@ bool TestMaskAnalyzer::testDetectBoundingBoxes(const double testDuration)
 		{
 			for (const CV::PixelBoundingBox& box : boxesSet)
 			{
-				if (detectedBoxesSet.find(box) == detectedBoxesSet.cend())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, detectedBoxesSet.find(box) != detectedBoxesSet.cend());
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::testCountMaskPixels(const double testDuration)
@@ -1700,9 +1538,8 @@ bool TestMaskAnalyzer::testCountMaskPixels(const double testDuration)
 
 	Log::info() << "Count mask pixels test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1762,23 +1599,13 @@ bool TestMaskAnalyzer::testCountMaskPixels(const double testDuration)
 			}
 		}
 
-		if (testMaskPixels != maskPixels)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, testMaskPixels, maskPixels);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 Frame TestMaskAnalyzer::generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue, const uint8_t nonMaskValue)
@@ -1815,18 +1642,17 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 	ocean_assert(distanceVerticalHorizontal > 0 && distanceDiagonal > 0);
 	ocean_assert(testDuration > 0.0);
 
-	bool allSucceeded = true;
-
 	uint64_t iteration = 0ull;
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	do
 	{
-		const bool measurePerformance = RandomI::random(randomGenerator, 1u) == 0u; // ~50% chance
+		const bool measurePerformance = RandomI::boolean(randomGenerator); // ~50% chance
 		const bool useExternalBuffer = iteration % 2ull == 0ull;
 
 		const uint32_t testWidth = measurePerformance ? width : RandomI::random(randomGenerator, 1u, 3072u);
@@ -1874,14 +1700,11 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, targetFrameClone))
 		{
 			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
-		if (validateComputeDistanceTransform8Bit(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.constdata<TDistanceType>(), distanceTransformStatus, distanceVerticalHorizontal, distanceDiagonal, referenceValue, sourceFrame.paddingElements(), targetFrame.paddingElements()) == false)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, validateComputeDistanceTransform8Bit(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.constdata<TDistanceType>(), distanceTransformStatus, distanceVerticalHorizontal, distanceDiagonal, referenceValue, sourceFrame.paddingElements(), targetFrame.paddingElements()));
 
 		iteration++;
 	}
@@ -1889,16 +1712,9 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 
 	Log::info() << "Performance (at " << width << " x " << height << " pixels) [p05, p50, p95, avg] : [ " << String::toAString(performance.percentileMseconds(0.05), 2u) << ", " << String::toAString(performance.percentileMseconds(0.05), 2u) << ", " << String::toAString(performance.percentileMseconds(0.05), 2u) << ", " << String::toAString(performance.averageMseconds(), 2u) << " ] ms";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestMaskAnalyzer::validateDetermineDistancesToBorder(const Frame& mask, const Frame& distance, const unsigned int maximalDistance, const bool assignFinal)

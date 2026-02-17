@@ -8,9 +8,11 @@
 #include "ocean/test/testcv/testsegmentation/TestBinPacking.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/RandomI.h"
+#include "ocean/base/RandomGenerator.h"
 
 #include "ocean/cv/PixelBoundingBox.h"
 
@@ -62,20 +64,21 @@ bool TestBinPacking::testBinPacking(const double testDuration)
 
 	Log::info() << "Bin packing test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int numberBoxes = RandomI::random(1u, 50u);
+		const unsigned int numberBoxes = RandomI::random(randomGenerator, 1u, 50u);
 
 		CV::PixelBoundingBoxes boxes;
 
 		for (unsigned int n = 0u; n < numberBoxes; ++n)
 		{
-			const unsigned int width = RandomI::random(1u, 200u);
-			const unsigned int height = RandomI::random(1u, 200u);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 200u);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 200u);
 
 			boxes.emplace_back(0u, 0u, width, height);
 		}
@@ -86,15 +89,10 @@ bool TestBinPacking::testBinPacking(const double testDuration)
 			unsigned int height = 0u;
 			const CV::Segmentation::BinPacking::Packings packings = CV::Segmentation::BinPacking::binPacking(boxes, allowTransposed, &width, &height);
 
-			if (packings.size() != boxes.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, packings.size(), boxes.size());
 
-			if (width == 0u || height == 0u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_NOT_EQUAL(validation, width, 0u);
+			OCEAN_EXPECT_NOT_EQUAL(validation, height, 0u);
 
 			Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 			frame.setValue(0xFFu);
@@ -112,7 +110,7 @@ bool TestBinPacking::testBinPacking(const double testDuration)
 
 				if (boxIndex >= boxes.size())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 					break;
 				}
 
@@ -125,10 +123,7 @@ bool TestBinPacking::testBinPacking(const double testDuration)
 				{
 					for (unsigned int x = box.left(); x < box.rightEnd(); ++x)
 					{
-						if (frame.constpixel<uint8_t>(x, y)[0] == 0x00)
-						{
-							allSucceeded = false;
-						}
+						OCEAN_EXPECT_NOT_EQUAL(validation, frame.constpixel<uint8_t>(x, y)[0], uint8_t(0x00));
 					}
 				}
 
@@ -141,29 +136,17 @@ bool TestBinPacking::testBinPacking(const double testDuration)
 				usedHeight = std::max(usedHeight, box.bottomEnd());
 			}
 
-			if (width != usedWidth || height != usedHeight)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, width, usedWidth);
+			OCEAN_EXPECT_EQUAL(validation, height, usedHeight);
 
-			if (boxIndicesSet.size() != boxes.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, boxIndicesSet.size(), boxes.size());
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestSegmentation

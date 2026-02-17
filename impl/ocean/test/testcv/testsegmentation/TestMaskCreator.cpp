@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/testsegmentation/TestMaskCreator.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
@@ -69,8 +70,7 @@ bool TestMaskCreator::testJoinMasks(const unsigned int width, const unsigned int
 	ocean_assert(testDuration > 0.0);
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -105,7 +105,8 @@ bool TestMaskCreator::testJoinMasks(const unsigned int width, const unsigned int
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 				{
 					ocean_assert(false && "Invalid padding memory!");
-					return false;
+					OCEAN_SET_FAILED(validation);
+					return validation.succeeded();
 				}
 
 				for (unsigned int y = 0u; y < maskFrame.height(); ++y)
@@ -117,10 +118,7 @@ bool TestMaskCreator::testJoinMasks(const unsigned int width, const unsigned int
 
 						if (maskPixel == maskValue || targetPixel == maskValue)
 						{
-							if (targetPixel != maskValue)
-							{
-								allSucceeded = false;
-							}
+							OCEAN_EXPECT_EQUAL(validation, targetPixel, maskValue);
 						}
 					}
 				}
@@ -138,16 +136,9 @@ bool TestMaskCreator::testJoinMasks(const unsigned int width, const unsigned int
 		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
