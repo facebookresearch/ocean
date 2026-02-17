@@ -11,6 +11,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Random.h"
 
@@ -471,329 +472,193 @@ bool TestNumeric::testEps()
 {
 	Log::info() << "Eps test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (NumericT<double>::eps() != 1e-12)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::eps(), 1e-12);
 
-	if (NumericT<float>::eps() != 1e-6f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::eps(), 1e-6f);
 
 
-	if (NumericT<signed char>::eps() != (signed char)(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<signed char>::eps(), (signed char)(0));
 
-	if (NumericT<unsigned char>::eps() != (unsigned char)(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned char>::eps(), (unsigned char)(0));
 
-	if (NumericT<int8_t>::eps() != int8_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::eps(), int8_t(0));
 
-	if (NumericT<uint8_t>::eps() != uint8_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::eps(), uint8_t(0));
 
 
-	if (NumericT<short>::eps() != short(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<short>::eps(), short(0));
 
-	if (NumericT<unsigned short>::eps() != (unsigned short)(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned short>::eps(), (unsigned short)(0));
 
-	if (NumericT<int16_t>::eps() != int16_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::eps(), int16_t(0));
 
-	if (NumericT<uint16_t>::eps() != uint16_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::eps(), uint16_t(0));
 
 
-	if (NumericT<int>::eps() != 0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::eps(), 0);
 
-	if (NumericT<unsigned int>::eps() != 0u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned int>::eps(), 0u);
 
-	if (NumericT<int32_t>::eps() != int32_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int32_t>::eps(), int32_t(0));
 
-	if (NumericT<uint32_t>::eps() != uint32_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::eps(), uint32_t(0));
 
 
-	if (NumericT<long long>::eps() != 0ll)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<long long>::eps(), 0ll);
 
-	if (NumericT<unsigned long long>::eps() != 0ull)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned long long>::eps(), 0ull);
 
-	if (NumericT<int64_t>::eps() != int64_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int64_t>::eps(), int64_t(0));
 
-	if (NumericT<uint64_t>::eps() != uint64_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint64_t>::eps(), uint64_t(0));
 
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testWeakEps()
 {
 	Log::info() << "WeakEps test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (NumericT<double>::weakEps() != 1e-6)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::weakEps(), 1e-6);
 
-	if (NumericT<float>::weakEps() != 1e-3f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::weakEps(), 1e-3f);
 
 
-	if (NumericT<signed char>::weakEps() != (signed char)(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<signed char>::weakEps(), (signed char)(0));
 
-	if (NumericT<unsigned char>::weakEps() != (unsigned char)(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned char>::weakEps(), (unsigned char)(0));
 
-	if (NumericT<int8_t>::weakEps() != int8_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::weakEps(), int8_t(0));
 
-	if (NumericT<uint8_t>::weakEps() != uint8_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::weakEps(), uint8_t(0));
 
 
-	if (NumericT<short>::weakEps() != short(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<short>::weakEps(), short(0));
 
-	if (NumericT<unsigned short>::weakEps() != (unsigned short)(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned short>::weakEps(), (unsigned short)(0));
 
-	if (NumericT<int16_t>::weakEps() != int16_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::weakEps(), int16_t(0));
 
-	if (NumericT<uint16_t>::weakEps() != uint16_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::weakEps(), uint16_t(0));
 
 
-	if (NumericT<int>::weakEps() != 0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::weakEps(), 0);
 
-	if (NumericT<unsigned int>::weakEps() != 0u)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned int>::weakEps(), 0u);
 
-	if (NumericT<int32_t>::weakEps() != int32_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int32_t>::weakEps(), int32_t(0));
 
-	if (NumericT<uint32_t>::weakEps() != uint32_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::weakEps(), uint32_t(0));
 
 
-	if (NumericT<long long>::weakEps() != 0ll)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<long long>::weakEps(), 0ll);
 
-	if (NumericT<unsigned long long>::weakEps() != 0ull)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned long long>::weakEps(), 0ull);
 
-	if (NumericT<int64_t>::weakEps() != int64_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int64_t>::weakEps(), int64_t(0));
 
-	if (NumericT<uint64_t>::weakEps() != uint64_t(0))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<uint64_t>::weakEps(), uint64_t(0));
 
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testIsEqualDynamic()
 {
 	Log::info() << "Dynamic isEqual test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	if (std::is_same<Scalar, double>::value)
 	{
-		allSucceeded = Numeric::isEqual<-5>(Scalar(0.00001), Scalar(0.00001), Numeric::eps()) && allSucceeded;
-		allSucceeded = Numeric::isEqual<-5>(Scalar(0.00001), Scalar(0.00001) + Numeric::eps() * Scalar(0.1), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-5>(Scalar(0.00001), Scalar(0.00001), Numeric::eps()));
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-5>(Scalar(0.00001), Scalar(0.00001) + Numeric::eps() * Scalar(0.1), Numeric::eps()));
 
-		allSucceeded = !Numeric::isEqual<-5>(Scalar(0.0001), Scalar(0.00015), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<-5>(Scalar(0.0001), Scalar(0.00015), Numeric::eps()));
 
-		allSucceeded = Numeric::isEqual<-5>(Scalar(1), Scalar(1.01), Numeric::weakEps()) && allSucceeded;
-		allSucceeded = Numeric::isEqual<-5>(Scalar(1), Scalar(2), Numeric::weakEps()) && allSucceeded;
-		allSucceeded = !Numeric::isEqual<-5>(Scalar(1), Scalar(2.1), Numeric::weakEps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-5>(Scalar(1), Scalar(1.01), Numeric::weakEps()));
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-5>(Scalar(1), Scalar(2), Numeric::weakEps()));
+		OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<-5>(Scalar(1), Scalar(2.1), Numeric::weakEps()));
 
-		allSucceeded = Numeric::isEqual<-5>(Scalar(100), Scalar(105), Numeric::weakEps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-5>(Scalar(100), Scalar(105), Numeric::weakEps()));
 	}
 	else
 	{
-		allSucceeded = Numeric::isEqual<-4>(Scalar(0.0001), Scalar(0.0001), Numeric::eps()) && allSucceeded;
-		allSucceeded = Numeric::isEqual<-4>(Scalar(0.0001), Scalar(0.0001) + Numeric::eps() * Scalar(0.1), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-4>(Scalar(0.0001), Scalar(0.0001), Numeric::eps()));
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-4>(Scalar(0.0001), Scalar(0.0001) + Numeric::eps() * Scalar(0.1), Numeric::eps()));
 
-		allSucceeded = !Numeric::isEqual<-4>(Scalar(0.001), Scalar(0.0015), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<-4>(Scalar(0.001), Scalar(0.0015), Numeric::eps()));
 
-		allSucceeded = Numeric::isEqual<-4>(Scalar(1), Scalar(1.01), Numeric::weakEps()) && allSucceeded;
-		allSucceeded = Numeric::isEqual<-4>(Scalar(1), Scalar(2), Numeric::weakEps()) && allSucceeded;
-		allSucceeded = !Numeric::isEqual<-2>(Scalar(1), Scalar(2.1), Numeric::weakEps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-4>(Scalar(1), Scalar(1.01), Numeric::weakEps()));
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-4>(Scalar(1), Scalar(2), Numeric::weakEps()));
+		OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<-2>(Scalar(1), Scalar(2.1), Numeric::weakEps()));
 
-		allSucceeded = Numeric::isEqual<-2>(Scalar(100), Scalar(105), Numeric::weakEps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-2>(Scalar(100), Scalar(105), Numeric::weakEps()));
 	}
 
 	for (unsigned int n = 0u; n < 500u; ++n)
 	{
-		allSucceeded = Numeric::isEqual<0>(Scalar(n), Scalar(n), Numeric::eps()) && allSucceeded;
-		allSucceeded = !Numeric::isEqual<0>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<0>(Scalar(n), Scalar(n), Numeric::eps()));
+		OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<0>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()));
 
-		allSucceeded = Numeric::isEqual<-4>(Scalar(n), Scalar(n), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<-4>(Scalar(n), Scalar(n), Numeric::eps()));
 
 		if (std::is_same<Scalar, double>::value)
 		{
-			allSucceeded = !Numeric::isEqual<-4>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
+			OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<-4>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()));
 		}
 		else
 		{
-			allSucceeded = !Numeric::isEqual<-2>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
+			OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<-2>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()));
 		}
 
-		allSucceeded = Numeric::isEqual<6>(Scalar(n), Scalar(n), Numeric::eps()) && allSucceeded;
-		allSucceeded = !Numeric::isEqual<6>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqual<6>(Scalar(n), Scalar(n), Numeric::eps()));
+		OCEAN_EXPECT_FALSE(validation, Numeric::isEqual<6>(Scalar(n), Scalar(n) - Scalar(1), Numeric::eps()));
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testRound()
 {
 	Log::info() << "Round test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	allSucceeded = Numeric::round32(Scalar(1.4)) == 1 && allSucceeded;
-	allSucceeded = Numeric::round32(Scalar(1.5)) == 2 && allSucceeded;
-	allSucceeded = Numeric::round32(Scalar(10.4)) == 10 && allSucceeded;
-	allSucceeded = Numeric::round32(Scalar(10.6)) == 11 && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(1.4)), 1);
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(1.5)), 2);
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(10.4)), 10);
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(10.6)), 11);
 
-	allSucceeded = Numeric::round32(Scalar(-1.4)) == -1 && allSucceeded;
-	allSucceeded = Numeric::round32(Scalar(-1.5)) == -2 && allSucceeded;
-	allSucceeded = Numeric::round32(Scalar(-10.4)) == -10 && allSucceeded;
-	allSucceeded = Numeric::round32(Scalar(-10.6)) == -11 && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(-1.4)), -1);
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(-1.5)), -2);
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(-10.4)), -10);
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round32(Scalar(-10.6)), -11);
 
-	allSucceeded = Numeric::round64(Scalar(1.4)) == (long long)(1) && allSucceeded;
-	allSucceeded = Numeric::round64(Scalar(1.5)) == (long long)(2) && allSucceeded;
-	allSucceeded = Numeric::round64(Scalar(10.4)) == (long long)(10) && allSucceeded;
-	allSucceeded = Numeric::round64(Scalar(10.6)) == (long long)(11) && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(1.4)), int64_t(1));
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(1.5)), int64_t(2));
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(10.4)), int64_t(10));
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(10.6)), int64_t(11));
 
-	allSucceeded = Numeric::round64(Scalar(-1.4)) == (long long)(-1) && allSucceeded;
-	allSucceeded = Numeric::round64(Scalar(-1.5)) == (long long)(-2) && allSucceeded;
-	allSucceeded = Numeric::round64(Scalar(-10.4)) == (long long)(-10) && allSucceeded;
-	allSucceeded = Numeric::round64(Scalar(-10.6)) == (long long)(-11) && allSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(-1.4)), int64_t(-1));
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(-1.5)), int64_t(-2));
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(-10.4)), int64_t(-10));
+	OCEAN_EXPECT_EQUAL(validation, Numeric::round64(Scalar(-10.6)), int64_t(-11));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -801,48 +666,36 @@ bool TestNumeric::testAngleConversion(const double testDuration)
 {
 	Log::info() << "Angle conversion test for '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		{
-			const Scalar deg = Random::scalar(-1000, 1000);
+			const Scalar deg = Random::scalar(randomGenerator, -1000, 1000);
 			const Scalar rad = Numeric::deg2rad(deg);
 
 			const Scalar radTest = deg * Numeric::pi() / Scalar(180);
 
-			if (!Numeric::isEqual(rad, radTest, Numeric::weakEps()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rad, radTest, Numeric::weakEps()));
 		}
 
 		{
-			const Scalar rad = Random::scalar(-20, 20);
+			const Scalar rad = Random::scalar(randomGenerator, -20, 20);
 			const Scalar deg = Numeric::rad2deg(rad);
 
 			const Scalar degTest = rad * Scalar(180) / Numeric::pi();
 
-			if (!Numeric::isEqual(deg, degTest, Numeric::weakEps()))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(deg, degTest, Numeric::weakEps()));
 		}
 	}
 	while (Timestamp(true) < startTimestamp + testDuration);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testAngleAdjustPositive(const double testDuration)
@@ -852,8 +705,9 @@ bool TestNumeric::testAngleAdjustPositive(const double testDuration)
 	Log::info() << "Angle adjust positive test:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	// for 32 bit float values we need to weaken the epsilon by one magnitude
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Numeric::eps() * Scalar(10) : Numeric::eps();
@@ -864,50 +718,52 @@ bool TestNumeric::testAngleAdjustPositive(const double testDuration)
 	{
 		for (unsigned int n = 0; n < constIterations; ++n)
 		{
-			++iterations;
-			const Scalar value = Random::scalar(0, Numeric::pi2() - Numeric::eps());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Scalar value = Random::scalar(randomGenerator, 0, Numeric::pi2() - Numeric::eps());
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value + Numeric::pi2() * 5), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value + Numeric::pi2() * 6), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value - Numeric::pi2() * 5), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(value - Numeric::pi2() * 6), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustPositive(Numeric::pi2()), 0, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
-
-			++validIterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testAngleAdjustNull(const double testDuration)
@@ -917,8 +773,9 @@ bool TestNumeric::testAngleAdjustNull(const double testDuration)
 	Log::info() << "Angle adjust null test:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	// for 32 bit float values we need to weaken the epsilon by one magnitude
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Numeric::eps() * Scalar(10) : Numeric::eps();
@@ -929,50 +786,52 @@ bool TestNumeric::testAngleAdjustNull(const double testDuration)
 	{
 		for (unsigned int n = 0; n < constIterations; ++n)
 		{
-			++iterations;
-			const Scalar value = Random::scalar(-Numeric::pi() + Numeric::eps(), Numeric::pi());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Scalar value = Random::scalar(randomGenerator, -Numeric::pi() + Numeric::eps(), Numeric::pi());
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value + Numeric::pi2() * 5), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value + Numeric::pi2() * 6), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value - Numeric::pi2() * 5), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(value - Numeric::pi2() * 6), value, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsEqual(Numeric::angleAdjustNull(Numeric::pi2()), 0, epsilon))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
-
-			++validIterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testAngleIsEqual(const double testDuration)
@@ -982,8 +841,9 @@ bool TestNumeric::testAngleIsEqual(const double testDuration)
 	Log::info() << "Angle is equal:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -991,55 +851,58 @@ bool TestNumeric::testAngleIsEqual(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			++iterations;
-			const Scalar value = Random::scalar(0, Numeric::pi2());
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			if (!Numeric::angleIsWeakEqual(value, value + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			const Scalar value = Random::scalar(randomGenerator, 0, Numeric::pi2());
+
+			if (!Numeric::angleIsWeakEqual(value, value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (Numeric::angleIsWeakEqual(value + Random::scalar(Scalar(0.1), 1), value + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			if (Numeric::angleIsWeakEqual(value + Random::scalar(randomGenerator, Scalar(0.1), 1), value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsWeakEqual(value, value - Numeric::pi2()))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (Numeric::angleIsWeakEqual(value - Random::scalar(Scalar(0.1), 1), Numeric::pi2() - value))
+			if (Numeric::angleIsWeakEqual(value - Random::scalar(randomGenerator, Scalar(0.1), 1), Numeric::pi2() - value))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (!Numeric::angleIsWeakEqual(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value - Numeric::pi2() + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			if (!Numeric::angleIsWeakEqual(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value - Numeric::pi2() + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (Numeric::angleIsWeakEqual(value + Random::scalar(Scalar(0.1), 1) + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::pi2() - value + Numeric::pi2() * Scalar(Random::random(-100, 100))))
+			if (Numeric::angleIsWeakEqual(value + Random::scalar(randomGenerator, Scalar(0.1), 1) + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::pi2() - value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100))))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
 			if (!Numeric::angleIsWeakEqual(Numeric::eps(), Numeric::pi2() - Numeric::eps()))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
-
-			++validIterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
@@ -1049,8 +912,9 @@ bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
 	Log::info() << "Angle is below threshold:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1058,55 +922,57 @@ bool TestNumeric::testAngleIsBelowThreshold(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			++iterations;
-			Scalar value = Random::scalar(0, Numeric::pi2());
-			Scalar offset = Random::scalar(-Numeric::deg2rad(20 - Numeric::eps()), Numeric::deg2rad(Scalar(20 - Numeric::eps())));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			Scalar value = Random::scalar(randomGenerator, 0, Numeric::pi2());
+			Scalar offset = Random::scalar(randomGenerator, -Numeric::deg2rad(20 - Numeric::eps()), Numeric::deg2rad(Scalar(20 - Numeric::eps())));
 
 			if (!Numeric::angleIsBelowThreshold(value, value + offset, Numeric::deg2rad(20)))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (!Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::deg2rad(20)))
+			if (!Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::deg2rad(20)))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			offset = Numeric::deg2rad(20) + Random::scalar(Numeric::eps(), Numeric::deg2rad(5));
+			offset = Numeric::deg2rad(20) + Random::scalar(randomGenerator, Numeric::eps(), Numeric::deg2rad(5));
 
 			if (Numeric::angleIsBelowThreshold(value, value + offset, Numeric::deg2rad(20)))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::deg2rad(20)))
+			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::deg2rad(20)))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			offset = -Numeric::deg2rad(20) - Random::scalar(Numeric::eps(), Numeric::deg2rad(5));
+			offset = -Numeric::deg2rad(20) - Random::scalar(randomGenerator, Numeric::eps(), Numeric::deg2rad(5));
 
 			if (Numeric::angleIsBelowThreshold(value, value + offset, Numeric::deg2rad(20)))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
 
-			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(-100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(-100, 100)), Numeric::deg2rad(20)))
+			if (Numeric::angleIsBelowThreshold(value + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), value + offset + Numeric::pi2() * Scalar(Random::random(randomGenerator, -100, 100)), Numeric::deg2rad(20)))
 			{
+				scopedIteration.setInaccurate();
 				continue;
 			}
-
-			++validIterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testGaussianDistribution1(const double testDuration)
@@ -1116,8 +982,9 @@ bool TestNumeric::testGaussianDistribution1(const double testDuration)
 	Log::info() << "1D Gaussian distribution test:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1125,28 +992,25 @@ bool TestNumeric::testGaussianDistribution1(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			const Scalar sigma = Random::scalar(Scalar(0.01), Scalar(10));
-			const Scalar x = Random::scalar(Scalar(-sigma * 5), Scalar(sigma * 5));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Scalar sigma = Random::scalar(randomGenerator, Scalar(0.01), Scalar(10));
+			const Scalar x = Random::scalar(randomGenerator, Scalar(-sigma * 5), Scalar(sigma * 5));
 
 			const Scalar value = Numeric::gaussianDistribution(x, sigma);
 			const Scalar testValue = 1 / (sigma * Numeric::sqrt(2 * Numeric::pi())) * Numeric::pow(Numeric::e(), - Scalar(0.5) * (x * x) / (sigma * sigma));
 
-			if (Numeric::isEqual(value, testValue))
+			if (!Numeric::isEqual(value, testValue))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testGaussianDistribution2(const double testDuration)
@@ -1156,8 +1020,9 @@ bool TestNumeric::testGaussianDistribution2(const double testDuration)
 	Log::info() << "2D Gaussian distribution test:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1165,31 +1030,28 @@ bool TestNumeric::testGaussianDistribution2(const double testDuration)
 	{
 		for (size_t n = 0; n < constIterations; ++n)
 		{
-			const Scalar sigmaX = Random::scalar(Scalar(0.01), Scalar(10));
-			const Scalar sigmaY = Random::scalar(Scalar(0.01), Scalar(10));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Scalar x = Random::scalar(Scalar(-sigmaX * 5), Scalar(sigmaX * 5));
-			const Scalar y = Random::scalar(Scalar(-sigmaY * 5), Scalar(sigmaY * 5));
+			const Scalar sigmaX = Random::scalar(randomGenerator, Scalar(0.01), Scalar(10));
+			const Scalar sigmaY = Random::scalar(randomGenerator, Scalar(0.01), Scalar(10));
+
+			const Scalar x = Random::scalar(randomGenerator, Scalar(-sigmaX * 5), Scalar(sigmaX * 5));
+			const Scalar y = Random::scalar(randomGenerator, Scalar(-sigmaY * 5), Scalar(sigmaY * 5));
 
 			const Scalar value = Numeric::gaussianDistribution2(x, y, sigmaX, sigmaY);
 			const Scalar testValue = Numeric::gaussianDistribution(x, sigmaX) * Numeric::gaussianDistribution(y, sigmaY);
 
-			if (Numeric::isEqual(value, testValue))
+			if (!Numeric::isEqual(value, testValue))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testGaussianDistribution3(const double testDuration)
@@ -1199,8 +1061,9 @@ bool TestNumeric::testGaussianDistribution3(const double testDuration)
 	Log::info() << "3D Gaussian distribution test:";
 
 	const unsigned int constIterations = 100000u;
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1208,108 +1071,68 @@ bool TestNumeric::testGaussianDistribution3(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			const Scalar sigmaX = Random::scalar(Scalar(0.01), Scalar(10));
-			const Scalar sigmaY = Random::scalar(Scalar(0.01), Scalar(10));
-			const Scalar sigmaZ = Random::scalar(Scalar(0.01), Scalar(10));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Scalar x = Random::scalar(Scalar(-sigmaX * 5), Scalar(sigmaX * 5));
-			const Scalar y = Random::scalar(Scalar(-sigmaY * 5), Scalar(sigmaY * 5));
-			const Scalar z = Random::scalar(Scalar(-sigmaZ * 5), Scalar(sigmaZ * 5));
+			const Scalar sigmaX = Random::scalar(randomGenerator, Scalar(0.01), Scalar(10));
+			const Scalar sigmaY = Random::scalar(randomGenerator, Scalar(0.01), Scalar(10));
+			const Scalar sigmaZ = Random::scalar(randomGenerator, Scalar(0.01), Scalar(10));
+
+			const Scalar x = Random::scalar(randomGenerator, Scalar(-sigmaX * 5), Scalar(sigmaX * 5));
+			const Scalar y = Random::scalar(randomGenerator, Scalar(-sigmaY * 5), Scalar(sigmaY * 5));
+			const Scalar z = Random::scalar(randomGenerator, Scalar(-sigmaZ * 5), Scalar(sigmaZ * 5));
 
 			const Scalar value = Numeric::gaussianDistribution3(x, y, z, sigmaX, sigmaY, sigmaZ);
 			const Scalar testValue = Numeric::gaussianDistribution(x, sigmaX) * Numeric::gaussianDistribution(y, sigmaY) * Numeric::gaussianDistribution(z, sigmaZ);
 
-			if (Numeric::isEqual(value, testValue))
+			if (!Numeric::isEqual(value, testValue))
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
-
-			++iterations;
 		}
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (validation.needMoreIterations() || Timestamp(true) < startTimestamp + testDuration);
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testAbs()
 {
 	Log::info() << "Abs test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (NumericT<signed char>::abs(5) != (signed char)(5) || NumericT<signed char>::abs(-5) != (signed char)(5))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<signed char>::abs(5) == (signed char)(5) && NumericT<signed char>::abs(-5) == (signed char)(5));
 
-	if (NumericT<unsigned char>::abs(5) != (unsigned char)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned char>::abs(5), (unsigned char)5);
 
-	if (NumericT<short>::abs(5) != short(5) || NumericT<short>::abs(-5) != short(5))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<short>::abs(5) == short(5) && NumericT<short>::abs(-5) == short(5));
 
-	if (NumericT<unsigned short>::abs(5) != (unsigned short)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned short>::abs(5), (unsigned short)5);
 
-	if (NumericT<int>::abs(5) != int(5) || NumericT<int>::abs(-5) != int(5))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<int>::abs(5) == int(5) && NumericT<int>::abs(-5) == int(5));
 
-	if (NumericT<unsigned int>::abs(5) != (unsigned int)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned int>::abs(5), (unsigned int)5);
 
-	if (NumericT<long long>::abs(5) != (long long)5 || NumericT<long long>::abs(-5) != (long long)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<long long>::abs(5) == (long long)5 && NumericT<long long>::abs(-5) == (long long)5);
 
-	if (NumericT<unsigned long long>::abs(5) != (unsigned long long)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned long long>::abs(5), (unsigned long long)5);
 
-	if (NumericT<float>::abs(5.0f) != 5.0f || NumericT<float>::abs(-5.0f) != 5.0f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<float>::abs(5.0f) == 5.0f && NumericT<float>::abs(-5.0f) == 5.0f);
 
-	if (NumericT<double>::abs(5.0) != 5.0 || NumericT<double>::abs(-5.0) != 5.0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<double>::abs(5.0) == 5.0 && NumericT<double>::abs(-5.0) == 5.0);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testSecureAbs()
 {
 	Log::info() << "Secure abs test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// char: [-128, 127]
 	{
@@ -1317,30 +1140,21 @@ bool TestNumeric::testSecureAbs()
 		const int a1 = NumericT<signed char>::secureAbs((signed char)(127));
 		const unsigned int a2 = NumericT<signed char>::secureAbs((signed char)(127));
 
-		if (a0 != 127u || a1 != 127 || a2 != 127u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 127u && a1 == 127 && a2 == 127u);
 	}
 	{
 		const unsigned char a0 = NumericT<signed char>::secureAbs((signed char)(-128));
 		const int a1 = NumericT<signed char>::secureAbs((signed char)(-128));
 		const unsigned int a2 = NumericT<signed char>::secureAbs((signed char)(-128));
 
-		if (a0 != 128u || a1 != 128 || a2 != 128u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 128u && a1 == 128 && a2 == 128u);
 	}
 	{
 		const unsigned char a0 = NumericT<signed char>::secureAbs((signed char)(uint8_t(128)));
 		const int a1 = NumericT<signed char>::secureAbs((signed char)(uint8_t(uint8_t(128))));
 		const unsigned int a2 = NumericT<signed char>::secureAbs((signed char)(uint8_t(128)));
 
-		if (a0 != 128u || a1 != 128 || a2 != 128u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 128u && a1 == 128 && a2 == 128u);
 	}
 
 	// short: [-32768, 32767]
@@ -1349,30 +1163,21 @@ bool TestNumeric::testSecureAbs()
 		const int a1 = NumericT<short>::secureAbs(short(32767));
 		const unsigned int a2 = NumericT<short>::secureAbs(short(32767));
 
-		if (a0 != 32767u || a1 != 32767 || a2 != 32767u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 32767u && a1 == 32767 && a2 == 32767u);
 	}
 	{
 		const unsigned short a0 = NumericT<short>::secureAbs(short(-32768));
 		const int a1 = NumericT<short>::secureAbs(short(-32768));
 		const unsigned int a2 = NumericT<short>::secureAbs(short(-32768));
 
-		if (a0 != 32768u || a1 != 32768 || a2 != 32768u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 32768u && a1 == 32768 && a2 == 32768u);
 	}
 	{
 		const unsigned short a0 = NumericT<short>::secureAbs(short(uint16_t(32768)));
 		const int a1 = NumericT<short>::secureAbs(short(uint16_t(32768)));
 		const unsigned int a2 = NumericT<short>::secureAbs(short(uint16_t(32768)));
 
-		if (a0 != 32768u || a1 != 32768 || a2 != 32768u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 32768u && a1 == 32768 && a2 == 32768u);
 	}
 
 	// int: [-2147483648, 2147483647]
@@ -1381,10 +1186,7 @@ bool TestNumeric::testSecureAbs()
 		const long long a1 = NumericT<int>::secureAbs(int(2147483647));
 		const unsigned long long a2 = NumericT<int>::secureAbs(int(2147483647));
 
-		if (a0 != 2147483647u || a1 != 2147483647 || a2 != 2147483647u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 2147483647u && a1 == 2147483647 && a2 == 2147483647u);
 	}
 
 	{
@@ -1393,101 +1195,52 @@ bool TestNumeric::testSecureAbs()
 		const long long a1 = NumericT<int>::secureAbs(-2147483647 - 1);
 		const unsigned long long a2 = NumericT<int>::secureAbs(-2147483647 - 1);
 
-		if (a0 != 2147483648u || a1 != 2147483648ll || a2 != 2147483648ull)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 2147483648u && a1 == 2147483648ll && a2 == 2147483648ull);
 	}
 	{
 		const unsigned int a0 = NumericT<int>::secureAbs(static_cast<int>(int64_t(2147483648ll)));
 		const long long a1 = NumericT<int>::secureAbs(static_cast<int>(int64_t(2147483648ll)));
 		const unsigned long long a2 = NumericT<int>::secureAbs(static_cast<int>(int64_t(2147483648ll)));
 
-		if (a0 != 2147483648u || a1 != 2147483648ll || a2 != 2147483648ull)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, a0 == 2147483648u && a1 == 2147483648ll && a2 == 2147483648ull);
 	}
 
 	// long long: [-9223372036854775808, 9223372036854775807]
 	{
 		const unsigned long long a0 = NumericT<long long>::secureAbs(9223372036854775807ll);
 
-		if (a0 != 9223372036854775807ull)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, a0, 9223372036854775807ull);
 	}
 	{
 		// as -9223372036854775808 may be composed of an unaray (-) operator and a signed long long value we create -9223372036854775808 by subtracting -1 from -9223372036854775807
 		const unsigned long long a0 = NumericT<long long>::secureAbs(-9223372036854775807ll - 1ll);
 
-		if (a0 != 9223372036854775808ull)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, a0, 9223372036854775808ull);
 	}
 
-	if (NumericT<signed char>::secureAbs(5) != (signed char)(5) || NumericT<signed char>::secureAbs(-5) != (signed char)(5))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<signed char>::secureAbs(5) == (signed char)(5) && NumericT<signed char>::secureAbs(-5) == (signed char)(5));
 
-	if (NumericT<unsigned char>::secureAbs(5) != (unsigned char)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned char>::secureAbs(5), (unsigned char)5);
 
-	if (NumericT<short>::secureAbs(5) != short(5) || NumericT<short>::secureAbs(-5) != short(5))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<short>::secureAbs(5) == short(5) && NumericT<short>::secureAbs(-5) == short(5));
 
-	if (NumericT<unsigned short>::secureAbs(5) != (unsigned short)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned short>::secureAbs(5), (unsigned short)5);
 
-	if (NumericT<int>::secureAbs(5) != int(5) || NumericT<int>::secureAbs(-5) != int(5))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<int>::secureAbs(5) == int(5) && NumericT<int>::secureAbs(-5) == int(5));
 
-	if (NumericT<unsigned int>::secureAbs(5) != (unsigned int)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned int>::secureAbs(5), (unsigned int)5);
 
-	if (NumericT<long long>::secureAbs(5) != (long long)5 || NumericT<long long>::secureAbs(-5) != (long long)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<long long>::secureAbs(5) == (long long)5 && NumericT<long long>::secureAbs(-5) == (long long)5);
 
-	if (NumericT<unsigned long long>::secureAbs(5) != (unsigned long long)5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<unsigned long long>::secureAbs(5), (unsigned long long)5);
 
-	if (NumericT<float>::secureAbs(5.0f) != 5.0f || NumericT<float>::secureAbs(-5.0f) != 5.0f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<float>::secureAbs(5.0f) == 5.0f && NumericT<float>::secureAbs(-5.0f) == 5.0f);
 
-	if (NumericT<double>::secureAbs(5.0) != 5.0 || NumericT<double>::secureAbs(-5.0) != 5.0)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<double>::secureAbs(5.0) == 5.0 && NumericT<double>::secureAbs(-5.0) == 5.0);
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testFloor(const double testDuration)
@@ -1612,10 +1365,10 @@ bool TestNumeric::testLog2(const double testDuration)
 
 	Log::info() << "Test log2 function:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
-
 	static const size_t size = 10000;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -1623,25 +1376,24 @@ bool TestNumeric::testLog2(const double testDuration)
 	{
 		for (size_t n = 0; n < size; ++n)
 		{
-			const Scalar value = Random::scalar(Numeric::weakEps(), Scalar(1000));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Scalar value = Random::scalar(randomGenerator, Numeric::weakEps(), Scalar(1000));
 			const Scalar valueLog2 = Numeric::log2(value);
 
 			const Scalar test = Numeric::pow(Scalar(2), valueLog2);
 
-			if (Numeric::isWeakEqual(value, test))
+			if (!Numeric::isWeakEqual(value, test))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	const double percent = double(validIterations) / double(iterations);
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1677,288 +1429,142 @@ bool TestNumeric::testSign(const double testDuration)
 
 	Log::info() << "Test sign function:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		if (NumericT<signed char>::sign(0) != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<signed char>::sign(0), (signed char)(0));
 
-		if (NumericT<signed char>::sign((signed char)(RandomI::random(1, 127))) != 1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<signed char>::sign((signed char)(RandomI::random(randomGenerator, 1, 127))), (signed char)(1));
 
-		if (NumericT<signed char>::sign((signed char)(RandomI::random(-127, -1))) != -1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<signed char>::sign((signed char)(RandomI::random(randomGenerator, -127, -1))), (signed char)(-1));
 
 
-		if (NumericT<short>::sign(0) != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<short>::sign(0), short(0));
 
-		if (NumericT<short>::sign(short(RandomI::random(1, 1000))) != 1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<short>::sign(short(RandomI::random(randomGenerator, 1, 1000))), short(1));
 
-		if (NumericT<short>::sign(short(RandomI::random(-1000, -1))) != -1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<short>::sign(short(RandomI::random(randomGenerator, -1000, -1))), short(-1));
 
 
-		if (NumericT<int>::sign(0) != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<int>::sign(0), 0);
 
-		if (NumericT<int>::sign(RandomI::random(1, 1000)) != 1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<int>::sign(RandomI::random(randomGenerator, 1, 1000)), 1);
 
-		if (NumericT<int>::sign(RandomI::random(-1000, -1)) != -1)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<int>::sign(RandomI::random(randomGenerator, -1000, -1)), -1);
 
 
-		if (NumericT<long long>::sign(0ll) != 0ll)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<long long>::sign(0ll), 0ll);
 
-		if (NumericT<long long>::sign(RandomI::random(1, 1000)) != 1ll)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<long long>::sign(RandomI::random(randomGenerator, 1, 1000)), 1ll);
 
-		if (NumericT<long long>::sign(RandomI::random(-1000, -1)) != -1ll)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<long long>::sign(RandomI::random(randomGenerator, -1000, -1)), -1ll);
 
 
-		if (NumericT<float>::sign(0.0f) != 0.0f)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<float>::sign(0.0f), 0.0f);
 
-		if (NumericT<float>::sign(RandomF::scalar(0.01f, 100.0f)) != 1.0f)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<float>::sign(RandomF::scalar(randomGenerator, 0.01f, 100.0f)), 1.0f);
 
-		if (NumericT<float>::sign(RandomF::scalar(-100.0f, -0.01f)) != -1.0f)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<float>::sign(RandomF::scalar(randomGenerator, -100.0f, -0.01f)), -1.0f);
 
 
-		if (NumericT<double>::sign(0.0) != 0.0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<double>::sign(0.0), 0.0);
 
-		if (NumericT<double>::sign(RandomD::scalar(0.01, 100.0)) != 1.0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<double>::sign(RandomD::scalar(randomGenerator, 0.01, 100.0)), 1.0);
 
-		if (NumericT<double>::sign(RandomD::scalar(-100.0, -0.01f)) != -1.0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, NumericT<double>::sign(RandomD::scalar(randomGenerator, -100.0, -0.01f)), -1.0);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testCopySign()
 {
 	Log::info() << "Test copySign function:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (NumericT<int>::copySign(-5, 1) != 5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::copySign(-5, 1), 5);
 
-	if (NumericT<int>::copySign(-5, -1) != -5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::copySign(-5, -1), -5);
 
-	if (NumericT<int>::copySign(5000, 4) != 5000)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::copySign(5000, 4), 5000);
 
-	if (NumericT<int>::copySign(5000, -4) != -5000)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::copySign(5000, -4), -5000);
 
 
-	if (NumericT<float>::copySign(-5.123f, 1.555f) != 5.123f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::copySign(-5.123f, 1.555f), 5.123f);
 
-	if (NumericT<float>::copySign(-5.123f, -1.678f) != -5.123f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::copySign(-5.123f, -1.678f), -5.123f);
 
-	if (NumericT<float>::copySign(5000.456f, 4.321f) != 5000.456f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::copySign(5000.456f, 4.321f), 5000.456f);
 
-	if (NumericT<float>::copySign(5000.456f, -4.753f) != -5000.456f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::copySign(5000.456f, -4.753f), -5000.456f);
 
 
-	if (NumericT<double>::copySign(-5.123, 1.444) != 5.123)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::copySign(-5.123, 1.444), 5.123);
 
-	if (NumericT<double>::copySign(-5.123, -1.489) != -5.123)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::copySign(-5.123, -1.489), -5.123);
 
-	if (NumericT<double>::copySign(5000.456, 4.258) != 5000.456)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::copySign(5000.456, 4.258), 5000.456);
 
-	if (NumericT<double>::copySign(5000.456, -4.654) != -5000.456)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::copySign(5000.456, -4.654), -5000.456);
 
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testInvertSign()
 {
 	Log::info() << "Test invertSign function:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (NumericT<int>::invertSign(-5, 1) != -5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::invertSign(-5, 1), -5);
 
-	if (NumericT<int>::invertSign(-5, -1) != 5)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::invertSign(-5, -1), 5);
 
-	if (NumericT<int>::invertSign(5000, 4) != -5000)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::invertSign(5000, 4), -5000);
 
-	if (NumericT<int>::invertSign(5000, -4) != 5000)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<int>::invertSign(5000, -4), 5000);
 
 
-	if (NumericT<float>::invertSign(-5.123f, 1.555f) != -5.123f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::invertSign(-5.123f, 1.555f), -5.123f);
 
-	if (NumericT<float>::invertSign(-5.123f, -1.678f) != 5.123f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::invertSign(-5.123f, -1.678f), 5.123f);
 
-	if (NumericT<float>::invertSign(5000.456f, 4.321f) != -5000.456f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::invertSign(5000.456f, 4.321f), -5000.456f);
 
-	if (NumericT<float>::invertSign(5000.456f, -4.753f) != 5000.456f)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<float>::invertSign(5000.456f, -4.753f), 5000.456f);
 
 
-	if (NumericT<double>::invertSign(-5.123, 1.444) != -5.123)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::invertSign(-5.123, 1.444), -5.123);
 
-	if (NumericT<double>::invertSign(-5.123, -1.489) != 5.123)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::invertSign(-5.123, -1.489), 5.123);
 
-	if (NumericT<double>::invertSign(5000.456, 4.258) != -5000.456)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::invertSign(5000.456, 4.258), -5000.456);
 
-	if (NumericT<double>::invertSign(5000.456, -4.654) != 5000.456)
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_EQUAL(validation, NumericT<double>::invertSign(5000.456, -4.654), 5000.456);
 
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testFactorial()
 {
 	Log::info() << "Test factorial function:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	for (unsigned int n = 0u; n <= 12u; ++n)
 	{
@@ -1966,10 +1572,7 @@ bool TestNumeric::testFactorial()
 
 		if (n == 0u)
 		{
-			if (factorial != 1u)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, factorial, 1u);
 		}
 		else
 		{
@@ -1982,23 +1585,13 @@ bool TestNumeric::testFactorial()
 				value *= double(i);
 			}
 
-			if (double(factorial) != value)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, double(factorial), value);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -2008,22 +1601,15 @@ bool TestNumeric::testIsNan(const double testDuration)
 
 	Log::info() << "Test isNan function for '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	if (NumericT<T>::isNan(T(0)) || NumericT<T>::isNan(T(1)) || NumericT<T>::isNan(T(-1)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, NumericT<T>::isNan(T(0)) || NumericT<T>::isNan(T(1)) || NumericT<T>::isNan(T(-1)));
 
 	if constexpr (std::is_floating_point<T>::value)
 	{
-		if (!NumericT<T>::isNan(NumericT<T>::nan()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isNan(NumericT<T>::nan()));
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -2034,10 +1620,7 @@ bool TestNumeric::testIsNan(const double testDuration)
 			{
 				const T value = T(RandomT<T>::scalar(randomGenerator, T(-100000), T(100000)));
 
-				if (NumericT<T>::isNan(value))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericT<T>::isNan(value));
 			}
 
 			if constexpr (std::is_same<T, float>::value)
@@ -2082,17 +1665,11 @@ bool TestNumeric::testIsNan(const double testDuration)
 				float floatValue;
 				memcpy(&floatValue, &intValue, sizeof(float));
 
-				if (valueIsNan != NumericF::isNan(floatValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, valueIsNan, NumericF::isNan(floatValue));
 
 #ifdef OCEAN_DEBUG
 				// in a not-optimized build, we can use std's isnan() function as well
-				if (NumericF::isNan(floatValue) != std::isnan(floatValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, NumericF::isNan(floatValue), bool(std::isnan(floatValue)));
 #endif
 			}
 			else
@@ -2139,17 +1716,11 @@ bool TestNumeric::testIsNan(const double testDuration)
 				double doubleValue;
 				memcpy(&doubleValue, &intValue, sizeof(double));
 
-				if (valueIsNan != NumericD::isNan(doubleValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, valueIsNan, NumericD::isNan(doubleValue));
 
 #ifdef OCEAN_DEBUG
 				// in a not-optimized build, we can use std's isnan() function as well
-				if (NumericD::isNan(doubleValue) != std::isnan(doubleValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, NumericD::isNan(doubleValue), bool(std::isnan(doubleValue)));
 #endif
 			}
 		}
@@ -2159,24 +1730,14 @@ bool TestNumeric::testIsNan(const double testDuration)
 
 			const T value = T(RandomI::random64(randomGenerator));
 
-			if (NumericT<T>::isNan(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, NumericT<T>::isNan(value));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -2186,45 +1747,26 @@ bool TestNumeric::testIsInf(const double testDuration)
 
 	Log::info() << "Test isInf function for '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	if (NumericT<T>::isInf(T(0)) || NumericT<T>::isInf(T(1)) || NumericT<T>::isInf(T(-1)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, NumericT<T>::isInf(T(0)) || NumericT<T>::isInf(T(1)) || NumericT<T>::isInf(T(-1)));
 
 	if constexpr (std::is_floating_point<T>::value)
 	{
-		if (!NumericT<T>::isInf(std::numeric_limits<T>::infinity()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isInf(std::numeric_limits<T>::infinity()));
 
-		if (!NumericT<T>::isInf(NumericT<T>::inf()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isInf(NumericT<T>::inf()));
 
-		if (!NumericT<T>::isInf(-std::numeric_limits<T>::infinity()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isInf(-std::numeric_limits<T>::infinity()));
 
-		if (!NumericT<T>::isInf(-NumericT<T>::inf()))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isInf(-NumericT<T>::inf()));
 
 		const T stdValue = std::numeric_limits<T>::infinity();
 		const T numericValue = NumericT<T>::inf();
 
-		if (memcmp(&stdValue, &numericValue, sizeof(T)) != 0)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, memcmp(&stdValue, &numericValue, sizeof(T)), 0);
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -2235,10 +1777,7 @@ bool TestNumeric::testIsInf(const double testDuration)
 			{
 				const T value = T(RandomT<T>::scalar(randomGenerator, T(-100000), T(100000)));
 
-				if (NumericT<T>::isInf(value))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericT<T>::isInf(value));
 			}
 
 			if constexpr (std::is_same<T, float>::value)
@@ -2283,17 +1822,11 @@ bool TestNumeric::testIsInf(const double testDuration)
 				float floatValue;
 				memcpy(&floatValue, &intValue, sizeof(float));
 
-				if (valueIsInf != NumericF::isInf(floatValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, valueIsInf, NumericF::isInf(floatValue));
 
 #ifdef OCEAN_DEBUG
 				// in a not-optimized build, we can use std's isinf() function as well
-				if (NumericF::isInf(floatValue) != std::isinf(floatValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, NumericF::isInf(floatValue), bool(std::isinf(floatValue)));
 #endif
 			}
 			else
@@ -2340,17 +1873,11 @@ bool TestNumeric::testIsInf(const double testDuration)
 				double doubleValue;
 				memcpy(&doubleValue, &intValue, sizeof(double));
 
-				if (valueIsInf != NumericD::isInf(doubleValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, valueIsInf, NumericD::isInf(doubleValue));
 
 #ifdef OCEAN_DEBUG
 				// in a not-optimized build, we can use std's isinf() function as well
-				if (NumericD::isInf(doubleValue) != std::isinf(doubleValue))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, NumericD::isInf(doubleValue), bool(std::isinf(doubleValue)));
 #endif
 			}
 		}
@@ -2360,118 +1887,61 @@ bool TestNumeric::testIsInf(const double testDuration)
 
 			const T value = T(RandomI::random64(randomGenerator));
 
-			if (NumericT<T>::isInf(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, NumericT<T>::isInf(value));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testPow()
 {
 	Log::info() << "Test pow function:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (Numeric::isNotEqual(Numeric::pow(8, 0), 1))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::pow(8, 0), Scalar(1)));
 
-	if (Numeric::isNotEqual(Numeric::pow(1, 1), 1))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::pow(1, 1), Scalar(1)));
 
-	if (Numeric::isNotEqual(Numeric::pow(Scalar(0.5), 2), Scalar(0.25)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::pow(Scalar(0.5), 2), Scalar(0.25)));
 
-	if (Numeric::isNotEqual(Numeric::pow(Scalar(-0.5), 2), Scalar(0.25)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::pow(Scalar(-0.5), 2), Scalar(0.25)));
 
-	if (Numeric::isNotEqual(Numeric::pow(Scalar(-0.5), -2), Scalar(4)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::pow(Scalar(-0.5), -2), Scalar(4)));
 
-	if (Numeric::isNotEqual(Numeric::integerPow(8, 0u), Scalar(1)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::integerPow(8, 0u), Scalar(1)));
 
-	if (Numeric::isNotEqual(Numeric::integerPow(1, 1u), Scalar(1)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::integerPow(1, 1u), Scalar(1)));
 
-	if (Numeric::isNotEqual(Numeric::integerPow(1, 2u), Scalar(1)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::integerPow(1, 2u), Scalar(1)));
 
-	if (Numeric::isNotEqual(Numeric::integerPow(Scalar(0.5), 1u), Scalar(0.5)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::integerPow(Scalar(0.5), 1u), Scalar(0.5)));
 
-	if (Numeric::isNotEqual(Numeric::integerPow(Scalar(0.5), 2u), Scalar(0.25)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::integerPow(Scalar(0.5), 2u), Scalar(0.25)));
 
-	if (Numeric::isNotEqual(Numeric::integerPow(Scalar(10), 4u), Scalar(1e4)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(Numeric::integerPow(Scalar(10), 4u), Scalar(1e4)));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNumeric::testIsInsideValueRange(const double testDuration)
 {
 	Log::info() << "Test pow function:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// testing special cases
 
-	if (!NumericT<std::string>::isInsideValueRange(std::string("test")))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<std::string>::isInsideValueRange(std::string("test")));
 
-	if (NumericT<std::string>::isInsideValueRange(false))
-	{
-		allSucceeded = false;
-	}
-
-	RandomGenerator randomGenerator;
+	OCEAN_EXPECT_FALSE(validation, NumericT<std::string>::isInsideValueRange(false));
 
 	const Timestamp startTimestamp(true);
 
@@ -2480,97 +1950,46 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 		{
 			// identical data types
 
-			if (!NumericT<bool>::isInsideValueRange(RandomI::random(randomGenerator, 1u) == 0u))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<bool>::isInsideValueRange(RandomI::boolean(randomGenerator)));
 
-			if (!NumericT<int8_t>::isInsideValueRange(int8_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint8_t>::isInsideValueRange(uint8_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<int8_t>::isInsideValueRange(int8_t(RandomI::random64(randomGenerator))));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint8_t>::isInsideValueRange(uint8_t(RandomI::random64(randomGenerator))));
 
-			if (!NumericT<int16_t>::isInsideValueRange(int16_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint16_t>::isInsideValueRange(uint16_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<int16_t>::isInsideValueRange(int16_t(RandomI::random64(randomGenerator))));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint16_t>::isInsideValueRange(uint16_t(RandomI::random64(randomGenerator))));
 
-			if (!NumericT<int32_t>::isInsideValueRange(int32_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint32_t>::isInsideValueRange(uint32_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<int32_t>::isInsideValueRange(int32_t(RandomI::random64(randomGenerator))));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint32_t>::isInsideValueRange(uint32_t(RandomI::random64(randomGenerator))));
 
-			if (!NumericT<int64_t>::isInsideValueRange(int64_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint64_t>::isInsideValueRange(uint64_t(RandomI::random64(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(int64_t(RandomI::random64(randomGenerator))));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint64_t>::isInsideValueRange(uint64_t(RandomI::random64(randomGenerator))));
 
-			if (!NumericT<float>::isInsideValueRange(RandomF::scalar(randomGenerator, -1000.0f, 1000.0f)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<double>::isInsideValueRange(RandomD::scalar(randomGenerator, 1000000.0, 1000000.0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<float>::isInsideValueRange(RandomF::scalar(randomGenerator, -1000.0f, 1000.0f)));
+			OCEAN_EXPECT_TRUE(validation, NumericT<double>::isInsideValueRange(RandomD::scalar(randomGenerator, 1000000.0, 1000000.0)));
 		}
 
 		{
 			// float -> double, and double -> float
 
-			if (!NumericT<float>::isInsideValueRange(RandomD::scalar(randomGenerator, 1000000.0, 1000000.0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<float>::isInsideValueRange(RandomD::scalar(randomGenerator, 1000000.0, 1000000.0)));
 
-			if (!NumericT<double>::isInsideValueRange(RandomF::scalar(randomGenerator, -1000.0f, 1000.0f)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<double>::isInsideValueRange(RandomF::scalar(randomGenerator, -1000.0f, 1000.0f)));
 		}
 
 		{
 			// float -> uint8_t, uint8_t -> float
 
-			if (NumericT<float>::isInsideValueRange(uint8_t(RandomI::random32(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, NumericT<float>::isInsideValueRange(uint8_t(RandomI::random32(randomGenerator))));
 
-			if (NumericT<uint8_t>::isInsideValueRange(RandomF::scalar(randomGenerator, -1000.0f, 1000.0f)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, NumericT<uint8_t>::isInsideValueRange(RandomF::scalar(randomGenerator, -1000.0f, 1000.0f)));
 		}
 
 		{
 			// double -> uint8_t, double -> float
 
-			if (NumericT<double>::isInsideValueRange(uint8_t(RandomI::random32(randomGenerator))))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, NumericT<double>::isInsideValueRange(uint8_t(RandomI::random32(randomGenerator))));
 
-			if (NumericT<uint8_t>::isInsideValueRange(RandomD::scalar(randomGenerator, -1000.0, 1000.0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, NumericT<uint8_t>::isInsideValueRange(RandomD::scalar(randomGenerator, -1000.0, 1000.0)));
 		}
 
 		{
@@ -2578,60 +1997,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const int8_t value = int8_t(RandomI::random64(randomGenerator));
 
-			if (!NumericT<int16_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int32_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<int16_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int32_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(value));
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value >= int8_t(0)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint16_t>::isInsideValueRange(value) != (value >= int8_t(0)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint32_t>::isInsideValueRange(value) != (value >= int8_t(0)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint64_t>::isInsideValueRange(value) != (value >= int8_t(0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value >= int8_t(0));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::isInsideValueRange(value), value >= int8_t(0));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::isInsideValueRange(value), value >= int8_t(0));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint64_t>::isInsideValueRange(value), value >= int8_t(0));
 
-			if (!verifyInsideValueRangeWithCast<int8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int32_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint32_t>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int32_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint32_t>(value));
 		}
 
 		{
@@ -2639,60 +2019,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const int16_t value = int16_t(RandomI::random64(randomGenerator));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value >= int16_t(-128) && value <= int16_t(127)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int32_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value >= int16_t(-128) && value <= int16_t(127));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int32_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(value));
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value >= int16_t(0) && value <= int16_t(255)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint16_t>::isInsideValueRange(value) != (value >= int16_t(0)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint32_t>::isInsideValueRange(value) != (value >= int16_t(0)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint64_t>::isInsideValueRange(value) != (value >= int16_t(0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value >= int16_t(0) && value <= int16_t(255));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::isInsideValueRange(value), value >= int16_t(0));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::isInsideValueRange(value), value >= int16_t(0));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint64_t>::isInsideValueRange(value), value >= int16_t(0));
 
-			if (!verifyInsideValueRangeWithCast<int8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int32_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint32_t>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int32_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint32_t>(value));
 		}
 
 		{
@@ -2700,60 +2041,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const int32_t value = int32_t(RandomI::random64(randomGenerator));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value >= int32_t(-128) && value <= int32_t(127)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int16_t>::isInsideValueRange(value) != (value >= int32_t(-32768) && value <= int32_t(32767)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value >= int32_t(-128) && value <= int32_t(127));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::isInsideValueRange(value), value >= int32_t(-32768) && value <= int32_t(32767));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(value));
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value >= int32_t(0) && value <= int32_t(255)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint16_t>::isInsideValueRange(value) != (value >= int32_t(0) && value <= int32_t(65535)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint32_t>::isInsideValueRange(value) != (value >= int32_t(0)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint64_t>::isInsideValueRange(value) != (value >= int32_t(0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value >= int32_t(0) && value <= int32_t(255));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::isInsideValueRange(value), value >= int32_t(0) && value <= int32_t(65535));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::isInsideValueRange(value), value >= int32_t(0));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint64_t>::isInsideValueRange(value), value >= int32_t(0));
 
-			if (!verifyInsideValueRangeWithCast<int8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int32_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint32_t>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int32_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint32_t>(value));
 		}
 
 		{
@@ -2761,36 +2063,15 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const int64_t value = int64_t(RandomI::random64(randomGenerator));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value >= int64_t(-128) && value <= int64_t(127ll)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int16_t>::isInsideValueRange(value) != (value >= int64_t(-32768) && value <= int64_t(32767ll)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int32_t>::isInsideValueRange(value) != (value >= int64_t(-2147483648ll) && value <= int64_t(2147483647ll)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value >= int64_t(-128) && value <= int64_t(127ll));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::isInsideValueRange(value), value >= int64_t(-32768) && value <= int64_t(32767ll));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int32_t>::isInsideValueRange(value), value >= int64_t(-2147483648ll) && value <= int64_t(2147483647ll));
 
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value >= int64_t(0) && value <= int64_t(255ll)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint16_t>::isInsideValueRange(value) != (value >= int64_t(0) && value <= int64_t(65535ll)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint32_t>::isInsideValueRange(value) != (value >= int64_t(0) && value <= int64_t(4294967295ll)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint64_t>::isInsideValueRange(value) != (value >= int64_t(0)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value >= int64_t(0) && value <= int64_t(255ll));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::isInsideValueRange(value), value >= int64_t(0) && value <= int64_t(65535ll));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::isInsideValueRange(value), value >= int64_t(0) && value <= int64_t(4294967295ll));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint64_t>::isInsideValueRange(value), value >= int64_t(0));
 		}
 
 		{
@@ -2798,60 +2079,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const uint8_t value = uint8_t(RandomI::random64(randomGenerator));
 
-			if (!NumericT<uint16_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint32_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint16_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint32_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint64_t>::isInsideValueRange(value));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value <= uint8_t(127)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int16_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int32_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value <= uint8_t(127));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int16_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int32_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(value));
 
-			if (!verifyInsideValueRangeWithCast<int8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int32_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint32_t>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int32_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint32_t>(value));
 		}
 
 		{
@@ -2859,60 +2101,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const uint16_t value = uint16_t(RandomI::random64(randomGenerator));
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value <= uint16_t(255)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint32_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value <= uint16_t(255));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint32_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint64_t>::isInsideValueRange(value));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value <= uint16_t(127)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int16_t>::isInsideValueRange(value) != (value <= uint16_t(32767)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int32_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value <= uint16_t(127));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::isInsideValueRange(value), value <= uint16_t(32767));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int32_t>::isInsideValueRange(value));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(value));
 
-			if (!verifyInsideValueRangeWithCast<int8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int32_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint32_t>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int32_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint32_t>(value));
 		}
 
 		{
@@ -2920,60 +2123,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const uint32_t value = uint32_t(RandomI::random64(randomGenerator));
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value <= uint32_t(255)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint16_t>::isInsideValueRange(value) != (value <= uint32_t(65535)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<uint64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value <= uint32_t(255));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::isInsideValueRange(value), value <= uint32_t(65535));
+			OCEAN_EXPECT_TRUE(validation, NumericT<uint64_t>::isInsideValueRange(value));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value <= uint32_t(127)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int16_t>::isInsideValueRange(value) != (value <= uint32_t(32767)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int32_t>::isInsideValueRange(value) != (value <= uint32_t(2147483647)))
-			{
-				allSucceeded = false;
-			}
-			if (!NumericT<int64_t>::isInsideValueRange(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value <= uint32_t(127));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::isInsideValueRange(value), value <= uint32_t(32767));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int32_t>::isInsideValueRange(value), value <= uint32_t(2147483647));
+			OCEAN_EXPECT_TRUE(validation, NumericT<int64_t>::isInsideValueRange(value));
 
-			if (!verifyInsideValueRangeWithCast<int8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint8_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint16_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<int32_t>(value))
-			{
-				allSucceeded = false;
-			}
-			if (!verifyInsideValueRangeWithCast<uint32_t>(value))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint8_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint16_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<int32_t>(value));
+			OCEAN_EXPECT_TRUE(validation, verifyInsideValueRangeWithCast<uint32_t>(value));
 		}
 
 		{
@@ -2981,49 +2145,21 @@ bool TestNumeric::testIsInsideValueRange(const double testDuration)
 
 			const uint64_t value = uint64_t(RandomI::random64(randomGenerator));
 
-			if (NumericT<uint8_t>::isInsideValueRange(value) != (value <= uint64_t(255ull)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint16_t>::isInsideValueRange(value) != (value <= uint64_t(65535ull)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<uint32_t>::isInsideValueRange(value) != (value <= uint64_t(4294967295ull)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint8_t>::isInsideValueRange(value), value <= uint64_t(255ull));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint16_t>::isInsideValueRange(value), value <= uint64_t(65535ull));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<uint32_t>::isInsideValueRange(value), value <= uint64_t(4294967295ull));
 
-			if (NumericT<int8_t>::isInsideValueRange(value) != (value <= uint64_t(127ull)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int16_t>::isInsideValueRange(value) != (value <= uint64_t(32767ull)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int32_t>::isInsideValueRange(value) != (value <= uint64_t(2147483647ull)))
-			{
-				allSucceeded = false;
-			}
-			if (NumericT<int64_t>::isInsideValueRange(value) != (value <= uint64_t(9223372036854775807ull)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int8_t>::isInsideValueRange(value), value <= uint64_t(127ull));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int16_t>::isInsideValueRange(value), value <= uint64_t(32767ull));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int32_t>::isInsideValueRange(value), value <= uint64_t(2147483647ull));
+			OCEAN_EXPECT_EQUAL(validation, NumericT<int64_t>::isInsideValueRange(value), value <= uint64_t(9223372036854775807ull));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T, size_t tSize>
@@ -3033,13 +2169,12 @@ bool TestNumeric::testDotProduct(const double testDuration)
 
 	Log::info() << "... with vector size " << String::insertCharacter(String::toAString(tSize), ',', 3, false) << ":";
 
-	bool allSucceeded = true;
-
 	std::vector<T> vectorA(tSize);
 	std::vector<T> vectorB(tSize);
 
 	const T valueRange = std::is_same<T, double>::value ? T(1) : T(0.1);
 	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	{
 		// first we test the standard implementation not using any kind of explicit optimization
@@ -3077,14 +2212,13 @@ bool TestNumeric::testDotProduct(const double testDuration)
 	{
 		// now we test the default implementation of the framework using SIMD optimizations
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
-
 		HighPerformanceStatistic performance;
 		const Timestamp startTimestamp(true);
 
 		do
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			for (unsigned int n = 0u; n < tSize; ++n)
 			{
 				vectorA[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
@@ -3100,25 +2234,19 @@ bool TestNumeric::testDotProduct(const double testDuration)
 
 			const T test = dotProduct<T>(vectorA.data(), vectorB.data(), tSize);
 
-			if (NumericT<T>::isEqual(result, test, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(1000))))
+			if (!NumericT<T>::isEqual(result, test, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(1000))))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Ocean performance individual: " << String::toAString(performance.averageMseconds()) << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		allSucceeded = percent >= 0.99 && allSucceeded;
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T, typename TValue>

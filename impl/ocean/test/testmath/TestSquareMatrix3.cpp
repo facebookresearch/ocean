@@ -12,6 +12,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/MathUtilities.h"
 #include "ocean/math/Quaternion.h"
@@ -215,8 +216,8 @@ bool TestSquareMatrix3::testElementConstructor(const double testDuration)
 
 	Log::info() << "Element-based constructor test:";
 
-	bool allSucceeded = true;
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const double epsilon = 0.0001;
 
@@ -287,99 +288,38 @@ bool TestSquareMatrix3::testElementConstructor(const double testDuration)
 
 			ocean_assert(index == 9u);
 
-			if (!floatMatrixA.isEqual(floatTest, float(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!floatMatrixB.isEqual(floatTest, float(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!floatMatrixBTransposed.isEqual(floatTestTransposed, float(epsilon)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, floatMatrixA.isEqual(floatTest, float(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, floatMatrixB.isEqual(floatTest, float(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, floatMatrixBTransposed.isEqual(floatTestTransposed, float(epsilon)));
 
-			if (!floatMatrixC.isEqual(floatTest, float(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!floatMatrixD.isEqual(floatTest, float(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!floatMatrixDTransposed.isEqual(floatTestTransposed, float(epsilon)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, floatMatrixC.isEqual(floatTest, float(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, floatMatrixD.isEqual(floatTest, float(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, floatMatrixDTransposed.isEqual(floatTestTransposed, float(epsilon)));
 
 
-			if (!doubleMatrixA.isEqual(doubleTest, double(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!doubleMatrixB.isEqual(doubleTest, double(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!doubleMatrixBTransposed.isEqual(doubleTestTransposed, double(epsilon)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, doubleMatrixA.isEqual(doubleTest, double(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, doubleMatrixB.isEqual(doubleTest, double(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, doubleMatrixBTransposed.isEqual(doubleTestTransposed, double(epsilon)));
 
-			if (!doubleMatrixC.isEqual(doubleTest, double(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!doubleMatrixD.isEqual(doubleTest, double(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!doubleMatrixDTransposed.isEqual(doubleTestTransposed, double(epsilon)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, doubleMatrixC.isEqual(doubleTest, double(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, doubleMatrixD.isEqual(doubleTest, double(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, doubleMatrixDTransposed.isEqual(doubleTestTransposed, double(epsilon)));
 
 
-			if (!scalarMatrixA.isEqual(scalarTest, Scalar(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!scalarMatrixB.isEqual(scalarTest, Scalar(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!scalarMatrixBTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, scalarMatrixA.isEqual(scalarTest, Scalar(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, scalarMatrixB.isEqual(scalarTest, Scalar(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, scalarMatrixBTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)));
 
-			if (!scalarMatrixC.isEqual(scalarTest, Scalar(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!scalarMatrixD.isEqual(scalarTest, Scalar(epsilon)))
-			{
-				allSucceeded = false;
-			}
-			if (!scalarMatrixDTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, scalarMatrixC.isEqual(scalarTest, Scalar(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, scalarMatrixD.isEqual(scalarTest, Scalar(epsilon)));
+			OCEAN_EXPECT_TRUE(validation, scalarMatrixDTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -389,8 +329,8 @@ bool TestSquareMatrix3::testQuaternionConstructor(const double testDuration)
 
 	Log::info() << "Quaternion-based constructor test for '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -410,7 +350,7 @@ bool TestSquareMatrix3::testQuaternionConstructor(const double testDuration)
 
 		if (quanterion.isValid() == false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
@@ -421,24 +361,14 @@ bool TestSquareMatrix3::testQuaternionConstructor(const double testDuration)
 			const VectorT3<T> rotatedVectorMatrix = rotationMatrix * vector;
 			const VectorT3<T> rotatedVectorQuaternion = quanterion * vector;
 
-			if (rotatedVectorMatrix.isEqual(rotatedVectorQuaternion, NumericT<T>::weakEps()) == false)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, rotatedVectorMatrix.isEqual(rotatedVectorQuaternion, NumericT<T>::weakEps()));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -450,11 +380,10 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 
 	Log::info() << "2D Vector multiplication test for " << sizeof(T) * 8 << "bit precision:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const T valueRange = std::is_same<T, double>::value ? T(100) : T(10);
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -462,7 +391,7 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 	{
 		for (unsigned int i = 0u; i < constNumber; ++i)
 		{
-			unsigned int localValidIterations = 0u;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			SquareMatrixT3<T> matrix;
 
@@ -471,7 +400,9 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 			}
 
-			const VectorT2<T> vector(RandomT<T>::scalar(randomGenerator, -valueRange, valueRange), RandomT<T>::scalar(randomGenerator, -valueRange, valueRange));
+			const T vectorX = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			const T vectorY = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			const VectorT2<T> vector(vectorX, vectorY);
 
 			VectorT3<T> testResult3;
 			testResult3[0] = matrix(0, 0) * vector[0] + matrix(0, 1) * vector[1] + matrix(0, 2);
@@ -479,6 +410,8 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 			testResult3[2] = matrix(2, 0) * vector[0] + matrix(2, 1) * vector[1] + matrix(2, 2);
 
 			const bool validNormalization = NumericT<T>::isNotEqualEps(testResult3[2]);
+
+			unsigned int localValidIterations = 0u;
 
 			// we test the multiplication operator
 
@@ -517,22 +450,17 @@ bool TestSquareMatrix3::testVectorMultiplication2(const double testDuration)
 				}
 			}
 
-			if (localValidIterations == 2u)
+			if (localValidIterations != 2u)
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "% succeeded.";
-
-	return percent >= 0.999;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -544,14 +472,13 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 	Log::info() << "3D Vector multiplication test for " << sizeof(T) * 8 << "bit precision with " << String::insertCharacter(String::toAString(constNumber), ',', 3, false) << " repetitions:";
 
-	bool allSucceeded = true;
-
 	SquareMatrixT3<T> matrix;
 	std::vector< VectorT3<T> > vectors(constNumber);
 	std::vector< VectorT3<T> > results(constNumber);
 
 	const T valueRange = std::is_same<T, double>::value ? T(100) : T(10);
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// first we test the standard implementation not using any kind of explicit optimization
@@ -592,8 +519,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 	{
 		// now we test the default implementation of the framework using SIMD optimizations
 
-		uint64_t iterations = 0ull;
-		uint64_t validIterations = 0ull;
+		ValidationPrecision validationIndividual(0.99, randomGenerator);
 
 		HighPerformanceStatistic performance;
 		const Timestamp startTimestamp(true);
@@ -624,7 +550,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
 			{
-				bool localSucceeded = true;
+				ValidationPrecision::ScopedIteration scopedIteration(validationIndividual);
 
 				for (unsigned int i = 0u; i < 3u; ++i)
 				{
@@ -632,34 +558,23 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 					if (NumericT<T>::isNotEqual(results[n][i], rowResult, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
-
-				if (localSucceeded)
-				{
-					++validIterations;
-				}
-
-				++iterations;
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validationIndividual.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Ocean performance individual: " << String::toAString(performance.averageMseconds()) << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validationIndividual;
 
-		allSucceeded = percent >= 0.99 && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validationIndividual.succeeded());
 	}
 
 	{
 		// now we test the utility function of the framework allowing to process an entire array
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		ValidationPrecision validationSinglecore(0.99, randomGenerator);
 
 		HighPerformanceStatistic performanceShared;
 		const Timestamp startTimestamp(true);
@@ -685,7 +600,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
 			{
-				bool localSucceeded = true;
+				ValidationPrecision::ScopedIteration scopedIteration(validationSinglecore);
 
 				for (unsigned int i = 0u; i < 3u; ++i)
 				{
@@ -693,35 +608,24 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 					if (NumericT<T>::isNotEqual(results[n][i], rowResult, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
-
-				if (localSucceeded)
-				{
-					++validIterations;
-				}
-
-				++iterations;
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validationSinglecore.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Ocean performance array (singlecore): " << String::toAString(performanceShared.averageMseconds()) << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validationSinglecore;
 
-		allSucceeded = percent >= 0.99 && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validationSinglecore.succeeded());
 	}
 
 	if (worker)
 	{
 		// now we test the utility function of the framework allowing to process an entire array (this time with multi-core support)
 
-		uint64_t iterations = 0ull;
-		uint64_t validIterations = 0ull;
+		ValidationPrecision validationMulticore(0.99, randomGenerator);
 
 		HighPerformanceStatistic performanceShared;
 		const Timestamp startTimestamp(true);
@@ -747,7 +651,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
 			{
-				bool localSucceeded = true;
+				ValidationPrecision::ScopedIteration scopedIteration(validationMulticore);
 
 				for (unsigned int i = 0u; i < 3u; ++i)
 				{
@@ -755,30 +659,20 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 					if (NumericT<T>::isNotEqual(results[n][i], rowResult, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
-
-				if (localSucceeded)
-				{
-					++validIterations;
-				}
-
-				++iterations;
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		while (validationMulticore.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Ocean performance array (multicore): " << String::toAString(performanceShared.averageMseconds()) << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validationMulticore;
 
-		allSucceeded = percent >= 0.99 && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validationMulticore.succeeded());
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSquareMatrix3::testInvert(const double testDuration)
@@ -787,8 +681,8 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 
 	Log::info() << "SquareMatrix3::invert() and SquareMatrix3::inverted() test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Scalar epsilon = Numeric::eps() * 100;
 	const SquareMatrix3 identity(true);
@@ -797,26 +691,28 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		SquareMatrix3 matrix;
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
 		{
-			matrix[n] = Random::scalar(-1, 1);
+			matrix[n] = Random::scalar(randomGenerator, -1, 1);
 		}
 
 		// we create a singular value each second iteration
-		if (iterations % 2u == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
-			Scalar factor = Random::scalar(-1, 1);
+			Scalar factor = Random::scalar(randomGenerator, -1, 1);
 			while (Numeric::isWeakEqualEps(factor))
 			{
-				factor = Random::scalar(-1, 1);
+				factor = Random::scalar(randomGenerator, -1, 1);
 			}
 
-			if (RandomI::random(1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				unsigned int rowIndex0, rowIndex1;
-				RandomI::random(2u, rowIndex0, rowIndex1);
+				RandomI::random(randomGenerator, 2u, rowIndex0, rowIndex1);
 
 				for (unsigned int c = 0u; c < 3u; ++c)
 				{
@@ -826,7 +722,7 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 			else
 			{
 				unsigned int columnIndex0, columnIndex1;
-				RandomI::random(2u, columnIndex0, columnIndex1);
+				RandomI::random(randomGenerator, 2u, columnIndex0, columnIndex1);
 
 				for (unsigned int r = 0u; r < 3u; ++r)
 				{
@@ -836,7 +732,6 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 		}
 
 		const bool matrixIsSingular = matrix.isSingular();
-		ocean_assert((iterations % 2u) != 0u || matrixIsSingular);
 
 		SquareMatrix3 invertedMatrix0(matrix);
 		const bool matrixInverted0 = invertedMatrix0.invert();
@@ -930,21 +825,16 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 			}
 		}
 
-		++iterations;
-
-		if (localSucceeded)
+		if (!localSucceeded)
 		{
-			++validIterations;
+			scopedIteration.setInaccurate();
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestSquareMatrix3::testMatrixConversion(const double testDuration)
@@ -953,12 +843,13 @@ bool TestSquareMatrix3::testMatrixConversion(const double testDuration)
 
 	Log::info() << "SquareMatrix3::matrices2matrices() test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const unsigned int size = RandomI::random(1000u);
+		const unsigned int size = RandomI::random(randomGenerator, 1000u);
 
 		std::vector<SquareMatrixD3> matricesD;
 		std::vector<SquareMatrixF3> matricesF;
@@ -970,8 +861,8 @@ bool TestSquareMatrix3::testMatrixConversion(const double testDuration)
 
 			for (unsigned int i = 0u; i < 9u; ++i)
 			{
-				matrixD[i] = RandomD::scalar(-10, 10);
-				matrixF[i] = RandomF::scalar(-10, 10);
+				matrixD[i] = RandomD::scalar(randomGenerator, -10, 10);
+				matrixF[i] = RandomF::scalar(randomGenerator, -10, 10);
 			}
 
 			matricesD.push_back(matrixD);
@@ -994,61 +885,30 @@ bool TestSquareMatrix3::testMatrixConversion(const double testDuration)
 		{
 			for (unsigned int i = 0u; i < 9u; ++i)
 			{
-				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_0[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_0[n][i]));
 
-				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_1[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_1[n][i]));
 
-				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_0[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_0[n][i])));
 
-				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_1[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_1[n][i])));
 
 
-				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_0[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_0[n][i]));
 
-				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_1[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_1[n][i]));
 
-				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_0[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_0[n][i])));
 
-				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_1[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_FALSE(validation, NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_1[n][i])));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSquareMatrix3::testSolve(const double testDuration)
@@ -1058,26 +918,20 @@ bool TestSquareMatrix3::testSolve(const double testDuration)
 	Log::info() << "SquareMatrix3::solve() test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	allSucceeded = testSolve(false, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testSolve(true, testDuration) && allSucceeded;
+	OCEAN_EXPECT_TRUE(validation, testSolve(false, testDuration));
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	OCEAN_EXPECT_TRUE(validation, testSolve(true, testDuration));
 
-	return allSucceeded;
+	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestSquareMatrix3::testSolve(const bool containsSingular, const double testDuration)
@@ -1093,8 +947,10 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 		Log::info() << "... without singular matrices:";
 	}
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	const double threshold = containsSingular ? 0.90 : 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 	unsigned long long solvedIterations = 0ull;
 	unsigned long long gaussSolvedIterations = 0ull;
 	unsigned long long invalidNonSingularIterations = 0ull;
@@ -1102,7 +958,6 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 	const Scalar epsilon = Numeric::eps() * 100;
 
-	RandomGenerator randomGenerator;
 	const size_t repetitions = 1000u;
 
 	SquareMatrices3 matrices(repetitions);
@@ -1129,10 +984,15 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 			if (containsSingular && (n % 50) == 0)
 			{
 				// we make some matrices singular: yAxis = a * xAxis + b * zAxis
-				(Vector3&)*(matrices[n]() + 3) = matrices[n].xAxis() * Random::scalar(randomGenerator, -valueRange, valueRange) + matrices[n].zAxis() * Random::scalar(randomGenerator, -valueRange, valueRange);
+				const Scalar factorA = Random::scalar(randomGenerator, -valueRange, valueRange);
+				const Scalar factorB = Random::scalar(randomGenerator, -valueRange, valueRange);
+				(Vector3&)*(matrices[n]() + 3) = matrices[n].xAxis() * factorA + matrices[n].zAxis() * factorB;
 			}
 
-			trueVectors[n] = Vector3(Random::scalar(randomGenerator, -valueRange, valueRange), Random::scalar(randomGenerator, -valueRange, valueRange), Random::scalar(randomGenerator, -valueRange, valueRange));
+			const Scalar trueX = Random::scalar(randomGenerator, -valueRange, valueRange);
+			const Scalar trueY = Random::scalar(randomGenerator, -valueRange, valueRange);
+			const Scalar trueZ = Random::scalar(randomGenerator, -valueRange, valueRange);
+			trueVectors[n] = Vector3(trueX, trueY, trueZ);
 			bVectors[n] = matrices[n] * trueVectors[n];
 		}
 
@@ -1147,11 +1007,13 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 
 		for (size_t n = 0 ; n < repetitions; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			if (solved[n])
 			{
-				if (trueVectors[n].isEqual(xVectors[n], epsilon))
+				if (!trueVectors[n].isEqual(xVectors[n], epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 
 				residual += double((trueVectors[n] - xVectors[n]).length());
@@ -1165,32 +1027,25 @@ bool TestSquareMatrix3::testSolve(const bool containsSingular, const double test
 				}
 
 			}
-			else if (!matrices[n].isSingular())
+			else
 			{
-				invalidNonSingularIterations++;
-			}
+				scopedIteration.setInaccurate();
 
-			iterations++;
+				if (!matrices[n].isSingular())
+				{
+					invalidNonSingularIterations++;
+				}
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 / double(repetitions) << "mys";
 	Log::info() << "Average residual: " << String::toAStringScientific(NumericD::ratio(residual, double(solvedIterations))) << ", (Gauss has: " << String::toAStringScientific(NumericD::ratio(residualGauss, double(gaussSolvedIterations))) << ")";
-	Log::info() << "Not solved non-singular: " << String::toAString(double(invalidNonSingularIterations) / double(iterations) * 100.0, 1u) << "%";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Not solved non-singular: " << String::toAString(double(invalidNonSingularIterations) / double(validation.iterations()) * 100.0, 1u) << "%";
+	Log::info() << "Validation: " << validation;
 
-	if (containsSingular)
-	{
-		return percent >= 0.90;
-	}
-	else
-	{
-		return percent >= 0.99;
-	}
+	return validation.succeeded();
 }
 
 template <typename T>

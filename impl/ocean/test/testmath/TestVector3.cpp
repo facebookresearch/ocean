@@ -10,6 +10,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Random.h"
 #include "ocean/math/Vector3.h"
@@ -162,8 +163,8 @@ bool TestVector3::testIsParallel(const double testDuration)
 
 	Log::info() << "Vector3::isParallel() test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 1 : 10;
 
@@ -172,6 +173,8 @@ bool TestVector3::testIsParallel(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 vector(Random::vector3(-valueRange, valueRange));
 
 			const Vector3 parallelVector(vector * Random::scalar(-valueRange, valueRange));
@@ -189,18 +192,16 @@ bool TestVector3::testIsParallel(const double testDuration)
 
 			const Vector3 notParallelVector(vector + Vector3(offsetX, offsetY, offsetZ) * Random::scalar(-valueRange, valueRange));
 
-			bool localSucceeded = true;
-
 			if (vector.isNull())
 			{
 				if (vector.isParallel(parallelVector))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (vector.isParallel(notParallelVector))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -209,14 +210,14 @@ bool TestVector3::testIsParallel(const double testDuration)
 				{
 					if (vector.isParallel(parallelVector))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 				else
 				{
 					if (!vector.isParallel(parallelVector))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -224,14 +225,14 @@ bool TestVector3::testIsParallel(const double testDuration)
 				{
 					if (vector.isParallel(notParallelVector))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 				else
 				{
 					if (vector.isParallel(notParallelVector))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -239,24 +240,15 @@ bool TestVector3::testIsParallel(const double testDuration)
 			ocean_assert(vector.isParallel(Vector3(0, 0, 0)) == false);
 			if (vector.isParallel(Vector3(0, 0, 0)))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestVector3::testIsUnit(const double testDuration)
@@ -265,8 +257,8 @@ bool TestVector3::testIsUnit(const double testDuration)
 
 	Log::info() << "Vector3::isUnit() test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 2 : 10;
 
@@ -275,36 +267,34 @@ bool TestVector3::testIsUnit(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Vector3 vector(Random::vector3(-valueRange, valueRange));
 			const Scalar length = vector.length();
 
 			if (Numeric::isEqual(length, Scalar(1)))
 			{
-				if (vector.isUnit())
+				if (!vector.isUnit())
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
 			{
 				const Vector3 normalizedVector = vector.normalized();
 
-				if (normalizedVector.isUnit() && !vector.isUnit())
+				if (!normalizedVector.isUnit() || vector.isUnit())
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestVector3::testAngle(const double testDuration)
@@ -313,8 +303,8 @@ bool TestVector3::testAngle(const double testDuration)
 
 	Log::info() << "Vector3::angle() test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -327,6 +317,8 @@ bool TestVector3::testAngle(const double testDuration)
 
 			if (!vectorA.isNull() && !vectorB.isNull())
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// a * b == cos(alpha) * |a| * |b|
 
 				const Scalar lengthA = Numeric::sqrt(vectorA[0] * vectorA[0] + vectorA[1] * vectorA[1] + vectorA[2] * vectorA[2]);
@@ -342,53 +334,43 @@ bool TestVector3::testAngle(const double testDuration)
 				const Scalar alphaDegree = Numeric::rad2deg(alpha);
 				const Scalar testDegree = Numeric::rad2deg(test);
 
-				if (Numeric::isEqual(alphaDegree, testDegree, Scalar(0.01)))
+				if (!Numeric::isEqual(alphaDegree, testDegree, Scalar(0.01)))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
-
-				iterations++;
 			}
 		}
 
-		bool localSucceeded = true;
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		if (Numeric::isNotEqual(Vector3(1, 0, 0).angle(Vector3(1, 1, 0)), Numeric::deg2rad(45)))
-		{
-			localSucceeded = false;
+			if (Numeric::isNotEqual(Vector3(1, 0, 0).angle(Vector3(1, 1, 0)), Numeric::deg2rad(45)))
+			{
+				scopedIteration.setInaccurate();
+			}
+			if (Numeric::isNotEqual(Vector3(5, 0, 0).angle(Vector3(Scalar(7.4), Scalar(7.4), 0)), Numeric::deg2rad(45)))
+			{
+				scopedIteration.setInaccurate();
+			}
+			if (Numeric::isNotEqual(Vector3(0, -5, 0).angle(Vector3(Scalar(-7.4), Scalar(-7.4), 0)), Numeric::deg2rad(45)))
+			{
+				scopedIteration.setInaccurate();
+			}
+			if (Numeric::isNotEqual(Vector3(5, 2, 0).angle(Vector3(-10, -4, 0)), Numeric::deg2rad(180)))
+			{
+				scopedIteration.setInaccurate();
+			}
+			if (Numeric::isNotEqual(Vector3(Scalar(4.2), Scalar(4.2), 0).angle(Vector3(Scalar(-7.44), Scalar(7.44), 0)), Numeric::deg2rad(90)))
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
-		if (Numeric::isNotEqual(Vector3(5, 0, 0).angle(Vector3(Scalar(7.4), Scalar(7.4), 0)), Numeric::deg2rad(45)))
-		{
-			localSucceeded = false;
-		}
-		if (Numeric::isNotEqual(Vector3(0, -5, 0).angle(Vector3(Scalar(-7.4), Scalar(-7.4), 0)), Numeric::deg2rad(45)))
-		{
-			localSucceeded = false;
-		}
-		if (Numeric::isNotEqual(Vector3(5, 2, 0).angle(Vector3(-10, -4, 0)), Numeric::deg2rad(180)))
-		{
-			localSucceeded = false;
-		}
-		if (Numeric::isNotEqual(Vector3(Scalar(4.2), Scalar(4.2), 0).angle(Vector3(Scalar(-7.44), Scalar(7.44), 0)), Numeric::deg2rad(90)))
-		{
-			localSucceeded = false;
-		}
-
-		if (localSucceeded)
-		{
-			validIterations++;
-		}
-
-		iterations++;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestVector3::testPerpendicular(const double testDuration)
@@ -398,8 +380,7 @@ bool TestVector3::testPerpendicular(const double testDuration)
 	Log::info() << "Perpendicular test:";
 
 	RandomGenerator randomGenerator;
-
-	bool succeeded = true;
+	Validation validation(randomGenerator);
 
 	// we start to test three coordinate axis
 	const Vector3 xAxis(1, 0, 0);
@@ -410,18 +391,9 @@ bool TestVector3::testPerpendicular(const double testDuration)
 	const Vector3 p1 = yAxis.perpendicular();
 	const Vector3 p2 = zAxis.perpendicular();
 
-	if (p0.isNull() || !p0.isOrthogonal(xAxis) || !p0.isUnit())
-	{
-		succeeded = false;
-	}
-	if (p1.isNull() || !p1.isOrthogonal(yAxis) || !p1.isUnit())
-	{
-		succeeded = false;
-	}
-	if (p2.isNull() || !p2.isOrthogonal(zAxis) || !p2.isUnit())
-	{
-		succeeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, !p0.isNull() && p0.isOrthogonal(xAxis) && p0.isUnit());
+	OCEAN_EXPECT_TRUE(validation, !p1.isNull() && p1.isOrthogonal(yAxis) && p1.isUnit());
+	OCEAN_EXPECT_TRUE(validation, !p2.isNull() && p2.isOrthogonal(zAxis) && p2.isUnit());
 
 	// now we test random vectors
 	const Timestamp startTimestamp(true);
@@ -432,23 +404,13 @@ bool TestVector3::testPerpendicular(const double testDuration)
 
 		ocean_assert(!perpendicular.isNull());
 
-		if (Numeric::isNotEqualEps(vector * perpendicular))
-		{
-			succeeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isEqualEps(vector * perpendicular));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (succeeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestVector3::testLessOperator(const double testDuration)
@@ -457,7 +419,8 @@ bool TestVector3::testLessOperator(const double testDuration)
 
 	Log::info() << "Vector3::operator < () test:";
 
-	bool succeeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 	unsigned int dummyValue = 0u;
 
 	const Timestamp startTimestamp(true);
@@ -485,10 +448,7 @@ bool TestVector3::testLessOperator(const double testDuration)
 				testLess = true;
 			}
 
-			if (less != testLess)
-			{
-				succeeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, less, testLess);
 
 			if (less)
 			{
@@ -504,28 +464,14 @@ bool TestVector3::testLessOperator(const double testDuration)
 
 	if (dummyValue % 2u == 0u)
 	{
-		if (succeeded)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 	else
 	{
-		if (succeeded)
-		{
-			Log::info() << "Validation: succeeded.";
-		}
-		else
-		{
-			Log::info() << "Validation: FAILED!";
-		}
+		Log::info() << "Validation: " << validation;
 	}
 
-	return succeeded;
+	return validation.succeeded();
 }
 
 bool TestVector3::testVectorConversion(const double testDuration)
@@ -534,12 +480,13 @@ bool TestVector3::testVectorConversion(const double testDuration)
 
 	Log::info() << "Vector3::vectors2vectors() test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const unsigned int size = RandomI::random(1000u);
+		const unsigned int size = RandomI::random(randomGenerator, 1000u);
 
 		std::vector<VectorD3> vectorsD;
 		std::vector<VectorF3> vectorsF;
@@ -566,61 +513,30 @@ bool TestVector3::testVectorConversion(const double testDuration)
 		{
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
-				if (NumericD::isNotWeakEqual(vectorsD[n][i], convertedD2D_0[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(vectorsD[n][i], convertedD2D_0[n][i]));
 
-				if (NumericD::isNotWeakEqual(vectorsD[n][i], convertedD2D_1[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(vectorsD[n][i], convertedD2D_1[n][i]));
 
-				if (NumericD::isNotWeakEqual(vectorsD[n][i], double(convertedD2F_0[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(vectorsD[n][i], double(convertedD2F_0[n][i])));
 
-				if (NumericD::isNotWeakEqual(vectorsD[n][i], double(convertedD2F_1[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(vectorsD[n][i], double(convertedD2F_1[n][i])));
 
 
-				if (NumericF::isNotWeakEqual(vectorsF[n][i], convertedF2F_0[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(vectorsF[n][i], convertedF2F_0[n][i]));
 
-				if (NumericF::isNotWeakEqual(vectorsF[n][i], convertedF2F_1[n][i]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(vectorsF[n][i], convertedF2F_1[n][i]));
 
-				if (NumericF::isNotWeakEqual(vectorsF[n][i], float(convertedF2D_0[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(vectorsF[n][i], float(convertedF2D_0[n][i])));
 
-				if (NumericF::isNotWeakEqual(vectorsF[n][i], float(convertedF2D_1[n][i])))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(vectorsF[n][i], float(convertedF2D_1[n][i])));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
