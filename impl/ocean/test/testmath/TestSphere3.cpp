@@ -10,6 +10,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Random.h"
 #include "ocean/math/Sphere3.h"
@@ -133,14 +134,16 @@ bool TestSphere3::testHasIntersection(const double testDuration)
 
 	Log::info() << "Ray intersection test, with '" << TypeNamer::name<T>() << "':";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const VectorT3<T> center(RandomT<T>::vector3(-100, 100));
 			const T radius = RandomT<T>::scalar(T(0.01), 100);
 			const SphereT3<T> sphere(center, radius);
@@ -151,11 +154,9 @@ bool TestSphere3::testHasIntersection(const double testDuration)
 
 			const LineT3<T> intersectingRay(rayPosition, rayDirection);
 
-			bool localSucceeded = true;
-
 			if (!sphere.hasIntersection(intersectingRay))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			const LineT3<T> arbitraryRay(RandomT<T>::vector3(-100, 100), RandomT<T>::vector3());
@@ -164,7 +165,7 @@ bool TestSphere3::testHasIntersection(const double testDuration)
 				const VectorT3<T> nearestPoint(arbitraryRay.nearestPoint(center));
 				if (center.distance(nearestPoint) > radius + NumericT<T>::eps())
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -172,26 +173,16 @@ bool TestSphere3::testHasIntersection(const double testDuration)
 				const VectorT3<T> nearestPoint(arbitraryRay.nearestPoint(center));
 				if (center.distance(nearestPoint) < radius + NumericT<T>::eps())
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -201,14 +192,16 @@ bool TestSphere3::testHasIntersectionTransformed(const double testDuration)
 
 	Log::info() << "Ray intersection test (transformed sphere), with '" << TypeNamer::name<T>() << "':";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const VectorT3<T> center(RandomT<T>::vector3(-100, 100));
 			const T radius = RandomT<T>::scalar(T(0.01), 100);
 			const SphereT3<T> sphere(center, radius);
@@ -225,15 +218,13 @@ bool TestSphere3::testHasIntersectionTransformed(const double testDuration)
 
 			const LineT3<T> sphereRay(sphereRayPoint, sphereRayDirection);
 
-			bool localSucceeded = true;
-
 			if (sphere.hasIntersection(worldRay, sphere_T_world))
 			{
 				const VectorT3<T> sNearestPoint(sphereRay.nearestPoint(center));
 
 				if (sNearestPoint.distance(center) > radius + NumericT<T>::eps())
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -242,26 +233,16 @@ bool TestSphere3::testHasIntersectionTransformed(const double testDuration)
 
 				if (sphereNearestPoint.distance(center) < radius + NumericT<T>::eps())
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration> Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -273,8 +254,8 @@ bool TestSphere3::testCoordinateVectorConversion(const double testDuration)
 
 	constexpr T angleThreshold = NumericT<T>::deg2rad(T(0.1));
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -282,7 +263,7 @@ bool TestSphere3::testCoordinateVectorConversion(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const T latitude = RandomT<T>::scalar(-NumericT<T>::pi_2(), NumericT<T>::pi_2());
 			const T longitude = RandomT<T>::scalar(-NumericT<T>::pi(), NumericT<T>::pi());
@@ -291,7 +272,7 @@ bool TestSphere3::testCoordinateVectorConversion(const double testDuration)
 
 			if (!coordinateVector.isUnit())
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			T resultingLatitude = NumericT<T>::minValue();
@@ -300,7 +281,7 @@ bool TestSphere3::testCoordinateVectorConversion(const double testDuration)
 
 			if (!NumericT<T>::angleIsEqual(latitude, resultingLatitude, angleThreshold))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (!NumericT<T>::angleIsEqual(longitude, resultingLongitude, angleThreshold))
@@ -309,26 +290,16 @@ bool TestSphere3::testCoordinateVectorConversion(const double testDuration)
 				{
 					// we are not at the poles
 
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration> Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -340,8 +311,8 @@ bool TestSphere3::testShortestDistance(const double testDuration)
 
 	constexpr T angleThreshold = NumericT<T>::deg2rad(T(0.1));
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -349,7 +320,7 @@ bool TestSphere3::testShortestDistance(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			bool localSucceeded = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const T latitudeA = RandomT<T>::scalar(-NumericT<T>::pi_2(), NumericT<T>::pi_2());
 			const T longitudeA = RandomT<T>::scalar(-NumericT<T>::pi(), NumericT<T>::pi());
@@ -366,25 +337,15 @@ bool TestSphere3::testShortestDistance(const double testDuration)
 
 			if (!NumericT<T>::angleIsEqual(distance, quaternion.angle(), angleThreshold))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				validIterations++;
-			}
-
-			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration> Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

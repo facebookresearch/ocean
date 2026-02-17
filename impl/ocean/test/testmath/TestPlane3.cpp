@@ -10,6 +10,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Line3.h"
 #include "ocean/math/Plane3.h"
@@ -87,8 +88,8 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 
 	Log::info() << "Three point constructor test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.985, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -96,6 +97,8 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// all points identical
@@ -103,16 +106,16 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 
 			const Plane3 plane(objectPoint, objectPoint, objectPoint);
 
-			if (!plane.isValid())
+			if (plane.isValid())
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// first and second point identical
@@ -121,16 +124,16 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 
 			const Plane3 plane(objectPoint0, objectPoint0, objectPoint1);
 
-			if (!plane.isValid())
+			if (plane.isValid())
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// first and third point identical
@@ -139,16 +142,16 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint0);
 
-			if (!plane.isValid())
+			if (plane.isValid())
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(10) : Scalar(100);
 
 			// second and third point identical
@@ -157,16 +160,16 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint1);
 
-			if (!plane.isValid())
+			if (plane.isValid())
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			// we explicitly use a smaller region [-1, 1] or [-10, 10] to ensure that we really receive collinear points
 			constexpr Scalar range = std::is_same<Scalar, float>::value ? Scalar(1) : Scalar(10);
 			constexpr Scalar equalEps = std::is_same<Scalar, float>::value ? Scalar(0.01) : Numeric::weakEps();
@@ -187,12 +190,10 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 
 			const Plane3 plane(objectPoint0, objectPoint1, objectPoint2);
 
-			if (!plane.isValid())
+			if (plane.isValid())
 			{
-				++succeeded;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 
 		for (unsigned int n = 0u; n < 1000u; ++n)
@@ -211,24 +212,21 @@ bool TestPlane3::testConstructorThreePoints(const double testDuration)
 			{
 				if (Numeric::isNotEqual(Numeric::abs((objectPoint1 - objectPoint0).normalized() * (objectPoint2 - objectPoint0).normalized()), Scalar(1)))
 				{
-					if (plane.isInPlane(objectPoint0) && plane.isInPlane(objectPoint1) && plane.isInPlane(objectPoint2))
-					{
-						++succeeded;
-					}
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-					++iterations;
+					if (!plane.isInPlane(objectPoint0) || !plane.isInPlane(objectPoint1) || !plane.isInPlane(objectPoint2))
+					{
+						scopedIteration.setInaccurate();
+					}
 				}
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.985;
+	return validation.succeeded();
 }
 
 bool TestPlane3::testIntersectionLine(const double testDuration)
@@ -237,8 +235,8 @@ bool TestPlane3::testIntersectionLine(const double testDuration)
 
 	Log::info() << "Plane-line intersection test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -246,6 +244,8 @@ bool TestPlane3::testIntersectionLine(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Plane3 plane(Random::vector3(), Random::scalar(-100, 100));
 			const Line3 line(Random::vector3(-100, 100), Random::vector3());
 
@@ -255,32 +255,27 @@ bool TestPlane3::testIntersectionLine(const double testDuration)
 				const Scalar d0 = line.distance(point);
 				const Scalar d1 = plane.signedDistance(point);
 
-				if (Numeric::isWeakEqualEps(d0) && Numeric::isWeakEqualEps(d1))
+				if (!Numeric::isWeakEqualEps(d0) || !Numeric::isWeakEqualEps(d1))
 				{
-					++succeeded;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
 			{
 				// check if the line is parallel to the plane
 
-				if (Numeric::isEqualEps(plane.normal() * line.direction()))
+				if (!Numeric::isEqualEps(plane.normal() * line.direction()))
 				{
-					++succeeded;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestPlane3::testIntersectionPlane(const double testDuration)
@@ -289,8 +284,8 @@ bool TestPlane3::testIntersectionPlane(const double testDuration)
 
 	Log::info() << "Plane-plane intersection test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -298,6 +293,8 @@ bool TestPlane3::testIntersectionPlane(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Plane3 planeA(Random::vector3(), Random::scalar(-10, 10));
 			const Plane3 planeB(Random::vector3(), Random::scalar(-10, 10));
 
@@ -312,33 +309,28 @@ bool TestPlane3::testIntersectionPlane(const double testDuration)
 				const Scalar distanceB1 = planeB.signedDistance(line.point());
 				const Scalar distanceB2 = planeB.signedDistance(line.point(1));
 
-				if (Numeric::isWeakEqualEps(distanceA0) && Numeric::isWeakEqualEps(distanceA1) && Numeric::isWeakEqualEps(distanceA2)
-						&& Numeric::isWeakEqualEps(distanceB0) && Numeric::isWeakEqualEps(distanceB1) && Numeric::isWeakEqualEps(distanceB2))
+				if (!Numeric::isWeakEqualEps(distanceA0) || !Numeric::isWeakEqualEps(distanceA1) || !Numeric::isWeakEqualEps(distanceA2)
+						|| !Numeric::isWeakEqualEps(distanceB0) || !Numeric::isWeakEqualEps(distanceB1) || !Numeric::isWeakEqualEps(distanceB2))
 				{
-					++succeeded;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
 			{
 				// check if both planes are parallel
 
-				if (planeA.normal().isParallel(planeB.normal()))
+				if (!planeA.normal().isParallel(planeB.normal()))
 				{
-					++succeeded;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }

@@ -10,6 +10,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
@@ -84,43 +85,30 @@ bool TestTriangle2::testIntersects(const double testDuration)
 
 	Log::info() << "Intersects test:";
 
-	bool someFailed = false;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	// some hard-coded tests
 	{
 		const Triangle2 triangleA(Vector2(0, 5), Vector2(0, 0), Vector2(5, 0));
 		const Triangle2 triangleB(Vector2(Scalar(0.01), 5), Vector2(Scalar(5.01), 0), Vector2(5, 5));
 
-		if (triangleA.intersects(triangleB))
-		{
-			someFailed = true;
-		}
+		OCEAN_EXPECT_FALSE(validation, triangleA.intersects(triangleB));
 	}
 
 	{
 		const Triangle2 triangleA(Vector2(0, 5), Vector2(-2, 0), Vector2(2, 0));
 		const Triangle2 triangleB(Vector2(-5, 3), Vector2(0, -2), Vector2(5, 3));
 
-		if (!triangleA.intersects(triangleB))
-		{
-			someFailed = true;
-		}
+		OCEAN_EXPECT_TRUE(validation, triangleA.intersects(triangleB));
 	}
 
 	{
 		const Triangle2 triangleA(Vector2(0, 5), Vector2(-2, 0), Vector2(2, 0));
 		const Triangle2 triangleB(Vector2(0, 6), Vector2(-3, -1), Vector2(3, -1));
 
-		if (!triangleA.intersects(triangleB))
-		{
-			someFailed = true;
-		}
+		OCEAN_EXPECT_TRUE(validation, triangleA.intersects(triangleB));
 	}
-
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 	do
@@ -131,9 +119,9 @@ bool TestTriangle2::testIntersects(const double testDuration)
 				// two identical (valid) triangles have always an intersection
 				const Triangle2 triangle(Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10), Random::vector2(randomGenerator, -10, 10));
 
-				if (triangle.isValid() && !triangle.intersects(triangle))
+				if (triangle.isValid())
 				{
-					someFailed = true;
+					OCEAN_EXPECT_TRUE(validation, triangle.intersects(triangle));
 				}
 			}
 
@@ -142,9 +130,9 @@ bool TestTriangle2::testIntersects(const double testDuration)
 				const Triangle2 triangleA(Random::vector2(randomGenerator, -10, Scalar(-0.01)), Random::vector2(randomGenerator, -10, Scalar(-0.01)), Random::vector2(randomGenerator, -10, Scalar(-0.01)));
 				const Triangle2 triangleB(Random::vector2(randomGenerator, Scalar(0.01), 10), Random::vector2(randomGenerator, Scalar(0.01), 10), Random::vector2(randomGenerator, Scalar(0.01), 10));
 
-				if (triangleA.isValid() && triangleB.isValid() && triangleA.intersects(triangleB))
+				if (triangleA.isValid() && triangleB.isValid())
 				{
-					someFailed = true;
+					OCEAN_EXPECT_FALSE(validation, triangleA.intersects(triangleB));
 				}
 			}
 
@@ -156,6 +144,8 @@ bool TestTriangle2::testIntersects(const double testDuration)
 
 				if (triangleA.isValid() && triangleB.isValid())
 				{
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 					const FiniteLine2 lineA_01(triangleA.point0(), triangleA.point1());
 					const FiniteLine2 lineA_12(triangleA.point1(), triangleA.point2());
 					const FiniteLine2 lineA_20(triangleA.point2(), triangleA.point0());
@@ -173,32 +163,19 @@ bool TestTriangle2::testIntersects(const double testDuration)
 
 					const bool hasIntersection = pointInA || pointInB || linesIntersect;
 
-					if (hasIntersection == triangleA.intersects(triangleB))
+					if (hasIntersection != triangleA.intersects(triangleB))
 					{
-						validIterations++;
+						scopedIteration.setInaccurate();
 					}
-
-					iterations++;
 				}
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	if (someFailed)
-	{
-		Log::info() << "Validation: FAILED!";
-		return false;
-	}
-	else
-	{
-		ocean_assert(iterations != 0ull);
-		double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		return percent >= 0.99;
-	}
+	return validation.succeeded();
 }
 
 bool TestTriangle2::testIsCounterClockwise(const double testDuration)
@@ -207,9 +184,8 @@ bool TestTriangle2::testIsCounterClockwise(const double testDuration)
 
 	Log::info() << "IsCounterClockwise test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 	do
@@ -235,39 +211,21 @@ bool TestTriangle2::testIsCounterClockwise(const double testDuration)
 			const Triangle2 counterClockwiseTriangleB(point1, point2, point0);
 			const Triangle2 counterClockwiseTriangleC(point2, point0, point1);
 
-			if (!counterClockwiseTriangleA.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, counterClockwiseTriangleA.isCounterClockwise(yAxisDownwards));
 
-			if (!counterClockwiseTriangleB.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, counterClockwiseTriangleB.isCounterClockwise(yAxisDownwards));
 
-			if (!counterClockwiseTriangleC.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, counterClockwiseTriangleC.isCounterClockwise(yAxisDownwards));
 
 			const Triangle2 clockwiseTriangleA(point2, point1, point0);
 			const Triangle2 clockwiseTriangleB(point1, point0, point2);
 			const Triangle2 clockwiseTriangleC(point0, point2, point1);
 
-			if (clockwiseTriangleA.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, clockwiseTriangleA.isCounterClockwise(yAxisDownwards));
 
-			if (clockwiseTriangleB.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, clockwiseTriangleB.isCounterClockwise(yAxisDownwards));
 
-			if (clockwiseTriangleC.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, clockwiseTriangleC.isCounterClockwise(yAxisDownwards));
 		}
 
 		{
@@ -285,53 +243,28 @@ bool TestTriangle2::testIsCounterClockwise(const double testDuration)
 			const Triangle2 counterClockwiseTriangleB(point1, point2, point0);
 			const Triangle2 counterClockwiseTriangleC(point2, point0, point1);
 
-			if (!counterClockwiseTriangleA.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, counterClockwiseTriangleA.isCounterClockwise(yAxisDownwards));
 
-			if (!counterClockwiseTriangleB.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, counterClockwiseTriangleB.isCounterClockwise(yAxisDownwards));
 
-			if (!counterClockwiseTriangleC.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, counterClockwiseTriangleC.isCounterClockwise(yAxisDownwards));
 
 			const Triangle2 clockwiseTriangleA(point2, point1, point0);
 			const Triangle2 clockwiseTriangleB(point1, point0, point2);
 			const Triangle2 clockwiseTriangleC(point0, point2, point1);
 
-			if (clockwiseTriangleA.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, clockwiseTriangleA.isCounterClockwise(yAxisDownwards));
 
-			if (clockwiseTriangleB.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, clockwiseTriangleB.isCounterClockwise(yAxisDownwards));
 
-			if (clockwiseTriangleC.isCounterClockwise(yAxisDownwards))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_FALSE(validation, clockwiseTriangleC.isCounterClockwise(yAxisDownwards));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestTriangle2::testPadded(const double testDuration)
@@ -340,10 +273,10 @@ bool TestTriangle2::testPadded(const double testDuration)
 
 	Log::info() << "Pad test:";
 
-	bool allSucceeded = true;
-
 	constexpr unsigned int kRandomSeed = 4u;
 	RandomGenerator randomGenerator(kRandomSeed);
+	constexpr Scalar kTargetSuccessfulTrialRatio = std::is_same<float, Scalar>::value ? Scalar(0.945) : Scalar(0.9999);
+	ValidationPrecision validation(double(kTargetSuccessfulTrialRatio), randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -367,9 +300,9 @@ bool TestTriangle2::testPadded(const double testDuration)
 		const Triangle2 paddedTriangle = equilateralTriangle.padded(padAmount);
 		ocean_assert(paddedTriangle.isValid());
 
-		allSucceeded = (groundTruthTriangle.point0() == paddedTriangle.point0()) && allSucceeded;
-		allSucceeded = (groundTruthTriangle.point1() == paddedTriangle.point1()) && allSucceeded;
-		allSucceeded = (groundTruthTriangle.point2() == paddedTriangle.point2()) && allSucceeded;
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point0(), paddedTriangle.point0());
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point1(), paddedTriangle.point1());
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point2(), paddedTriangle.point2());
 	}
 
 	// Halving in size.
@@ -381,9 +314,9 @@ bool TestTriangle2::testPadded(const double testDuration)
 		const Triangle2 paddedTriangle = equilateralTriangle.padded(padAmount);
 		ocean_assert(paddedTriangle.isValid());
 
-		allSucceeded = (groundTruthTriangle.point0() == paddedTriangle.point0()) && allSucceeded;
-		allSucceeded = (groundTruthTriangle.point1() == paddedTriangle.point1()) && allSucceeded;
-		allSucceeded = (groundTruthTriangle.point2() == paddedTriangle.point2()) && allSucceeded;
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point0(), paddedTriangle.point0());
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point1(), paddedTriangle.point1());
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point2(), paddedTriangle.point2());
 	}
 
 	// Flipping orientation (180 degree rotation plus scaling) due to the padding being greater than
@@ -396,24 +329,21 @@ bool TestTriangle2::testPadded(const double testDuration)
 		const Triangle2 paddedTriangle = equilateralTriangle.padded(padAmount);
 		ocean_assert(paddedTriangle.isValid());
 
-		allSucceeded = (groundTruthTriangle.point0() == paddedTriangle.point0()) && allSucceeded;
-		allSucceeded = (groundTruthTriangle.point1() == paddedTriangle.point1()) && allSucceeded;
-		allSucceeded = (groundTruthTriangle.point2() == paddedTriangle.point2()) && allSucceeded;
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point0(), paddedTriangle.point0());
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point1(), paddedTriangle.point1());
+		OCEAN_EXPECT_EQUAL(validation, groundTruthTriangle.point2(), paddedTriangle.point2());
 	}
 
 	// Degenerate case that collapses to a point.
 	{
 		const Scalar padAmount = -sqrt3 / Scalar(3);
-		allSucceeded = !equilateralTriangle.padded(padAmount).isValid() && allSucceeded;
+		OCEAN_EXPECT_FALSE(validation, equilateralTriangle.padded(padAmount).isValid());
 	}
-
-	unsigned long long numberSuccessfulTrials = 0ull;
-	unsigned long long totalNumberTrials = 0ull;
 
 	// Random test cases.
 	do
 	{
-		++totalNumberTrials;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		// Generate a random canonical counter-clockwise triangle from two angles.
 		// The first triangle point is at (0, 0), and the second is at (1, 0).
@@ -494,39 +424,22 @@ bool TestTriangle2::testPadded(const double testDuration)
 			(triangle.point1() - incenter) * scale + incenter,
 			(triangle.point2() - incenter) * scale + incenter);
 
-		bool success = true;
-
 		for (unsigned int i = 0u; i < 3u; ++i)
 		{
 			// 32-bit precision is *much* worse for these tests.
 			constexpr Scalar kEpsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Numeric::weakEps();
-			success = paddedTriangle[i].isEqual(expectedTriangle[i], kEpsilon) && success;
+
+			if (!paddedTriangle[i].isEqual(expectedTriangle[i], kEpsilon))
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
-
-		if (success)
-		{
-			++numberSuccessfulTrials;
-		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	const Scalar ratioSuccessfulTrials = Scalar(numberSuccessfulTrials) / Scalar(totalNumberTrials);
-	Log::info() << "Successful trial ratio: " << (ratioSuccessfulTrials * Scalar(100)) << "%.";
+	Log::info() << "Validation: " << validation;
 
-	constexpr Scalar kTargetSuccessfulTrialRatio = std::is_same<float, Scalar>::value ? Scalar(0.945) : Scalar(0.9999);
-
-	allSucceeded = ratioSuccessfulTrials >= kTargetSuccessfulTrialRatio && allSucceeded;
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

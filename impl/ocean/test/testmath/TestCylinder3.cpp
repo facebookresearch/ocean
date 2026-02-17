@@ -14,6 +14,7 @@
 #include "ocean/math/SquareMatrix3.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -76,35 +77,38 @@ TEST(TestCylinder3, NearestIntersectionDouble)
 
 bool TestCylinder3::testConstructor()
 {
-	bool allSucceeded = true;
+	Validation validation;
+
 	{
 		Cylinder3 cylinder;
-		if (cylinder.isValid())
-		{
-			Log::info() << "Cylinder3 default constructor failed";
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, cylinder.isValid());
 	}
 	{
 		// Height constructor.
 		Cylinder3 cylinder(Vector3(1.0, 1.0, 1.0), Vector3(0.0, 0.0, 1.0), 1.0, 10.0);
-		if (!cylinder.isValid() || cylinder.origin() != Vector3(1.0, 1.0, 1.0) || cylinder.axis() != Vector3(0.0, 0.0, 1.0) || cylinder.radius() != 1.0 || cylinder.minSignedDistanceAlongAxis() != 0.0 || cylinder.maxSignedDistanceAlongAxis() != 10.0 || cylinder.height() != 10.0)
-		{
-			Log::info() << "Cylinder3 valid constructor failed";
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, cylinder.isValid());
+		OCEAN_EXPECT_EQUAL(validation, cylinder.origin(), Vector3(1.0, 1.0, 1.0));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.axis(), Vector3(0.0, 0.0, 1.0));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.radius(), Scalar(1));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.minSignedDistanceAlongAxis(), Scalar(0));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.maxSignedDistanceAlongAxis(), Scalar(10));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.height(), Scalar(10));
 	}
 	{
 		// Min/max distance constructor.
 		Cylinder3 cylinder(Vector3(1.0, 1.0, 1.0), Vector3(0.0, 0.0, 1.0), 1.0, -10.0, 10.0);
-		if (!cylinder.isValid() || cylinder.origin() != Vector3(1.0, 1.0, 1.0) || cylinder.axis() != Vector3(0.0, 0.0, 1.0) || cylinder.radius() != 1.0 || cylinder.minSignedDistanceAlongAxis() != -10.0 || cylinder.maxSignedDistanceAlongAxis() != 10.0 || cylinder.height() != 20.0)
-		{
-			Log::info() << "Cylinder3 valid constructor failed";
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, cylinder.isValid());
+		OCEAN_EXPECT_EQUAL(validation, cylinder.origin(), Vector3(1.0, 1.0, 1.0));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.axis(), Vector3(0.0, 0.0, 1.0));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.radius(), Scalar(1));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.minSignedDistanceAlongAxis(), Scalar(-10));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.maxSignedDistanceAlongAxis(), Scalar(10));
+		OCEAN_EXPECT_EQUAL(validation, cylinder.height(), Scalar(20));
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -114,8 +118,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 
 	constexpr unsigned int kRandomSeed = 3u;
 	RandomGenerator randomGenerator(kRandomSeed);
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -284,8 +287,6 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 
 				if (!success)
 				{
-					allSucceeded = false;
-
 					Log::info() << "Incorrect intersection!";
 					Log::info() << "Test instance = " << testId;
 					Log::info() << "Estimated intersect = " << (intersects ? "true" : "false") << " for GT = " << (gtIntersection ? "true" : "false");
@@ -301,6 +302,8 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 					Log::info() << "Ray Direction = " << rayDirection;
 					Log::info() << " ";
 				}
+
+				OCEAN_EXPECT_TRUE(validation, success);
 
 				++testId;
 			}
@@ -319,7 +322,9 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 		Log::info() << "Num GT True but Discriminant Near Zero: " << numGroundTruthTrueButDiscriminantNearZero << " / " << testId << " (" << (T(numGroundTruthTrueButDiscriminantNearZero) / T(testId) * T(100.0)) << "%)";
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 } // namespace TestMath

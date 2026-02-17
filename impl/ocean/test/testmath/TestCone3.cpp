@@ -14,6 +14,7 @@
 #include "ocean/math/SquareMatrix3.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
 {
@@ -96,28 +97,27 @@ bool TestCone3::testConstructor()
 {
 	Log::info() << "Constructor test: ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		Cone3 cone;
-		if (cone.isValid())
-		{
-			Log::info() << "Cone3 default constructor failed";
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, cone.isValid());
 	}
 
 	{
 		Cone3 cone(Vector3(1.0, 1.0, 1.0), Vector3(0.0, 0.0, 1.0), Numeric::pi_2(), -1.0, 10.0);
 
-		if (!cone.isValid() || cone.apex() != Vector3(1.0, 1.0, 1.0) || cone.axis() != Vector3(0.0, 0.0, 1.0) || cone.apexAngle() != Numeric::pi_2() || cone.minSignedDistanceAlongAxis() != -1.0 || cone.maxSignedDistanceAlongAxis() != 10.0)
-		{
-			Log::info() << "Cone3 valid constructor failed";
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, cone.isValid());
+		OCEAN_EXPECT_EQUAL(validation, cone.apex(), Vector3(1.0, 1.0, 1.0));
+		OCEAN_EXPECT_EQUAL(validation, cone.axis(), Vector3(0.0, 0.0, 1.0));
+		OCEAN_EXPECT_EQUAL(validation, cone.apexAngle(), Numeric::pi_2());
+		OCEAN_EXPECT_EQUAL(validation, cone.minSignedDistanceAlongAxis(), Scalar(-1));
+		OCEAN_EXPECT_EQUAL(validation, cone.maxSignedDistanceAlongAxis(), Scalar(10));
 	}
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -168,9 +168,7 @@ bool TestCone3::testNearestIntersection()
 		{false, false, false, false, false, false, false}
 	};
 
-	bool allSucceeded = true;
-
-	const Timestamp startTimestamp(true);
+	Validation validation;
 
 	for (unsigned int coneIndex = 0u; coneIndex < cones.size(); ++coneIndex)
 	{
@@ -186,7 +184,7 @@ bool TestCone3::testNearestIntersection()
 
 			if (intersects ^ groundTruthIntersection || (groundTruthIntersection && groundTruthPoint != point))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 
 				Log::info() << "Incorrect intersection!";
 				Log::info() << "Cone index = " << coneIndex << ", Ray index = " << rayIndex;
@@ -198,9 +196,9 @@ bool TestCone3::testNearestIntersection()
 		}
 	}
 
-	Log::info() << "Test: " << (allSucceeded ? "Success" : "FAILED!");
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -214,8 +212,8 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 	constexpr unsigned int kRandomSeed = 3u;
 	RandomGenerator randomGenerator(kRandomSeed);
 
-	unsigned int numberSuccessfulTrials = 0u;
-	unsigned int totalNumberTrials = 0u;
+	constexpr double kRatioThreshold = std::is_same<T, float>::value ? 0.90 : 0.9999;
+	ValidationPrecision validation(kRatioThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -223,8 +221,8 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 	{
 		// Generate a random cone aligned with the +Z-axis and with its apex at the origin.
 		// Then, rotate, translate, and scale it.
-		const bool minDistanceIsAtInfinity = (RandomI::random(randomGenerator, 0u, 1u) == 0u);
-		const bool maxDistanceIsAtInfinity = (RandomI::random(randomGenerator, 0u, 1u) == 0u);
+		const bool minDistanceIsAtInfinity = RandomI::boolean(randomGenerator);
+		const bool maxDistanceIsAtInfinity = RandomI::boolean(randomGenerator);
 
 		const T apexAngle = RandomT<T>::scalar(randomGenerator, NumericT<T>::weakEps(), NumericT<T>::pi() - NumericT<T>::weakEps());
 		const T minSignedDistanceAlongAxis = minDistanceIsAtInfinity ? -std::numeric_limits<T>::infinity() : RandomT<T>::scalar(randomGenerator, T(-10.0), T(10.0) - NumericT<T>::weakEps());
@@ -245,6 +243,8 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 
 		for (unsigned int i = 0u; i < kNumRandomRays; ++i)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			// Define a ray in the pre-transformed space.
 			VectorT3<T> rayOrigin = RandomT<T>::vector3(randomGenerator, T(-5.0), T(5.0));
 			rayOrigin.z() *= T(2.0); // allow more variation in z for the ray origin
@@ -353,30 +353,26 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 					}
 				}
 
-				if (resultIsCorrect)
+				if (!resultIsCorrect)
 				{
-					++numberSuccessfulTrials;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++totalNumberTrials;
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	// Inconsistent results can occasionally pop up when (1) a is nearly 0 in the quadratic
 	// equation solver or (2) the ray is nearly parallel with the cone surface. Both of these cases
 	// are very rare, especially when using double precision.
-	const T ratioOfCorrectTrials = T(numberSuccessfulTrials) / T(totalNumberTrials);
 
-	constexpr T kRatioThreshold = std::is_same<T, float>::value ? T(0.90) : T(0.9999);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(ratioOfCorrectTrials * 100.0, 1u) << "% succeeded.";
-
-	const bool success = ratioOfCorrectTrials > kRatioThreshold;
-	Log::info() << "Validation: " << (success ? "Success" : "FAILED!");
-
-	return success;
+	return validation.succeeded();
 }
 
 } // namespace TestMath
