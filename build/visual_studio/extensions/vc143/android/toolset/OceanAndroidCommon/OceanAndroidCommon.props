@@ -51,6 +51,7 @@
     <GradleWrapper Condition="'$(GradleWrapper)' == ''">$(GradleProjectDir)\gradlew.bat</GradleWrapper>
     <GradleCacheDir Condition="'$(GradleCacheDir)' == ''">$(IntDir)gradle-cache</GradleCacheDir>
     <GradleBuildDir Condition="'$(GradleBuildDir)' == ''">$(IntDir)gradle-build</GradleBuildDir>
+    <JniLibsStagingDir Condition="'$(JniLibsStagingDir)' == ''">$(IntDir)jniLibs</JniLibsStagingDir>
   </PropertyGroup>
 
   <!-- Platform to Android ABI Mapping -->

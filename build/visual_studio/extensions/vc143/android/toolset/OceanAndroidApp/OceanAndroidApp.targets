@@ -128,4 +128,68 @@
              Condition="Exists('$(JniLibsDir)')" />
   </Target>
 
+  <!-- ============================================================
+       Native Library Resolution via ProjectReference
+
+       Builds referenced native library projects, extracts .so outputs,
+       and copies them to the jniLibs staging directory for Gradle.
+       This complements CopyNativeLibsToJniLibs (which handles
+       OceanNativeSharedLibrary items from _use.props imports).
+       ============================================================ -->
+
+  <Target Name="_ResolveAndCopyNativeLibraries"
+          BeforeTargets="Build"
+          Condition="'@(ProjectReference)' != ''">
+
+    <Message Text="========================================" Importance="high" />
+    <Message Text="Resolving native library references..." Importance="high" />
+    <Message Text="  Platform: $(Platform) ($(AndroidAbi))" Importance="normal" />
+
+    <!-- Build referenced native library projects -->
+    <MSBuild Projects="@(ProjectReference)"
+             Targets="Build"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)"
+             BuildInParallel="true" />
+
+    <!-- Get output paths from referenced projects -->
+    <MSBuild Projects="@(ProjectReference)"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="_NativeLibraryOutputs" />
+    </MSBuild>
+
+    <!-- Filter to .so files only -->
+    <ItemGroup>
+      <_SoFilesToCopy Include="@(_NativeLibraryOutputs)"
+                      Condition="'%(Extension)' == '.so'" />
+    </ItemGroup>
+
+    <!-- Create jniLibs staging directory -->
+    <MakeDir Directories="$(JniLibsStagingDir)\$(AndroidAbi)"
+             Condition="'@(_SoFilesToCopy)' != ''" />
+
+    <!-- Copy .so files to jniLibs staging directory -->
+    <Copy SourceFiles="@(_SoFilesToCopy)"
+          DestinationFolder="$(JniLibsStagingDir)\$(AndroidAbi)"
+          SkipUnchangedFiles="true"
+          Condition="'@(_SoFilesToCopy)' != ''">
+      <Output TaskParameter="CopiedFiles" ItemName="_CopiedNativeLibs" />
+    </Copy>
+
+    <Message Text="  Copied: @(_CopiedNativeLibs->'%(Filename)%(Extension)', ', ')"
+             Importance="high"
+             Condition="'@(_CopiedNativeLibs)' != ''" />
+    <Message Text="  Destination: $(JniLibsStagingDir)\$(AndroidAbi)\"
+             Importance="normal"
+             Condition="'@(_CopiedNativeLibs)' != ''" />
+    <Message Text="========================================" Importance="high" />
+  </Target>
+
+  <Target Name="_CleanNativeLibraries" BeforeTargets="Clean">
+    <ItemGroup>
+      <_JniLibsToDelete Include="$(MSBuildProjectDirectory)\app\src\main\jniLibs\**\*.so" />
+    </ItemGroup>
+    <Delete Files="@(_JniLibsToDelete)" ContinueOnError="true" />
+  </Target>
+
 </Project>
