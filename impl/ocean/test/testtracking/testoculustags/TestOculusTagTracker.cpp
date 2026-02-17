@@ -8,6 +8,7 @@
 #include "ocean/test/testtracking/testoculustags/TestOculusTagTracker.h"
 
 #include "ocean/test/TestResult.h"
+#include "ocean/test/Validation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
@@ -87,7 +88,7 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 	// it's simply meant to ensure that the tracker does not crash
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -118,25 +119,16 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 
 			const OculusTagTracker::TrackedTagMap trackedTagMap = oculusTagTracker.trackedTagMap();
 
-			if (tags.empty() == false || trackedTagMap.empty() == false)
-			{
-				// Because of the random data, the tracker is not expected to detect anything
-				allSucceeded = false;
-			}
+			// Because of the random data, the tracker is not expected to detect anything
+			OCEAN_EXPECT_TRUE(validation, tags.empty());
+			OCEAN_EXPECT_TRUE(validation, trackedTagMap.empty());
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Stress test: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Stress test: FAILED!";
-	}
+	Log::info() << "Stress test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestTrackingOculusTag

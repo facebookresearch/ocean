@@ -20,6 +20,8 @@
 
 #include "ocean/test/testgeometry/Utilities.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/tracking/oculustags/Utilities.h"
 
 using namespace Ocean::Tracking::OculusTags;
@@ -90,7 +92,7 @@ bool TestUtilities::testSerializeDeserializeOculusTags(const double testDuration
 	Log::info() << "Serialize/Deserialize Oculus Tags test:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -103,7 +105,7 @@ bool TestUtilities::testSerializeDeserializeOculusTags(const double testDuration
 		for (unsigned int i = 0u; i < numberTags; ++i)
 		{
 			const uint32_t tagID = RandomI::random(randomGenerator, 0u, 1023u);
-			const OculusTag::ReflectanceType reflectanceType = RandomI::random(randomGenerator, 1u) == 0u ? OculusTag::RT_REFLECTANCE_NORMAL : OculusTag::RT_REFLECTANCE_INVERTED;
+			const OculusTag::ReflectanceType reflectanceType = RandomI::boolean(randomGenerator) ? OculusTag::RT_REFLECTANCE_NORMAL : OculusTag::RT_REFLECTANCE_INVERTED;
 			const uint8_t intensityThreshold = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
 			const HomogenousMatrix4 world_T_tag(Random::vector3(randomGenerator), Random::rotation(randomGenerator));
 			const Scalar tagSize = Random::scalar(randomGenerator, Scalar(0.01), Scalar(1));
@@ -118,7 +120,7 @@ bool TestUtilities::testSerializeDeserializeOculusTags(const double testDuration
 			// False is expected if tags are empty
 			if (!tags.empty())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -128,62 +130,40 @@ bool TestUtilities::testSerializeDeserializeOculusTags(const double testDuration
 			// False is expected if buffer is empty
 			if (!buffer.empty())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
 		if (tags.size() != deserializedTags.size())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
 			for (size_t t = 0; t < deserializedTags.size(); ++t)
 			{
-				if (tags[t].tagID() != deserializedTags[t].tagID())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, tags[t].tagID(), deserializedTags[t].tagID());
 
-				if (tags[t].reflectanceType() != deserializedTags[t].reflectanceType())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, tags[t].reflectanceType(), deserializedTags[t].reflectanceType());
 
-				if (tags[t].intensityThreshold() != deserializedTags[t].intensityThreshold())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, tags[t].intensityThreshold(), deserializedTags[t].intensityThreshold());
 
 				const HomogenousMatrix4& world_T_tag = tags[t].world_T_tag();
 				const HomogenousMatrix4 deserialized_world_T_tag = deserializedTags[t].world_T_tag();
 				for (unsigned int i = 0u; i < 16u; ++i)
 				{
-					if (!Numeric::isWeakEqual(world_T_tag[i], deserialized_world_T_tag[i]))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(world_T_tag[i], deserialized_world_T_tag[i]));
 				}
 
-				if (!Numeric::isWeakEqual(tags[t].tagSize(), deserializedTags[t].tagSize()))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(tags[t].tagSize(), deserializedTags[t].tagSize()));
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Serialize/deserialize Oculus Tags: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Serialize/deserialize Oculus Tags: FAILED!";
-	}
+	Log::info() << "Serialize/deserialize Oculus Tags: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestUtilities::testSerializeDeserializeTagSizeMap(const double testDuration)
@@ -193,7 +173,7 @@ bool TestUtilities::testSerializeDeserializeTagSizeMap(const double testDuration
 	Log::info() << "Serialize/Deserialize tag sizes test:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -244,30 +224,21 @@ bool TestUtilities::testSerializeDeserializeTagSizeMap(const double testDuration
 
 		std::string buffer;
 
-		if (!Tracking::OculusTags::Utilities::serializeTagSizeMap(tagSizeMap, defaultTagSize, buffer))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Tracking::OculusTags::Utilities::serializeTagSizeMap(tagSizeMap, defaultTagSize, buffer));
 
 		Scalar deserializedDefaultTagSize;
 		TagSizeMap deserializedTagSizeMap;
 
-		if (!Tracking::OculusTags::Utilities::deserializeTagSizeMap(buffer, deserializedTagSizeMap, deserializedDefaultTagSize))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Tracking::OculusTags::Utilities::deserializeTagSizeMap(buffer, deserializedTagSizeMap, deserializedDefaultTagSize));
 
 
 		// Validation
 
-		if (!Numeric::isWeakEqual(defaultTagSize, deserializedDefaultTagSize))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(defaultTagSize, deserializedDefaultTagSize));
 
 		if (tagSizeMap.size() != deserializedTagSizeMap.size())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 		else
 		{
@@ -279,32 +250,22 @@ bool TestUtilities::testSerializeDeserializeTagSizeMap(const double testDuration
 
 				if (deserializedTagSizeMapIter == deserializedTagSizeMap.cend())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
 					ocean_assert(tagSizeMapIter.first == deserializedTagSizeMapIter->first);
 
-					if (!Numeric::isWeakEqual(tagSizeMapIter.second, deserializedTagSizeMapIter->second))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(tagSizeMapIter.second, deserializedTagSizeMapIter->second));
 				}
 			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Serialize/deserialize tag sizes: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Serialize/deserialize tag sizes: FAILED!";
-	}
+	Log::info() << "Serialize/deserialize tag sizes: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestTrackingOculusTag
