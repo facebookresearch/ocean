@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Devices MapBuilding JNI (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_devicesmapbuildingjni_use_imported>True</ocean_devicesmapbuildingjni_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_devicesmapbuildingjni_common_imported)' != 'True'" Project="devicesmapbuildingjni_common.props"/>
+  </ImportGroup>
+
+  <!-- Link library for Debug configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <OceanDevicesMapBuildingJniLib>OceanDevicesMapBuildingJniD.lib</OceanDevicesMapBuildingJniLib>
+  </PropertyGroup>
+
+  <!-- Link library for Release configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <OceanDevicesMapBuildingJniLib>OceanDevicesMapBuildingJni.lib</OceanDevicesMapBuildingJniLib>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>$(OceanDevicesMapBuildingJniLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
