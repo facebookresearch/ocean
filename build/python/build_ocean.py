@@ -64,6 +64,7 @@ LinkType = _platform_module.LinkType
 OS = _platform_module.OS
 detect_host_arch = _platform_module.detect_host_arch
 detect_host_os = _platform_module.detect_host_os
+get_cmake_generator = _platform_module.get_cmake_generator
 get_msvc_toolset_version = _platform_module.get_msvc_toolset_version
 get_installed_windows_archs = _platform_module.get_installed_windows_archs
 parse_platform_string = _platform_module.parse_platform_string
@@ -285,6 +286,7 @@ def run_cmake_build(
     generator: Optional[str] = None,
     log_level: str = "ERROR",
     android_sdk: str = "android-32",
+    vs_version: Optional[str] = None,
 ) -> bool:
     """Run CMake configure and build for a single target.
 
@@ -321,16 +323,45 @@ def run_cmake_build(
                 third_party_dir, target
             )
 
+    # Determine CMake generator
+    if generator:
+        cmake_generator = generator
+    else:
+        cmake_generator = get_cmake_generator(target, vs_version)
+
     # Configure arguments
     configure_args = [
         "cmake",
-        "--preset",
-        preset_name,
+        "-G",
+        cmake_generator,
         f"--log-level={log_level}",
         "-B",
         str(config_build_dir),
         f"-DCMAKE_INSTALL_PREFIX={config_install_dir}",
     ]
+
+    # Build type - always pass this so CMakeLists.txt can resolve correct 3P library paths.
+    # For multi-config generators (Visual Studio), the actual build config is selected via
+    # --config at build time, but CMAKE_BUILD_TYPE is still needed at configure time for
+    # third-party library path resolution.
+    build_type = "Debug" if target.build_config == BuildConfig.DEBUG else "Release"
+    configure_args.append(f"-DCMAKE_BUILD_TYPE={build_type}")
+
+    # Architecture flag for Visual Studio generator
+    if "Visual Studio" in cmake_generator:
+        arch_map = {
+            Arch.ARM64: "ARM64",
+            Arch.X86_64: "x64",
+            Arch.X86: "Win32",
+        }
+        if target.arch in arch_map:
+            configure_args.extend(["-A", arch_map[target.arch]])
+
+    # Static vs shared
+    if target.link_type == LinkType.STATIC:
+        configure_args.append("-DBUILD_SHARED_LIBS=OFF")
+    else:
+        configure_args.append("-DBUILD_SHARED_LIBS=ON")
 
     if cmake_prefix_path:
         configure_args.append(
@@ -351,9 +382,6 @@ def run_cmake_build(
             f"-DCMAKE_LIBRARY_PATH={';'.join(str(p) for p in cmake_library_path)}"
         )
 
-    if generator:
-        configure_args.extend(["-G", generator])
-
     if target.os == OS.ANDROID:
         configure_args.append(
             f"-DCMAKE_FIND_ROOT_PATH={';'.join(str(p) for p in cmake_prefix_path)}"
@@ -368,6 +396,9 @@ def run_cmake_build(
                 "-DOCEAN_BUILD_TESTS=OFF",
             ]
         )
+
+    # Source directory
+    configure_args.extend(["-S", str(ocean_source_dir)])
 
     # Run configure
     print(f"\n{'=' * 60}")
@@ -737,6 +768,7 @@ def main() -> int:
             generator=args.generator,
             log_level=log_level,
             android_sdk=args.android_sdk,
+            vs_version=args.vs_version,
         )
         if not success:
             failed_builds.append(get_cmake_preset_name(target, args.quest))
