@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Devices ARCore JNI Java (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_devicesarcorejnijava_use_imported>True</ocean_devicesarcorejnijava_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_devicesarcorejnijava_common_imported)' != 'True'" Project="devicesarcorejnijava_common.props"/>
+  </ImportGroup>
+
+  <!-- AAR library path for Debug configurations -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanDevicesARCoreJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanDevicesARCoreJniD.aar</OceanDevicesARCoreJniAAR>
+  </PropertyGroup>
+
+  <!-- AAR library path for Release configurations -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanDevicesARCoreJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanDevicesARCoreJni.aar</OceanDevicesARCoreJniAAR>
+  </PropertyGroup>
+</Project>

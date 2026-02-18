@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Devices ARCore JNI (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_devicesarcorejni_use_imported>True</ocean_devicesarcorejni_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_devicesarcorejni_common_imported)' != 'True'" Project="devicesarcorejni_common.props"/>
+  </ImportGroup>
+
+  <!-- Link library for Debug configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <OceanDevicesARCoreJniLib>OceanDevicesARCoreJniD.lib</OceanDevicesARCoreJniLib>
+  </PropertyGroup>
+
+  <!-- Link library for Release configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <OceanDevicesARCoreJniLib>OceanDevicesARCoreJni.lib</OceanDevicesARCoreJniLib>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>$(OceanDevicesARCoreJniLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
