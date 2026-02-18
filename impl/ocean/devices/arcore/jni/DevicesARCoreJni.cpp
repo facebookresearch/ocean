@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_registerLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::ARCore::registerARCoreLibrary();
@@ -20,7 +20,7 @@ jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_registerLibrary(JNI
 	return true;
 }
 
-jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_unregisterLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::ARCore::unregisterARCoreLibrary();

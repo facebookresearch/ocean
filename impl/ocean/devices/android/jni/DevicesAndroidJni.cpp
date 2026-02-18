@@ -12,7 +12,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_registerLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::Android::registerAndroidLibrary();
@@ -21,7 +21,7 @@ jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_registerLibrary(J
 	return true;
 }
 
-jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_unregisterLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::Android::unregisterAndroidLibrary();
@@ -30,7 +30,7 @@ jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_unregisterLibrary
 	return true;
 }
 
-jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_newGPSLocation(JNIEnv* env, jobject javaThis, jdouble latitude, jdouble longitude, jfloat altitude, jfloat direction, jfloat speed, jfloat accuracy, jfloat altitudeAccuracy, jfloat directionAccuracy, jfloat speedAccuracy, jdouble timestamp)
+jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_newGPSLocation(JNIEnv* /*env*/, jobject /*javaThis*/, jdouble latitude, jdouble longitude, jfloat altitude, jfloat direction, jfloat speed, jfloat accuracy, jfloat altitudeAccuracy, jfloat directionAccuracy, jfloat speedAccuracy, jdouble timestamp)
 {
 	Devices::Android::AndroidFactory::newGPSLocation(latitude, longitude, altitude, direction, speed, accuracy, altitudeAccuracy, directionAccuracy, speedAccuracy, Ocean::Timestamp(timestamp));
 	return true;

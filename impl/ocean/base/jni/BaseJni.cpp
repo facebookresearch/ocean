@@ -34,7 +34,7 @@ jboolean Java_com_meta_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* en
 
 jboolean Java_com_meta_ocean_base_BaseJni_setCurrentActivity(JNIEnv* env, jobject /*javaThis*/, jobject activity)
 {
-	ocean_assert(env != nullptr);
+	ocean_assert_and_suppress_unused(env != nullptr, env);
 
 	Platform::Android::NativeInterfaceManager::get().setCurrentActivity(activity);
 

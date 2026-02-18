@@ -9,7 +9,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_registerLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::Android::registerAndroidLibrary();
@@ -18,7 +18,7 @@ jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_registerLibrary(JNIEn
 	return true;
 }
 
-jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_unregisterLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::Android::unregisterAndroidLibrary();

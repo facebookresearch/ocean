@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_registerLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	SceneDescription::SDL::Assimp::registerAssimpLibrary();
@@ -20,7 +20,7 @@ jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssi
 	return true;
 }
 
-jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_unregisterLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	SceneDescription::SDL::Assimp::unregisterAssimpLibrary();

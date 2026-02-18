@@ -9,7 +9,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_media_usb_MediaUSBJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_media_usb_MediaUSBJni_registerLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::USB::registerUSBLibrary();
@@ -18,7 +18,7 @@ jboolean Java_com_meta_ocean_media_usb_MediaUSBJni_registerLibrary(JNIEnv* env, 
 	return true;
 }
 
-jboolean Java_com_meta_ocean_media_usb_MediaUSBJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_media_usb_MediaUSBJni_unregisterLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::USB::unregisterUSBLibrary();

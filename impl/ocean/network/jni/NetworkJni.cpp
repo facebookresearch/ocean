@@ -11,9 +11,9 @@
 
 using namespace Ocean;
 
-jboolean Java_com_meta_ocean_network_NetworkJni_setCurrentLocalIPAddress(JNIEnv* env, jobject javaThis, jint localIPAddress)
+jboolean Java_com_meta_ocean_network_NetworkJni_setCurrentLocalIPAddress(JNIEnv* env, jobject /*javaThis*/, jint localIPAddress)
 {
-	ocean_assert(env != nullptr);
+	ocean_assert_and_suppress_unused(env != nullptr, env);
 
     const Network::Address4 localAddress((unsigned int)(localIPAddress), Network::Address4::TYPE_BIG_ENDIAN);
 
