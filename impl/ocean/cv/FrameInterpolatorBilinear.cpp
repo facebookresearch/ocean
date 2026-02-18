@@ -8,6 +8,7 @@
 #include "ocean/cv/FrameInterpolatorBilinear.h"
 
 #include "ocean/cv/IntegralImage.h"
+#include "ocean/cv/NEON.h"
 
 #include "ocean/math/Numeric.h"
 #include "ocean/math/PinholeCamera.h"
@@ -729,8 +730,8 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To224x224_8BitPerChan
 
 	constexpr uint8_t topRowOffsets[14] = {0u, 2u, 3u, 5u, 7u, 9u, 11u, 12u, 14u, 16u, 18u, 20u, 21u, 23u};
 
-	constexpr uint8x16_t shuffleA_u_8x16 = {0u, 1u, 2u, 3u, 3u, 4u, 5u, 6u, 7u, 8u, 9u, 10u, 11u, 12u, 12u, 13u}; // [ 0L 0R 1L 1R ...
-	constexpr uint8x16_t shuffleB_u_8x16 = {5u, 6u, 7u, 8u, 9u, 10u, 11u, 12u, 12u, 13u, 14u, 15u, 255u, 255u, 255u, 255u}; // [ 8L 8R 9L 9R ... 13L 13R X X X X ]
+	constexpr uint8x16_t shuffleA_u_8x16 = NEON::create_uint8x16(0u, 1u, 2u, 3u, 3u, 4u, 5u, 6u, 7u, 8u, 9u, 10u, 11u, 12u, 12u, 13u); // [ 0L 0R 1L 1R ...
+	constexpr uint8x16_t shuffleB_u_8x16 = NEON::create_uint8x16(5u, 6u, 7u, 8u, 9u, 10u, 11u, 12u, 12u, 13u, 14u, 15u, 255u, 255u, 255u, 255u); // [ 8L 8R 9L 9R ... 13L 13R X X X X ]
 
 	/*
 	 *                  0    1    2    3    4    5    6    7    8    9    10    11    12    13
@@ -742,10 +743,10 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To224x224_8BitPerChan
 
 	constexpr uint8_t factorsTop[14] = {78u, 105u, 5u, 32u, 59u, 87u, 114u, 14u, 41u, 69u, 96u, 123u, 23u, 50u};
 
-	constexpr uint8x8_t factorsLeftRightA_u_8x8 = {78u, 50u, 105u, 23u, 5u, 123u, 32u, 96u};
-	constexpr uint8x8_t factorsLeftRightB_u_8x8 = {59u, 69u, 87u, 41u, 114u, 14u, 14u, 114u};
-	constexpr uint8x8_t factorsLeftRightC_u_8x8 = {41u, 87u, 69u, 59u, 96u, 32u, 123u, 5u};
-	constexpr uint8x8_t factorsLeftRightD_u_8x8 = {23u, 105u, 50u, 78u, 0u, 0u, 0u, 0u};
+	constexpr uint8x8_t factorsLeftRightA_u_8x8 = NEON::create_uint8x8(78u, 50u, 105u, 23u, 5u, 123u, 32u, 96u);
+	constexpr uint8x8_t factorsLeftRightB_u_8x8 = NEON::create_uint8x8(59u, 69u, 87u, 41u, 114u, 14u, 14u, 114u);
+	constexpr uint8x8_t factorsLeftRightC_u_8x8 = NEON::create_uint8x8(41u, 87u, 69u, 59u, 96u, 32u, 123u, 5u);
+	constexpr uint8x8_t factorsLeftRightD_u_8x8 = NEON::create_uint8x8(23u, 105u, 50u, 78u, 0u, 0u, 0u, 0u);
 
 
 	const unsigned int sourceStrideElements = 400u + sourcePaddingElements;
@@ -880,8 +881,8 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To256x256_8BitPerChan
 
 	constexpr uint8_t topRowOffsets[16] = {0u, 1u, 3u, 4u, 6u, 8u, 9u, 11u, 12u, 14u, 15u, 17u, 19u, 20u, 22u, 23u};
 
-	constexpr uint8x16_t shuffleA_u_8x16 = {0u, 1u, 1u, 2u, 3u, 4u, 4u, 5u, 6u, 7u, 8u, 9u, 9u, 10u, 11u, 12u}; // [ 0L 0R 1L 1R ...
-	constexpr uint8x16_t shuffleB_u_8x16 = {3u, 4u, 5u, 6u, 6u, 7u, 8u, 9u, 10u, 11u, 11u, 12u, 13u, 14u, 14u, 15u}; // [ 8L 8R 9L 9R ...
+	constexpr uint8x16_t shuffleA_u_8x16 = NEON::create_uint8x16(0u, 1u, 1u, 2u, 3u, 4u, 4u, 5u, 6u, 7u, 8u, 9u, 9u, 10u, 11u, 12u); // [ 0L 0R 1L 1R ...
+	constexpr uint8x16_t shuffleB_u_8x16 = NEON::create_uint8x16(3u, 4u, 5u, 6u, 6u, 7u, 8u, 9u, 10u, 11u, 11u, 12u, 13u, 14u, 14u, 15u); // [ 8L 8R 9L 9R ...
 
 	/*
 	 *                  0    1    2    3    4    5    6    7    8    9    10    11    12    13    14    15
@@ -893,10 +894,10 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To256x256_8BitPerChan
 
 	constexpr uint8_t factorsTop[16] = {92u, 20u, 76u, 4u, 60u, 116u, 44u, 100u, 28u, 84u, 12u, 68u, 124u, 52u, 108u, 36u};
 
-	constexpr uint8x8_t factorsLeftRightA_u_8x8 = {92u, 36u, 20u, 108u, 76u, 52u, 4u, 124u};
-	constexpr uint8x8_t factorsLeftRightB_u_8x8 = {60u, 68u, 116u, 12u, 44u, 84u, 100u, 28u};
-	constexpr uint8x8_t factorsLeftRightC_u_8x8 = {28u, 100u, 84u, 44u, 12u, 116u, 68u, 60u};
-	constexpr uint8x8_t factorsLeftRightD_u_8x8 = {124u, 4u, 52u, 76u, 108u, 20u, 36u, 92u};
+	constexpr uint8x8_t factorsLeftRightA_u_8x8 = NEON::create_uint8x8(92u, 36u, 20u, 108u, 76u, 52u, 4u, 124u);
+	constexpr uint8x8_t factorsLeftRightB_u_8x8 = NEON::create_uint8x8(60u, 68u, 116u, 12u, 44u, 84u, 100u, 28u);
+	constexpr uint8x8_t factorsLeftRightC_u_8x8 = NEON::create_uint8x8(28u, 100u, 84u, 44u, 12u, 116u, 68u, 60u);
+	constexpr uint8x8_t factorsLeftRightD_u_8x8 = NEON::create_uint8x8(124u, 4u, 52u, 76u, 108u, 20u, 36u, 92u);
 
 
 	const unsigned int sourceStrideElements = 400u + sourcePaddingElements;
@@ -1115,11 +1116,11 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To256x256_8BitPerChan
 
 	constexpr uint8_t topRowOffsets[16] = {0u, 1u, 3u, 4u, 6u, 8u, 9u, 11u, 12u, 14u, 15u, 17u, 19u, 20u, 22u, 23u};
 
-	constexpr uint8x16_t shuffleLeftA_u_8x16 = {16u, 16u, 16u, 16u, 16u, 0u, 1u, 3u, 4u, 6u, 8u, 9u, 11u, 12u, 14u, 15u};
-	constexpr uint8x16_t shuffleLeftB_u_8x16 = {8u, 10u, 11u, 13u, 14u};
+	constexpr uint8x16_t shuffleLeftA_u_8x16 = NEON::create_uint8x16(16u, 16u, 16u, 16u, 16u, 0u, 1u, 3u, 4u, 6u, 8u, 9u, 11u, 12u, 14u, 15u);
+	constexpr uint8x16_t shuffleLeftB_u_8x16 = NEON::create_uint8x16(8u, 10u, 11u, 13u, 14u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
 
-	constexpr uint8x16_t shuffleRightA_u_8x16 = {16u, 16u, 16u, 16u, 16u, 16u, 1u, 2u, 4u, 5u, 7u, 9u, 10u, 12u, 13u, 15u};
-	constexpr uint8x16_t shuffleRightB_u_8x16 = {7u, 9u, 11u, 12u, 14u, 15u};
+	constexpr uint8x16_t shuffleRightA_u_8x16 = NEON::create_uint8x16(16u, 16u, 16u, 16u, 16u, 16u, 1u, 2u, 4u, 5u, 7u, 9u, 10u, 12u, 13u, 15u);
+	constexpr uint8x16_t shuffleRightB_u_8x16 = NEON::create_uint8x16(7u, 9u, 11u, 12u, 14u, 15u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
 
 	/*
 	 *                  0    1    2    3    4    5    6    7    8    9    10    11    12    13    14    15
@@ -1131,11 +1132,11 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To256x256_8BitPerChan
 
 	constexpr uint8_t factorsTop[16] = {92u, 20u, 76u, 4u, 60u, 116u, 44u, 100u, 28u, 84u, 12u, 68u, 124u, 52u, 108u, 36u};
 
-	constexpr uint8x8_t factorsLeftA_u_8x8 = {92u, 20u, 76u, 4u, 60u, 116u, 44u, 100};
-	constexpr uint8x8_t factorsLeftB_u_8x8 = {28u, 84u, 12u, 68u, 124u, 52u, 108u, 36u};
+	constexpr uint8x8_t factorsLeftA_u_8x8 = NEON::create_uint8x8(92u, 20u, 76u, 4u, 60u, 116u, 44u, 100u);
+	constexpr uint8x8_t factorsLeftB_u_8x8 = NEON::create_uint8x8(28u, 84u, 12u, 68u, 124u, 52u, 108u, 36u);
 
-	constexpr uint8x8_t factorsRightA_u_8x8 = {36u, 108u, 52u, 124u, 68u, 12u, 84u, 28u};
-	constexpr uint8x8_t factorsRightB_u_8x8 = {100u, 44u, 116u, 60u, 4u, 76u, 20u, 92u};
+	constexpr uint8x8_t factorsRightA_u_8x8 = NEON::create_uint8x8(36u, 108u, 52u, 124u, 68u, 12u, 84u, 28u);
+	constexpr uint8x8_t factorsRightB_u_8x8 = NEON::create_uint8x8(100u, 44u, 116u, 60u, 4u, 76u, 20u, 92u);
 
 
 	const unsigned int sourceStrideElements = 400u + sourcePaddingElements;
@@ -1271,8 +1272,8 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To256x256_8BitPerChan
 
 	constexpr uint8_t topRowOffsets[16] = {0u, 1u, 3u, 4u, 6u, 8u, 9u, 11u, 12u, 14u, 15u, 17u, 19u, 20u, 22u, 23u};
 
-	constexpr uint8x16_t shuffleA_u_8x16 = {0u, 1u, 1u, 2u, 3u, 4u, 4u, 5u, 6u, 7u, 8u, 9u, 9u, 10u, 11u, 12u}; // [ 0L 0R 1L 1R ...
-	constexpr uint8x16_t shuffleB_u_8x16 = {3u, 4u, 5u, 6u, 6u, 7u, 8u, 9u, 10u, 11u, 11u, 12u, 13u, 14u, 14u, 15u}; // [ 8L 8R 9L 9R ...
+	constexpr uint8x16_t shuffleA_u_8x16 = NEON::create_uint8x16(0u, 1u, 1u, 2u, 3u, 4u, 4u, 5u, 6u, 7u, 8u, 9u, 9u, 10u, 11u, 12u); // [ 0L 0R 1L 1R ...
+	constexpr uint8x16_t shuffleB_u_8x16 = NEON::create_uint8x16(3u, 4u, 5u, 6u, 6u, 7u, 8u, 9u, 10u, 11u, 11u, 12u, 13u, 14u, 14u, 15u); // [ 8L 8R 9L 9R ...
 
 	/*
 	 *                  0    1    2    3    4    5    6    7    8    9    10    11    12    13    14    15
@@ -1284,10 +1285,10 @@ void FrameInterpolatorBilinear::SpecialCases::resize400x400To256x256_8BitPerChan
 
 	constexpr uint8_t factorsTop[16] = {92u, 20u, 76u, 4u, 60u, 116u, 44u, 100u, 28u, 84u, 12u, 68u, 124u, 52u, 108u, 36u};
 
-	constexpr uint8x8_t factorsLeftRightA_u_8x8 = {92u, 36u, 20u, 108u, 76u, 52u, 4u, 124u};
-	constexpr uint8x8_t factorsLeftRightB_u_8x8 = {60u, 68u, 116u, 12u, 44u, 84u, 100u, 28u};
-	constexpr uint8x8_t factorsLeftRightC_u_8x8 = {28u, 100u, 84u, 44u, 12u, 116u, 68u, 60u};
-	constexpr uint8x8_t factorsLeftRightD_u_8x8 = {124u, 4u, 52u, 76u, 108u, 20u, 36u, 92u};
+	constexpr uint8x8_t factorsLeftRightA_u_8x8 = NEON::create_uint8x8(92u, 36u, 20u, 108u, 76u, 52u, 4u, 124u);
+	constexpr uint8x8_t factorsLeftRightB_u_8x8 = NEON::create_uint8x8(60u, 68u, 116u, 12u, 44u, 84u, 100u, 28u);
+	constexpr uint8x8_t factorsLeftRightC_u_8x8 = NEON::create_uint8x8(28u, 100u, 84u, 44u, 12u, 116u, 68u, 60u);
+	constexpr uint8x8_t factorsLeftRightD_u_8x8 = NEON::create_uint8x8(124u, 4u, 52u, 76u, 108u, 20u, 36u, 92u);
 
 
 	const unsigned int sourceStrideElements = 400u + sourcePaddingElements;
@@ -1657,8 +1658,8 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 
 	ocean_assert_and_suppress_unused(channels == 2u, channels);
 
-	const uint8x8_t mask_left_8x8 = {0, 0, 2, 2, 4, 4, 6, 6};
-	const uint8x8_t mask_right_8x8 = {1, 1, 3, 3, 5, 5, 7, 7};
+	constexpr uint8x8_t mask_left_8x8 = NEON::create_uint8x8(0, 0, 2, 2, 4, 4, 6, 6);
+	constexpr uint8x8_t mask_right_8x8 = NEON::create_uint8x8(1, 1, 3, 3, 5, 5, 7, 7);
 
 	for (unsigned int x = 0; x < targetWidth; x += 8u)
 	{
@@ -1868,10 +1869,10 @@ inline void FrameInterpolatorBilinear::interpolateRowHorizontal8BitPerChannel7Bi
 
 	ocean_assert_and_suppress_unused(channels == 4u, channels);
 
-	const uint8x8_t mask_02_8x8 = {0, 0, 0, 0, 2, 2, 2, 2};
-	const uint8x8_t mask_13_8x8 = {1, 1, 1, 1, 3, 3, 3, 3};
-	const uint8x8_t mask_46_8x8 = {4, 4, 4, 4, 6, 6, 6, 6};
-	const uint8x8_t mask_57_8x8 = {5, 5, 5, 5, 7, 7, 7, 7};
+	constexpr uint8x8_t mask_02_8x8 = NEON::create_uint8x8(0, 0, 0, 0, 2, 2, 2, 2);
+	constexpr uint8x8_t mask_13_8x8 = NEON::create_uint8x8(1, 1, 1, 1, 3, 3, 3, 3);
+	constexpr uint8x8_t mask_46_8x8 = NEON::create_uint8x8(4, 4, 4, 4, 6, 6, 6, 6);
+	constexpr uint8x8_t mask_57_8x8 = NEON::create_uint8x8(5, 5, 5, 5, 7, 7, 7, 7);
 
 	for (unsigned int x = 0; x < targetWidth; x += 8u)
 	{

@@ -379,7 +379,9 @@ uint32_t SumSquareDifferencesNEON::patchMirroredBorder8BitPerChannel(const uint8
 		for (unsigned int n = 0u; n < blocks16; ++n)
 		{
 			// [|patch0[0] - patch1[0]|, |patch0[1] - patch1[1]|, ..]
-			const uint8x16_t absDifference_u_8x16 = vabdq_u8(loadMirrored_u_8x16<tChannels, true, 16u>(mirroredRow0, x0, width0Elements, intermediate), loadMirrored_u_8x16<tChannels, true, 16u>(mirroredRow1, x1, width1Elements, intermediate));
+			const uint8x16_t patch0_u_8x16 = loadMirrored_u_8x16<tChannels, true, 16u>(mirroredRow0, x0, width0Elements, intermediate);
+			const uint8x16_t patch1_u_8x16 = loadMirrored_u_8x16<tChannels, true, 16u>(mirroredRow1, x1, width1Elements, intermediate);
+			const uint8x16_t absDifference_u_8x16 = vabdq_u8(patch0_u_8x16, patch1_u_8x16);
 
 			const uint8x8_t absDifferenceA_u_8x8 = vget_low_u8(absDifference_u_8x16);
 			const uint8x8_t absDifferenceB_u_8x8 = vget_high_u8(absDifference_u_8x16);
@@ -400,7 +402,9 @@ uint32_t SumSquareDifferencesNEON::patchMirroredBorder8BitPerChannel(const uint8
 			if (y0 < int(centerY0) + int(tPatchSize_2))
 			{
 				// [|patch0[0] - patch1[0]|, |patch0[1] - patch1[1]|, ..]
-				const uint8x16_t absDifference_u_8x16 = vabdq_u8(loadMirrored_u_8x16<tChannels, true, remainingAfterBlocks16>(mirroredRow0, x0, width0Elements, intermediate), loadMirrored_u_8x16<tChannels, true, remainingAfterBlocks16>(mirroredRow1, x1, width1Elements, intermediate));
+				const uint8x16_t patch0_u_8x16 = loadMirrored_u_8x16<tChannels, true, remainingAfterBlocks16>(mirroredRow0, x0, width0Elements, intermediate);
+				const uint8x16_t patch1_u_8x16 = loadMirrored_u_8x16<tChannels, true, remainingAfterBlocks16>(mirroredRow1, x1, width1Elements, intermediate);
+				const uint8x16_t absDifference_u_8x16 = vabdq_u8(patch0_u_8x16, patch1_u_8x16);
 
 				const uint8x8_t absDifferenceA_u_8x8 = vget_low_u8(absDifference_u_8x16);
 				const uint8x8_t absDifferenceB_u_8x8 = vget_high_u8(absDifference_u_8x16);
@@ -412,10 +416,12 @@ uint32_t SumSquareDifferencesNEON::patchMirroredBorder8BitPerChannel(const uint8
 				sumA_u_32x4 = vpadalq_u16(sumA_u_32x4, sqrDifferenceA_u_16x8);
 				sumB_u_32x4 = vpadalq_u16(sumB_u_32x4, sqrDifferenceB_u_16x8);
 			}
-			else
+		else
 			{
 				// [|patch0[0] - patch1[0]|, |patch0[1] - patch1[1]|, ..]
-				const uint8x16_t absDifference_u_8x16 = vabdq_u8(loadMirrored_u_8x16<tChannels, false, remainingAfterBlocks16>(mirroredRow0, x0, width0Elements, intermediate), loadMirrored_u_8x16<tChannels, false, remainingAfterBlocks16>(mirroredRow1, x1, width1Elements, intermediate));
+				const uint8x16_t patch0_u_8x16 = loadMirrored_u_8x16<tChannels, false, remainingAfterBlocks16>(mirroredRow0, x0, width0Elements, intermediate);
+				const uint8x16_t patch1_u_8x16 = loadMirrored_u_8x16<tChannels, false, remainingAfterBlocks16>(mirroredRow1, x1, width1Elements, intermediate);
+				const uint8x16_t absDifference_u_8x16 = vabdq_u8(patch0_u_8x16, patch1_u_8x16);
 
 				const uint8x8_t absDifferenceA_u_8x8 = vget_low_u8(absDifference_u_8x16);
 				const uint8x8_t absDifferenceB_u_8x8 = vget_high_u8(absDifference_u_8x16);
@@ -435,7 +441,9 @@ uint32_t SumSquareDifferencesNEON::patchMirroredBorder8BitPerChannel(const uint8
 		for (unsigned int n = 0u; n < blocks8; ++n)
 		{
 			// [|patch0[0] - patch1[0]|, |patch0[1] - patch1[1]|, ..]
-			const uint8x8_t absDifference_u_8x8 = vabd_u8(loadMirrored_u_8x8<tChannels, true, 8u>(mirroredRow0, x0, width0Elements, intermediate), loadMirrored_u_8x8<tChannels, true, 8u>(mirroredRow1, x1, width1Elements, intermediate));
+			const uint8x8_t patch0_u_8x8 = loadMirrored_u_8x8<tChannels, true, 8u>(mirroredRow0, x0, width0Elements, intermediate);
+			const uint8x8_t patch1_u_8x8 = loadMirrored_u_8x8<tChannels, true, 8u>(mirroredRow1, x1, width1Elements, intermediate);
+			const uint8x8_t absDifference_u_8x8 = vabd_u8(patch0_u_8x8, patch1_u_8x8);
 
 			// sqrDifferenceA_u_16x8 = absDifferenceA_u_8x8 ^ 2
 			const uint16x8_t sqrDifference_u_16x8 = vmull_u8(absDifference_u_8x8, absDifference_u_8x8);

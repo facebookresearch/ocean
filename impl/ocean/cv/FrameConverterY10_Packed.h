@@ -11,6 +11,7 @@
 #include "ocean/cv/CV.h"
 #include "ocean/cv/FrameChannels.h"
 #include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/NEON.h"
 
 #include "ocean/base/Memory.h"
 #include "ocean/base/Singleton.h"
@@ -401,7 +402,7 @@ OCEAN_FORCE_INLINE void FrameConverterY10_Packed::convert16PixelY10_PackedToY8Li
 
 	// F E D C B A 9 8 7 6 5 4 3 2 1 0
 	// D C B A 8 7 6 5 3 2 1 0 X X X X
-	constexpr uint8x16_t shuffle_u_8x16 = {16u, 16u, 16u, 16u, 0u, 1u, 2u, 3u, 5u, 6u, 7u, 8u, 10u, 11u, 12u, 13u};
+	constexpr uint8x16_t shuffle_u_8x16 = NEON::create_uint8x16(16u, 16u, 16u, 16u, 0u, 1u, 2u, 3u, 5u, 6u, 7u, 8u, 10u, 11u, 12u, 13u);
 	const uint8x16_t intermediateA_u_8x16 = vqtbl1q_u8(packedA_u_8x16, shuffle_u_8x16);
 
 	const uint8x8_t intermediateB_u_8x8 = vext_u8(packedB_u_8x8, packedB_u_8x8, 3);
@@ -410,7 +411,7 @@ OCEAN_FORCE_INLINE void FrameConverterY10_Packed::convert16PixelY10_PackedToY8Li
 
 #else
 
-	constexpr uint8x16_t mask_u_8x16 = {0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0xFFu, 0xFFu, 0xFFu};
+	constexpr uint8x16_t mask_u_8x16 = NEON::create_uint8x16(0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0xFFu, 0xFFu, 0xFFu);
 
 	const uint8x16_t packedA_u_8x16 = vld1q_u8(source);
 	const uint8x8_t packedB_u_8x8 = vld1_u8(source + 11);
@@ -418,8 +419,8 @@ OCEAN_FORCE_INLINE void FrameConverterY10_Packed::convert16PixelY10_PackedToY8Li
 	const uint8x8_t packedAA_u_8x8 = vget_low_u8(packedA_u_8x16);
 	const uint8x8_t packedAB_u_8x8 = vget_high_u8(packedA_u_8x16);
 
-	constexpr uint8x8_t shuffleA_u_8x8 = {8u, 0u, 1u, 2u, 3u, 5u, 6u, 7u};
-	constexpr uint8x8_t shuffleB_u_8x8 = {0u, 2u, 3u, 4u, 5u, 7u, 8u, 8u};
+	constexpr uint8x8_t shuffleA_u_8x8 = NEON::create_uint8x8(8u, 0u, 1u, 2u, 3u, 5u, 6u, 7u);
+	constexpr uint8x8_t shuffleB_u_8x8 = NEON::create_uint8x8(0u, 2u, 3u, 4u, 5u, 7u, 8u, 8u);
 	const uint8x16_t intermediateA_u_8x16 = vextq_u8(vcombine_u8(vtbl1_u8(packedAA_u_8x8, shuffleA_u_8x8), vtbl1_u8(packedAB_u_8x8, shuffleB_u_8x8)), mask_u_8x16, 1); // we use the first zero element of mask_u_8x16
 
 	const uint8x16_t intermediateB_u_8x16 = vcombine_u8(vget_low_u8(mask_u_8x16), vand_u8(packedB_u_8x8, vget_high_u8(mask_u_8x16)));
@@ -436,8 +437,8 @@ OCEAN_FORCE_INLINE void FrameConverterY10_Packed::convert16PixelY10_PackedToY8Ap
 {
 	static_assert(0u < tStep01 && tStep01 < tStep12 && tStep12 < 1023u, "Invalid steps");
 
-	constexpr int8x16_t leftShifts_s_8x16 = {6, 0, 4, 0, 2, 0, 0, 0, 6, 0, 4, 0, 2, 0, 0, 0};
-	constexpr int16x8_t rightShifts_s_16x8 = {-6, -6, -6, -6, -6, -6, -6, -6};
+	constexpr int8x16_t leftShifts_s_8x16 = NEON::create_int8x16(6, 0, 4, 0, 2, 0, 0, 0, 6, 0, 4, 0, 2, 0, 0, 0);
+	constexpr int16x8_t rightShifts_s_16x8 = NEON::create_int16x8(-6, -6, -6, -6, -6, -6, -6, -6);
 
 #ifdef __aarch64__
 
@@ -446,17 +447,17 @@ OCEAN_FORCE_INLINE void FrameConverterY10_Packed::convert16PixelY10_PackedToY8Ap
 
 	// F E D C B A 9 8 7 6 5 4 3 2 1 0
 	// 8 9 7 9 6 9 5 9 3 4 2 4 1 4 0 4
-	constexpr uint8x16_t shuffleAB_u_8x16 = {4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u, 9u, 5u, 9u, 6u, 9u, 7u, 9u, 8u};
+	constexpr uint8x16_t shuffleAB_u_8x16 = NEON::create_uint8x16(4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u, 9u, 5u, 9u, 6u, 9u, 7u, 9u, 8u);
 	const uint8x16_t intermediateAB_u_8x16 = vqtbl1q_u8(packedAB_u_8x16, shuffleAB_u_8x16);
 
-	constexpr uint8x16_t shuffleCD_u_8x16 = {10u, 6u, 10u, 7u, 10u, 8u, 10u, 9u, 15u, 11u, 15u, 12u, 15u, 13u, 15u, 14u};
+	constexpr uint8x16_t shuffleCD_u_8x16 = NEON::create_uint8x16(10u, 6u, 10u, 7u, 10u, 8u, 10u, 9u, 15u, 11u, 15u, 12u, 15u, 13u, 15u, 14u);
 	const uint8x16_t intermediateCD_u_8x16 = vqtbl1q_u8(packedCD_u_8x16, shuffleCD_u_8x16);
 
 #else
 
-	constexpr uint8x8_t shuffleAB_u_8x8 = {4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u};
-	constexpr uint8x8_t shuffleC_u_8x8 = {6u, 2u, 6u, 3u, 6u, 4u, 6u, 5u};
-	constexpr uint8x8_t shuffleD_u_8x8 = {7u, 3u, 7u, 4u, 7u, 5u, 7u, 6u};
+	constexpr uint8x8_t shuffleAB_u_8x8 = NEON::create_uint8x8(4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u);
+	constexpr uint8x8_t shuffleC_u_8x8 = NEON::create_uint8x8(6u, 2u, 6u, 3u, 6u, 4u, 6u, 5u);
+	constexpr uint8x8_t shuffleD_u_8x8 = NEON::create_uint8x8(7u, 3u, 7u, 4u, 7u, 5u, 7u, 6u);
 
 	const uint8x16_t packedAB_u_8x16 = vld1q_u8(source);
 	const uint8x8_t packedForD_u_8x8 = vld1_u8(source + 12);
@@ -489,8 +490,8 @@ OCEAN_FORCE_INLINE void FrameConverterY10_Packed::convert16PixelY10_PackedToY8Ap
 	// [step01, step12]:  f_1(x) = m_1 * x + c_1
 	// [step21, 1     ]:  f_2(x) = m_2 * x + c_2, with f_2(1) = 1
 
-	constexpr int16x8_t step01_s_16x8 = {int32_t(tStep01), int32_t(tStep01), int32_t(tStep01), int32_t(tStep01), int32_t(tStep01), int32_t(tStep01), int32_t(tStep01), int32_t(tStep01)};
-	constexpr int16x8_t step12_s_16x8 = {int32_t(tStep12), int32_t(tStep12), int32_t(tStep12), int32_t(tStep12), int32_t(tStep12), int32_t(tStep12), int32_t(tStep12), int32_t(tStep12)};
+	constexpr int16x8_t step01_s_16x8 = NEON::create_int16x8(int16_t(tStep01), int16_t(tStep01), int16_t(tStep01), int16_t(tStep01), int16_t(tStep01), int16_t(tStep01), int16_t(tStep01), int16_t(tStep01));
+	constexpr int16x8_t step12_s_16x8 = NEON::create_int16x8(int16_t(tStep12), int16_t(tStep12), int16_t(tStep12), int16_t(tStep12), int16_t(tStep12), int16_t(tStep12), int16_t(tStep12), int16_t(tStep12));
 
 	// determining masks to switch between one of the tree linear equations
 

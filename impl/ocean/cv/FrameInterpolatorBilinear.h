@@ -10,6 +10,7 @@
 
 #include "ocean/cv/CV.h"
 #include "ocean/cv/FrameBlender.h"
+#include "ocean/cv/NEON.h"
 #include "ocean/cv/PixelPosition.h"
 #include "ocean/cv/SSE.h"
 
@@ -3948,8 +3949,8 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	// ARM64 is not affected.
 #if defined(__aarch64__)
 
-	const uint8x8_t m64_mask0 = {0, 4, 1, 1, 1, 1, 1, 1};
-	const uint8x8_t m64_mask1 = {1, 1, 0, 4, 1, 1, 1, 1};
+	constexpr uint8x8_t m64_mask0 = NEON::create_uint8x8(0, 4, 1, 1, 1, 1, 1, 1);
+	constexpr uint8x8_t m64_mask1 = NEON::create_uint8x8(1, 1, 0, 4, 1, 1, 1, 1);
 
 	const uint8x8_t m64_interpolation01 = vtbl1_u8(vget_low_u8(m128_interpolation), m64_mask0);
 	const uint8x8_t m64_interpolation23 = vtbl1_u8(vget_high_u8(m128_interpolation), m64_mask1);
@@ -4079,8 +4080,8 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 
 	// we shuffle the 128 bit register to a 64 bit register:
 
-	const uint8x8_t m64_mask0 = {0, 1, 4, 5, 2, 2, 2, 2};
-	const uint8x8_t m64_mask1 = {2, 2, 2, 2, 0, 1, 4, 5};
+	const uint8x8_t m64_mask0 = NEON::create_uint8x8(0, 1, 4, 5, 2, 2, 2, 2);
+	const uint8x8_t m64_mask1 = NEON::create_uint8x8(2, 2, 2, 2, 0, 1, 4, 5);
 
 	const uint8x8_t m64_interpolation_low = vtbl1_u8(vget_low_u8(vreinterpretq_u8_u32(m128_interpolation)), m64_mask0);
 	const uint8x8_t m64_interpolation_high = vtbl1_u8(vget_high_u8(vreinterpretq_u8_u32(m128_interpolation)), m64_mask1);

@@ -6,6 +6,7 @@
  */
 
 #include "ocean/cv/FrameInterpolatorNearestPixel.h"
+#include "ocean/cv/NEON.h"
 
 namespace Ocean
 {
@@ -270,8 +271,8 @@ void FrameInterpolatorNearestPixel::SpecialCases::resize400x400To224x224_8BitPer
 
 	constexpr uint8_t topRowOffsets[14] = {0u, 1u, 3u, 5u, 7u, 8u, 10u, 12u, 14u, 16u, 17u, 19u, 21u, 23u};
 
-	constexpr uint8x16_t shuffleA_u_8x16 = {255u, 255u, 255u, 255u, 255u, 255u, 255u, 0u, 1u, 3u, 5u, 7u, 8u, 10u, 12u, 14u};
-	constexpr uint8x16_t shuffleB_u_8x16 = {7u, 8u, 10u, 12u, 14u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u};
+	constexpr uint8x16_t shuffleA_u_8x16 = NEON::create_uint8x16(255u, 255u, 255u, 255u, 255u, 255u, 255u, 0u, 1u, 3u, 5u, 7u, 8u, 10u, 12u, 14u);
+	constexpr uint8x16_t shuffleB_u_8x16 = NEON::create_uint8x16(7u, 8u, 10u, 12u, 14u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 255u);
 
 	const unsigned int sourceStrideElements = 400u + sourcePaddingElements;
 	const unsigned int targetStrideElements = 224u + targetPaddingElements;

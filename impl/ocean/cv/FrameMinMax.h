@@ -9,6 +9,7 @@
 #define META_OCEAN_CV_FRAME_MIN_MAX_H
 
 #include "ocean/cv/CV.h"
+#include "ocean/cv/NEON.h"
 #include "ocean/cv/PixelPosition.h"
 
 #include "ocean/base/Frame.h"
@@ -216,7 +217,7 @@ void FrameMinMax::ExtremumDeterminer<unsigned char>::determineExtremumValue(cons
 		 */
 
 		// [0, 1, 2, 3, 4, 5, 6, 7]
-		const uint16x8_t constant_01234567_u_16x8 = {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u};
+		const uint16x8_t constant_01234567_u_16x8 = NEON::create_uint16x8(0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u);
 		// [8, 8, 8, 8, 8, 8, 8, 8]
 		const uint16x8_t constant_8_u_16x8 = vdupq_n_u16(8u);
 		// [16, 16, 16, 16, 16, 16, 16, 16]
@@ -393,7 +394,7 @@ void FrameMinMax::ExtremumDeterminer<float>::determineExtremumValue(const float*
 		 */
 
 		// [0, 1, 2, 3]
-		const uint32x4_t constant_0123_u_32x4 = {0u, 1u, 2u, 3u};
+		const uint32x4_t constant_0123_u_32x4 = NEON::create_uint32x4(0u, 1u, 2u, 3u);
 		// [4, 4, 4, 4]
 		const uint32x4_t constant_4_u_32x4 = vdupq_n_u32(4u);
 		// [8, 8, 8, 8]
