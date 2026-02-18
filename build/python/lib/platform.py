@@ -58,19 +58,19 @@ def get_msvc_toolset_version(vs_version: Optional[str] = None) -> Optional[str]:
                    If specified, returns the toolset for that version.
                    If not specified, auto-detects the latest installed version.
 
-    Returns toolset version string like 'vc143' (VS2022), 'vc144' (VS2026), or 'vc142' (VS2019).
+    Returns toolset version string like 'vc143' (VS2022), 'vc145' (VS2026), or 'vc142' (VS2019).
     Returns None if not on Windows or MSVC is not available.
     """
     if platform.system().lower() != "windows":
         return None
 
     # Map VS year to toolset version
-    # VS 2017 = vc141, VS 2019 = vc142, VS 2022 = vc143, VS 2026 = vc144
+    # VS 2017 = vc141, VS 2019 = vc142, VS 2022 = vc143, VS 2026 = vc145
     year_to_toolset = {
         "2017": "vc141",
         "2019": "vc142",
         "2022": "vc143",
-        "2026": "vc144",
+        "2026": "vc145",
     }
 
     # If a specific version is requested, return its toolset
@@ -79,9 +79,9 @@ def get_msvc_toolset_version(vs_version: Optional[str] = None) -> Optional[str]:
 
     # Auto-detect: check for installed Visual Studio versions (newest first)
     vs_checks = [
-        # VS 2026 (vc144)
+        # VS 2026 (vc145)
         (
-            "vc144",
+            "vc145",
             [
                 os.environ.get("VS180COMNTOOLS"),
                 os.path.expandvars(
@@ -144,7 +144,7 @@ def get_msvc_toolset_version(vs_version: Optional[str] = None) -> Optional[str]:
         # cl.exe outputs version info to stderr
         version_output = result.stderr
         if "19.5" in version_output:  # VS2026 18.x (estimated)
-            return "vc144"
+            return "vc145"
         elif "19.4" in version_output:  # VS2022 17.x
             return "vc143"
         elif "19.3" in version_output:  # VS2022 17.0-17.3
