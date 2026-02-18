@@ -176,10 +176,13 @@ class BuildTarget:
             macos_arm64_static_debug
             ios_arm64_static
             android_arm64_static_debug
-            windows_x86_64_vc143_static
-            windows_x86_64_vc143_static_debug
+            windows_x64_vc143_static
+            windows_x64_vc143_static_debug
         """
-        parts = [self.os.value, self.arch.value]
+        arch_str = self.arch.value
+        if self.os == OS.WINDOWS and self.arch == Arch.X86_64:
+            arch_str = "x64"
+        parts = [self.os.value, arch_str]
         # Include MSVC toolset version for Windows
         if self.os == OS.WINDOWS:
             toolset = self.msvc_toolset or get_msvc_toolset_version() or "vc143"
@@ -742,8 +745,12 @@ def parse_platform_string(platform_str: str) -> tuple[OS, Arch]:
         valid_os = ", ".join(o.value for o in OS)
         raise ValueError(f"Unknown OS: {parts[0]}. Valid options: {valid_os}")
 
+    arch_str = parts[1]
+    # Accept "x64" as an alias for "x86_64" (used in Windows target paths)
+    if arch_str == "x64":
+        arch_str = "x86_64"
     try:
-        arch_val = Arch(parts[1])
+        arch_val = Arch(arch_str)
     except ValueError:
         valid_arch = ", ".join(a.value for a in Arch)
         raise ValueError(
@@ -763,8 +770,8 @@ def parse_target_string(target_str: str) -> BuildTarget:
     Examples:
         macos_arm64_static
         macos_arm64_static_debug
-        windows_x86_64_vc143_static
-        windows_x86_64_vc143_static_debug
+        windows_x64_vc143_static
+        windows_x64_vc143_static_debug
 
     Note: This function is deprecated. Prefer using parse_platform_string()
     and combining with explicit config/link parameters.
@@ -782,8 +789,12 @@ def parse_target_string(target_str: str) -> BuildTarget:
     except ValueError:
         raise ValueError(f"Unknown OS: {parts[0]}")
 
+    # Accept "x64" as an alias for "x86_64" (used in Windows target paths)
+    arch_str = parts[1]
+    if arch_str == "x64":
+        arch_str = "x86_64"
     try:
-        arch_val = Arch(parts[1])
+        arch_val = Arch(arch_str)
     except ValueError:
         raise ValueError(f"Unknown architecture: {parts[1]}")
 
