@@ -11,7 +11,12 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_scenedescription_sdx_x3d")
 
-    find_package(tinyxml2 QUIET)
+    if (NOT TARGET tinyxml2::tinyxml2)
+        find_package(tinyxml2 QUIET)
+    endif()
+    if (TARGET tinyxml2::tinyxml2)
+        set(tinyxml2_FOUND TRUE)
+    endif()
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
