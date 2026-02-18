@@ -55,17 +55,56 @@ std::string Processor::brand()
 
 #if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
-	static_assert(sizeof(char) == 1, "Invalid char data type!");
-	static_assert(sizeof(int) == 4, "Invalid integer data type!");
+	#if defined(_M_ARM64)
 
-	char brandString[3 * 4 * 4 + 1];
+		HKEY key = nullptr;
+		if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &key) == ERROR_SUCCESS)
+		{
+			wchar_t brandString[256] = {};
+			DWORD size = sizeof(brandString);
+			DWORD type = REG_SZ;
 
-	__cpuid((int*)brandString + 0 * 4, 0x80000002);
-	__cpuid((int*)brandString + 1 * 4, 0x80000003);
-	__cpuid((int*)brandString + 2 * 4, 0x80000004);
-	brandString[3 * 4 * 4] = 0;
+			if (RegQueryValueExW(key, L"ProcessorNameString", nullptr, &type, (LPBYTE)brandString, &size) == ERROR_SUCCESS)
+			{
+				RegCloseKey(key);
 
-	return String::trimWhitespace(std::string(brandString));
+				char narrowBrandString[256] = {};
+				WideCharToMultiByte(CP_UTF8, 0, brandString, -1, narrowBrandString, sizeof(narrowBrandString), nullptr, nullptr);
+
+				return String::trimWhitespace(std::string(narrowBrandString));
+			}
+
+			RegCloseKey(key);
+		}
+
+		// Fallback: construct a generic name using GetSystemInfo
+		SYSTEM_INFO systemInfo = {};
+		GetNativeSystemInfo(&systemInfo);
+
+		std::string fallbackName = "ARM64 Processor";
+
+		if (systemInfo.wProcessorLevel != 0)
+		{
+			fallbackName += " (Level " + std::to_string(systemInfo.wProcessorLevel) + ", Revision " + std::to_string(systemInfo.wProcessorRevision) + ")";
+		}
+
+		return fallbackName;
+
+	#else
+
+		static_assert(sizeof(char) == 1, "Invalid char data type!");
+		static_assert(sizeof(int) == 4, "Invalid integer data type!");
+
+		char brandString[3 * 4 * 4 + 1];
+
+		__cpuid((int*)brandString + 0 * 4, 0x80000002);
+		__cpuid((int*)brandString + 1 * 4, 0x80000003);
+		__cpuid((int*)brandString + 2 * 4, 0x80000004);
+		brandString[3 * 4 * 4] = 0;
+
+		return String::trimWhitespace(std::string(brandString));
+
+	#endif // _M_ARM64
 
 #elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
@@ -233,80 +272,95 @@ ProcessorInstructions Processor::realInstructions()
 
 #if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
-	int info[4] = {0, 0, 0, 0};
+	#if defined(_M_ARM64)
 
-	__cpuid(info, 0);
-	const int functionIds = info[0];
+		// ARM64 Windows always supports NEON
+		instructions = ProcessorInstructions(instructions | PI_NEON);
 
-	if (functionIds >= 1)
-	{
-		__cpuid(info, 1);
-
-		//const int eax = info[0];
-		//const int ebx = info[1];
-		const int ecx = info[2];
-		const int edx = info[3];
-
-		if (edx & (1 << 25))
-		{
-			instructions = ProcessorInstructions(instructions | PI_SSE);
-		}
-
-		if (edx & (1 << 26))
-		{
-			instructions = ProcessorInstructions(instructions | PI_SSE_2);
-		}
-
-		if (ecx & (1 << 0))
-		{
-			instructions = ProcessorInstructions(instructions | PI_SSE_3);
-		}
-
-		if (ecx & (1 << 9))
-		{
-			instructions = ProcessorInstructions(instructions | PI_SSSE_3);
-		}
-
-		if (ecx & (1 << 19))
-		{
-			instructions = ProcessorInstructions(instructions | PI_SSE_4_1);
-		}
-
-		if (ecx & (1 << 20))
-		{
-			instructions = ProcessorInstructions(instructions | PI_SSE_4_2);
-		}
-
-		if (ecx & (1 << 25))
+		// Check for AES support using IsProcessorFeaturePresent
+		if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE))
 		{
 			instructions = ProcessorInstructions(instructions | PI_AES);
 		}
 
-		if (ecx & (1 << 28))
+	#else
+
+		int info[4] = {0, 0, 0, 0};
+
+		__cpuid(info, 0);
+		const int functionIds = info[0];
+
+		if (functionIds >= 1)
 		{
-			instructions = ProcessorInstructions(instructions | PI_AVX);
+			__cpuid(info, 1);
+
+			//const int eax = info[0];
+			//const int ebx = info[1];
+			const int ecx = info[2];
+			const int edx = info[3];
+
+			if (edx & (1 << 25))
+			{
+				instructions = ProcessorInstructions(instructions | PI_SSE);
+			}
+
+			if (edx & (1 << 26))
+			{
+				instructions = ProcessorInstructions(instructions | PI_SSE_2);
+			}
+
+			if (ecx & (1 << 0))
+			{
+				instructions = ProcessorInstructions(instructions | PI_SSE_3);
+			}
+
+			if (ecx & (1 << 9))
+			{
+				instructions = ProcessorInstructions(instructions | PI_SSSE_3);
+			}
+
+			if (ecx & (1 << 19))
+			{
+				instructions = ProcessorInstructions(instructions | PI_SSE_4_1);
+			}
+
+			if (ecx & (1 << 20))
+			{
+				instructions = ProcessorInstructions(instructions | PI_SSE_4_2);
+			}
+
+			if (ecx & (1 << 25))
+			{
+				instructions = ProcessorInstructions(instructions | PI_AES);
+			}
+
+			if (ecx & (1 << 28))
+			{
+				instructions = ProcessorInstructions(instructions | PI_AVX);
+			}
 		}
-	}
 
-	if (functionIds >= 7)
-	{
-		__cpuid(info, 7);
-
-		//const int eax = info[0];
-		const int ebx = info[1];
-		//const int ecx = info[2];
-		//const int edx = info[3];
-
-		if (ebx & (1 << 5))
+		if (functionIds >= 7)
 		{
-			instructions = ProcessorInstructions(instructions | PI_AVX_2);
+			__cpuid(info, 7);
+
+			//const int eax = info[0];
+			const int ebx = info[1];
+			//const int ecx = info[2];
+			//const int edx = info[3];
+
+			if (ebx & (1 << 5))
+			{
+				instructions = ProcessorInstructions(instructions | PI_AVX_2);
+			}
+
+			if ((ebx & (1 << 16)) != 0 && (ebx & (1 << 26)) != 0 && (ebx & (1 << 27)) != 0 && (ebx & (1 << 28)) != 0)
+			{
+				instructions = ProcessorInstructions(instructions | PI_AVX_512);
+			}
 		}
 
-		if ((ebx & (1 << 16)) != 0 && (ebx & (1 << 26)) != 0 && (ebx & (1 << 27)) != 0 && (ebx & (1 << 28)) != 0)
-		{
-			instructions = ProcessorInstructions(instructions | PI_AVX_512);
-		}
-	}
+	#endif // _M_ARM64
 
 #elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
