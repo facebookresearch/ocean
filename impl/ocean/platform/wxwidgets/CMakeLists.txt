@@ -43,10 +43,11 @@ if (MACOS OR WIN32)
             set(_wx_arch "x86_64")
         endif()
 
-        set(_wx_target "${_wx_platform}_${_wx_arch}_${_wx_link}${_wx_config}")
+        # Use the toolset string from root CMakeLists.txt (e.g., "_vc143", "_vc145")
+        set(_wx_target "${_wx_platform}_${_wx_arch}${_ocean_3p_toolset}_${_wx_link}${_wx_config}")
         set(_wx_root "${OCEAN_THIRD_PARTY_ROOT}/wxwidgets")
         set(_wx_lib_dir "${_wx_root}/lib/${_wx_target}")
-        set(_wx_include_dir "${_wx_root}/h/${_wx_platform}/wx-3.3")
+        set(_wx_include_dir "${_wx_root}/h/${_wx_platform}")
 
         message(STATUS "wxWidgets (Python layout): ${_wx_lib_dir}")
 
