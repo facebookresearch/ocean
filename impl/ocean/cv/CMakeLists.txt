@@ -17,7 +17,9 @@ endif()
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
-    find_package(Eigen3 REQUIRED)
+    if (NOT TARGET Eigen3::Eigen)
+        find_package(Eigen3 REQUIRED)
+    endif()
 
     set(OCEAN_TARGET_NAME "ocean_cv")
 

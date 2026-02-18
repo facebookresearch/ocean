@@ -9,7 +9,9 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_math")
 
-    find_package(Eigen3 REQUIRED)
+    if (NOT TARGET Eigen3::Eigen)
+        find_package(Eigen3 REQUIRED)
+    endif()
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")

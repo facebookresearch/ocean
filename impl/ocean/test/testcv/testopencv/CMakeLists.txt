@@ -15,7 +15,9 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
     endif()
 
     # Workaround some OpenCV-related linker errors
-    find_package(Eigen3)
+    if (NOT TARGET Eigen3::Eigen)
+        find_package(Eigen3)
+    endif()
     find_package(ZLIB)
     find_package(JPEG)
 
@@ -99,7 +101,9 @@ if (ANDROID OR IOS OR LINUX OR MACOS)
     set(OCEAN_TARGET_NAME "ocean_test_testcv_testopencv_gtest")
 
     # Workaround some OpenCV-related linker errors
-    find_package(Eigen3)
+    if (NOT TARGET Eigen3::Eigen)
+        find_package(Eigen3)
+    endif()
     find_package(ZLIB)
     find_package(JPEG)
 
