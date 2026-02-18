@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Devices Android JNI (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_devicesandroidjni_use_imported>True</ocean_devicesandroidjni_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_devicesandroidjni_common_imported)' != 'True'" Project="devicesandroidjni_common.props"/>
+  </ImportGroup>
+
+  <!-- Link library for Debug configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <OceanDevicesAndroidJniLib>OceanDevicesAndroidJniD.lib</OceanDevicesAndroidJniLib>
+  </PropertyGroup>
+
+  <!-- Link library for Release configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <OceanDevicesAndroidJniLib>OceanDevicesAndroidJni.lib</OceanDevicesAndroidJniLib>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>$(OceanDevicesAndroidJniLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
