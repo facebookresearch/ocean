@@ -35,6 +35,108 @@ class NEON
 	public:
 
 		/**
+		 * Creates a uint8x8_t vector from 8 individual uint8_t values.
+		 * This function provides a portable way to initialize uint8x8_t vectors across compilers.
+		 * @param v0 Element at index 0
+		 * @param v1 Element at index 1
+		 * @param v2 Element at index 2
+		 * @param v3 Element at index 3
+		 * @param v4 Element at index 4
+		 * @param v5 Element at index 5
+		 * @param v6 Element at index 6
+		 * @param v7 Element at index 7
+		 * @return A uint8x8_t vector containing the specified values
+		 */
+		static constexpr uint8x8_t create_uint8x8(const uint8_t v0, const uint8_t v1, const uint8_t v2, const uint8_t v3, const uint8_t v4, const uint8_t v5, const uint8_t v6, const uint8_t v7);
+
+		/**
+		 * Creates a uint8x16_t vector from 16 individual uint8_t values.
+		 * This function provides a portable way to initialize uint8x16_t vectors across compilers.
+		 * @param v0 Element at index 0
+		 * @param v1 Element at index 1
+		 * @param v2 Element at index 2
+		 * @param v3 Element at index 3
+		 * @param v4 Element at index 4
+		 * @param v5 Element at index 5
+		 * @param v6 Element at index 6
+		 * @param v7 Element at index 7
+		 * @param v8 Element at index 8
+		 * @param v9 Element at index 9
+		 * @param v10 Element at index 10
+		 * @param v11 Element at index 11
+		 * @param v12 Element at index 12
+		 * @param v13 Element at index 13
+		 * @param v14 Element at index 14
+		 * @param v15 Element at index 15
+		 * @return A uint8x16_t vector containing the specified values
+		 */
+		static constexpr uint8x16_t create_uint8x16(const uint8_t v0, const uint8_t v1, const uint8_t v2, const uint8_t v3, const uint8_t v4, const uint8_t v5, const uint8_t v6, const uint8_t v7, const uint8_t v8, const uint8_t v9, const uint8_t v10, const uint8_t v11, const uint8_t v12, const uint8_t v13, const uint8_t v14, const uint8_t v15);
+
+		/**
+		 * Creates an int8x16_t vector from 16 individual int8_t values.
+		 * This function provides a portable way to initialize int8x16_t vectors across compilers.
+		 * @param v0 Element at index 0
+		 * @param v1 Element at index 1
+		 * @param v2 Element at index 2
+		 * @param v3 Element at index 3
+		 * @param v4 Element at index 4
+		 * @param v5 Element at index 5
+		 * @param v6 Element at index 6
+		 * @param v7 Element at index 7
+		 * @param v8 Element at index 8
+		 * @param v9 Element at index 9
+		 * @param v10 Element at index 10
+		 * @param v11 Element at index 11
+		 * @param v12 Element at index 12
+		 * @param v13 Element at index 13
+		 * @param v14 Element at index 14
+		 * @param v15 Element at index 15
+		 * @return An int8x16_t vector containing the specified values
+		 */
+		static constexpr int8x16_t create_int8x16(const int8_t v0, const int8_t v1, const int8_t v2, const int8_t v3, const int8_t v4, const int8_t v5, const int8_t v6, const int8_t v7, const int8_t v8, const int8_t v9, const int8_t v10, const int8_t v11, const int8_t v12, const int8_t v13, const int8_t v14, const int8_t v15);
+
+		/**
+		 * Creates an int16x8_t vector from 8 individual int16_t values.
+		 * This function provides a portable way to initialize int16x8_t vectors across compilers.
+		 * @param v0 Element at index 0
+		 * @param v1 Element at index 1
+		 * @param v2 Element at index 2
+		 * @param v3 Element at index 3
+		 * @param v4 Element at index 4
+		 * @param v5 Element at index 5
+		 * @param v6 Element at index 6
+		 * @param v7 Element at index 7
+		 * @return An int16x8_t vector containing the specified values
+		 */
+		static constexpr int16x8_t create_int16x8(const int16_t v0, const int16_t v1, const int16_t v2, const int16_t v3, const int16_t v4, const int16_t v5, const int16_t v6, const int16_t v7);
+
+		/**
+		 * Creates a uint32x4_t vector from 4 individual uint32_t values.
+		 * This function provides a portable way to initialize uint32x4_t vectors across compilers.
+		 * @param v0 Element at index 0
+		 * @param v1 Element at index 1
+		 * @param v2 Element at index 2
+		 * @param v3 Element at index 3
+		 * @return A uint32x4_t vector containing the specified values
+		 */
+		static constexpr uint32x4_t create_uint32x4(const uint32_t v0, const uint32_t v1, const uint32_t v2, const uint32_t v3);
+
+		/**
+		 * Creates a uint16x8_t vector from 8 individual uint16_t values.
+		 * This function provides a portable way to initialize uint16x8_t vectors across compilers.
+		 * @param v0 Element at index 0
+		 * @param v1 Element at index 1
+		 * @param v2 Element at index 2
+		 * @param v3 Element at index 3
+		 * @param v4 Element at index 4
+		 * @param v5 Element at index 5
+		 * @param v6 Element at index 6
+		 * @param v7 Element at index 7
+		 * @return A uint16x8_t vector containing the specified values
+		 */
+		static constexpr uint16x8_t create_uint16x8(const uint16_t v0, const uint16_t v1, const uint16_t v2, const uint16_t v3, const uint16_t v4, const uint16_t v5, const uint16_t v6, const uint16_t v7);
+
+		/**
 		 * Sum square differences determination for the last 9 elements of an 16 elements buffer with 8 bit precision.
 		 * @param image0 First 9 elements to determine the ssd for, may be non aligned
 		 * @param image1 Second 9 elements to determine the ssd for, may be non aligned
@@ -485,6 +587,60 @@ class NEON
 		 */
 		static inline unsigned int ssd2Channel16Bit1x1(const uint8_t* const pixel0, const uint8_t* const pixel1, const unsigned int size0, const unsigned int size1, const unsigned int f0x_y_, const unsigned int f0xy_, const unsigned int f0x_y, const unsigned int f0xy, const unsigned int f1x_y_, const unsigned int f1xy_, const unsigned int f1x_y, const unsigned int f1xy);
 };
+
+constexpr uint8x8_t NEON::create_uint8x8(const uint8_t v0, const uint8_t v1, const uint8_t v2, const uint8_t v3, const uint8_t v4, const uint8_t v5, const uint8_t v6, const uint8_t v7)
+{
+#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+	return uint8x8_t{{uint64_t(v0) | (uint64_t(v1) << 8) | (uint64_t(v2) << 16) | (uint64_t(v3) << 24) | (uint64_t(v4) << 32) | (uint64_t(v5) << 40) | (uint64_t(v6) << 48) | (uint64_t(v7) << 56)}};
+#else
+	return uint8x8_t{v0, v1, v2, v3, v4, v5, v6, v7};
+#endif
+}
+
+constexpr uint8x16_t NEON::create_uint8x16(const uint8_t v0, const uint8_t v1, const uint8_t v2, const uint8_t v3, const uint8_t v4, const uint8_t v5, const uint8_t v6, const uint8_t v7, const uint8_t v8, const uint8_t v9, const uint8_t v10, const uint8_t v11, const uint8_t v12, const uint8_t v13, const uint8_t v14, const uint8_t v15)
+{
+#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+	return uint8x16_t{{uint64_t(v0) | (uint64_t(v1) << 8) | (uint64_t(v2) << 16) | (uint64_t(v3) << 24) | (uint64_t(v4) << 32) | (uint64_t(v5) << 40) | (uint64_t(v6) << 48) | (uint64_t(v7) << 56), uint64_t(v8) | (uint64_t(v9) << 8) | (uint64_t(v10) << 16) | (uint64_t(v11) << 24) | (uint64_t(v12) << 32) | (uint64_t(v13) << 40) | (uint64_t(v14) << 48) | (uint64_t(v15) << 56)}};
+#else
+	return uint8x16_t{v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15};
+#endif
+}
+
+constexpr int8x16_t NEON::create_int8x16(const int8_t v0, const int8_t v1, const int8_t v2, const int8_t v3, const int8_t v4, const int8_t v5, const int8_t v6, const int8_t v7, const int8_t v8, const int8_t v9, const int8_t v10, const int8_t v11, const int8_t v12, const int8_t v13, const int8_t v14, const int8_t v15)
+{
+#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+	return int8x16_t{create_uint8x16(uint8_t(v0), uint8_t(v1), uint8_t(v2), uint8_t(v3), uint8_t(v4), uint8_t(v5), uint8_t(v6), uint8_t(v7), uint8_t(v8), uint8_t(v9), uint8_t(v10), uint8_t(v11), uint8_t(v12), uint8_t(v13), uint8_t(v14), uint8_t(v15))};
+#else
+	return int8x16_t{v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15};
+#endif
+}
+
+constexpr int16x8_t NEON::create_int16x8(const int16_t v0, const int16_t v1, const int16_t v2, const int16_t v3, const int16_t v4, const int16_t v5, const int16_t v6, const int16_t v7)
+{
+#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+	return int16x8_t{{uint64_t(uint16_t(v0)) | (uint64_t(uint16_t(v1)) << 16) | (uint64_t(uint16_t(v2)) << 32) | (uint64_t(uint16_t(v3)) << 48), uint64_t(uint16_t(v4)) | (uint64_t(uint16_t(v5)) << 16) | (uint64_t(uint16_t(v6)) << 32) | (uint64_t(uint16_t(v7)) << 48)}};
+#else
+	return int16x8_t{v0, v1, v2, v3, v4, v5, v6, v7};
+#endif
+}
+
+constexpr uint32x4_t NEON::create_uint32x4(const uint32_t v0, const uint32_t v1, const uint32_t v2, const uint32_t v3)
+{
+#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+	return uint32x4_t{{uint64_t(v0) | (uint64_t(v1) << 32), uint64_t(v2) | (uint64_t(v3) << 32)}};
+#else
+	return uint32x4_t{v0, v1, v2, v3};
+#endif
+}
+
+constexpr uint16x8_t NEON::create_uint16x8(const uint16_t v0, const uint16_t v1, const uint16_t v2, const uint16_t v3, const uint16_t v4, const uint16_t v5, const uint16_t v6, const uint16_t v7)
+{
+#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+	return uint16x8_t{{uint64_t(v0) | (uint64_t(v1) << 16) | (uint64_t(v2) << 32) | (uint64_t(v3) << 48), uint64_t(v4) | (uint64_t(v5) << 16) | (uint64_t(v6) << 32) | (uint64_t(v7) << 48)}};
+#else
+	return uint16x8_t{v0, v1, v2, v3, v4, v5, v6, v7};
+#endif
+}
 
 inline uint32x4_t NEON::sumSquareDifferences8BitBack9Elements(const uint8_t* const image0, const uint8_t* const image1)
 {
