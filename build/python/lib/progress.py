@@ -24,22 +24,28 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional
 
-# Enable Windows Virtual Terminal mode for ANSI escape sequence support
-# This must be done before importing rich to ensure proper initialization
+# Enable Windows Virtual Terminal mode for ANSI escape sequence support.
+# This must be done before importing rich to ensure proper initialization.
+# If the mode cannot be enabled (e.g., output is piped or the console doesn't
+# support it), we record this so that Rich can be told not to emit ANSI codes.
+_WIN_VT_ENABLED = True  # Assume True for non-Windows or when not needed
+
 if os.name == "nt":
+    _WIN_VT_ENABLED = False  # Assume failure; set True only on success
     try:
         import ctypes
         from ctypes import wintypes
 
         kernel32 = ctypes.windll.kernel32
-        STD_OUTPUT_HANDLE = -11
         ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004
 
-        handle = kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
-        mode = wintypes.DWORD()
-        if kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
-            mode.value |= ENABLE_VIRTUAL_TERMINAL_PROCESSING
-            kernel32.SetConsoleMode(handle, mode.value)
+        for std_handle_id in (-11, -12):  # STD_OUTPUT_HANDLE, STD_ERROR_HANDLE
+            handle = kernel32.GetStdHandle(std_handle_id)
+            mode = wintypes.DWORD()
+            if kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
+                new_mode = mode.value | ENABLE_VIRTUAL_TERMINAL_PROCESSING
+                if kernel32.SetConsoleMode(handle, new_mode):
+                    _WIN_VT_ENABLED = True
     except Exception:
         pass
 
@@ -133,8 +139,16 @@ class ProgressDisplay:
         self._use_rich = RICH_AVAILABLE and use_color
 
         if self._use_rich:
-            # Force terminal mode on Windows to ensure ANSI codes work
-            self._console = Console(force_terminal=True if os.name == "nt" else None)
+            if os.name == "nt":
+                # Only use ANSI codes if Virtual Terminal Processing is active.
+                # When VT is not enabled (e.g., older cmd.exe, piped output),
+                # raw escape sequences would litter the output.
+                self._console = Console(
+                    force_terminal=_WIN_VT_ENABLED,
+                    no_color=not _WIN_VT_ENABLED,
+                )
+            else:
+                self._console = Console()
         elif not RICH_AVAILABLE:
             print("Note: Install 'rich' for better progress display: pip install rich")
 
