@@ -18,9 +18,11 @@
     <OceanCompilerVersion>vc145</OceanCompilerVersion>
   </PropertyGroup>
 
-  <!-- Platform suffix: x64 -->
+  <!-- Platform suffix: x64 or arm64 -->
   <PropertyGroup>
-    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>  </PropertyGroup>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='ARM64'">arm64</OceanPlatformSuffix>
+  </PropertyGroup>
 
   <!-- Build type: static or shared -->
   <PropertyGroup>
@@ -121,6 +123,17 @@
     </Link>
   </ItemDefinitionGroup>
 
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64' Or '$(Configuration)|$(Platform)'=='Static Profile|ARM64' Or '$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Lib>
+      <TargetMachine>MachineARM64</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Profile|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
+    <Link>
+      <TargetMachine>MachineARM64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
     <Link>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
@@ -195,6 +208,14 @@
     </ClCompile>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='ARM64'">
+    <ClCompile>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Midl>
+      <TargetEnvironment>ARM64</TargetEnvironment>
     </Midl>
   </ItemDefinitionGroup>
 </Project>

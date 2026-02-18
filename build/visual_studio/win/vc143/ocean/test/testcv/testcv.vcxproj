@@ -25,6 +25,30 @@
       <Configuration>Static Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+      <ProjectConfiguration Include="Shared Debug|ARM64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|ARM64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|ARM64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|ARM64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24453264-0ADA-48C9-945E-A4C486D85663}</ProjectGuid>
