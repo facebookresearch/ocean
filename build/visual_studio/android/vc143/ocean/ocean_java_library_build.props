@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Java Libraries (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_java_library_build_imported>True</ocean_java_library_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\ocean_common.props"/>
+  </ImportGroup>
+
+  <!-- Java-specific configuration suffix
+       Java projects use Debug/Release configurations (not Static Debug/Shared Release),
+       so we define a separate suffix that works with these simpler configuration names. -->
+  <PropertyGroup>
+    <OceanJavaConfigSuffix Condition="$(Configuration.Contains('Debug'))">_debug</OceanJavaConfigSuffix>
+    <OceanJavaConfigSuffix Condition="!$(Configuration.Contains('Debug'))"></OceanJavaConfigSuffix>
+  </PropertyGroup>
+
+  <!-- Combined configuration folder name for Java libraries (e.g., android_arm64_vc143_debug)
+       Note: Unlike native libraries, Java libraries don't have static/shared variants. -->
+  <PropertyGroup>
+    <OceanJavaConfigFolder>android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)$(OceanJavaConfigSuffix)</OceanJavaConfigFolder>
+  </PropertyGroup>
+
+  <!-- Output and intermediate directories -->
+  <PropertyGroup>
+    <OutDir>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\</OutDir>
+    <IntDir>$(OceanRootPath)bin\tmp\impl\ocean\$(ProjectName)\$(OceanJavaConfigFolder)\</IntDir>
+  </PropertyGroup>
+
+  <!-- Gradle build directories (redirected to IntDir to keep source tree clean)
+       Note: Do NOT add trailing backslashes - these paths are quoted in GradleProperties,
+       and a trailing backslash would escape the closing quote (e.g., "path\" becomes path" ...) -->
+  <PropertyGroup>
+    <GradleBuildDir>$(IntDir)gradle-build</GradleBuildDir>
+    <GradleCacheDir>$(IntDir)gradle-cache</GradleCacheDir>
+    <JavaStagingDir>$(IntDir)java-staging</JavaStagingDir>
+  </PropertyGroup>
+
+</Project>
