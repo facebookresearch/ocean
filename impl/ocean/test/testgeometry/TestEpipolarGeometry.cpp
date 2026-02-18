@@ -82,7 +82,7 @@ TEST(TestEpipolarGeometry, FundamentalMatrix)
 	EXPECT_TRUE(TestEpipolarGeometry::testFundamentalMatrix(GTEST_TEST_DURATION));
 }
 
-TEST(TestEpipolarGeometry, undamentalMatrixWithNoise)
+TEST(TestEpipolarGeometry, FundamentalMatrixWithNoise)
 {
 	EXPECT_TRUE(TestEpipolarGeometry::testFundamentalMatrixWithNoise(GTEST_TEST_DURATION));
 }
