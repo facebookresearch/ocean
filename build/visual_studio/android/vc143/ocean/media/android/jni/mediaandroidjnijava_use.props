@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Media Android JNI Java (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_mediaandroidjnijava_use_imported>True</ocean_mediaandroidjnijava_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_mediaandroidjnijava_common_imported)' != 'True'" Project="mediaandroidjnijava_common.props"/>
+  </ImportGroup>
+
+  <!-- AAR library path for Debug configurations -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanMediaAndroidJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanMediaAndroidJniD.aar</OceanMediaAndroidJniAAR>
+  </PropertyGroup>
+
+  <!-- AAR library path for Release configurations -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanMediaAndroidJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanMediaAndroidJni.aar</OceanMediaAndroidJniAAR>
+  </PropertyGroup>
+</Project>
