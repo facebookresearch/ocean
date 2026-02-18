@@ -10,6 +10,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -21,7 +22,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This class implements an MSBuild task that deploys an APK to an Android device using ADB.
  * @ingroup oceanandroidextension
  */
-public class AdbDeployTask : Task
+public class AdbDeployTask : CancelableTask
 {
 	/// The path to the ADB executable.
 	[Required]
@@ -84,8 +85,20 @@ public class AdbDeployTask : Task
 				Log.LogWarning("Could not determine package info from APK");
 			}
 
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
+			}
+
 			if (!InstallApk())
 			{
+				return false;
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
 				return false;
 			}
 
@@ -299,6 +312,8 @@ public class AdbDeployTask : Task
 
 	/**
 	 * Runs a process and returns the output.
+	 * Uses async output reads to avoid deadlocks when the child process
+	 * writes to both stdout and stderr concurrently.
 	 * @param fileName The executable path
 	 * @param arguments The command line arguments
 	 * @return The process output
@@ -323,17 +338,46 @@ public class AdbDeployTask : Task
 				return null;
 			}
 
-			var output = process.StandardOutput.ReadToEnd();
-			var error = process.StandardError.ReadToEnd();
+			RegisterProcess(process);
 
-			process.WaitForExit();
+			var outputBuilder = new StringBuilder();
+			var errorBuilder = new StringBuilder();
 
+			process.OutputDataReceived += (sender, eventArgs) =>
+			{
+				if (!string.IsNullOrEmpty(eventArgs.Data))
+				{
+					outputBuilder.AppendLine(eventArgs.Data);
+				}
+			};
+
+			process.ErrorDataReceived += (sender, eventArgs) =>
+			{
+				if (!string.IsNullOrEmpty(eventArgs.Data))
+				{
+					errorBuilder.AppendLine(eventArgs.Data);
+				}
+			};
+
+			process.BeginOutputReadLine();
+			process.BeginErrorReadLine();
+
+			try
+			{
+				process.WaitForExit();
+			}
+			finally
+			{
+				UnregisterProcess(process);
+			}
+
+			var error = errorBuilder.ToString();
 			if (!string.IsNullOrEmpty(error))
 			{
 				Log.LogMessage(MessageImportance.Low, $"stderr: {error}");
 			}
 
-			return output + error;
+			return outputBuilder.ToString() + error;
 		}
 		catch (Exception exception)
 		{

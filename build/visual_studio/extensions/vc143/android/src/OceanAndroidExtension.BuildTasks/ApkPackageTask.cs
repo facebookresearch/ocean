@@ -23,7 +23,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This class implements an MSBuild task that packages native libraries into an APK-ready structure.
  * @ingroup oceanandroidextension
  */
-public class ApkPackageTask : Task
+public class ApkPackageTask : CancelableTask
 {
 	/// The native library files to include.
 	[Required]
@@ -67,6 +67,12 @@ public class ApkPackageTask : Task
 
 			foreach (var library in NativeLibraries)
 			{
+				if (IsCancelled)
+				{
+					Log.LogMessage(MessageImportance.High, "Build cancelled.");
+					return false;
+				}
+
 				var sourcePath = library.ItemSpec;
 				if (!File.Exists(sourcePath))
 				{
@@ -170,7 +176,20 @@ public class ApkPackageTask : Task
 			};
 
 			using var process = Process.Start(startInfo);
-			process?.WaitForExit();
+
+			if (process != null)
+			{
+				RegisterProcess(process);
+
+				try
+				{
+					process.WaitForExit();
+				}
+				finally
+				{
+					UnregisterProcess(process);
+				}
+			}
 
 			if (process?.ExitCode == 0)
 			{

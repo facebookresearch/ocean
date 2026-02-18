@@ -22,7 +22,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This class implements an MSBuild task that compiles native C++ code using the Android NDK.
  * @ingroup oceanandroidextension
  */
-public class NdkCompileTask : Task
+public class NdkCompileTask : CancelableTask
 {
 	/// The path to the Android NDK.
 	[Required]
@@ -76,6 +76,12 @@ public class NdkCompileTask : Task
 
 			foreach (var abi in abis)
 			{
+				if (IsCancelled)
+				{
+					Log.LogMessage(MessageImportance.High, "Build cancelled.");
+					return false;
+				}
+
 				Log.LogMessage(MessageImportance.High, $"Building for ABI: {abi}");
 
 				if (!ConfigureAndBuild(abi, out var outputs))
@@ -90,6 +96,12 @@ public class NdkCompileTask : Task
 					item.SetMetadata("CopyToOutputDirectory", "PreserveNewest");
 					outputFiles.Add(item);
 				}
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
 			}
 
 			OutputFiles = outputFiles.ToArray();
@@ -172,7 +184,15 @@ public class NdkCompileTask : Task
 
 		if (RunProcess(CmakePath, configureArgs, ProjectDirectory) != 0)
 		{
-			Log.LogError($"CMake configuration failed for {abi}");
+			if (!IsCancelled)
+			{
+				Log.LogError($"CMake configuration failed for {abi}");
+			}
+			return false;
+		}
+
+		if (IsCancelled)
+		{
 			return false;
 		}
 
@@ -182,7 +202,10 @@ public class NdkCompileTask : Task
 
 		if (RunProcess(CmakePath, buildArgs, ProjectDirectory) != 0)
 		{
-			Log.LogError($"CMake build failed for {abi}");
+			if (!IsCancelled)
+			{
+				Log.LogError($"CMake build failed for {abi}");
+			}
 			return false;
 		}
 
@@ -310,9 +333,23 @@ public class NdkCompileTask : Task
 		};
 
 		process.Start();
+		RegisterProcess(process);
 		process.BeginOutputReadLine();
 		process.BeginErrorReadLine();
-		process.WaitForExit();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return -1;
+		}
 
 		return process.ExitCode;
 	}

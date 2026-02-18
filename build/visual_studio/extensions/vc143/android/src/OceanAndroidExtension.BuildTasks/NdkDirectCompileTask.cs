@@ -25,7 +25,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This approach provides better Visual Studio integration than CMake, with native error parsing and proper incremental build support through MSBuild's dependency tracking.
  * @ingroup oceanandroidextension
  */
-public class NdkDirectCompileTask : Task
+public class NdkDirectCompileTask : CancelableTask
 {
 	/// The regex pattern for parsing compiler errors.
 	private static readonly Regex ErrorRegex = new Regex(@"^(?<file>.+?):(?<line>\d+):(?<col>\d+):\s*(?<type>error|warning|note):\s*(?<msg>.+)$", RegexOptions.Compiled);
@@ -154,6 +154,12 @@ public class NdkDirectCompileTask : Task
 			bool allSucceeded = true;
 			foreach (var (source, objPath) in compileTasks)
 			{
+				if (IsCancelled)
+				{
+					Log.LogMessage(MessageImportance.High, "Build cancelled.");
+					return false;
+				}
+
 				var sourcePath = source.GetMetadata("FullPath");
 				if (string.IsNullOrEmpty(sourcePath))
 				{
@@ -181,12 +187,28 @@ public class NdkDirectCompileTask : Task
 
 			ObjectFiles = objectFiles.ToArray();
 
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
+			}
+
 			var libName = $"lib{LibraryName}.so";
 			var libPath = Path.Combine(OutputDirectory, TargetAbi, libName);
 			Directory.CreateDirectory(Path.GetDirectoryName(libPath)!);
 
 			if (!LinkLibrary(clangPath, sysrootPath, targetTriple, objectFiles, libPath))
 			{
+				if (IsCancelled)
+				{
+					Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				}
+				return false;
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
 				return false;
 			}
 
@@ -505,9 +527,23 @@ public class NdkDirectCompileTask : Task
 		};
 
 		process.Start();
+		RegisterProcess(process);
 		process.BeginOutputReadLine();
 		process.BeginErrorReadLine();
-		process.WaitForExit();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return false;
+		}
 
 		return process.ExitCode == 0;
 	}

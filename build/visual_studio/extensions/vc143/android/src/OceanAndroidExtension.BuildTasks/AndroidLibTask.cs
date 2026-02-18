@@ -24,7 +24,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This provides incremental build support via .tlog file generation.
  * @ingroup oceanandroidextension
  */
-public class AndroidLibTask : Task
+public class AndroidLibTask : CancelableTask
 {
 	/// The object files to archive.
 	[Required]
@@ -112,7 +112,16 @@ public class AndroidLibTask : Task
 
 			if (!RunArchiver(arguments, outputDirectory ?? "."))
 			{
-				Log.LogError("Static library creation failed. See errors above.");
+				if (!IsCancelled)
+				{
+					Log.LogError("Static library creation failed. See errors above.");
+				}
+				return false;
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
 				return false;
 			}
 
@@ -231,9 +240,23 @@ public class AndroidLibTask : Task
 		};
 
 		process.Start();
+		RegisterProcess(process);
 		process.BeginOutputReadLine();
 		process.BeginErrorReadLine();
-		process.WaitForExit();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return false;
+		}
 
 		return process.ExitCode == 0 && !hasErrors;
 	}

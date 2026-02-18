@@ -27,7 +27,7 @@ namespace OceanAndroidExtension.BuildTasks
  * Provides full incremental build support via .tlog file generation for Visual Studio integration.
  * @ingroup oceanandroidextension
  */
-public class AndroidClCompileTask : Task
+public class AndroidClCompileTask : CancelableTask
 {
 	/// The regex for parsing compiler error/warning output.
 	private static readonly Regex ErrorRegex = new Regex(
@@ -197,71 +197,96 @@ public class AndroidClCompileTask : Task
 
 			var parallelOptions = new System.Threading.Tasks.ParallelOptions
 			{
-				MaxDegreeOfParallelism = MaxParallelJobs > 0 ? MaxParallelJobs : Environment.ProcessorCount
+				MaxDegreeOfParallelism = MaxParallelJobs > 0 ? MaxParallelJobs : Environment.ProcessorCount,
+				CancellationToken = CancellationToken
 			};
 
-			System.Threading.Tasks.Parallel.ForEach(Sources, parallelOptions, source =>
+			try
 			{
-				var sourcePath = source.GetMetadata("FullPath");
-				if (string.IsNullOrEmpty(sourcePath))
+				System.Threading.Tasks.Parallel.ForEach(Sources, parallelOptions, source =>
 				{
-					sourcePath = source.ItemSpec;
-				}
-
-				string objPath;
-				if (!string.IsNullOrEmpty(ObjectFileDir))
-				{
-					var relativeDir = source.GetMetadata("RelativeDir") ?? "";
-					// Strip ".." segments so the path stays within IntDir
-					relativeDir = string.Join(
-						Path.DirectorySeparatorChar.ToString(),
-						relativeDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
-							.Where(p => p != ".."));
-					var filename = source.GetMetadata("Filename");
-					if (string.IsNullOrEmpty(filename))
+					if (IsCancelled)
 					{
-						filename = Path.GetFileNameWithoutExtension(sourcePath);
+						return;
 					}
-					objPath = Path.Combine(ObjectFileDir, relativeDir, filename + ".o");
-				}
-				else if (!string.IsNullOrEmpty(ObjectFileName))
-				{
-					objPath = ObjectFileName;
-				}
-				else
-				{
-					objPath = Path.Combine(tlogDirectory, Path.GetFileNameWithoutExtension(sourcePath) + ".o");
-				}
 
-				var objectDirectory = Path.GetDirectoryName(objPath);
-				if (!string.IsNullOrEmpty(objectDirectory) && !Directory.Exists(objectDirectory))
-				{
-					Directory.CreateDirectory(objectDirectory);
-				}
+					var sourcePath = source.GetMetadata("FullPath");
+					if (string.IsNullOrEmpty(sourcePath))
+					{
+						sourcePath = source.ItemSpec;
+					}
 
-				if (IsUpToDate(sourcePath, objPath, tlogDirectory))
-				{
-					Log.LogMessage(MessageImportance.Normal, $"Skipping {Path.GetFileName(sourcePath)} (up to date)");
-					var item = new TaskItem(objPath);
-					item.SetMetadata("SourceFile", sourcePath);
-					objectFiles.Add(item);
-					return;
-				}
+					string objPath;
+					if (!string.IsNullOrEmpty(ObjectFileDir))
+					{
+						var relativeDir = source.GetMetadata("RelativeDir") ?? "";
+						// Strip ".." segments so the path stays within IntDir
+						relativeDir = string.Join(
+							Path.DirectorySeparatorChar.ToString(),
+							relativeDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+								.Where(p => p != ".."));
+						var filename = source.GetMetadata("Filename");
+						if (string.IsNullOrEmpty(filename))
+						{
+							filename = Path.GetFileNameWithoutExtension(sourcePath);
+						}
+						objPath = Path.Combine(ObjectFileDir, relativeDir, filename + ".o");
+					}
+					else if (!string.IsNullOrEmpty(ObjectFileName))
+					{
+						objPath = ObjectFileName;
+					}
+					else
+					{
+						objPath = Path.Combine(tlogDirectory, Path.GetFileNameWithoutExtension(sourcePath) + ".o");
+					}
 
-				Log.LogMessage(MessageImportance.High, Path.GetFileName(sourcePath));
+					var objectDirectory = Path.GetDirectoryName(objPath);
+					if (!string.IsNullOrEmpty(objectDirectory) && !Directory.Exists(objectDirectory))
+					{
+						Directory.CreateDirectory(objectDirectory);
+					}
 
-				if (CompileSource(source, sourcePath, objPath, tlogDirectory))
-				{
-					var item = new TaskItem(objPath);
-					item.SetMetadata("SourceFile", sourcePath);
-					item.SetMetadata("AndroidAbi", AndroidAbi);
-					objectFiles.Add(item);
-				}
-				else
-				{
-					Interlocked.Increment(ref failureCount);
-				}
-			});
+					if (IsUpToDate(sourcePath, objPath, tlogDirectory))
+					{
+						Log.LogMessage(MessageImportance.Normal, $"Skipping {Path.GetFileName(sourcePath)} (up to date)");
+						var item = new TaskItem(objPath);
+						item.SetMetadata("SourceFile", sourcePath);
+						objectFiles.Add(item);
+						return;
+					}
+
+					Log.LogMessage(MessageImportance.High, Path.GetFileName(sourcePath));
+
+					if (IsCancelled)
+					{
+						return;
+					}
+
+					if (CompileSource(source, sourcePath, objPath, tlogDirectory))
+					{
+						var item = new TaskItem(objPath);
+						item.SetMetadata("SourceFile", sourcePath);
+						item.SetMetadata("AndroidAbi", AndroidAbi);
+						objectFiles.Add(item);
+					}
+					else
+					{
+						Interlocked.Increment(ref failureCount);
+					}
+				});
+			}
+			catch (OperationCanceledException)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
+			}
 
 			ObjectFiles = objectFiles.ToArray();
 
@@ -505,6 +530,15 @@ public class AndroidClCompileTask : Task
 
 		Log.LogMessage(MessageImportance.Low, $"{CompilerPath} {arguments}");
 
+		// Delete the output file before compiling so that a killed compiler
+		// leaves no file rather than a truncated .o that the timestamp-based
+		// up-to-date check would consider valid on the next build.
+		if (File.Exists(objPath))
+		{
+			try { File.Delete(objPath); }
+			catch (IOException) { }
+		}
+
 		return RunCompiler(arguments.ToString(), Path.GetDirectoryName(sourcePath) ?? ".");
 	}
 
@@ -646,9 +680,23 @@ public class AndroidClCompileTask : Task
 		};
 
 		process.Start();
+		RegisterProcess(process);
 		process.BeginOutputReadLine();
 		process.BeginErrorReadLine();
-		process.WaitForExit();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return false;
+		}
 
 		return process.ExitCode == 0;
 	}

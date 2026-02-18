@@ -24,7 +24,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This class implements an MSBuild task that invokes Gradle for Android builds.
  * @ingroup oceanandroidextension
  */
-public class GradleBuildTask : Task
+public class GradleBuildTask : CancelableTask
 {
 	/// The path to the Gradle executable or wrapper script.
 	[Required]
@@ -76,6 +76,12 @@ public class GradleBuildTask : Task
 				return false;
 			}
 
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
+			}
+
 			var arguments = BuildArguments();
 			var environment = BuildEnvironment();
 
@@ -87,6 +93,12 @@ public class GradleBuildTask : Task
 			}
 
 			var exitCode = RunProcess(GradleExecutable, arguments, environment);
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
+			}
 
 			if (exitCode != 0)
 			{
@@ -257,9 +269,23 @@ public class GradleBuildTask : Task
 		};
 
 		process.Start();
+		RegisterProcess(process);
 		process.BeginOutputReadLine();
 		process.BeginErrorReadLine();
-		process.WaitForExit();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return -1;
+		}
 
 		return process.ExitCode;
 	}

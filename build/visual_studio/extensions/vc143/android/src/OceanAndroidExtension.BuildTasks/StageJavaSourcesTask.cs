@@ -22,7 +22,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This enables flat Java source layouts while maintaining proper compilation by Gradle.
  * @ingroup oceanandroidextension
  */
-public class StageJavaSourcesTask : Task
+public class StageJavaSourcesTask : CancelableTask
 {
 	/// The regex pattern for extracting package declarations.
 	private static readonly Regex PackageRegex = new Regex(@"^\s*package\s+([\w.]+)\s*;", RegexOptions.Multiline | RegexOptions.Compiled);
@@ -68,6 +68,12 @@ public class StageJavaSourcesTask : Task
 
 			foreach (var source in JavaSources)
 			{
+				if (IsCancelled)
+				{
+					Log.LogMessage(MessageImportance.High, "Build cancelled.");
+					return false;
+				}
+
 				var sourcePath = source.GetMetadata("FullPath");
 				if (string.IsNullOrEmpty(sourcePath))
 				{

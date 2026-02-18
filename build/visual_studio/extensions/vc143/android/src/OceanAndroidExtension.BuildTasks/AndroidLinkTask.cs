@@ -25,7 +25,7 @@ namespace OceanAndroidExtension.BuildTasks
  * This provides incremental build support via .tlog file generation.
  * @ingroup oceanandroidextension
  */
-public class AndroidLinkTask : Task
+public class AndroidLinkTask : CancelableTask
 {
 	/// The regex pattern for parsing linker errors.
 	private static readonly Regex ErrorRegex = new Regex(@"^(?<file>.+?):(?<line>\d+)?:?\s*(?<type>error|warning|undefined reference):\s*(?<msg>.+)$", RegexOptions.Compiled);
@@ -153,13 +153,28 @@ public class AndroidLinkTask : Task
 
 			if (!RunLinker(arguments, outputDirectory ?? "."))
 			{
-				Log.LogError("Linking failed. See errors above.");
+				if (!IsCancelled)
+				{
+					Log.LogError("Linking failed. See errors above.");
+				}
+				return false;
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
 				return false;
 			}
 
 			if (StripSymbols && File.Exists(OutputFile))
 			{
 				StripOutputSymbols();
+			}
+
+			if (IsCancelled)
+			{
+				Log.LogMessage(MessageImportance.High, "Build cancelled.");
+				return false;
 			}
 
 			OutputLibrary = OutputFile;
@@ -393,9 +408,23 @@ public class AndroidLinkTask : Task
 		};
 
 		process.Start();
+		RegisterProcess(process);
 		process.BeginOutputReadLine();
 		process.BeginErrorReadLine();
-		process.WaitForExit();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return false;
+		}
 
 		return process.ExitCode == 0 && !hasErrors;
 	}
@@ -478,7 +507,24 @@ public class AndroidLinkTask : Task
 
 		using var process = new Process { StartInfo = startInfo };
 		process.Start();
-		process.WaitForExit();
+
+		RegisterProcess(process);
+		process.BeginOutputReadLine();
+		process.BeginErrorReadLine();
+
+		try
+		{
+			process.WaitForExit();
+		}
+		finally
+		{
+			UnregisterProcess(process);
+		}
+
+		if (IsCancelled)
+		{
+			return;
+		}
 
 		if (process.ExitCode != 0)
 		{
