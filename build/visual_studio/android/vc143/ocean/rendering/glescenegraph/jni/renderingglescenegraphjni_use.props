@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Rendering GLESceneGraph JNI (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_renderingglescenegraphjni_use_imported>True</ocean_renderingglescenegraphjni_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_renderingglescenegraphjni_common_imported)' != 'True'" Project="renderingglescenegraphjni_common.props"/>
+  </ImportGroup>
+
+  <!-- Link library for Debug configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <OceanRenderingGLESceneGraphJniLib>OceanRenderingGLESceneGraphJniD.lib</OceanRenderingGLESceneGraphJniLib>
+  </PropertyGroup>
+
+  <!-- Link library for Release configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <OceanRenderingGLESceneGraphJniLib>OceanRenderingGLESceneGraphJni.lib</OceanRenderingGLESceneGraphJniLib>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>$(OceanRenderingGLESceneGraphJniLib);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
