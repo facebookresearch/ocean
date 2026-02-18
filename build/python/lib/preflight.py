@@ -64,8 +64,8 @@ class LogLevel(Enum):
 # Minimum required versions
 MIN_CMAKE_VERSION = (
     3,
-    16,
-)  # CMake 3.16 is widely available and supports modern features
+    25,
+)  # CMake 3.25 required for modern Android toolchain and preset support
 MIN_GIT_VERSION = (2, 0)
 
 
@@ -311,9 +311,49 @@ def run_preflight_checks(log_level: LogLevel = LogLevel.STATUS) -> bool:
         print("Pre-flight checks failed. Please install missing dependencies.")
         return False
 
+    # On Windows, warn about Long Path support
+    if os.name == "nt":
+        _check_long_path_support(log_level)
+
     if log_level >= LogLevel.STATUS:
         print("Pre-flight checks passed.")
     return True
+
+
+def _check_long_path_support(log_level: LogLevel) -> None:
+    """Check if Windows Long Path support is enabled and warn if not.
+
+    Build paths can easily exceed the 260-character MAX_PATH limit on Windows.
+    This checks the registry to see if long paths are enabled and prints a
+    warning with remediation steps if they are not.
+    """
+    try:
+        import winreg
+
+        key = winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE,
+            r"SYSTEM\CurrentControlSet\Control\FileSystem",
+        )
+        value, _ = winreg.QueryValueEx(key, "LongPathsEnabled")
+        winreg.CloseKey(key)
+
+        if value == 1:
+            if log_level >= LogLevel.STATUS:
+                print("  ✓ Windows Long Path support is enabled.")
+            return
+    except Exception:
+        pass
+
+    # Long paths not enabled or we couldn't check
+    print("  ⚠ WARNING: Windows Long Path support is not enabled.")
+    print("    Build paths may exceed the 260-character MAX_PATH limit, causing failures.")
+    print("    To enable (requires Administrator privileges):")
+    print("      reg add HKLM\\SYSTEM\\CurrentControlSet\\Control\\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f")
+    print("    Or via Group Policy Editor:")
+    print("      Computer Configuration > Administrative Templates > System > Filesystem")
+    print("      > Enable Win32 long paths")
+    print("    A system restart may be required after enabling this setting.")
+    print()
 
 
 def _print_install_instructions(tool: str) -> None:

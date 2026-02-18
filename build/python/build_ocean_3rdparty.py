@@ -1702,6 +1702,14 @@ def main() -> int:  # noqa: C901
 
     print(f"Targets: {', '.join(t.to_path_component() for t in targets)}")
 
+    # Display Android NDK path if any Android targets are selected
+    if any(t.os == OS.ANDROID for t in targets):
+        from lib.platform import get_android_ndk_path
+
+        ndk_path = get_android_ndk_path()
+        if ndk_path:
+            print(f"Android NDK: {ndk_path}")
+
     # Check toolchains for target platforms (unless skipped)
     if not args.skip_preflight and not args.dry_run:
         target_strs = [t.to_path_component() for t in targets]
