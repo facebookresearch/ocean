@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Network JNI Java (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_networkjnijava_use_imported>True</ocean_networkjnijava_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_networkjnijava_common_imported)' != 'True'" Project="networkjnijava_common.props"/>
+  </ImportGroup>
+
+  <!-- AAR library path for Debug configurations -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanNetworkJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanNetworkJniD.aar</OceanNetworkJniAAR>
+  </PropertyGroup>
+
+  <!-- AAR library path for Release configurations -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanNetworkJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanNetworkJni.aar</OceanNetworkJniAAR>
+  </PropertyGroup>
+</Project>

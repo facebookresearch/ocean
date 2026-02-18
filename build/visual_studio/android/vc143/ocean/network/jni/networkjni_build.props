@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Network JNI (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_networkjni_build_imported>True</ocean_networkjni_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_networkjni_common_imported)' != 'True'" Project="networkjni_common.props"/>
+    <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <!-- Target name for Debug configurations -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <TargetName>OceanNetworkJniD</TargetName>
+  </PropertyGroup>
+
+  <!-- Target name for Release configurations -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <TargetName>OceanNetworkJni</TargetName>
+  </PropertyGroup>
+</Project>
