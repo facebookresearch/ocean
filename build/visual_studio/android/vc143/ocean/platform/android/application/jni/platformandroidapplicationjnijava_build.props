@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Platform Android Application JNI Java (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_platformandroidapplicationjnijava_build_imported>True</ocean_platformandroidapplicationjnijava_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_platformandroidapplicationjnijava_common_imported)' != 'True'" Project="platformandroidapplicationjnijava_common.props"/>
+    <Import Condition="'$(ocean_java_library_build_imported)' != 'True'" Project="..\..\..\..\ocean_java_library_build.props"/>
+  </ImportGroup>
+
+  <!-- Target name for Debug configurations -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <TargetName>OceanPlatformAndroidApplicationJniD</TargetName>
+  </PropertyGroup>
+
+  <!-- Target name for Release configurations -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <TargetName>OceanPlatformAndroidApplicationJni</TargetName>
+  </PropertyGroup>
+</Project>
