@@ -239,6 +239,10 @@ using WStrings = std::vector<std::wstring>;
 // Defines OCEAN_HARDWARE_NEON_VERSION for platforms supporting NEON instructions
 #ifndef OCEAN_HARDWARE_NEON_VERSION
 	#if defined(__ARM_NEON__) || defined(__ARM_NEON)
+		// Clang and GCC
+		#define OCEAN_HARDWARE_NEON_VERSION 10
+	#elif defined(_M_ARM64)
+		// MSVC
 		#define OCEAN_HARDWARE_NEON_VERSION 10
 	#endif
 #endif
@@ -359,8 +363,8 @@ using WStrings = std::vector<std::wstring>;
 			#define OCEAN_HARDWARE_SSE_VERSION 41
 		#endif
 
-		// The 64 bit compiler provides SSE support by default
-		#if defined(_WIN64)
+		// The 64 bit compiler (x64) provides SSE support by default
+		#if defined(_M_X64)
 			#define OCEAN_HARDWARE_SSE_VERSION 41
 		#endif
 
