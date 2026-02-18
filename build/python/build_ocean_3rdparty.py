@@ -771,7 +771,8 @@ UNWANTED_EXTENSIONS = {".md", ".json", ".lock", ".cmake", ".txt", ".rst", ".3", 
 def _copy_headers_filtered(src_dir: Path, dest_dir: Path) -> None:
     """Copy header files, filtering out unwanted file types.
 
-    Only copies files with allowed header extensions.
+    Copies files with allowed header extensions and extension-less files
+    (e.g., Eigen's Dense, Sparse, Core headers).
     Skips documentation, cmake files, man pages, etc.
     """
     import shutil
@@ -784,10 +785,15 @@ def _copy_headers_filtered(src_dir: Path, dest_dir: Path) -> None:
             # Don't ignore directories (we want to traverse them)
             if path.is_dir():
                 continue
-            # Check if file has an allowed extension
             ext = path.suffix.lower()
-            if ext not in ALLOWED_HEADER_EXTENSIONS:
-                ignored.append(f)
+            # Keep files with allowed header extensions
+            if ext in ALLOWED_HEADER_EXTENSIONS:
+                continue
+            # Keep extension-less files (e.g., Eigen's Dense, Sparse, Core)
+            if ext == "":
+                continue
+            # Skip known unwanted extensions
+            ignored.append(f)
         return ignored
 
     shutil.copytree(src_dir, dest_dir, ignore=ignore_unwanted)
