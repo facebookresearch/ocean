@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean SceneDescription SDL Assimp JNI Java (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_scenedescriptionsdlassimpjnijava_use_imported>True</ocean_scenedescriptionsdlassimpjnijava_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_scenedescriptionsdlassimpjnijava_common_imported)' != 'True'" Project="scenedescriptionsdlassimpjnijava_common.props"/>
+  </ImportGroup>
+
+  <!-- AAR library path for Debug configurations -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanSceneDescriptionSDLAssimpJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanSceneDescriptionSDLAssimpJniD.aar</OceanSceneDescriptionSDLAssimpJniAAR>
+  </PropertyGroup>
+
+  <!-- AAR library path for Release configurations -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanSceneDescriptionSDLAssimpJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanSceneDescriptionSDLAssimpJni.aar</OceanSceneDescriptionSDLAssimpJniAAR>
+  </PropertyGroup>
+</Project>
