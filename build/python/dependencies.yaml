@@ -57,6 +57,7 @@ libraries:
       options:
         BUILD_GMOCK: ON
         INSTALL_GTEST: ON
+        gtest_force_shared_crt: ON
     platforms: all
 
   tinyxml2:
