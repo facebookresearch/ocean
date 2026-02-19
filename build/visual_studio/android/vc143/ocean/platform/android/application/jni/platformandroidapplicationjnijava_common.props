@@ -10,5 +10,9 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_basejnijava_use_imported)' != 'True'" Project="..\..\..\..\base\jni\basejnijava_use.props"/>
+    <Import Condition="'$(ocean_mediaandroidjnijava_use_imported)' != 'True'" Project="..\..\..\..\media\android\jni\mediaandroidjnijava_use.props"/>
+    <Import Condition="'$(ocean_platformandroidjava_use_imported)' != 'True'" Project="..\..\..\androidjava\platformandroidjava_use.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraphjnijava_use_imported)' != 'True'" Project="..\..\..\..\rendering\glescenegraph\jni\renderingglescenegraphjnijava_use.props"/>
   </ImportGroup>
 </Project>

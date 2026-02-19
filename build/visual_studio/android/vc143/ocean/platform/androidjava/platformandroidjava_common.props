@@ -10,5 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_devicesandroidjnijava_use_imported)' != 'True'" Project="..\..\devices\android\jni\devicesandroidjnijava_use.props"/>
+    <Import Condition="'$(ocean_networkjnijava_use_imported)' != 'True'" Project="..\..\network\jni\networkjnijava_use.props"/>
   </ImportGroup>
 </Project>

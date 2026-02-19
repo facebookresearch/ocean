@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_mediausbjnijava_common_imported)' != 'True'" Project="mediausbjnijava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanMediaUSBJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanMediaUSBJniD.aar</OceanMediaUSBJniAAR>
+    <GradleLocalAARDependencies>OceanMediaUSBJniD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanMediaUSBJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanMediaUSBJni.aar</OceanMediaUSBJniAAR>
+    <GradleLocalAARDependencies>OceanMediaUSBJni.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

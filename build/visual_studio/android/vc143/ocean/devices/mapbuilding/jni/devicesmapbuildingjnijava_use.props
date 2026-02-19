@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_devicesmapbuildingjnijava_common_imported)' != 'True'" Project="devicesmapbuildingjnijava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanDevicesMapBuildingJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanDevicesMapBuildingJniD.aar</OceanDevicesMapBuildingJniAAR>
+    <GradleLocalAARDependencies>OceanDevicesMapBuildingJniD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanDevicesMapBuildingJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanDevicesMapBuildingJni.aar</OceanDevicesMapBuildingJniAAR>
+    <GradleLocalAARDependencies>OceanDevicesMapBuildingJni.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

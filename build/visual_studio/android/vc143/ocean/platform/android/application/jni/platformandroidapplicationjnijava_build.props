@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
-    <Import Condition="'$(ocean_platformandroidapplicationjnijava_common_imported)' != 'True'" Project="platformandroidapplicationjnijava_common.props"/>
     <Import Condition="'$(ocean_java_library_build_imported)' != 'True'" Project="..\..\..\..\ocean_java_library_build.props"/>
+    <Import Condition="'$(ocean_platformandroidapplicationjnijava_common_imported)' != 'True'" Project="platformandroidapplicationjnijava_common.props"/>
   </ImportGroup>
 
   <!-- Target name for Debug configurations -->
@@ -21,5 +21,10 @@
   <!-- Target name for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
     <TargetName>OceanPlatformAndroidApplicationJni</TargetName>
+  </PropertyGroup>
+
+  <!-- Java library dependencies -->
+  <PropertyGroup>
+    <GradleImplementationDependencies>androidx.appcompat:appcompat:1.6.1</GradleImplementationDependencies>
   </PropertyGroup>
 </Project>

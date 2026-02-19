@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_platformandroidjava_common_imported)' != 'True'" Project="platformandroidjava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanPlatformAndroidJavaAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanPlatformAndroidJavaD.aar</OceanPlatformAndroidJavaAAR>
+    <GradleLocalAARDependencies>OceanPlatformAndroidJavaD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanPlatformAndroidJavaAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanPlatformAndroidJava.aar</OceanPlatformAndroidJavaAAR>
+    <GradleLocalAARDependencies>OceanPlatformAndroidJava.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

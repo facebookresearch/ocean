@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_mediaopenimagelibrariesjnijava_common_imported)' != 'True'" Project="mediaopenimagelibrariesjnijava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanMediaOpenImageLibrariesJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanMediaOpenImageLibrariesJniD.aar</OceanMediaOpenImageLibrariesJniAAR>
+    <GradleLocalAARDependencies>OceanMediaOpenImageLibrariesJniD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanMediaOpenImageLibrariesJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanMediaOpenImageLibrariesJni.aar</OceanMediaOpenImageLibrariesJniAAR>
+    <GradleLocalAARDependencies>OceanMediaOpenImageLibrariesJni.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

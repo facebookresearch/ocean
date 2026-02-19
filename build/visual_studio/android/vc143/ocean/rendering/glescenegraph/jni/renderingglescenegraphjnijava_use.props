@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_renderingglescenegraphjnijava_common_imported)' != 'True'" Project="renderingglescenegraphjnijava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanRenderingGLESceneGraphJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanRenderingGLESceneGraphJniD.aar</OceanRenderingGLESceneGraphJniAAR>
+    <GradleLocalAARDependencies>OceanRenderingGLESceneGraphJniD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanRenderingGLESceneGraphJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanRenderingGLESceneGraphJni.aar</OceanRenderingGLESceneGraphJniAAR>
+    <GradleLocalAARDependencies>OceanRenderingGLESceneGraphJni.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

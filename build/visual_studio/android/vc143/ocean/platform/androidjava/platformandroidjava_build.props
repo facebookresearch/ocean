@@ -9,11 +9,8 @@
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
-    <Import Condition="'$(ocean_platformandroidjava_common_imported)' != 'True'" Project="platformandroidjava_common.props"/>
     <Import Condition="'$(ocean_java_library_build_imported)' != 'True'" Project="..\..\ocean_java_library_build.props"/>
-    <!-- Import AAR paths from Java library dependencies -->
-    <Import Condition="'$(ocean_devicesandroidjnijava_use_imported)' != 'True'" Project="..\..\devices\android\jni\devicesandroidjnijava_use.props"/>
-    <Import Condition="'$(ocean_networkjnijava_use_imported)' != 'True'" Project="..\..\network\jni\networkjnijava_use.props"/>
+    <Import Condition="'$(ocean_platformandroidjava_common_imported)' != 'True'" Project="platformandroidjava_common.props"/>
   </ImportGroup>
 
   <!-- Target name for Debug configurations -->
@@ -29,10 +26,5 @@
   <!-- Gradle dependencies (api scope, exported to consumers) -->
   <PropertyGroup>
     <GradleDependencies>com.google.android.gms:play-services-location:21.0.1</GradleDependencies>
-  </PropertyGroup>
-
-  <!-- Local AAR dependencies (compile-only, classes from other Ocean Java libraries) -->
-  <PropertyGroup>
-    <GradleLocalAARDependencies>$(OceanDevicesAndroidJniAAR);$(OceanNetworkJniAAR)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

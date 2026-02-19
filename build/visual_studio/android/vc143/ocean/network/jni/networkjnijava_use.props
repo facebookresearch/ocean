@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_networkjnijava_common_imported)' != 'True'" Project="networkjnijava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanNetworkJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanNetworkJniD.aar</OceanNetworkJniAAR>
+    <GradleLocalAARDependencies>OceanNetworkJniD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanNetworkJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanNetworkJni.aar</OceanNetworkJniAAR>
+    <GradleLocalAARDependencies>OceanNetworkJni.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>

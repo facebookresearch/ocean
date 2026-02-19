@@ -12,13 +12,11 @@
     <Import Condition="'$(ocean_scenedescriptionsdlobjjnijava_common_imported)' != 'True'" Project="scenedescriptionsdlobjjnijava_common.props"/>
   </ImportGroup>
 
-  <!-- AAR library path for Debug configurations -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanSceneDescriptionSDLOBJJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanSceneDescriptionSDLOBJJniD.aar</OceanSceneDescriptionSDLOBJJniAAR>
+    <GradleLocalAARDependencies>OceanSceneDescriptionSDLOBJJniD.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 
-  <!-- AAR library path for Release configurations -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanSceneDescriptionSDLOBJJniAAR>$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)\OceanSceneDescriptionSDLOBJJni.aar</OceanSceneDescriptionSDLOBJJniAAR>
+    <GradleLocalAARDependencies>OceanSceneDescriptionSDLOBJJni.aar;$(GradleLocalAARDependencies)</GradleLocalAARDependencies>
   </PropertyGroup>
 </Project>
