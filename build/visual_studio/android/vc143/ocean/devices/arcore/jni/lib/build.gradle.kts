@@ -33,6 +33,13 @@ val gradleDependencies: String = project.findProperty("gradleDependencies") as S
 val gradleImplementationDependencies: String =
     project.findProperty("gradleImplementationDependencies") as String? ?: ""
 
+// Local AAR dependencies (semicolon or newline separated file names)
+val gradleLocalAARDependencies: String =
+    project.findProperty("gradleLocalAARDependencies") as String? ?: ""
+
+// Directory containing local AAR files (analog of AdditionalLibraryDirectories on Windows)
+val gradleLocalAARDir: String = project.findProperty("gradleLocalAARDir") as String? ?: ""
+
 // Map Java version string to JavaVersion enum
 val javaVersion: JavaVersion =
     when (javaVersionStr) {
@@ -84,6 +91,25 @@ android {
 }
 
 dependencies {
+  // Parse and add local AAR file dependencies (compileOnly - classes available at compile time)
+  // Format: file names separated by semicolons or newlines, resolved against gradleLocalAARDir
+  gradleLocalAARDependencies
+      .split(";", "\n", "\r\n")
+      .map { it.trim() }
+      .filter { it.isNotEmpty() }
+      .forEach { aarName ->
+        val aarFile =
+            if (gradleLocalAARDir.isNotEmpty()) file("$gradleLocalAARDir/$aarName")
+            else file(aarName)
+        if (aarFile.exists()) {
+          compileOnly(files(aarFile))
+        } else {
+          logger.warn(
+              "WARNING: Local AAR dependency not found: $aarFile — build the dependency project first."
+          )
+        }
+      }
+
   // Parse and add 'api' dependencies (exported to consumers)
   // Format: "group:artifact:version" separated by semicolons or newlines
   gradleDependencies
