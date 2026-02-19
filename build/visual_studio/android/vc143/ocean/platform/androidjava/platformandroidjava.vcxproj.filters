@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="lib">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\src">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gradle">
+      <UniqueIdentifier>{C5E6F7A8-9B0C-4D3E-1F2A-3B4C5D6E7F8A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Java sources -->
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanLocationManager.java">
+      <Filter>lib\src</Filter>
+    </JavaSource>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanWifiManager.java">
+      <Filter>lib\src</Filter>
+    </JavaSource>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.java">
+      <Filter>lib\src</Filter>
+    </JavaSource>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Assets.java">
+      <Filter>lib\src</Filter>
+    </JavaSource>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesAndroidJni.java">
+      <Filter>lib\src</Filter>
+    </JavaSource>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\network\NetworkJni.java">
+      <Filter>lib\src</Filter>
+    </JavaSource>
+    <!-- Library module build file -->
+    <None Include="lib\build.gradle.kts">
+      <Filter>lib</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Gradle build files in gradle subfolder -->
+    <None Include="gradle\build.gradle.kts">
+      <Filter>gradle</Filter>
+    </None>
+    <None Include="gradle\settings.gradle.kts">
+      <Filter>gradle</Filter>
+    </None>
+    <None Include="gradle\gradle.properties">
+      <Filter>gradle</Filter>
+    </None>
+  </ItemGroup>
+</Project>
