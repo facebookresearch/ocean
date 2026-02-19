@@ -780,6 +780,7 @@ CGColorSpaceRef IIOObject::determineColorSpace(const FrameType::PixelFormat main
 			{"kCGColorSpaceAdobeRGB1998", {FrameType::FORMAT_RGB24, kCGColorSpaceAdobeRGB1998}},
 
 			{"Generic HDR Profile", {FrameType::FORMAT_RGB24, kCGColorSpaceGenericRGBLinear}},
+			{"Generic RGB Linear Profile", {FrameType::FORMAT_RGB24, kCGColorSpaceGenericRGBLinear}},
 			{"kCGColorSpaceGenericRGBLinear", {FrameType::FORMAT_RGB24, kCGColorSpaceGenericRGBLinear}},
 
 			{"ROMM RGB: ISO 22028-2:2013", {FrameType::FORMAT_RGB24, kCGColorSpaceROMMRGB}},
