@@ -154,8 +154,8 @@ void GICylinder::rebuildPrimitives()
 		const Scalar angle = Scalar(n) * angleFactor;
 		const Normal normal(sin(angle), 0, cos(angle));
 
-		topRingVertices.push_back(Vertex(normal.x() * cylinderRadius, height2, normal.z() * cylinderRadius));
-		bottomRingVertices.push_back(Vertex(normal.x() * cylinderRadius, -height2, normal.z() * cylinderRadius));
+		topRingVertices.emplace_back(normal.x() * cylinderRadius, height2, normal.z() * cylinderRadius);
+		bottomRingVertices.emplace_back(normal.x() * cylinderRadius, -height2, normal.z() * cylinderRadius);
 
 		sideNormals.push_back(normal);
 	}
@@ -207,8 +207,8 @@ void GICylinder::rebuildPrimitives()
 			normals.insert(normals.end(), 2, sideNormals[n]);
 
 			const Scalar texX = textureFactor * Scalar(n);
-			textureCoordinates.push_back(TextureCoordinate(texX, 1));
-			textureCoordinates.push_back(TextureCoordinate(texX, 0));
+			textureCoordinates.emplace_back(texX, 1);
+			textureCoordinates.emplace_back(texX, 0);
 		}
 
 		vertices.push_back(topRingVertices.front());
@@ -216,8 +216,8 @@ void GICylinder::rebuildPrimitives()
 
 		normals.insert(normals.end(), 2, sideNormals.front());
 
-		textureCoordinates.push_back(TextureCoordinate(1, 1));
-		textureCoordinates.push_back(TextureCoordinate(1, 0));
+		textureCoordinates.emplace_back(1, 1);
+		textureCoordinates.emplace_back(1, 0);
 
 		// strip for the side
 		strips[stripIndex].reserve(side);
@@ -237,8 +237,8 @@ void GICylinder::rebuildPrimitives()
 			const Scalar angle = Scalar(n) * angleFactor;
 
 			vertices.push_back(topRingVertices[n]);
-			normals.push_back(Normal(0, 1, 0));
-			textureCoordinates.push_back(TextureCoordinate(Scalar(0.5) + sin(angle) * Scalar(0.5), Scalar(0.5) - cos(angle) * Scalar(0.5)));
+			normals.emplace_back(0, 1, 0);
+			textureCoordinates.emplace_back(Scalar(0.5) + sin(angle) * Scalar(0.5), Scalar(0.5) - cos(angle) * Scalar(0.5));
 		}
 
 		// strip for top
@@ -277,9 +277,9 @@ void GICylinder::rebuildPrimitives()
 			const Scalar angle = Scalar(n) * angleFactor;
 
 			vertices.push_back(bottomRingVertices[n]);
-			normals.push_back(Normal(0, -1, 0));
+			normals.emplace_back(0, -1, 0);
 
-			textureCoordinates.push_back(TextureCoordinate(Scalar(0.5) + sin(angle) * Scalar(0.5), Scalar(0.5) + cos(angle) * Scalar(0.5)));
+			textureCoordinates.emplace_back(Scalar(0.5) + sin(angle) * Scalar(0.5), Scalar(0.5) + cos(angle) * Scalar(0.5));
 		}
 
 		// strip for bottom
