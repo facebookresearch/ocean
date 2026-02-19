@@ -39,6 +39,7 @@
     <GradleBuildDir>$(IntDir)gradle-build</GradleBuildDir>
     <GradleCacheDir>$(IntDir)gradle-cache</GradleCacheDir>
     <JavaStagingDir>$(IntDir)java-staging</JavaStagingDir>
+    <GradleLocalAARDir Condition="'$(GradleLocalAARDir)' == ''">$(OceanRootPath)bin\java\$(OceanJavaConfigFolder)</GradleLocalAARDir>
   </PropertyGroup>
 
 </Project>
