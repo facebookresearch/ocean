@@ -114,7 +114,7 @@ bool System::isMinimalVersion(const unsigned int minimalMajor, const unsigned in
 	ocean_assert(minimalMajor >= 10u);
 
 	NSOperatingSystemVersion version = [[[NSProcessInfo alloc] init] operatingSystemVersion];
-	ocean_assert(version.majorVersion > 0 && version.minorVersion > 0);
+	ocean_assert(version.majorVersion > 0 && version.minorVersion >= 0);
 
 	if ((unsigned int)(version.majorVersion) > minimalMajor)
 	{
