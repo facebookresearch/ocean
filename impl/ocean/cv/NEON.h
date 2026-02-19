@@ -590,7 +590,7 @@ class NEON
 
 constexpr uint8x8_t NEON::create_uint8x8(const uint8_t v0, const uint8_t v1, const uint8_t v2, const uint8_t v3, const uint8_t v4, const uint8_t v5, const uint8_t v6, const uint8_t v7)
 {
-#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+#ifdef OCEAN_COMPILER_MSC
 	return uint8x8_t{{uint64_t(v0) | (uint64_t(v1) << 8) | (uint64_t(v2) << 16) | (uint64_t(v3) << 24) | (uint64_t(v4) << 32) | (uint64_t(v5) << 40) | (uint64_t(v6) << 48) | (uint64_t(v7) << 56)}};
 #else
 	return uint8x8_t{v0, v1, v2, v3, v4, v5, v6, v7};
@@ -599,7 +599,7 @@ constexpr uint8x8_t NEON::create_uint8x8(const uint8_t v0, const uint8_t v1, con
 
 constexpr uint8x16_t NEON::create_uint8x16(const uint8_t v0, const uint8_t v1, const uint8_t v2, const uint8_t v3, const uint8_t v4, const uint8_t v5, const uint8_t v6, const uint8_t v7, const uint8_t v8, const uint8_t v9, const uint8_t v10, const uint8_t v11, const uint8_t v12, const uint8_t v13, const uint8_t v14, const uint8_t v15)
 {
-#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+#ifdef OCEAN_COMPILER_MSC
 	return uint8x16_t{{uint64_t(v0) | (uint64_t(v1) << 8) | (uint64_t(v2) << 16) | (uint64_t(v3) << 24) | (uint64_t(v4) << 32) | (uint64_t(v5) << 40) | (uint64_t(v6) << 48) | (uint64_t(v7) << 56), uint64_t(v8) | (uint64_t(v9) << 8) | (uint64_t(v10) << 16) | (uint64_t(v11) << 24) | (uint64_t(v12) << 32) | (uint64_t(v13) << 40) | (uint64_t(v14) << 48) | (uint64_t(v15) << 56)}};
 #else
 	return uint8x16_t{v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15};
@@ -608,7 +608,7 @@ constexpr uint8x16_t NEON::create_uint8x16(const uint8_t v0, const uint8_t v1, c
 
 constexpr int8x16_t NEON::create_int8x16(const int8_t v0, const int8_t v1, const int8_t v2, const int8_t v3, const int8_t v4, const int8_t v5, const int8_t v6, const int8_t v7, const int8_t v8, const int8_t v9, const int8_t v10, const int8_t v11, const int8_t v12, const int8_t v13, const int8_t v14, const int8_t v15)
 {
-#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+#ifdef OCEAN_COMPILER_MSC
 	return int8x16_t{create_uint8x16(uint8_t(v0), uint8_t(v1), uint8_t(v2), uint8_t(v3), uint8_t(v4), uint8_t(v5), uint8_t(v6), uint8_t(v7), uint8_t(v8), uint8_t(v9), uint8_t(v10), uint8_t(v11), uint8_t(v12), uint8_t(v13), uint8_t(v14), uint8_t(v15))};
 #else
 	return int8x16_t{v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15};
@@ -617,7 +617,7 @@ constexpr int8x16_t NEON::create_int8x16(const int8_t v0, const int8_t v1, const
 
 constexpr int16x8_t NEON::create_int16x8(const int16_t v0, const int16_t v1, const int16_t v2, const int16_t v3, const int16_t v4, const int16_t v5, const int16_t v6, const int16_t v7)
 {
-#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+#ifdef OCEAN_COMPILER_MSC
 	return int16x8_t{{uint64_t(uint16_t(v0)) | (uint64_t(uint16_t(v1)) << 16) | (uint64_t(uint16_t(v2)) << 32) | (uint64_t(uint16_t(v3)) << 48), uint64_t(uint16_t(v4)) | (uint64_t(uint16_t(v5)) << 16) | (uint64_t(uint16_t(v6)) << 32) | (uint64_t(uint16_t(v7)) << 48)}};
 #else
 	return int16x8_t{v0, v1, v2, v3, v4, v5, v6, v7};
@@ -626,7 +626,7 @@ constexpr int16x8_t NEON::create_int16x8(const int16_t v0, const int16_t v1, con
 
 constexpr uint32x4_t NEON::create_uint32x4(const uint32_t v0, const uint32_t v1, const uint32_t v2, const uint32_t v3)
 {
-#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+#ifdef OCEAN_COMPILER_MSC
 	return uint32x4_t{{uint64_t(v0) | (uint64_t(v1) << 32), uint64_t(v2) | (uint64_t(v3) << 32)}};
 #else
 	return uint32x4_t{v0, v1, v2, v3};
@@ -635,7 +635,7 @@ constexpr uint32x4_t NEON::create_uint32x4(const uint32_t v0, const uint32_t v1,
 
 constexpr uint16x8_t NEON::create_uint16x8(const uint16_t v0, const uint16_t v1, const uint16_t v2, const uint16_t v3, const uint16_t v4, const uint16_t v5, const uint16_t v6, const uint16_t v7)
 {
-#if defined(OCEAN_MSC_VERSION) && OCEAN_MSC_VERSION > 0
+#ifdef OCEAN_COMPILER_MSC
 	return uint16x8_t{{uint64_t(v0) | (uint64_t(v1) << 16) | (uint64_t(v2) << 32) | (uint64_t(v3) << 48), uint64_t(v4) | (uint64_t(v5) << 16) | (uint64_t(v6) << 32) | (uint64_t(v7) << 48)}};
 #else
 	return uint16x8_t{v0, v1, v2, v3, v4, v5, v6, v7};
