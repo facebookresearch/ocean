@@ -207,6 +207,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "renderingglescenegraphjni",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "renderingglescenegraphjnijava", "ocean\rendering\glescenegraph\jni\renderingglescenegraphjnijava.vcxproj", "{558AB126-9923-4C64-9D6F-93BF2A5A376B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platformandroidjava", "ocean\platform\androidjava\platformandroidjava.vcxproj", "{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -3115,6 +3117,30 @@ Global
 		{558AB126-9923-4C64-9D6F-93BF2A5A376B}.Static Release|ARM.ActiveCfg = Release|ARM
 		{558AB126-9923-4C64-9D6F-93BF2A5A376B}.Static Release|ARM64.ActiveCfg = Release|ARM64
 		{558AB126-9923-4C64-9D6F-93BF2A5A376B}.Static Release|x64.ActiveCfg = Release|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Debug|ARM.ActiveCfg = Debug|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Debug|ARM.Build.0 = Debug|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Debug|ARM64.Build.0 = Debug|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Debug|x64.ActiveCfg = Debug|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Debug|x64.Build.0 = Debug|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Release|ARM.ActiveCfg = Release|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Release|ARM.Build.0 = Release|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Release|ARM64.ActiveCfg = Release|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Release|ARM64.Build.0 = Release|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Release|x64.ActiveCfg = Release|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Release|x64.Build.0 = Release|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Shared Debug|ARM.ActiveCfg = Debug|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Shared Debug|ARM64.ActiveCfg = Debug|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Shared Debug|x64.ActiveCfg = Debug|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Shared Release|ARM.ActiveCfg = Release|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Shared Release|ARM64.ActiveCfg = Release|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Shared Release|x64.ActiveCfg = Release|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Static Debug|ARM.ActiveCfg = Debug|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Static Debug|ARM64.ActiveCfg = Debug|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Static Debug|x64.ActiveCfg = Debug|x64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Static Release|ARM.ActiveCfg = Release|ARM
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Static Release|ARM64.ActiveCfg = Release|ARM64
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3}.Static Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -3221,6 +3247,7 @@ Global
 		{D0E1F2A3-B4C5-4D6E-7F8A-9B0C1D2E3F4A} = {A84E0586-3D16-4BD3-80C3-F326BD179C33}
 		{E1F2A3B4-C5D6-4E7F-8A9B-0C1D2E3F4A5B} = {A84E0586-3D16-4BD3-80C3-F326BD179C33}
 		{558AB126-9923-4C64-9D6F-93BF2A5A376B} = {A84E0586-3D16-4BD3-80C3-F326BD179C33}
+		{0E2881CE-8F0D-4DCC-AD4E-0E0FDA57ABA3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2BCADCA3-A709-48C0-B594-0DEBD4182B19}
