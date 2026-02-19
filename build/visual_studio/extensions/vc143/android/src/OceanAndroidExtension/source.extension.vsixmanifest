@@ -125,6 +125,12 @@
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.targets" d:VsixSubPath="toolset\OceanJavaLib\" />
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\OceanJavaLib\OceanJavaLib.General.xml" d:VsixSubPath="toolset\OceanJavaLib\" />
 
+    <!-- Deploy script - centralized deployment for F5/Start -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\Deploy\deploy.bat" d:VsixSubPath="toolset\Deploy\" />
+
+    <!-- Deploy launcher exe - F5/Start target that spawns deploy.bat outside the debugger -->
+    <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="Project" d:ProjectName="OceanAndroidExtension.DeployLauncher" Path="|OceanAndroidExtension.DeployLauncher|" d:VsixSubPath="toolset\Deploy\" />
+
     <!-- GradleWrapper - checksum, wrapper scripts, and JAR for Gradle builds -->
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradle-wrapper.jar.sha256" d:VsixSubPath="toolset\GradleWrapper\" />
     <Asset Type="Microsoft.VisualStudio.MsBuildExtensions" d:Source="File" Path="toolset\GradleWrapper\gradlew.bat" d:VsixSubPath="toolset\GradleWrapper\" />

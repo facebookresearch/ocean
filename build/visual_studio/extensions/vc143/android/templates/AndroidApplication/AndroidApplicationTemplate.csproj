@@ -77,7 +77,6 @@
     <None Include="gradle\gradle.properties" />
     <None Include="gradle\gradlew" />
     <None Include="gradle\gradlew.bat" />
-    <None Include="gradle\deploy.bat" />
     <None Include="gradle\wrapper\gradle-wrapper.jar" />
     <None Include="gradle\wrapper\gradle-wrapper.properties" />
   </ItemGroup>

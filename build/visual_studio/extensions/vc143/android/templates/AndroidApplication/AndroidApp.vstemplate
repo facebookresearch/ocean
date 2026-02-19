@@ -38,7 +38,6 @@
       <ProjectItem ReplaceParameters="true">gradle\build.gradle.kts</ProjectItem>
       <ProjectItem ReplaceParameters="true">gradle\settings.gradle.kts</ProjectItem>
       <ProjectItem ReplaceParameters="false">gradle\gradle.properties</ProjectItem>
-      <ProjectItem ReplaceParameters="false">gradle\deploy.bat</ProjectItem>
     </Project>
   </TemplateContent>
 </VSTemplate>

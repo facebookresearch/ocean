@@ -76,6 +76,13 @@
       <Name>OceanAndroidExtension.LanguageService</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\OceanAndroidExtension.DeployLauncher\OceanAndroidExtension.DeployLauncher.csproj">
+      <Project>{D5E6F7A8-B9C0-1234-5678-AABBCCDDEEFF}</Project>
+      <Name>OceanAndroidExtension.DeployLauncher</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup</IncludeOutputGroupsInVSIX>
+      <VSIXSubPath>toolset\Deploy</VSIXSubPath>
+    </ProjectReference>
     <!-- Project Templates -->
     <ProjectReference Include="..\..\templates\AndroidApplication\AndroidApplicationTemplate.csproj">
       <Project>{B1C2D3E4-F5A6-7890-ABCD-111111111111}</Project>
@@ -221,6 +228,14 @@
     <!-- JavaSource property page schema (Item Type dropdown registration) -->
     <Content Include="..\..\toolset\JavaStaging\PropertyPages\JavaSource.xml">
       <Link>toolset\JavaStaging\PropertyPages\JavaSource.xml</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- Deploy script - centralized deployment script for F5/Start -->
+  <ItemGroup>
+    <Content Include="..\..\toolset\Deploy\deploy.bat">
+      <Link>toolset\Deploy\deploy.bat</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

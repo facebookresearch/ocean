@@ -117,11 +117,17 @@
        Debug/Start Settings
 
        F5 runs deploy.bat to install and launch via ADB.
+       OceanDeployLauncher.exe is the LocalDebuggerCommand target
+       (safe to be "debugged" by WindowsLocalDebugger). It spawns
+       deploy.bat in a separate detached process that is not under
+       the debugger, waits for it, and returns its exit code.
        ============================================================ -->
   <PropertyGroup>
-    <LocalDebuggerCommand Condition="'$(LocalDebuggerCommand)' == ''">$(MSBuildProjectDirectory)\gradle\deploy.bat</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND $(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\release\app-release.apk"</LocalDebuggerCommandArguments>
-    <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND !$(Configuration.Contains('Release'))">"$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</LocalDebuggerCommandArguments>
+    <_OceanDeployScript>$(MSBuildThisFileDirectory)..\Deploy\deploy.bat</_OceanDeployScript>
+    <_OceanDeployLauncher>$(MSBuildThisFileDirectory)..\Deploy\OceanDeployLauncher.exe</_OceanDeployLauncher>
+    <LocalDebuggerCommand Condition="'$(LocalDebuggerCommand)' == ''">$(_OceanDeployLauncher)</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND $(Configuration.Contains('Release'))">"$(_OceanDeployScript)" "$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\release\app-release.apk"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND !$(Configuration.Contains('Release'))">"$(_OceanDeployScript)" "$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory Condition="'$(LocalDebuggerWorkingDirectory)' == ''">$(MSBuildProjectDirectory)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor Condition="'$(DebuggerFlavor)' == ''">WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>

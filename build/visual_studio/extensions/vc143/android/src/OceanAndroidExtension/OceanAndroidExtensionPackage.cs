@@ -504,7 +504,23 @@ public sealed class OceanAndroidExtensionPackage : AsyncPackage
 							outputService_?.WriteLine($"Found Android project: {project.Name} (gradlew.bat in gradle/)");
 							break;
 						}
-						// 3. Check if it's a vcxproj with OceanNDK platform (native library without Gradle)
+						// 3. Check if it's an Ocean Android Application project (no local gradlew.bat)
+						if (projectPath.EndsWith(".vcxproj", StringComparison.OrdinalIgnoreCase))
+						{
+							try
+							{
+								var vcxprojContent = System.IO.File.ReadAllText(projectPath);
+								if (vcxprojContent.Contains("<OutputType>AndroidApplication</OutputType>"))
+								{
+									projectDir = directory;
+									gradleDir = System.IO.Path.Combine(directory, "gradle");
+									outputService_?.WriteLine($"Found Ocean Android Application project: {project.Name}");
+									break;
+								}
+							}
+							catch { }
+						}
+						// 4. Check if it's a vcxproj with OceanNDK platform (native library without Gradle)
 						if (projectPath.EndsWith(".vcxproj", StringComparison.OrdinalIgnoreCase))
 						{
 							try
@@ -644,12 +660,24 @@ public sealed class OceanAndroidExtensionPackage : AsyncPackage
 			System.IO.Path.Combine(projectDir, "bin", "x64", "Debug"),
 			System.IO.Path.Combine(projectDir, "bin", "x64", "Release"),
 			System.IO.Path.Combine(projectDir, "bin", "ARM64", "Debug"),
-			System.IO.Path.Combine(projectDir, "bin", "ARM64", "Release")
+			System.IO.Path.Combine(projectDir, "bin", "ARM64", "Release"),
 		};
 
-		outputService_?.WriteLine($"Searching for APK in {searchPaths.Length} locations...");
+		// Ocean build output paths: obj/{Platform}/{Config}/gradle-build/outputs/apk/{debug|release}
+		var platforms = new[] { "x64", "ARM64", "ARM", "x86" };
+		var configurations = new[] { "Debug", "Release" };
+		var oceanPaths = platforms.SelectMany(platform =>
+			configurations.SelectMany(config => new[]
+			{
+				System.IO.Path.Combine(projectDir, "obj", platform, config, "gradle-build", "outputs", "apk", "debug"),
+				System.IO.Path.Combine(projectDir, "obj", platform, config, "gradle-build", "outputs", "apk", "release"),
+			}));
 
-		foreach (var path in searchPaths)
+		var allSearchPaths = searchPaths.Concat(oceanPaths).ToArray();
+
+		outputService_?.WriteLine($"Searching for APK in {allSearchPaths.Length} locations...");
+
+		foreach (var path in allSearchPaths)
 		{
 			if (System.IO.Directory.Exists(path))
 			{
