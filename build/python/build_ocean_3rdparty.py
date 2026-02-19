@@ -187,7 +187,11 @@ PLATFORM_GROUPS: Dict[str, List[tuple[OS, Arch]]] = {
         (OS.LINUX, Arch.ARM64),
         (OS.LINUX, Arch.X86_64),
     ],
-    "windows": [
+    "win": [
+        (OS.WINDOWS, Arch.X86_64),
+        (OS.WINDOWS, Arch.ARM64),
+    ],
+    "windows": [  # backward-compatible alias for "win"
         (OS.WINDOWS, Arch.X86_64),
         (OS.WINDOWS, Arch.ARM64),
     ],
@@ -1318,7 +1322,7 @@ def parse_args() -> argparse.Namespace:
         action="append",
         help=(
             "Target platform(s). Accepts specific targets (e.g., ios_arm64, macos_arm64), "
-            "OS group names (android, ios, macos, linux, windows) to build all architectures "
+            "OS group names (android, ios, macos, linux, win) to build all architectures "
             "for that OS, or 'all_supported' for everything the host can build. "
             "Comma-separated or multiple flags. "
             "Default: all platforms supported by the current host."
@@ -1539,7 +1543,7 @@ def parse_platforms(
 
     Special values:
         - "all_supported": Returns all platforms supported by the current host
-        - Group names ("android", "ios", "macos", "linux", "windows"):
+        - Group names ("android", "ios", "macos", "linux", "win"):
           Expands to all architectures for that OS
     """
     if not target_args:

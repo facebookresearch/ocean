@@ -314,7 +314,7 @@ libraries:
     platforms:
         - macos
         - linux
-        - windows
+        - win
         - ios
         - android
 
@@ -329,7 +329,7 @@ libraries:
     platforms:
       - macos
       - linux
-      - windows
+      - win
 
   libusb:
     version: "cec1e49"
@@ -352,7 +352,7 @@ libraries:
     platforms:
       - macos
       - linux
-      - windows
+      - win
 
   directshow:
     version: "adf93f0"
@@ -367,7 +367,7 @@ libraries:
     build:
       system: cmake
     platforms:
-      - windows
+      - win
     # DirectShow Base Classes MUST be static - it has undefined symbols (g_Templates,
     # g_cTemplates) that are meant to be provided by the DirectShow filter that links
     # against it. Cannot be built as a DLL.
@@ -418,7 +418,7 @@ libraries:
       - libtiff
     platforms:
       - macos
-      - windows
+      - win
 
   # Android-specific libraries
   android_native_app_glue:

@@ -93,7 +93,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["macos", "ios", "linux", "android", "windows"]
+                "enum": ["macos", "ios", "linux", "android", "win"]
               },
               "minItems": 1
             }

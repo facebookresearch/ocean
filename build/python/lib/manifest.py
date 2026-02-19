@@ -174,7 +174,7 @@ class LibraryConfig:
         """Check if this library supports the given platform.
 
         Args:
-            platform: Either an OS name (e.g., 'macos') or a full target string
+            platform: Either an OS name (e.g., 'macos', 'win') or a full target string
                       (e.g., 'macos_arm64', 'ios_arm64_static_debug')
         """
         if "all" in self.platforms:
@@ -182,6 +182,9 @@ class LibraryConfig:
         # Extract just the OS part from the platform/target string
         # e.g., 'macos_arm64' -> 'macos', 'ios_arm64_static_debug' -> 'ios'
         os_part = platform.lower().split("_")[0]
+        # Accept "windows" as a backward-compatible alias for "win"
+        if os_part == "windows":
+            os_part = "win"
         return os_part in self.platforms
 
     def supports_link_type(self, link_type: str) -> bool:

@@ -24,7 +24,7 @@ class OS(Enum):
     IOS = "ios"
     LINUX = "linux"
     ANDROID = "android"
-    WINDOWS = "windows"
+    WINDOWS = "win"
 
 
 class Arch(Enum):
@@ -176,8 +176,8 @@ class BuildTarget:
             macos_arm64_static_debug
             ios_arm64_static
             android_arm64_static_debug
-            windows_x64_vc143_static
-            windows_x64_vc143_static_debug
+            win_x64_vc143_static
+            win_x64_vc143_static_debug
         """
         arch_str = self.arch.value
         if self.os == OS.WINDOWS and self.arch == Arch.X86_64:
@@ -742,8 +742,12 @@ def parse_platform_string(platform_str: str) -> tuple[OS, Arch]:
     try:
         os_val = OS(parts[0])
     except ValueError:
-        valid_os = ", ".join(o.value for o in OS)
-        raise ValueError(f"Unknown OS: {parts[0]}. Valid options: {valid_os}")
+        # Accept "windows" as a backward-compatible alias for "win"
+        if parts[0] == "windows":
+            os_val = OS.WINDOWS
+        else:
+            valid_os = ", ".join(o.value for o in OS)
+            raise ValueError(f"Unknown OS: {parts[0]}. Valid options: {valid_os}")
 
     arch_str = parts[1]
     # Accept "x64" as an alias for "x86_64" (used in Windows target paths)
@@ -770,8 +774,8 @@ def parse_target_string(target_str: str) -> BuildTarget:
     Examples:
         macos_arm64_static
         macos_arm64_static_debug
-        windows_x64_vc143_static
-        windows_x64_vc143_static_debug
+        win_x64_vc143_static
+        win_x64_vc143_static_debug
 
     Note: This function is deprecated. Prefer using parse_platform_string()
     and combining with explicit config/link parameters.
@@ -787,7 +791,11 @@ def parse_target_string(target_str: str) -> BuildTarget:
     try:
         os_val = OS(parts[0])
     except ValueError:
-        raise ValueError(f"Unknown OS: {parts[0]}")
+        # Accept "windows" as a backward-compatible alias for "win"
+        if parts[0] == "windows":
+            os_val = OS.WINDOWS
+        else:
+            raise ValueError(f"Unknown OS: {parts[0]}")
 
     # Accept "x64" as an alias for "x86_64" (used in Windows target paths)
     arch_str = parts[1]
@@ -805,7 +813,7 @@ def parse_target_string(target_str: str) -> BuildTarget:
         if len(parts) < 4:
             raise ValueError(
                 f"Invalid Windows target string: {target_str}. "
-                "Expected format: windows_arch_toolset_linktype[_debug]"
+                "Expected format: win_arch_toolset_linktype[_debug]"
             )
         # Check if parts[2] is a toolset version (starts with 'vc')
         if parts[2].startswith("vc"):

@@ -203,7 +203,7 @@ my-lib:
 my-lib:
   description: "..."    # Human-readable description
   dependencies: [...]   # List of library names
-  platforms: all        # all, or: [macos, linux, ios, android, windows]
+  platforms: all        # all, or: [macos, linux, ios, android, win]
   optional: false       # If true, not built by default
   optional_group: "..." # Group name for --with-group
   build:

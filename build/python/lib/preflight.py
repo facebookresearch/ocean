@@ -887,7 +887,7 @@ def get_required_toolchains(targets: List[str]) -> List[str]:
         elif target_lower.startswith("android_"):
             required.add("android_ndk")
 
-        elif target_lower.startswith("windows_"):
+        elif target_lower.startswith("win_") or target_lower.startswith("windows_"):
             required.add("visual_studio")
             required.add("windows_sdk")
 
