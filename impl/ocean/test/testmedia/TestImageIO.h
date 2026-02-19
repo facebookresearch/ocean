@@ -31,6 +31,13 @@ namespace TestMedia
  */
 class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 {
+	protected:
+
+		/**
+		 * Definition of a pair combining a pixel format with a color profile name.
+		 */
+		using ColorProfilePair = std::pair<FrameType::PixelFormat, std::string>;
+
 	public:
 
 		/**
@@ -178,6 +185,13 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		static bool testColorProfileNameProperty(const std::string& imageType, const double testDuration);
 
 	protected:
+
+		/**
+		 * Returns color profile pairs for testing, using the correct profile name for the current OS version.
+		 * @param imageType The image type (e.g., "jpg", "heic")
+		 * @return The color profile pairs
+		 */
+		static std::vector<ColorProfilePair> getColorProfilePairsForImageType(const std::string& imageType);
 
 		/**
 		 * Determines the minimal, the average and the maximal distance between corresponding pixel values (channel-wise) for two frames.

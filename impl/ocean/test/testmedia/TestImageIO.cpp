@@ -34,6 +34,7 @@
 #include "ocean/media/openimagelibraries/OILLibrary.h"
 
 #include "ocean/platform/apple/Apple.h"
+#include "ocean/platform/apple/System.h"
 
 namespace Ocean
 {
@@ -1696,25 +1697,7 @@ bool TestImageIO::testColorProfileNameProperty(const std::string& imageType, con
 
 	Log::info() << "Test color profile name property for '" << imageType << "':";
 
-	using ColorProfilePair = std::pair<FrameType::PixelFormat, std::string>;
-
-	std::vector<ColorProfilePair> colorProfileNames =
-	{
-		{FrameType::FORMAT_RGB24, ""}, // default
-		{FrameType::FORMAT_RGB24, "Display P3"},
-		{FrameType::FORMAT_RGB24, "sRGB IEC61966-2.1"},
-		{FrameType::FORMAT_RGB24, "sRGB IEC61966-2.1 Linear"},
-		{FrameType::FORMAT_RGB24, "Adobe RGB (1998)"},
-		{FrameType::FORMAT_RGB24, "Generic HDR Profile"},
-		{FrameType::FORMAT_RGB24, "ROMM RGB: ISO 22028-2:2013"},
-	};
-
-	if (imageType != "heic")
-	{
-		colorProfileNames.emplace_back(FrameType::FORMAT_Y8, ""); // default
-		colorProfileNames.emplace_back(FrameType::FORMAT_Y8, "Generic Gray Gamma 2.2 Profile");
-		colorProfileNames.emplace_back(FrameType::FORMAT_Y8, "Linear Gray");
-	};
+	const std::vector<ColorProfilePair> colorProfileNames = getColorProfilePairsForImageType(imageType);
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -1777,6 +1760,41 @@ bool TestImageIO::testColorProfileNameProperty(const std::string& imageType, con
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
+}
+
+std::vector<TestImageIO::ColorProfilePair> TestImageIO::getColorProfilePairsForImageType(const std::string& imageType)
+{
+	ocean_assert(!imageType.empty());
+
+	// On macOS 14+ / iOS 17+, Apple renamed the ICC profile description for kCGColorSpaceGenericRGBLinear
+	// from "Generic HDR Profile" to "Generic RGB Linear Profile".
+#ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY
+	const bool usesNewColorProfileNames = Platform::Apple::System::isMinimalVersion(17u, 0u);
+#else
+	const bool usesNewColorProfileNames = Platform::Apple::System::isMinimalVersion(14u, 0u);
+#endif
+
+	const std::string genericRGBLinearProfileName = usesNewColorProfileNames ? "Generic RGB Linear Profile" : "Generic HDR Profile";
+
+	std::vector<ColorProfilePair> colorProfileNames =
+	{
+		{FrameType::FORMAT_RGB24, ""}, // default
+		{FrameType::FORMAT_RGB24, "Display P3"},
+		{FrameType::FORMAT_RGB24, "sRGB IEC61966-2.1"},
+		{FrameType::FORMAT_RGB24, "sRGB IEC61966-2.1 Linear"},
+		{FrameType::FORMAT_RGB24, "Adobe RGB (1998)"},
+		{FrameType::FORMAT_RGB24, genericRGBLinearProfileName},
+		{FrameType::FORMAT_RGB24, "ROMM RGB: ISO 22028-2:2013"},
+	};
+
+	if (imageType != "heic")
+	{
+		colorProfileNames.emplace_back(FrameType::FORMAT_Y8, ""); // default
+		colorProfileNames.emplace_back(FrameType::FORMAT_Y8, "Generic Gray Gamma 2.2 Profile");
+		colorProfileNames.emplace_back(FrameType::FORMAT_Y8, "Linear Gray");
+	}
+
+	return colorProfileNames;
 }
 
 bool TestImageIO::determineSimilarity(const Frame& firstFrame, const Frame& secondFrame, double& minDifference, double& aveDifference, double& maxDifference)
