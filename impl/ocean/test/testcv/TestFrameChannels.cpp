@@ -297,64 +297,64 @@ bool TestFrameChannels::test(const unsigned int width, const unsigned int height
 
 TEST(TestFrameChannels, SeparateTo1Channel_1920x1080)
 {
-	EXPECT_TRUE(TestFrameChannels::testSeparateTo1Channel(1920u, 1080u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestFrameChannels::testSeparateTo1Channel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION));
 }
 
 TEST(TestFrameChannels, ZipChannels_1920x1080)
 {
-	EXPECT_TRUE(TestFrameChannels::testZipChannels(1920u, 1080u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestFrameChannels::testZipChannels(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION));
 }
 
 TEST(TestFrameChannels, AddFirstChannel_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testAddFirstChannel(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testAddFirstChannel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestFrameChannels, AddFirstChannelValue_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testAddFirstChannelValue(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testAddFirstChannelValue(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 
 TEST(TestFrameChannels, AddLastChannel_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testAddLastChannel(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testAddLastChannel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestFrameChannels, AddLastChannelValue_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testAddLastChannelValue(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testAddLastChannelValue(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 
 TEST(TestFrameChannels, RemoveFirstChannel_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testRemoveFirstChannel(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testRemoveFirstChannel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestFrameChannels, RemoveLastChannel_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testRemoveLastChannel(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testRemoveLastChannel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 
 TEST(TestFrameChannels, CopyChannel_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testCopyChannel(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testCopyChannel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 
 TEST(TestFrameChannels, SetChannel_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameChannels::testSetChannel(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameChannels::testSetChannel(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
 }
 
 
