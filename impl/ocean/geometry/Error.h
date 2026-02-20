@@ -1102,7 +1102,7 @@ Scalar Error::uniqueAveragedRobustErrorInPointCloud(const Vector2* imagePoints, 
 
 		for (unsigned int c = 0; c < numberCandidatePoints; ++c)
 		{
-			errorElements.push_back(ErrorElement(i, c, imagePoint.sqrDistance(candidatePoints[c])));
+			errorElements.emplace_back(i, c, imagePoint.sqrDistance(candidatePoints[c]));
 		}
 	}
 
@@ -1131,7 +1131,7 @@ Scalar Error::uniqueAveragedRobustErrorInPointCloud(const Vector2* imagePoints, 
 
 				if (correspondences)
 				{
-					correspondences->push_back(IndexPair32(i->imageIndex(), i->candidateIndex()));
+					correspondences->emplace_back(i->imageIndex(), i->candidateIndex());
 				}
 			}
 
@@ -1164,7 +1164,7 @@ Scalar Error::uniqueAveragedRobustErrorInPointCloud(const Vector2* imagePoints, 
 
 				if (correspondences)
 				{
-					correspondences->push_back(IndexPair32(i->imageIndex(), i->candidateIndex()));
+					correspondences->emplace_back(i->imageIndex(), i->candidateIndex());
 				}
 			}
 
@@ -1225,7 +1225,7 @@ Scalar Error::approximatedAveragedRobustErrorInPointCloud(const Vector2* imagePo
 
 		ocean_assert(minIndex != 0xFFFFFFFF);
 
-		errorElements.push_back(ErrorElement(i, minIndex, minValue));
+		errorElements.emplace_back(i, minIndex, minValue);
 
 		ocean_assert(usedCandidates[minIndex] == 0u);
 		usedCandidates[minIndex] = 1u;
@@ -1251,7 +1251,7 @@ Scalar Error::approximatedAveragedRobustErrorInPointCloud(const Vector2* imagePo
 			for (size_t n = 0; n < numberUsedErrors; ++n)
 			{
 				sqrErrors += errorElements[n].error();
-				correspondences->push_back(IndexPair32(errorElements[n].imageIndex(), errorElements[n].candidateIndex()));
+				correspondences->emplace_back(errorElements[n].imageIndex(), errorElements[n].candidateIndex());
 			}
 		}
 		else
@@ -1275,7 +1275,7 @@ Scalar Error::approximatedAveragedRobustErrorInPointCloud(const Vector2* imagePo
 
 			if (correspondences)
 			{
-				correspondences->push_back(IndexPair32(errorElements[n].imageIndex(), errorElements[n].candidateIndex()));
+				correspondences->emplace_back(errorElements[n].imageIndex(), errorElements[n].candidateIndex());
 			}
 		}
 
@@ -1323,7 +1323,7 @@ Scalar Error::ambiguousAveragedRobustErrorInPointCloud(const Vector2* imagePoint
 
 		ocean_assert(minIndex != 0xFFFFFFFF);
 
-		errorElements.push_back(ErrorElement(i, minIndex, minValue));
+		errorElements.emplace_back(i, minIndex, minValue);
 	}
 
 	std::sort(errorElements.begin(), errorElements.end());
@@ -1346,7 +1346,7 @@ Scalar Error::ambiguousAveragedRobustErrorInPointCloud(const Vector2* imagePoint
 			for (unsigned int n = 0; n < numberUsedErrors; ++n)
 			{
 				sqrErrors += errorElements[n].error();
-				correspondences->push_back(IndexPair32(errorElements[n].imageIndex(), errorElements[n].candidateIndex()));
+				correspondences->emplace_back(errorElements[n].imageIndex(), errorElements[n].candidateIndex());
 			}
 		}
 		else
@@ -1369,7 +1369,7 @@ Scalar Error::ambiguousAveragedRobustErrorInPointCloud(const Vector2* imagePoint
 			for (unsigned int n = 0; n < numberUsedErrors; ++n)
 			{
 				sqrErrors.push_back(errorElements[n].error());
-				correspondences->push_back(IndexPair32(errorElements[n].imageIndex(), errorElements[n].candidateIndex()));
+				correspondences->emplace_back(errorElements[n].imageIndex(), errorElements[n].candidateIndex());
 			}
 		}
 		else
