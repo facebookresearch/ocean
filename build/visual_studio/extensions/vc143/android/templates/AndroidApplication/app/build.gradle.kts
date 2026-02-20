@@ -131,4 +131,27 @@ dependencies {
       .map { it.trim() }
       .filter { it.isNotEmpty() && it.contains(":") }
       .forEach { dependency -> implementation(dependency) }
+
+  // Local AAR dependencies from Ocean Java library projects (semicolon or newline separated file
+  // names)
+  val gradleLocalAARDependencies: String =
+      project.findProperty("gradleLocalAARDependencies") as String? ?: ""
+  val gradleLocalAARDir: String = project.findProperty("gradleLocalAARDir") as String? ?: ""
+
+  gradleLocalAARDependencies
+      .split(";", "\n", "\r\n")
+      .map { it.trim() }
+      .filter { it.isNotEmpty() }
+      .forEach { aarName ->
+        val aarFile =
+            if (gradleLocalAARDir.isNotEmpty()) file("$gradleLocalAARDir/$aarName")
+            else file(aarName)
+        if (aarFile.exists()) {
+          implementation(files(aarFile))
+        } else {
+          logger.warn(
+              "WARNING: Local AAR dependency not found: $aarFile — build the dependency project first."
+          )
+        }
+      }
 }

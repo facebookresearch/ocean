@@ -98,7 +98,7 @@
        this file is imported.
        ============================================================ -->
   <PropertyGroup>
-    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
+    <ProjectGradleProperties Condition="'$(ProjectGradleProperties)' == ''">-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)" -PgradleLocalAARDir="$(GradleLocalAARDir)" -PgradleLocalAARDependencies="$(GradleLocalAARDependencies)"</ProjectGradleProperties>
   </PropertyGroup>
 
   <!-- ============================================================
@@ -130,6 +130,11 @@
     <LocalDebuggerCommandArguments Condition="'$(LocalDebuggerCommandArguments)' == '' AND !$(Configuration.Contains('Release'))">"$(_OceanDeployScript)" "$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory Condition="'$(LocalDebuggerWorkingDirectory)' == ''">$(MSBuildProjectDirectory)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor Condition="'$(DebuggerFlavor)' == ''">WindowsLocalDebugger</DebuggerFlavor>
+    <!-- VS enables Deploy for ARM/ARM64 platforms, which requires RemoteDebuggerCommand.
+         Point it to the same deploy launcher so the Deploy step installs the APK via ADB. -->
+    <RemoteDebuggerCommand Condition="'$(RemoteDebuggerCommand)' == ''">$(_OceanDeployLauncher)</RemoteDebuggerCommand>
+    <RemoteDebuggerCommandArguments Condition="'$(RemoteDebuggerCommandArguments)' == '' AND $(Configuration.Contains('Release'))">"$(_OceanDeployScript)" "$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\release\app-release.apk"</RemoteDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments Condition="'$(RemoteDebuggerCommandArguments)' == '' AND !$(Configuration.Contains('Release'))">"$(_OceanDeployScript)" "$(MSBuildProjectDirectory)" "$(AndroidPackageName)" "$(ApkOutputPath)\debug\app-debug.apk"</RemoteDebuggerCommandArguments>
   </PropertyGroup>
 
   <!-- ============================================================
@@ -156,10 +161,11 @@
           Condition="'@(OceanNativeSharedLibrary)' != ''">
 
     <!-- Determine jniLibs destination based on ABI -->
-    <!-- Only set if not already defined (allows project-level override) -->
-    <!-- Uses simplified folder structure: app/jniLibs/ instead of app/src/main/jniLibs/ -->
+    <!-- Prefer JniLibsStagingDir (set by Ocean props hierarchy) so Gradle finds the .so files.
+         Fall back to project-local path for projects without the Ocean hierarchy. -->
     <PropertyGroup Condition="'$(JniLibsDir)' == ''">
-      <JniLibsDir>$(MSBuildProjectDirectory)\app\jniLibs\$(AndroidAbi)</JniLibsDir>
+      <JniLibsDir Condition="'$(JniLibsStagingDir)' != ''">$(JniLibsStagingDir)\$(AndroidAbi)</JniLibsDir>
+      <JniLibsDir Condition="'$(JniLibsStagingDir)' == ''">$(MSBuildProjectDirectory)\app\jniLibs\$(AndroidAbi)</JniLibsDir>
     </PropertyGroup>
 
     <!-- Create jniLibs directory if needed -->
@@ -187,10 +193,11 @@
           Condition="'@(ProjectReference)' != ''">
 
     <!-- Get the jniLibs directory for the current ABI -->
-    <!-- Only set if not already defined (allows project-level override) -->
-    <!-- Uses simplified folder structure: app/jniLibs/ instead of app/src/main/jniLibs/ -->
+    <!-- Prefer JniLibsStagingDir (set by Ocean props hierarchy) for consistency with Build.
+         Fall back to project-local path for projects without the Ocean hierarchy. -->
     <PropertyGroup Condition="'$(JniLibsDir)' == ''">
-      <JniLibsDir>$(MSBuildProjectDirectory)\app\jniLibs\$(AndroidAbi)</JniLibsDir>
+      <JniLibsDir Condition="'$(JniLibsStagingDir)' != ''">$(JniLibsStagingDir)\$(AndroidAbi)</JniLibsDir>
+      <JniLibsDir Condition="'$(JniLibsStagingDir)' == ''">$(MSBuildProjectDirectory)\app\jniLibs\$(AndroidAbi)</JniLibsDir>
     </PropertyGroup>
 
     <!-- Remove the ABI-specific jniLibs directory -->
@@ -365,7 +372,7 @@
          AndroidManifestFile value. We must redefine it here so the Build/Rebuild/Clean
          targets pick up the resolved value. -->
     <PropertyGroup>
-      <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)"</ProjectGradleProperties>
+      <ProjectGradleProperties>-PjniLibsDir="$(JniLibsStagingDir)" -PandroidManifest="$(AndroidManifestFile)" -PandroidPackageName="$(AndroidPackageName)" -PandroidMinSdk=$(AndroidMinSdkVersion) -PandroidTargetSdk=$(AndroidTargetSdkVersion) -PgradleDependencies="$(GradleDependencies)" -PgradleLocalAARDir="$(GradleLocalAARDir)" -PgradleLocalAARDependencies="$(GradleLocalAARDependencies)"</ProjectGradleProperties>
       <GradleProperties>$(GradleBaseProperties) $(ProjectGradleProperties)</GradleProperties>
     </PropertyGroup>
 
@@ -394,6 +401,34 @@
 
     <Error Text="APK not found at $(ApkFile). Build the project first."
            Condition="!Exists('$(ApkFile)')" />
+  </Target>
+
+  <!-- ============================================================
+       APK Output Management
+
+       Copies the APK from Gradle's build output to the project's
+       output directory after Build, and cleans it during Clean.
+       ============================================================ -->
+
+  <Target Name="_CopyApkOutput" AfterTargets="Build;Rebuild">
+    <PropertyGroup>
+      <_ApkSource Condition="$(Configuration.Contains('Release'))">$(ApkOutputPath)\release\app-release.apk</_ApkSource>
+      <_ApkSource Condition="'$(_ApkSource)' == ''">$(ApkOutputPath)\debug\app-debug.apk</_ApkSource>
+      <_ApkDest>$(OutDir)$(ProjectName).apk</_ApkDest>
+    </PropertyGroup>
+    <MakeDir Directories="$(OutDir)" Condition="!Exists('$(OutDir)')" />
+    <Copy SourceFiles="$(_ApkSource)"
+          DestinationFiles="$(_ApkDest)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(_ApkSource)')" />
+    <Message Text="$(MSBuildProjectFile) -> $([System.IO.Path]::GetFullPath('$(_ApkDest)'))" Importance="high" />
+  </Target>
+
+  <Target Name="_CleanApkOutput" AfterTargets="Clean">
+    <PropertyGroup>
+      <_ApkDest>$(OutDir)$(ProjectName).apk</_ApkDest>
+    </PropertyGroup>
+    <Delete Files="$(_ApkDest)" Condition="Exists('$(_ApkDest)')" />
   </Target>
 
 </Project>

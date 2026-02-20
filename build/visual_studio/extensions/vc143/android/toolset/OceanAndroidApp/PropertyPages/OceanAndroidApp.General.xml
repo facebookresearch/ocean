@@ -80,4 +80,25 @@
     </StringProperty.DataSource>
   </StringProperty>
 
+  <StringProperty Name="GradleLocalAARDir"
+                  DisplayName="Additional Library Directories"
+                  Description="Directory to search for local AAR library dependencies. Use MSBuild properties like $(OceanRootPath) for paths. Defaults to the Java library output directory."
+                  Category="Dependencies"
+                  F1Keyword="VC.Project.GradleLocalAARDir">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+  <StringProperty Name="GradleLocalAARDependencies"
+                  DisplayName="Local AAR Dependencies"
+                  Description="Local AAR library dependencies (compile-only). Enter one file name per line, or separate with semicolons (e.g., OceanBaseJni.aar). Files are resolved against Additional Library Directories. These provide classes at compile time but are not bundled into the APK."
+                  Category="Dependencies"
+                  F1Keyword="VC.Project.GradleLocalAARDependencies"
+                  Subtype="multiline">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
 </Rule>
