@@ -120,9 +120,14 @@ bool GLESFramebuffer::setAntialiasing(const bool antialiasing)
 void GLESFramebuffer::setFaceMode(const FaceMode mode)
 {
 #ifdef OCEAN_RENDERING_GLES_USE_ES
-	throw NotSupportedException("Face mode is not supported OpenGL ES 2.0.");
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(mode);
+	throw NotSupportedException("Face mode is not supported OpenGL ES.");
+
 #else
+
 	faceMode_ = mode;
+
 #endif
 }
 

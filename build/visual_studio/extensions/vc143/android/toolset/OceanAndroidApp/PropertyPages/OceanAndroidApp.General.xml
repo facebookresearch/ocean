@@ -45,6 +45,16 @@
     </StringProperty.DataSource>
   </StringProperty>
 
+  <StringProperty Name="AndroidResDir"
+                  DisplayName="Android Resources Directory"
+                  Description="Path to the Android resources directory containing drawable, layout, values, etc. folders. Use MSBuild properties like $(MSBuildProjectDirectory) for relative paths."
+                  Category="General"
+                  F1Keyword="VC.Project.AndroidResDir">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
   <!-- Android Category -->
   <IntProperty Name="AndroidMinSdkVersion"
                DisplayName="Minimum SDK Version"

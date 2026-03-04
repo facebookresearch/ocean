@@ -85,7 +85,7 @@
        Gradle Task and Output Path Defaults
        ============================================================ -->
   <PropertyGroup>
-    <GradleTask Condition="'$(Configuration)' == 'Release'">assembleRelease</GradleTask>
+    <GradleTask Condition="$(Configuration.Contains('Release'))">assembleRelease</GradleTask>
     <GradleTask Condition="'$(GradleTask)' == ''">assembleDebug</GradleTask>
     <OutputPath Condition="'$(OutputPath)' == ''">$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
@@ -252,16 +252,22 @@
     <Message Text="Resolving native library references..." Importance="high" />
     <Message Text="  Platform: $(Platform) ($(AndroidAbi))" Importance="normal" />
 
-    <!-- Build referenced native library projects -->
-    <MSBuild Projects="@(ProjectReference)"
-             Targets="Build"
-             Properties="Configuration=$(Configuration);Platform=$(Platform)"
-             BuildInParallel="true" />
+    <!-- Map app configuration (Debug/Release) to native library configuration (Shared Debug/Shared Release).
+         Native library projects use 'Static Debug', 'Static Release', 'Shared Debug', 'Shared Release'
+         configurations, while app projects use simple 'Debug' and 'Release'. When building via MSBuild
+         (as opposed to the IDE solution build), we need to map the configuration names.
+         Default to 'Shared' build type since we need .so files for the APK's jniLibs folder. -->
+    <PropertyGroup>
+      <_NativeLibraryConfiguration Condition="$(Configuration.StartsWith('Static')) OR $(Configuration.StartsWith('Shared'))">$(Configuration)</_NativeLibraryConfiguration>
+      <_NativeLibraryConfiguration Condition="'$(_NativeLibraryConfiguration)' == ''">Shared $(Configuration)</_NativeLibraryConfiguration>
+    </PropertyGroup>
+
+    <Message Text="  Mapped configuration: $(Configuration) -> $(_NativeLibraryConfiguration)" Importance="normal" />
 
     <!-- Get output paths from referenced projects -->
     <MSBuild Projects="@(ProjectReference)"
              Targets="GetTargetPath"
-             Properties="Configuration=$(Configuration);Platform=$(Platform)">
+             Properties="Configuration=$(_NativeLibraryConfiguration);Platform=$(Platform)">
       <Output TaskParameter="TargetOutputs" ItemName="_NativeLibraryOutputs" />
     </MSBuild>
 
@@ -311,15 +317,7 @@
           BeforeTargets="StageJavaSources"
           Condition="'@(ProjectReference)' != ''">
 
-    <!-- Get IsAndroidJavaLibrary property from referenced projects -->
-    <MSBuild Projects="@(ProjectReference)"
-             Targets="GetPropertyValue"
-             Properties="PropertyName=IsAndroidJavaLibrary"
-             ContinueOnError="true">
-      <Output TaskParameter="TargetOutputs" ItemName="_JavaLibraryCheckOutputs" />
-    </MSBuild>
-
-    <!-- Filter to only Java library projects -->
+    <!-- Filter to only Java library projects (metadata set in *_reference.props) -->
     <ItemGroup>
       <_JavaLibraryProjects Include="@(ProjectReference)"
                             Condition="'%(ProjectReference.IsAndroidJavaLibrary)' == 'true'" />

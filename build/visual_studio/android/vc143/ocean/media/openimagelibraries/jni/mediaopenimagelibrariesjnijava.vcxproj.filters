@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Java sources -->
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\MediaOpenImageLibrariesJni.java">
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\jni\MediaOpenImageLibrariesJni.java">
       <Filter>lib\java</Filter>
     </JavaSource>
     <!-- Library module build file -->

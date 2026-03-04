@@ -23,4 +23,20 @@
       <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\assimp\h\android;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
+
+  <!-- Link against Assimp debug library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\assimp\lib\android_arm64_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimpd;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against Assimp release library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\assimp\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>

@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_mediaandroidjnijava_common_imported)' != 'True'" Project="mediaandroidjnijava_common.props"/>
+    <Import Condition="'$(ocean_mediaandroidjnijava_reference_imported)' != 'True'" Project="mediaandroidjnijava_reference.props"/>
     <Import Condition="'$(ocean_java_library_build_imported)' != 'True'" Project="..\..\..\ocean_java_library_build.props"/>
   </ImportGroup>
 

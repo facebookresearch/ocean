@@ -41,7 +41,7 @@ class ImageGif::SourceBuffer
 		 * Reads bytes from this buffer (at the current location) and copies them in a target buffer.
 		 * @param targetBuffer The target buffer to which the bytes will be copied, must be valid
 		 * @param length The number of bytes to read, with range [0, infinity)
-		 * @return The number of bytes which could be read, -1 if an error occured
+		 * @return The number of bytes which could be read, -1 if an error occurred
 		 */
 		inline int readBytesFromBuffer(GifByteType* targetBuffer, const size_t length);
 
@@ -50,7 +50,7 @@ class ImageGif::SourceBuffer
 		 * @param gifFile The gif file for which the buffer will be read, must be valid
 		 * @param targetBuffer The target buffer to which the bytes will be copied, must be valid
 		 * @param length The number of bytes to read, with range [0, infinity)
-		 * @return The number of bytes which could be read, -1 if an error occured
+		 * @return The number of bytes which could be read, -1 if an error occurred
 		 */
 		static inline int staticReadBytesFromBuffer(GifFileType* gifFile, GifByteType* targetBuffer, int length);
 
@@ -155,7 +155,7 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_GIF
 
-	// DGifSlurp can contain an interger overflow, so we need to apply a manual pre-check to ensure that the gif file is not corrupt
+	// DGifSlurp can contain an integer overflow, so we need to apply a manual pre-check to ensure that the gif file is not corrupt
 
 	if (!verifyGif(buffer, size))
 	{

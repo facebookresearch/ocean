@@ -52,15 +52,15 @@ tasks.register("copyTemporaryFiles") {
       listOf(
           "$oceanDevelopmentPath/impl/application/ocean/demo/media/externalcamera/android/ExternalCameraActivity.java",
           "$oceanDevelopmentPath/impl/ocean/base/BaseJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/android/MediaAndroidJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/usb/MediaUSBJni.java",
+          "$oceanDevelopmentPath/impl/ocean/media/android/jni/MediaAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/media/usb/jni/MediaUSBJni.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameViewActivity.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/MessengerView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/OceanActivity.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/Assets.java",
-          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/RenderingGLESceneGraphJni.java",
+          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/jni/RenderingGLESceneGraphJni.java",
           "$oceanDevelopmentPath/impl/ocean/system/usb/android/OceanUSBManager.java")
 
   copy {

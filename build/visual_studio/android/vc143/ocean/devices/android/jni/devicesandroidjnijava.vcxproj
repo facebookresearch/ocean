@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesAndroidJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.java" />
   </ItemGroup>
 
   <ItemGroup>

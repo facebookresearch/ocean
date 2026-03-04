@@ -66,11 +66,15 @@ bool PackagedConnectionlessServer::onScheduler()
 
 		if ((unsigned int)(size) > packageManagmentHeaderSize())
 		{
-			const MessageId messageId = Data::fromBigEndian(((unsigned int*)packageBuffer_.data())[0]);
-			const unsigned int messageSize = Data::fromBigEndian(((unsigned int*)packageBuffer_.data())[1]);
-			const unsigned int dataStartPosition = Data::fromBigEndian(((unsigned int*)packageBuffer_.data())[2]);
-			const unsigned int packageIndex = Data::fromBigEndian(((unsigned int*)packageBuffer_.data())[3]);
-			const unsigned int totalPackages = Data::fromBigEndian(((unsigned int*)packageBuffer_.data())[4]);
+			unsigned int headerValues[5];
+			static_assert(sizeof(headerValues) == packageManagmentHeaderSize(), "Header size mismatch");
+			memcpy(headerValues, packageBuffer_.data(), sizeof(headerValues));
+
+			const MessageId messageId = Data::fromBigEndian(headerValues[0]);
+			const unsigned int messageSize = Data::fromBigEndian(headerValues[1]);
+			const unsigned int dataStartPosition = Data::fromBigEndian(headerValues[2]);
+			const unsigned int packageIndex = Data::fromBigEndian(headerValues[3]);
+			const unsigned int totalPackages = Data::fromBigEndian(headerValues[4]);
 
 			OCEAN_SUPPRESS_UNUSED_WARNING(packageIndex);
 

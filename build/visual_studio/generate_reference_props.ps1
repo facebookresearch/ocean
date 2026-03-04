@@ -54,6 +54,21 @@ param(
 	[switch]$UpdateBuildProps
 )
 
+# Helper function to write file with LF line endings (Unix-style)
+function Write-FileWithLF
+{
+	param(
+		[string]$Path,
+		[string]$Content
+	)
+
+	# Normalize line endings to LF
+	$lfContent = $Content -replace "`r`n", "`n" -replace "`r", "`n"
+
+	# Write with UTF-8 encoding (no BOM)
+	[System.IO.File]::WriteAllText($Path, $lfContent, [System.Text.UTF8Encoding]::new($false))
+}
+
 # Helper function to get relative path (compatible with Windows PowerShell and PowerShell Core)
 function Get-RelativePath
 {
@@ -272,10 +287,11 @@ function New-ReferenceProps
 
   </ItemGroup>
 </Project>
+
 "@
 
-	# Write the file
-	$xml | Out-File -FilePath $OutputPath -Encoding utf8
+	# Write the file with LF line endings
+	Write-FileWithLF -Path $OutputPath -Content $xml
 	Write-Host "  Generated: $OutputPath"
 
 	return $true
@@ -318,7 +334,7 @@ function Update-LibraryBuildProps
 	{
 		# Insert the reference import directly after the common import
 		$newContent = $content -replace $commonPropsPattern, "`$1`n$newImportLine"
-		$newContent | Out-File -FilePath $BuildPropsPath -Encoding utf8 -NoNewline
+		Write-FileWithLF -Path $BuildPropsPath -Content $newContent
 		Write-Host "  Updated: $BuildPropsPath"
 		return $true
 	}
@@ -330,7 +346,7 @@ function Update-LibraryBuildProps
 		if ($content -match $pattern)
 		{
 			$newContent = $content -replace $pattern, "`$1$newImportLine`n  `$2"
-			$newContent | Out-File -FilePath $BuildPropsPath -Encoding utf8 -NoNewline
+			Write-FileWithLF -Path $BuildPropsPath -Content $newContent
 			Write-Host "  Updated: $BuildPropsPath (fallback - appended to ImportGroup)"
 			return $true
 		}
@@ -377,7 +393,7 @@ function Update-ApplicationBuildProps
 	if ($content -match $pattern)
 	{
 		$newContent = $content -replace $pattern, "`$1`n$newImportLine`n"
-		$newContent | Out-File -FilePath $BuildPropsPath -Encoding utf8 -NoNewline
+		Write-FileWithLF -Path $BuildPropsPath -Content $newContent
 		Write-Host "  Updated: $BuildPropsPath"
 		return $true
 	}
@@ -388,7 +404,7 @@ function Update-ApplicationBuildProps
 	}
 }
 
-# Check if a build.props file is for an application (no corresponding common.props)
+# Check if a build.props file is for an application
 function Test-IsApplicationBuildProps
 {
 	param(

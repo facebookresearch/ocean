@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Java sources -->
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\RenderingGLESceneGraphJni.java">
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.java">
       <Filter>lib\java</Filter>
     </JavaSource>
     <!-- Library module build file -->

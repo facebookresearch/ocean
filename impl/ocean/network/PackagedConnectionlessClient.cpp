@@ -8,12 +8,11 @@
 #include "ocean/network/PackagedConnectionlessClient.h"
 #include "ocean/network/Data.h"
 
-#include "ocean/base/Exception.h"
 #include "ocean/base/Thread.h"
 
 #include "ocean/math/Numeric.h"
 
-#include <climits>
+#include <cerrno>
 
 #ifdef __GNUC__
 	#include <sys/select.h>
@@ -84,25 +83,57 @@ PackagedConnectionlessClient::SocketResult PackagedConnectionlessClient::send(co
 	size_t pendingBytes = size;
 	size_t dataStartPosition = 0;
 
-	const unsigned char* data8 = (unsigned char*)data;
+	const unsigned char* data8 = (const unsigned char*)(data);
 
 	while (pendingBytes != 0)
 	{
 		ocean_assert(packageIndex < totalPackages);
 
-		((unsigned int*)clientPackageBuffer_.data())[0] = Data::toBigEndian((unsigned int)(messageId));
-		((unsigned int*)clientPackageBuffer_.data())[1] = Data::toBigEndian((unsigned int)(size));
-		((unsigned int*)clientPackageBuffer_.data())[2] = Data::toBigEndian((unsigned int)(dataStartPosition));
-		((unsigned int*)clientPackageBuffer_.data())[3] = Data::toBigEndian((unsigned int)(packageIndex));
-		((unsigned int*)clientPackageBuffer_.data())[4] = Data::toBigEndian((unsigned int)(totalPackages));
+		const unsigned int headerValues[5] =
+		{
+			Data::toBigEndian((unsigned int)(messageId)),
+			Data::toBigEndian((unsigned int)(size)),
+			Data::toBigEndian((unsigned int)(dataStartPosition)),
+			Data::toBigEndian((unsigned int)(packageIndex)),
+			Data::toBigEndian((unsigned int)(totalPackages))
+		};
+
+		static_assert(sizeof(headerValues) == packageManagmentHeaderSize(), "Header size mismatch");
+		memcpy(clientPackageBuffer_.data(), headerValues, sizeof(headerValues));
 
 		const size_t packageDataSize = min(maximalPayloadSize, pendingBytes);
 		memcpy(clientPackageBuffer_.data() + packageManagmentHeaderSize(), data8, packageDataSize);
 
 		const int sendSize = int(packageDataSize + packageManagmentHeaderSize());
 
-		if (sendSize != sendto(socketId_, (const char*)(clientPackageBuffer_.data()), sendSize, 0, (sockaddr*)&receiver, sizeof(receiver)))
+		// Retry on EAGAIN/EWOULDBLOCK (send buffer full on non-blocking socket)
+		constexpr unsigned int maxRetries = 100u;
+
+		bool sendSucceeded = false;
+
+		for (unsigned int retry = 0u; retry < maxRetries; ++retry)
 		{
+			const int result = sendto(socketId_, (const char*)(clientPackageBuffer_.data()), sendSize, 0, (sockaddr*)&receiver, sizeof(receiver));
+
+			if (result == sendSize)
+			{
+				sendSucceeded = true;
+				break;
+			}
+
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+			{
+				// Send buffer is full, wait briefly and retry
+				Thread::sleep(1u);
+				continue;
+			}
+
+			break;
+		}
+
+		if (!sendSucceeded)
+		{
+			Log::debug() << "PackagedConnectionlessClient: Failed to send package " << packageIndex << "/" << totalPackages << ", size: " << sendSize << " bytes, errno: " << errno;
 			return SR_FAILED;
 		}
 
@@ -112,12 +143,6 @@ PackagedConnectionlessClient::SocketResult PackagedConnectionlessClient::send(co
 		pendingBytes -= packageDataSize;
 		data8 += packageDataSize;
 		dataStartPosition += packageDataSize;
-
-		if (pendingBytes != 0)
-		{
-			// as we do not have any feedback regarding the connection or the receiver's cache we will wait some time
-			Thread::sleep(10u);
-		}
 	}
 
 	return SR_SUCCEEDED;

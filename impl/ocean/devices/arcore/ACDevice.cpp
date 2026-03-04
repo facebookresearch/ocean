@@ -110,6 +110,11 @@ bool ACDevice::isObjectTracked(const ObjectId& objectId) const
 {
 	const ScopedLock scopedLock(deviceLock);
 
+	if (worldObjectId_ != objectId)
+	{
+		return false;
+	}
+
 	return worldIsTracked_;
 }
 

@@ -7,6 +7,8 @@
 
 #include "ocean/devices/mapbuilding/jni/DevicesMapBuildingJni.h"
 
+#include "ocean/devices/mapbuilding/MapBuilding.h"
+
 using namespace Ocean;
 
 jboolean Java_com_meta_ocean_devices_mapbuilding_DevicesMapBuildingJni_registerLibrary(JNIEnv* /*env*/, jobject /*javaThis*/)

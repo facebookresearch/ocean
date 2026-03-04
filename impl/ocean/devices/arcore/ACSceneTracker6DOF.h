@@ -24,7 +24,7 @@ namespace ARCore
 
 /*
  * This class implements the 6DOF scene tracker.
- * @ingroup devicescore
+ * @ingroup devicesarcore
  */
 class OCEAN_DEVICES_ARCORE_EXPORT ACSceneTracker6DOF final :
 	virtual public ACDevice,

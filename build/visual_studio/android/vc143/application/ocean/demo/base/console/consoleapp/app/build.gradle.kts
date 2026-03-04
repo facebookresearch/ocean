@@ -57,10 +57,13 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
+  signingConfigs { getByName("debug") {} }
+
   buildTypes {
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      signingConfig = signingConfigs.getByName("debug")
     }
   }
 
@@ -104,8 +107,11 @@ android {
           )
 
   // Android resources directory - passed via -PandroidResDir property from MSBuild
-  // Defaults to "res" relative to app folder if not specified
-  val androidResDir = project.findProperty("androidResDir") as String? ?: "res"
+  val androidResDir =
+      project.findProperty("androidResDir") as String?
+          ?: error(
+              "androidResDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+          )
 
   sourceSets {
     getByName("main") {

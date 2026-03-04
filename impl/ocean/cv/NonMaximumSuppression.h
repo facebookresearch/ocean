@@ -245,6 +245,27 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		inline void removeCandidatesRightFrom(const unsigned int x, const unsigned int y);
 
 		/**
+		 * Returns the strength value of a candidate at a specified position.
+		 * The function uses binary search on the x-coordinate within the specified row, as candidates are sorted by horizontal position.
+		 * @param x The horizontal position to look up, with range [0, width() - 1]
+		 * @param y The vertical position (row) to look up, with range [yOffset(), yOffset() + height() - 1]
+		 * @param strength The resulting strength value if a candidate exists at the specified position
+		 * @return True, if a candidate exists at the specified position; False, if no candidate was found
+		 */
+		bool candidate(const unsigned int x, const unsigned int y, T& strength) const;
+
+		/**
+		 * Returns all gathered candidates of this object.
+		 * The resulting candidates are raw candidates without any suppression.
+		 * @param firstColumn The first column from which candidates will be returned, with range [0, width() - 1]
+		 * @param numberColumns The number of columns for which candidates will be returned, with range [1, width() - firstColumn]
+		 * @param firstRow The first row from which candidates will be returned, with range [yOffset(), height() - 1]
+		 * @param numberRows The number of rows for which candidates will be returned, with range [1, height() - firstRow]
+		 * @param strengthPositions The resulting strength positions
+		 */
+		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions);
+
+		/**
 		 * Applies a non-maximum-suppression search on a given 2D frame in a 3x3 neighborhood (eight neighbors).
 		 * This function allows to determine the precise position of the individual maximum value positions by application of a callback function determining the individual positions.<br>
 		 * @param firstColumn First column to be handled, with range [1, width() - 1)
@@ -261,17 +282,6 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 */
 		template <typename TCoordinate, typename TStrength, bool tStrictMaximum = true>
 		bool suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker = nullptr, const PositionCallback<TCoordinate, TStrength>* positionCallback = nullptr) const;
-
-		/**
-		 * Returns all gathered candidates of this object.
-		 * The resulting candidates are raw candidates without any suppression.
-		 * @param firstColumn The first column from which candidates will be returned, with range [0, width() - 1]
-		 * @param numberColumns The number of columns for which candidates will be returned, with range [1, width() - firstColumn]
-		 * @param firstRow The first row from which candidates will be returned, with range [yOffset(), height() - 1]
-		 * @param numberRows The number of rows for which candidates will be returned, with range [1, height() - firstRow]
-		 * @param strengthPositions The resulting strength positions
-		 */
-		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions);
 
 		/**
 		 * Removes the gathered non-maximum suppression information so that this object can be reused again (for the same task with same resolution etc.).
@@ -528,35 +538,48 @@ inline void NonMaximumSuppressionT<T>::removeCandidatesRightFrom(const unsigned 
 }
 
 template <typename T>
-template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
-bool NonMaximumSuppressionT<T>::suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker, const PositionCallback<TCoordinate, TStrength>* positionCallback) const
+bool NonMaximumSuppressionT<T>::candidate(const unsigned int x, const unsigned int y, T& strength) const
 {
-	ocean_assert(firstColumn + numberColumns <= width_);
-	ocean_assert(firstRow >= (unsigned int)(rows_.firstIndex()) && firstRow + numberRows <= (unsigned int)(rows_.endIndex()));
+	ocean_assert(x < width_);
+	ocean_assert(rows_.isValidIndex(y) && y >= (unsigned int)(rows_.firstIndex()) && y <= (unsigned int)(rows_.endIndex()));
 
-	if (firstColumn + numberColumns > width_)
+	const StrengthCandidateRow& suppressionRow = rows_[y];
+
+	if (suppressionRow.empty())
 	{
 		return false;
 	}
 
-	if (firstRow >= (unsigned int)(rows_.endIndex()) || firstRow + numberRows <= (unsigned int)(rows_.firstIndex()))
+	size_t left = 0;
+	size_t right = suppressionRow.size() - 1;
+
+	while (left <= right)
 	{
-		return false;
+		const size_t mid = left + (right - left) / 2;
+
+		const unsigned int midX = suppressionRow[mid].x();
+
+		if (midX == x)
+		{
+			strength = suppressionRow[mid].strength();
+			return true;
+		}
+		else if (midX < x)
+		{
+			left = mid + 1;
+		}
+		else
+		{
+			if (mid == 0)
+			{
+				break;
+			}
+
+			right = mid - 1;
+		}
 	}
 
-	strengthPositions.reserve(strengthPositions.size() + 128);
-
-	if (worker != nullptr)
-	{
-		Lock lock;
-		worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppressionT<T>::suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
-	}
-	else
-	{
-		suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
-	}
-
-	return true;
+	return false;
 }
 
 template <typename T>
@@ -586,6 +609,38 @@ void NonMaximumSuppressionT<T>::candidates(const unsigned int firstColumn, const
 			strengthPositions.emplace_back(candidate.x(), y, candidate.strength());
 		}
 	}
+}
+
+template <typename T>
+template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
+bool NonMaximumSuppressionT<T>::suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker, const PositionCallback<TCoordinate, TStrength>* positionCallback) const
+{
+	ocean_assert(firstColumn + numberColumns <= width_);
+	ocean_assert(firstRow >= (unsigned int)(rows_.firstIndex()) && firstRow + numberRows <= (unsigned int)(rows_.endIndex()));
+
+	if (firstColumn + numberColumns > width_)
+	{
+		return false;
+	}
+
+	if (firstRow >= (unsigned int)(rows_.endIndex()) || firstRow + numberRows <= (unsigned int)(rows_.firstIndex()))
+	{
+		return false;
+	}
+
+	strengthPositions.reserve(strengthPositions.size() + 128);
+
+	if (worker != nullptr)
+	{
+		Lock lock;
+		worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppressionT<T>::suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
+	}
+	else
+	{
+		suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
+	}
+
+	return true;
 }
 
 template <typename T>

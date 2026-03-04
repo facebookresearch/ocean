@@ -28,7 +28,7 @@ namespace ARCore
 
 /**
  * This class implements a device for the ARCore library.
- * @ingroup devicearcore
+ * @ingroup devicesarcore
  */
 class OCEAN_DEVICES_ARCORE_EXPORT ACDevice :
 	virtual public Device,
@@ -118,10 +118,10 @@ class OCEAN_DEVICES_ARCORE_EXPORT ACDevice :
 		/// The capabilities of the tracker for this device.
 		TrackerCapabilities trackerCapabilities_ = TC_INVALID;
 
-		/// True, if this tracker has been registered with the session mananager.
+		/// True, if this tracker has been registered with the session manager.
 		bool hasBeenRegistered_ = false;
 
-		/// The id of the world object (the world coodinate system).
+		/// The id of the world object (the world coordinate system).
 		ObjectId worldObjectId_ = invalidObjectId();
 
 		/// True, if the world is currently tracked.

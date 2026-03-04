@@ -194,6 +194,42 @@ const std::string& Streaming::dataTypeRequestResponseN()
 	return value;
 }
 
+const std::string& Streaming::extraDataRequestCommand()
+{
+	static const std::string value("extradata");
+	return value;
+}
+
+const std::string& Streaming::extraDataRequestResponseP()
+{
+	static const std::string value("extradata");
+	return value;
+}
+
+const std::string& Streaming::extraDataRequestResponseN()
+{
+	static const std::string value("noextradata");
+	return value;
+}
+
+const std::string& Streaming::changedExtraDataCommand()
+{
+	static const std::string value("changedextradata");
+	return value;
+}
+
+const std::string& Streaming::changedExtraDataResponseP()
+{
+	static const std::string value("accepted");
+	return value;
+}
+
+const std::string& Streaming::changedExtraDataResponseN()
+{
+	static const std::string value("notaccepted");
+	return value;
+}
+
 const std::string& Streaming::changedDataTypeCommand()
 {
 	static const std::string value("changeddatatype");

@@ -21,4 +21,20 @@
       <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\freetype\h\android\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
+
+  <!-- Link against FreeType debug library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\freetype\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetyped;z;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against FreeType release library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\freetype\lib\android_arm64_static;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype;z;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>

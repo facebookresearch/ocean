@@ -20,7 +20,7 @@ PackagedUDPClient::PackagedUDPClient() :
 
 	buildSocket();
 
-	maximalPackageSize_ = min(maximalMessageSize(0), size_t(262144));
+	maximalPackageSize_ = min(maximalMessageSize(0), size_t(1400));
 	ocean_assert(maximalPackageSize_ >= packageManagmentHeaderSize());
 }
 

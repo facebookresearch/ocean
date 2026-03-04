@@ -24,7 +24,7 @@ namespace ARCore
 
 /*
  * This class implements the 6DOF plane tracker.
- * @ingroup devicescore
+ * @ingroup devicesarcore
  */
 class OCEAN_DEVICES_ARCORE_EXPORT ACPlaneTracker6DOF final :
 	virtual public ACDevice,

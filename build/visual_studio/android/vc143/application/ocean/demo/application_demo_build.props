@@ -12,7 +12,10 @@
     <Import Condition="'$(ocean_application_build_imported)' != 'True'" Project="..\application_build.props"/>
   </ImportGroup>
 
+  <!-- IntDir for demo applications includes the demo category prefix (e.g., "demorendering", "demobase").
+       The prefix is set by category-specific property sheets (e.g., application_demo_rendering_build.props)
+       BEFORE they import this file. If no prefix is set, use just the project name. -->
   <PropertyGroup>
-    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\$(OceanDemoCategoryPrefix)$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
   </PropertyGroup>
 </Project>

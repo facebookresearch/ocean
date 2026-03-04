@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Java sources -->
-    <JavaSource Include="..\..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\SceneDescriptionSDXX3DJni.java">
+    <JavaSource Include="..\..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\jni\SceneDescriptionSDXX3DJni.java">
       <Filter>lib\java</Filter>
     </JavaSource>
     <!-- Library module build file -->

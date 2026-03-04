@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Java sources -->
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\mapbuilding\DevicesMapBuildingJni.java">
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\mapbuilding\jni\DevicesMapBuildingJni.java">
       <Filter>lib\java</Filter>
     </JavaSource>
     <!-- Library module build file -->

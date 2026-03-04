@@ -9,6 +9,8 @@
 
 #include "ocean/base/String.h"
 
+#include "ocean/io/Base64.h"
+
 namespace Ocean
 {
 
@@ -47,9 +49,10 @@ bool StreamingServer::Channel::Stream::stream(const void* data, const size_t siz
 	return false;
 }
 
-StreamingServer::Channel::Channel(const std::string& name, const std::string& dataType, const ChannelCallback& callback) :
+StreamingServer::Channel::Channel(const std::string& name, const std::string& dataType, const Buffer& extraData, const ChannelCallback& callback) :
 	name_(name),
 	dataType_(dataType),
+	extraData_(extraData),
 	channelCallback_(callback)
 {
 	// nothing to do here
@@ -200,20 +203,36 @@ Port StreamingServer::Channel::streamSenderPort(const StreamId streamId) const
 	return i->second->senderPort();
 }
 
-bool StreamingServer::Channel::setDataType(TCPServer& configurationTCPServer, MessageQueue& messageQueue, const std::string& dataType)
+bool StreamingServer::Channel::setDataType(TCPServer& configurationTCPServer, MessageQueue& messageQueue, const std::string& dataType, const Buffer& extraData)
 {
-	if (dataType == dataType_)
+	const bool dataTypeChanged = (dataType != dataType_);
+	const bool extraDataChanged = (extraData != extraData_);
+
+	if (!dataTypeChanged && !extraDataChanged)
 	{
 		return true;
 	}
 
 	dataType_ = dataType;
+	extraData_ = extraData;
 
-	/// inform connected streaming clients on this change data type
+	// notify connected streaming clients about the combined data type and extra data change
 	for (StreamMap::iterator i = streamMap_.begin(); i != streamMap_.end(); ++i)
 	{
+		// encode the extra data as Base64 for transmission over the text protocol
+		std::string encodedExtraData;
+		if (!extraData_.empty())
+		{
+			IO::Base64::Buffer encodedBuffer;
+			IO::Base64::encode(extraData_.data(), extraData_.size(), encodedBuffer);
+			encodedExtraData = std::string(encodedBuffer.begin(), encodedBuffer.end());
+		}
+
+		// combine dataType and extraData into a single value: "dataType|base64EncodedExtraData"
+		const std::string combinedValue = dataType_ + "|" + encodedExtraData;
+
 		const SessionId sessionId = messageQueue.uniqueId();
-		if (configurationTCPServer.send(i->second->tcpConnectionId(), createCommand(changedDataTypeCommand(), dataType, sessionId)) != TCPServer::SR_SUCCEEDED)
+		if (configurationTCPServer.send(i->second->tcpConnectionId(), createCommand(changedDataTypeCommand(), combinedValue, sessionId)) != TCPServer::SR_SUCCEEDED)
 		{
 			Log::error() << "Could not send a change data type command to a streaming client.";
 		}
@@ -222,7 +241,7 @@ bool StreamingServer::Channel::setDataType(TCPServer& configurationTCPServer, Me
 			// **TODO** use user defined timeout
 			if (messageQueue.pop(sessionId, 5) != changedDataTypeResponseP())
 			{
-				Log::error() << "A streaming client did not accept the change data type, however it is change on server side.";
+				Log::error() << "A streaming client did not accept the change data type, however it is changed on server side.";
 			}
 		}
 	}
@@ -329,7 +348,7 @@ bool StreamingServer::disable()
 	return true;
 }
 
-StreamingServer::ChannelId StreamingServer::registerChannel(const std::string& channel, const std::string& dataType, const ChannelCallback& callback)
+StreamingServer::ChannelId StreamingServer::registerChannel(const std::string& channel, const std::string& dataType, const Buffer& extraData, const ChannelCallback& callback)
 {
 	if (channel.empty())
 	{
@@ -348,11 +367,11 @@ StreamingServer::ChannelId StreamingServer::registerChannel(const std::string& c
 
 	ocean_assert(channelMap_.find(channelIdCounter_) == channelMap_.end());
 
-	channelMap_[channelIdCounter_] = Channel(channel, dataType, callback);
+	channelMap_[channelIdCounter_] = Channel(channel, dataType, extraData, callback);
 	return channelIdCounter_++;
 }
 
-bool StreamingServer::changeDataType(const ChannelId channelId, const std::string& dataType)
+bool StreamingServer::changeDataType(const ChannelId channelId, const std::string& dataType, const Buffer& extraData)
 {
 	if (channelId == invalidChannelId())
 	{
@@ -367,7 +386,7 @@ bool StreamingServer::changeDataType(const ChannelId channelId, const std::strin
 		return false;
 	}
 
-	return i->second.setDataType(tcpServer_, messageQueue_, dataType);
+	return i->second.setDataType(tcpServer_, messageQueue_, dataType, extraData);
 }
 
 bool StreamingServer::unregisterChannel(const ChannelId channelId)
@@ -554,6 +573,10 @@ void StreamingServer::onCommand(const TCPServer::ConnectionId tcpConnectionId, c
 	else if (command == dataTypeRequestCommand())
 	{
 		onDataTypeRequest(tcpConnectionId, value, sessionId);
+	}
+	else if (command == extraDataRequestCommand())
+	{
+		onExtraDataRequest(tcpConnectionId, value, sessionId);
 	}
 	else
 	{
@@ -928,6 +951,56 @@ void StreamingServer::onDataTypeRequest(const TCPServer::ConnectionId tcpConnect
 	}
 
 	tcpServer_.send(tcpConnectionId, createResponse(dataTypeRequestResponseN(), sessionId));
+}
+
+void StreamingServer::onExtraDataRequest(const TCPServer::ConnectionId tcpConnectionId, const std::string& value, const SessionId sessionId)
+{
+	ConnectionMap::iterator iConnection = connectionMap_.find(tcpConnectionId);
+
+	if (iConnection != connectionMap_.end())
+	{
+		if (channelMap_.empty() == false)
+		{
+			ChannelMap::iterator iChannel = channelMap_.end();
+
+			for (iChannel = channelMap_.begin(); iChannel != channelMap_.end(); ++iChannel)
+			{
+				if (iChannel->second.name() == value)
+				{
+					break;
+				}
+			}
+
+			if (iChannel == channelMap_.end())
+			{
+				iChannel = channelMap_.begin();
+			}
+
+			ocean_assert(iChannel != channelMap_.end());
+
+			const Channel& channel = iChannel->second;
+
+			// encode the extra data as Base64 for transmission over the text protocol
+			std::string encodedExtraData;
+			if (!channel.extraData().empty())
+			{
+				IO::Base64::Buffer encodedBuffer;
+				IO::Base64::encode(channel.extraData().data(), channel.extraData().size(), encodedBuffer);
+				encodedExtraData = std::string(encodedBuffer.begin(), encodedBuffer.end());
+			}
+
+			Log::info() << name_ << " got an extra data request for channel \"" << channel.name() << "\" from " << iConnection->second.address().readable() << " and send " << channel.extraData().size() << " bytes back.";
+
+			tcpServer_.send(tcpConnectionId, createResponse(extraDataRequestResponseP(), encodedExtraData, sessionId));
+			return;
+		}
+	}
+	else
+	{
+		Log::warning() << name_ << " got an extra data request from an unknown client.";
+	}
+
+	tcpServer_.send(tcpConnectionId, createResponse(extraDataRequestResponseN(), sessionId));
 }
 
 void StreamingServer::onTCPReceive(const TCPServer::ConnectionId tcpConnectionId, const void* data, const size_t size)

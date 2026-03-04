@@ -962,8 +962,6 @@ std::string Scanner::discardNonWhiteSpace()
 
 		++position;
 	}
-
-	return std::string();
 }
 
 bool Scanner::readRemark()

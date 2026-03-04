@@ -75,24 +75,24 @@ if (MACOS)
     find_program (IBTOOL NAMES ibtool REQUIRED)
     find_program (ACTOOL NAMES actool REQUIRED)
 
-    set(OCEAN_TARGET_NAME "${TARGET_NAME_COMMON_FRAGMENT}_osx")
+    set(OCEAN_TARGET_NAME "${TARGET_NAME_COMMON_FRAGMENT}_macos")
 
-    set(APP_RESOURCES_SRC_DIR "${OCEAN_IMPL_DIR}/../res/${DIR_STRUCTURE_COMMON_FRAGMENT}/osx")
+    set(APP_RESOURCES_SRC_DIR "${OCEAN_IMPL_DIR}/../res/${DIR_STRUCTURE_COMMON_FRAGMENT}/macos")
     set(APP_RESOURCES_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources")
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/osx/*.h")
-    file(GLOB OCEAN_TARGET_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/osx/*.mm")
+    file(GLOB OCEAN_TARGET_HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/macos/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/macos/*.mm")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
     set(MACOSX_DEPLOYMENT_TARGET "10.12")
-    set(PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.application.demo.cv.detector.barcodes.detector2d.osx")
+    set(PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.application.demo.cv.detector.barcodes.detector2d.macos")
     set(EXECUTABLE_NAME ${OCEAN_TARGET_NAME})
     set(PRODUCT_NAME ${OCEAN_TARGET_NAME})
     set(BUNDLE_ICON_NAME "AppIcon")
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/osx/Info.plist ${CMAKE_CURRENT_BINARY_DIR})
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/macos/Info.plist ${CMAKE_CURRENT_BINARY_DIR})
     set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"

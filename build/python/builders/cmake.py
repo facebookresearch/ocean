@@ -106,6 +106,10 @@ class CMakeBuilder(Builder):
             phase="install",
         )
 
+        # Copy extra files from build dir to install dir (e.g., wxWidgets webp DLLs)
+        if ctx.post_install_copy:
+            self._post_install_copy(ctx)
+
     def _build_configure_command(self, ctx: BuildContext) -> List[str]:
         """Build the cmake configure command."""
         cmd = ["cmake"]
@@ -307,6 +311,14 @@ class CMakeBuilder(Builder):
         # Add architecture flag for Visual Studio generator
         cmd.extend(["-A", arch_map[target.arch]])
 
+        # Set MSVC runtime library to match Ocean's build configuration
+        # Ocean uses MultiThreadedDebugDLL (/MDd) for debug and MultiThreadedDLL (/MD) for release
+        # This ensures all 3rdparty libraries use the same runtime as Ocean
+        if target.build_config == BuildConfig.DEBUG:
+            cmd.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebugDLL")
+        else:
+            cmd.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL")
+
     def _find_ios_toolchain(self) -> Optional[Path]:
         """Find iOS CMake toolchain file."""
         # Look for toolchain in our local toolchains directory
@@ -318,6 +330,32 @@ class CMakeBuilder(Builder):
             return toolchain_path
 
         return None
+
+    def _post_install_copy(self, ctx: BuildContext) -> None:
+        """Copy extra files from build dir to install dir after cmake install.
+
+        Handles the post_install_copy entries from the YAML manifest.
+        Each entry has a 'glob' pattern (relative to build dir) and a 'dest' (relative to install dir).
+        """
+        import glob as glob_module
+        import shutil
+
+        for entry in ctx.post_install_copy:
+            pattern = entry.get("glob", "")
+            dest = entry.get("dest", "")
+            if not pattern or not dest:
+                continue
+
+            full_pattern = str(ctx.build_dir / pattern)
+            dest_dir = ctx.install_dir / dest / ctx.target.to_path_component()
+            self._ensure_dir(dest_dir)
+
+            matches = glob_module.glob(full_pattern, recursive=True)
+            for match in matches:
+                src_path = Path(match)
+                if src_path.is_file():
+                    dst_path = dest_dir / src_path.name
+                    shutil.copy2(str(src_path), str(dst_path))
 
     @staticmethod
     def _run(  # noqa: C901

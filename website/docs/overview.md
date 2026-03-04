@@ -77,10 +77,10 @@ A more detailed description of the Ocean libraries will be provided in the next 
 Ocean comes with a large number of demo applications showing how to use Ocean and giving good start
 points to investigate the code. All demo applications have the same prefix
 `application_ocean_demo_`. Additionally, applications may have a suffix identifying the platform
-`_ios`, `_osx`, `_android`, `_quest`, etc. For example:
+`_ios`, `_macos`, `_android`, `_quest`, etc. For example:
 
 - `application_ocean_demo_media_videopreview_ios` - an iOS app.
-- `application_ocean_demo_media_videopreview_osx` - same app but for macOS.
+- `application_ocean_demo_media_videopreview_macos` - same app but for macOS.
 - `application_ocean_demo_tracking_featuretracker_ios`.
 - `application_ocean_demo_...`.
 

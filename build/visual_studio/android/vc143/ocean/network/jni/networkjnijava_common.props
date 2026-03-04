@@ -10,5 +10,6 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_networkjni_use_imported)' != 'True'" Project="networkjni_use.props"/>
   </ImportGroup>
 </Project>

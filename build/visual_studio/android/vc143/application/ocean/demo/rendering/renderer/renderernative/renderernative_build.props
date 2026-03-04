@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Renderer Native Demo (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_renderernative_build_imported>True</ocean_renderernative_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_renderernative_common_imported)' != 'True'" Project="renderernative_common.props"/>
+    <Import Condition="'$(ocean_renderernative_reference_imported)' != 'True'" Project="renderernative_reference.props"/>
+  </ImportGroup>
+
+  <PropertyGroup>
+    <TargetName>OceanDemoRenderingRenderer</TargetName>
+  </PropertyGroup>
+</Project>

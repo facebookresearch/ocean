@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_scenedescriptionsdlassimpjnijava_common_imported)' != 'True'" Project="scenedescriptionsdlassimpjnijava_common.props"/>
+    <Import Condition="'$(ocean_scenedescriptionsdlassimpjnijava_reference_imported)' != 'True'" Project="scenedescriptionsdlassimpjnijava_reference.props"/>
     <Import Condition="'$(ocean_java_library_build_imported)' != 'True'" Project="..\..\..\..\ocean_java_library_build.props"/>
   </ImportGroup>
 

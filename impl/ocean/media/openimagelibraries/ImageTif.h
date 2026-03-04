@@ -38,7 +38,7 @@ class OCEAN_MEDIA_OIL_EXPORT ImageTif
 		using InputDataTriple = Triple<const uint8_t*, size_t, size_t>;
 
 		/**
-		 * Definition of a triple containing an output buffer (with addtional reserved bytes), the size of the output buffer, and the current location within the output buffer.
+		 * Definition of a triple containing an output buffer (with additional reserved bytes), the size of the output buffer, and the current location within the output buffer.
 		 */
 		using OutputDataTriple = Triple<std::vector<uint8_t>, size_t, size_t>;
 

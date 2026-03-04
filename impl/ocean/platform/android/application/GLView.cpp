@@ -67,7 +67,7 @@ bool GLView::release()
 	return true;
 }
 
-bool GLView::resize(const int width, const int height)
+bool GLView::resize(const int /*width*/, const int /*height*/)
 {
 	// should be implemented in derived classes
 
@@ -81,17 +81,17 @@ bool GLView::render()
 	return true;
 }
 
-void GLView::onTouchDown(const float x, const float y)
+void GLView::onTouchDown(const float /*x*/, const float /*y*/)
 {
 	// should be implemented in derived classes
 }
 
-void GLView::onTouchMove(const float x, const float y)
+void GLView::onTouchMove(const float /*x*/, const float /*y*/)
 {
 	// should be implemented in derived classes
 }
 
-void GLView::onTouchUp(const float x, const float y)
+void GLView::onTouchUp(const float /*x*/, const float /*y*/)
 {
 	// should be implemented in derived classes
 }

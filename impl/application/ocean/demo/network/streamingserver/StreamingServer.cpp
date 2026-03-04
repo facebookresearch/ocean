@@ -68,13 +68,13 @@ StreamingServer* serverPointer = nullptr;
 			std::cout << "ERROR:  Could not set the listening port of the streaming server!" << std::endl << std::endl;
 		}
 
-		channelIdA = server.registerChannel("Channel A", "some data", StreamingServer::ChannelCallback(&onChannelA));
+		channelIdA = server.registerChannel("Channel A", "some data", StreamingServer::Buffer(), StreamingServer::ChannelCallback(&onChannelA));
 		if (channelIdA == StreamingServer::invalidChannelId())
 		{
 			std::cout << "Registered a first channel." << std::endl;
 		}
 
-		channelIdB = server.registerChannel("Channel B", "some data", StreamingServer::ChannelCallback(&onChannelB));
+		channelIdB = server.registerChannel("Channel B", "some data", StreamingServer::Buffer(), StreamingServer::ChannelCallback(&onChannelB));
 		if (channelIdB == StreamingServer::invalidChannelId())
 		{
 			std::cout << "Registered a second channel." << std::endl;

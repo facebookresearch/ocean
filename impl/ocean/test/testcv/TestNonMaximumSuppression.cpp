@@ -82,6 +82,15 @@ bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned in
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("candidate"))
+	{
+		testResult = testCandidate(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << " ";
 
 	Log::info() << testResult;
@@ -146,6 +155,11 @@ TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_Float)
 TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_Double)
 {
 	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation2<double>());
+}
+
+TEST(TestNonMaximumSuppression, Candidate)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testCandidate(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -651,6 +665,97 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 			}
 		}
 	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestNonMaximumSuppression::testCandidate(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test candidate lookup:";
+
+	using GroundTruthMap = std::map<IndexPair32, uint32_t, bool(*)(const IndexPair32&, const IndexPair32&)>;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 10u, 1080u);
+
+		const unsigned int yOffset = RandomI::random(randomGenerator, 0u, 100u);
+
+		CV::NonMaximumSuppressionT<uint32_t> nonMaximumSuppression(width, height, yOffset);
+
+		GroundTruthMap groundTruth(comparePositionYX);
+
+		const unsigned int numberCandidates = RandomI::random(randomGenerator, 1u, 500u);
+
+		for (unsigned int n = 0u; n < numberCandidates; ++n)
+		{
+			const unsigned int y = RandomI::random(randomGenerator, yOffset, yOffset + height - 1u);
+			const unsigned int x = RandomI::random(randomGenerator, 0u, width - 1u);
+			const uint32_t strength = RandomI::random32(randomGenerator);
+
+			const IndexPair32 key(x, y);
+
+			if (groundTruth.find(key) != groundTruth.cend())
+			{
+				continue;
+			}
+
+			groundTruth[key] = strength;
+		}
+
+		// the map is sorted by (y, x), so iterating adds candidates row by row in ascending x order
+
+		for (GroundTruthMap::const_iterator i = groundTruth.cbegin(); i != groundTruth.cend(); ++i)
+		{
+			nonMaximumSuppression.addCandidate(i->first.first, i->first.second, i->second);
+		}
+
+		// verify that every inserted candidate can be found with the correct strength
+
+		for (GroundTruthMap::const_iterator i = groundTruth.cbegin(); i != groundTruth.cend(); ++i)
+		{
+			uint32_t strength = 0u;
+			const bool found = nonMaximumSuppression.candidate(i->first.first, i->first.second, strength);
+
+			OCEAN_EXPECT_TRUE(validation, found);
+
+			if (found)
+			{
+				OCEAN_EXPECT_EQUAL(validation, strength, i->second);
+			}
+		}
+
+		// verify that positions without candidates return false
+
+		for (unsigned int n = 0u; n < 100u; ++n)
+		{
+			const unsigned int y = RandomI::random(randomGenerator, yOffset, yOffset + height - 1u);
+			const unsigned int x = RandomI::random(randomGenerator, 0u, width - 1u);
+
+			const IndexPair32 key(x, y);
+
+			if (groundTruth.find(key) != groundTruth.cend())
+			{
+				continue;
+			}
+
+			uint32_t strength = 0u;
+			const bool found = nonMaximumSuppression.candidate(x, y, strength);
+
+			OCEAN_EXPECT_FALSE(validation, found);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

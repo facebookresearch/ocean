@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\assimp\SceneDescriptionSDLAssimpJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\assimp\jni\SceneDescriptionSDLAssimpJni.java" />
   </ItemGroup>
 
   <ItemGroup>

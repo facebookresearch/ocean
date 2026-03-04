@@ -61,80 +61,142 @@ def get_msvc_toolset_version(vs_version: Optional[str] = None) -> Optional[str]:
     Returns toolset version string like 'vc143' (VS2022), 'vc145' (VS2026), or 'vc142' (VS2019).
     Returns None if not on Windows or MSVC is not available.
     """
+    toolset, _ = get_msvc_toolset_version_and_path(vs_version)
+    return toolset
+
+
+def get_all_installed_vs_versions() -> list[tuple[str, str, str]]:
+    """Detect all installed Visual Studio versions using vswhere.
+
+    Returns:
+        List of tuples (year, toolset, path) for each installed VS version,
+        sorted from newest to oldest. Returns empty list if not on Windows
+        or vswhere is not available.
+    """
     if platform.system().lower() != "windows":
-        return None
+        return []
 
-    # Map VS year to toolset version
-    # VS 2017 = vc141, VS 2019 = vc142, VS 2022 = vc143, VS 2026 = vc145
-    year_to_toolset = {
-        "2017": "vc141",
-        "2019": "vc142",
-        "2022": "vc143",
-        "2026": "vc145",
-    }
-
-    # If a specific version is requested, return its toolset
-    if vs_version and vs_version in year_to_toolset:
-        return year_to_toolset[vs_version]
-
-    # Auto-detect: check for installed Visual Studio versions (newest first)
-    vs_checks = [
-        # VS 2026 (vc145)
-        (
-            "vc145",
-            [
-                os.environ.get("VS180COMNTOOLS"),
-                os.path.expandvars(
-                    r"%ProgramFiles%\Microsoft Visual Studio\2026\Professional\VC"
-                ),
-                os.path.expandvars(
-                    r"%ProgramFiles%\Microsoft Visual Studio\2026\Community\VC"
-                ),
-                os.path.expandvars(
-                    r"%ProgramFiles%\Microsoft Visual Studio\2026\Enterprise\VC"
-                ),
-            ],
-        ),
-        # VS 2022 (vc143)
-        (
-            "vc143",
-            [
-                os.environ.get("VS170COMNTOOLS"),
-                os.path.expandvars(
-                    r"%ProgramFiles%\Microsoft Visual Studio\2022\Professional\VC"
-                ),
-                os.path.expandvars(
-                    r"%ProgramFiles%\Microsoft Visual Studio\2022\Community\VC"
-                ),
-                os.path.expandvars(
-                    r"%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\VC"
-                ),
-            ],
-        ),
-        # VS 2019 (vc142)
-        (
-            "vc142",
-            [
-                os.environ.get("VS160COMNTOOLS"),
-                os.path.expandvars(
-                    r"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Professional\VC"
-                ),
-                os.path.expandvars(
-                    r"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\VC"
-                ),
-                os.path.expandvars(
-                    r"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC"
-                ),
-            ],
-        ),
+    # Find vswhere.exe
+    vswhere_paths = [
+        r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe",
+        r"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe",
     ]
 
-    for toolset, paths in vs_checks:
-        for path in paths:
-            if path and os.path.exists(path):
-                return toolset
+    vswhere_path = None
+    for path in vswhere_paths:
+        if os.path.exists(path):
+            vswhere_path = path
+            break
 
-    # Fallback: try to detect from cl.exe version
+    if not vswhere_path:
+        return []
+
+    # Map major version to toolset
+    # VS 2017 = 15.x = vc141, VS 2019 = 16.x = vc142, VS 2022 = 17.x = vc143, VS 2026 = 18.x = vc145
+    major_to_toolset = {
+        "15": "vc141",
+        "16": "vc142",
+        "17": "vc143",
+        "18": "vc145",
+    }
+
+    try:
+        # Get all VS installations in JSON format
+        result = subprocess.run(
+            [vswhere_path, "-all", "-format", "json"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        if not result.stdout.strip():
+            return []
+
+        import json
+        import re
+
+        installations = json.loads(result.stdout)
+        installed = []
+
+        for install in installations:
+            install_path = install.get("installationPath", "")
+            install_version = install.get("installationVersion", "")
+            display_name = install.get("displayName", "")
+
+            if not install_path or not install_version:
+                continue
+
+            # Extract major version (e.g., "17" from "17.8.34525.116")
+            major_version = install_version.split(".")[0] if install_version else ""
+
+            # Extract year from display name (e.g., "2022" from "Visual Studio Professional 2022")
+            year_match = re.search(r"(\d{4})$", display_name)
+            year = (
+                year_match.group(1) if year_match else f"20{major_version}"
+            )  # Fallback
+
+            toolset = major_to_toolset.get(major_version, f"vc{major_version}")
+
+            # Append \VC to get the VC directory path
+            vc_path = os.path.join(install_path, "VC")
+
+            installed.append((year, toolset, vc_path))
+
+        # Sort by year descending (newest first)
+        installed.sort(key=lambda x: x[0], reverse=True)
+        return installed
+
+    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
+        return []
+
+
+def get_msvc_toolset_version_and_path(
+    vs_version: Optional[str] = None,
+) -> tuple[Optional[str], Optional[str]]:
+    """Get the MSVC toolset version and installation path.
+
+    Uses vswhere.exe to detect installed Visual Studio versions.
+
+    Args:
+        vs_version: Optional Visual Studio version year (e.g., "2022", "2026").
+                   If specified, returns the toolset for that version.
+                   If not specified, auto-detects the latest installed version.
+
+    Returns:
+        Tuple of (toolset_version, install_path).
+        toolset_version: String like 'vc143' (VS2022), 'vc145' (VS2026), or 'vc142' (VS2019).
+        install_path: Path to the Visual Studio VC directory.
+        Returns (None, None) if not on Windows or MSVC is not available.
+    """
+    if platform.system().lower() != "windows":
+        return None, None
+
+    # Get all installed VS versions via vswhere
+    installed = get_all_installed_vs_versions()
+
+    if not installed:
+        # Fallback to cl.exe detection if vswhere fails
+        return _detect_toolset_from_cl()
+
+    # If a specific version is requested, find it
+    if vs_version:
+        for year, toolset, path in installed:
+            if year == vs_version:
+                return toolset, path
+        # Version not found, return None
+        return None, None
+
+    # Return the newest installed version (list is sorted newest first)
+    year, toolset, path = installed[0]
+    return toolset, path
+
+
+def _detect_toolset_from_cl() -> tuple[Optional[str], Optional[str]]:
+    """Fallback detection using cl.exe version output.
+
+    Returns:
+        Tuple of (toolset_version, None) since we can't determine path from cl.exe.
+    """
     try:
         result = subprocess.run(
             ["cl"],
@@ -144,18 +206,18 @@ def get_msvc_toolset_version(vs_version: Optional[str] = None) -> Optional[str]:
         # cl.exe outputs version info to stderr
         version_output = result.stderr
         if "19.5" in version_output:  # VS2026 18.x (estimated)
-            return "vc145"
+            return "vc145", None
         elif "19.4" in version_output:  # VS2022 17.x
-            return "vc143"
+            return "vc143", None
         elif "19.3" in version_output:  # VS2022 17.0-17.3
-            return "vc143"
+            return "vc143", None
         elif "19.2" in version_output:  # VS2019
-            return "vc142"
+            return "vc142", None
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
 
     # Default to vc143 (VS2022) if we can't detect
-    return "vc143"
+    return "vc143", None
 
 
 @dataclass(frozen=True)

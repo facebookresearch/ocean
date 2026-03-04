@@ -20,13 +20,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
 
-  <ItemDefinitionGroup Condition="$(Configuration.Contains('Debug'))">
-    <Link>
-      <AdditionalDependencies>tinyxml2d;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\tinyxml2\lib\$(Ocean3rdPartyConfigFolder);$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="!$(Configuration.Contains('Debug'))">
+  <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>tinyxml2;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\tinyxml2\lib\$(Ocean3rdPartyConfigFolder);$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

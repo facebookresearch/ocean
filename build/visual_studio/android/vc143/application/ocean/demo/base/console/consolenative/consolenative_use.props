@@ -12,17 +12,25 @@
     <Import Condition="'$(ocean_consolenative_common_imported)' != 'True'" Project="consolenative_common.props"/>
   </ImportGroup>
 
+  <!-- Compute the output directory for this shared library.
+       Use OceanSharedLibConfigFolder if available (set by application_build.props for app projects),
+       otherwise fall back to OceanConfigFolder (for native library projects referencing each other). -->
+  <PropertyGroup>
+    <_ConsolenativeOutDir Condition="'$(OceanSharedLibConfigFolder)' != ''">$(OceanRootPath)bin\application\ocean\demo\base\android\$(OceanSharedLibConfigFolder)\</_ConsolenativeOutDir>
+    <_ConsolenativeOutDir Condition="'$(_ConsolenativeOutDir)' == ''">$(OceanRootPath)bin\application\ocean\demo\base\android\$(OceanConfigFolder)\</_ConsolenativeOutDir>
+  </PropertyGroup>
+
   <ItemGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanNativeSharedLibrary Include="$(OutDir)libOceanDemoBaseConsole.so" />
-    <OceanNativeSharedLibrary Include="$(OutDir)libc++_shared.so" />
+    <OceanNativeSharedLibrary Include="$(_ConsolenativeOutDir)libOceanDemoBaseConsole.so" />
+    <OceanNativeSharedLibrary Include="$(_ConsolenativeOutDir)libc++_shared.so" />
   </ItemGroup>
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
     <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libOceanDemoBaseConsole.so;libc++_shared.so</OceanNativeSharedLibraries>
   </PropertyGroup>
 
   <ItemGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanNativeSharedLibrary Include="$(OutDir)libOceanDemoBaseConsole.so" />
-    <OceanNativeSharedLibrary Include="$(OutDir)libc++_shared.so" />
+    <OceanNativeSharedLibrary Include="$(_ConsolenativeOutDir)libOceanDemoBaseConsole.so" />
+    <OceanNativeSharedLibrary Include="$(_ConsolenativeOutDir)libc++_shared.so" />
   </ItemGroup>
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
     <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libOceanDemoBaseConsole.so;libc++_shared.so</OceanNativeSharedLibraries>

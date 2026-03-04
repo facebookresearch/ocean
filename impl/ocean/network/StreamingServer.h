@@ -190,9 +190,10 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 				 * Creates a new channel.
 				 * @param name Unique channel name
 				 * @param dataType Data type of the channel
+				 * @param extraData Optional extra data of the channel (e.g., codec configuration)
 				 * @param callback Channel callback function.
 				 */
-				Channel(const std::string& name, const std::string& dataType, const ChannelCallback& callback);
+				Channel(const std::string& name, const std::string& dataType, const Buffer& extraData, const ChannelCallback& callback);
 
 				/**
 				 * Adds a new stream to this channel.
@@ -244,6 +245,12 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 				inline const std::string& dataType() const;
 
 				/**
+				 * Returns the extra data of this channel.
+				 * @return Channel extra data
+				 */
+				inline const Buffer& extraData() const;
+
+				/**
 				 * Returns the UDP client sender port of a given stream.
 				 * @param streamId Id of the stream to return the UDP sender port for
 				 * @return UDP server sender port
@@ -251,13 +258,14 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 				Port streamSenderPort(const StreamId streamId) const;
 
 				/**
-				 * Sets or changes the data type of this channel.
+				 * Sets or changes the data type and extra data of this channel.
 				 * @param configurationTCPServer TCP server of the streaming server used for stream configurations
 				 * @param messageQueue Message queue of the streaming server used for message identification
 				 * @param dataType New data type to set
+				 * @param extraData New extra data to set (empty to clear/remove extra data)
 				 * @return True, if succeeded
 				 */
-				bool setDataType(TCPServer& configurationTCPServer, MessageQueue& messageQueue, const std::string& dataType);
+				bool setDataType(TCPServer& configurationTCPServer, MessageQueue& messageQueue, const std::string& dataType, const Buffer& extraData = Buffer());
 
 				/**
 				 * Streams new data using the given UDP connections.
@@ -274,6 +282,9 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 
 				/// Data type of the channel.
 				std::string dataType_;
+
+				/// Extra data of the channel (e.g., codec configuration).
+				Buffer extraData_;
 
 				/// Determines the number of active streaming streams.
 				unsigned int activeStreams_ = 0u;
@@ -439,18 +450,20 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		 * Registers a new channel.
 		 * @param channel Unique name of the new channel to register
 		 * @param dataType Data type provides by the channel
+		 * @param extraData Optional extra data for the channel (e.g., codec configuration)
 		 * @param callback Channel request callback
 		 * @return Valid channel id if succeeded
 		 */
-		ChannelId registerChannel(const std::string& channel, const std::string& dataType, const ChannelCallback& callback);
+		ChannelId registerChannel(const std::string& channel, const std::string& dataType, const Buffer& extraData, const ChannelCallback& callback);
 
 		/**
-		 * Changes the data type of a channel.
-		 * @param channelId SessionId of the channel to change the data type for
+		 * Changes the data type and extra data of a channel.
+		 * @param channelId SessionId of the channel to change
 		 * @param dataType New data type to set
+		 * @param extraData New extra data to set (empty to clear/remove extra data)
 		 * @return True, if succeeded
 		 */
-		bool changeDataType(const ChannelId channelId, const std::string& dataType);
+		bool changeDataType(const ChannelId channelId, const std::string& dataType, const Buffer& extraData = Buffer());
 
 		/**
 		 * Unregister a channel.
@@ -597,6 +610,14 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		void onDataTypeRequest(const TCPServer::ConnectionId tcpConnectionId, const std::string& value, const SessionId sessionId);
 
 		/**
+		 * Function handling extra data commands.
+		 * @param tcpConnectionId TCP server connection id
+		 * @param value Command value
+		 * @param sessionId Unique id of the server which is not unique on the client side
+		 */
+		void onExtraDataRequest(const TCPServer::ConnectionId tcpConnectionId, const std::string& value, const SessionId sessionId);
+
+		/**
 		 * Callback function for TCP receive message.
 		 * @param tcpConnectionId TCP server connection id
 		 * @param data Received data
@@ -673,6 +694,11 @@ inline const std::string& StreamingServer::Channel::name() const
 inline const std::string& StreamingServer::Channel::dataType() const
 {
 	return dataType_;
+}
+
+inline const StreamingServer::Buffer& StreamingServer::Channel::extraData() const
+{
+	return extraData_;
 }
 
 inline StreamingServer::Connection::Connection(const Address4& receiver) :

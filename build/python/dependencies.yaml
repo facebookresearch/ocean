@@ -416,6 +416,15 @@ libraries:
         wxBUILD_SHARED: OFF
       options_shared:
         wxBUILD_SHARED: ON
+      # wxWidgets builds webp as internal DLLs for shared builds, but its
+      # cmake install rules don't copy them. Copy them manually.
+      post_install_copy:
+        - glob: "libs/webp-build/*/wxwebp.dll"
+          dest: lib
+        - glob: "libs/webp-build/*/wxsharpyuv.dll"
+          dest: lib
+        - glob: "libs/webp-build/*/wxwebpdemux.dll"
+          dest: lib
     dependencies:
       - zlib
       - libpng

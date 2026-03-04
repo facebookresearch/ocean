@@ -41,6 +41,14 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		using RequestCallback = Callback<bool, const State, const std::string&>;
 
 		/**
+		 * Definition of a callback function for data type and extra data changes.
+		 * Parameter 0 provides the new data type
+		 * Parameter 1 provides the new extra data (may be empty)
+		 * Return True, to accept the change
+		 */
+		using DataTypeChangedCallback = Callback<bool, const std::string&, const Buffer&>;
+
+		/**
 		 * Definition of a callback function for streaming data.
 		 * Parameter 0 provides the buffer that has been received
 		 * Parameter 1 provides the size of the buffer, in bytes
@@ -98,6 +106,13 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		std::string channelDataType(const std::string& channel);
 
 		/**
+		 * Returns extra data of a specified channel provides by the streaming server.
+		 * @param channel Channel to return the extra data for
+		 * @return Extra data (may be empty)
+		 */
+		Buffer channelExtraData(const std::string& channel);
+
+		/**
 		 * Returns the selected channel of the streaming server.
 		 * @return Selected channel
 		 */
@@ -108,6 +123,12 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		 * @return Data type
 		 */
 		inline std::string dataType() const;
+
+		/**
+		 * Returns the extra data of the streaming channel.
+		 * @return Extra data (may be empty)
+		 */
+		inline Buffer extraData() const;
 
 		/**
 		 * Returns the address of the connected streaming server.
@@ -160,6 +181,12 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		inline void setRequestCallback(const RequestCallback& callback);
 
 		/**
+		 * Sets the callback function for data type and extra data changes from the streaming server.
+		 * @param callback Callback function to set
+		 */
+		inline void setDataTypeChangedCallback(const DataTypeChangedCallback& callback);
+
+		/**
 		 * Sets the callback function for streaming data received from the streaming server.
 		 * @param callback Callback function to set
 		 */
@@ -198,7 +225,7 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 
 		/**
 		 * Function handling changed data type commands.
-		 * @param value Command value
+		 * @param value Command value (format: "dataType|base64EncodedExtraData")
 		 * @param sessionId Unique id of the server which is not unique on the client side
 		 */
 		void onChangedDataType(const std::string& value, const SessionId sessionId);
@@ -228,6 +255,9 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		/// Stream data type.
 		std::string dataType_;
 
+		/// Stream extra data (e.g., codec configuration).
+		Buffer extraData_;
+
 		/// Determines whether the client is currently receiving.
 		bool isReceiving_ = false;
 
@@ -249,6 +279,9 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		/// Streaming server request callback function.
 		RequestCallback requestCallback_;
 
+		/// Data type and extra data changed callback function.
+		DataTypeChangedCallback dataTypeChangedCallback_;
+
 		/// Streaming data receive callback function.
 		ReceiveCallback receiveCallback_;
 
@@ -266,6 +299,12 @@ inline std::string StreamingClient::dataType() const
 {
 	const ScopedLock scopedLock(lock_);
 	return dataType_;
+}
+
+inline StreamingClient::Buffer StreamingClient::extraData() const
+{
+	const ScopedLock scopedLock(lock_);
+	return extraData_;
 }
 
 inline bool StreamingClient::isReceiving()
@@ -296,6 +335,12 @@ inline void StreamingClient::setRequestCallback(const RequestCallback& callback)
 {
 	const ScopedLock scopedLock(lock_);
 	requestCallback_ = callback;
+}
+
+inline void StreamingClient::setDataTypeChangedCallback(const DataTypeChangedCallback& callback)
+{
+	const ScopedLock scopedLock(lock_);
+	dataTypeChangedCallback_ = callback;
 }
 
 inline void StreamingClient::setReceiveCallback(const ReceiveCallback& callback)

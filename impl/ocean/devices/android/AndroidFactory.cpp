@@ -363,21 +363,21 @@ void AndroidFactory::registerDevices()
 	registerDevice(AndroidGPSTracker::deviceNameAndroidGPSTracker(), AndroidGPSTracker::deviceTypeAndroidGPSTracker(), InstanceFunction::create(*this, &AndroidFactory::createAndroidGPSTracker));
 }
 
-Device* AndroidFactory::createAndroidAccelerationSensor3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidAccelerationSensor3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	ocean_assert(sensorAccelerometer_ != nullptr);
 
 	return new AndroidAccelerationSensor3DOF(Sensor::SENSOR_ACCELERATION_3DOF, sensorAccelerometer_);
 }
 
-Device* AndroidFactory::createAndroidLinearAccelerationSensor3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidLinearAccelerationSensor3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	ocean_assert(sensorLinearAccelerometer_ != nullptr);
 
 	return new AndroidAccelerationSensor3DOF(Sensor::SENSOR_LINEAR_ACCELERATION_3DOF, sensorLinearAccelerometer_);
 }
 
-Device* AndroidFactory::createAndroidOrientationTracker3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidOrientationTracker3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	if (sensorGameRotationVector_ != nullptr)
 	{
@@ -393,33 +393,33 @@ Device* AndroidFactory::createAndroidOrientationTracker3DOF(const std::string& n
 	}
 }
 
-Device* AndroidFactory::createAndroidGyroRawSensor3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidGyroRawSensor3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	ocean_assert(sensorGyroRaw_ != nullptr);
 
 	return new AndroidGyroSensor3DOF(Sensor::SENSOR_GYRO_RAW_3DOF, sensorGyroRaw_);
 }
 
-Device* AndroidFactory::createAndroidGyroUnbiasedSensor3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidGyroUnbiasedSensor3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	ocean_assert(sensorGyroUnbiased_ != nullptr);
 
 	return new AndroidGyroSensor3DOF(Sensor::SENSOR_GYRO_UNBIASED_3DOF, sensorGyroUnbiased_);
 }
 
-Device* AndroidFactory::createAndroidGPSTracker(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidGPSTracker(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	return new AndroidGPSTracker();
 }
 
-Device* AndroidFactory::createAndroidGravityTracker3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidGravityTracker3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	ocean_assert(sensorGravity_ != nullptr);
 
 	return new AndroidGravityTracker3DOF(sensorGravity_);
 }
 
-Device* AndroidFactory::createAndroidHeadingTracker3DOF(const std::string& name, const Device::DeviceType& deviceType)
+Device* AndroidFactory::createAndroidHeadingTracker3DOF(const std::string& /*name*/, const Device::DeviceType& /*deviceType*/)
 {
 	ocean_assert(sensorRotationVector_ != nullptr);
 

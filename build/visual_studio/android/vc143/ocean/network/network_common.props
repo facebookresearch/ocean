@@ -19,4 +19,20 @@
       <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\curl\h\android;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
+
+  <!-- Link against curl debug library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\curl\lib\android_arm64_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>curl-d;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against curl release library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\curl\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>curl;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>

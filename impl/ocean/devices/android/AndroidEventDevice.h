@@ -238,7 +238,7 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidEventDevice :
 		TimestampConverter& timestampConverter_;
 };
 
-inline int AndroidEventDevice::onEventFunctionStatic(int fd, int events, void* data)
+inline int AndroidEventDevice::onEventFunctionStatic(int /*fd*/, int /*events*/, void* data)
 {
 	if (data == nullptr)
 	{

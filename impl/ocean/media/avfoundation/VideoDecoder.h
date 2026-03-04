@@ -217,6 +217,36 @@ class VideoDecoder
 		void release();
 
 		/**
+		 * Converts Annex B formatted H.264/H.265 data to AVCC/HVCC format.
+		 * For encoded samples (isCodecConfig = false): Replaces start code prefixes (00 00 00 01 or 00 00 01) with 4-byte big-endian length prefixes.
+		 * For codec config (isCodecConfig = true): Extracts SPS/PPS (and VPS for HEVC) NAL units and builds an AVCC/HVCC configuration record.
+		 * @param annexBData The Annex B formatted data containing NAL units with start code prefixes, must be valid
+		 * @param annexBSize The size of the Annex B data in bytes, with range [4, infinity)
+		 * @param avccData The resulting AVCC/HVCC formatted data
+		 * @param isCodecConfig True to build an AVCC/HVCC codec configuration record from the NAL units; False to simply replace start codes with length prefixes
+		 * @param mime The MIME type, used only when isCodecConfig is true to determine H.264 vs HEVC format, either "video/avc" or "video/hevc"
+		 * @return True if conversion succeeded; False if the input data is invalid or conversion failed
+		 */
+		static bool convertAnnexBToAvcc(const void* annexBData, const size_t annexBSize, std::vector<uint8_t>& avccData, const bool isCodecConfig = false, const std::string& mime = "video/avc");
+
+		/**
+		 * Determines whether the given data is in Annex B format (start code prefixed) or AVCC format (length prefixed).
+		 * Annex B format uses start codes (0x00 0x00 0x00 0x01 or 0x00 0x00 0x01) to delimit NAL units.
+		 * AVCC format uses 4-byte big-endian length prefixes before each NAL unit.
+		 *
+		 * Note: For codec configuration data, use isCodecConfig=true as AVCC config starts with version byte 0x01.
+		 * For regular NAL unit samples, use isCodecConfig=false which applies more sophisticated detection
+		 * to distinguish AVCC length prefixes from Annex B start codes (especially for NAL sizes 256-511 bytes
+		 * where the length prefix 0x00 0x00 0x01 XX looks like an Annex B 3-byte start code).
+		 *
+		 * @param data The data to check, must be valid
+		 * @param size The size of the data in bytes, with range [4, infinity)
+		 * @param isCodecConfig True if the data is codec configuration (SPS/PPS), false for regular NAL samples
+		 * @return True if the data is in Annex B format; false if it's in AVCC format
+		 */
+		static bool isAnnexB(const void* data, const size_t size, const bool isCodecConfig = false);
+
+		/**
 		 * Move operator.
 		 * @param videoDecoder The video decoder to be moved
 		 * @return Reference to this object

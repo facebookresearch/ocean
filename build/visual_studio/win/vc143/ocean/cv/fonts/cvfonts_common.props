@@ -15,13 +15,19 @@
   </ImportGroup>
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\freetype\2.10\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\freetype\h\win\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="$(Configuration.Contains('Debug'))">
     <Link>
-      <AdditionalDependencies>freetype.lib;libpng.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\freetype\2.10\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetyped.lib;libpng16_staticd.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\freetype\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="!$(Configuration.Contains('Debug'))">
+    <Link>
+      <AdditionalDependencies>freetype.lib;libpng16_static.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\freetype\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

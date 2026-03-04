@@ -4,7 +4,7 @@
     <Filter Include="lib">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\src">
+    <Filter Include="lib\java">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
     </Filter>
     <Filter Include="gradle">
@@ -14,22 +14,22 @@
   <ItemGroup>
     <!-- Java sources -->
     <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanLocationManager.java">
-      <Filter>lib\src</Filter>
+      <Filter>lib\java</Filter>
     </JavaSource>
     <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanWifiManager.java">
-      <Filter>lib\src</Filter>
+      <Filter>lib\java</Filter>
     </JavaSource>
     <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.java">
-      <Filter>lib\src</Filter>
+      <Filter>lib\java</Filter>
     </JavaSource>
     <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Assets.java">
-      <Filter>lib\src</Filter>
+      <Filter>lib\java</Filter>
     </JavaSource>
-    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesAndroidJni.java">
-      <Filter>lib\src</Filter>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.java">
+      <Filter>lib\java</Filter>
     </JavaSource>
-    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\network\NetworkJni.java">
-      <Filter>lib\src</Filter>
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\network\jni\NetworkJni.java">
+      <Filter>lib\java</Filter>
     </JavaSource>
     <!-- Library module build file -->
     <None Include="lib\build.gradle.kts">

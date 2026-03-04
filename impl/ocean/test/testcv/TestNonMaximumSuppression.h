@@ -108,6 +108,13 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		template <typename T>
 		static bool testDeterminePrecisePeakLocation2();
 
+		/**
+		 * Tests the candidate lookup function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCandidate(const double testDuration);
+
 	protected:
 
 		/**
@@ -145,6 +152,14 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		 * @param numberRows The number of rows to be handled, with range [1, height - firstRow - 1]
 		 */
 		static void determineFeaturePointsSubset(const Frame* yFrame, const uint8_t minimalThreshold, const bool strictMaximum, Lock* lock, StrengthPositions* locations, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
+
+		/**
+		 * Compares two IndexPair32 positions by y-coordinate first, then by x-coordinate.
+		 * @param a The first position (x, y)
+		 * @param b The second position (x, y)
+		 * @return True, if a comes before b
+		 */
+		static inline bool comparePositionYX(const IndexPair32& a, const IndexPair32& b);
 };
 
 inline TestNonMaximumSuppression::StrengthPositions TestNonMaximumSuppression::determineFeaturePoints(const Frame& yFrame, const unsigned int subRegionLeft, const unsigned int subRegionTop, const unsigned int subRegionWidth, const unsigned int subRegionHeight, const uint8_t minimalThreshold, const bool strictMaximum, Worker* worker)
@@ -174,6 +189,11 @@ inline TestNonMaximumSuppression::StrengthPositions TestNonMaximumSuppression::d
 	}
 
 	return result;
+}
+
+inline bool TestNonMaximumSuppression::comparePositionYX(const IndexPair32& a, const IndexPair32& b)
+{
+	return a.second < b.second || (a.second == b.second && a.first < b.first);
 }
 
 }

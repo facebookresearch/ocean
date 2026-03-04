@@ -998,7 +998,7 @@ Frame ARSessionManager::extractImage(ArSession* arSession, ArFrame* arFrame, Med
 				sourcePixelStrides[planeIndex] = (unsigned int)(planePixelStride);
 
 				sourcePaddingElements[planeIndex] = (unsigned int)(planeDataRowStride - planeWidth);
-				ocean_assert(sourcePaddingElements[planeIndex] < planeDataRowStride);
+				ocean_assert(sourcePaddingElements[planeIndex] < (unsigned int)(planeDataRowStride));
 			}
 
 			int64_t timestampNs = NumericT<int64_t>::minValue();

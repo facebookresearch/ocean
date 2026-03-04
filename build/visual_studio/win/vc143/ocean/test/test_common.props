@@ -18,4 +18,10 @@
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
     <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\base\base_use.props"/>
   </ImportGroup>
+
+  <!-- Append test library DLL directory to the debugger PATH for Shared builds -->
+  <PropertyGroup Condition="$(Configuration.StartsWith('Shared'))">
+    <OceanSharedLibPaths>$(OceanSharedLibPaths);$(OceanRootPath)bin\test\lib\$(OceanConfigFolder)</OceanSharedLibPaths>
+    <LocalDebuggerEnvironment>PATH=$(OceanSharedLibPaths);%PATH%</LocalDebuggerEnvironment>
+  </PropertyGroup>
 </Project>

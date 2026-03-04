@@ -24,7 +24,7 @@ namespace ARCore
 
 /*
  * This class implements the 6DOF depth tracker.
- * @ingroup devicescore
+ * @ingroup devicesarcore
  */
 class OCEAN_DEVICES_ARCORE_EXPORT ACDepthTracker6DOF final :
 	virtual public ACDevice,

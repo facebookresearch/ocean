@@ -13,8 +13,10 @@
   </ImportGroup>
 
   <!-- Debugger environment for Shared builds to find DLLs -->
+  <!-- OceanSharedLibPaths accumulates DLL directories; library _common.props files append their own 3rdparty paths -->
   <PropertyGroup Condition="$(Configuration.StartsWith('Shared'))">
-    <LocalDebuggerEnvironment>PATH=$(OceanRootPath)bin\lib\$(OceanConfigFolder);%PATH%</LocalDebuggerEnvironment>
+    <OceanSharedLibPaths>$(OceanRootPath)bin\lib\$(OceanConfigFolder)</OceanSharedLibPaths>
+    <LocalDebuggerEnvironment>PATH=$(OceanSharedLibPaths);%PATH%</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

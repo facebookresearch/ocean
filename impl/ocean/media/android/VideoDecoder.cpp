@@ -466,6 +466,199 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 	return frame;
 }
 
+bool VideoDecoder::convertAvccToAnnexB(const void* avccData, const size_t avccSize, std::vector<uint8_t>& annexBData, const bool isCodecConfig, const std::string& mime)
+{
+	ocean_assert(avccData != nullptr && avccSize >= 4);
+
+	if (avccData == nullptr || avccSize < 4)
+	{
+		return false;
+	}
+
+	const uint8_t* data = static_cast<const uint8_t*>(avccData);
+	static const uint8_t startCode[] = {0x00, 0x00, 0x00, 0x01};
+
+	if (!isCodecConfig)
+	{
+		// convert length-prefixed NAL units to start code-prefixed NAL units
+		annexBData.clear();
+		annexBData.reserve(avccSize);
+
+		size_t offset = 0;
+		while (offset + 4 <= avccSize)
+		{
+			const uint32_t nalLength = (uint32_t(data[offset]) << 24) | (uint32_t(data[offset + 1]) << 16) | (uint32_t(data[offset + 2]) << 8) | uint32_t(data[offset + 3]);
+			offset += 4;
+
+			if (nalLength == 0 || offset + nalLength > avccSize)
+			{
+				break;
+			}
+
+			annexBData.insert(annexBData.end(), startCode, startCode + 4);
+			annexBData.insert(annexBData.end(), data + offset, data + offset + nalLength);
+
+			offset += nalLength;
+		}
+
+		return !annexBData.empty();
+	}
+
+	const bool isHevc = (mime == "video/hevc" || mime == "video/h265");
+
+	if (isHevc)
+	{
+		// parse HVCC format: [22-byte header][num arrays][[array type][num nalus][nalu length][nalu data]...]
+		if (avccSize < 23)
+		{
+			return false;
+		}
+
+		annexBData.clear();
+
+		const uint8_t numArrays = data[22];
+		size_t offset = 23;
+
+		for (uint8_t arrayIdx = 0; arrayIdx < numArrays && offset + 3 <= avccSize; ++arrayIdx)
+		{
+			offset++;
+			const uint16_t numNalus = (uint16_t(data[offset]) << 8) | data[offset + 1];
+			offset += 2;
+
+			for (uint16_t naluIdx = 0; naluIdx < numNalus && offset + 2 <= avccSize; ++naluIdx)
+			{
+				const size_t naluLength = (size_t(data[offset]) << 8) | data[offset + 1];
+				offset += 2;
+
+				if (offset + naluLength > avccSize)
+				{
+					break;
+				}
+
+				annexBData.insert(annexBData.end(), startCode, startCode + 4);
+				annexBData.insert(annexBData.end(), data + offset, data + offset + naluLength);
+
+				offset += naluLength;
+			}
+		}
+
+		return !annexBData.empty();
+	}
+
+	// parse AVCC format: [version][profile][compat][level][0xFF][numSPS | 0xE0][sps length][sps]...[num pps][pps length][pps]...
+	if (avccSize < 7)
+	{
+		return false;
+	}
+
+	annexBData.clear();
+
+	size_t offset = 5;
+	const uint8_t numSPS = data[offset] & 0x1F;
+	offset++;
+
+	for (uint8_t i = 0; i < numSPS && offset + 2 <= avccSize; ++i)
+	{
+		const size_t spsLength = (size_t(data[offset]) << 8) | data[offset + 1];
+		offset += 2;
+
+		if (offset + spsLength > avccSize)
+		{
+			break;
+		}
+
+		annexBData.insert(annexBData.end(), startCode, startCode + 4);
+		annexBData.insert(annexBData.end(), data + offset, data + offset + spsLength);
+
+		offset += spsLength;
+	}
+
+	if (offset < avccSize)
+	{
+		const uint8_t numPPS = data[offset];
+		offset++;
+
+		for (uint8_t i = 0; i < numPPS && offset + 2 <= avccSize; ++i)
+		{
+			const size_t ppsLength = (size_t(data[offset]) << 8) | data[offset + 1];
+			offset += 2;
+
+			if (offset + ppsLength > avccSize)
+			{
+				break;
+			}
+
+			annexBData.insert(annexBData.end(), startCode, startCode + 4);
+			annexBData.insert(annexBData.end(), data + offset, data + offset + ppsLength);
+
+			offset += ppsLength;
+		}
+	}
+
+	return !annexBData.empty();
+}
+
+bool VideoDecoder::isAvcc(const void* data, const size_t size, const bool isCodecConfig)
+{
+	ocean_assert(data != nullptr && size >= 4);
+
+	if (data == nullptr || size < 4)
+	{
+		return false;
+	}
+
+	const uint8_t* byteData = static_cast<const uint8_t*>(data);
+
+	if (isCodecConfig)
+	{
+		// For codec configuration data:
+		// - AVCC config starts with version byte 0x01
+		// - Annex B config starts with start codes (0x00 0x00 0x00 0x01 or 0x00 0x00 0x01)
+		if (byteData[0] == 0x00 && byteData[1] == 0x00 && byteData[2] == 0x00 && byteData[3] == 0x01)
+		{
+			return false; // Annex B 4-byte start code
+		}
+
+		if (byteData[0] == 0x00 && byteData[1] == 0x00 && byteData[2] == 0x01)
+		{
+			return false; // Annex B 3-byte start code
+		}
+
+		// AVCC config starts with 0x01 (configurationVersion)
+		return true;
+	}
+
+	// For regular NAL unit samples:
+	// Need more sophisticated detection because AVCC length prefix for NAL units
+	// with sizes 256-511 bytes is 0x00 0x00 0x01 XX, which looks like Annex B 3-byte start code
+
+	if (byteData[0] == 0x00 && byteData[1] == 0x00 && byteData[2] == 0x00 && byteData[3] == 0x01)
+	{
+		// Definitely Annex B 4-byte start code (AVCC length of 1 byte NAL unit is impossible in practice)
+		return false;
+	}
+
+	if (byteData[0] == 0x00 && byteData[1] == 0x00 && byteData[2] == 0x01)
+	{
+		// Could be Annex B 3-byte start code, or AVCC with NAL size 256-511
+		// Check if treating as AVCC length makes sense
+		const uint32_t possibleLength = (uint32_t(byteData[0]) << 24) | (uint32_t(byteData[1]) << 16) |
+		                                (uint32_t(byteData[2]) << 8) | uint32_t(byteData[3]);
+
+		if (possibleLength > 0 && possibleLength <= size - 4)
+		{
+			// Valid AVCC length - this is AVCC format
+			return true;
+		}
+
+		// Invalid as AVCC, must be Annex B
+		return false;
+	}
+
+	// Doesn't start with a recognized Annex B pattern, assume AVCC
+	return true;
+}
+
 }
 
 }

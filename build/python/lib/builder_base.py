@@ -64,6 +64,10 @@ class BuildContext:
     # None = use default (32)
     android_api_level: Optional[int] = None
 
+    # Extra files to copy from build dir to install dir after cmake install
+    # Each entry is a dict with 'glob' (relative to build dir) and 'dest' (relative to install dir)
+    post_install_copy: Optional[list] = None
+
     def report_progress(self, phase: str) -> None:
         """Report progress to callback if set."""
         if self.progress_callback:

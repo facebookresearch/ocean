@@ -51,8 +51,8 @@ tasks.register("copyTemporaryFiles") {
       listOf(
           "$oceanDevelopmentPath/impl/application/ocean/demo/platform/android/pixelformats/android/DemoPlatformAndroidPixelFormatsActivity.java",
           "$oceanDevelopmentPath/impl/ocean/base/BaseJni.java",
-          "$oceanDevelopmentPath/impl/ocean/devices/android/DevicesAndroidJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/android/MediaAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/devices/android/jni/DevicesAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/media/android/jni/MediaAndroidJni.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/Assets.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/MessengerView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/TextActivity.java")

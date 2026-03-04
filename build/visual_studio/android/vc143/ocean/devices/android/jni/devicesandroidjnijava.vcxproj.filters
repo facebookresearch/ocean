@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Java sources -->
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesAndroidJni.java">
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.java">
       <Filter>lib\java</Filter>
     </JavaSource>
     <!-- Library module build file -->

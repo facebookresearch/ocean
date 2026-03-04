@@ -6,7 +6,6 @@
 <Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Project configurations - Debug/Release for each platform -->
   <ItemGroup Label="ProjectConfigurations">
-
     <ProjectConfiguration Include="Debug|ARM64">
       <Configuration>Debug</Configuration>
       <Platform>ARM64</Platform>
@@ -15,7 +14,6 @@
       <Configuration>Release</Configuration>
       <Platform>ARM64</Platform>
     </ProjectConfiguration>
-
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
       <Platform>ARM</Platform>
@@ -24,7 +22,6 @@
       <Configuration>Release</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -34,24 +31,19 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-
   <PropertyGroup Label="Globals">
     <ProjectGuid>{d5f0f3d4-21d2-4d69-bf50-c85594cdb76d}</ProjectGuid>
     <RootNamespace>consoleapp</RootNamespace>
     <ProjectName>consoleapp</ProjectName>
     <Keyword>Android</Keyword>
-
     <ConfigurationType>Makefile</ConfigurationType>
-
     <AndroidPackageName>com.meta.ocean.app.demo.base.console.android</AndroidPackageName>
     <OutputType>AndroidApplication</OutputType>
     <AndroidMinSdkVersion>24</AndroidMinSdkVersion>
     <AndroidTargetSdkVersion>34</AndroidTargetSdkVersion>
     <JavaVersion>VERSION_17</JavaVersion>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-
   <PropertyGroup>
     <_OceanExtensionPath Condition="'$(_OceanExtensionPath)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\Software\OceanAndroidExtension', 'ExtensionPath', '', RegistryView.Default))</_OceanExtensionPath>
     <_OceanCommonPropsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.props</_OceanCommonPropsPath>
@@ -65,35 +57,46 @@
     <Import Project="consoleapp_build.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-
   <ItemGroup>
     <None Include="app\build.gradle.kts" />
     <None Include="gradle\build.gradle.kts" />
     <None Include="gradle\settings.gradle.kts" />
     <None Include="gradle\gradle.properties" />
   </ItemGroup>
-
   <ItemGroup>
     <JavaSource Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\base\console\android\DemoConsoleActivity.java" />
   </ItemGroup>
-
- <ItemGroup>
+  <ItemGroup>
     <None Include="..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\base\console\android\res\drawable\ic_launcher_background.xml" />
     <None Include="..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\base\console\android\res\drawable\ic_launcher_foreground.xml" />
     <None Include="..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\base\console\android\res\values\strings.xml" />
     <None Include="..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\base\console\android\res\values\ic_launcher_background.xml" />
   </ItemGroup>
-
   <ItemGroup>
     <AndroidManifest Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\base\console\android\AndroidManifest.xml" />
   </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
-
   <PropertyGroup>
     <_OceanCommonTargetsPath Condition="'$(_OceanExtensionPath)' != '' AND Exists('$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets')">$(_OceanExtensionPath)\toolset\OceanAndroidCommon\OceanAndroidCommon.targets</_OceanCommonTargetsPath>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\demobase$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\demobase$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\demobase$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\demobase$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\demobase$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(OceanRootPath)bin\tmp\impl\application\ocean\demo\demobase$(ProjectName)\android\$(OceanConfigFolder)\</IntDir>
+  </PropertyGroup>
   <Import Project="$(_OceanCommonTargetsPath)" Condition="'$(_OceanCommonTargetsPath)' != '' AND Exists('$(_OceanCommonTargetsPath)')" />
 </Project>

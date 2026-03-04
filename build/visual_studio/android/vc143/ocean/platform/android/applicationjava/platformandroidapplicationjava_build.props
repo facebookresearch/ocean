@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Platform Android Application Java (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_platformandroidapplicationjava_build_imported>True</ocean_platformandroidapplicationjava_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_java_library_build_imported)' != 'True'" Project="..\..\..\ocean_java_library_build.props"/>
+    <Import Condition="'$(ocean_platformandroidapplicationjava_common_imported)' != 'True'" Project="platformandroidapplicationjava_common.props"/>
+    <Import Condition="'$(ocean_platformandroidapplicationjava_reference_imported)' != 'True'" Project="platformandroidapplicationjava_reference.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <TargetName>OceanPlatformAndroidApplicationJavaD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <TargetName>OceanPlatformAndroidApplicationJava</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GradleImplementationDependencies>androidx.appcompat:appcompat:1.6.1</GradleImplementationDependencies>
+  </PropertyGroup>
+</Project>

@@ -305,8 +305,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -337,7 +337,7 @@
 					../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
 					../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
 				);
-				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lOceanBaseD",
@@ -379,7 +379,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.linedetector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorlinedetectorios;
 				PRODUCT_NAME = democvdetectorlinedetectorios;
-				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
 					"-Wdeprecated-declarations",
@@ -402,8 +402,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -433,7 +433,7 @@
 					../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
 					../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
 				);
-				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lOceanBase",
@@ -475,7 +475,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.linedetector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorlinedetectorios;
 				PRODUCT_NAME = democvdetectorlinedetectorios;
-				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/macos_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
 					"-Wdeprecated-declarations",

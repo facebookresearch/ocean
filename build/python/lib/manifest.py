@@ -75,6 +75,8 @@ class BuildConfig:
     options_release: Dict[str, Any] = field(default_factory=dict)
     script: Optional[str] = None  # For custom builds
     cmake_targets: Optional[List[str]] = None  # Specific CMake targets to build
+    # Extra files to copy from build dir to install dir after cmake install
+    post_install_copy: List[Dict[str, str]] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "BuildConfig":
@@ -87,6 +89,7 @@ class BuildConfig:
             options_release=data.get("options_release", {}),
             script=data.get("script"),
             cmake_targets=data.get("cmake_targets"),
+            post_install_copy=data.get("post_install_copy", []),
         )
 
     def get_merged_options(self, link_type: str, config: str) -> Dict[str, Any]:

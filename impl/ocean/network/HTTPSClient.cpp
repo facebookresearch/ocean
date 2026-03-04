@@ -135,7 +135,7 @@ size_t HTTPSClient::CurlSessionData::onNewData(char* ptr, size_t size, size_t nm
 	if (nmemb != 0)
 	{
 		ocean_assert(ptr != nullptr);
-		ocean_assert(size == 1);
+		ocean_assert_and_suppress_unused(size == 1, size);
 
 		const uint8_t* const dataStart = (const uint8_t*)(ptr);
 		const uint8_t* const dataEnd = dataStart + nmemb;

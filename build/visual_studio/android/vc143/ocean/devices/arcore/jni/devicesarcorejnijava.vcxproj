@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\arcore\DevicesARCoreJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\arcore\jni\DevicesARCoreJni.java" />
   </ItemGroup>
 
   <ItemGroup>

@@ -59,7 +59,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\RenderingGLESceneGraphJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.java" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\build.gradle.kts" />

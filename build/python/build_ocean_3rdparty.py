@@ -156,7 +156,7 @@ from lib import (
     SourceFetcher,
 )
 from lib.builder_base import BuildContext, Builder
-from lib.platform import detect_host_os, get_installed_windows_archs, get_msvc_toolset_version
+from lib.platform import detect_host_os, get_installed_windows_archs, get_msvc_toolset_version_and_path, get_all_installed_vs_versions
 from lib.progress import BuildPhase, ProgressDisplay
 
 
@@ -525,6 +525,7 @@ def execute_build_job(
         log_file=log_file,
         vs_version=vs_version,
         android_api_level=android_api_level,
+        post_install_copy=lib.build.post_install_copy or None,
     )
 
     # Get builder
@@ -583,50 +584,6 @@ def _get_include_lock(include_dir: Path) -> threading.Lock:
         if key not in _include_locks:
             _include_locks[key] = threading.Lock()
         return _include_locks[key]
-
-
-def _normalize_debug_lib_name(filename: str) -> str:
-    """Normalize a library filename for debug builds by ensuring 'd' suffix.
-
-    Examples:
-        libz.a -> libzd.a
-        libcurl-d.a -> libcurld.a
-        libfreetyped.a -> libfreetyped.a (already has d)
-        libpng16d.a -> libpng16d.a (already has d)
-    """
-    # Library extensions we care about
-    lib_extensions = {".a", ".dylib", ".so", ".lib", ".dll"}
-
-    # Check if this is a library file
-    for ext in lib_extensions:
-        if filename.endswith(ext):
-            base = filename[: -len(ext)]
-
-            # Handle -d suffix (curl style) -> normalize to d
-            if base.endswith("-d"):
-                return base[:-2] + "d" + ext
-
-            # Already has d suffix
-            if base.endswith("d"):
-                return filename
-
-            # Add d suffix
-            return base + "d" + ext
-
-    # Handle versioned .so files (e.g., libz.so.1.3.1)
-    if ".so." in filename:
-        # Find the .so. part and add d before it
-        idx = filename.index(".so.")
-        base = filename[:idx]
-        rest = filename[idx:]
-
-        if base.endswith("-d"):
-            return base[:-2] + "d" + rest
-        if base.endswith("d"):
-            return filename
-        return base + "d" + rest
-
-    return filename
 
 
 def _get_base_lib_name(filename: str) -> str:
@@ -811,14 +768,12 @@ def _copy_lib_files_recursive(
     dest_dir: Path,
     skip_extensions: set,
     skip_patterns: list,
-    is_debug: bool = False,
     skip_versioned: bool = False,
 ) -> None:
     """Recursively copy library files from src_dir to dest_dir (flattened).
 
     Skips .framework directories and files matching skip_extensions/skip_patterns.
     All library files are copied directly to dest_dir regardless of subdirectory depth.
-    For debug builds, normalizes library names to have 'd' suffix.
     For symlinks, copies the target file using the symlink's name (for CMake compatibility).
     If skip_versioned is True, skips versioned library files (e.g., libz.1.dylib).
     """
@@ -837,7 +792,7 @@ def _copy_lib_files_recursive(
                 continue
             # Recurse into other directories
             _copy_lib_files_recursive(
-                item, dest_dir, skip_extensions, skip_patterns, is_debug, skip_versioned
+                item, dest_dir, skip_extensions, skip_patterns, skip_versioned
             )
         elif item.is_file() or item.is_symlink():
             # For symlinks, we'll copy the target file using the symlink's name
@@ -869,51 +824,11 @@ def _copy_lib_files_recursive(
                     skip_file = True
                     break
             if not skip_file:
-                # Use the original name (symlink name if symlink, otherwise file name)
-                # Apply debug suffix if needed
-                dest_name = (
-                    _normalize_debug_lib_name(item.name) if is_debug else item.name
-                )
+                dest_name = item.name
                 dest = dest_dir / dest_name
                 # Only copy if we don't already have this library
                 if not dest.exists():
                     shutil.copy2(actual_file, dest)
-
-
-def _create_debug_lib_symlinks(lib_dir: Path) -> None:
-    """Create symlinks without 'd' suffix for debug shared libraries.
-
-    CMake's Find modules (FindGIF, FindPNG, etc.) don't look for debug-suffixed
-    library names like libgifd.dylib. This function creates symlinks like
-    libgif.dylib -> libgifd.dylib so the Find modules can locate the libraries.
-
-    Only creates symlinks for libraries where removing 'd' results in a different name.
-    """
-    lib_extensions = {".dylib", ".so"}
-
-    for lib_file in lib_dir.iterdir():
-        if not lib_file.is_file():
-            continue
-
-        name = lib_file.name
-        ext = lib_file.suffix
-
-        if ext not in lib_extensions:
-            continue
-
-        # Check if name ends with 'd' before the extension
-        base = name[: -len(ext)]
-        if not base.endswith("d"):
-            continue
-
-        # Create symlink without the 'd'
-        non_debug_base = base[:-1]
-        non_debug_name = non_debug_base + ext
-        symlink_path = lib_dir / non_debug_name
-
-        # Only create if it doesn't exist and differs from original
-        if non_debug_name != name and not symlink_path.exists():
-            symlink_path.symlink_to(lib_file.name)
 
 
 def reorganize_output(  # noqa: C901
@@ -975,7 +890,6 @@ def reorganize_output(  # noqa: C901
     # Copy lib to target-specific directory (exclude cmake/pkgconfig)
     # Also filter out wrong library types (e.g., .dylib when building static)
     src_lib = install_dir / "lib"
-    is_debug = target.build_config == BuildConfig.DEBUG
     is_shared = target.link_type == LinkType.SHARED
 
     if src_lib.exists():
@@ -1024,7 +938,6 @@ def reorganize_output(  # noqa: C901
                     final_lib,
                     skip_extensions,
                     skip_patterns,
-                    is_debug,
                     skip_versioned=is_shared,
                 )
             elif item.is_file() or item.is_symlink():
@@ -1057,11 +970,7 @@ def reorganize_output(  # noqa: C901
                         skip_file = True
                         break
                 if not skip_file:
-                    # Use the original name (symlink name if symlink, otherwise file name)
-                    # Apply debug suffix if needed
-                    dest_name = (
-                        _normalize_debug_lib_name(item.name) if is_debug else item.name
-                    )
+                    dest_name = item.name
                     dest = final_lib / dest_name
                     # Only copy if we don't already have this library
                     if not dest.exists():
@@ -1082,20 +991,10 @@ def reorganize_output(  # noqa: C901
             # Recursively find all DLLs in bin/ and its subdirectories
             for dll_file in src_bin.rglob("*.dll"):
                 if dll_file.is_file():
-                    dest_name = (
-                        _normalize_debug_lib_name(dll_file.name)
-                        if is_debug
-                        else dll_file.name
-                    )
+                    dest_name = dll_file.name
                     dest = final_lib / dest_name
                     if not dest.exists():
                         shutil.copy2(dll_file, dest)
-
-    # For shared debug libraries, create symlinks without the 'd' suffix
-    # so that CMake's Find modules can find them (they don't look for debug suffixes)
-    if is_debug and target.link_type == LinkType.SHARED:
-        if final_lib.exists():
-            _create_debug_lib_symlinks(final_lib)
 
     # Special handling for wxWidgets: setup.h needs to be in a wx/ subdirectory
     # so that wxWidgets can include it as <wx/setup.h>
@@ -1544,7 +1443,8 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=None,
         help="Visual Studio version to use (e.g., '2022', '2026'). "
-        "Default: auto-detect latest installed version.",
+        "Default: auto-detect newest installed version (checks 2026, 2022, 2019 in order). "
+        "Within each version, checks Professional, Community, then Enterprise editions.",
     )
     parser.add_argument(
         "--android-api-level",
@@ -1734,11 +1634,12 @@ def main() -> int:  # noqa: C901
 
     # Determine MSVC toolset based on --vs-version (for Windows targets)
     msvc_toolset = None
+    msvc_path = None
     if args.vs_version:
-        msvc_toolset = get_msvc_toolset_version(args.vs_version)
+        msvc_toolset, msvc_path = get_msvc_toolset_version_and_path(args.vs_version)
     elif detect_host_os() == OS.WINDOWS:
         # Auto-detect if on Windows and no version specified
-        msvc_toolset = get_msvc_toolset_version()
+        msvc_toolset, msvc_path = get_msvc_toolset_version_and_path()
 
     # Expand platforms with configs/link types
     targets = [
@@ -1778,6 +1679,28 @@ def main() -> int:  # noqa: C901
         return 1
 
     print(f"Targets: {', '.join(t.to_path_component() for t in targets)}")
+
+    # Display Visual Studio version if any Windows targets are selected
+    if any(t.os == OS.WINDOWS for t in targets) and msvc_toolset:
+        # Map toolset back to VS year for user-friendly output
+        toolset_to_year = {
+            "vc141": "2017",
+            "vc142": "2019",
+            "vc143": "2022",
+            "vc145": "2026",
+        }
+        vs_year = toolset_to_year.get(msvc_toolset, "unknown")
+        print(f"Visual Studio: {vs_year} ({msvc_toolset})")
+        if log_level >= LogLevel.VERBOSE:
+            if msvc_path:
+                print(f"  Path: {msvc_path}")
+            # Show all detected Visual Studio versions
+            all_vs_versions = get_all_installed_vs_versions()
+            if all_vs_versions:
+                print("  Detected installations:")
+                for year, toolset, path in all_vs_versions:
+                    selected_marker = " (selected)" if toolset == msvc_toolset else ""
+                    print(f"    - {year} ({toolset}): {path}{selected_marker}")
 
     # Display Android NDK path if any Android targets are selected
     if any(t.os == OS.ANDROID for t in targets):

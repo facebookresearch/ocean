@@ -51,15 +51,15 @@ tasks.register("copyTemporaryFiles") {
       listOf(
           "$oceanDevelopmentPath/impl/application/ocean/demo/cv/detector/messengercode/android/MessengerCodeActivity.java",
           "$oceanDevelopmentPath/impl/ocean/base/BaseJni.java",
-          "$oceanDevelopmentPath/impl/ocean/devices/android/DevicesAndroidJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/android/MediaAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/devices/android/jni/DevicesAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/media/android/jni/MediaAndroidJni.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameViewActivity.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/Assets.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/MessengerView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/OceanActivity.java",
-          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/RenderingGLESceneGraphJni.java")
+          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/jni/RenderingGLESceneGraphJni.java")
 
   copy {
     from(javaSourceFiles)

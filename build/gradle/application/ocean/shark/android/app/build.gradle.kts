@@ -50,19 +50,19 @@ tasks.register("copyTemporaryFiles") {
           "$oceanDevelopmentPath/impl/application/ocean/shark/android/NativeInterfaceShark.java",
           "$oceanDevelopmentPath/impl/application/ocean/shark/android/SharkActivity.java",
           "$oceanDevelopmentPath/impl/ocean/base/BaseJni.java",
-          "$oceanDevelopmentPath/impl/ocean/devices/android/DevicesAndroidJni.java",
-          "$oceanDevelopmentPath/impl/ocean/devices/pattern/DevicesPatternJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/android/MediaAndroidJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/openimagelibraries/MediaOpenImageLibrariesJni.java",
+          "$oceanDevelopmentPath/impl/ocean/devices/android/jni/DevicesAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/devices/pattern/jni/DevicesPatternJni.java",
+          "$oceanDevelopmentPath/impl/ocean/media/android/jni/MediaAndroidJni.java",
+          "$oceanDevelopmentPath/impl/ocean/media/openimagelibraries/jni/MediaOpenImageLibrariesJni.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameViewActivity.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/MessengerView.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/application/OceanActivity.java",
           "$oceanDevelopmentPath/impl/ocean/platform/android/Assets.java",
-          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/RenderingGLESceneGraphJni.java",
-          "$oceanDevelopmentPath/impl/ocean/scenedescription/sdl/obj/SceneDescriptionSDLOBJJni.java",
-          "$oceanDevelopmentPath/impl/ocean/scenedescription/sdx/x3d/SceneDescriptionSDXX3DJni.java")
+          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/jni/RenderingGLESceneGraphJni.java",
+          "$oceanDevelopmentPath/impl/ocean/scenedescription/sdl/obj/jni/SceneDescriptionSDLOBJJni.java",
+          "$oceanDevelopmentPath/impl/ocean/scenedescription/sdx/x3d/jni/SceneDescriptionSDXX3DJni.java")
 
   copy {
     from(javaSourceFiles)

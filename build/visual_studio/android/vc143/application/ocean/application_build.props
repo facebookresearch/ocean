@@ -12,19 +12,51 @@
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\ocean_common.props"/>
   </ImportGroup>
 
-  <!-- Android native applications produce a single .so that statically links all Ocean
-       dependencies. Override the build type and config folder so that Shared configurations
-       resolve to the Static library search paths. -->
-  <PropertyGroup Condition="$(Configuration.StartsWith('Shared'))">
+  <!-- Android native applications have complex configuration requirements:
+
+       1. App projects use simple configurations: Debug, Release
+       2. Native library projects use prefixed configurations: Static Debug, Shared Debug, etc.
+       3. The app's single .so statically links all Ocean dependencies
+
+       This creates three different folder needs:
+       - OceanConfigFolder: Where THIS project's output goes (uses app's actual config)
+       - OceanLibraryConfigFolder: Where to find Ocean STATIC libraries to link against
+       - OceanSharedLibConfigFolder: Where to find SHARED native libraries (.so files)
+
+       For an app project with Configuration=Debug:
+       - OceanConfigFolder → android_arm64_vc143_static_debug (app's .so output)
+       - OceanLibraryConfigFolder → android_arm64_vc143_static_debug (Ocean static libs)
+       - OceanSharedLibConfigFolder → android_arm64_vc143_shared_debug (native .so libs)
+  -->
+
+  <!-- Handle app configurations (Debug/Release) that don't have Static/Shared prefix.
+       For these, we need to set OceanBuildType so OceanConfigFolder computes correctly.
+       App native libraries should be treated as 'static' builds since they statically link
+       all Ocean dependencies. -->
+  <PropertyGroup Condition="!$(Configuration.StartsWith('Static')) AND !$(Configuration.StartsWith('Shared'))">
     <OceanBuildType>static</OceanBuildType>
-    <OceanConfigFolder>android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_static$(OceanConfigSuffix)</OceanConfigFolder>
+    <OceanConfigFolder>android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_$(OceanBuildType)$(OceanConfigSuffix)</OceanConfigFolder>
   </PropertyGroup>
 
-  <!-- Add the static library directory to the linker search path (ocean_common.props already
-       set AdditionalLibraryDirectories using the original OceanConfigFolder before our override) -->
+  <PropertyGroup>
+    <!-- OceanLibraryConfigFolder: where to find Ocean STATIC libraries to link against.
+         For Shared application builds, this should point to static libraries because
+         the application .so statically links all Ocean dependencies.
+         For app projects (Debug/Release config), this matches OceanConfigFolder. -->
+    <OceanLibraryConfigFolder Condition="$(Configuration.StartsWith('Shared'))">android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_static$(OceanConfigSuffix)</OceanLibraryConfigFolder>
+    <OceanLibraryConfigFolder Condition="'$(OceanLibraryConfigFolder)' == ''">$(OceanConfigFolder)</OceanLibraryConfigFolder>
+
+    <!-- OceanSharedLibConfigFolder: where to find SHARED native libraries (.so files).
+         These are built with 'Shared Debug' or 'Shared Release' configurations,
+         so their output folder uses 'shared' in the path.
+         Used by _use.props files for OceanNativeSharedLibrary items. -->
+    <OceanSharedLibConfigFolder>android_$(OceanPlatformSuffix)_$(OceanCompilerVersion)_shared$(OceanConfigSuffix)</OceanSharedLibConfigFolder>
+  </PropertyGroup>
+
+  <!-- Add the static library directory to the linker search path for Shared configurations -->
   <ItemDefinitionGroup Condition="$(Configuration.StartsWith('Shared'))">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)bin\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)bin\lib\$(OceanLibraryConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

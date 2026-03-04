@@ -10,5 +10,6 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
+	<Import Condition="'$(ocean_mediaandroid_use_imported)' != 'True'" Project="..\..\..\media\android\mediaandroid_use.props"/>
   </ImportGroup>
 </Project>

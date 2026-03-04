@@ -10,6 +10,7 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_mediausbjni_common_imported)' != 'True'" Project="mediausbjni_common.props"/>
+    <Import Condition="'$(ocean_mediausbjni_reference_imported)' != 'True'" Project="mediausbjni_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\..\ocean_library_build.props"/>
   </ImportGroup>
 

@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\media\usb\MediaUSBJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\media\usb\jni\MediaUSBJni.java" />
   </ItemGroup>
 
   <ItemGroup>

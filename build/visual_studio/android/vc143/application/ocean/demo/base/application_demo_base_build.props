@@ -8,6 +8,13 @@
     <ocean_applicationdemobase_build_imported>True</ocean_applicationdemobase_build_imported>
   </PropertyGroup>
 
+  <!-- Set the demo category prefix for intermediate directory naming.
+       This prefix is prepended to $(ProjectName) in the IntDir path.
+       Must be defined BEFORE importing application_demo_build.props which uses it. -->
+  <PropertyGroup>
+    <OceanDemoCategoryPrefix>demobase</OceanDemoCategoryPrefix>
+  </PropertyGroup>
+
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_applicationdemo_build_imported)' != 'True'" Project="..\application_demo_build.props"/>
   </ImportGroup>

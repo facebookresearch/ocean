@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\MediaOpenImageLibrariesJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\jni\MediaOpenImageLibrariesJni.java" />
   </ItemGroup>
 
   <ItemGroup>

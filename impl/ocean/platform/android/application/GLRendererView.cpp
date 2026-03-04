@@ -288,7 +288,7 @@ void GLRendererView::onTouchMove(const float x, const float y)
 	}
 }
 
-void GLRendererView::onTouchUp(const float x, const float y)
+void GLRendererView::onTouchUp(const float /*x*/, const float /*y*/)
 {
 	const ScopedLock scopedLock(lock_);
 

@@ -15,4 +15,27 @@
     <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\media\media_use.props"/>
     <Import Condition="'$(ocean_system_use_imported)' != 'True'" Project="..\..\system\system_use.props"/>
   </ImportGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_MEDIA_OIL_SUPPORT_JPG;OCEAN_MEDIA_OIL_SUPPORT_PNG;OCEAN_MEDIA_OIL_SUPPORT_TIF;OCEAN_MEDIA_OIL_SUPPORT_GIF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\h\android;$(OceanRootPath)3rdparty\libpng\h\android;$(OceanRootPath)3rdparty\libtiff\h\android;$(OceanRootPath)3rdparty\giflib\h\android;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- Link against debug libraries -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\libpng\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\libtiff\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\giflib\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jpeg;png16d;tiff;gif;z;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against release libraries -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\android_arm64_static;$(OceanRootPath)3rdparty\libpng\lib\android_arm64_static;$(OceanRootPath)3rdparty\libtiff\lib\android_arm64_static;$(OceanRootPath)3rdparty\giflib\lib\android_arm64_static;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jpeg;png16;tiff;gif;z;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>

@@ -12,9 +12,17 @@
     <Import Condition="'$(ocean_devicesarcorejni_common_imported)' != 'True'" Project="devicesarcorejni_common.props"/>
   </ImportGroup>
 
-  <!-- Use shared JNI linking props to export all JNI symbols via whole-archive -->
-  <PropertyGroup>
-    <OceanJniLibraryName>OceanDevicesARCoreJni</OceanJniLibraryName>
-  </PropertyGroup>
-  <Import Condition="'$(ocean_jni_library_common_imported)' != 'True'" Project="..\..\..\..\ocean_jni_library_common.props"/>
+  <!-- Link against debug JNI library with whole-archive (force static linking) -->
+  <ItemDefinitionGroup Condition="$(Configuration.Contains('Debug'))">
+    <Link>
+      <AdditionalOptions>-Wl,--whole-archive -Wl,-Bstatic -lOceanDevicesARCoreJniD -Wl,-Bdynamic -Wl,--no-whole-archive %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against release JNI library with whole-archive (force static linking) -->
+  <ItemDefinitionGroup Condition="!$(Configuration.Contains('Debug'))">
+    <Link>
+      <AdditionalOptions>-Wl,--whole-archive -Wl,-Bstatic -lOceanDevicesARCoreJni -Wl,-Bdynamic -Wl,--no-whole-archive %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>

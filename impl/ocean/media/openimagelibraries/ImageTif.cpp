@@ -52,7 +52,7 @@ static tmsize_t imageTifWriteData_Write(thandle_t userData, void* buffer, tmsize
 	ocean_assert(userData && size >= 0);
 	ImageTif::OutputDataTriple* outputDataTriple = reinterpret_cast<ImageTif::OutputDataTriple*>(userData);
 
-	// outputDataTriple->first() holds the memory buffer including some unsued bytes
+	// outputDataTriple->first() holds the memory buffer including some unused bytes
 	// outputDataTriple->second() holds the number of used bytes in the output buffer
 	// outputDataTriple->third() holds the current location within the output buffer
 
@@ -139,7 +139,7 @@ static toff_t imageTifSeekData_Write(thandle_t userData, toff_t position, int wh
 
 	ocean_assert(position != 0xFFFFFFFF);
 
-	// outputDataTriple->first() holds the memory buffer including some unsued bytes
+	// outputDataTriple->first() holds the memory buffer including some unused bytes
 	// outputDataTriple->second() holds the number of used bytes in the output buffer
 	// outputDataTriple->third() holds the current location within the output buffer
 
@@ -289,7 +289,7 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 
 	Frame result(FrameType(width, height, FrameType::FORMAT_RGBA32, pixelOrigin));
 
-	// currently we keep it quite simple, we request an RGBA frame independent of the acutal data stored
+	// currently we keep it quite simple, we request an RGBA frame independent of the actual data stored
 	// this can be improved if necessary - however, tiff images seem not to have a high impact
 
 	ocean_assert(result.isContinuous());

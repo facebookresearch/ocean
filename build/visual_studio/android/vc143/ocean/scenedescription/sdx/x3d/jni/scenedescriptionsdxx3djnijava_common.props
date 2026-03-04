@@ -10,5 +10,6 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_scenedescriptionsdxx3djni_use_imported)' != 'True'" Project="scenedescriptionsdxx3djni_use.props"/>
   </ImportGroup>
 </Project>

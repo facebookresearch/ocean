@@ -21,7 +21,7 @@
     <Import Condition="'$(ocean_scenedescriptionsdlassimp_use_imported)' != 'True'" Project="..\..\..\..\ocean\scenedescription\sdl\assimp\scenedescriptionsdlassimp_use.props" />
     <Import Condition="'$(ocean_scenedescriptionsdlobj_use_imported)' != 'True'" Project="..\..\..\..\ocean\scenedescription\sdl\obj\scenedescriptionsdlobj_use.props" />
     <Import Condition="'$(ocean_scenedescriptionsdxx3d_use_imported)' != 'True'" Project="..\..\..\..\ocean\scenedescription\sdx\x3d\scenedescriptionsdxx3d_use.props" />
-    <Import Condition="'$(ocean_interactionjavascript_use_imported)' != 'True'" Project="..\..\..\..\ocean\interaction\javascript\interactionjavascript_use.props" />
+    <Import Condition="'$(ocean_interaction_use_imported)' != 'True'" Project="..\..\..\..\ocean\interaction\interaction_use.props" />
   </ImportGroup>
 
   <ItemDefinitionGroup>

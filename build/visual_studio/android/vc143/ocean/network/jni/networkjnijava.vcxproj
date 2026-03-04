@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
 
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\network\NetworkJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\impl\ocean\network\jni\NetworkJni.java" />
   </ItemGroup>
 
   <ItemGroup>

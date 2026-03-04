@@ -59,7 +59,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\pattern\DevicesPatternJni.java" />
+    <JavaSource Include="..\..\..\..\..\..\..\..\impl\ocean\devices\pattern\jni\DevicesPatternJni.java" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\build.gradle.kts" />

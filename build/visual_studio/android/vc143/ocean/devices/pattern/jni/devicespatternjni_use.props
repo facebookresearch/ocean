@@ -12,9 +12,17 @@
     <Import Condition="'$(ocean_devicespatternjni_common_imported)' != 'True'" Project="devicespatternjni_common.props"/>
   </ImportGroup>
 
-  <!-- Use shared JNI linking props to export all JNI symbols via whole-archive -->
-  <PropertyGroup>
-    <OceanJniLibraryName>OceanDevicesPatternJni</OceanJniLibraryName>
-  </PropertyGroup>
-  <Import Condition="'$(ocean_jni_library_common_imported)' != 'True'" Project="..\..\..\..\ocean_jni_library_common.props"/>
+  <!-- Link against debug JNI library with whole-archive (force static linking) -->
+  <ItemDefinitionGroup Condition="$(Configuration.Contains('Debug'))">
+    <Link>
+      <AdditionalOptions>-Wl,--whole-archive -Wl,-Bstatic -lOceanDevicesPatternJniD -Wl,-Bdynamic -Wl,--no-whole-archive %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against release JNI library with whole-archive (force static linking) -->
+  <ItemDefinitionGroup Condition="!$(Configuration.Contains('Debug'))">
+    <Link>
+      <AdditionalOptions>-Wl,--whole-archive -Wl,-Bstatic -lOceanDevicesPatternJni -Wl,-Bdynamic -Wl,--no-whole-archive %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>

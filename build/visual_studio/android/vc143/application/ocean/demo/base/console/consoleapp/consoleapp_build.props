@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_PropertySheetDisplayName>Build Console App Demo (Android)</_PropertySheetDisplayName>
@@ -10,5 +10,6 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_consoleapp_common_imported)' != 'True'" Project="consoleapp_common.props"/>
+    <Import Condition="'$(ocean_consoleapp_reference_imported)' != 'True'" Project="consoleapp_reference.props"/>
   </ImportGroup>
 </Project>

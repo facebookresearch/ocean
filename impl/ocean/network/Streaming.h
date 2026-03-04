@@ -26,6 +26,11 @@ class OCEAN_NETWORK_EXPORT Streaming
 	public:
 
 		/**
+		 * Definition of a vector holding bytes.
+		 */
+		using Buffer = std::vector<uint8_t>;
+
+		/**
 		 * Definition of different streaming states.
 		 */
 		enum State
@@ -123,6 +128,20 @@ class OCEAN_NETWORK_EXPORT Streaming
 		static const std::string& dataTypeRequestResponseP();
 		/// Definition of a negative data type request response.
 		static const std::string& dataTypeRequestResponseN();
+
+		/// Definition of an extra data request command.
+		static const std::string& extraDataRequestCommand();
+		/// Definition of a positive extra data request response.
+		static const std::string& extraDataRequestResponseP();
+		/// Definition of a negative extra data request response.
+		static const std::string& extraDataRequestResponseN();
+
+		/// Definition of a changed extra data command.
+		static const std::string& changedExtraDataCommand();
+		/// Definition of a positive changed extra data response.
+		static const std::string& changedExtraDataResponseP();
+		/// Definition of a negative changed extra data response.
+		static const std::string& changedExtraDataResponseN();
 
 	public:
 

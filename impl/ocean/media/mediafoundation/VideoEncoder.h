@@ -84,7 +84,7 @@ namespace MediaFoundation
  * @endcode
  * @ingroup mediamf
  */
-class VideoEncoder
+class OCEAN_MEDIA_MF_EXPORT VideoEncoder
 {
 	public:
 

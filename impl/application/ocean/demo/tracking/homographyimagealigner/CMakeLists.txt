@@ -79,7 +79,7 @@ endif()
 
 if (MACOS)
 
-    set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_homographyimagealigner_osx")
+    set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_homographyimagealigner_macos")
 
     find_library(APPKIT_LIB AppKit)
     find_library(AVFOUNDATION_LIB AVFoundation)
@@ -87,17 +87,17 @@ if (MACOS)
     find_library(COREVIDEO_LIB CoreVideo)
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/osx/*.h")
-    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/osx/*.mm")
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/macos/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/macos/*.mm")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} MACOSX_BUNDLE ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
     set(MACOSX_DEPLOYMENT_TARGET "10.12")
-    set(PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.application.demo.tracking.homographyimagealigner.osx")
+    set(PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.application.demo.tracking.homographyimagealigner.macos")
     set(EXECUTABLE_NAME ${OCEAN_TARGET_NAME})
     set(PRODUCT_NAME ${OCEAN_TARGET_NAME})
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/osx/Info.plist ${CMAKE_CURRENT_BINARY_DIR})
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/macos/Info.plist ${CMAKE_CURRENT_BINARY_DIR})
     set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES
         BUNDLE True
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
@@ -122,7 +122,7 @@ if (MACOS)
     )
 
     # Custom command to compile Application.xib to Application.nib
-    set(APPLICATION_XIB "${OCEAN_IMPL_DIR}/../res/application/ocean/demo/tracking/homographyimagealigner/osx/Application.xib")
+    set(APPLICATION_XIB "${OCEAN_IMPL_DIR}/../res/application/ocean/demo/tracking/homographyimagealigner/macos/Application.xib")
     add_custom_command(TARGET ${OCEAN_TARGET_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/Resources
         COMMAND ${CMAKE_COMMAND} -E env "IBTOOL=${CMAKE_PROGRAM_PATH}" "${CMAKE_COMMAND}" -E remove ${CMAKE_CURRENT_BINARY_DIR}/Resources/Application.nib
