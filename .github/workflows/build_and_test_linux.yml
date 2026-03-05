@@ -1,0 +1,177 @@
+# This workflow builds and tests Ocean on Linux (static) using the
+# Python-based build system (build/python/).
+#
+# Pipeline: build-thirdparty → build-ocean → test-ocean
+# Each stage waits for the previous one to succeed via `needs:`.
+name: Build and test Ocean on Linux (Python, static)
+
+on:
+  schedule:
+    # Mon-Sun, every 24 hours at 6 am (UTC)
+    - cron: '0 6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'build/python/**'
+  workflow_dispatch:
+
+env:
+  OCEAN_THIRDPARTY_INSTALL_PATH: ${{ github.workspace }}/ocean_thirdparty_install
+  OCEAN_BUILD_PATH: ${{ github.workspace }}/ocean_build
+  OCEAN_INSTALL_PATH: ${{ github.workspace }}/ocean_install
+
+jobs:
+  # ---------- Stage 1: Build third-party libraries ----------
+  build-thirdparty:
+    name: 3P · Linux (${{ matrix.build_config }}, static)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [debug, release]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache third-party install
+        id: cache-thirdparty
+        uses: actions/cache@v4
+        with:
+          key: thirdparty-python-${{ matrix.build_config }}-${{ hashFiles('build/python/') }}
+          path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+
+      - name: Install system dependencies
+        if: ${{ steps.cache-thirdparty.outputs.cache-hit != 'true' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y -o Acquire::Retries=5 \
+            git ninja-build zip libx11-dev libgtk-3-dev \
+            liblzma-dev libgl1-mesa-dev libxcb-glx0-dev \
+            libdeflate-dev libudev-dev zlib1g-dev
+
+      - name: Build third-party libraries
+        if: ${{ steps.cache-thirdparty.outputs.cache-hit != 'true' }}
+        run: |
+          python build/python/build_ocean_3rdparty.py \
+            --target linux \
+            --config ${{ matrix.build_config }} \
+            --link static \
+            --install-dir ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+
+  # ---------- Stage 2: Build Ocean ----------
+  build-ocean:
+    name: Ocean · Linux (${{ matrix.build_config }}, static)
+    needs: build-thirdparty
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [debug, release]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y -o Acquire::Retries=5 \
+            git ninja-build zip libx11-dev libgtk-3-dev \
+            liblzma-dev libgl1-mesa-dev libxcb-glx0-dev \
+            libdeflate-dev libudev-dev zlib1g-dev
+
+      - name: Restore third-party cache
+        uses: actions/cache/restore@v4
+        with:
+          key: thirdparty-python-${{ matrix.build_config }}-${{ hashFiles('build/python/') }}
+          path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+          fail-on-cache-miss: true
+
+      - name: Cache Ocean build
+        id: cache-ocean
+        uses: actions/cache@v4
+        with:
+          key: ocean-python-build-${{ matrix.build_config }}-${{ github.sha }}
+          path: ${{ env.OCEAN_BUILD_PATH }}
+
+      - name: Build Ocean
+        if: ${{ steps.cache-ocean.outputs.cache-hit != 'true' }}
+        run: |
+          python build/python/build_ocean.py \
+            --target linux \
+            --config ${{ matrix.build_config }} \
+            --link static \
+            --third-party-layout python \
+            --third-party-dir ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }} \
+            --build-dir ${{ env.OCEAN_BUILD_PATH }} \
+            --install-dir ${{ env.OCEAN_INSTALL_PATH }}
+
+  # ---------- Stage 3: Test Ocean ----------
+  test-ocean:
+    name: "${{ matrix.suite.id }} (${{ matrix.build_config }})"
+    needs: build-ocean
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - { id: testbase,           test-directory: impl/ocean/test/testbase,     ctest-args: "-E TestHighPerformanceTimer|TestSignal" }
+          - { id: testcv-AdvancedFrame, test-directory: impl/ocean/test/testcv,     ctest-args: "-j 16 -R TestAdvancedFrame" }
+          - { id: testcv-FrameConverter, test-directory: impl/ocean/test/testcv,    ctest-args: "-j 16 -R TestFrameConverter" }
+          - { id: testcv-FrameFilterScharr, test-directory: impl/ocean/test/testcv, ctest-args: "-j 16 -R TestFrameFilterScharr" }
+          - { id: testcv-FrameFilter-Other, test-directory: impl/ocean/test/testcv, ctest-args: "-j 16 -R TestFrameFilter -E TestFrameFilterScharr" }
+          - { id: testcv-FrameVariance, test-directory: impl/ocean/test/testcv,     ctest-args: "-j 16 -R TestFrameVariance" }
+          - { id: testcv-Frame-Other, test-directory: impl/ocean/test/testcv,       ctest-args: "-j 16 -R TestFrame -E TestFrameConverter|TestFrameFilter|TestFrameVariance|TestFrameInterpolator.ResizeUseCase_" }
+          - { id: testcv-Other,       test-directory: impl/ocean/test/testcv,       ctest-args: "-j 16 -E TestAdvancedFrame|TestFrame|TestFASTDetector.StandardStrength" }
+          - { id: testdevices,        test-directory: impl/ocean/test/testdevices }
+          - { id: testgeometry,       test-directory: impl/ocean/test/testgeometry, ctest-args: "-E TestStereoscopicGeometry.CameraPose_6DOF_100" }
+          - { id: testio,             test-directory: impl/ocean/test/testio,       ctest-args: "-E TestBasemap" }
+          - { id: testmath,           test-directory: impl/ocean/test/testmath,     ctest-args: "-E TestEquation.CubicEquation" }
+          - { id: testmedia,          test-directory: impl/ocean/test/testmedia }
+          - { id: testnetwork,        test-directory: impl/ocean/test/testnetwork }
+          - { id: testtracking,       test-directory: impl/ocean/test/testtracking, ctest-args: "-E TestHomographyImageAlignmentDense.InverseCompositional_2" }
+        build_config: [debug, release]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine architecture
+        id: arch
+        run: |
+          ARCH=$(uname -m)
+          if [[ "$ARCH" == "x86_64" ]]; then
+            ARCH="x64"
+          elif [[ "$ARCH" == "arm64" ]]; then
+            ARCH="arm64"
+          fi
+          echo "arch=${ARCH}" >> $GITHUB_OUTPUT
+
+      - name: Restore Ocean build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.OCEAN_BUILD_PATH }}
+          key: ocean-python-build-${{ matrix.build_config }}-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Run tests
+        run: |
+          mkdir -p $INSTALL_PATH/bin
+          cd $TEST_PATH
+          if !(ctest $CTEST_ARGS); then
+            echo "::warning::Re-running failed tests"
+            ctest $CTEST_ARGS --rerun-failed
+          fi
+        env:
+          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux/${{ steps.arch.outputs.arch }}_static_${{ matrix.build_config }}
+          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux/${{ steps.arch.outputs.arch }}_static_${{ matrix.build_config }}/${{ matrix.suite.test-directory }}
+          CTEST_ARGS: ${{ matrix.suite.ctest-args }}
