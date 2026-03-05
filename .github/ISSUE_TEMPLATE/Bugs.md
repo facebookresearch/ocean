@@ -1,32 +1,28 @@
 ---
 name: "\U0001F41B Bugs"
-about: ' Report bugs in Ocean'
+about: Report bugs in Ocean
 title: ''
 labels: bug
 assignees: ''
 ---
 
-## Instructions to reproduce the problem:
+**What happened?**
 
-1. The code or full code changes that exhibit the problem:
+Describe the bug clearly. What did you expect to happen instead?
 
-```
-If you made changes to the Ocean code base itself, please use the output of the following command:
-git rev-parse HEAD; git diff
+**Steps to reproduce**
 
-<put code or diff here>
-```
+1. ...
+2. ...
+3. ...
 
-2. Command or list of commands needed to trigger the problem:
-3. **Full logs** or other relevant observations:
+**Logs or error output**
 
 ```
-<put logs here>
+<paste relevant logs here>
 ```
 
-4. If possible, please keep the repro step simple. In particular, please make it so that they do not require
-   additional resources, for example any private data.
+**Environment**
 
-## Expected behavior:
-
-If there are no obvious errors, please tell us the expected behavior.
+- OS/Platform:
+- Ocean version or commit:

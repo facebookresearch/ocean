@@ -1,20 +1,15 @@
 ---
-name: "\U0001F680Feature Request"
+name: "\U0001F680 Feature Request"
 about: Suggest an improvement or new feature
 title: ''
 labels: enhancement
 assignees: ''
 ---
 
-## 🚀 Feature
+**What would you like to see?**
 
-A clear and concise description of the feature proposal.
+Describe the feature or improvement.
 
-## Motivation & Examples
+**Why is this useful?**
 
-Tell us why the feature is useful.
-
-Describe what the feature would look like, if it is implemented. Best
-demonstrated using **code examples** in addition to words.
-
-Would you be able/willing to contribute to this work?
+What problem does it solve? A code example helps if applicable.
