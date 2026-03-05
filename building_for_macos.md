@@ -10,130 +10,142 @@ This document describes the process to build Ocean for macOS. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](README.md)
-* CMake 3.25 or higher is required (for CMake preset support)
+* Python 3.8 or higher
 * XCode is required (recommended version: 15 or higher)
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_linuxunix.sh`](build/cmake/build_thirdparty_linuxunix.sh). This script handles both Linux and macOS builds and will automatically detect the platform. By default, it will build all third-party libraries in both debug and release configurations with static linking.
+The third-party libraries are built using the Python-based build system. It handles fetching, patching, and building all dependencies with DAG-based parallel builds.
 
-```
+```bash
 cd /path/to/ocean
-./build/cmake/build_thirdparty_linuxunix.sh
+
+# Build all required third-party libraries for the host platform (debug + release, static)
+python build/python/build_ocean_3rdparty.py
+
+# Build for macOS only (both arm64 and x86_64)
+python build/python/build_ocean_3rdparty.py --target macos
+
+# Build release only
+python build/python/build_ocean_3rdparty.py --target macos --config release
+
+# Build shared libraries
+python build/python/build_ocean_3rdparty.py --target macos --link shared
+
+# Include optional libraries (e.g., OpenCV)
+python build/python/build_ocean_3rdparty.py --target macos --with opencv
+
+# Show build plan without building
+python build/python/build_ocean_3rdparty.py --target macos --dry-run
 ```
 
-Once the build is complete, there will be one subdirectory per build config within the installation and build directories. For example, on an Apple Silicon Mac it will be similar to `bin/cmake/3rdparty/macos/arm64_static_debug` and `.../macos/arm64_static_release`. On Intel Macs, the folder will use `x64` instead of `arm64`.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/<platform>/` and libraries in `<lib>/lib/<target>/` (e.g., `zlib/lib/macos_arm64_static_release/`).
 
-The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
+Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
-```
-cd /path/to/ocean
-./build/cmake/build_thirdparty_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
-```
-
-Run `./build/cmake/build_thirdparty_linuxunix.sh --help` to see all available options.
-
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+> **Note:** The build system displays a real-time TUI with progress for all parallel build jobs. Use `--log-level verbose` to see detailed build output instead.
 
 ## 3 Building Ocean
 
-Ocean uses CMake presets for build configuration. The easiest way to build all Ocean libraries and apps is by using the provided build script, [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh). By default, it will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
-
-```
-cd /path/to/ocean
-./build/cmake/build_ocean.sh
-```
-
-Once the build is complete, the compiled binaries can be found in `bin/cmake/macos/arm64_static_debug` and `.../macos/arm64_static_release` (or `x64_static_*` on Intel Macs).
-
-The build script can be customized using command-line parameters. For example:
-
-```
-cd /path/to/ocean
-./build/cmake/build_ocean.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
-```
-
-Run `./build/cmake/build_ocean.sh --help` to see all available options.
-
-### Using CMake Presets Directly
-
-Alternatively, you can use CMake presets directly without the build script:
+Ocean is built using a Python build script that invokes CMake with the correct configuration.
 
 ```bash
-# List all available presets
-cmake --list-presets
+cd /path/to/ocean
 
-# Configure and build using a preset
-cmake --preset macos-arm64-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_release"
-cmake --build --preset macos-arm64-static-release --target install
+# Build Ocean using the new Python 3P layout
+python build/python/build_ocean.py --third-party-layout python
+
+# Build for a specific configuration
+python build/python/build_ocean.py --third-party-layout python --config release
+
+# Specify a custom third-party directory
+python build/python/build_ocean.py --third-party-layout python --third-party-dir /path/to/ocean_3rdparty/install
+
+# Show build plan without building
+python build/python/build_ocean.py --third-party-layout python --dry-run
+```
+
+Once the build is complete, the compiled binaries can be found in `ocean_install/macos_arm64_static_debug` and `.../macos_arm64_static_release` (or `macos_x86_64_static_*` on Intel Macs).
+
+Run `python build/python/build_ocean.py --help` to see all available options.
+
+### Using CMake Directly
+
+Alternatively, you can invoke CMake directly:
+
+```bash
+cd /path/to/ocean
+
+# Configure
+cmake -S . -B build_macos \
+    -G Xcode \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
+
+# Build
+cmake --build build_macos --target install -j
 ```
 
 ## 4 Building the Ocean macOS demo/test apps
 
 First, build the required third-party libraries as described above (targets should be available as static libraries as debug and/or release builds).
 
-### Option A: Using CMake Presets (Recommended)
+### Option A: Using the Build Script (Recommended)
 
-Configure the project using a CMake preset and open in Xcode:
+Build Ocean and then open the generated Xcode project:
 
 ```bash
-# Debug
 cd /path/to/ocean
-cmake --preset macos-arm64-static-debug \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_debug"
+
+# Configure only (to generate Xcode project)
+python build/python/build_ocean.py --third-party-layout python --configure-only
 
 # Open in Xcode
-open bin/cmake/tmp/macos-arm64-static-debug/ocean.xcodeproj
-```
-
-For release builds:
-
-```bash
-# Release
-cmake --preset macos-arm64-static-release \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_release"
-
-open bin/cmake/tmp/macos-arm64-static-release/ocean.xcodeproj
+open ocean_build/macos_arm64_static_debug/ocean.xcodeproj
 ```
 
 ### Option B: Manual CMake Configuration
 
 To configure the CMake project of Ocean as a debug build manually:
 
-```
+```bash
 # Debug
 cd /path/to/ocean
-cmake -S"/path/to/ocean" \
-    -B"${HOME}/build_ocean_macos_debug" \
+cmake -S . \
+    -B "${HOME}/build_ocean_macos_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_debug" \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DBUILD_SHARED_LIBS="OFF"
 ```
 
 and for release builds:
 
-```
+```bash
 # Release
 cd /path/to/ocean
-cmake -S"/path/to/ocean" \
-    -B"${HOME}/build_ocean_macos_release" \
+cmake -S . \
+    -B "${HOME}/build_ocean_macos_release" \
     -DCMAKE_BUILD_TYPE="Release" \
     -G Xcode \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/macos/arm64_static_release" \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DBUILD_SHARED_LIBS="OFF"
 ```
 
 Once the configuration is complete, open the generated Xcode project:
 
-```
+```bash
 # Debug
 open ${HOME}/build_ocean_macos_debug/ocean.xcodeproj
 ```
 
 or
 
-```
+```bash
 # Release
 open ${HOME}/build_ocean_macos_release/ocean.xcodeproj
 ```

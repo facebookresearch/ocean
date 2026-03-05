@@ -13,7 +13,8 @@ This document describes the general process to build Ocean. Platform-specific in
 Before building Ocean, ensure you have the following:
 
 - **Git**: Required to clone the repository
-- **CMake 3.25 or higher**: Build system generator (required for CMake preset support)
+- **Python 3.8 or higher**: Required for the build scripts
+- **CMake 3.26 or higher**: Build system generator
 - A compatible **C++ compiler** for your target platform
 
 ## Getting the Source Code
@@ -27,12 +28,34 @@ cd ocean
 
 ## Build Overview
 
-Ocean's build process generally follows these steps:
+Ocean's build process follows two steps:
 
-1. **Build third-party dependencies** - Ocean relies on several third-party libraries that need to be built first
-2. **Build Ocean** - Build the Ocean libraries and applications using the provided build scripts
+1. **Build third-party dependencies** using `build/python/build_ocean_3rdparty.py` — this fetches, patches, and builds all required libraries with DAG-based parallel builds
+2. **Build Ocean** using `build/python/build_ocean.py` — this configures and builds Ocean via CMake with the correct settings for your target platform
 
-Each platform has specific requirements and build scripts. See the platform-specific sub-pages for detailed instructions:
+### Quick Start (macOS/Linux)
+
+```bash
+# Build third-party libraries
+python build/python/build_ocean_3rdparty.py
+
+# Build Ocean
+python build/python/build_ocean.py --third-party-layout python
+```
+
+### Quick Start (Windows)
+
+```powershell
+# Build third-party libraries
+python build/python/build_ocean_3rdparty.py
+
+# Build Ocean
+python build/python/build_ocean.py --third-party-layout python
+```
+
+The build system supports cross-compilation for multiple platforms from a single host. For example, on macOS you can build for iOS and Android in addition to macOS itself.
+
+Each platform has specific requirements and options. See the platform-specific sub-pages for detailed instructions:
 
 - [Android](./building_for_android.md)
 - [iOS](./building_for_ios.md)

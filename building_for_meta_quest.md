@@ -14,7 +14,7 @@ To build the project, you need to satisfy the following prerequisites:
 
 Please refer to the [main page](README.md) for general build prerequisites.
 
-* CMake 3.25 or higher is required (for CMake preset support)
+* Python 3.8 or higher
 
 ### Android Setup
 
@@ -51,75 +51,52 @@ While this SDK is optional some of the Ocean demo apps for Quest require this se
 
 ## 2 Building the third-party libraries
 
-Please refer to the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest, the default build parameters are sufficient.
-
-### Linux/macOS
+Please refer to the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest, you only need to build for Android ARM64.
 
 ```bash
 cd /path/to/ocean
-./build/cmake/build_thirdparty_android.sh
+
+# Build third-party libraries for Android ARM64 (sufficient for Quest)
+python build/python/build_ocean_3rdparty.py --target android_arm64
 ```
 
-### Windows (PowerShell)
+On Windows:
 
 ```powershell
 cd \path\to\ocean
-.\build\cmake\build_thirdparty_android.ps1
+python build/python/build_ocean_3rdparty.py --target android_arm64
 ```
 
 This will build the third-party libraries with the following default settings which are compatible with Quest:
-* Android ABI: `arm64-v8a`
+* Architecture: `arm64`
 * Linking type: `static`
 * Build config: `debug` and `release`
 
-Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/android/arm64_static_debug` and `.../android/arm64_static_release`.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are in `<lib>/h/android/` and libraries in `<lib>/lib/android_arm64_static_debug/` and `.../android_arm64_static_release/`.
 
-The build script can be customized if needed. For example, to specify a different Android SDK version:
+Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
-### Linux/macOS
+> **Note:** The build system displays a real-time TUI with progress for all parallel build jobs. Use `--log-level verbose` to see detailed build output instead.
 
-```bash
-cd /path/to/ocean
-./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a --sdk android-32
-```
-
-### Windows (PowerShell)
-
-```powershell
-cd \path\to\ocean
-.\build\cmake\build_thirdparty_android.ps1 -Config debug,release -Link static -Build C:\build_ocean_thirdparty -Install C:\install_ocean_thirdparty -ABI arm64-v8a -Sdk android-32
-```
-
-Run `./build/cmake/build_thirdparty_android.sh --help` (or `Get-Help .\build\cmake\build_thirdparty_android.ps1 -Detailed` on Windows) to see all available options.
-
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (or `-LogLevel STATUS` on Windows) for general progress information, or other levels like `VERBOSE` or `DEBUG`.
-
-**Note:** On a Windows build host, it is advisable to place build and install directories close to the root of a filesystem (e.g., `C:\build_ocean_thirdparty`) due to Windows limitations on path lengths. Exceeding this limit will result in build errors, for example errors about missing files.
+**Note:** On a Windows build host, it is advisable to use `--output-dir C:\ocean_3rdparty` to place output directories close to the root of a filesystem due to Windows limitations on path lengths.
 
 ## 2.1 Building Ocean for Quest (Optional)
 
-If you want to build Ocean libraries for Quest separately (not via Gradle), you can use the unified build script with the `--quest` flag:
+If you want to build Ocean libraries for Quest separately (not via Gradle), you can use the build script with the `--quest` flag:
 
-```
+```bash
 cd /path/to/ocean
-./build/cmake/build_ocean.sh --quest
+python build/python/build_ocean.py --quest --third-party-layout python
 ```
 
-This will build Ocean using the Quest-specific CMake presets which configure additional Quest extensions.
-
-On Windows, you can use PowerShell:
+On Windows:
 
 ```powershell
 cd \path\to\ocean
-.\build\cmake\build_ocean.ps1 -Quest
+python build/python/build_ocean.py --quest --third-party-layout python
 ```
 
-Or using CMake presets directly:
-
-```bash
-cmake --preset android-quest-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/android/arm64_static_release"
-cmake --build --preset android-quest-static-release --target install
-```
+This will build Ocean using the Quest-specific CMake presets which configure additional Quest extensions.
 
 ## 3 Building Quest demo apps that come with Ocean
 

@@ -9,8 +9,8 @@ This document describes the process to build Ocean for Windows. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](README.md)
-* CMake 3.25 or higher is required (for CMake preset support)
-* Visual Studio 2019 or later is required (2022 recommended). By default, CMake will auto-detect the newest installed version.
+* Python 3.8 or higher
+* Visual Studio 2019 or later is required (2022 recommended). The build system will auto-detect the newest installed version.
 
 ### Enabling Long Path Support (Highly Recommended)
 
@@ -29,104 +29,106 @@ Alternatively, use the Group Policy Editor:
 
 A system restart may be required after enabling this setting.
 
-> **Note:** The build scripts will automatically check for Long Path support and display a warning if it is not enabled.
+> **Note:** The build system will automatically check for Long Path support and display a warning if it is not enabled.
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided PowerShell build script, [`build/cmake/build_thirdparty_windows.ps1`](build/cmake/build_thirdparty_windows.ps1). By default, this will build all third-party libraries in both debug and release configurations with static linking.
+The third-party libraries are built using the Python-based build system. The same script works from PowerShell, Command Prompt, or Git Bash.
 
 ```powershell
 cd \path\to\ocean
-.\build\cmake\build_thirdparty_windows.ps1
+
+# Build all required third-party libraries for the host platform (debug + release, static + shared)
+python build/python/build_ocean_3rdparty.py
+
+# Build for a specific architecture
+python build/python/build_ocean_3rdparty.py --target win
+
+# Build release only, static only
+python build/python/build_ocean_3rdparty.py --config release --link static
+
+# Use a specific Visual Studio version
+python build/python/build_ocean_3rdparty.py --vs-version 2022
+
+# Include optional libraries (e.g., OpenCV)
+python build/python/build_ocean_3rdparty.py --with opencv
+
+# Show build plan without building
+python build/python/build_ocean_3rdparty.py --dry-run
 ```
 
-Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/win/x64_vc145_static_debug` and `.../win/x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version, e.g., `vc143` for VS 2022, `vc145` for VS 2026; or with `arm64_` prefix on ARM64 systems).
-
-The build script can be customized using command-line parameters. Use `-Config` to specify build configurations, `-Link` for linking type, `-Build` for build directory, and `-Install` for installation directory. For example:
+It is advisable to place build and install directories as close to the root of a filesystem as possible, due to Windows limitations on path lengths:
 
 ```powershell
-cd \path\to\ocean
-.\build\cmake\build_thirdparty_windows.ps1 -Config debug,release -Link static -Build C:\build_oceanTP -Install C:\install_oceanTP
+python build/python/build_ocean_3rdparty.py --output-dir C:\ocean_3rdparty
 ```
 
-It is advisable to place build and install directories as close to the root of a filesystem as possible, due to Windows limitations on path lengths. Build directories in particular can be very deep.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/` (or the custom output directory). Headers are stored in `<lib>/h/<platform>/` and libraries in `<lib>/lib/<target>/` (e.g., `zlib/lib/win_x86_64_static_release/`).
 
-Run `Get-Help .\build\cmake\build_thirdparty_windows.ps1 -Detailed` to see all available options.
+On Windows, the default is to build both static and shared libraries. On ARM64 systems, paths use `arm64` instead of `x86_64`.
 
-To use a specific Visual Studio version instead of the auto-detected one:
+Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
-```powershell
-.\build\cmake\build_thirdparty_windows.ps1 -Generator "Visual Studio 16 2019"
-```
-
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `-LogLevel STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+> **Note:** The build system displays a real-time TUI with progress for all parallel build jobs. Use `--log-level verbose` to see detailed build output instead.
 
 ## 3 Building Ocean
 
-Ocean uses CMake presets for build configuration. There are two options for building Ocean on Windows:
+Ocean is built using a Python build script that invokes CMake with the correct configuration.
 
-### Option A: Using PowerShell (Recommended)
-
-The easiest way to build all Ocean libraries and apps is by using the PowerShell script [`build/cmake/build_ocean.ps1`](build/cmake/build_ocean.ps1). By default, it will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
+### Using the Build Script (Recommended)
 
 ```powershell
 cd \path\to\ocean
-.\build\cmake\build_ocean.ps1
+
+# Build Ocean using the Python 3P layout
+python build/python/build_ocean.py --third-party-layout python
+
+# Build for a specific configuration
+python build/python/build_ocean.py --third-party-layout python --config release
+
+# Use a specific Visual Studio version
+python build/python/build_ocean.py --third-party-layout python --vs-version 2022
+
+# Specify custom directories
+python build/python/build_ocean.py --third-party-layout python `
+    --build-dir C:\build_ocean `
+    --install-dir C:\install_ocean `
+    --third-party-dir C:\ocean_3rdparty\install
+
+# Show build plan without building
+python build/python/build_ocean.py --third-party-layout python --dry-run
 ```
 
-Once the build is complete, the compiled binaries can be found in `bin/cmake/win/x64_vc145_static_debug` and `.../win/x64_vc145_static_release` (where `vc145` corresponds to the Visual Studio toolset version; or with `arm64_` prefix on ARM64 systems).
+Once the build is complete, the compiled binaries can be found in `ocean_install/win_x86_64_static_debug` and `.../win_x86_64_static_release` (or with `arm64_` prefix on ARM64 systems).
 
-The build script can be customized using command-line parameters. For example:
+Run `python build/python/build_ocean.py --help` to see all available options.
+
+### Using CMake Directly
+
+Alternatively, you can invoke CMake directly:
 
 ```powershell
 cd \path\to\ocean
-.\build\cmake\build_ocean.ps1 -Config debug,release -Link static -Build C:\build_ocean -Install C:\install_ocean -ThirdParty C:\install_oceanTP
-```
 
-Run `Get-Help .\build\cmake\build_ocean.ps1 -Detailed` to see all available options.
-
-To use a specific Visual Studio version instead of the auto-detected one:
-
-```powershell
-.\build\cmake\build_ocean.ps1 -Generator "Visual Studio 16 2019"
-```
-
-### Option B: Using Git Bash
-
-You can also use the unified bash script via Git Bash:
-
-```bash
-cd /path/to/ocean
-./build/cmake/build_ocean.sh
-```
-
-The bash script supports the same options as on other platforms. Run `./build/cmake/build_ocean.sh --help` for details.
-
-To use a specific Visual Studio version:
-
-```bash
-./build/cmake/build_ocean.sh -g "Visual Studio 16 2019"
-```
-
-### Using CMake Presets Directly
-
-Alternatively, you can use CMake presets directly without the build scripts:
-
-```powershell
-# List all available presets
-cmake --list-presets
-
-# Configure using a preset
-cmake --preset windows-x64-static-release -DCMAKE_PREFIX_PATH="C:\install_oceanTP\win\x64_static_release"
+# Configure
+cmake -S . -B build_win `
+    -DCMAKE_BUILD_TYPE=Release `
+    -DBUILD_SHARED_LIBS=OFF `
+    -DOCEAN_THIRD_PARTY_LAYOUT=python `
+    -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install
 
 # Build and install
-cmake --build --preset windows-x64-static-release --target install
+cmake --build build_win --target install
 ```
 
-To use a specific Visual Studio version with presets, add the `-G` flag:
+To use a specific Visual Studio version with CMake directly, add the `-G` flag:
 
 ```powershell
-cmake --preset windows-x64-static-release -G "Visual Studio 16 2019" -DCMAKE_PREFIX_PATH="C:\install_oceanTP\win\x64_static_release"
+cmake -S . -B build_win -G "Visual Studio 16 2019" `
+    -DCMAKE_BUILD_TYPE=Release `
+    -DBUILD_SHARED_LIBS=OFF `
+    -DOCEAN_THIRD_PARTY_LAYOUT=python `
+    -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install
 ```
 
 ### Building with Visual Studio
@@ -135,10 +137,10 @@ To open the project in Visual Studio after configuration:
 
 ```powershell
 # Configure the project
-cmake --preset windows-x64-static-release -DCMAKE_PREFIX_PATH="C:\install_oceanTP\win\x64_static_release"
+python build/python/build_ocean.py --third-party-layout python --configure-only
 
 # Open in Visual Studio
-start bin\cmake\tmp\win-x64-static-release\ocean.sln
+start ocean_build\win_x86_64_static_release\ocean.sln
 ```
 
 Then build and run the desired targets from within Visual Studio.

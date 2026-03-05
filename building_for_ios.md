@@ -10,14 +10,14 @@ This document describes the process of building Ocean for iOS. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](README.md)
-* CMake 3.25 or higher is required (for CMake preset support)
+* Python 3.8 or higher
 * Create an [Apple Developer account](https://developer.apple.com/), if you haven't already
 * Retrieve the team ID of the above developer account. This will be an alphanumeric identifier of the form `XXXXXXXXXX`. Here are instructions to
   * [find it on the Apple page](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id) and to
   * [find it in your local keychain](https://stackoverflow.com/a/47732584)
 * Install a recent version of [Xcode](https://developer.apple.com/xcode/) (recommended version is Xcode 15).
 * Install all required resources to build iOS following these [instructions](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators).
-* This document assumes the use a physical iPhone with ARM64-based CPUs, not a simulator. Building for old iPhones should be possible but hasn't been tested. For details check the toolchain file, [build/cmake/ios-cmake/ios.toolchain.cmake](https://github.com/facebookresearch/ocean/blob/7eb6a04e60278185c3ebe469829f00fc7092b223/build/cmake/ios-cmake/ios.toolchain.cmake#L59-L60).
+* This document assumes the use a physical iPhone with ARM64-based CPUs, not a simulator. Building for old iPhones should be possible but hasn't been tested.
 
 ## 2 Building the third-party libraries
 
@@ -26,59 +26,77 @@ As with the desktop use case, this process consists of two steps:
 1. Building the required third-party libraries
 2. Building the Ocean libraries
 
-The easiest way to build the third-party libraries is by using the provided build script. By default, this will build all third-party libraries in both debug and release configurations with static linking.
+The third-party libraries are built using the Python-based build system. It handles fetching, patching, and building all dependencies with DAG-based parallel builds.
 
-```
+```bash
 cd /path/to/ocean
-./build/cmake/build_thirdparty_ios.sh
+
+# Build all required third-party libraries for iOS (debug + release, static)
+python build/python/build_ocean_3rdparty.py --target ios
+
+# Build release only
+python build/python/build_ocean_3rdparty.py --target ios --config release
+
+# Build for both iOS and macOS at the same time
+python build/python/build_ocean_3rdparty.py --target ios --target macos
+
+# Show build plan without building
+python build/python/build_ocean_3rdparty.py --target ios --dry-run
 ```
 
-Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/ios/arm64_static_debug` and `.../ios/arm64_static_release`.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/ios/` and libraries in `<lib>/lib/ios_arm64_static_release/` (and `..._debug/`).
 
-The build script can be customized using command-line parameters. Use `--config` to specify build configurations, `--link` for linking type, `-b` for build directory, and `-i` for installation directory. For example:
+Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
-```
-cd /path/to/ocean
-./build/cmake/build_thirdparty_ios.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
-```
+> **Note:** The build system displays a real-time TUI with progress for all parallel build jobs. Use `--log-level verbose` to see detailed build output instead.
 
-Run `./build/cmake/build_thirdparty_ios.sh --help` to see all available options.
-
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `--log-level STATUS` (for general progress information) or other levels like `VERBOSE` or `DEBUG`.
+> **Note:** Shared library builds are not supported for iOS and will be automatically skipped.
 
 ## 3 Using Ocean in external Xcode projects
 
 This section provides an example of how to build the Ocean libraries for the case that you plan to integrate them into an existing iOS project.
 
-Make sure that the third-party libraries have been built and installed as described above. Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for iOS from macOS. By default, the script will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
-
-```
-cd /path/to/ocean
-./build/cmake/build_ocean.sh -p ios
-```
-
-Once the build is complete, the compiled binaries can be found in `bin/cmake/ios/arm64_static_release` (or with `_debug` suffix for debug builds).
-
-The build script can be customized using command-line parameters. For example:
-
-```
-cd /path/to/ocean
-./build/cmake/build_ocean.sh -p ios -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
-```
-
-Run `./build/cmake/build_ocean.sh --help` to see all available options.
-
-### Using CMake Presets Directly
-
-Alternatively, you can use CMake presets directly without the build script:
+Make sure that the third-party libraries have been built and installed as described above.
 
 ```bash
-# List all available presets
-cmake --list-presets
+cd /path/to/ocean
 
-# Configure and build using a preset
-cmake --preset ios-arm64-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/ios/arm64_static_release"
-cmake --build --preset ios-arm64-static-release --target install
+# Build Ocean for iOS
+python build/python/build_ocean.py --target ios_arm64 --third-party-layout python
+
+# Build for a specific configuration
+python build/python/build_ocean.py --target ios_arm64 --third-party-layout python --config release
+
+# Specify custom directories
+python build/python/build_ocean.py --target ios_arm64 --third-party-layout python \
+    --build-dir "${HOME}/build_ocean" \
+    --install-dir "${HOME}/install_ocean" \
+    --third-party-dir /path/to/ocean_3rdparty/install
+```
+
+Once the build is complete, the compiled binaries can be found in `ocean_install/ios_arm64_static_release` (or with `_debug` suffix for debug builds).
+
+Run `python build/python/build_ocean.py --help` to see all available options.
+
+### Using CMake Directly
+
+Alternatively, you can invoke CMake directly:
+
+```bash
+cd /path/to/ocean
+
+# Configure and build
+cmake -S . -B build_ios \
+    -G Xcode \
+    -DCMAKE_TOOLCHAIN_FILE=build/python/toolchains/ios.toolchain.cmake \
+    -DPLATFORM=OS64 \
+    -DDEPLOYMENT_TARGET=15.0 \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
+
+cmake --build build_ios --target install
 ```
 
 From here, the Ocean binaries and include files can be used in any other project. Check out this guide on how to [include the CMake project of Ocean in an Xcode project](https://blog.tomtasche.at/2019/05/how-to-include-cmake-project-in-xcode.html).
@@ -89,66 +107,54 @@ First, build the required third-party libraries as described above (targets shou
 
 Also have your Apple team ID ready; it should have the following format: `XXXXXXXXXX`. Without it the apps cannot be signed and the build will fail.
 
-### Option A: Using CMake Presets (Recommended)
+### Option A: Using the Build Script (Recommended)
 
-Configure the project using a CMake preset:
+Build Ocean and then open the generated Xcode project:
 
 ```bash
-# Debug
 cd /path/to/ocean
-cmake --preset ios-arm64-static-debug \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/ios/arm64_static_debug" \
-    -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX
 
-# Open in Xcode
-open bin/cmake/tmp/ios-arm64-static-debug/ocean.xcodeproj
+# Configure only (to generate Xcode project)
+python build/python/build_ocean.py --target ios_arm64 --third-party-layout python --configure-only
+
+# Open in Xcode (adjust the path to match your build config)
+open ocean_build/ios_arm64_static_debug/ocean.xcodeproj
 ```
-
-For release builds:
-
-```bash
-# Release
-cmake --preset ios-arm64-static-release \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/ios/arm64_static_release" \
-    -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX
-
-open bin/cmake/tmp/ios-arm64-static-release/ocean.xcodeproj
-```
-
-Make sure to replace `XXXXXXXXXX` with your Apple Team ID.
 
 ### Option B: Manual CMake Configuration
 
 To configure the CMake project of Ocean as a debug build manually:
 
-```
+```bash
 # Debug
 cd /path/to/ocean
-cmake -S"/path/to/ocean" \
-    -B"${HOME}/build_ocean_ios_debug" \
+cmake -S . \
+    -B "${HOME}/build_ocean_ios_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
-    -DCMAKE_TOOLCHAIN_FILE="/path/to/ocean/build/cmake/ios-cmake/ios.toolchain.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE=build/python/toolchains/ios.toolchain.cmake \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/ios/arm64_static_debug" \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```
 
 and for release builds:
 
-```
+```bash
 # Release
 cd /path/to/ocean
-cmake -S"/path/to/ocean" \
-    -B"${HOME}/build_ocean_ios_release" \
+cmake -S . \
+    -B "${HOME}/build_ocean_ios_release" \
     -DCMAKE_BUILD_TYPE="Release" \
     -G Xcode \
-    -DCMAKE_TOOLCHAIN_FILE="/path/to/ocean/build/cmake/ios-cmake/ios.toolchain.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE=build/python/toolchains/ios.toolchain.cmake \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/ios/arm64_static_release" \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```
@@ -157,14 +163,14 @@ In both cases make sure to replace `XXXXXXXXXX` with your Apple Team ID.
 
 Once the configuration is complete, open the generated Xcode project:
 
-```
+```bash
 # Debug
 open ${HOME}/build_ocean_ios_debug/ocean.xcodeproj
 ```
 
 or
 
-```
+```bash
 # Release
 open ${HOME}/build_ocean_ios_release/ocean.xcodeproj
 ```

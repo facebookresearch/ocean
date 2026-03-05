@@ -15,7 +15,7 @@ To build the project, you need to satisfy the following prerequisites:
 
 Please refer to the [main page](README.md) for general build prerequisites.
 
-* CMake 3.25 or higher is required (for CMake preset support)
+* Python 3.8 or higher
 
 ### Android Setup
 
@@ -37,11 +37,6 @@ Please refer to the [main page](README.md) for general build prerequisites.
 
 ### Additional tools
 
-**Ninja build tool (Windows only)**
-
-* Install via Android Studio's CMake component (see Android NDK installation).
-* Alternatively, ensure the Ninja executable is present in the directory tree pointed to by the `ANDROID_HOME` environment variable.
-
 **Java Development Kit (JDK)**
 
 * Recommended: [OpenJDK 22](https://jdk.java.net/22/)
@@ -58,9 +53,9 @@ Add these lines to your shell configuration file (`.zshrc`, `.bashrc`, or `.prof
 # Android SDK location
 export ANDROID_HOME="${HOME}/Library/Android/sdk"
 
-# Android NDK location and version
-export ANDROID_NDK="${HOME}/Library/Android/sdk/ndk/<NDK_VERSION>"
-export ANDROID_NDK_VERSION="<NDK_VERSION>"
+# Android NDK location (used by the build system for cross-compilation)
+# Set ANDROID_NDK_HOME or ANDROID_NDK_ROOT to the NDK directory
+export ANDROID_NDK_HOME="${HOME}/Library/Android/sdk/ndk/<NDK_VERSION>"
 
 # Java Development Kit location
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home"
@@ -76,107 +71,93 @@ Configure the environment variables through System Properties:
 2. Go to the "Advanced" tab and click "Environment Variables"
 3. Under "System variables", add the following variables:
    - `ANDROID_HOME`: Path to Android SDK (e.g., `C:\Users\%USERNAME%\AppData\Local\Android\Sdk`)
-   - `ANDROID_NDK`: Path to Android NDK (e.g., `C:\Users\%USERNAME%\AppData\Local\Android\Sdk\ndk\<NDK_VERSION>`)
-   - `ANDROID_NDK_VERSION`: NDK version number (e.g., `26.2.11394342`)
+   - `ANDROID_NDK_HOME`: Path to Android NDK (e.g., `C:\Users\%USERNAME%\AppData\Local\Android\Sdk\ndk\<NDK_VERSION>`)
    - `JAVA_HOME`: Path to JDK (e.g., `C:\Program Files\Java\jdk-22`)
 4. Click "OK" to save and restart your terminal or IDE
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script. On Linux/macOS, use [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh). On Windows, use the PowerShell script [`build/cmake/build_thirdparty_android.ps1`](build/cmake/build_thirdparty_android.ps1). By default, this will build all third-party libraries in both debug and release configurations with static linking for the `arm64-v8a` ABI.
-
-### Linux/macOS
+The third-party libraries are built using the Python-based build system. The same script works on Linux, macOS, and Windows.
 
 ```bash
 cd /path/to/ocean
-./build/cmake/build_thirdparty_android.sh
+
+# Build all required third-party libraries for Android (all ABIs, debug + release, static)
+python build/python/build_ocean_3rdparty.py --target android
+
+# Build for a specific Android architecture
+python build/python/build_ocean_3rdparty.py --target android_arm64
+
+# Build for multiple specific architectures
+python build/python/build_ocean_3rdparty.py --target android_arm64,android_x86_64
+
+# Build release only
+python build/python/build_ocean_3rdparty.py --target android --config release
+
+# Specify a custom Android API level
+python build/python/build_ocean_3rdparty.py --target android --android-api-level 34
+
+# Show build plan without building
+python build/python/build_ocean_3rdparty.py --target android --dry-run
 ```
 
-### Windows (PowerShell)
+On Windows (PowerShell):
 
 ```powershell
 cd \path\to\ocean
-.\build\cmake\build_thirdparty_android.ps1
+python build/python/build_ocean_3rdparty.py --target android
 ```
 
-Once the build is complete, the compiled binaries can be found in `bin/cmake/3rdparty/android/arm64-v8a_static_debug` and `.../android/arm64-v8a_static_release`.
+Once the build is complete, the installed libraries can be found in `ocean_3rdparty/install/`. Headers are stored in `<lib>/h/android/` and libraries in `<lib>/lib/android_arm64_static_release/` (and similar paths for other architectures and configurations).
 
-The build script can be customized using command-line parameters. Use `-Config` (or `--config` on bash) to specify build configurations, `-Link` (or `--link`) for linking type, `-ABI` (or `--abi`) for Android ABI, `-Build` (or `-b`) for build directory, and `-Install` (or `-i`) for installation directory. For example:
+Run `python build/python/build_ocean_3rdparty.py --help` to see all available options.
 
-### Linux/macOS
-
-```bash
-cd /path/to/ocean
-./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
-```
-
-### Windows (PowerShell)
-
-```powershell
-cd \path\to\ocean
-.\build\cmake\build_thirdparty_android.ps1 -Config debug,release -Link static -Build C:\build_ocean_thirdparty -Install C:\install_ocean_thirdparty -ABI arm64-v8a
-```
-
-To build for multiple ABIs:
-
-```powershell
-.\build\cmake\build_thirdparty_android.ps1 -ABI "arm64-v8a,armeabi-v7a,x86_64"
-```
-
-Run `./build/cmake/build_thirdparty_android.sh --help` (or `Get-Help .\build\cmake\build_thirdparty_android.ps1 -Detailed` on Windows) to see all available options.
-
-> **Note:** By default, the build scripts only display error messages. To see more detailed CMake output, use `-LogLevel STATUS` (or `--log-level STATUS` on bash) for general progress information, or other levels like `VERBOSE` or `DEBUG`.
+> **Note:** The build system displays a real-time TUI with progress for all parallel build jobs. Use `--log-level verbose` to see detailed build output instead.
 
 
 ## 3 Using Ocean in external Android projects
 
 This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project. This assumes that the third-party libraries have been built as described above for the required Android ABIs.
 
-Ocean uses CMake presets for build configuration. The unified build script [`build/cmake/build_ocean.sh`](build/cmake/build_ocean.sh) supports cross-compilation for Android from macOS, Linux, or Windows (via Git Bash). By default, the script will look for third-party libraries in `bin/cmake/3rdparty` (the default output from the previous step).
-
-```
+```bash
 cd /path/to/ocean
-./build/cmake/build_ocean.sh -p android
+
+# Build Ocean for Android
+python build/python/build_ocean.py --target android_arm64 --third-party-layout python
+
+# Build for multiple architectures
+python build/python/build_ocean.py --target android_arm64,android_x86_64 --third-party-layout python
+
+# Build for a specific configuration
+python build/python/build_ocean.py --target android_arm64 --third-party-layout python --config release
+
+# Specify custom directories
+python build/python/build_ocean.py --target android_arm64 --third-party-layout python \
+    --build-dir "${HOME}/build_ocean" \
+    --install-dir "${HOME}/install_ocean" \
+    --third-party-dir /path/to/ocean_3rdparty/install
 ```
 
-Once the build is complete, the compiled binaries can be found in `bin/cmake/android/arm64_static_release` (or with `_debug` suffix for debug builds).
+Once the build is complete, the compiled binaries can be found in `ocean_install/android_arm64_static_release` (or with `_debug` suffix for debug builds).
 
-The build script can be customized using command-line parameters. For example, to build for multiple ABIs:
+Run `python build/python/build_ocean.py --help` to see all available options.
 
-```
-cd /path/to/ocean
-./build/cmake/build_ocean.sh -p android -a arm64,arm32,x64 -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
-```
+### Using CMake Directly
 
-### Windows Users
-
-On Windows, you can use either:
-
-1. **PowerShell** (recommended):
-   ```powershell
-   cd \path\to\ocean
-   .\build\cmake\build_ocean.ps1 -Platform android -Arch arm64
-   ```
-
-2. **Git Bash**:
-   ```bash
-   cd /path/to/ocean
-   ./build/cmake/build_ocean.sh -p android
-   ```
-
-Run `./build/cmake/build_ocean.sh --help` or `.\build\cmake\build_ocean.ps1 -?` to see all available options.
-
-### Using CMake Presets Directly
-
-Alternatively, you can use CMake presets directly without the build script:
+Alternatively, you can invoke CMake directly:
 
 ```bash
-# List all available presets
-cmake --list-presets
+cd /path/to/ocean
 
-# Configure and build using a preset
-cmake --preset android-arm64-static-release -DCMAKE_PREFIX_PATH="${HOME}/install_ocean_thirdparty/android/arm64_static_release"
-cmake --build --preset android-arm64-static-release --target install
+# Configure and build
+cmake -S . -B build_android \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
+    -DANDROID_PLATFORM=android-32
+
+cmake --build build_android --target install -j
 ```
 
 For projects that use Gradle as their main build system, they can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:

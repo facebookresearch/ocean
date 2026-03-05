@@ -17,7 +17,8 @@ For a general overview, the [project website](https://facebookresearch.github.io
 
 ## General Prerequisites
 
-- Install [CMake](https://cmake.org/download/) 3.25 or higher (required for CMake preset support).
+- [Python](https://www.python.org/downloads/) 3.8 or higher (for the build scripts)
+- [CMake](https://cmake.org/download/) 3.26 or higher
 - Ocean requires C++20
 - Ensure that the [Git](https://www.git-scm.com/downloads) executable is available in your path.
 

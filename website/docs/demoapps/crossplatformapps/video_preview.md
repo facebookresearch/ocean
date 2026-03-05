@@ -73,13 +73,13 @@ The demo app is available for both desktop and mobile devices. The code is locat
     cd /path/to/ocean
 
     # Build the third-party libraries
-    ./build/cmake/build_thirdparty_linuxunix.sh -c release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
+    python build/python/build_ocean_3rdparty.py --config release
 
     # Build and install Ocean
-    ./build/cmake/build_ocean.sh -c release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
+    python build/python/build_ocean.py --third-party-layout python --config release
 
     # Execute the demo app (a bundle)
-    open ${HOME}/install_ocean/macos/arm64_static_release/bin/application_ocean_demo_media_videopreview_macos.app
+    open ocean_install/macos_arm64_static_release/bin/application_ocean_demo_media_videopreview_macos.app
     ```
 
     Alternatively, [generate a XCode project for Ocean](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_macos.md#4-building-the-ocean-ios-demotest-apps) and search for `application_ocean_demo_media_videopreview_macos` in the schemes at the top. Then hit `CMD-R` to build and run the app.
