@@ -187,7 +187,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 	protected:
 
 		/**
-		 * Returns color profile pairs for testing, using the correct profile name for the current OS version.
+		 * Returns color profile pairs for testing.
 		 * @param imageType The image type (e.g., "jpg", "heic")
 		 * @return The color profile pairs
 		 */

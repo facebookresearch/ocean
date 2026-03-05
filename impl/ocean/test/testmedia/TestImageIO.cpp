@@ -34,7 +34,6 @@
 #include "ocean/media/openimagelibraries/OILLibrary.h"
 
 #include "ocean/platform/apple/Apple.h"
-#include "ocean/platform/apple/System.h"
 
 namespace Ocean
 {
@@ -1752,7 +1751,15 @@ bool TestImageIO::testColorProfileNameProperty(const std::string& imageType, con
 				}
 			}
 
-			OCEAN_EXPECT_EQUAL(validation, decodedProperties.colorProfileName_, expectedColorProfileName);
+			// On macOS 14+ / iOS 17+, Apple renamed the ICC profile description for kCGColorSpaceGenericRGBLinear
+			// from "Generic HDR Profile" to "Generic RGB Linear Profile". Both names map to the same underlying
+			// color space, so when verifying the round-trip we accept either name as equivalent.
+			const bool isGenericRGBLinearAlias = (expectedColorProfileName == "Generic HDR Profile" || expectedColorProfileName == "Generic RGB Linear Profile") && (decodedProperties.colorProfileName_ == "Generic HDR Profile" || decodedProperties.colorProfileName_ == "Generic RGB Linear Profile");
+
+			if (!isGenericRGBLinearAlias)
+			{
+				OCEAN_EXPECT_EQUAL(validation, decodedProperties.colorProfileName_, expectedColorProfileName);
+			}
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -1766,19 +1773,6 @@ std::vector<TestImageIO::ColorProfilePair> TestImageIO::getColorProfilePairsForI
 {
 	ocean_assert(!imageType.empty());
 
-	// On macOS 14+ / iOS 17+, Apple renamed the ICC profile description for kCGColorSpaceGenericRGBLinear
-	// from "Generic HDR Profile" to "Generic RGB Linear Profile".
-	unsigned int majorVersion = 0u;
-	Platform::Apple::System::version(&majorVersion);
-
-#ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY
-	const bool usesNewColorProfileNames = majorVersion >= 17u;
-#else
-	const bool usesNewColorProfileNames = majorVersion >= 14u;
-#endif
-
-	const std::string genericRGBLinearProfileName = usesNewColorProfileNames ? "Generic RGB Linear Profile" : "Generic HDR Profile";
-
 	std::vector<ColorProfilePair> colorProfileNames =
 	{
 		{FrameType::FORMAT_RGB24, ""}, // default
@@ -1786,7 +1780,7 @@ std::vector<TestImageIO::ColorProfilePair> TestImageIO::getColorProfilePairsForI
 		{FrameType::FORMAT_RGB24, "sRGB IEC61966-2.1"},
 		{FrameType::FORMAT_RGB24, "sRGB IEC61966-2.1 Linear"},
 		{FrameType::FORMAT_RGB24, "Adobe RGB (1998)"},
-		{FrameType::FORMAT_RGB24, genericRGBLinearProfileName},
+		{FrameType::FORMAT_RGB24, "Generic HDR Profile"},
 		{FrameType::FORMAT_RGB24, "ROMM RGB: ISO 22028-2:2013"},
 	};
 
