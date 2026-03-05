@@ -177,6 +177,33 @@ class OCEAN_RENDERING_EXPORT Utilities
 		static TransformRef createCoordinateSystems(const Engine& engine, const HomogenousMatrices4& world_T_coordinateSystems, const Scalar length, VertexSetRef* vertexSet = nullptr);
 
 		/**
+		 * Creates or updates line-based coordinate system visualizations.
+		 * On the first call (when transform is null), coordinate systems are created via createCoordinateSystems().
+		 * On subsequent calls, only the vertex positions on the existing VertexSet are updated for efficiency.
+		 * @param engine The rendering engine, must be valid
+		 * @param world_T_coordinateSystems The transformations defining the coordinate systems, must not be empty
+		 * @param length The length of each axis in meters, with range (0, infinity)
+		 * @param transform The Transform node; will be created if null, must be valid after the first call
+		 * @param vertexSet The VertexSet node; will be created if null, must be valid after the first call
+		 * @return True if the transform was newly created (caller should add it to its scene graph); false if existing vertices were updated
+		 */
+		static bool updateOrCreateCoordinateSystems(const Engine& engine, const HomogenousMatrices4& world_T_coordinateSystems, const Scalar length, TransformRef& transform, VertexSetRef& vertexSet);
+
+		/**
+		 * Creates or updates a line-based coordinate system visualization for a single coordinate system.
+		 * This overload avoids the overhead of wrapping a single matrix into a vector, making it suitable for per-frame updates.
+		 * On the first call (when transform is null), the coordinate system is created via createCoordinateSystems().
+		 * On subsequent calls, only the vertex positions on the existing VertexSet are updated for efficiency.
+		 * @param engine The rendering engine, must be valid
+		 * @param world_T_coordinateSystem The transformation defining the coordinate system, must be valid
+		 * @param length The length of each axis in meters, with range (0, infinity)
+		 * @param transform The Transform node; will be created if null, must be valid after the first call
+		 * @param vertexSet The VertexSet node; will be created if null, must be valid after the first call
+		 * @return True if the transform was newly created (caller should add it to its scene graph); false if existing vertices were updated
+		 */
+		static bool updateOrCreateCoordinateSystem(const Engine& engine, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, TransformRef& transform, VertexSetRef& vertexSet);
+
+		/**
 		 * Returns an arrow with specified length and radius.
 		 * @param engine Rendering engine to be used
 		 * @param length The length of the arrow, with range [0, infinity)

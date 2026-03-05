@@ -7,6 +7,8 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRControllerVisualizer.h"
 
+#include "ocean/rendering/Utilities.h"
+
 namespace Ocean
 {
 
@@ -94,8 +96,41 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 			baseSpace_T_controllerGrip.toNull();
 		}
 
+		const size_t controllerIndex = controllerType == TrackedController::CT_LEFT ? 0 : 1;
+
+		if (showCoordinateSystems_ && baseSpace_T_controllerGrip.isValid())
+		{
+			visualizeControllerCoordinateSystem(controllerIndex, baseSpace_T_controllerGrip);
+		}
+		else if (transformCoordinateSystems_[controllerIndex])
+		{
+			transformCoordinateSystems_[controllerIndex]->setVisible(false);
+		}
+
 		visualizeControllerInWorld(controllerType == TrackedController::CT_LEFT ? CT_LEFT : CT_RIGHT, baseSpace_T_controllerGrip, controllerRayLength);
 	}
+}
+
+void VRControllerVisualizer::visualizeControllerCoordinateSystem(const size_t controllerIndex, const HomogenousMatrix4& world_T_controller)
+{
+	ocean_assert(controllerIndex < 2);
+	ocean_assert(engine_ && framebuffer_);
+	ocean_assert(world_T_controller.isValid());
+
+	constexpr Scalar axisLength = Scalar(0.05); // 5cm
+
+	if (Rendering::Utilities::updateOrCreateCoordinateSystem(*engine_, world_T_controller, axisLength, transformCoordinateSystems_[controllerIndex], vertexSetCoordinateSystems_[controllerIndex]))
+	{
+		if (!sceneCoordinateSystems_)
+		{
+			sceneCoordinateSystems_ = engine_->factory().createScene();
+			framebuffer_->addScene(sceneCoordinateSystems_);
+		}
+
+		sceneCoordinateSystems_->addChild(transformCoordinateSystems_[controllerIndex]);
+	}
+
+	transformCoordinateSystems_[controllerIndex]->setVisible(true);
 }
 
 }

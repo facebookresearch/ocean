@@ -343,33 +343,9 @@ bool VRHandVisualizer::visualizeJoints(const HandPoses& handPoses)
 		return true;
 	}
 
-	if (transformJoints_.isNull())
+	if (Rendering::Utilities::updateOrCreateCoordinateSystems(*engine_, world_T_joints, axisLength, transformJoints_, vertexSetJoints_))
 	{
-		transformJoints_ = Rendering::Utilities::createCoordinateSystems(*engine_, world_T_joints, axisLength, &vertexSetJoints_);
-
 		scene_->addChild(transformJoints_);
-	}
-	else
-	{
-		Vectors3 vertices;
-		vertices.reserve(world_T_joints.size() * 6);
-
-		for (const HomogenousMatrix4& world_T_joint : world_T_joints)
-		{
-			const Vector3 translation = world_T_joint.translation();
-
-			vertices.emplace_back(translation);
-			vertices.emplace_back(world_T_joint * Vector3(axisLength, 0, 0));
-
-			vertices.emplace_back(translation);
-			vertices.emplace_back(world_T_joint * Vector3(0, axisLength, 0));
-
-			vertices.emplace_back(translation);
-			vertices.emplace_back(world_T_joint * Vector3(0, 0, axisLength));
-		}
-
-		ocean_assert(vertexSetJoints_);
-		vertexSetJoints_->setVertices(vertices);
 	}
 
 	transformJoints_->setVisible(true);

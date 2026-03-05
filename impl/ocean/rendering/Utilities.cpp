@@ -709,6 +709,75 @@ TransformRef Utilities::createCoordinateSystems(const Engine& engine, const Homo
 	return TransformRef();
 }
 
+bool Utilities::updateOrCreateCoordinateSystems(const Engine& engine, const HomogenousMatrices4& world_T_coordinateSystems, const Scalar length, TransformRef& transform, VertexSetRef& vertexSet)
+{
+	ocean_assert(!world_T_coordinateSystems.empty());
+	ocean_assert(length > 0);
+
+	if (transform.isNull())
+	{
+		transform = createCoordinateSystems(engine, world_T_coordinateSystems, length, &vertexSet);
+
+		return true;
+	}
+
+	Vectors3 vertices;
+	vertices.reserve(world_T_coordinateSystems.size() * 6);
+
+	for (const HomogenousMatrix4& world_T_coordinateSystem : world_T_coordinateSystems)
+	{
+		const Vector3 translation = world_T_coordinateSystem.translation();
+
+		vertices.emplace_back(translation);
+		vertices.emplace_back(world_T_coordinateSystem * Vector3(length, 0, 0));
+
+		vertices.emplace_back(translation);
+		vertices.emplace_back(world_T_coordinateSystem * Vector3(0, length, 0));
+
+		vertices.emplace_back(translation);
+		vertices.emplace_back(world_T_coordinateSystem * Vector3(0, 0, length));
+	}
+
+	ocean_assert(vertexSet);
+	vertexSet->setVertices(vertices);
+
+	return false;
+}
+
+bool Utilities::updateOrCreateCoordinateSystem(const Engine& engine, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, TransformRef& transform, VertexSetRef& vertexSet)
+{
+	ocean_assert(world_T_coordinateSystem.isValid());
+	ocean_assert(length > 0);
+
+	if (transform.isNull())
+	{
+		const HomogenousMatrices4 world_T_coordinateSystems(1, world_T_coordinateSystem);
+
+		transform = createCoordinateSystems(engine, world_T_coordinateSystems, length, &vertexSet);
+
+		return true;
+	}
+
+	const Vector3 translation = world_T_coordinateSystem.translation();
+
+	const Vectors3 vertices =
+	{
+		translation,
+		world_T_coordinateSystem * Vector3(length, 0, 0),
+
+		translation,
+		world_T_coordinateSystem * Vector3(0, length, 0),
+
+		translation,
+		world_T_coordinateSystem * Vector3(0, 0, length)
+	};
+
+	ocean_assert(vertexSet);
+	vertexSet->setVertices(vertices);
+
+	return false;
+}
+
 TransformRef Utilities::createArrow(const EngineRef& engine, const Scalar length, const Scalar topLength, const Scalar radius, const RGBAColor& color)
 {
 	if (engine.isNull() || length < 0 || topLength < 0 || radius < 0)

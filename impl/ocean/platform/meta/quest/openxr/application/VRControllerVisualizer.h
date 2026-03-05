@@ -14,6 +14,10 @@
 
 #include "ocean/platform/meta/quest/openxr/TrackedController.h"
 
+#include "ocean/rendering/Scene.h"
+#include "ocean/rendering/Transform.h"
+#include "ocean/rendering/VertexSet.h"
+
 namespace Ocean
 {
 
@@ -39,6 +43,11 @@ namespace Application
  */
 class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRControllerVisualizer final : public Quest::Application::VRControllerVisualizer
 {
+	protected:
+
+		/// The number of controllers.
+		static constexpr size_t numberControllers_ = 2;
+
 	public:
 
 		/**
@@ -51,7 +60,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRControllerVisualizer
 		 * @param engine The rendering engine to be used, must be valid
 		 * @param framebuffer The framebuffer to be used, must be valid
 		 * @param leftRenderModelFilename The path to file that contains the render model of the left controller, must be valid
-		 * @param rightRenderModelFilename The path to file that contains the render model of the left controller, must be valid
+		 * @param rightRenderModelFilename The path to file that contains the render model of the right controller, must be valid
 		 * @param controllerAim_t_controllerModel The translation offset between controller model and controller aim transformation, must be valid
 		 * @see Quest::Application::VRControllerVisualizer::VRControllerVisualizer().
 		 */
@@ -72,10 +81,43 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRControllerVisualizer
 		 */
 		void visualizeControllersInWorld(const TrackedController& trackedController, const Scalar controllerRayLength = -1);
 
+		/**
+		 * Sets whether the controller coordinate systems are shown.
+		 * @param show True to show the coordinate systems; False to hide them
+		 */
+		inline void showCoordinateSystems(const bool show);
+
+		/**
+		 * Returns whether the controller coordinate systems are shown.
+		 * @return True, if the coordinate systems are shown
+		 */
+		inline bool coordinateSystemsShown() const;
+
+	protected:
+
+		/**
+		 * Visualizes the coordinate system of a single controller.
+		 * @param controllerIndex The index of the controller (0 = left, 1 = right)
+		 * @param world_T_controller The transformation of the controller in world coordinates, must be valid
+		 */
+		void visualizeControllerCoordinateSystem(const size_t controllerIndex, const HomogenousMatrix4& world_T_controller);
+
 	protected:
 
 		/// The translation offset between controller model and controller aim transformation, must be valid
 		Vector3 controllerAim_t_controllerModel_ = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue());
+
+		/// The rendering Transform nodes for rendering the controller coordinate systems (one per controller).
+		Rendering::TransformRef transformCoordinateSystems_[numberControllers_];
+
+		/// The rendering VertexSet objects for rendering the controller coordinate systems (one per controller).
+		Rendering::VertexSetRef vertexSetCoordinateSystems_[numberControllers_];
+
+		/// The scene for the coordinate system visualizations.
+		Rendering::SceneRef sceneCoordinateSystems_;
+
+		/// True, if the controller coordinate systems are shown.
+		bool showCoordinateSystems_ = false;
 };
 
 inline VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const std::string& leftRenderModelFilename, const std::string& rightRenderModelFilename, const Vector3& controllerAim_t_controllerModel) :
@@ -83,6 +125,16 @@ inline VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef
 	controllerAim_t_controllerModel_(controllerAim_t_controllerModel)
 {
 	// nothing to do here
+}
+
+inline void VRControllerVisualizer::showCoordinateSystems(const bool show)
+{
+	showCoordinateSystems_ = show;
+}
+
+inline bool VRControllerVisualizer::coordinateSystemsShown() const
+{
+	return showCoordinateSystems_;
 }
 
 #ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_TRANSLATION_OFFSET
