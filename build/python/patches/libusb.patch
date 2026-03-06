@@ -4,7 +4,7 @@ index 0fb6b07..f8f3f97 100644
 +++ b/CMakeLists.txt
 @@ -108,17 +108,17 @@ set(LIBUSB_GEN_INCLUDES "${CMAKE_CURRENT_BINARY_DIR}/gen_include")
  generate_config_file()
-
+ 
  if(LIBUSB_BUILD_SHARED_LIBS)
 -    add_library(usb-1.0 SHARED)
 +    add_library(usb SHARED)
@@ -12,12 +12,12 @@ index 0fb6b07..f8f3f97 100644
 -    add_library(usb-1.0 STATIC)
 +    add_library(usb STATIC)
  endif()
-
+ 
 -set_target_properties(usb-1.0 PROPERTIES
 +set_target_properties(usb PROPERTIES
      PREFIX lib # to be consistent with mainline libusb build system(s)
  )
-
+ 
  # common sources
 -target_sources(usb-1.0 PRIVATE
 +target_sources(usb PRIVATE
@@ -34,7 +34,7 @@ index 0fb6b07..f8f3f97 100644
          "${LIBUSB_GEN_INCLUDES}"
          "${LIBUSB_ROOT}/os"
  )
-
+ 
  if (LIBUSB_TARGETS_INCLUDE_USING_SYSTEM)
 -    target_include_directories(usb-1.0 SYSTEM PUBLIC "${LIBUSB_ROOT}")
 +    target_include_directories(usb SYSTEM PUBLIC "${LIBUSB_ROOT}")
@@ -42,7 +42,7 @@ index 0fb6b07..f8f3f97 100644
 -    target_include_directories(usb-1.0 PUBLIC "${LIBUSB_ROOT}")
 +    target_include_directories(usb PUBLIC "${LIBUSB_ROOT}")
  endif()
-
+ 
  if(WIN32)
 -    target_sources(usb-1.0 PRIVATE
 +    target_sources(usb PRIVATE
@@ -133,7 +133,7 @@ index 0fb6b07..f8f3f97 100644
      endif()
 @@ -230,6 +230,6 @@ if(LIBUSB_BUILD_EXAMPLES)
  endif()
-
+ 
  if(LIBUSB_INSTALL_TARGETS)
 -    install(TARGETS usb-1.0)
 -    install(FILES "${LIBUSB_ROOT}/libusb.h" DESTINATION "include/libusb-1.0")
