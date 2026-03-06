@@ -62,6 +62,89 @@
     <GradleProperties Condition="'$(GradleProperties)' == ''">$(GradleBaseProperties) $(ProjectGradleProperties)</GradleProperties>
   </PropertyGroup>
 
+  <!-- Gradle Build Up-to-Date Check -->
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'Makefile'">
+    <_GradleBuildStampFile>$(IntDir)gradle-build.stamp</_GradleBuildStampFile>
+    <_GradleCommandCacheFile>$(IntDir)gradle-command.cache</_GradleCommandCacheFile>
+  </PropertyGroup>
+
+  <!-- Inline task to check if Gradle build is up-to-date based on input file timestamps -->
+  <UsingTask TaskName="CheckGradleBuildUpToDate" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <StampFile ParameterType="System.String" Required="true" />
+      <InputFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <CommandLine ParameterType="System.String" Required="true" />
+      <CommandCacheFile ParameterType="System.String" Required="true" />
+      <IsUpToDate ParameterType="System.Boolean" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+#pragma warning disable CS0162 // Unreachable code detected (RoslynCodeTaskFactory generates wrapper code)
+IsUpToDate = false;
+try
+{
+    // Write command line to cache file only if content changed (preserves timestamp if unchanged)
+    var cacheDir = Path.GetDirectoryName(CommandCacheFile);
+    if (!Directory.Exists(cacheDir))
+        Directory.CreateDirectory(cacheDir);
+
+    if (!File.Exists(CommandCacheFile) || File.ReadAllText(CommandCacheFile) != CommandLine)
+        File.WriteAllText(CommandCacheFile, CommandLine);
+
+    // If stamp file doesn't exist, not up-to-date (first build or after clean)
+    if (!File.Exists(StampFile))
+    {
+        Log.LogMessage(MessageImportance.Normal, "[OceanAndroid] Gradle build stamp not found, build required.");
+        return true;
+    }
+
+    var stampTime = File.GetLastWriteTimeUtc(StampFile);
+
+    // Check all input files + command cache file
+    var allFiles = new System.Collections.Generic.List<string>();
+    if (InputFiles != null)
+    {
+        foreach (var item in InputFiles)
+        {
+            var path = item.GetMetadata("FullPath");
+            if (!string.IsNullOrEmpty(path))
+                allFiles.Add(path);
+        }
+    }
+    allFiles.Add(CommandCacheFile);
+
+    foreach (var filePath in allFiles)
+    {
+        if (!File.Exists(filePath))
+        {
+            Log.LogMessage(MessageImportance.Normal, $"[OceanAndroid] Input file missing: {filePath}, build required.");
+            return true;
+        }
+        if (File.GetLastWriteTimeUtc(filePath) > stampTime)
+        {
+            Log.LogMessage(MessageImportance.Normal, $"[OceanAndroid] Input file newer than stamp: {Path.GetFileName(filePath)}, build required.");
+            return true;
+        }
+    }
+
+    IsUpToDate = true;
+    Log.LogMessage(MessageImportance.Normal, "[OceanAndroid] All inputs older than stamp, Gradle build is up-to-date.");
+    return true;
+}
+catch (Exception ex)
+{
+    Log.LogWarning($"[OceanAndroid] Up-to-date check failed: {ex.Message}. Falling back to full build.");
+    IsUpToDate = false;
+    return true;
+}
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
   <!-- NMake / Gradle Build Commands (shared pattern for Makefile-based Android projects).
        GradleTask and GradleProperties must be set by the project before this point.
        NMakeOutput remains project-specific (APK vs AAR). -->
@@ -76,20 +159,57 @@
        Projects can add pre/post logic via BeforeTargets/AfterTargets hooks.
        Rebuild always passes clean and disables the Gradle build cache for a true from-scratch build. -->
   <Target Name="Build" Condition="'$(ConfigurationType)' == 'Makefile'">
-    <Message Text="========================================" Importance="high" />
-    <Message Text="Building $(ProjectName) with Gradle..." Importance="high" />
-    <Message Text="  Configuration: $(Configuration)" Importance="normal" />
-    <Message Text="  Java Home: $(JavaHome)" Importance="normal" />
-    <Message Text="========================================" Importance="high" />
+    <!-- Collect all inputs for up-to-date checking -->
+    <ItemGroup>
+      <_GradleBuildInputs Include="$(MSBuildProjectFullPath)" />
+      <_GradleBuildInputs Include="@(JavaSource)" />
+      <_GradleBuildInputs Include="$(AndroidManifestFile)" Condition="'$(AndroidManifestFile)' != '' AND Exists('$(AndroidManifestFile)')" />
+      <_GradleBuildInputs Include="$(GradleProjectDir)\**\*.gradle.kts" />
+      <_GradleBuildInputs Include="$(GradleProjectDir)\**\*.gradle" />
+      <_GradleBuildInputs Include="$(GradleProjectDir)\**\gradle.properties" />
+      <_GradleBuildInputs Include="$(AndroidResDir)\**\*" Condition="'$(AndroidResDir)' != '' AND Exists('$(AndroidResDir)')" />
+      <_GradleBuildInputs Include="$(JniLibsStagingDir)\**\*.so" Condition="'$(JniLibsStagingDir)' != '' AND Exists('$(JniLibsStagingDir)')" />
+    </ItemGroup>
+
+    <!-- Check if Gradle build is up-to-date -->
+    <CheckGradleBuildUpToDate
+      StampFile="$(_GradleBuildStampFile)"
+      InputFiles="@(_GradleBuildInputs)"
+      CommandLine="$(GradleTask)|$(GradleProperties)"
+      CommandCacheFile="$(_GradleCommandCacheFile)">
+      <Output TaskParameter="IsUpToDate" PropertyName="_GradleBuildIsUpToDate" />
+    </CheckGradleBuildUpToDate>
+
+    <!-- Skip Gradle if up-to-date -->
+    <Message Text="[OceanAndroid] $(ProjectName) Gradle build is up to date, skipping."
+             Importance="high"
+             Condition="'$(_GradleBuildIsUpToDate)' == 'true'" />
+
+    <!-- Run Gradle if not up-to-date -->
+    <Message Text="========================================" Importance="high"
+             Condition="'$(_GradleBuildIsUpToDate)' != 'true'" />
+    <Message Text="Building $(ProjectName) with Gradle..." Importance="high"
+             Condition="'$(_GradleBuildIsUpToDate)' != 'true'" />
+    <Message Text="  Configuration: $(Configuration)" Importance="normal"
+             Condition="'$(_GradleBuildIsUpToDate)' != 'true'" />
+    <Message Text="  Java Home: $(JavaHome)" Importance="normal"
+             Condition="'$(_GradleBuildIsUpToDate)' != 'true'" />
+    <Message Text="========================================" Importance="high"
+             Condition="'$(_GradleBuildIsUpToDate)' != 'true'" />
 
     <Exec Command="&quot;$(GradleWrapper)&quot; $(GradleTask) $(GradleProperties) --no-daemon"
           WorkingDirectory="$(GradleProjectDir)"
           EnvironmentVariables="ANDROID_HOME=$(AndroidSdkPath);JAVA_HOME=$(JavaHome)"
           ConsoleToMsBuild="true"
-          Condition="Exists('$(GradleWrapper)')" />
+          Condition="'$(_GradleBuildIsUpToDate)' != 'true' AND Exists('$(GradleWrapper)')" />
 
     <Warning Text="Gradle wrapper not found at $(GradleWrapper). Please ensure gradlew.bat exists."
-             Condition="!Exists('$(GradleWrapper)')" />
+             Condition="'$(_GradleBuildIsUpToDate)' != 'true' AND !Exists('$(GradleWrapper)')" />
+
+    <!-- Touch stamp file after successful build -->
+    <MakeDir Directories="$(IntDir)" Condition="'$(_GradleBuildIsUpToDate)' != 'true' AND !Exists('$(IntDir)')" />
+    <Touch Files="$(_GradleBuildStampFile)" AlwaysCreate="true"
+           Condition="'$(_GradleBuildIsUpToDate)' != 'true'" />
   </Target>
 
   <Target Name="Clean" Condition="'$(ConfigurationType)' == 'Makefile'">
@@ -100,6 +220,8 @@
           ConsoleToMsBuild="true"
           IgnoreExitCode="true"
           Condition="Exists('$(GradleWrapper)')" />
+    <Delete Files="$(_GradleBuildStampFile)" Condition="Exists('$(_GradleBuildStampFile)')" />
+    <Delete Files="$(_GradleCommandCacheFile)" Condition="Exists('$(_GradleCommandCacheFile)')" />
   </Target>
 
   <Target Name="Rebuild" DependsOnTargets="CleanStagedJavaSources;StageJavaSources"
