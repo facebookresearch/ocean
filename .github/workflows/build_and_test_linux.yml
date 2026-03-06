@@ -61,7 +61,7 @@ jobs:
         if: ${{ steps.cache-thirdparty.outputs.cache-hit != 'true' }}
         run: |
           python build/python/build_ocean_3rdparty.py \
-            --target linux \
+            --target linux_x86_64 \
             --config ${{ matrix.build_config }} \
             --link static \
             --install-dir ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
@@ -113,7 +113,7 @@ jobs:
         if: ${{ steps.cache-ocean.outputs.cache-hit != 'true' }}
         run: |
           python build/python/build_ocean.py \
-            --target linux \
+            --target linux_x86_64 \
             --config ${{ matrix.build_config }} \
             --link static \
             --third-party-layout python \
@@ -151,17 +151,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Determine architecture
-        id: arch
-        run: |
-          ARCH=$(uname -m)
-          if [[ "$ARCH" == "x86_64" ]]; then
-            ARCH="x64"
-          elif [[ "$ARCH" == "arm64" ]]; then
-            ARCH="arm64"
-          fi
-          echo "arch=${ARCH}" >> $GITHUB_OUTPUT
-
       - name: Restore Ocean build cache
         uses: actions/cache/restore@v4
         with:
@@ -178,6 +167,6 @@ jobs:
             ctest $CTEST_ARGS --rerun-failed
           fi
         env:
-          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux/${{ steps.arch.outputs.arch }}_static_${{ matrix.build_config }}
-          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux/${{ steps.arch.outputs.arch }}_static_${{ matrix.build_config }}/${{ matrix.suite.test-directory }}
+          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_x86_64_static_${{ matrix.build_config }}
+          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux_x86_64_static_${{ matrix.build_config }}/${{ matrix.suite.test-directory }}
           CTEST_ARGS: ${{ matrix.suite.ctest-args }}
