@@ -304,7 +304,7 @@ bool GLMainView::render()
 	return GLFrameView::render();
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_startCamera(JNIEnv* env, jobject javaThis, jstring resolution)
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_startCamera(JNIEnv* env, jobject /*javaThis*/, jstring resolution)
 {
 	jobject currentActivity = Platform::Android::NativeInterfaceManager::get().currentActivity();
 
@@ -326,43 +326,43 @@ jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_Pictur
 	return GLMainView::get<GLMainView>().startCamera(resolutionValue, directory);
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_takePicture(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_takePicture(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 	return GLMainView::get<GLMainView>().takePicture();
 }
 
-jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_availableCameras(JNIEnv* env, jobject javaThis)
+jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_availableCameras(JNIEnv* env, jobject /*javaThis*/)
 {
 	const Strings cameras = GLMainView::availableCameras();
 
 	return Platform::Android::Utilities::toJavaStringArray(env, cameras);
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_selectCamera(JNIEnv* env, jobject javaThis, jstring cameraName)
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_selectCamera(JNIEnv* env, jobject /*javaThis*/, jstring cameraName)
 {
 	const std::string cameraNameValue(Platform::Android::Utilities::toAString(env, cameraName));
 
 	return GLMainView::get<GLMainView>().selectCamera(cameraNameValue);
 }
 
-jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_availableResolutions(JNIEnv* env, jobject javaThis)
+jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_availableResolutions(JNIEnv* env, jobject /*javaThis*/)
 {
 	const Strings resolutions = GLMainView::get<GLMainView>().availableResolutions();
 
 	return Platform::Android::Utilities::toJavaStringArray(env, resolutions);
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setFocus(JNIEnv* env, jobject javaThis, jfloat focus)
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setFocus(JNIEnv* /*env*/, jobject /*javaThis*/, jfloat focus)
 {
 	return GLMainView::get<GLMainView>().setFocus(float(focus));
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setVideoStabilization(JNIEnv* env, jobject javaThis, jboolean enabled)
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setVideoStabilization(JNIEnv* /*env*/, jobject /*javaThis*/, jboolean enabled)
 {
 	return GLMainView::get<GLMainView>().setVideoStabilization(bool(enabled));
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_videoStabilization(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_videoStabilization(JNIEnv* /*env*/, jobject /*javaThis*/)
 {
 	return GLMainView::get<GLMainView>().videoStabilization();
 }
