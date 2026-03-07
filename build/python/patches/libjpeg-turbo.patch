@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index adb0ca4..c6c8a6c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -699,6 +699,8 @@ if(WITH_TURBOJPEG)
+@@ -699,6 +699,9 @@ if(WITH_TURBOJPEG)
          LINK_FLAGS "${TJMAPFLAG}${TJMAPFILE}")
      endif()
  
@@ -20,7 +20,7 @@ index adb0ca4..c6c8a6c 100644
    endif()
  
    if(ENABLE_STATIC)
-@@ -733,6 +736,8 @@ if(WITH_TURBOJPEG)
+@@ -733,6 +736,9 @@ if(WITH_TURBOJPEG)
        set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
      endif()
  
