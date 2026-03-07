@@ -494,8 +494,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * The resulting Jacobian rows have the following form:<br>
 		 * | dfx / dX, dfx / dY, dfx / dZ |<br>
 		 * | dfy / dX, dfy / dY, dfy / dZ |<br>
-		 * @param jx First row position of the jacobian, with 3 column entries receiving the point derivatives
-		 * @param jy Second row position of the jacobian, with 3 column entries receiving the point derivatives
+		 * @param jx First row position of the Jacobian, with 3 column entries receiving the point derivatives
+		 * @param jy Second row position of the Jacobian, with 3 column entries receiving the point derivatives
 		 * @param pinholeCamera The pinhole camera to determine the Jacobian values for
 		 * @param flippedCamera_T_world Pose to determine the Jacobian for (inverted and flipped)
 		 * @param objectPoint 3D object point to determine the Jacobian for
@@ -504,12 +504,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 */
 		template <bool tUseBorderDistortionIfOutside>
 		static void calculatePointJacobian2x3(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint, const bool distortImagePoint);
-
-		/**
-		 * Returns the minimal threshold necessary to succeed a verification.
-		 * @return The necessary success rate, in percent, with range [0, 1]
-		 */
-		static constexpr double successThreshold();
 };
 
 template <>
@@ -658,11 +652,6 @@ void TestJacobian::calculatePointJacobian2x3(Scalar* jx, Scalar* jy, const Pinho
 		jx[n] = dx;
 		jy[n] = dy;
 	}
-}
-
-constexpr double TestJacobian::successThreshold()
-{
-	return 0.99;
 }
 
 }

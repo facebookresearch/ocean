@@ -1085,7 +1085,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 	Log::info() << "Testing pinhole camera pose Jacobian Rodrigues 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performancePerfectCamera;
@@ -1212,7 +1212,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -1233,7 +1233,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -1326,7 +1326,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 	Log::info() << "Testing fisheye camera pose Jacobian Rodrigues 2x6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -1684,7 +1684,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 	Log::info() << "Testing pose Jacobian with damped distortion Rodrigues 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performancePerfectCamera;
@@ -1896,7 +1896,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	constexpr double threshold = successThreshold() * 0.975; // making threshold slightly weaker
+	constexpr double threshold = 0.99 * 0.975; // making threshold slightly weaker
 
 	ValidationPrecision validation(threshold, randomGenerator);
 
@@ -2033,7 +2033,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 				ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 				ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2135,7 +2135,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Testing pinhole camera object transformation Jacobian 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -2241,7 +2241,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -2262,7 +2262,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -2363,7 +2363,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Testing fisheye camera object transformation Jacobian 2x6 and 2nx6 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -2536,7 +2536,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 	constexpr Scalar eps = Numeric::weakEps();
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	unsigned int distortionIteration = 0u;
 
@@ -2652,7 +2652,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 				ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 				ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2743,7 +2743,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 	constexpr Scalar eps = Numeric::weakEps();
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceOptimized;
@@ -2824,7 +2824,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 				ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 				ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2929,7 +2929,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 		const AnyCamera& anyCamera = *anyCameraShared;
 
-		ValidationPrecision validationPrecision(successThreshold(), randomGenerator);
+		ValidationPrecision validationPrecision(0.99, randomGenerator);
 
 		HighPerformanceStatistic performanceNaive;
 		HighPerformanceStatistic performanceOptimized;
@@ -3012,7 +3012,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -3051,7 +3051,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 	Log::info() << "Testing poses jacobian Rodrigues 2nx12 for several points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -3275,7 +3275,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 	Log::info() << "Testing spherical object point jacobian 3x3:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Vector3 defaultRotationDirection(0, 0, -1);
 
@@ -3554,7 +3554,7 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 	Log::info() << "Testing camera distortion jacobian 2x4:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -3694,7 +3694,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 	Log::info() << "Testing pinhole camera jacobian 2x6:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -3838,7 +3838,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 	Log::info() << "Testing pinhole camera jacobian 2x7:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -4273,7 +4273,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 	Log::info() << "Testing camera orientation jacobian 2x11 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -4440,7 +4440,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -4567,7 +4567,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 	Log::info() << "Testing camera pose jacobian 2x12 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -4743,7 +4743,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
 					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -5037,7 +5037,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x14(const double testDuration)
 							ocean_assert(NumericT<T>::isWeakEqual(jacobianY[i], singleJacobianCameraY[i]));
 						}
 
-						if (NumericT<T>::isNotEqual(jacobianX[i], singleJacobianCameraX[i], NumericT<T>::eps() * 100) || NumericT<T>::isNotEqual(jacobianY[i], singleJacobianCameraY[i], NumericT<T>::eps() * 100))
+						if (NumericT<T>::isNotEqual(jacobianX[i], singleJacobianCameraX[i], NumericT<T>::weakEps()) || NumericT<T>::isNotEqual(jacobianY[i], singleJacobianCameraY[i], NumericT<T>::weakEps()))
 						{
 							scopedIteration.setInaccurate();
 						}
@@ -5051,7 +5051,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x14(const double testDuration)
 							ocean_assert(NumericT<T>::isWeakEqual(jacobianY[8 + i], singleJacobianPoseY[i]));
 						}
 
-						if (NumericT<T>::isNotEqual(jacobianX[8 + i], singleJacobianPoseX[i], NumericT<T>::eps() * 100) || NumericT<T>::isNotEqual(jacobianY[8 + i], singleJacobianPoseY[i], NumericT<T>::eps() * 100))
+						if (NumericT<T>::isNotEqual(jacobianX[8 + i], singleJacobianPoseX[i], NumericT<T>::weakEps()) || NumericT<T>::isNotEqual(jacobianY[8 + i], singleJacobianPoseY[i], NumericT<T>::weakEps()))
 						{
 							scopedIteration.setInaccurate();
 						}
@@ -5376,7 +5376,7 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 	Log::info() << "Testing homography Jacobian 2x8 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -5528,7 +5528,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	const double threshold = std::is_same<Scalar, float>::value ? 0.95 : successThreshold();
+	const double threshold = std::is_same<Scalar, float>::value ? 0.95 : 0.99;
 
 	ValidationPrecision validation(threshold, randomGenerator);
 
@@ -5681,7 +5681,7 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 	Log::info() << "Testing identity homography Jacobian 2x8 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -5821,7 +5821,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 	Log::info() << "Testing identity homography Jacobian 2x9 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -5989,7 +5989,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 	Log::info() << "Testing similarity Jacobian 2x4 for " << numberPoints << " points:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold(), randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
