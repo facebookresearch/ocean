@@ -17,4 +17,10 @@
     <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\media\media_use.props"/>
     <Import Condition="'$(ocean_system_use_imported)' != 'True'" Project="..\..\system\system_use.props"/>
   </ImportGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalOptions>-lOpenSLES %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>
