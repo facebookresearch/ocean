@@ -471,7 +471,7 @@ inline void Validation::expectTrue(const bool value, const char* file, const int
 		if (file != nullptr)
 		{
 #ifdef OCEAN_USE_GTEST
-			std::cerr << "\nValidation::expectTrue() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+			ADD_FAILURE_AT(file, line) << "Validation::expectTrue() failed" << randomGeneratorOutput();
 #else
 			Log::error() << "Validation::expectTrue() failed in '" << file << "', in line " << line << randomGeneratorOutput();
 #endif
@@ -499,7 +499,7 @@ inline void Validation::expectFalse(const bool value, const char* file, const in
 		if (file != nullptr)
 		{
 #ifdef OCEAN_USE_GTEST
-			std::cerr << "\nValidation::expectFalse() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+			ADD_FAILURE_AT(file, line) << "Validation::expectFalse() failed" << randomGeneratorOutput();
 #else
 			Log::error() << "Validation::expectFalse() failed in '" << file << "', in line " << line << randomGeneratorOutput();
 #endif
@@ -538,11 +538,11 @@ inline void Validation::expectEqual(const T& value0, const T& value1, const char
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectEqual(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectEqual(" << value0 << ", " << value1 << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectEqual() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -589,11 +589,11 @@ inline void Validation::expectNotEqual(const T& value0, const T& value1, const c
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectNotEqual(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectNotEqual(" << value0 << ", " << value1 << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectNotEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectNotEqual() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -640,11 +640,11 @@ inline void Validation::expectLess(const T& value0, const T& value1, const char*
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectLess(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectLess(" << value0 << ", " << value1 << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectLess() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectLess() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -691,11 +691,11 @@ inline void Validation::expectLessEqual(const T& value0, const T& value1, const 
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectLessEqual(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectLessEqual(" << value0 << ", " << value1 << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectLessEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectLessEqual() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -742,11 +742,11 @@ inline void Validation::expectGreater(const T& value0, const T& value1, const ch
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectGreater(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectGreater(" << value0 << ", " << value1 << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectGreater() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectGreater() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -793,11 +793,11 @@ inline void Validation::expectGreaterEqual(const T& value0, const T& value1, con
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectGreaterEqual(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectGreaterEqual(" << value0 << ", " << value1 << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectGreaterEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectGreaterEqual() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -844,11 +844,11 @@ inline void Validation::expectInsideRange(const T& lower, const T& value, const 
 #ifdef OCEAN_USE_GTEST
 			if constexpr (Log::isSupported<T, std::ostream>())
 			{
-				std::cerr << "\nValidation::expectInsideRange(" << lower << ", " << value << ", " << upper <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectInsideRange(" << lower << ", " << value << ", " << upper << ") failed" << randomGeneratorOutput();
 			}
 			else
 			{
-				std::cerr << "\nValidation::expectInsideRange() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+				ADD_FAILURE_AT(file, line) << "Validation::expectInsideRange() failed" << randomGeneratorOutput();
 			}
 #else
 			if constexpr (Log::isSupported<T>())
@@ -879,7 +879,7 @@ inline void Validation::setFailed(const char* file, const int line)
 	if (file != nullptr)
 	{
 #ifdef OCEAN_USE_GTEST
-		std::cerr << "\nValidation::setFailed() in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+		ADD_FAILURE_AT(file, line) << "Validation::setFailed()" << randomGeneratorOutput();
 #else
 		Log::error() << "Validation::setFailed() in '" << file << "', in line " << line << randomGeneratorOutput();
 #endif

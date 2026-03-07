@@ -324,14 +324,16 @@ inline bool ValidationPrecision::succeeded() const
 	{
 #ifdef OCEAN_USE_GTEST
 
-		std::ostream& stream = std::cerr << "\nFAILED with only " << String::toAString(accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(threshold() * 100.0, 1u) << "%" << randomGeneratorOutput() << "\n";
-
 		if (needMoreIterations())
 		{
-			stream << "Not enough iterations for the specified success threshold (executed " << iterations_ << " of " << necessaryIterations_ << " necessary iterations)\n";
+			ADD_FAILURE() << "FAILED with only " << String::toAString(accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(threshold() * 100.0, 1u) << "%" << randomGeneratorOutput()
+				<< "\nNot enough iterations for the specified success threshold (executed " << iterations_ << " of " << necessaryIterations_ << " necessary iterations)";
+		}
+		else
+		{
+			ADD_FAILURE() << "FAILED with only " << String::toAString(accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(threshold() * 100.0, 1u) << "%" << randomGeneratorOutput();
 		}
 
-		stream << std::endl;
 #endif
 		return false;
 	}
