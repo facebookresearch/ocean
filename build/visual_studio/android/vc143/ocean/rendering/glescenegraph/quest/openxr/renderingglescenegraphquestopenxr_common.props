@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Rendering GLESceneGraph Quest OpenXR (Common, Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_renderingglescenegraphquestopenxr_common_imported>True</ocean_renderingglescenegraphquestopenxr_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraph_use_imported)' != 'True'" Project="..\..\renderingglescenegraph_use.props"/>
+    <Import Condition="'$(ocean_platformopenxr_use_imported)' != 'True'" Project="..\..\..\..\platform\openxr\platformopenxr_use.props"/>
+  </ImportGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RENDERING_GLES_QUEST_PLATFORM_OPENXR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+
+    <Link>
+      <AdditionalDependencies>GLESv2;EGL;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

@@ -3,7 +3,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-#Requires -RunAsAdministrator
 <#
 .SYNOPSIS
     Installs the OceanNDK Application Type into Visual Studio.
@@ -242,7 +241,13 @@ Write-Host ""
 
 # Check admin privileges
 if (-not (Test-AdminPrivileges)) {
-    Write-Error "This script requires administrator privileges.`nPlease run PowerShell as Administrator and try again."
+    Write-Host "This script needs Administrator rights to install files into the Visual Studio program folder." -ForegroundColor Red
+    Write-Host ""
+    Write-Host "To run as Administrator:" -ForegroundColor Yellow
+    Write-Host "  1. Right-click on PowerShell (or Windows Terminal) in the Start menu" -ForegroundColor White
+    Write-Host "  2. Select 'Run as administrator'" -ForegroundColor White
+    Write-Host "  3. Navigate back to this folder and run the script again" -ForegroundColor White
+    Write-Host ""
     exit 1
 }
 

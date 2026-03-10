@@ -115,7 +115,7 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 
 			if (darkModule > 0u || !start)
 			{
-				moduleCentersTmp.emplace_back(Scalar(x) * 0.5 + Scalar(lastIn.x()) * 0.5, Scalar(y) * 0.5 + Scalar(lastIn.y()) * 0.5);
+				moduleCentersTmp.emplace_back(Scalar(x) * Scalar(0.5) + Scalar(lastIn.x()) * Scalar(0.5), Scalar(y) * Scalar(0.5) + Scalar(lastIn.y()) * Scalar(0.5));
 			}
 
 			x = firstOut.x();

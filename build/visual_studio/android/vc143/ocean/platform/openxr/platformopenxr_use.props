@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Platform OpenXR (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_platformopenxr_use_imported>True</ocean_platformopenxr_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_platformopenxr_common_imported)' != 'True'" Project="platformopenxr_common.props"/>
+  </ImportGroup>
+
+  <!-- Link against debug library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalDependencies>OceanPlatformOpenXRD;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Link against release library -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <AdditionalDependencies>OceanPlatformOpenXR;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Bundle the OpenXR loader shared library into apps that use OpenXR -->
+  <ItemGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibrary Include="$(OceanRootPath)3rdparty\openxr\lib\android_arm64_shared_debug\libopenxr_loader.so" />
+  </ItemGroup>
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libopenxr_loader.so</OceanNativeSharedLibraries>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibrary Include="$(OceanRootPath)3rdparty\openxr\lib\android_arm64_shared\libopenxr_loader.so" />
+  </ItemGroup>
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libopenxr_loader.so</OceanNativeSharedLibraries>
+  </PropertyGroup>
+</Project>

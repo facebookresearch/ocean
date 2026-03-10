@@ -207,8 +207,8 @@ void GICylinder::rebuildPrimitives()
 			normals.insert(normals.end(), 2, sideNormals[n]);
 
 			const Scalar texX = textureFactor * Scalar(n);
-			textureCoordinates.emplace_back(texX, 1);
-			textureCoordinates.emplace_back(texX, 0);
+			textureCoordinates.emplace_back(texX, Scalar(1));
+			textureCoordinates.emplace_back(texX, Scalar(0));
 		}
 
 		vertices.push_back(topRingVertices.front());
@@ -216,8 +216,8 @@ void GICylinder::rebuildPrimitives()
 
 		normals.insert(normals.end(), 2, sideNormals.front());
 
-		textureCoordinates.emplace_back(1, 1);
-		textureCoordinates.emplace_back(1, 0);
+		textureCoordinates.emplace_back(Scalar(1), Scalar(1));
+		textureCoordinates.emplace_back(Scalar(1), Scalar(0));
 
 		// strip for the side
 		strips[stripIndex].reserve(side);
@@ -237,7 +237,7 @@ void GICylinder::rebuildPrimitives()
 			const Scalar angle = Scalar(n) * angleFactor;
 
 			vertices.push_back(topRingVertices[n]);
-			normals.emplace_back(0, 1, 0);
+			normals.emplace_back(Scalar(0), Scalar(1), Scalar(0));
 			textureCoordinates.emplace_back(Scalar(0.5) + sin(angle) * Scalar(0.5), Scalar(0.5) - cos(angle) * Scalar(0.5));
 		}
 
@@ -277,7 +277,7 @@ void GICylinder::rebuildPrimitives()
 			const Scalar angle = Scalar(n) * angleFactor;
 
 			vertices.push_back(bottomRingVertices[n]);
-			normals.emplace_back(0, -1, 0);
+			normals.emplace_back(Scalar(0), Scalar(-1), Scalar(0));
 
 			textureCoordinates.emplace_back(Scalar(0.5) + sin(angle) * Scalar(0.5), Scalar(0.5) + cos(angle) * Scalar(0.5));
 		}

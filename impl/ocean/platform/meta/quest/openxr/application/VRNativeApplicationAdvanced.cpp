@@ -208,7 +208,7 @@ void VRNativeApplicationAdvanced::onAddCompositorBackLayers(XrCompositorLayerUni
 
 		XrCompositionLayerPassthroughFB& xrCompositionLayerPassthroughFB = xrCompositorLayerUnions.back().xrCompositionLayerPassthroughFB_;
 
-		xrCompositionLayerPassthroughFB = {XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_FB};
+		xrCompositionLayerPassthroughFB = xrCreateObject<XrCompositionLayerPassthroughFB>(XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_FB);
 		xrCompositionLayerPassthroughFB.layerHandle = passthrough_.xrPassthroughLayerFB();
 		xrCompositionLayerPassthroughFB.flags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
 	}

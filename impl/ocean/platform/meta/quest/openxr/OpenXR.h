@@ -10,6 +10,8 @@
 
 #include "ocean/platform/meta/quest/Quest.h"
 
+#include "ocean/platform/openxr/OpenXR.h"
+
 namespace Ocean
 {
 
@@ -49,6 +51,12 @@ namespace OpenXR
 #else
 	#define OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT
 #endif
+
+/**
+ * Re-exports xrCreateObject from the base OpenXR namespace for convenience.
+ * @see Ocean::Platform::OpenXR::xrCreateObject()
+ */
+using Ocean::Platform::OpenXR::xrCreateObject;
 
 }
 

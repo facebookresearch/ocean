@@ -167,7 +167,7 @@ bool GLESFramebuffer::initialize(const XrSession& xrSession, const GLenum colorF
 		return false;
 	}
 
-	XrSwapchainCreateInfo xrSwapchainCreateInfo = {XR_TYPE_SWAPCHAIN_CREATE_INFO};
+	XrSwapchainCreateInfo xrSwapchainCreateInfo = xrCreateObject<XrSwapchainCreateInfo>(XR_TYPE_SWAPCHAIN_CREATE_INFO);
 	xrSwapchainCreateInfo.usageFlags = XR_SWAPCHAIN_USAGE_SAMPLED_BIT | XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
 	xrSwapchainCreateInfo.format = foundSwapchainFormat;
 	xrSwapchainCreateInfo.sampleCount = 1u;
@@ -196,7 +196,7 @@ bool GLESFramebuffer::initialize(const XrSession& xrSession, const GLenum colorF
 		return false;
 	}
 
-	xrSwapchainImages_.resize(imageCountOutput, {XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR});
+	xrSwapchainImages_.resize(imageCountOutput, xrCreateObject<XrSwapchainImageOpenGLESKHR>(XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR));
 
 	imageCountOutput = 0u;
 	xrResult = xrEnumerateSwapchainImages(xrSwapchain_, uint32_t(xrSwapchainImages_.size()), &imageCountOutput, (XrSwapchainImageBaseHeader*)(xrSwapchainImages_.data()));
@@ -344,7 +344,7 @@ bool GLESFramebuffer::bind()
 
 	if (textureSwapChainIndex_ == size_t(-1))
 	{
-		const XrSwapchainImageAcquireInfo xrSwapchainImageAcquireInfo = {XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO};
+		const XrSwapchainImageAcquireInfo xrSwapchainImageAcquireInfo = xrCreateObject<XrSwapchainImageAcquireInfo>(XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO);
 
 		uint32_t textureSwapChainIndex = 0u;
 		XrResult xrResult = xrAcquireSwapchainImage(xrSwapchain_, &xrSwapchainImageAcquireInfo, &textureSwapChainIndex);
@@ -363,7 +363,7 @@ bool GLESFramebuffer::bind()
 		Log::debug() << "OpenXR: Reusing swapchain index as we failed to wait for the previous frame";
 	}
 
-	XrSwapchainImageWaitInfo xrSwapchainImageWaitInfo = {XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO};
+	XrSwapchainImageWaitInfo xrSwapchainImageWaitInfo = xrCreateObject<XrSwapchainImageWaitInfo>(XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO);
 	xrSwapchainImageWaitInfo.timeout = Timestamp::seconds2nanoseconds(0.01); // 10ms
 
 	XrResult xrResult = xrWaitSwapchainImage(xrSwapchain_, &xrSwapchainImageWaitInfo);
@@ -415,7 +415,7 @@ bool GLESFramebuffer::unbind()
 	glFlush();
 	ocean_assert(GL_NO_ERROR == glGetError());
 
-	const XrSwapchainImageReleaseInfo xrSwapchainImageReleaseInfo = {XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO};
+	const XrSwapchainImageReleaseInfo xrSwapchainImageReleaseInfo = xrCreateObject<XrSwapchainImageReleaseInfo>(XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO);
 	const XrResult xrResult = xrReleaseSwapchainImage(xrSwapchain_, &xrSwapchainImageReleaseInfo);
 
 	if (xrResult != XR_SUCCESS)

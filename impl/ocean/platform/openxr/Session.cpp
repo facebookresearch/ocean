@@ -40,7 +40,7 @@ bool Session::initialize(const XrInstance& xrInstance, const XrSystemId& xrSyste
 		return true;
 	}
 
-	XrSessionCreateInfo xrSessionCreateInfo = {XR_TYPE_SESSION_CREATE_INFO};
+	XrSessionCreateInfo xrSessionCreateInfo = xrCreateObject<XrSessionCreateInfo>(XR_TYPE_SESSION_CREATE_INFO);
 	xrSessionCreateInfo.next = xrGraphicsBinding;
 	xrSessionCreateInfo.createFlags = 0;
 	xrSessionCreateInfo.systemId = xrSystemId;
@@ -106,7 +106,7 @@ bool Session::begin(const XrViewConfigurationType xrViewConfigurationType)
 
 	ocean_assert(isValid());
 
-	XrSessionBeginInfo xrSessionBeginInfo = {XR_TYPE_SESSION_BEGIN_INFO};
+	XrSessionBeginInfo xrSessionBeginInfo = xrCreateObject<XrSessionBeginInfo>(XR_TYPE_SESSION_BEGIN_INFO);
 	xrSessionBeginInfo.primaryViewConfigurationType = xrViewConfigurationType;
 
 	const XrResult xrResult = xrBeginSession(xrSession_, &xrSessionBeginInfo);
@@ -152,9 +152,9 @@ bool Session::nextFrame(XrTime& predictedDisplayTime, XrDuration* predictedDispl
 
 	ocean_assert(isValid());
 
-	XrFrameWaitInfo xrFrameWaitInfo = {XR_TYPE_FRAME_WAIT_INFO};
+	XrFrameWaitInfo xrFrameWaitInfo = xrCreateObject<XrFrameWaitInfo>(XR_TYPE_FRAME_WAIT_INFO);
 
-	XrFrameState xrFrameState = {XR_TYPE_FRAME_STATE};
+	XrFrameState xrFrameState = xrCreateObject<XrFrameState>(XR_TYPE_FRAME_STATE);
 
 	const XrResult xrResult = xrWaitFrame(xrSession_, &xrFrameWaitInfo, &xrFrameState);
 	ocean_assert_and_suppress_unused(xrResult == XR_SUCCESS, xrResult);
@@ -213,7 +213,7 @@ ScopedXrSpace Session::createSpace(const XrInstance& xrInstance, const XrSession
 {
 	ocean_assert(xrSession != XR_NULL_HANDLE);
 
-	XrReferenceSpaceCreateInfo xrReferenceSpaceCreateInfo = {XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+	XrReferenceSpaceCreateInfo xrReferenceSpaceCreateInfo = xrCreateObject<XrReferenceSpaceCreateInfo>(XR_TYPE_REFERENCE_SPACE_CREATE_INFO);
 	xrReferenceSpaceCreateInfo.referenceSpaceType = xrReferenceSpaceType;
 	xrReferenceSpaceCreateInfo.poseInReferenceSpace.orientation.w = 1.0f; // using identity pose
 
@@ -239,7 +239,7 @@ ScopedXrSpace Session::createActionSpace(const XrInstance& xrInstance, const XrS
 		return ScopedXrSpace();
 	}
 
-	XrActionSpaceCreateInfo xrActionSpaceCreateInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
+	XrActionSpaceCreateInfo xrActionSpaceCreateInfo = xrCreateObject<XrActionSpaceCreateInfo>(XR_TYPE_ACTION_SPACE_CREATE_INFO);
 	xrActionSpaceCreateInfo.action = xrAction;
 	xrActionSpaceCreateInfo.subactionPath = xrSubactionPath;
 	xrActionSpaceCreateInfo.poseInActionSpace.orientation.w = 1.0f; // using identity pose

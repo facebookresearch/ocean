@@ -57,9 +57,9 @@ void Background::update()
 		const Scalar height_2 = Scalar(camera->height()) * Scalar(0.5);
 
 		const Vector3 vectorLeft = camera->vector(Vector2(0, height_2));
-		const Vector3 vectorRight = camera->vector(Vector2(camera->width(), height_2));
+		const Vector3 vectorRight = camera->vector(Vector2(Scalar(camera->width()), height_2));
 		const Vector3 vectorTop = camera->vector(Vector2(width_2, 0));
-		const Vector3 vectorBottom = camera->vector(Vector2(width_2, camera->height()));
+		const Vector3 vectorBottom = camera->vector(Vector2(width_2, Scalar(camera->height())));
 
 		const Vector3 vectorCenter = camera->vector(camera->principalPoint());
 

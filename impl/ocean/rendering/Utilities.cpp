@@ -999,20 +999,20 @@ TransformRef Utilities::createPanel(const EngineRef& engine, const Scalar xDimen
 
 		if (bothSides)
 		{
-			vertices.emplace_back(xDimension_2, yDimension_2, 0);
-			vertices.emplace_back(xDimension_2, -yDimension_2, 0);
-			vertices.emplace_back(-xDimension_2, -yDimension_2, 0);
-			vertices.emplace_back(-xDimension_2, yDimension_2, 0);
+			vertices.emplace_back(xDimension_2, yDimension_2, Scalar(0));
+			vertices.emplace_back(xDimension_2, -yDimension_2, Scalar(0));
+			vertices.emplace_back(-xDimension_2, -yDimension_2, Scalar(0));
+			vertices.emplace_back(-xDimension_2, yDimension_2, Scalar(0));
 
-			textureCoordinates.emplace_back(0, 1);
-			textureCoordinates.emplace_back(0, 0);
-			textureCoordinates.emplace_back(1, 0);
-			textureCoordinates.emplace_back(1, 1);
+			textureCoordinates.emplace_back(Scalar(0), Scalar(1));
+			textureCoordinates.emplace_back(Scalar(0), Scalar(0));
+			textureCoordinates.emplace_back(Scalar(1), Scalar(0));
+			textureCoordinates.emplace_back(Scalar(1), Scalar(1));
 
-			normals.emplace_back(0, 0, -1);
-			normals.emplace_back(0, 0, -1);
-			normals.emplace_back(0, 0, -1);
-			normals.emplace_back(0, 0, -1);
+			normals.emplace_back(Scalar(0), Scalar(0), Scalar(-1));
+			normals.emplace_back(Scalar(0), Scalar(0), Scalar(-1));
+			normals.emplace_back(Scalar(0), Scalar(0), Scalar(-1));
+			normals.emplace_back(Scalar(0), Scalar(0), Scalar(-1));
 		}
 
 		const VertexSetRef internalVertexSet = engine->factory().createVertexSet();

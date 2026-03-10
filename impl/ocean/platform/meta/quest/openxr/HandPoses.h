@@ -138,7 +138,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 			protected:
 
 				/// The OpenXR hand tracking mesh.
-				XrHandTrackingMeshFB xrHandTrackingMeshFB_ = {XR_TYPE_HAND_TRACKING_MESH_FB};
+				XrHandTrackingMeshFB xrHandTrackingMeshFB_ = xrCreateObject<XrHandTrackingMeshFB>(XR_TYPE_HAND_TRACKING_MESH_FB);
 
 				/// The joint bind poses.
 				Platform::OpenXR::XrPosesf jointBindPoses_;

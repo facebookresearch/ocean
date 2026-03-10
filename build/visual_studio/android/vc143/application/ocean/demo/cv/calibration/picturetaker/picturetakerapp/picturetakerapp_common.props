@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>PictureTaker App Demo (Common, Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_picturetakerapp_common_imported>True</ocean_picturetakerapp_common_imported>
+  </PropertyGroup>
+
+  <!-- Pre-set OceanBuildType for Debug/Release configurations (no Static/Shared prefix) -->
+  <PropertyGroup Condition="'$(OceanBuildType)' == ''">
+    <OceanBuildType>static</OceanBuildType>
+  </PropertyGroup>
+
+  <!-- Main activity name for deployment (used by deploy.bat) -->
+  <PropertyGroup>
+    <AndroidMainActivityName>PictureTakerActivity</AndroidMainActivityName>
+  </PropertyGroup>
+
+  <!-- Android resources directory (external to project folder) -->
+  <PropertyGroup>
+    <AndroidResDir>$(MSBuildProjectDirectory)\..\..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\cv\calibration\picturetaker\android\res</AndroidResDir>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemocvcalibration_build_imported)' != 'True'" Project="..\..\application_demo_cv_calibration_build.props"/>
+    <Import Condition="'$(ocean_java_app_build_imported)' != 'True'" Project="..\..\..\..\..\ocean_java_app_build.props"/>
+    <Import Condition="'$(ocean_basejnijava_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\base\jni\basejnijava_use.props"/>
+    <Import Condition="'$(ocean_platformandroidapplicationjnijava_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\platform\android\application\jni\platformandroidapplicationjnijava_use.props"/>
+    <Import Condition="'$(ocean_mediaandroidjnijava_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\android\jni\mediaandroidjnijava_use.props"/>
+    <Import Condition="'$(ocean_mediaopenimagelibrariesjnijava_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\openimagelibraries\jni\mediaopenimagelibrariesjnijava_use.props"/>
+    <Import Condition="'$(ocean_picturetakernative_use_imported)' != 'True'" Project="..\picturetakernative\picturetakernative_use.props"/>
+  </ImportGroup>
+</Project>

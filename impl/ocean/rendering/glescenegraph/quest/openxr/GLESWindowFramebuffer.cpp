@@ -48,7 +48,7 @@ GLESWindowFramebuffer::~GLESWindowFramebuffer()
 bool GLESWindowFramebuffer::initializeById(const size_t id, const FramebufferRef& shareFramebuffer)
 {
 	ocean_assert(id != 0);
-	ocean_assert(shareFramebuffer.isNull());
+	ocean_assert_and_suppress_unused(shareFramebuffer.isNull(), shareFramebuffer);
 
 	release();
 

@@ -200,7 +200,7 @@ bool TrackedController::update(const XrSpace& baseSpace, const XrTime& xrPredict
 	const XrSpace spaces[numberPoses] = {spaceLeftAim_.object(), spaceLeftGrip_.object(), spaceRightAim_.object(), spaceRightGrip_.object()};
 	HomogenousMatrix4* const baseSpace_T_poses[numberPoses] = {&baseSpace_T_leftAim_, &baseSpace_T_leftGrip_, &baseSpace_T_rightAim_, &baseSpace_T_rightGrip_};
 
-	XrSpaceLocation xrSpaceLocation{XR_TYPE_SPACE_LOCATION};
+	XrSpaceLocation xrSpaceLocation = xrCreateObject<XrSpaceLocation>(XR_TYPE_SPACE_LOCATION);
 
 	for (size_t n = 0; n < numberPoses; ++n)
 	{
@@ -254,7 +254,7 @@ bool TrackedController::update(const XrSpace& baseSpace, const XrTime& xrPredict
 	{
 		if (xrHapticVibrations_[controllerIndex].type == XR_TYPE_HAPTIC_VIBRATION)
 		{
-			XrHapticActionInfo xrHapticActionInfo{XR_TYPE_HAPTIC_ACTION_INFO};
+			XrHapticActionInfo xrHapticActionInfo = xrCreateObject<XrHapticActionInfo>(XR_TYPE_HAPTIC_ACTION_INFO);
 			xrHapticActionInfo.action = actionSet_->action(controllerIndex == 0 ? AT_LEFT_VIBRATION : AT_RIGHT_VIBRATION);
 
 			if (xrApplyHapticFeedback(xrSession_, &xrHapticActionInfo, (const XrHapticBaseHeader*)(xrHapticVibrations_ + controllerIndex)) != XR_SUCCESS)
@@ -477,7 +477,7 @@ bool TrackedController::setVibration(const ControllerType controllerType, const 
 			continue;
 		}
 
-		xrHapticVibration = XrHapticVibration{XR_TYPE_HAPTIC_VIBRATION};
+		xrHapticVibration = xrCreateObject<XrHapticVibration>(XR_TYPE_HAPTIC_VIBRATION);
 
 		if (duration == 0.0)
 		{

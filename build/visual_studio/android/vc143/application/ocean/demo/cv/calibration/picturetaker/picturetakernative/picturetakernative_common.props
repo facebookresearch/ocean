@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>PictureTaker Native Demo (Common, Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_picturetakernative_common_imported>True</ocean_picturetakernative_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemocvcalibration_build_imported)' != 'True'" Project="..\..\application_demo_cv_calibration_build.props"/>
+    <Import Condition="'$(ocean_platformandroidapplicationjni_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\platform\android\application\jni\platformandroidapplicationjni_use.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraphjni_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\rendering\glescenegraph\jni\renderingglescenegraphjni_use.props"/>
+    <Import Condition="'$(ocean_io_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\io\io_use.props"/>
+    <Import Condition="'$(ocean_ioimage_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\io\image\ioimage_use.props"/>
+    <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\media_use.props"/>
+    <Import Condition="'$(ocean_mediaandroid_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\android\mediaandroid_use.props"/>
+    <Import Condition="'$(ocean_mediaandroidjni_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\android\jni\mediaandroidjni_use.props"/>
+    <Import Condition="'$(ocean_mediaopenimagelibraries_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\openimagelibraries\mediaopenimagelibraries_use.props"/>
+    <Import Condition="'$(ocean_mediaopenimagelibrariesjni_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\openimagelibraries\jni\mediaopenimagelibrariesjni_use.props"/>
+    <Import Condition="'$(ocean_mediaspecial_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\special\mediaspecial_use.props"/>
+  </ImportGroup>
+</Project>

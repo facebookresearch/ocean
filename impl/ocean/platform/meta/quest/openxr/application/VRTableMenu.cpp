@@ -30,7 +30,7 @@ namespace OpenXR
 namespace Application
 {
 
-bool VRTableMenu::onPreRender(TrackedController& trackedController, const Timestamp& renderTimestamp, std::string& url)
+bool VRTableMenu::onPreRender(TrackedController& trackedController, const Timestamp& /*renderTimestamp*/, std::string& url)
 {
 	if (engine_.isNull())
 	{

@@ -5,18 +5,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_devices_arcore_common_imported>True</ocean_devices_arcore_common_imported>
+    <ocean_devicesarcore_common_imported>True</ocean_devicesarcore_common_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
     <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
     <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\cv\cv_use.props"/>
-    <Import Condition="'$(ocean_cv_segmentation_use_imported)' != 'True'" Project="..\..\cv\segmentation\cvsegmentation_use.props"/>
+    <Import Condition="'$(ocean_cvsegmentation_use_imported)' != 'True'" Project="..\..\cv\segmentation\cvsegmentation_use.props"/>
     <Import Condition="'$(ocean_devices_use_imported)' != 'True'" Project="..\devices_use.props"/>
     <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
-    <Import Condition="'$(ocean_media_android_use_imported)' != 'True'" Project="..\..\media\android\mediaandroid_use.props"/>
-    <Import Condition="'$(ocean_platform_android_use_imported)' != 'True'" Project="..\..\platform\android\platformandroid_use.props"/>
+    <Import Condition="'$(ocean_mediaandroid_use_imported)' != 'True'" Project="..\..\media\android\mediaandroid_use.props"/>
+    <Import Condition="'$(ocean_platformandroid_use_imported)' != 'True'" Project="..\..\platform\android\platformandroid_use.props"/>
   </ImportGroup>
 
   <ItemDefinitionGroup>

@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_rendering_glescenegraph_android_common_imported>True</ocean_rendering_glescenegraph_android_common_imported>
+    <ocean_renderingglescenegraphandroid_common_imported>True</ocean_renderingglescenegraphandroid_common_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
-    <Import Condition="'$(ocean_rendering_glescenegraph_use_imported)' != 'True'" Project="..\renderingglescenegraph_use.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraph_use_imported)' != 'True'" Project="..\renderingglescenegraph_use.props"/>
   </ImportGroup>
 
   <!-- Link against OpenGL ES system libraries -->

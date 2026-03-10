@@ -134,7 +134,7 @@ bool Passthrough::initialize(const XrInstance& xrInstance, const XrSession& xrSe
 		return false;
 	}
 
-	XrPassthroughCreateInfoFB xrPassthroughCreateInfoFB{XR_TYPE_PASSTHROUGH_CREATE_INFO_FB};
+	XrPassthroughCreateInfoFB xrPassthroughCreateInfoFB = xrCreateObject<XrPassthroughCreateInfoFB>(XR_TYPE_PASSTHROUGH_CREATE_INFO_FB);
 	xrResult = xrCreatePassthroughFB_(xrSession, &xrPassthroughCreateInfoFB, &xrPassthroughFB_);
 
 	if (xrResult != XR_SUCCESS)
@@ -145,7 +145,7 @@ bool Passthrough::initialize(const XrInstance& xrInstance, const XrSession& xrSe
 		return false;
 	}
 
-	XrPassthroughLayerCreateInfoFB xrPassthroughLayerCreateInfoFB = {XR_TYPE_PASSTHROUGH_LAYER_CREATE_INFO_FB};
+	XrPassthroughLayerCreateInfoFB xrPassthroughLayerCreateInfoFB = xrCreateObject<XrPassthroughLayerCreateInfoFB>(XR_TYPE_PASSTHROUGH_LAYER_CREATE_INFO_FB);
 	xrPassthroughLayerCreateInfoFB.passthrough = xrPassthroughFB_;
 	xrPassthroughLayerCreateInfoFB.purpose = xrPassthroughLayerPurposeFB;
 
@@ -169,7 +169,7 @@ bool Passthrough::initialize(const XrInstance& xrInstance, const XrSession& xrSe
 		return false;
 	}
 
-	XrPassthroughStyleFB xrPassthroughStyleFB{XR_TYPE_PASSTHROUGH_STYLE_FB};
+	XrPassthroughStyleFB xrPassthroughStyleFB = xrCreateObject<XrPassthroughStyleFB>(XR_TYPE_PASSTHROUGH_STYLE_FB);
 	xrPassthroughStyleFB.textureOpacityFactor = 1.0f;
 	xrPassthroughStyleFB.edgeColor = {0.0f, 0.0f, 0.0f, 0.0f};
 

@@ -20,16 +20,16 @@ bool P4P::pose(const AnyCamera& camera, const Vector3* objectPoints, const Vecto
 {
 	ocean_assert(objectPoints != nullptr && imagePoints != nullptr);
 
-	Vector3 imageRays[4];
+	VectorD3 imageRays[4];
 
 	for (size_t n = 0; n < 4; ++n)
 	{
-		imageRays[n] = camera.vector(imagePoints[n], true /*makeUnitVector*/);
+		imageRays[n] = VectorD3(camera.vector(imagePoints[n], false /*makeUnitVector*/)).normalizedOrZero();
 
 		ocean_assert(imageRays[n].isUnit());
 	}
 
-	Scalar distancesBetweenCameraAndObjectPoints[4];
+	double distancesBetweenCameraAndObjectPoints[4];
 
 	if (!calculatePointDistances(objectPoints, imageRays, distancesBetweenCameraAndObjectPoints))
 	{
@@ -40,38 +40,47 @@ bool P4P::pose(const AnyCamera& camera, const Vector3* objectPoints, const Vecto
 
 	for (unsigned int n = 0; n < 4; n++)
 	{
-		cameraObjectPoints[n] = imageRays[n] * distancesBetweenCameraAndObjectPoints[n];
+		cameraObjectPoints[n] = Vector3(imageRays[n] * distancesBetweenCameraAndObjectPoints[n]);
 	}
 
 	return AbsoluteTransformation::calculateTransformation(cameraObjectPoints, objectPoints /*aka worldObjectPoints*/, 4, world_T_camera);
 }
 
-bool P4P::calculatePointDistances(const Vector3* objectPoints, const Vector3* imageRays, Scalar distances[4])
+bool P4P::calculatePointDistances(const Vector3* objectPoints, const VectorD3* imageRays, double distances[4])
 {
 	ocean_assert(objectPoints != nullptr && imageRays != nullptr);
 
+	// Using double precision internally to ensure numerical stability when Scalar is 32-bit float
+
+	VectorD3 objectPointsD[4];
+
+	for (size_t n = 0; n < 4; ++n)
+	{
+		objectPointsD[n] = VectorD3(double(objectPoints[n].x()), double(objectPoints[n].y()), double(objectPoints[n].z()));
+	}
+
 	// beware: The paper has some mistakes in the definition of the 24x24 polynomial matrix
 
-	const Scalar c12 = -Scalar(2) * (imageRays[0] * imageRays[1]);
-	const Scalar c13 = -Scalar(2) * (imageRays[0] * imageRays[2]);
-	const Scalar c14 = -Scalar(2) * (imageRays[0] * imageRays[3]);
-	const Scalar c23 = -Scalar(2) * (imageRays[1] * imageRays[2]);
-	const Scalar c24 = -Scalar(2) * (imageRays[1] * imageRays[3]);
-	const Scalar c34 = -Scalar(2) * (imageRays[2] * imageRays[3]);
+	const double c12 = -2.0 * (imageRays[0] * imageRays[1]);
+	const double c13 = -2.0 * (imageRays[0] * imageRays[2]);
+	const double c14 = -2.0 * (imageRays[0] * imageRays[3]);
+	const double c23 = -2.0 * (imageRays[1] * imageRays[2]);
+	const double c24 = -2.0 * (imageRays[1] * imageRays[3]);
+	const double c34 = -2.0 * (imageRays[2] * imageRays[3]);
 
-	ocean_assert(Numeric::isEqual(c12, -Scalar(2) * Numeric::cos(imageRays[0].angle(imageRays[1]))));
-	ocean_assert(Numeric::isEqual(c13, -Scalar(2) * Numeric::cos(imageRays[0].angle(imageRays[2]))));
-	ocean_assert(Numeric::isEqual(c14, -Scalar(2) * Numeric::cos(imageRays[0].angle(imageRays[3]))));
-	ocean_assert(Numeric::isEqual(c23, -Scalar(2) * Numeric::cos(imageRays[1].angle(imageRays[2]))));
-	ocean_assert(Numeric::isEqual(c24, -Scalar(2) * Numeric::cos(imageRays[1].angle(imageRays[3]))));
-	ocean_assert(Numeric::isEqual(c34, -Scalar(2) * Numeric::cos(imageRays[2].angle(imageRays[3]))));
+	ocean_assert(NumericD::isEqual(c12, -2.0 * NumericD::cos(imageRays[0].angle(imageRays[1]))));
+	ocean_assert(NumericD::isEqual(c13, -2.0 * NumericD::cos(imageRays[0].angle(imageRays[2]))));
+	ocean_assert(NumericD::isEqual(c14, -2.0 * NumericD::cos(imageRays[0].angle(imageRays[3]))));
+	ocean_assert(NumericD::isEqual(c23, -2.0 * NumericD::cos(imageRays[1].angle(imageRays[2]))));
+	ocean_assert(NumericD::isEqual(c24, -2.0 * NumericD::cos(imageRays[1].angle(imageRays[3]))));
+	ocean_assert(NumericD::isEqual(c34, -2.0 * NumericD::cos(imageRays[2].angle(imageRays[3]))));
 
-	const Scalar d12 = (objectPoints[0] - objectPoints[1]).sqr();
-	const Scalar d13 = (objectPoints[0] - objectPoints[2]).sqr();
-	const Scalar d14 = (objectPoints[0] - objectPoints[3]).sqr();
-	const Scalar d23 = (objectPoints[1] - objectPoints[2]).sqr();
-	const Scalar d24 = (objectPoints[1] - objectPoints[3]).sqr();
-	const Scalar d34 = (objectPoints[2] - objectPoints[3]).sqr();
+	const double d12 = (objectPointsD[0] - objectPointsD[1]).sqr();
+	const double d13 = (objectPointsD[0] - objectPointsD[2]).sqr();
+	const double d14 = (objectPointsD[0] - objectPointsD[3]).sqr();
+	const double d23 = (objectPointsD[1] - objectPointsD[2]).sqr();
+	const double d24 = (objectPointsD[1] - objectPointsD[3]).sqr();
+	const double d34 = (objectPointsD[2] - objectPointsD[3]).sqr();
 
 	/**
 	 * The following code is in general not good as we should obviously should use a sparse solution
@@ -82,7 +91,7 @@ bool P4P::calculatePointDistances(const Vector3* objectPoints, const Vector3* im
 #ifdef OCEAN_INTENSIVE_DEBUG
 
 	// row aligned matrix values
-	const Scalar debugMatrixValues[576] = {
+	const double debugMatrixValues[576] = {
 			1, 0, 0, 0,     c12, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,     0, 0, 0, 0,     d12, 0, 0, 0,
 			0, 1, 0, 0,     1, 0, 0, c12, 0, 0, 0, 0, 0, 0, 0, 0,     0, 0, 0, 0,     0, d12, 0, 0,
 			0, 0, 0, 0,     0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,       c12, 0, 0, 0,   0, 0, d12, 0,
@@ -113,11 +122,11 @@ bool P4P::calculatePointDistances(const Vector3* objectPoints, const Vector3* im
 			0, 0, 1, 0,     0, 0, 0, 0, 0, 0, 0, 0, c34, 0, 1, 0,     0, 0, 0, 0,     0, 0, d34, 0,
 			0, 0, 0, 1,     0, 0, 0, 0, 0, 0, 0, 0, 1, 0, c34, 0,     0, 0, 0, 0,     0, 0, 0, d34};
 
-	const Matrix debugMatrix(24, 24, debugMatrixValues);
+	const MatrixD debugMatrix(24, 24, debugMatrixValues);
 
 #endif // OCEAN_INTENSIVE_DEBUG
 
-	Matrix matrix(24, 24, false);
+	MatrixD matrix(24, 24, false);
 
 	// first column block
 	matrix( 0, 0) = 1;
@@ -237,7 +246,7 @@ bool P4P::calculatePointDistances(const Vector3* objectPoints, const Vector3* im
 	ocean_assert(matrix == debugMatrix);
 #endif // OCEAN_INTENSIVE_DEBUG
 
-	Matrix u, w, v;
+	MatrixD u, w, v;
 	if (!matrix.singularValueDecomposition(u, w, v))
 	{
 		return false;
@@ -250,20 +259,20 @@ bool P4P::calculatePointDistances(const Vector3* objectPoints, const Vector3* im
 	}
 #endif
 
-	const Scalar v20 = v(20, 23);
-	const Scalar v21 = v(21, 23);
-	const Scalar v22 = v(22, 23);
-	const Scalar v23 = v(23, 23);
+	const double v20 = v(20, 23);
+	const double v21 = v(21, 23);
+	const double v22 = v(22, 23);
+	const double v23 = v(23, 23);
 
-	if (Numeric::isEqualEps(v20) || Numeric::isEqualEps(v21) || Numeric::isEqualEps(v22) || Numeric::isEqualEps(v23))
+	if (NumericD::isEqualEps(v20) || NumericD::isEqualEps(v21) || NumericD::isEqualEps(v22) || NumericD::isEqualEps(v23))
 	{
 		return false;
 	}
 
-	distances[0] = Numeric::sqrt(Numeric::abs(v(0, 23) / v20));
-	distances[1] = Numeric::sqrt(Numeric::abs(v(1, 23) / v21));
-	distances[2] = Numeric::sqrt(Numeric::abs(v(2, 23) / v22));
-	distances[3] = Numeric::sqrt(Numeric::abs(v(3, 23) / v23));
+	distances[0] = Scalar(NumericD::sqrt(NumericD::abs(v(0, 23) / v20)));
+	distances[1] = Scalar(NumericD::sqrt(NumericD::abs(v(1, 23) / v21)));
+	distances[2] = Scalar(NumericD::sqrt(NumericD::abs(v(2, 23) / v22)));
+	distances[3] = Scalar(NumericD::sqrt(NumericD::abs(v(3, 23) / v23)));
 
 	return true;
 }

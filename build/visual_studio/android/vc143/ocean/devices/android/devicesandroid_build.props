@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_devices_android_build_imported>True</ocean_devices_android_build_imported>
+    <ocean_devicesandroid_build_imported>True</ocean_devicesandroid_build_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
-    <Import Condition="'$(ocean_devices_android_common_imported)' != 'True'" Project="devicesandroid_common.props"/>
+    <Import Condition="'$(ocean_devicesandroid_common_imported)' != 'True'" Project="devicesandroid_common.props"/>
     <Import Condition="'$(ocean_devicesandroid_reference_imported)' != 'True'" Project="devicesandroid_reference.props"/>
     <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\ocean_library_build.props"/>
   </ImportGroup>

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_platform_gles_use_imported>True</ocean_platform_gles_use_imported>
+    <ocean_platformgles_use_imported>True</ocean_platformgles_use_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
-    <Import Condition="'$(ocean_platform_gles_common_imported)' != 'True'" Project="platformgles_common.props"/>
+    <Import Condition="'$(ocean_platformgles_common_imported)' != 'True'" Project="platformgles_common.props"/>
   </ImportGroup>
 
   <!-- Link against debug library -->

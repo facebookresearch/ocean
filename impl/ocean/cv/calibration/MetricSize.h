@@ -280,7 +280,7 @@ inline std::string MetricSize::value(const UnitType unitType, const unsigned int
 
 inline bool MetricSize::isNull() const
 {
-	return Numeric::isEqualEps(valueMillimeter_);
+	return NumericD::isEqualEps(valueMillimeter_);
 }
 
 inline bool MetricSize::isValid() const

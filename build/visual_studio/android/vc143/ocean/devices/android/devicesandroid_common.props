@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_devices_android_common_imported>True</ocean_devices_android_common_imported>
+    <ocean_devicesandroid_common_imported>True</ocean_devicesandroid_common_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">

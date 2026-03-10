@@ -667,7 +667,7 @@ bool TestRotation::testAngleNormalization(const double testDuration)
 				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
 				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
 
-				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rotation.angle(), T(0)) || Numeric::isEqual(rotation.angle(), NumericT<T>::pi2()));
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(rotation.angle(), T(0)) || NumericT<T>::isEqual(rotation.angle(), NumericT<T>::pi2()));
 			}
 
 			{
@@ -678,7 +678,7 @@ bool TestRotation::testAngleNormalization(const double testDuration)
 				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
 				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
 
-				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rotation.angle(), T(0)) || Numeric::isEqual(rotation.angle(), NumericT<T>::pi2()));
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(rotation.angle(), T(0)) || NumericT<T>::isEqual(rotation.angle(), NumericT<T>::pi2()));
 			}
 		}
 

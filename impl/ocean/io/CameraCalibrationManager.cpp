@@ -733,7 +733,7 @@ SharedAnyCamera CameraCalibrationManager::createOceanPinhole(const JSONParser::J
 				return nullptr;
 			}
 
-			parameters.push_back(parameterValue.number());
+			parameters.push_back(Scalar(parameterValue.number()));
 		}
 
 		ocean_assert(parameters.size() == expectedParameterCount);
@@ -867,7 +867,7 @@ SharedAnyCamera CameraCalibrationManager::createOceanFisheye(const JSONParser::J
 				return nullptr;
 			}
 
-			parameters.push_back(parameterValue.number());
+			parameters.push_back(Scalar(parameterValue.number()));
 		}
 
 		ocean_assert(parameters.size() == expectedParameterCount);

@@ -46,7 +46,7 @@ class OCEAN_GEOMETRY_EXPORT P4P : public PerspectivePose
 		 * @param distances The four resulting distances between camera center and each of the four object points
 		 * @return True, if succeeded
 		 */
-		static bool calculatePointDistances(const Vector3* objectPoints, const Vector3* imageRays, Scalar distances[4]);
+		static bool calculatePointDistances(const Vector3* objectPoints, const VectorD3* imageRays, double distances[4]);
 };
 
 }

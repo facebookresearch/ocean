@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Platform Meta Quest OpenXR Renderer App Demo (Common, Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_rendererapp_common_imported>True</ocean_rendererapp_common_imported>
+  </PropertyGroup>
+
+  <!-- Pre-set OceanBuildType for Debug/Release configurations (no Static/Shared prefix) -->
+  <PropertyGroup Condition="'$(OceanBuildType)' == ''">
+    <OceanBuildType>static</OceanBuildType>
+  </PropertyGroup>
+
+  <!-- Main activity name for deployment (used by deploy.bat) -->
+  <PropertyGroup>
+    <AndroidMainActivityName>OpenXRRendererApplicationActivity</AndroidMainActivityName>
+  </PropertyGroup>
+
+  <!-- Android resources directory (external to project folder) -->
+  <PropertyGroup>
+    <AndroidResDir>$(MSBuildProjectDirectory)\..\..\..\..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\platform\meta\quest\openxr\renderer\quest\res</AndroidResDir>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemoplatform_build_imported)' != 'True'" Project="..\..\..\..\..\application_demo_platform_build.props"/>
+    <Import Condition="'$(ocean_java_app_build_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean_java_app_build.props"/>
+    <Import Condition="'$(ocean_renderernative_use_imported)' != 'True'" Project="..\renderernative\renderernative_use.props"/>
+  </ImportGroup>
+</Project>

@@ -46,7 +46,7 @@ bool ActionSet::initialize(const XrInstance& xrInstance, const std::string& name
 		return true;
 	}
 
-	XrActionSetCreateInfo xrActionSetCreateInfo{XR_TYPE_ACTION_SET_CREATE_INFO};
+	XrActionSetCreateInfo xrActionSetCreateInfo = xrCreateObject<XrActionSetCreateInfo>(XR_TYPE_ACTION_SET_CREATE_INFO);
 	strcpy(xrActionSetCreateInfo.actionSetName, name.c_str());
 	strcpy(xrActionSetCreateInfo.localizedActionSetName, description.c_str());
 	xrActionSetCreateInfo.priority = priority;
@@ -122,7 +122,7 @@ ActionSet::ActionId ActionSet::createAction(const XrActionType xrActionType, con
 		}
 	}
 
-	XrActionCreateInfo xrActionCreateInfo{XR_TYPE_ACTION_CREATE_INFO};
+	XrActionCreateInfo xrActionCreateInfo = xrCreateObject<XrActionCreateInfo>(XR_TYPE_ACTION_CREATE_INFO);
 	xrActionCreateInfo.actionType = xrActionType;
 	strcpy(xrActionCreateInfo.actionName, name.c_str());
 	strcpy(xrActionCreateInfo.localizedActionName, description.c_str());
@@ -212,7 +212,7 @@ bool ActionSet::suggestActionBindings(const XrInstance& xrInstance, const XrPath
 		return false;
 	}
 
-	XrInteractionProfileSuggestedBinding xrInteractionProfileSuggestedBinding{XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING};
+	XrInteractionProfileSuggestedBinding xrInteractionProfileSuggestedBinding = xrCreateObject<XrInteractionProfileSuggestedBinding>(XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING);
 	xrInteractionProfileSuggestedBinding.interactionProfile = xrInteractionProfilePath;
 	xrInteractionProfileSuggestedBinding.suggestedBindings = xrActionSuggestedBindings_.data();
 	xrInteractionProfileSuggestedBinding.countSuggestedBindings = uint32_t(xrActionSuggestedBindings_.size());

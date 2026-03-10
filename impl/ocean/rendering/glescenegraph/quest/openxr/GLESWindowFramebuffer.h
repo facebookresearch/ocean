@@ -108,7 +108,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESWindowFramebuffer :
 		~GLESWindowFramebuffer() override;
 
 		/**
-		 * Initialize the OpenGL ES dispaly and context.
+		 * Initialize the OpenGL ES display and context.
 		 * @return True, if succeeded
 		 */
 		bool initializeContext() override;

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_devices_arcore_use_imported>True</ocean_devices_arcore_use_imported>
+    <ocean_devicesarcore_use_imported>True</ocean_devicesarcore_use_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
-    <Import Condition="'$(ocean_devices_arcore_common_imported)' != 'True'" Project="devicesarcore_common.props"/>
+    <Import Condition="'$(ocean_devicesarcore_common_imported)' != 'True'" Project="devicesarcore_common.props"/>
   </ImportGroup>
 
   <!-- Link against debug library -->

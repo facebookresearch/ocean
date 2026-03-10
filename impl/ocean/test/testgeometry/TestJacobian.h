@@ -140,9 +140,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		class DerivativeCalculatorOrientationJacobian2nx3;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPinholeCameraPoseJacobian2nx6;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorFisheyeCameraPoseJacobian2x6;
 
 		/// Forward declaration.
@@ -150,24 +152,31 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		class DerivativeCalculatorAnyCameraPoseJacobian2nx6;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPoseJacobianDampedDistortion2nx6;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPoseZoomJacobian2nx7;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPinholeCameraObjectTransformation2nx6;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorFisheyeCameraObjectTransformation2nx6;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPinholeCameraPointJacobian2nx3;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorFisheyeCameraPointJacobian2x3;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorAnyCameraPointJacobian2x3;
 
 		/// Forward declaration.
@@ -178,12 +187,15 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		class DerivativeCalculatorSphericalObjectPointOrientation2x3IF;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPinholeCameraDistortionJacobian2x4;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPinholeCameraJacobian2x6;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPinholeCameraJacobian2x7;
 
 		/// Forward declaration.
@@ -193,9 +205,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		class DerivativeCalculatorFisheyeCameraJacobian2x12;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorOrientationPinholeCameraJacobian2x11;
 
 		/// Forward declaration.
+		template <typename T>
 		class DerivativeCalculatorPosePinholeCameraJacobian2x12;
 
 		/// Forward declaration.
@@ -326,7 +340,9 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * Tests the Jacobian for an 2D image point projection in relation to an object point using any camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testAnyCameraPointJacobian2x3(const double testDuration);
 
 		/**

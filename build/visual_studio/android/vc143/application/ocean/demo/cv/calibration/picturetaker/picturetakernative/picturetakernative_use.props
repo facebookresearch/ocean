@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use PictureTaker Native Demo (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_picturetakernative_use_imported>True</ocean_picturetakernative_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_picturetakernative_common_imported)' != 'True'" Project="picturetakernative_common.props"/>
+  </ImportGroup>
+
+  <!-- Compute the output directory for this shared library.
+       Use OceanSharedLibConfigFolder if available (set by application_build.props for app projects),
+       otherwise fall back to OceanConfigFolder (for native library projects referencing each other). -->
+  <PropertyGroup>
+    <_PicturetakernativeOutDir Condition="'$(OceanSharedLibConfigFolder)' != ''">$(OceanRootPath)bin\application\ocean\demo\cv\calibration\android\$(OceanSharedLibConfigFolder)\</_PicturetakernativeOutDir>
+    <_PicturetakernativeOutDir Condition="'$(_PicturetakernativeOutDir)' == ''">$(OceanRootPath)bin\application\ocean\demo\cv\calibration\android\$(OceanConfigFolder)\</_PicturetakernativeOutDir>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibrary Include="$(_PicturetakernativeOutDir)libOceanDemoCVCalibrationPictureTaker.so" />
+    <OceanNativeSharedLibrary Include="$(_PicturetakernativeOutDir)libc++_shared.so" />
+  </ItemGroup>
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libOceanDemoCVCalibrationPictureTaker.so;libc++_shared.so</OceanNativeSharedLibraries>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibrary Include="$(_PicturetakernativeOutDir)libOceanDemoCVCalibrationPictureTaker.so" />
+    <OceanNativeSharedLibrary Include="$(_PicturetakernativeOutDir)libc++_shared.so" />
+  </ItemGroup>
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libOceanDemoCVCalibrationPictureTaker.so;libc++_shared.so</OceanNativeSharedLibraries>
+  </PropertyGroup>
+</Project>

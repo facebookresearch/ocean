@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Platform Meta Quest OpenXR (Android)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_platformmetaquestopenxr_build_imported>True</ocean_platformmetaquestopenxr_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_platformmetaquestopenxr_common_imported)' != 'True'" Project="platformmetaquestopenxr_common.props"/>
+    <Import Condition="'$(ocean_platformmetaquestopenxr_reference_imported)' != 'True'" Project="platformmetaquestopenxr_reference.props"/>
+    <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\..\..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <!-- Target name for Debug configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>OceanPlatformMetaQuestOpenXRD</TargetName>
+  </PropertyGroup>
+
+  <!-- Target name for Release configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>OceanPlatformMetaQuestOpenXR</TargetName>
+  </PropertyGroup>
+</Project>

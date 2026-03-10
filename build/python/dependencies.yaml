@@ -230,6 +230,7 @@ libraries:
         ASSIMP_NO_EXPORT: ON
         ASSIMP_BUILD_ZLIB: OFF
         ASSIMP_INSTALL_PDB: OFF
+        ASSIMP_WARNINGS_AS_ERRORS: OFF
     dependencies:
       - zlib
     platforms: all

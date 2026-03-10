@@ -370,7 +370,7 @@ void NativeApplication::onOpenXREvent(const XrEventDataBaseHeader& xrEventDataBa
 	Log::debug() << "OpenXR Received unknown event type: " << int(xrEventDataBaseHeader.type);
 }
 
-void NativeApplication::onChangedReferenceSpace(const XrReferenceSpaceType xrReferenceSpaceType, const HomogenousMatrix4& previous_T_changed, const XrTime& changeTime)
+void NativeApplication::onChangedReferenceSpace(const XrReferenceSpaceType xrReferenceSpaceType, const HomogenousMatrix4& previous_T_changed, const XrTime& /*changeTime*/)
 {
 	Log::debug() << "NativeApplication::onChangedReferenceSpace() for reference space type " << int(xrReferenceSpaceType) << ":";
 	Log::debug() << previous_T_changed;

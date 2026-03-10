@@ -149,7 +149,7 @@ bool HandPoses::Mesh::initialize(const XrHandTrackerEXT& xrHandTrackerEXT, const
 
 	// now, we fill the memory
 
-	XrHandTrackingCapsulesStateFB xrHandTrackingCapsulesStateFB{XR_TYPE_HAND_TRACKING_CAPSULES_STATE_FB};
+	XrHandTrackingCapsulesStateFB xrHandTrackingCapsulesStateFB = xrCreateObject<XrHandTrackingCapsulesStateFB>(XR_TYPE_HAND_TRACKING_CAPSULES_STATE_FB);
 	xrHandTrackingMeshFB_.next = &xrHandTrackingCapsulesStateFB;
 
 	xrResult = xrGetHandMeshFB(xrHandTrackerEXT, &xrHandTrackingMeshFB_);
@@ -333,8 +333,9 @@ bool HandPoses::initialize(const XrInstance& xrInstance, const XrSession& xrSess
 		return true;
 	}
 
-	XrSystemHandTrackingPropertiesEXT xrSystemHandTrackingPropertiesEXT{XR_TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT};
-	XrSystemProperties xrSystemProperties{XR_TYPE_SYSTEM_PROPERTIES, &xrSystemHandTrackingPropertiesEXT};
+	XrSystemHandTrackingPropertiesEXT xrSystemHandTrackingPropertiesEXT = xrCreateObject<XrSystemHandTrackingPropertiesEXT>(XR_TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT);
+	XrSystemProperties xrSystemProperties = xrCreateObject<XrSystemProperties>(XR_TYPE_SYSTEM_PROPERTIES);
+	xrSystemProperties.next = &xrSystemHandTrackingPropertiesEXT;
 
 	XrResult xrResult = xrGetSystemProperties(xrInstance, xrSystemId, &xrSystemProperties);
 
@@ -387,7 +388,7 @@ bool HandPoses::initialize(const XrInstance& xrInstance, const XrSession& xrSess
 	XrHandTrackerEXT& xrHandTrackerLeft = xrHandTrackersEXT_[leftHandIndex_];
 	XrHandTrackerEXT& xrHandTrackerRight = xrHandTrackersEXT_[rightHandIndex_];
 
-	XrHandTrackerCreateInfoEXT xrHandTrackerCreateInfoEXT{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
+	XrHandTrackerCreateInfoEXT xrHandTrackerCreateInfoEXT = xrCreateObject<XrHandTrackerCreateInfoEXT>(XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT);
     xrHandTrackerCreateInfoEXT.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
     xrHandTrackerCreateInfoEXT.hand = XR_HAND_LEFT_EXT;
 
@@ -549,29 +550,29 @@ bool HandPoses::updateHandPose(const XrHandTrackerEXT& xrHandTrackersEXT, const 
 
 	pose.xrBaseSpace_ = XR_NULL_HANDLE;
 
-	XrHandTrackingScaleFB xrHandTrackingScaleFB{XR_TYPE_HAND_TRACKING_SCALE_FB};
+	XrHandTrackingScaleFB xrHandTrackingScaleFB = xrCreateObject<XrHandTrackingScaleFB>(XR_TYPE_HAND_TRACKING_SCALE_FB);
 	xrHandTrackingScaleFB.sensorOutput = 1.0f;
 	xrHandTrackingScaleFB.currentOutput = 1.0f;
 	xrHandTrackingScaleFB.overrideValueInput = 1.00f;
 	xrHandTrackingScaleFB.overrideHandScale = XR_FALSE;
 
-	XrHandTrackingCapsulesStateFB xrHandTrackingCapsulesStateFB{XR_TYPE_HAND_TRACKING_CAPSULES_STATE_FB};
+	XrHandTrackingCapsulesStateFB xrHandTrackingCapsulesStateFB = xrCreateObject<XrHandTrackingCapsulesStateFB>(XR_TYPE_HAND_TRACKING_CAPSULES_STATE_FB);
 	xrHandTrackingCapsulesStateFB.next = &xrHandTrackingScaleFB;
 
-	XrHandTrackingAimStateFB xrHandTrackingAimStateFB{XR_TYPE_HAND_TRACKING_AIM_STATE_FB};
+	XrHandTrackingAimStateFB xrHandTrackingAimStateFB = xrCreateObject<XrHandTrackingAimStateFB>(XR_TYPE_HAND_TRACKING_AIM_STATE_FB);
 	xrHandTrackingAimStateFB.next = &xrHandTrackingCapsulesStateFB;
 
-	XrHandJointVelocitiesEXT xrHandJointVelocitiesEXT{XR_TYPE_HAND_JOINT_VELOCITIES_EXT};
+	XrHandJointVelocitiesEXT xrHandJointVelocitiesEXT = xrCreateObject<XrHandJointVelocitiesEXT>(XR_TYPE_HAND_JOINT_VELOCITIES_EXT);
 	xrHandJointVelocitiesEXT.next = &xrHandTrackingAimStateFB;
 	xrHandJointVelocitiesEXT.jointCount = XR_HAND_JOINT_COUNT_EXT;
 	xrHandJointVelocitiesEXT.jointVelocities = pose.xrHandJointVelocitiesEXT_;
 
-	XrHandJointLocationsEXT xrHandJointLocationsEXT{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+	XrHandJointLocationsEXT xrHandJointLocationsEXT = xrCreateObject<XrHandJointLocationsEXT>(XR_TYPE_HAND_JOINT_LOCATIONS_EXT);
 	xrHandJointLocationsEXT.next = &xrHandJointVelocitiesEXT;
 	xrHandJointLocationsEXT.jointCount = XR_HAND_JOINT_COUNT_EXT;
 	xrHandJointLocationsEXT.jointLocations = pose.xrHandJointLocationsEXT_;
 
-	XrHandJointsLocateInfoEXT xrHandJointsLocateInfoEXT{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
+	XrHandJointsLocateInfoEXT xrHandJointsLocateInfoEXT = xrCreateObject<XrHandJointsLocateInfoEXT>(XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT);
 	xrHandJointsLocateInfoEXT.baseSpace = xrBaseSpace;
 	xrHandJointsLocateInfoEXT.time = xrTime;
 

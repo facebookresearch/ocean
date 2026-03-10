@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_rendering_glescenegraph_android_use_imported>True</ocean_rendering_glescenegraph_android_use_imported>
+    <ocean_renderingglescenegraphandroid_use_imported>True</ocean_renderingglescenegraphandroid_use_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
-    <Import Condition="'$(ocean_rendering_glescenegraph_android_common_imported)' != 'True'" Project="renderingglescenegraphandroid_common.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraphandroid_common_imported)' != 'True'" Project="renderingglescenegraphandroid_common.props"/>
   </ImportGroup>
 
   <!-- Link against debug library -->

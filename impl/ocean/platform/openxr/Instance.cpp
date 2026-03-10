@@ -51,7 +51,7 @@ bool Instance::initialize(const StringSet& necessaryExtensions, const std::strin
 	const XrExtensionPropertyGroups xrExtensionPropertyGroups = determineExtensionProperties();
 	const std::vector<const char*> enableExtensionNames = determineExistingExtensionNames(xrExtensionPropertyGroups, necessaryExtensions);
 
-	XrInstanceCreateInfo xrInstanceCreateInfo = {XR_TYPE_INSTANCE_CREATE_INFO};
+	XrInstanceCreateInfo xrInstanceCreateInfo = xrCreateObject<XrInstanceCreateInfo>(XR_TYPE_INSTANCE_CREATE_INFO);
 	xrInstanceCreateInfo.createFlags = 0;
 	xrInstanceCreateInfo.applicationInfo = xrApplicationInfo;
 	xrInstanceCreateInfo.enabledApiLayerCount = 0;
@@ -77,7 +77,7 @@ bool Instance::initialize(const StringSet& necessaryExtensions, const std::strin
 
 	ocean_assert(enabledExtensions_.size() == enableExtensionNames.size());
 
-	XrInstanceProperties xrInstanceProperties = {XR_TYPE_INSTANCE_PROPERTIES};
+	XrInstanceProperties xrInstanceProperties = xrCreateObject<XrInstanceProperties>(XR_TYPE_INSTANCE_PROPERTIES);
 	xrResult = xrGetInstanceProperties(xrInstance_, &xrInstanceProperties);
 
 	if (xrResult == XR_SUCCESS)
@@ -89,7 +89,7 @@ bool Instance::initialize(const StringSet& necessaryExtensions, const std::strin
 		Log::error() << "OpenXR: Failed to determine instance properties: " << translateResult(xrResult);
 	}
 
-	XrSystemGetInfo xrSystemGetInfo = {XR_TYPE_SYSTEM_GET_INFO};
+	XrSystemGetInfo xrSystemGetInfo = xrCreateObject<XrSystemGetInfo>(XR_TYPE_SYSTEM_GET_INFO);
 	xrSystemGetInfo.formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
 
 	ocean_assert(xrSystemId_ == XR_NULL_SYSTEM_ID);
@@ -100,9 +100,9 @@ bool Instance::initialize(const StringSet& necessaryExtensions, const std::strin
 		Log::error() << "OpenXR: Failed to determine the system id: " << translateResult(xrResult);
 	}
 
-	XrSystemProperties xrSystemProperties = {XR_TYPE_SYSTEM_PROPERTIES};
+	XrSystemProperties xrSystemProperties = xrCreateObject<XrSystemProperties>(XR_TYPE_SYSTEM_PROPERTIES);
 
-	XrSystemColorSpacePropertiesFB xrSystemColorSpacePropertiesFB = {XR_TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB};
+	XrSystemColorSpacePropertiesFB xrSystemColorSpacePropertiesFB = xrCreateObject<XrSystemColorSpacePropertiesFB>(XR_TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB);
 	xrSystemProperties.next = &xrSystemColorSpacePropertiesFB;
 
 	xrResult = xrGetSystemProperties(xrInstance_, xrSystemId_, &xrSystemProperties);
@@ -281,7 +281,7 @@ Instance::XrExtensionPropertyGroups Instance::determineExtensionProperties(Strin
 			extensionNames->reserve(propertyCountOutput);
 		}
 
-		XrExtensionPropertyGroups xrExtensionPropertyGroups(propertyCountOutput, {XR_TYPE_EXTENSION_PROPERTIES});
+		XrExtensionPropertyGroups xrExtensionPropertyGroups(propertyCountOutput, xrCreateObject<XrExtensionProperties>(XR_TYPE_EXTENSION_PROPERTIES));
 
 		xrResult = xrEnumerateInstanceExtensionProperties(nullptr, uint32_t(xrExtensionPropertyGroups.size()), &propertyCountOutput, xrExtensionPropertyGroups.data());
 		ocean_assert(xrExtensionPropertyGroups.size() == size_t(propertyCountOutput));
@@ -396,7 +396,7 @@ bool Instance::determineViewConfigurations(const XrInstance& xrInstance, const X
 
 	for (const XrViewConfigurationType& xrEnumeratedViewConfigurationType : xrEnumeratedViewConfigurationTypes)
 	{
-		XrViewConfigurationProperties xrViewConfigurationProperties = {/*type=*/ XR_TYPE_VIEW_CONFIGURATION_PROPERTIES};
+		XrViewConfigurationProperties xrViewConfigurationProperties = xrCreateObject<XrViewConfigurationProperties>(XR_TYPE_VIEW_CONFIGURATION_PROPERTIES);
 		xrResult = xrGetViewConfigurationProperties(xrInstance, xrSystemId, xrEnumeratedViewConfigurationType, &xrViewConfigurationProperties);
 
 		if (xrResult != XR_SUCCESS)
@@ -416,7 +416,7 @@ bool Instance::determineViewConfigurations(const XrInstance& xrInstance, const X
 			return false;
 		}
 
-		xrEnumeratedViewConfigurationViews.resize(viewCountOutput, {XR_TYPE_VIEW_CONFIGURATION_VIEW});
+		xrEnumeratedViewConfigurationViews.resize(viewCountOutput, xrCreateObject<XrViewConfigurationView>(XR_TYPE_VIEW_CONFIGURATION_VIEW));
 
 		xrResult = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId, xrEnumeratedViewConfigurationType, uint32_t(xrEnumeratedViewConfigurationViews.size()), &viewCountOutput, xrEnumeratedViewConfigurationViews.data());
 

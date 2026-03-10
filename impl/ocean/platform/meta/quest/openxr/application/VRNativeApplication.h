@@ -46,7 +46,7 @@ namespace Application
 {
 
 /**
- * This class implements a basic OpenXR (VR) application using Ocean's scene graph rendering pipline (Rendering::GLESceneGraph).
+ * This class implements a basic OpenXR (VR) application using Ocean's scene graph rendering pipeline (Rendering::GLESceneGraph).
  * @ingroup platformmetaquestopenxrapplication
  */
 class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplication : public NativeApplication

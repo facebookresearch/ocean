@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_platform_gles_common_imported>True</ocean_platform_gles_common_imported>
+    <ocean_platformgles_common_imported>True</ocean_platformgles_common_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">

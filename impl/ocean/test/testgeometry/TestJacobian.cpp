@@ -144,7 +144,9 @@ bool TestJacobian::test(const double testDuration, const TestSelector& selector)
 
 	if (selector.shouldRun("anycamerapointjacobian2x3"))
 	{
-		testResult = testAnyCameraPointJacobian2x3(testDuration);
+		testResult = testAnyCameraPointJacobian2x3<float>(testDuration);
+		Log::info() << " ";
+		testResult = testAnyCameraPointJacobian2x3<double>(testDuration);
 
 		Log::info() << " ";
 		Log::info() << "-";
@@ -402,9 +404,14 @@ TEST(TestJacobian, FisheyeCameraPointJacobian2x3)
 	EXPECT_TRUE(TestJacobian::testFisheyeCameraPointJacobian2x3(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, AnyCameraPointJacobian2x3)
+TEST(TestJacobian, AnyCameraPointJacobian2x3_float)
 {
-	EXPECT_TRUE(TestJacobian::testAnyCameraPointJacobian2x3(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testAnyCameraPointJacobian2x3<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, AnyCameraPointJacobian2x3_double)
+{
+	EXPECT_TRUE(TestJacobian::testAnyCameraPointJacobian2x3<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestJacobian, PosesPointsJacobian2nx12)
@@ -1031,8 +1038,10 @@ bool TestJacobian::testOrientationJacobian2nx3(const double testDuration)
 /**
  * Derivative calculator for pinhole camera pose jacobian 2nx6.
  * Calculates numerical derivatives of 2D image projections with respect to camera pose parameters (rotation and translation).
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -1041,9 +1050,9 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public D
 		 * @param camera The pinhole camera
 		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 */
-		DerivativeCalculatorPinholeCameraPoseJacobian2nx6(const PinholeCamera& camera, const Pose& flippedCamera_P_world) :
-			camera_(camera),
-			flippedCamera_P_world_(flippedCamera_P_world)
+		DerivativeCalculatorPinholeCameraPoseJacobian2nx6(const PinholeCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world) :
+			cameraD_(camera),
+			flippedCamera_P_worldD_(flippedCamera_P_world)
 		{
 			// nothing to do here
 		}
@@ -1057,23 +1066,23 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public D
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+			PoseD flippedCamera_P_world_perturbed(flippedCamera_P_worldD_);
 			flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return camera_.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, camera_.hasDistortionParameters());
+			return cameraD_.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, cameraD_.hasDistortionParameters());
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera camera_;
+		/// The pinhole camera in double precision
+		const PinholeCameraD cameraD_;
 
-		/// The camera pose (inverted and flipped)
-		const Pose flippedCamera_P_world_;
+		/// The camera pose (inverted and flipped) in double precision
+		const PoseD flippedCamera_P_worldD_;
 };
 
 bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
@@ -1240,11 +1249,13 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculator(camera, flippedCamera_P_world);
+			const DerivativeCalculatorPinholeCameraPoseJacobian2nx6<Scalar> derivativeCalculator(camera, flippedCamera_P_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				const VectorD3 objectPointD(objectPoint);
+
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -1258,22 +1269,15 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for fisheye camera pose jacobian.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -1282,9 +1286,9 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public De
 		 * @param fisheyeCamera The fisheye camera
 		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 */
-		DerivativeCalculatorFisheyeCameraPoseJacobian2x6(const FisheyeCamera& fisheyeCamera, const Pose& flippedCamera_P_world) :
-			fisheyeCamera_(fisheyeCamera),
-			flippedCamera_P_world_(flippedCamera_P_world)
+		DerivativeCalculatorFisheyeCameraPoseJacobian2x6(const FisheyeCameraT<T>& fisheyeCamera, const PoseT<T>& flippedCamera_P_world) :
+			fisheyeCameraD_(fisheyeCamera),
+			flippedCamera_P_worldD_(flippedCamera_P_world)
 		{
 			// nothing to do here
 		}
@@ -1298,23 +1302,23 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public De
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+			PoseD flippedCamera_P_world_perturbed(flippedCamera_P_worldD_);
 			flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return fisheyeCamera_.projectToImageIF(flippedCamera_P_world_perturbed.transformation(), objectPoint);
+			return fisheyeCameraD_.projectToImageIF(flippedCamera_P_world_perturbed.transformation(), objectPoint);
 		}
 
 	protected:
 
-		/// The fisheye camera
-		const FisheyeCamera fisheyeCamera_;
+		/// The fisheye camera in double precision
+		const FisheyeCameraD fisheyeCameraD_;
 
-		/// The camera pose (inverted and flipped)
-		const Pose flippedCamera_P_world_;
+		/// The camera pose (inverted and flipped) in double precision
+		const PoseD flippedCamera_P_worldD_;
 };
 
 bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
@@ -1411,11 +1415,13 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 			const Scalar* jacobianX = jacobian[2 * n + 0];
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
-			const DerivativeCalculatorFisheyeCameraPoseJacobian2x6 derivativeCalculator(fisheyeCamera, flippedCamera_P_world);
+			const DerivativeCalculatorFisheyeCameraPoseJacobian2x6<Scalar> derivativeCalculator(fisheyeCamera, flippedCamera_P_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				const VectorD3 objectPointD(objectPoint);
+
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -1427,15 +1433,6 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 	Log::info() << "Performance naive: " << performanceNaive;
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
-
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
 
 	return validation.succeeded();
 }
@@ -1625,8 +1622,10 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 
 /**
  * Derivative calculator for pose jacobian with damped distortion.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -1636,10 +1635,10 @@ class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : publi
 		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 * @param dampingFactor The damping factor for distortion
 		 */
-		DerivativeCalculatorPoseJacobianDampedDistortion2nx6(const PinholeCamera& camera, const Pose& flippedCamera_P_world, const Scalar dampingFactor) :
-			camera_(camera),
-			flippedCamera_P_world_(flippedCamera_P_world),
-			dampingFactor_(dampingFactor)
+		DerivativeCalculatorPoseJacobianDampedDistortion2nx6(const PinholeCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world, const T dampingFactor) :
+			cameraD_(camera),
+			flippedCamera_P_worldD_(flippedCamera_P_world),
+			dampingFactorD_(double(dampingFactor))
 		{
 			// nothing to do here
 		}
@@ -1653,26 +1652,26 @@ class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : publi
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+			PoseD flippedCamera_P_world_perturbed(flippedCamera_P_worldD_);
 			flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return camera_.projectToImageDampedIF(flippedCamera_P_world_perturbed.transformation(), Vector3(objectPoint), camera_.hasDistortionParameters(), dampingFactor_);
+			return cameraD_.projectToImageDampedIF(flippedCamera_P_world_perturbed.transformation(), VectorD3(objectPoint), cameraD_.hasDistortionParameters(), dampingFactorD_);
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera camera_;
+		/// The pinhole camera in double precision
+		const PinholeCameraD cameraD_;
 
-		/// The camera pose (inverted and flipped)
-		const Pose flippedCamera_P_world_;
+		/// The camera pose (inverted and flipped) in double precision
+		const PoseD flippedCamera_P_worldD_;
 
-		/// The damping factor for distortion
-		const Scalar dampingFactor_;
+		/// The damping factor for distortion in double precision
+		const double dampingFactorD_;
 };
 
 bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuration)
@@ -1796,11 +1795,13 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 			const Scalar* jacobianX = jacobian[2 * n + 0];
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
-			const DerivativeCalculatorPoseJacobianDampedDistortion2nx6 derivativeCalculator(camera, flippedCamera_P_world, Scalar(1));
+			const DerivativeCalculatorPoseJacobianDampedDistortion2nx6<Scalar> derivativeCalculator(camera, flippedCamera_P_world, Scalar(1));
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				const VectorD3 objectPointD(objectPoint);
+
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -1814,22 +1815,15 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for pose and zoom jacobian.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -1839,10 +1833,10 @@ class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public Derivative
 		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 * @param zoom The zoom factor
 		 */
-		DerivativeCalculatorPoseZoomJacobian2nx7(const PinholeCamera& camera, const Pose& flippedCamera_P_world, const Scalar zoom) :
-			camera_(camera),
-			flippedCamera_P_world_(flippedCamera_P_world),
-			zoom_(zoom)
+		DerivativeCalculatorPoseZoomJacobian2nx7(const PinholeCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world, const T zoom) :
+			cameraD_(camera),
+			flippedCamera_P_worldD_(flippedCamera_P_world),
+			zoomD_(double(zoom))
 		{
 			// nothing to do here
 		}
@@ -1856,34 +1850,34 @@ class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public Derivative
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			if (parameterIndex < 6)
 			{
 				const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-				Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+				PoseD flippedCamera_P_world_perturbed(flippedCamera_P_worldD_);
 				flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-				return camera_.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, camera_.hasDistortionParameters(), zoom_);
+				return cameraD_.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, cameraD_.hasDistortionParameters(), zoomD_);
 			}
 			else
 			{
-				const Scalar zoomPerturbed = zoom_ + offset;
-				return camera_.projectToImageIF<false>(flippedCamera_P_world_.transformation(), objectPoint, camera_.hasDistortionParameters(), zoomPerturbed);
+				const double zoomPerturbed = zoomD_ + offset;
+				return cameraD_.projectToImageIF<false>(flippedCamera_P_worldD_.transformation(), objectPoint, cameraD_.hasDistortionParameters(), zoomPerturbed);
 			}
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera camera_;
+		/// The pinhole camera in double precision
+		const PinholeCameraD cameraD_;
 
-		/// The camera pose (inverted and flipped)
-		const Pose flippedCamera_P_world_;
+		/// The camera pose (inverted and flipped) in double precision
+		const PoseD flippedCamera_P_worldD_;
 
-		/// The zoom factor
-		const Scalar zoom_;
+		/// The zoom factor in double precision
+		const double zoomD_;
 };
 
 bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
@@ -2039,11 +2033,13 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPoseZoomJacobian2nx7 derivativeCalculator(camera, flippedCamera_P_world, zoom);
+			const DerivativeCalculatorPoseZoomJacobian2nx7<Scalar> derivativeCalculator(camera, flippedCamera_P_world, zoom);
 
 			for (size_t parameterIndex = 0; parameterIndex < 7; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				const VectorD3 objectPointD(objectPoint);
+
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2057,23 +2053,16 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for object transformation Jacobian (6-DOF object pose).
  * Calculates numerical derivatives of image point projection with respect to object pose parameters.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -2083,13 +2072,12 @@ class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : 
 		 * @param flippedCamera_T_world The camera pose (inverted and flipped)
 		 * @param world_P_object The object pose
 		 * @param world_T_object The object transformation matrix
-		 * @param distortImagePoint Whether to apply distortion
 		 */
-		DerivativeCalculatorPinholeCameraObjectTransformation2nx6(const PinholeCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& world_P_object, const HomogenousMatrix4& world_T_object) :
-			camera_(camera),
-			flippedCamera_T_world_(flippedCamera_T_world),
-			world_P_object_(world_P_object),
-			world_T_object_(world_T_object)
+		DerivativeCalculatorPinholeCameraObjectTransformation2nx6(const PinholeCameraT<T>& camera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const PoseT<T>& world_P_object, const HomogenousMatrixT4<T>& world_T_object) :
+			cameraD_(camera),
+			flippedCamera_T_worldD_(flippedCamera_T_world),
+			world_P_objectD_(world_P_object),
+			world_T_objectD_(world_T_object)
 		{
 			// nothing to do here
 		}
@@ -2101,29 +2089,29 @@ class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : 
 		 * @param offset The offset to apply to the pose parameter
 		 * @return The projected image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose world_P_object_perturbed(world_P_object_);
+			PoseD world_P_object_perturbed(world_P_objectD_);
 			world_P_object_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return camera_.projectToImageIF<false>(flippedCamera_T_world_, world_P_object_perturbed.transformation() * objectPoint, false);
+			return cameraD_.projectToImageIF<false>(flippedCamera_T_worldD_, world_P_object_perturbed.transformation() * objectPoint, false);
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera camera_;
+		/// The pinhole camera in double precision
+		const PinholeCameraD cameraD_;
 
-		/// The camera pose (inverted and flipped)
-		const HomogenousMatrix4 flippedCamera_T_world_;
+		/// The camera pose (inverted and flipped) in double precision
+		const HomogenousMatrixD4 flippedCamera_T_worldD_;
 
-		/// The object pose
-		const Pose world_P_object_;
+		/// The object pose in double precision
+		const PoseD world_P_objectD_;
 
-		/// The object transformation matrix
-		const HomogenousMatrix4 world_T_object_;
+		/// The object transformation matrix in double precision
+		const HomogenousMatrixD4 world_T_objectD_;
 };
 
 bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDuration)
@@ -2269,11 +2257,13 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 				}
 			}
 
-			const DerivativeCalculatorPinholeCameraObjectTransformation2nx6 derivativeCalculator(camera, flippedCamera_T_world, world_P_object, world_T_object);
+			const DerivativeCalculatorPinholeCameraObjectTransformation2nx6<Scalar> derivativeCalculator(camera, flippedCamera_T_world, world_P_object, world_T_object);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				const VectorD3 objectPointD(objectPoint);
+
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2286,23 +2276,16 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for fisheye camera object transformation Jacobian (6-DOF object pose).
  * Calculates numerical derivatives of image point projection with respect to object pose parameters.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -2313,11 +2296,11 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : 
 		 * @param world_P_object The object pose
 		 * @param world_T_object The object transformation matrix
 		 */
-		DerivativeCalculatorFisheyeCameraObjectTransformation2nx6(const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& world_P_object, const HomogenousMatrix4& world_T_object) :
-			fisheyeCamera_(fisheyeCamera),
-			flippedCamera_T_world_(flippedCamera_T_world),
-			world_P_object_(world_P_object),
-			world_T_object_(world_T_object)
+		DerivativeCalculatorFisheyeCameraObjectTransformation2nx6(const FisheyeCameraT<T>& fisheyeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const PoseT<T>& world_P_object, const HomogenousMatrixT4<T>& world_T_object) :
+			fisheyeCameraD_(fisheyeCamera),
+			flippedCamera_T_worldD_(flippedCamera_T_world),
+			world_P_objectD_(world_P_object),
+			world_T_objectD_(world_T_object)
 		{
 			// nothing to do here
 		}
@@ -2329,29 +2312,29 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : 
 		 * @param offset The offset to apply to the pose parameter
 		 * @return The projected image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose world_P_object_perturbed(world_P_object_);
+			PoseD world_P_object_perturbed(world_P_objectD_);
 			world_P_object_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return fisheyeCamera_.projectToImageIF(flippedCamera_T_world_, world_P_object_perturbed.transformation() * objectPoint);
+			return fisheyeCameraD_.projectToImageIF(flippedCamera_T_worldD_, world_P_object_perturbed.transformation() * objectPoint);
 		}
 
 	protected:
 
-		/// The fisheye camera
-		const FisheyeCamera fisheyeCamera_;
+		/// The fisheye camera in double precision
+		const FisheyeCameraD fisheyeCameraD_;
 
-		/// The camera pose (inverted and flipped)
-		const HomogenousMatrix4 flippedCamera_T_world_;
+		/// The camera pose (inverted and flipped) in double precision
+		const HomogenousMatrixD4 flippedCamera_T_worldD_;
 
-		/// The object pose
-		const Pose world_P_object_;
+		/// The object pose in double precision
+		const PoseD world_P_objectD_;
 
-		/// The object transformation matrix
-		const HomogenousMatrix4 world_T_object_;
+		/// The object transformation matrix in double precision
+		const HomogenousMatrixD4 world_T_objectD_;
 };
 
 bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDuration)
@@ -2447,11 +2430,13 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 			const Scalar* jacobianX = jacobian[2 * n + 0];
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
-			const DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 derivativeCalculator(fisheyeCamera, flippedCamera_T_world, world_P_object, world_T_object);
+			const DerivativeCalculatorFisheyeCameraObjectTransformation2nx6<Scalar> derivativeCalculator(fisheyeCamera, flippedCamera_T_world, world_P_object, world_T_object);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				const VectorD3 objectPointD(objectPoint);
+
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2464,23 +2449,16 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for pinhole camera point Jacobian (3D object point).
  * Calculates numerical derivatives of image point projection with respect to object point coordinates.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public DerivativeCalculatorT<VectorD2, Scalar, VectorD3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -2490,9 +2468,9 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public 
 		 * @param flippedCamera_T_world The camera transformation (inverted and flipped)
 		 * @param distortImagePoint Whether to apply distortion
 		 */
-		DerivativeCalculatorPinholeCameraPointJacobian2nx3(const PinholeCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const bool distortImagePoint) :
-			camera_(camera),
-			flippedCamera_T_world_(flippedCamera_T_world),
+		DerivativeCalculatorPinholeCameraPointJacobian2nx3(const PinholeCameraT<T>& camera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const bool distortImagePoint) :
+			cameraD_(camera),
+			flippedCamera_T_worldD_(flippedCamera_T_world),
 			distortImagePoint_(distortImagePoint)
 		{
 			// nothing to do here
@@ -2505,21 +2483,21 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public 
 		 * @param offset The offset to apply to the coordinate
 		 * @return The projected image point
 		 */
-		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			VectorD3 objectPointPerturbed(objectPoint);
 			objectPointPerturbed[(unsigned int)(parameterIndex)] += offset;
 
-			return VectorD2(camera_.projectToImageIF<false>(flippedCamera_T_world_, Vector3(objectPointPerturbed), distortImagePoint_));
+			return cameraD_.projectToImageIF<false>(flippedCamera_T_worldD_, objectPointPerturbed, distortImagePoint_);
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera camera_;
+		/// The pinhole camera in double precision
+		const PinholeCameraD cameraD_;
 
-		/// The camera transformation (inverted and flipped)
-		const HomogenousMatrix4 flippedCamera_T_world_;
+		/// The camera transformation (inverted and flipped) in double precision
+		const HomogenousMatrixD4 flippedCamera_T_worldD_;
 
 		/// Whether to apply distortion
 		const bool distortImagePoint_;
@@ -2658,11 +2636,11 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculator(camera, flippedCamera_T_world, camera.hasDistortionParameters());
+			const DerivativeCalculatorPinholeCameraPointJacobian2nx3<Scalar> derivativeCalculator(camera, flippedCamera_T_world, camera.hasDistortionParameters());
 
 			for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				if (!derivativeCalculator.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2676,23 +2654,16 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for fisheye camera point Jacobian (2x3) using central finite differences.
  * Calculates numerical derivatives of 2D image projection with respect to 3D object point coordinates.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public DerivativeCalculatorT<VectorD2, Scalar, VectorD3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -2701,9 +2672,9 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public D
 		 * @param fisheyeCamera Fisheye camera model for projection
 		 * @param flippedCamera_T_world Inverted and flipped camera transformation
 		 */
-		DerivativeCalculatorFisheyeCameraPointJacobian2x3(const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& flippedCamera_T_world) :
-			fisheyeCamera_(fisheyeCamera),
-			flippedCamera_T_world_(flippedCamera_T_world)
+		DerivativeCalculatorFisheyeCameraPointJacobian2x3(const FisheyeCameraT<T>& fisheyeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world) :
+			fisheyeCameraD_(fisheyeCamera),
+			flippedCamera_T_worldD_(flippedCamera_T_world)
 		{
 			// nothing to do here
 		}
@@ -2715,21 +2686,21 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public D
 		 * @param offset Epsilon offset to apply to coordinate
 		 * @return Projected 2D image point
 		 */
-		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
 			VectorD3 objectPointPerturbed(objectPoint);
 			objectPointPerturbed[(unsigned int)(parameterIndex)] += offset;
 
-			return VectorD2(fisheyeCamera_.projectToImageIF(flippedCamera_T_world_, Vector3(objectPointPerturbed)));
+			return fisheyeCameraD_.projectToImageIF(flippedCamera_T_worldD_, objectPointPerturbed);
 		}
 
 	protected:
 
-		/// Fisheye camera model
-		const FisheyeCamera fisheyeCamera_;
+		/// Fisheye camera model in double precision
+		const FisheyeCameraD fisheyeCameraD_;
 
-		/// Inverted and flipped camera transformation
-		const HomogenousMatrix4 flippedCamera_T_world_;
+		/// Inverted and flipped camera transformation in double precision
+		const HomogenousMatrixD4 flippedCamera_T_worldD_;
 };
 
 bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
@@ -2830,11 +2801,11 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorFisheyeCameraPointJacobian2x3 derivativeCalculator(fisheyeCamera, flippedCamera_T_world);
+			const DerivativeCalculatorFisheyeCameraPointJacobian2x3<Scalar> derivativeCalculator(fisheyeCamera, flippedCamera_T_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				if (!derivativeCalculator.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -2847,23 +2818,16 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 	Log::info() << "Performance optimized: " << performanceOptimized;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for any camera point Jacobian (2x3) using central finite differences.
  * Calculates numerical derivatives of 2D image projection with respect to 3D object point coordinates.
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public DerivativeCalculatorT<VectorD2, Scalar, VectorD3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public DerivativeCalculatorT<VectorD2, T, VectorD3>
 {
 	public:
 
@@ -2872,11 +2836,11 @@ class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public Deriv
 		 * @param anyCamera Any camera model for projection
 		 * @param flippedCamera_T_world Inverted and flipped camera transformation
 		 */
-		DerivativeCalculatorAnyCameraPointJacobian2x3(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world) :
-			anyCamera_(anyCamera),
-			flippedCamera_T_world_(flippedCamera_T_world)
+		DerivativeCalculatorAnyCameraPointJacobian2x3(const AnyCameraT<T>& anyCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world) :
+			anyCamera_(anyCamera.cloneToDouble()),
+			flippedCamera_T_world_(HomogenousMatrixD4(flippedCamera_T_world))
 		{
-			// nothing to do here
+			ocean_assert(anyCamera_);
 		}
 
 		/**
@@ -2886,33 +2850,34 @@ class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public Deriv
 		 * @param offset Epsilon offset to apply to coordinate
 		 * @return Projected 2D image point
 		 */
-		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const T offset) const override
 		{
 			VectorD3 objectPointPerturbed(objectPoint);
 			objectPointPerturbed[(unsigned int)(parameterIndex)] += offset;
 
-			return VectorD2(anyCamera_.projectToImageIF(flippedCamera_T_world_, Vector3(objectPointPerturbed)));
+			return anyCamera_->projectToImageIF(flippedCamera_T_world_, objectPointPerturbed);
 		}
 
 	protected:
 
-		/// Any camera model
-		const AnyCamera& anyCamera_;
+		/// Any camera model in double precision
+		const SharedAnyCameraD anyCamera_;
 
-		/// Inverted and flipped camera transformation
-		const HomogenousMatrix4 flippedCamera_T_world_;
+		/// Inverted and flipped camera transformation in double precision
+		const HomogenousMatrixD4 flippedCamera_T_world_;
 };
 
+template <typename T>
 bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	constexpr unsigned int numberPoints = 50u;
 
-	Log::info() << "Testing any camera point Jacobian 2x3 for " << numberPoints << " points:";
+	Log::info() << "Testing any camera point Jacobian 2x3 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 	Log::info() << " ";
 
-	constexpr Scalar eps = Numeric::weakEps();
+	constexpr T eps = NumericT<T>::weakEps();
 
 	bool firstCameraIteration = true;
 
@@ -2924,10 +2889,10 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 		Log::info().newLine(!firstCameraIteration);
 		firstCameraIteration = false;
 
-		const std::shared_ptr<AnyCamera> anyCameraShared = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
+		const SharedAnyCameraT<T> anyCameraShared = Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCameraShared);
 
-		const AnyCamera& anyCamera = *anyCameraShared;
+		const AnyCameraT<T>& anyCamera = *anyCameraShared;
 
 		ValidationPrecision validationPrecision(0.99, randomGenerator);
 
@@ -2940,29 +2905,29 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validationPrecision);
 
-			const Scalar world_t_camera_x = Random::scalar(randomGenerator, -1, 1);
-			const Scalar world_t_camera_y = Random::scalar(randomGenerator, -1, 1);
-			const Scalar world_t_camera_z = Random::scalar(randomGenerator, -1, 1);
+			const T world_t_camera_x = RandomT<T>::scalar(randomGenerator, -1, 1);
+			const T world_t_camera_y = RandomT<T>::scalar(randomGenerator, -1, 1);
+			const T world_t_camera_z = RandomT<T>::scalar(randomGenerator, -1, 1);
 
-			const Vector3 world_t_camera(world_t_camera_x, world_t_camera_y, world_t_camera_z);
-			const Quaternion world_Q_camera(Random::quaternion(randomGenerator));
+			const VectorT3<T> world_t_camera(world_t_camera_x, world_t_camera_y, world_t_camera_z);
+			const QuaternionT<T> world_Q_camera(RandomT<T>::quaternion(randomGenerator));
 
-			const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
-			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+			const HomogenousMatrixT4<T> world_T_camera(world_t_camera, world_Q_camera);
+			const HomogenousMatrixT4<T> flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
 
-			Vectors3 objectPoints;
+			std::vector<VectorT3<T>> objectPoints;
 			objectPoints.reserve(numberPoints);
 
 			while (objectPoints.size() < numberPoints)
 			{
-				const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(5u), Scalar(anyCamera.width() - 5u), Scalar(5u), Scalar(anyCamera.height() - 5u));
-				const Line3 ray(anyCamera.ray(imagePoint, world_T_camera));
-				const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, 1, 10)));
+				const VectorT2<T> imagePoint = RandomT<T>::vector2(randomGenerator, T(5u), T(anyCamera.width() - 5u), T(5u), T(anyCamera.height() - 5u));
+				const LineT3<T> ray(anyCamera.ray(imagePoint, world_T_camera));
+				const VectorT3<T> objectPoint(ray.point(RandomT<T>::scalar(randomGenerator, 1, 10)));
 
 				objectPoints.push_back(objectPoint);
 			}
 
-			Matrix jacobian(objectPoints.size() * 2, 3);
+			MatrixT<T> jacobian(objectPoints.size() * 2, 3);
 
 			{
 				const HighPerformanceStatistic::ScopedStatistic scope(performanceOptimized);
@@ -2974,22 +2939,22 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 			}
 
 			{
-				Matrix naiveJacobian(2 * objectPoints.size(), 3);
+				MatrixT<T> naiveJacobian(2 * objectPoints.size(), 3);
 
 				const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
 
 				for (size_t n = 0; n < objectPoints.size(); ++n)
 				{
-					const Vector3& objectPoint = objectPoints[n];
-					const Vector2 imagePoint(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint));
+					const VectorT3<T>& objectPoint = objectPoints[n];
+					const VectorT2<T> imagePoint(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint));
 
 					for (unsigned int i = 0u; i < 3u; ++i)
 					{
-						Vector3 objectPointDelta(objectPoint);
+						VectorT3<T> objectPointDelta(objectPoint);
 						objectPointDelta[i] += eps;
 
-						const Vector2 imagePointDelta(anyCamera.projectToImageIF(flippedCamera_T_world, objectPointDelta));
-						const Vector2 derivative = (imagePointDelta - imagePoint) / eps;
+						const VectorT2<T> imagePointDelta(anyCamera.projectToImageIF(flippedCamera_T_world, objectPointDelta));
+						const VectorT2<T> derivative = (imagePointDelta - imagePoint) / eps;
 
 						naiveJacobian[n * 2 + 0][i] = derivative.x();
 						naiveJacobian[n * 2 + 1][i] = derivative.y();
@@ -2999,30 +2964,30 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				const Vector3& objectPoint = objectPoints[n];
+				const VectorT3<T>& objectPoint = objectPoints[n];
 
-				const Scalar* jacobianX = jacobian[2 * n + 0];
-				const Scalar* jacobianY = jacobian[2 * n + 1];
+				const T* jacobianX = jacobian[2 * n + 0];
+				const T* jacobianY = jacobian[2 * n + 1];
 
-				Scalar singleJacobianX[3], singleJacobianY[3];
+				T singleJacobianX[3], singleJacobianY[3];
 				Geometry::Jacobian::calculatePointJacobian2x3IF(anyCamera, flippedCamera_T_world, objectPoint, singleJacobianX, singleJacobianY);
 
 				for (unsigned int i = 0u; i < 3u; ++i)
 				{
-					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
-					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
+					ocean_assert(NumericT<T>::isWeakEqual(jacobianX[i], singleJacobianX[i]));
+					ocean_assert(NumericT<T>::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
+					if (NumericT<T>::isNotEqual(jacobianX[i], singleJacobianX[i], NumericT<T>::weakEps()) || NumericT<T>::isNotEqual(jacobianY[i], singleJacobianY[i], NumericT<T>::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
 				}
 
-				const DerivativeCalculatorAnyCameraPointJacobian2x3 derivativeCalculator(anyCamera, flippedCamera_T_world);
+				const DerivativeCalculatorAnyCameraPointJacobian2x3<T> derivativeCalculator(anyCamera, flippedCamera_T_world);
 
 				for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 				{
-					if (!derivativeCalculator.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+					if (!derivativeCalculator.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -3131,10 +3096,10 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansSecond, camera, Pose(flippedCameraSecond_T_world), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
 
 		// Create derivative calculators for pose and point Jacobians
-		const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculatorFirstPose(camera, flippedCameraFirst_P_world);
-		const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculatorSecondPose(camera, flippedCameraSecond_P_world);
-		const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculatorFirstPoint(camera, flippedCameraFirst_T_world, camera.hasDistortionParameters());
-		const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculatorSecondPoint(camera, flippedCameraSecond_T_world, camera.hasDistortionParameters());
+		const DerivativeCalculatorPinholeCameraPoseJacobian2nx6<Scalar> derivativeCalculatorFirstPose(camera, flippedCameraFirst_P_world);
+		const DerivativeCalculatorPinholeCameraPoseJacobian2nx6<Scalar> derivativeCalculatorSecondPose(camera, flippedCameraSecond_P_world);
+		const DerivativeCalculatorPinholeCameraPointJacobian2nx3<Scalar> derivativeCalculatorFirstPoint(camera, flippedCameraFirst_T_world, camera.hasDistortionParameters());
+		const DerivativeCalculatorPinholeCameraPointJacobian2nx3<Scalar> derivativeCalculatorSecondPoint(camera, flippedCameraSecond_T_world, camera.hasDistortionParameters());
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
@@ -3147,7 +3112,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 				{
-					if (!derivativeCalculatorFirstPose.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+					if (!derivativeCalculatorFirstPose.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -3161,7 +3126,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 				{
-					if (!derivativeCalculatorSecondPose.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+					if (!derivativeCalculatorSecondPose.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -3175,7 +3140,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 				{
-					if (!derivativeCalculatorFirstPoint.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+					if (!derivativeCalculatorFirstPoint.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -3189,7 +3154,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 				{
-					if (!derivativeCalculatorSecondPoint.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+					if (!derivativeCalculatorSecondPoint.verifyDerivative(VectorD3(objectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -3201,15 +3166,6 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
@@ -3217,7 +3173,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
  * Derivative calculator for spherical object point Jacobian (3x3) using central finite differences.
  * Calculates numerical derivatives of 3D point position with respect to spherical rotation parameters.
  */
-class TestJacobian::DerivativeCalculatorSphericalObjectPoint3x3 : public DerivativeCalculatorT<VectorD3, Scalar, void>
+class TestJacobian::DerivativeCalculatorSphericalObjectPoint3x3 : public DerivativeCalculatorT<VectorD3, double, void>
 {
 	public:
 
@@ -3227,8 +3183,8 @@ class TestJacobian::DerivativeCalculatorSphericalObjectPoint3x3 : public Derivat
 		 * @param defaultObjectPoint Default object point before rotation
 		 */
 		DerivativeCalculatorSphericalObjectPoint3x3(const ExponentialMap& sphericalObjectPoint, const Vector3& defaultObjectPoint) :
-			sphericalObjectPoint_(sphericalObjectPoint),
-			defaultObjectPoint_(defaultObjectPoint)
+			sphericalObjectPointD_(sphericalObjectPoint),
+			defaultObjectPointD_(defaultObjectPoint)
 		{
 			// nothing to do here
 		}
@@ -3239,33 +3195,33 @@ class TestJacobian::DerivativeCalculatorSphericalObjectPoint3x3 : public Derivat
 		 * @param offset Epsilon offset to apply to rotation component
 		 * @return Rotated 3D point position
 		 */
-		VectorD3 calculateValue(const size_t parameterIndex, const Scalar offset) const override
+		VectorD3 calculateValue(const size_t parameterIndex, const double offset) const override
 		{
-			ExponentialMap perturbedRotation(sphericalObjectPoint_);
+			ExponentialMapD perturbedRotation(sphericalObjectPointD_);
 
 			if (parameterIndex == 0)
 			{
-				perturbedRotation += ExponentialMap(offset, 0, 0);
+				perturbedRotation += ExponentialMapD(offset, 0, 0);
 			}
 			else if (parameterIndex == 1)
 			{
-				perturbedRotation += ExponentialMap(0, offset, 0);
+				perturbedRotation += ExponentialMapD(0, offset, 0);
 			}
 			else
 			{
-				perturbedRotation += ExponentialMap(0, 0, offset);
+				perturbedRotation += ExponentialMapD(0, 0, offset);
 			}
 
-			return VectorD3(perturbedRotation.rotation() * defaultObjectPoint_);
+			return VectorD3(perturbedRotation.rotation() * defaultObjectPointD_);
 		}
 
 	protected:
 
-		/// Spherical rotation representation
-		const ExponentialMap sphericalObjectPoint_;
+		/// Spherical rotation representation in double precision
+		const ExponentialMapD sphericalObjectPointD_;
 
-		/// Default object point before rotation
-		const Vector3 defaultObjectPoint_;
+		/// Default object point before rotation in double precision
+		const VectorD3 defaultObjectPointD_;
 };
 
 bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
@@ -3310,7 +3266,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 		for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 		{
-			if (!derivativeCalculator.verifyDerivative(parameterIndex, Vector3(jacobianX[parameterIndex], jacobianY[parameterIndex], jacobianZ[parameterIndex])))
+			if (!derivativeCalculator.verifyDerivative(parameterIndex, VectorD3(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]), double(jacobianZ[parameterIndex]))))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -3319,15 +3275,6 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
-
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
 
 	return validation.succeeded();
 }
@@ -3458,7 +3405,7 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 
 			for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(ExponentialMapD(sphericalObjectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				if (!derivativeCalculator.verifyDerivative(ExponentialMapD(sphericalObjectPoint), parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -3479,8 +3426,10 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 /**
  * Derivative calculator for pinhole camera distortion jacobian 2x4.
  * Calculates numerical derivatives of 2D image projection with respect to distortion parameters (k1, k2, p1, p2).
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPinholeCameraDistortionJacobian2x4 : public DerivativeCalculatorT<Vector2, Scalar, void>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPinholeCameraDistortionJacobian2x4 : public DerivativeCalculatorT<VectorD2, double, void>
 {
 	public:
 
@@ -3489,9 +3438,9 @@ class TestJacobian::DerivativeCalculatorPinholeCameraDistortionJacobian2x4 : pub
 		 * @param camera The pinhole camera with distortion parameters
 		 * @param normalizedImagePoint The normalized image point
 		 */
-		DerivativeCalculatorPinholeCameraDistortionJacobian2x4(const PinholeCamera& camera, const Vector2& normalizedImagePoint) :
-			camera_(camera),
-			normalizedImagePoint_(normalizedImagePoint)
+		DerivativeCalculatorPinholeCameraDistortionJacobian2x4(const PinholeCameraT<T>& camera, const VectorT2<T>& normalizedImagePoint) :
+			cameraD_(camera),
+			normalizedImagePointD_(normalizedImagePoint)
 		{
 			// nothing to do here
 		}
@@ -3504,47 +3453,47 @@ class TestJacobian::DerivativeCalculatorPinholeCameraDistortionJacobian2x4 : pub
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const size_t parameterIndex, const double offset) const override
 		{
-			const PinholeCamera::DistortionPair radialDistortion = camera_.radialDistortion();
-			const PinholeCamera::DistortionPair tangentialDistortion = camera_.tangentialDistortion();
+			const PinholeCameraD::DistortionPair radialDistortion = cameraD_.radialDistortion();
+			const PinholeCameraD::DistortionPair tangentialDistortion = cameraD_.tangentialDistortion();
 
-			const Scalar k1 = radialDistortion.first;
-			const Scalar k2 = radialDistortion.second;
-			const Scalar p1 = tangentialDistortion.first;
-			const Scalar p2 = tangentialDistortion.second;
+			const double k1 = radialDistortion.first;
+			const double k2 = radialDistortion.second;
+			const double p1 = tangentialDistortion.first;
+			const double p2 = tangentialDistortion.second;
 
-			PinholeCamera cameraPerturbed(camera_);
+			PinholeCameraD cameraPerturbed(cameraD_);
 
 			switch (parameterIndex)
 			{
 				case 0:
-					cameraPerturbed.setRadialDistortion(PinholeCamera::DistortionPair(k1 + offset, k2));
+					cameraPerturbed.setRadialDistortion(PinholeCameraD::DistortionPair(k1 + offset, k2));
 					break;
 				case 1:
-					cameraPerturbed.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2 + offset));
+					cameraPerturbed.setRadialDistortion(PinholeCameraD::DistortionPair(k1, k2 + offset));
 					break;
 				case 2:
-					cameraPerturbed.setTangentialDistortion(PinholeCamera::DistortionPair(p1 + offset, p2));
+					cameraPerturbed.setTangentialDistortion(PinholeCameraD::DistortionPair(p1 + offset, p2));
 					break;
 				case 3:
-					cameraPerturbed.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2 + offset));
+					cameraPerturbed.setTangentialDistortion(PinholeCameraD::DistortionPair(p1, p2 + offset));
 					break;
 				default:
 					ocean_assert(false && "Invalid parameter index");
 					break;
 			}
 
-			return cameraPerturbed.projectToImageIF<false>(normalizedImagePoint_, true);
+			return cameraPerturbed.projectToImageIF<false>(normalizedImagePointD_, true);
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera camera_;
+		/// The pinhole camera in double precision
+		const PinholeCameraD cameraD_;
 
-		/// The normalized image point
-		const Vector2 normalizedImagePoint_;
+		/// The normalized image point in double precision
+		const VectorD2 normalizedImagePointD_;
 };
 
 bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDuration)
@@ -3599,11 +3548,11 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 		const Vector2 normalizedImagePoint(normalizedImagePointX, normalizedImagePointY);
 		Geometry::Jacobian::calculateCameraDistortionJacobian2x4(jacobianX, jacobianY, camera, normalizedImagePoint);
 
-		const DerivativeCalculatorPinholeCameraDistortionJacobian2x4 derivativeCalculator(camera, normalizedImagePoint);
+		const DerivativeCalculatorPinholeCameraDistortionJacobian2x4<Scalar> derivativeCalculator(camera, normalizedImagePoint);
 
 		for (size_t parameterIndex = 0; parameterIndex < 4; ++parameterIndex)
 		{
-			if (!derivativeCalculator.verifyDerivative(parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+			if (!derivativeCalculator.verifyDerivative(parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -3613,23 +3562,16 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for pinhole camera jacobian 2x6.
  * Computes derivatives with respect to camera parameters: k1, k2, Fx, Fy, mx, my
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x6 : public DerivativeCalculatorT<Vector2, Scalar, void>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x6 : public DerivativeCalculatorT<VectorD2, double, void>
 {
 	public:
 
@@ -3638,15 +3580,16 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x6 : public Deriva
 		 * @param camera The camera profile
 		 * @param normalizedImagePoint The normalized image point
 		 */
-		DerivativeCalculatorPinholeCameraJacobian2x6(const PinholeCamera& camera, const Vector2& normalizedImagePoint) :
-			normalizedImagePoint_(normalizedImagePoint)
+		DerivativeCalculatorPinholeCameraJacobian2x6(const PinholeCameraT<T>& camera, const VectorT2<T>& normalizedImagePoint) :
+			normalizedImagePointD_(normalizedImagePoint)
 		{
-			PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+			PinholeCameraD::ParameterConfiguration parameterConfiguration = PinholeCameraD::PC_UNKNOWN;
 
-			ocean_assert(camera.isValid());
-			camera.copyParameters(width_, height_, cameraParameters_, parameterConfiguration);
-			ocean_assert(width_ == camera.width() && height_ == camera.height());
-			ocean_assert(cameraParameters_.size() == 8 && parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
+			const PinholeCameraD cameraD(camera);
+			ocean_assert(cameraD.isValid());
+			cameraD.copyParameters(width_, height_, cameraParametersD_, parameterConfiguration);
+			ocean_assert(width_ == cameraD.width() && height_ == cameraD.height());
+			ocean_assert(cameraParametersD_.size() == 8 && parameterConfiguration == PinholeCameraD::PC_8_PARAMETERS);
 		}
 
 	public:
@@ -3657,25 +3600,25 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x6 : public Deriva
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const size_t parameterIndex, const double offset) const override
 		{
-			ocean_assert(cameraParameters_.size() == 8 && parameterIndex < 6);
+			ocean_assert(cameraParametersD_.size() == 8 && parameterIndex < 6);
 
-			Scalars cameraParametersPerturbed(cameraParameters_);
+			std::vector<double> cameraParametersPerturbed(cameraParametersD_);
 
 			constexpr std::array<Index32, 6> parameterMapping = {4u, 5u, 0u, 1u, 2u, 3u};
 
 			cameraParametersPerturbed[parameterMapping[parameterIndex]] += offset;
 
-			const PinholeCamera cameraPerturbed(width_, height_, PinholeCamera::PC_8_PARAMETERS, cameraParametersPerturbed.data());
+			const PinholeCameraD cameraPerturbed(width_, height_, PinholeCameraD::PC_8_PARAMETERS, cameraParametersPerturbed.data());
 
-			return cameraPerturbed.projectToImageIF<true>(normalizedImagePoint_, cameraPerturbed.hasDistortionParameters());
+			return cameraPerturbed.projectToImageIF<true>(normalizedImagePointD_, cameraPerturbed.hasDistortionParameters());
 		}
 
 	protected:
 
-		/// The normalized image point
-		const Vector2 normalizedImagePoint_;
+		/// The normalized image point in double precision
+		const VectorD2 normalizedImagePointD_;
 
 		/// The width of the camera model, in pixel.
 		unsigned int width_ = 0u;
@@ -3683,8 +3626,8 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x6 : public Deriva
 		/// The height of the camera model, in pixel.
 		unsigned int height_ = 0u;
 
-		/// The camera parameters.
-		Scalars cameraParameters_;
+		/// The camera parameters in double precision.
+		std::vector<double> cameraParametersD_;
 };
 
 bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
@@ -3736,11 +3679,11 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 		const Vector2 normalizedImagePoint(normalizedImagePointX, normalizedImagePointY);
 		Geometry::Jacobian::calculateCameraJacobian2x6(jacobianX, jacobianY, camera, normalizedImagePoint);
 
-		const DerivativeCalculatorPinholeCameraJacobian2x6 derivativeCalculator(camera, normalizedImagePoint);
+		const DerivativeCalculatorPinholeCameraJacobian2x6<Scalar> derivativeCalculator(camera, normalizedImagePoint);
 
 		for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 		{
-			if (!derivativeCalculator.verifyDerivative(parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+			if (!derivativeCalculator.verifyDerivative(parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -3750,23 +3693,16 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for pinhole camera jacobian 2x7.
  * Computes derivatives with respect to camera parameters: k1, k2, p1, p2, F, mx, my
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x7 : public DerivativeCalculatorT<Vector2, Scalar, void>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x7 : public DerivativeCalculatorT<VectorD2, double, void>
 {
 	public:
 
@@ -3775,15 +3711,16 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x7 : public Deriva
 		 * @param camera The camera profile
 		 * @param normalizedImagePoint The normalized image point
 		 */
-		DerivativeCalculatorPinholeCameraJacobian2x7(const PinholeCamera& camera, const Vector2& normalizedImagePoint) :
-			normalizedImagePoint_(normalizedImagePoint)
+		DerivativeCalculatorPinholeCameraJacobian2x7(const PinholeCameraT<T>& camera, const VectorT2<T>& normalizedImagePoint) :
+			normalizedImagePointD_(normalizedImagePoint)
 		{
-			PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+			PinholeCameraD::ParameterConfiguration parameterConfiguration = PinholeCameraD::PC_UNKNOWN;
 
-			ocean_assert(camera.isValid());
-			camera.copyParameters(width_, height_, cameraParameters_, parameterConfiguration);
-			ocean_assert(width_ == camera.width() && height_ == camera.height());
-			ocean_assert(cameraParameters_.size() == 8 && parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
+			const PinholeCameraD cameraD(camera);
+			ocean_assert(cameraD.isValid());
+			cameraD.copyParameters(width_, height_, cameraParametersD_, parameterConfiguration);
+			ocean_assert(width_ == cameraD.width() && height_ == cameraD.height());
+			ocean_assert(cameraParametersD_.size() == 8 && parameterConfiguration == PinholeCameraD::PC_8_PARAMETERS);
 		}
 
 	public:
@@ -3794,11 +3731,11 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x7 : public Deriva
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const size_t parameterIndex, const double offset) const override
 		{
-			ocean_assert(cameraParameters_.size() == 8 && parameterIndex < 7);
+			ocean_assert(cameraParametersD_.size() == 8 && parameterIndex < 7);
 
-			Scalars cameraParametersPerturbed(cameraParameters_);
+			std::vector<double> cameraParametersPerturbed(cameraParametersD_);
 
 			constexpr std::array<Index32, 7> parameterMapping = {4u, 5u, 6u, 7u, 0u, 2u, 3u};
 
@@ -3811,15 +3748,15 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x7 : public Deriva
 				cameraParametersPerturbed[1u] += offset;
 			}
 
-			const PinholeCamera cameraPerturbed(width_, height_, PinholeCamera::PC_8_PARAMETERS, cameraParametersPerturbed.data());
+			const PinholeCameraD cameraPerturbed(width_, height_, PinholeCameraD::PC_8_PARAMETERS, cameraParametersPerturbed.data());
 
-			return cameraPerturbed.projectToImageIF<true>(normalizedImagePoint_, cameraPerturbed.hasDistortionParameters());
+			return cameraPerturbed.projectToImageIF<true>(normalizedImagePointD_, cameraPerturbed.hasDistortionParameters());
 		}
 
 	protected:
 
-		/// The normalized image point
-		const Vector2 normalizedImagePoint_;
+		/// The normalized image point in double precision
+		const VectorD2 normalizedImagePointD_;
 
 		/// The width of the camera model, in pixel.
 		unsigned int width_ = 0u;
@@ -3827,8 +3764,8 @@ class TestJacobian::DerivativeCalculatorPinholeCameraJacobian2x7 : public Deriva
 		/// The height of the camera model, in pixel.
 		unsigned int height_ = 0u;
 
-		/// The camera parameters.
-		Scalars cameraParameters_;
+		/// The camera parameters in double precision.
+		std::vector<double> cameraParametersD_;
 };
 
 bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
@@ -3877,11 +3814,11 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 		const Vector2 normalizedImagePoint(normalizedImagePointX, normalizedImagePointY);
 		Geometry::Jacobian::calculateCameraJacobian2x7(jacobianX, jacobianY, camera, normalizedImagePoint);
 
-		const DerivativeCalculatorPinholeCameraJacobian2x7 derivativeCalculator(camera, normalizedImagePoint);
+		const DerivativeCalculatorPinholeCameraJacobian2x7<Scalar> derivativeCalculator(camera, normalizedImagePoint);
 
 		for (size_t parameterIndex = 0; parameterIndex < 7; ++parameterIndex)
 		{
-			if (!derivativeCalculator.verifyDerivative(parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+			if (!derivativeCalculator.verifyDerivative(parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -3890,15 +3827,6 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
-
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
 
 	return validation.succeeded();
 }
@@ -4184,8 +4112,10 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 /**
  * Derivative calculator for orientation pinhole camera jacobian 2x11.
  * Computes derivatives with respect to 11 parameters: wx, wy, wz, k1, k2, p1, p2, Fx, Fy, mx, my
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -4193,42 +4123,42 @@ class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : p
 		 * Creates a derivative calculator for orientation pinhole camera jacobian 2x11.
 		 * @param camera The pinhole camera
 		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
-		 * @param objectPoint The 3D object point
 		 */
-		DerivativeCalculatorOrientationPinholeCameraJacobian2x11(const PinholeCamera& camera, const Pose& flippedCamera_P_world) :
-			camera_(camera),
-			flippedCamera_P_world_(flippedCamera_P_world)
+		DerivativeCalculatorOrientationPinholeCameraJacobian2x11(const PinholeCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world) :
+			cameraD_(camera),
+			flippedCamera_P_worldD_(flippedCamera_P_world)
 		{
-			unsigned int width = 0u;
-			unsigned int height = 0u;
-			PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+			unsigned int cameraWidth = 0u;
+			unsigned int cameraHeight = 0u;
+			PinholeCameraD::ParameterConfiguration parameterConfiguration = PinholeCameraD::PC_UNKNOWN;
 
-			camera_.copyParameters(width, height, cameraParameters_, parameterConfiguration);
+			cameraD_.copyParameters(cameraWidth, cameraHeight, cameraParametersD_, parameterConfiguration);
 
-			ocean_assert(width == camera_.width());
-			ocean_assert(height == camera_.height());
-			ocean_assert(parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
-			ocean_assert(cameraParameters_.size() == 8);
+			ocean_assert(parameterConfiguration == PinholeCameraD::PC_8_PARAMETERS);
+			ocean_assert(cameraParametersD_.size() == 8);
+
+			cameraWidth_ = cameraWidth;
+			cameraHeight_ = cameraHeight;
+			cameraParameterConfiguration_ = parameterConfiguration;
 		}
 
 	public:
 
 		/**
 		 * Calculates the projected image point with a perturbed parameter.
-		 * @param objectPoint The 3D object point (not used, required by interface)
+		 * @param objectPoint The 3D object point
 		 * @param parameterIndex The parameter index to perturb (0-2: rotation, 3-10: camera params)
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
-			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
-			Scalars cameraParameters(cameraParameters_);
+			PoseD flippedCamera_P_world_perturbed(flippedCamera_P_worldD_);
+			std::vector<double> cameraParameters(cameraParametersD_);
 
 			if (parameterIndex < 3)
 			{
-				// Rotation parameters (wx, wy, wz) - perturb the pose
-				flippedCamera_P_world_perturbed[(unsigned int)(parameterIndex + 3)] += offset; // index 0-2 map to rx, ry, rz which are indices 3-5 in Pose
+				flippedCamera_P_world_perturbed[(unsigned int)(parameterIndex + 3)] += offset;
 			}
 			else
 			{
@@ -4247,21 +4177,30 @@ class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : p
 				cameraParameters[parameterMapping[parameterIndex - 3]] += offset;
 			}
 
-			const PinholeCamera cameraPerturbed(camera_.width(), camera_.height(), PinholeCamera::PC_8_PARAMETERS, cameraParameters.data());
+			const PinholeCameraD cameraPerturbed(cameraWidth_, cameraHeight_, cameraParameterConfiguration_, cameraParameters.data());
 
 			return cameraPerturbed.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, cameraPerturbed.hasDistortionParameters());
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera& camera_;
+		/// The pinhole camera in double precision
+		PinholeCameraD cameraD_;
 
-		/// The 8 camera parameters.
-		Scalars cameraParameters_;
+		/// The camera pose (inverted and flipped) in double precision
+		const PoseD flippedCamera_P_worldD_;
 
-		/// The camera pose (inverted and flipped)
-		const Pose& flippedCamera_P_world_;
+		/// Camera width
+		unsigned int cameraWidth_ = 0u;
+
+		/// Camera height
+		unsigned int cameraHeight_ = 0u;
+
+		/// Camera parameters in double precision
+		std::vector<double> cameraParametersD_;
+
+		/// Camera parameter configuration
+		PinholeCameraD::ParameterConfiguration cameraParameterConfiguration_ = PinholeCameraD::PC_UNKNOWN;
 };
 
 bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDuration)
@@ -4419,7 +4358,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 			}
 		}
 
-		const DerivativeCalculatorOrientationPinholeCameraJacobian2x11 derivativeCalculator(camera, flippedCamera_P_world);
+		const DerivativeCalculatorOrientationPinholeCameraJacobian2x11<Scalar> derivativeCalculator(camera, flippedCamera_P_world);
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
@@ -4447,9 +4386,11 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 				}
 			}
 
+			const VectorD3 objectPointD(objectPoint);
+
 			for (size_t parameterIndex = 0; parameterIndex < 11; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -4462,23 +4403,16 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
 
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
 	return validation.succeeded();
 }
 
 /**
  * Derivative calculator for pose pinhole camera jacobian 2x12.
  * Computes derivatives with respect to 12 parameters: k1, k2, Fx, Fy, mx, my, wx, wy, wz, tx, ty, tz
+ * @tparam T The data type of the scalar, either 'float' or 'double'
  */
-class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public DerivativeCalculatorT<Vector2, Scalar, Vector3>
+template <typename T>
+class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public DerivativeCalculatorT<VectorD2, double, VectorD3>
 {
 	public:
 
@@ -4486,37 +4420,38 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 		 * Creates a derivative calculator for pose pinhole camera jacobian 2x12.
 		 * @param camera The pinhole camera
 		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
-		 * @param objectPoint The 3D object point
 		 */
-		DerivativeCalculatorPosePinholeCameraJacobian2x12(const PinholeCamera& camera, const Pose& flippedCamera_P_world) :
-			camera_(camera),
-			flippedCamera_P_world_(flippedCamera_P_world)
+		DerivativeCalculatorPosePinholeCameraJacobian2x12(const PinholeCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world) :
+			cameraD_(camera),
+			flippedCamera_P_worldD_(flippedCamera_P_world)
 		{
-			unsigned int width = 0u;
-			unsigned int height = 0u;
-			PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+			unsigned int cameraWidth = 0u;
+			unsigned int cameraHeight = 0u;
+			PinholeCameraD::ParameterConfiguration parameterConfiguration = PinholeCameraD::PC_UNKNOWN;
 
-			camera_.copyParameters(width, height, cameraParameters_, parameterConfiguration);
+			cameraD_.copyParameters(cameraWidth, cameraHeight, cameraParametersD_, parameterConfiguration);
 
-			ocean_assert(width == camera_.width());
-			ocean_assert(height == camera_.height());
-			ocean_assert(parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
-			ocean_assert(cameraParameters_.size() == 8);
+			ocean_assert(parameterConfiguration == PinholeCameraD::PC_8_PARAMETERS);
+			ocean_assert(cameraParametersD_.size() == 8);
+
+			cameraWidth_ = cameraWidth;
+			cameraHeight_ = cameraHeight;
+			cameraParameterConfiguration_ = parameterConfiguration;
 		}
 
 	public:
 
 		/**
 		 * Calculates the projected image point with a perturbed parameter.
-		 * @param objectPoint The 3D object point (not used, required by interface)
+		 * @param objectPoint The 3D object point
 		 * @param parameterIndex The parameter index to perturb (0-5: camera params, 6-11: pose params)
 		 * @param offset The offset to apply
 		 * @return The projected 2D image point
 		 */
-		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
+		VectorD2 calculateValue(const VectorD3& objectPoint, const size_t parameterIndex, const double offset) const override
 		{
-			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
-			Scalars cameraParameters(cameraParameters_);
+			PoseD flippedCamera_P_world_perturbed(flippedCamera_P_worldD_);
+			std::vector<double> cameraParameters(cameraParametersD_);
 
 			if (parameterIndex < 6)
 			{
@@ -4541,21 +4476,30 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 				flippedCamera_P_world_perturbed[parameterMapping[parameterIndex - 6]] += offset;
 			}
 
-			const PinholeCamera cameraPerturbed(camera_.width(), camera_.height(), PinholeCamera::PC_8_PARAMETERS, cameraParameters.data());
+			const PinholeCameraD cameraPerturbed(cameraWidth_, cameraHeight_, cameraParameterConfiguration_, cameraParameters.data());
 
 			return cameraPerturbed.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, cameraPerturbed.hasDistortionParameters());
 		}
 
 	protected:
 
-		/// The pinhole camera
-		const PinholeCamera& camera_;
+		/// The pinhole camera in double precision
+		PinholeCameraD cameraD_;
 
-		/// The 8 camera parameters.
-		Scalars cameraParameters_;
+		/// The camera pose (inverted and flipped) in double precision
+		const PoseD flippedCamera_P_worldD_;
 
-		/// The camera pose (inverted and flipped)
-		const Pose& flippedCamera_P_world_;
+		/// Camera width
+		unsigned int cameraWidth_ = 0u;
+
+		/// Camera height
+		unsigned int cameraHeight_ = 0u;
+
+		/// Camera parameters in double precision
+		std::vector<double> cameraParametersD_;
+
+		/// Camera parameter configuration
+		PinholeCameraD::ParameterConfiguration cameraParameterConfiguration_ = PinholeCameraD::PC_UNKNOWN;
 };
 
 bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
@@ -4722,7 +4666,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 			}
 		}
 
-		const DerivativeCalculatorPosePinholeCameraJacobian2x12 derivativeCalculator(camera, flippedCamera_P_world);
+		const DerivativeCalculatorPosePinholeCameraJacobian2x12<Scalar> derivativeCalculator(camera, flippedCamera_P_world);
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
@@ -4750,9 +4694,11 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 				}
 			}
 
+			const VectorD3 objectPointD(objectPoint);
+
 			for (size_t parameterIndex = 0; parameterIndex < 12; ++parameterIndex)
 			{
-				if (!derivativeCalculator.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
+				if (!derivativeCalculator.verifyDerivative(objectPointD, parameterIndex, VectorD2(double(jacobianX[parameterIndex]), double(jacobianY[parameterIndex]))))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -4764,15 +4710,6 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 	Log::info() << "Performance naive: " << performanceNaive;
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
-
-	if (!validation.succeeded())
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
 
 	return validation.succeeded();
 }

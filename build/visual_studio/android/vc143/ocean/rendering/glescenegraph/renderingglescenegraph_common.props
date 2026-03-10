@@ -5,14 +5,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ocean_rendering_glescenegraph_common_imported>True</ocean_rendering_glescenegraph_common_imported>
+    <ocean_renderingglescenegraph_common_imported>True</ocean_renderingglescenegraph_common_imported>
   </PropertyGroup>
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
     <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
     <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\cv\cv_use.props"/>
-    <Import Condition="'$(ocean_cv_fonts_use_imported)' != 'True'" Project="..\..\cv\fonts\cvfonts_use.props"/>
+    <Import Condition="'$(ocean_cvfonts_use_imported)' != 'True'" Project="..\..\cv\fonts\cvfonts_use.props"/>
     <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
     <Import Condition="'$(ocean_rendering_use_imported)' != 'True'" Project="..\rendering_use.props"/>
     <Import Condition="'$(ocean_system_use_imported)' != 'True'" Project="..\..\system\system_use.props"/>

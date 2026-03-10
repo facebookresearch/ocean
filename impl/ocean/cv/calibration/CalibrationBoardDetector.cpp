@@ -133,7 +133,7 @@ bool CalibrationBoardDetector::determineClosedRectangle(ContinuousLineIndices& l
 
 		bool foundNextLine = false;
 
-		for (const Scalar leftRight : {1, -1})
+		for (const Scalar leftRight : {Scalar(1), Scalar(-1)})
 		{
 			perpendicularLineIndices.clear();
 
@@ -440,7 +440,7 @@ bool CalibrationBoardDetector::determineCameraPoseForMarker(const AnyCamera& cam
 
 			ocean_assert(pointIndex < points.size());
 
-			objectPoints.emplace_back(Scalar(x), 0, Scalar(z));
+			objectPoints.emplace_back(Scalar(x), Scalar(0), Scalar(z));
 			imagePoints.emplace_back(points[pointIndex].observation());
 		}
 	}

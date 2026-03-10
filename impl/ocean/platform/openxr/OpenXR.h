@@ -49,6 +49,16 @@ namespace OpenXR
 #endif
 
 /**
+ * Creates a zero-initialized OpenXR object with the given structure type.
+ * @param xrStructureType The structure type to set for the object, e.g., XR_TYPE_SPACE_LOCATION
+ * @return The zero-initialized object with the type field set
+ * @tparam T The type of the OpenXR object to create, e.g., XrSpaceLocation
+ * @ingroup platformopenxr
+ */
+template <typename T>
+constexpr T xrCreateObject(const XrStructureType xrStructureType);
+
+/**
  * Wrapper function for xrDestroySpace.
  * @param xrSpace The object to destroy
  * @return The return value
@@ -111,6 +121,15 @@ using XrHandJointsEXT = std::vector<XrHandJointEXT>;
  * @ingroup platformopenxr
  */
 using XrPaths = std::vector<XrPath>;
+
+template <typename T>
+constexpr T xrCreateObject(const XrStructureType xrStructureType)
+{
+	T object = {};
+	object.type = xrStructureType;
+
+	return object;
+}
 
 }
 

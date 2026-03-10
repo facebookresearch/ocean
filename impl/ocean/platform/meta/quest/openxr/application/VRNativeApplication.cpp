@@ -92,7 +92,7 @@ bool VRNativeApplication::createOpenXRSession(const XrViewConfigurationViews& xr
 		return false;
 	}
 
-	XrGraphicsRequirementsOpenGLESKHR xrGraphicsRequirementsOpenGLESKHR = {XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR};
+	XrGraphicsRequirementsOpenGLESKHR xrGraphicsRequirementsOpenGLESKHR = xrCreateObject<XrGraphicsRequirementsOpenGLESKHR>(XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR);
 	result = pfnGetOpenGLESGraphicsRequirementsKHR(xrInstance_, xrInstance_.xrSystemId(), &xrGraphicsRequirementsOpenGLESKHR);
 
 	if (result != XR_SUCCESS)
@@ -123,7 +123,7 @@ bool VRNativeApplication::createOpenXRSession(const XrViewConfigurationViews& xr
 
 	Log::debug() << "OpenGLES initialized";
 
-	XrGraphicsBindingOpenGLESAndroidKHR xrGraphicsBindingAndroidGLES = {XR_TYPE_GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR};
+	XrGraphicsBindingOpenGLESAndroidKHR xrGraphicsBindingAndroidGLES = xrCreateObject<XrGraphicsBindingOpenGLESAndroidKHR>(XR_TYPE_GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR);
 	xrGraphicsBindingAndroidGLES.display = eglContext_.display();
 	xrGraphicsBindingAndroidGLES.config = eglContext_.config();
 	xrGraphicsBindingAndroidGLES.context = eglContext_.context();
@@ -279,32 +279,32 @@ void VRNativeApplication::registerSystemFonts()
 	}
 }
 
-void VRNativeApplication::render(const bool shouldRender, const XrTime& xrPredictedDisplayTime, const Timestamp& renderTimestamp)
+void VRNativeApplication::render(const bool /*shouldRender*/, const XrTime& xrPredictedDisplayTime, const Timestamp& renderTimestamp)
 {
 	ocean_assert(stereoView_);
 	ocean_assert(engine_);
 	ocean_assert(framebuffer_ && questFramebuffer_ != nullptr);
 	ocean_assert(xrSession_.isValid());
 
-	XrSpaceLocation xrSpaceLocation = {XR_TYPE_SPACE_LOCATION};
+	XrSpaceLocation xrSpaceLocation = xrCreateObject<XrSpaceLocation>(XR_TYPE_SPACE_LOCATION);
 	XrResult xrResult = xrLocateSpace(xrSpaceView_.object(), baseSpace(), xrPredictedDisplayTime, &xrSpaceLocation);
 	ocean_assert_and_suppress_unused(xrResult == XR_SUCCESS, xrResult);
 
 	const HomogenousMatrix4 world_T_device(Utilities::toHomogenousMatrix4<Scalar>(xrSpaceLocation.pose));
 
-	XrFrameBeginInfo xrFrameBeginInfo = {XR_TYPE_FRAME_BEGIN_INFO};
+	XrFrameBeginInfo xrFrameBeginInfo = xrCreateObject<XrFrameBeginInfo>(XR_TYPE_FRAME_BEGIN_INFO);
 	xrResult = xrBeginFrame(xrSession_, &xrFrameBeginInfo);
 	ocean_assert(xrResult == XR_SUCCESS);
 
-	XrViewLocateInfo xrViewLocateInfo = {XR_TYPE_VIEW_LOCATE_INFO};
+	XrViewLocateInfo xrViewLocateInfo = xrCreateObject<XrViewLocateInfo>(XR_TYPE_VIEW_LOCATE_INFO);
 	xrViewLocateInfo.viewConfigurationType = xrViewConfigurationType_;
 	xrViewLocateInfo.displayTime = xrPredictedDisplayTime;
 	xrViewLocateInfo.space = xrSpaceView_.object();
 
-	XrViewState xrViewState = {XR_TYPE_VIEW_STATE};
+	XrViewState xrViewState = xrCreateObject<XrViewState>(XR_TYPE_VIEW_STATE);
 
   /// The OpenXR views for both eyes.
-	XrView xrViews[maximalNumberEyes_] = {{XR_TYPE_VIEW}, {XR_TYPE_VIEW}};
+	XrView xrViews[maximalNumberEyes_] = {xrCreateObject<XrView>(XR_TYPE_VIEW), xrCreateObject<XrView>(XR_TYPE_VIEW)};
 
 	uint32_t viewCountOutput = 0u;
 	xrResult = xrLocateViews(xrSession_, &xrViewLocateInfo, &xrViewState, uint32_t(maximalNumberEyes_), &viewCountOutput, xrViews);
@@ -349,7 +349,7 @@ void VRNativeApplication::render(const bool shouldRender, const XrTime& xrPredic
 	XrCompositionLayerProjection& xrCompositionLayerProjection = xrCompositorLayerUnions_.back().xrCompositionLayerProjection_;
 	memset(&xrCompositionLayerProjection, 0, sizeof(XrCompositionLayerProjection));
 
-	XrCompositionLayerProjectionView xrCompositionLayerProjectionViews[maximalNumberEyes_] = {{XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW}, {XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW}};
+	XrCompositionLayerProjectionView xrCompositionLayerProjectionViews[maximalNumberEyes_] = {xrCreateObject<XrCompositionLayerProjectionView>(XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW), xrCreateObject<XrCompositionLayerProjectionView>(XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW)};
 
 	xrCompositionLayerProjection.type = XR_TYPE_COMPOSITION_LAYER_PROJECTION;
 	xrCompositionLayerProjection.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT | XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT;
@@ -391,7 +391,7 @@ void VRNativeApplication::render(const bool shouldRender, const XrTime& xrPredic
 		xrCompositionLayerBaseHeaders_.emplace_back((const XrCompositionLayerBaseHeader*)(&xrCompositorLayerUnion));
 	}
 
-	XrFrameEndInfo xrFrameEndInfo = {XR_TYPE_FRAME_END_INFO};
+	XrFrameEndInfo xrFrameEndInfo = xrCreateObject<XrFrameEndInfo>(XR_TYPE_FRAME_END_INFO);
 	xrFrameEndInfo.displayTime = xrPredictedDisplayTime;
 	xrFrameEndInfo.environmentBlendMode = XR_ENVIRONMENT_BLEND_MODE_OPAQUE;
 	xrFrameEndInfo.layerCount = uint32_t(xrCompositionLayerBaseHeaders_.size());
@@ -443,7 +443,7 @@ void VRNativeApplication::onOpenXRSessionReady()
 				}
 			}
 
-			XrSessionActionSetsAttachInfo xrSessionActionSetsAttachInfo{XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO};
+			XrSessionActionSetsAttachInfo xrSessionActionSetsAttachInfo = xrCreateObject<XrSessionActionSetsAttachInfo>(XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO);
 			xrSessionActionSetsAttachInfo.countActionSets = uint32_t(xrActionSets.size());
 			xrSessionActionSetsAttachInfo.actionSets = xrActionSets.data();
 
@@ -529,7 +529,7 @@ void VRNativeApplication::onIdle()
 			}
 		}
 
-		XrActionsSyncInfo xrActionsSyncInfo{XR_TYPE_ACTIONS_SYNC_INFO};
+		XrActionsSyncInfo xrActionsSyncInfo = xrCreateObject<XrActionsSyncInfo>(XR_TYPE_ACTIONS_SYNC_INFO);
 		xrActionsSyncInfo.countActiveActionSets = uint32_t(xrActiveActionSets_.size());
 		xrActionsSyncInfo.activeActionSets = xrActiveActionSets_.data();
 
@@ -596,9 +596,9 @@ void VRNativeApplication::onAddCompositorFrontLayers(XrCompositorLayerUnions& /*
 	// can be implemented in derived classes
 }
 
-void VRNativeApplication::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
+void VRNativeApplication::onPreRender(const XrTime& /*xrPredictedDisplayTime*/, const Timestamp& predictedDisplayTime)
 {
-	ocean_assert(predictedDisplayTime.isValid());
+	ocean_assert_and_suppress_unused(predictedDisplayTime.isValid(), predictedDisplayTime);
 }
 
 void VRNativeApplication::onButtonPressed(const TrackedController::ButtonType buttons, const Timestamp& /*timestamp*/)

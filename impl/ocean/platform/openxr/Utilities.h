@@ -228,7 +228,7 @@ inline HomogenousMatrixT4<T> Utilities::determinePose(const XrSpace& xrSpace, co
 	ocean_assert(xrSpace != XR_NULL_HANDLE);
 	ocean_assert(xrBaseSpace != XR_NULL_HANDLE);
 
-	XrSpaceLocation xrSpaceLocation = {XR_TYPE_SPACE_LOCATION};
+	XrSpaceLocation xrSpaceLocation = xrCreateObject<XrSpaceLocation>(XR_TYPE_SPACE_LOCATION);
 	const XrResult xrResult = xrLocateSpace(xrSpace, xrBaseSpace, xrTime, &xrSpaceLocation);
 
 	if (xrResult != XR_SUCCESS)

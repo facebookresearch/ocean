@@ -346,9 +346,9 @@ inline bool ActionSet::actionState(const XrSession& xrSession, const XrAction& x
 	ocean_assert(xrSession != XR_NULL_HANDLE);
 	ocean_assert(xrAction != XR_NULL_HANDLE);
 
-	state = XrActionStateBoolean{XR_TYPE_ACTION_STATE_BOOLEAN};
+	state = xrCreateObject<XrActionStateBoolean>(XR_TYPE_ACTION_STATE_BOOLEAN);
 
-	XrActionStateGetInfo xrActionStateGetInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+	XrActionStateGetInfo xrActionStateGetInfo = xrCreateObject<XrActionStateGetInfo>(XR_TYPE_ACTION_STATE_GET_INFO);
 	xrActionStateGetInfo.action = xrAction;
 
 	const XrResult xrResult = xrGetActionStateBoolean(xrSession, &xrActionStateGetInfo, &state);
@@ -363,9 +363,9 @@ inline bool ActionSet::actionState(const XrSession& xrSession, const XrAction& x
 	ocean_assert(xrSession != XR_NULL_HANDLE);
 	ocean_assert(xrAction != XR_NULL_HANDLE);
 
-	state = XrActionStateFloat{XR_TYPE_ACTION_STATE_FLOAT};
+	state = xrCreateObject<XrActionStateFloat>(XR_TYPE_ACTION_STATE_FLOAT);
 
-	XrActionStateGetInfo xrActionStateGetInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+	XrActionStateGetInfo xrActionStateGetInfo = xrCreateObject<XrActionStateGetInfo>(XR_TYPE_ACTION_STATE_GET_INFO);
 	xrActionStateGetInfo.action = xrAction;
 
 	const XrResult xrResult = xrGetActionStateFloat(xrSession, &xrActionStateGetInfo, &state);
@@ -380,9 +380,9 @@ inline bool ActionSet::actionState(const XrSession& xrSession, const XrAction& x
 	ocean_assert(xrSession != XR_NULL_HANDLE);
 	ocean_assert(xrAction != XR_NULL_HANDLE);
 
-	state = XrActionStateVector2f{XR_TYPE_ACTION_STATE_VECTOR2F};
+	state = xrCreateObject<XrActionStateVector2f>(XR_TYPE_ACTION_STATE_VECTOR2F);
 
-	XrActionStateGetInfo xrActionStateGetInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+	XrActionStateGetInfo xrActionStateGetInfo = xrCreateObject<XrActionStateGetInfo>(XR_TYPE_ACTION_STATE_GET_INFO);
 	xrActionStateGetInfo.action = xrAction;
 
 	const XrResult xrResult = xrGetActionStateVector2f(xrSession, &xrActionStateGetInfo, &state);
@@ -397,9 +397,9 @@ inline bool ActionSet::actionState(const XrSession& xrSession, const XrAction& x
 	ocean_assert(xrSession != XR_NULL_HANDLE);
 	ocean_assert(xrAction != XR_NULL_HANDLE);
 
-	state = XrActionStatePose{XR_TYPE_ACTION_STATE_POSE};
+	state = xrCreateObject<XrActionStatePose>(XR_TYPE_ACTION_STATE_POSE);
 
-	XrActionStateGetInfo xrActionStateGetInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+	XrActionStateGetInfo xrActionStateGetInfo = xrCreateObject<XrActionStateGetInfo>(XR_TYPE_ACTION_STATE_GET_INFO);
 	xrActionStateGetInfo.action = xrAction;
 
 	const XrResult xrResult = xrGetActionStatePose(xrSession, &xrActionStateGetInfo, &state);

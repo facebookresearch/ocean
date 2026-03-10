@@ -75,7 +75,7 @@ bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, co
 	for (const CV::PixelPositionI& offset : offsets_)
 	{
 		uint8_t surroundingPixel;
-		CV::FrameInterpolatorBilinear::interpolatePixel<uint8_t, uint8_t, 1u, CV::PC_CENTER>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), observation + Vector2(offset.x(), offset.y()), &surroundingPixel);
+		CV::FrameInterpolatorBilinear::interpolatePixel<uint8_t, uint8_t, 1u, CV::PC_CENTER>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), observation + Vector2(Scalar(offset.x()), Scalar(offset.y())), &surroundingPixel);
 
 		const int32_t difference = int32_t(surroundingPixel) - int32_t(centerPixel);
 

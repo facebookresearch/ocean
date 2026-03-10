@@ -44,6 +44,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
           'building_for_macos.md',
           'building_for_meta_quest.md',
           'building_for_windows.md',
+          'building_with_visual_studio.md',
         ],
         modifyContent(filename, content) {
           // Convert relative links to absolute GitHub URLs
@@ -64,6 +65,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
             'building_for_macos.md': { title: 'Building for macOS', position: 5 },
             'building_for_meta_quest.md': { title: 'Building for Meta Quest', position: 6 },
             'building_for_windows.md': { title: 'Building for Windows', position: 7 },
+            'building_with_visual_studio.md': { title: 'Building with Visual Studio', position: 8 },
           };
 
           const platform = platformMap[filename];
