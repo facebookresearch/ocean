@@ -21,7 +21,7 @@ namespace CV
 
 /**
  * This class implements functions to measure the quality of images.
- * @ingroup oceancv
+ * @ingroup cv
  */
 class OCEAN_CV_EXPORT ImageQuality
 {

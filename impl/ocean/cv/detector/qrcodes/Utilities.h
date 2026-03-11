@@ -283,8 +283,6 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 				/**
 				 * Computes the locations of the corners of the finder pattern for a specific Micro QR code version in object space
 				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
-				 * @param version The version for which the locations of the finder pattern corners will be computed, range: [1, 4]
-				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
 				 * @return The 3D locations of the finder pattern corners in object space
 				 */
 				Vectors3 computeFinderPatternCornersInObjectSpace() const;

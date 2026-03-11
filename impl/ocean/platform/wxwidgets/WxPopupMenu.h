@@ -21,7 +21,7 @@ namespace WxWidgets
 
 /**
  * This class implements a popup menu.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxPopupMenu : public wxMenu
 {

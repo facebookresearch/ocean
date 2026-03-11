@@ -115,7 +115,10 @@ class OCEAN_CV_CALIBRATION_EXPORT Utilities
 
 		/**
 		 * Parses the marker dimension from a string.
-		 * The string must have the format '<HorizontalMarkers>x<VerticalMarkers>' - e.g., '8x13'
+		 * The string must have the format:
+		 * <pre>
+		 * <HorizontalMarkers>x<VerticalMarkers>, e.g., '8x13'
+		 * </pre>
 		 * @param markerDimension The string with the marker dimension to parse
 		 * @param horizontalMarkers The resulting number of horizontal markers, with range [1, infinity)
 		 * @param verticalMarkers The resulting number of vertical markers, with range [1, infinity)

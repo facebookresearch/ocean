@@ -77,7 +77,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeDetector2D : protected CV:
 		 * @param gaussianFilterSize Size of a Gaussian filter that is applied to the synthesized data; no filter is applied for the value 0, range: [0, infinity), must be an odd value
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker A worker object
-		 * @param testLable Label specified by caller test function, used in log messages and within generated file names.  Must be alphanumeric.
+		 * @param testLabel Label specified by caller test function, used in log messages and within generated file names.  Must be alphanumeric.
 		 * @param detectionValidationThreshold Proportion of QR code detection attempts that must succeed for the test to pass, range: [0, 1]
 		 * @param groundtruthComparisonValidationThreshold Proportion of QR code detection attempts that must succeed with exact match to groundtruth for the test to pass, range: [0, detectionValidationThreshold]
 		 * @param moduleSizePixelsMin Minimum module size in pixels, range: [1, infinity)

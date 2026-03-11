@@ -14,38 +14,56 @@
     <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\media\media_use.props"/>
     <Import Condition="'$(ocean_platform_use_imported)' != 'True'" Project="..\..\platform\platform_use.props"/>
   </ImportGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+  <ItemDefinitionGroup Condition="$(Configuration.StartsWith('Shared'))">
     <ClCompile>
       <PreprocessorDefinitions>WXUSINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
-	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\include;$(OceanRootPath)3rdparty\wxwidgets\3.1\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
+  <!-- Include paths need the lib-specific setup.h folder before the msvc wrapper to bypass wxWidgets' hardcoded relative paths -->
+  <!-- Static Debug -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\wxwidgets\h\win;$(OceanRootPath)3rdparty\wxwidgets\h\win\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;libpng16_staticd.lib;zlibstaticd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  <!-- Shared Debug -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\wxwidgets\h\win;$(OceanRootPath)3rdparty\wxwidgets\h\win\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>wxbase31d.lib;wxmsw31d_core.lib;wxpngd.lib;wxzlibd.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33ud.lib;wxmsw33ud_core.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  <!-- Static Profile/Release -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\wxwidgets\h\win;$(OceanRootPath)3rdparty\wxwidgets\h\win\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;libpng16_static.lib;zlibstatic.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  <!-- Shared Profile/Release -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\wxwidgets\h\win;$(OceanRootPath)3rdparty\wxwidgets\h\win\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
-	    <AdditionalDependencies>wxbase31.lib;wxmsw31_core.lib;wxpng.lib;wxzlib.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\3.1\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxbase33u.lib;wxmsw33u_core.lib;Comctl32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+
+  <!-- Append wxWidgets shared DLL directory and its zlib dependency to the debugger PATH for Shared builds -->
+  <PropertyGroup Condition="$(Configuration.StartsWith('Shared'))">
+    <OceanSharedLibPaths>$(OceanSharedLibPaths);$(OceanRootPath)3rdparty\wxwidgets\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libjpeg-turbo\lib\$(OceanConfigFolder);$(OceanRootPath)3rdparty\libtiff\lib\$(OceanConfigFolder)</OceanSharedLibPaths>
+    <LocalDebuggerEnvironment>PATH=$(OceanSharedLibPaths);%PATH%</LocalDebuggerEnvironment>
+  </PropertyGroup>
 </Project>

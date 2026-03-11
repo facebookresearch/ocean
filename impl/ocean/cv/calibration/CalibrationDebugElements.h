@@ -130,9 +130,9 @@ class CalibrationDebugElements final :
 		/**
 		 * Updates the point element visualizing the optimization process.
 		 * @param yFrame The frame in which the points have been detected, must be valid
-		 * @param pointsMoveFrom The starting point of all points which moved too much during the optimization process
-		 * @param pointsMoveTo The end point of all points which moved too much during the optimization process
-		 * @param pointsFlip The points with flipped sign during the optimization process
+		 * @param pointsMovedFrom The starting point of all points which moved too much during the optimization process
+		 * @param pointsMovedTo The end point of all points which moved too much during the optimization process
+		 * @param pointsFlipped The points with flipped sign during the optimization process
 		 * @param pointsFailed The points which failed during the optimization process
 		 */
 		void updatePointDetectorPointsOptimization(const Frame& yFrame, const Vectors2& pointsMovedFrom, const Vectors2& pointsMovedTo, const Vectors2& pointsFlipped, const Vectors2& pointsFailed);

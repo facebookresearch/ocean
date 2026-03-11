@@ -26,7 +26,7 @@ namespace X3D
 
 /**
  * This class implements an abstract x3d programmable shader object.
- * @ingroup x3d
+ * @ingroup scenedescriptionsdxx3d
  */
 class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DProgrammableShaderObject : virtual public SDXNode
 {

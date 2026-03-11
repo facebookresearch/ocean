@@ -199,7 +199,7 @@ class OCEAN_CV_CALIBRATION_EXPORT SVGImage
 		 * Writes the board markers of a calibration board to the SVG file.
 		 * @param stream The stream to which the SVG image will be written, must be valid
 		 * @param indentation The optional indentation within the SVG file when writing the markers, can be empty
-		 * @param boardMarkers The board markers to be written, must be valid
+		 * @param boardMarker The board marker to be written, must be valid
 		 * @param left The left position of the first marker, must be valid
 		 * @param top The top position of the first marker, must be valid
 		 * @param markerSize The size of the markers (the edge length of each marker), must be valid

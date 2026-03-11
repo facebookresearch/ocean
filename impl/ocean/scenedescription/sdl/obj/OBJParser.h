@@ -30,7 +30,7 @@ class OBJScene;
 
 /**
  * This class implements a obj parser able to parse obj files.
- * @ingroup scenegrpahobj
+ * @ingroup scenedescriptionsdlobj
  */
 class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJParser
 {

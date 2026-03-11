@@ -81,7 +81,7 @@ class OCEAN_TRACKING_EXPORT UnidirectionalCorrespondences
 		 * @param backwardDescriptors The second (backward) set of descriptors, can be invalid if 'numberBackwardDescriptors == 0'
 		 * @param numberBackwardDescriptors The number of descriptors in the second set, with range [0, infinity)
 		 * @param maximalDistance The maximal distance between two descriptors to count as match, with range [0, infinity)
-		 * @parma worker Optional worker to distribute the computation
+		 * @param worker Optional worker to distribute the computation
 		 * @return The resulting pairs with unidirectional correspondences
 		 * @tparam TDescriptor The data type of the descriptors
 		 * @tparam TDistance The data type of the distance between two descriptors

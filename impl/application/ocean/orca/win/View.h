@@ -272,7 +272,7 @@ class View : public CWnd
 
 		/**
 		 * Sets whether the framebuffer will use anti-aliasing.
-		 * @param anti-aliasing True, if anti-aliasing should be used
+		 * @param antialiasing True, if anti-aliasing should be used
 		 * @return True, if succeeded
 		 */
 		bool setAntialiasing(const bool antialiasing);

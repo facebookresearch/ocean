@@ -35,7 +35,7 @@ namespace ARCore
 
 /**
  * This class implements a wrapper around the actual ARCore tracker which may be used by several devices at the same time.
- * @ingroup devicearcore
+ * @ingroup devicesarcore
  */
 class OCEAN_DEVICES_ARCORE_EXPORT ARSessionManager : public Singleton<ARSessionManager>
 {

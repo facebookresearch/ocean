@@ -16,13 +16,19 @@
   </ImportGroup>
   <ItemDefinitionGroup>
 	  <ClCompile>
-      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\jpeglib\h;$(OceanRootPath)3rdparty\libpng\h;$(OceanRootPath)3rdparty\libtiff\h;$(OceanRootPath)3rdparty\libtiff\impl\h;$(OceanRootPath)3rdparty\libtiff\h\win;$(OceanRootPath)3rdparty\libtiff\impl\h\win;$(OceanRootPath)3rdparty\giflib\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\h\win;$(OceanRootPath)3rdparty\libpng\h\win;$(OceanRootPath)3rdparty\libtiff\h\win;$(OceanRootPath)3rdparty\giflib\h\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="$(Configuration.Contains('Debug'))">
     <Link>
-      <AdditionalDependencies>libjpeg.lib;libpng.lib;libtiff.lib;zlib.lib;giflib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\jpeglib\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libtiff\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\giflib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jpeg-static.lib;libpng16_staticd.lib;tiffd.lib;zlibstaticd.lib;gif.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libtiff\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\giflib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="!$(Configuration.Contains('Debug'))">
+    <Link>
+      <AdditionalDependencies>jpeg-static.lib;libpng16_static.lib;tiff.lib;zlibstatic.lib;gif.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libtiff\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\giflib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

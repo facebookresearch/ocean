@@ -83,7 +83,7 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 
 				/**
 				 * Returns the sign of point in this marker.
-				 * @param indexInMarkerUnoriented The index of the point in the marker, with range [0, numberPoints() - 1]
+				 * @param indexInMarker The index of the point in the marker, with range [0, numberPoints() - 1]
 				 * @return True, if the point has a positive sign (black dot on white background); False, if the point has a negative sign (white dot on black background)
 				 * @tparam tOriented True, if the specified point is defined within the marker's orientation; False, if the specified point is defined within the marker's unoriented layout
 				 */

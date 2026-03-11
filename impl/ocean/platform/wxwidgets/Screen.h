@@ -24,7 +24,7 @@ namespace WxWidgets
 
 /**
  * This class implements functions allowing to control screens and windows on screens.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 {

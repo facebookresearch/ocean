@@ -112,7 +112,10 @@ class OCEAN_MEDIA_EXPORT Utilities
 
 		/**
 		 * Parses a resolution string and returns the width and height.
-		 * The resolution string must have the following format: '<width>x<height>', e.g., '640x480', or '1280x720', or '1920x1080'.
+		 * The resolution string must have the following format:
+		 * <pre>
+		 * <width>x<height>, e.g., '640x480', or '1280x720', or '1920x1080'.
+		 * </pre>
 		 * @param resolution The resolution string to be parsed
 		 * @param width The resulting width
 		 * @param height The resulting height

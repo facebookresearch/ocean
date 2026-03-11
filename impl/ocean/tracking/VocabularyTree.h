@@ -138,7 +138,7 @@ class VocabularyStructure
 
 		/**
 		 * Definition of a vector holding matches.
-		 * @ingroup TDistance The data type of the distance measure between two descriptors, e.g., 'unsigned int', 'float'
+		 * @tparam TDistance The data type of the distance measure between two descriptors, e.g., 'unsigned int', 'float'
 		 */
 		template <typename TDistance>
 		using Matches = std::vector<Match<TDistance>>;

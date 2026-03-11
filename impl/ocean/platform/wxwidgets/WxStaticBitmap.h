@@ -21,7 +21,7 @@ namespace WxWidgets
 
 /**
  * This class implements a static bitmap.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxStaticBitmap : public wxStaticBitmap
 {

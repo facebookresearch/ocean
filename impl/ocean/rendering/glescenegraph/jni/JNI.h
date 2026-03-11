@@ -25,7 +25,7 @@ namespace JNI
 {
 
 /**
- * @ingroup renderingglescenegraph
+ * @ingroup renderinggles
  * @defgroup renderingglescenegraphjni Ocean Rendering GLESceneGraph JNI Library
  * @{
  * The Ocean Rendering GLESceneGraph JNI Library provides a Java Native Interface for Android.

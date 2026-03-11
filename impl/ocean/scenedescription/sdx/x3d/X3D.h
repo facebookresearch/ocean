@@ -60,7 +60,7 @@ OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT std::string nameX3DLibrary();
 /**
  * Registers this scenedescription library at the global scenedescription manager.
  * This function calls X3DLoader::registerLoader() only.
- * @ingroup scenedescriptionlsgx3d
+ * @ingroup scenedescriptionsdxx3d
  */
 void registerX3DLibrary();
 
@@ -68,7 +68,7 @@ void registerX3DLibrary();
  * Unregisters this scenedescription library at the global scenedescription manager.
  * This function calls X3DLoader::unregisterLoader() only.
  * @return True, if succeeded
- * @ingroup scenedescriptionlsgx3d
+ * @ingroup scenedescriptionsdxx3d
  */
 bool unregisterX3DLibrary();
 

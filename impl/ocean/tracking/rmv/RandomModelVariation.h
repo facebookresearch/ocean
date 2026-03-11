@@ -153,7 +153,7 @@ class OCEAN_TRACKING_RMV_EXPORT RandomModelVariation
 		 * @param initialFlippedCameras_T_world The initial and rough inverted and flipped poses which will be improved by application of the random model variation approach
 		 * @param firstInitialPose First initial pose to be handled, must be valid
 		 * @param numberInitialPoses Number of initial poses to be handled, with range [1, infinity)
-		 * @param Camera The camera profile defining the projection between 3D object points and 2D image points
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points
 		 * @param objectPoints Objects points to be used for pose determination, must be valid
 		 * @param numberObjectPoints Number of object points to be used for pose determination, with range [numberImagePoints, infinity) if tLessImagePoints is True; with range [3, numberImagePoints) if tLessImagePoints is False
 		 * @param imagePoints Image points to be used for pose determination, must be valid

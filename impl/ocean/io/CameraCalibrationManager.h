@@ -335,14 +335,14 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * The provided JSON object must have the following structure:
 		 * <pre>
 		 * {
-		 *    "resolution": {"width": <WIDTH_IN_PIXELS>, "height": <HEIGHT_IN_PIXELS>},
-		 *    "model": "<MODEL_NAME>",
-		 *    "configuration": "<PARAMETER_CONFIGURATION>",
-		 *    "parameters": [<PARAMETER_1>, <PARAMETER_2>, ...],
+		 *    "resolution": {"width": &lt;WIDTH_IN_PIXELS&gt;, "height": &lt;HEIGHT_IN_PIXELS&gt;},
+		 *    "model": "&lt;MODEL_NAME&gt;",
+		 *    "configuration": "&lt;PARAMETER_CONFIGURATION&gt;",
+		 *    "parameters": [&lt;PARAMETER_1&gt;, &lt;PARAMETER_2&gt;, ...],
 		 * }
 		 * </pre>
-		 * @param jsonCameraCalibrationFile The file path of the JSON calibration file, empty in case a buffer is provided via 'jsonCameraCalibrationBuffer'
-		 * @param jsonCameraCalibrationBuffer The JSON string/buffer containing the camera calibration, empty in case a file is provided via 'jsonCameraCalibrationFile'
+		 * @param jsonCameraCalibrationFile The file path of the JSON calibration file, empty in case a buffer is provided via 'jsonCameraCalibration'
+		 * @param jsonCameraCalibration The JSON string/buffer containing the camera calibration, empty in case a file is provided via 'jsonCameraCalibrationFile'
 		 * @return The parsed camera object, nullptr in case of an error
 		 */
 		SharedAnyCamera parseCamera(const std::string& jsonCameraCalibrationFile, std::string&& jsonCameraCalibration = std::string()) const;

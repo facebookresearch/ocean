@@ -24,7 +24,7 @@ namespace GlobalIllumination
 
 /**
  * This class implements a perspective view.
- * @ingroup renderingi
+ * @ingroup renderinggi
  */
 class OCEAN_RENDERING_GI_EXPORT GIPerspectiveView :
 	virtual public GIView,

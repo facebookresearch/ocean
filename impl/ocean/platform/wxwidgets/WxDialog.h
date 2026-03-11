@@ -28,7 +28,7 @@ namespace WxWidgets
 
 /**
  * This class implements a modal dialog for WxWidgets which in addition to the standard wxDialog implementation forces the modal-event-loop to stop if the dialog ends (the modal state).
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxDialog : public wxDialog
 {

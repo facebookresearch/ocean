@@ -21,7 +21,7 @@ namespace WxWidgets
 
 /**
  * This class implements a parent window taking on an already existing window handle as long as the instance of the scoped window exists.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxScopedParentWindow
 {

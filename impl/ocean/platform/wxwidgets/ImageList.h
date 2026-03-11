@@ -25,7 +25,7 @@ namespace WxWidgets
 
 /**
  * This class implements an image list.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT ImageList : public wxImageList
 {

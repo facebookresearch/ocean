@@ -73,7 +73,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 		/**
 		 * Draws styled text on a device context with customizable font, anchor position, and colors.
 		 * The text can be positioned using anchor points relative to the window dimensions, with optional shadow for better visibility.
-		 * @param dc The device context on which the text will be drawn
+		 * @param deviceContext The device context on which the text will be drawn
 		 * @param text The text to be drawn
 		 * @param font The name of the font to use (e.g., "Arial")
 		 * @param fontSize The height of the font in pixels

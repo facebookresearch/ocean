@@ -23,7 +23,7 @@ namespace WxWidgets
 
 /**
  * This class implements a bitmap.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class OCEAN_PLATFORM_WXWIDGETS_EXPORT Bitmap : public wxBitmap
 {

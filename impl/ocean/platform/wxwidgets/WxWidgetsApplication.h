@@ -21,7 +21,7 @@ namespace WxWidgets
 
 /**
  * This class implements a very simple WxWidgets application not registering for any kind of application event like e.g., file drag&drop events.
- * @ingroup platformwxwidgets
+ * @ingroup platformwxw
  */
 class WxWidgetsApplication : public wxApp
 {

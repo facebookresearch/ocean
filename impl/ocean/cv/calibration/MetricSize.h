@@ -133,14 +133,14 @@ class OCEAN_CV_CALIBRATION_EXPORT MetricSize
 
 		/**
 		 * Multiplies this metric size object with a scalar factor.
-		 * @param value The multiplication factor, with range (-infinity, infinity)
+		 * @param factor The multiplication factor, with range (-infinity, infinity)
 		 * @return The resulting product
 		 */
 		inline MetricSize operator*(const double factor) const;
 
 		/**
 		 * Multiplies and assigns this metric object with a scalar factor.
-		 * @param value The multiplication factor, with range (-infinity, infinity)
+		 * @param factor The multiplication factor, with range (-infinity, infinity)
 		 * @return The resulting product
 		 */
 		inline MetricSize& operator*=(const double factor);

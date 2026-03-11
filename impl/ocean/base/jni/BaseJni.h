@@ -156,7 +156,7 @@ class OCEAN_BASE_JNI_EXPORT BaseJni
 		 * Several individual message output types can be specified and combined:
 		 * - "STANDARD": To write all messages to the standard output (e.g., std::cout on desktop platforms, or Android logcat on Android platforms).
 		 * - "QUEUED": To queue all messages and to explicitly pop the messages later (e.g., to display messages in a debug window).
-		 * - <filename>: To write all messages to a define file.
+		 * - 'filename': To write all messages to a define file.
 		 * @param messageOutputType The type of the message output to be used, empty to use 'STANDARD'
 		 * @return True, if succeeded
 		 */

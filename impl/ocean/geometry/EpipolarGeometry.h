@@ -105,7 +105,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param normalizedRight_E_normalizedLeft The essential matrix to convert, must be valid
 		 * @param leftIntrinsic The left intrinsic camera matrix, must be valid
 		 * @param rightIntrinsic The right intrinsic camera matrix, must be valid
-		 * @param fundamental The resulting fundamental matrix 'right_F_left'
+		 * @return The resulting fundamental matrix 'right_F_left'
 		 */
 		static SquareMatrix3 essential2fundamental(const SquareMatrix3& normalizedRight_E_normalizedLeft, const SquareMatrix3& leftIntrinsic, const SquareMatrix3& rightIntrinsic);
 

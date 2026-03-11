@@ -790,7 +790,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * | dfx / dtx, dfx / dty, dfx / dtz,   dfx / dwx, dfx / dwy, dfx / dwz |
 		 * | dfy / dtx, dfy / dty, dfy / dtz,   dfy / dwx, dfy / dwy, dfy / dwz |
 		 * </pre>
-		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
+		 * @param fisheyeCamera The fisheye camera to determine the jacobian values for
 		 * @param flippedCamera_T_world Transformation between world and flipped camera, with flipped camera pointing towards the positive z-space with y-axis down
 		 * @param objectPoint 3D object point to determine the jacobian for
 		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()

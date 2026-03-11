@@ -103,7 +103,7 @@ class Depth final : public VRNativeApplicationAdvanced
 		 * Initializes the function pointer of an OpenXR function.
 		 * @param xrInstance The instance of the OpenXR session, must be valid
 		 * @param functionName The name of the function to be initialized, must be valid
-		 * @param fucntion The resulting function pointer
+		 * @param function The resulting function pointer
 		 * @return True, if succeeded
 		 */
 		template <typename T>

@@ -25,7 +25,7 @@ namespace GLESceneGraph
 /**
  * This class implements a GLESceneGraph material object.
  * @see Material
- * @ingroup renderingles
+ * @ingroup renderinggles
  */
 class OCEAN_RENDERING_GLES_EXPORT GLESMaterial :
 	virtual public GLESAttribute,

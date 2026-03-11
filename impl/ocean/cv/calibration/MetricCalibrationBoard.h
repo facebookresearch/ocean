@@ -119,7 +119,7 @@ class OCEAN_CV_CALIBRATION_EXPORT MetricCalibrationBoard : public CalibrationBoa
 		 * @param randomGenerator The random generator to be used
 		 * @param board_T_camera The resulting camera pose transforming camera to board, with default camera looking towards the positive z-space with y-axis upwards
 		 * @param maximalProjectionError The maximal projection error between projected 3D object points and their corresponding 2D observations, with range [0, infinity)
-		 * @param useMarkerCandidateIndices Optional resulting indices of the marker candidates which were used to determine the camera pose, nullptr if not of interest
+		 * @param usedMarkerCandidates Optional resulting indices of the marker candidates which were used to determine the camera pose, nullptr if not of interest
 		 * @param usedObjectPointIds Optional resulting ids of the object points which were used to determine the camera pose, nullptr if not of interest
 		 * @param usedObjectPoints Optional resulting 3D object points which were used to determine the camera pose, nullptr if not
 		 * @param usedImagePoints Optional resulting 2D image points which were used to determine the camera pose, nullptr if not
@@ -164,7 +164,7 @@ class OCEAN_CV_CALIBRATION_EXPORT MetricCalibrationBoard : public CalibrationBoa
 		 * @param yMarkers The number of vertical markers the calibration board will have, with range [1, infinity)
 		 * @param measurementMetricIndicationWidth The measured metric distance between the left and right measurement indication on the real calibration board, with range (0, infinity)
 		 * @param measurementMetricIndicationHeight The measured metric distance between the top and bottom measurement indication on the real calibration board, with range (0, infinity)
-		 * @param calibrationBoard The resulting calibration board
+		 * @param metricCalibrationBoard The resulting calibration board
 		 * @return True, if succeeded
 		 */
 		static bool createMetricCalibrationBoard(const unsigned int id, const size_t xMarkers, const size_t yMarkers, const MetricSize& measurementMetricIndicationWidth, const MetricSize& measurementMetricIndicationHeight, MetricCalibrationBoard& metricCalibrationBoard);

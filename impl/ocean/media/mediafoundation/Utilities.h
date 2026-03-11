@@ -180,7 +180,7 @@ class OCEAN_MEDIA_MF_EXPORT Utilities
 		 * @param activate The activate from which the string will be returned, must be valid
 		 * @param key The key identifying which value to retrieve, must be valid
 		 * @param value The resulting string value
-		 * @reutrn True, if succeeded
+		 * @return True, if succeeded
 		 */
 		static bool getAllocatedString(IMFActivate* activate, const GUID& key, std::string& value);
 

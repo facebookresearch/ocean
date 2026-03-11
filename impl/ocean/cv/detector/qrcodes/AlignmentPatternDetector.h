@@ -112,8 +112,8 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT AlignmentPatternDetector
 		 * @param height The height of the input image, range: [searchY + searchHeight, infinity)
 		 * @param paddingElements The padding elements of the input image, range: [0, infinity)
 		 * @param row The row of the input image in which alignment patterns will be searched, range: [0, height)
-		 * @param offsetX The offset in x-direction that will be added to the location of detected alignment patterns, range: [0, infinity)
-		 * @param offsetY The offset in y-direction that will be added to the location of detected alignment patterns, range: [0, infinity)
+		 * @param xOffset The offset in x-direction that will be added to the location of detected alignment patterns, range: [0, infinity)
+		 * @param yOffset The offset in y-direction that will be added to the location of detected alignment patterns, range: [0, infinity)
 		 * @param isNormalReflectance Indicates whether alignment patterns with normal or inverted reflectance are searched
 		 * @param grayThreshold The gray value that has been determined as the separation between foreground and background modules (cf. `FinderPattern::grayThreshold()`), range: [0, 255]
 		 * @param alignmentPatterns The resulting list of alignment patterns that have been found in the selected row

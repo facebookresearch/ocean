@@ -10,20 +10,21 @@
 
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_application_build_imported)' != 'True'" Project="application_build.props"/>
-  </ImportGroup>  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+  </ImportGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
     <Link>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Platform)'=='ARM64'">
     <Link>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <TargetMachine>MachineARM64</TargetMachine>
     </Link>
     <ProjectReference>

@@ -111,7 +111,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 				 * @param lensFacing The direction of the device
 				 * @param metadataMap The optional metadata map of the device
 				 */
-				inline Device(const std::string& id, const std::string& name_, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap = MetadataMap());
+				inline Device(const std::string& id, const std::string& name, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap = MetadataMap());
 
 			protected:
 

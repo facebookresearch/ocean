@@ -32,7 +32,7 @@ using namespace Ocean;
 /**
  * Parses the command inputs and returns the calibration board to be used.
  * @param commandArguments The command arguments to be parsed
- * @param calibrationBoard The resulting calibration board
+ * @return The resulting calibration board
  * @ingroup applicationdemocvcalibrationoffline
  */
 CV::Calibration::MetricCalibrationBoard determineCalibrationBoard(const CommandArguments& commandArguments);

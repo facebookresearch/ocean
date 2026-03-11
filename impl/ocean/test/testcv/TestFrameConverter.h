@@ -373,8 +373,8 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 
 		/**
 		 * Returns whether an image type can be converted to another image type without needing to create a copy of the image.
-		 * @param sourceType The source image type, must be valid
-		 * @param targetType The target image type, must be valid
+		 * @param sourceFrameType The source image type, must be valid
+		 * @param targetFrameType The target image type, must be valid
 		 * @return True, if soc
 		 */
 		static bool canBeConvertedWithoutCopy(const FrameType& sourceFrameType, const FrameType& targetFrameType);

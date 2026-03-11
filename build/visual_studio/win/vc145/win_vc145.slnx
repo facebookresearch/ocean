@@ -6,7 +6,6 @@
     <BuildType Name="Static Debug" />
     <BuildType Name="Static Profile" />
     <BuildType Name="Static Release" />
-    <Platform Name="Win32" />
     <Platform Name="x64" />
   </Configurations>
   <Folder Name="/application/" />
@@ -69,10 +68,8 @@
       <BuildType Solution="Shared Debug|*" Project="Static Debug" />
       <BuildType Solution="Shared Profile|*" Project="Static Profile" />
       <BuildType Solution="Shared Release|*" Project="Static Release" />
-      <Platform Project="x64" />
-      <Build Solution="*|Win32" Project="false" />
-      <Build Solution="Shared Debug|x64" Project="false" />
-      <Build Solution="Shared Release|x64" Project="false" />
+      <Build Solution="Shared Debug|*" Project="false" />
+      <Build Solution="Shared Release|*" Project="false" />
     </Project>
   </Folder>
   <Folder Name="/application/ocean/demo/cv/segmentation/">
@@ -135,7 +132,9 @@
   <Folder Name="/application/ocean/demo/rendering/">
     <Project Path="application/ocean/demo/rendering/opengl/win/demorenderingopenglwin.vcxproj" Id="6ab8360f-ce7a-4c32-9160-7e0286c671b9" />
     <Project Path="application/ocean/demo/rendering/opengl/wxw/demorenderingopenglwxw.vcxproj" Id="0962061e-2a24-4fa9-971c-faf035c61da1" />
-    <Project Path="application/ocean/demo/rendering/opengles/win/demorenderingopengles.vcxproj" Id="9978a529-cc35-45e3-bbae-0f19597cc92d" />
+    <Project Path="application/ocean/demo/rendering/opengles/win/demorenderingopengles.vcxproj" Id="9978a529-cc35-45e3-bbae-0f19597cc92d">
+      <Build Solution="*|*" Project="false" />
+    </Project>
     <Project Path="application/ocean/demo/rendering/openglstereo/win/demorenderingopenglstereo.vcxproj" Id="6a91fc3c-f930-4bc0-aae6-87d0a6fc2cf9" />
     <Project Path="application/ocean/demo/rendering/renderer/win/demorenderingrendererwin.vcxproj" Id="c0fe5d4a-d982-4342-bd66-48ab11eb87d2" />
     <Project Path="application/ocean/demo/rendering/renderer/wxw/demorenderingrendererwxw.vcxproj" Id="2fe7a996-2203-4f30-b753-7407996cf61f" />
@@ -154,14 +153,11 @@
   <Folder Name="/application/ocean/demo/tracking/mapbuilding/">
     <Project Path="application/ocean/demo/tracking/mapbuilding/multiviewmapcreator/win/demotrackingmultiviewmapcreator.vcxproj" Id="413c538a-95f9-43e3-bc22-615d3e1555bb">
       <BuildType Solution="Shared Debug|*" Project="Static Debug" />
-      <BuildType Solution="Shared Profile|Win32" Project="Static Profile" />
-      <BuildType Solution="Shared Profile|x64" Project="Static Release" />
+      <BuildType Solution="Shared Profile|*" Project="Static Release" />
       <BuildType Solution="Shared Release|*" Project="Static Release" />
-      <Platform Project="x64" />
-      <Build Solution="*|Win32" Project="false" />
-      <Build Solution="Shared Debug|x64" Project="false" />
-      <Build Solution="Shared Profile|x64" Project="false" />
-      <Build Solution="Shared Release|x64" Project="false" />
+      <Build Solution="Shared Debug|*" Project="false" />
+      <Build Solution="Shared Profile|*" Project="false" />
+      <Build Solution="Shared Release|*" Project="false" />
     </Project>
   </Folder>
   <Folder Name="/application/ocean/demo/tracking/maptexturing/">
@@ -169,11 +165,9 @@
       <BuildType Solution="Shared Debug|*" Project="Static Debug" />
       <BuildType Solution="Shared Profile|*" Project="Static Profile" />
       <BuildType Solution="Shared Release|*" Project="Static Release" />
-      <Platform Project="x64" />
-      <Build Solution="*|Win32" Project="false" />
-      <Build Solution="Shared Debug|x64" Project="false" />
-      <Build Solution="Shared Profile|x64" Project="false" />
-      <Build Solution="Shared Release|x64" Project="false" />
+      <Build Solution="Shared Debug|*" Project="false" />
+      <Build Solution="Shared Profile|*" Project="false" />
+      <Build Solution="Shared Release|*" Project="false" />
     </Project>
   </Folder>
   <Folder Name="/application/ocean/demo/tracking/offline/">
@@ -193,7 +187,6 @@
     <Project Path="application/ocean/test/base/testbase/win/testbase.vcxproj" Id="f5a19df7-54c6-456a-bbce-3042739066d7" />
   </Folder>
   <Folder Name="/application/ocean/test/cv/">
-    <Project Path="application/ocean/test/cv/detector/fastcomparison/win/testcvdetectorfastcomparison.vcxproj" Id="1ec7e81f-2f39-453c-b256-4e49214d391e" />
     <Project Path="application/ocean/test/cv/detector/orbpatterngenerator/win/testcvdetectororbpatterngenerator.vcxproj" Id="c572282d-e6d3-483a-b553-9f1bb7b81a62" />
     <Project Path="application/ocean/test/cv/testcv/testadvanced/win/testcvadvanced.vcxproj" Id="2c31a871-404e-4a20-93cb-c8a981756529" />
     <Project Path="application/ocean/test/cv/testcv/testdetector/testqrcodes/win/testcvdetectorqrcodes.vcxproj" Id="53f9d925-d145-42a2-8a15-2dd81b8872a0" />
@@ -207,9 +200,6 @@
   </Folder>
   <Folder Name="/application/ocean/test/geometry/">
     <Project Path="application/ocean/test/geometry/testgeometry/win/testgeometry.vcxproj" Id="e6f222f1-8b97-4096-bf50-b5bda382e17c" />
-  </Folder>
-  <Folder Name="/application/ocean/test/interaction/">
-    <Project Path="application/ocean/test/interaction/javascript/win/testinteractionjavascript.vcxproj" Id="df4dbfd0-b498-4f9a-b7a5-447de7eb8f58" />
   </Folder>
   <Folder Name="/application/ocean/test/io/">
     <Project Path="application/ocean/test/io/testio/testserialization/win/testioserialization.vcxproj" Id="7f8b4d1e-3a9c-4e5f-b2d6-8c1a5e3f7b9d" />
@@ -249,9 +239,6 @@
       <BuildType Solution="Shared Debug|*" Project="Static Debug" />
       <BuildType Solution="Shared Profile|*" Project="Static Profile" />
       <BuildType Solution="Shared Release|*" Project="Static Release" />
-      <Platform Solution="Shared Debug|Win32" Project="x64" />
-      <Platform Solution="Shared Profile|Win32" Project="x64" />
-      <Platform Solution="Shared Release|Win32" Project="x64" />
       <Build Solution="Shared Debug|*" Project="false" />
       <Build Solution="Shared Profile|*" Project="false" />
       <Build Solution="Shared Release|*" Project="false" />
@@ -266,7 +253,6 @@
       <BuildType Solution="Static Profile|*" Project="Static Release" />
     </Project>
     <Project Path="ocean/interaction/interaction.vcxproj" Id="d2f93ca9-fe4b-4912-86c0-5a3155c523c8" />
-    <Project Path="ocean/interaction/javascript/interactionjavascript.vcxproj" Id="c26c6def-7c17-499a-9e0a-d91e710f0673" />
     <Project Path="ocean/io/image/ioimage.vcxproj" Id="64ac6979-b5a6-4921-a61c-c4f688c48140" />
     <Project Path="ocean/io/io.vcxproj" Id="e1c7e10f-0ffe-470f-b85c-fbe427fc5371" />
     <Project Path="ocean/io/serialization/ioserialization.vcxproj" Id="ca10cc95-ddb8-406a-aa0f-ae5e9315ea50" />
@@ -299,9 +285,6 @@
       <BuildType Solution="Shared Debug|*" Project="Static Debug" />
       <BuildType Solution="Shared Profile|*" Project="Static Profile" />
       <BuildType Solution="Shared Release|*" Project="Static Release" />
-      <Platform Solution="Shared Debug|Win32" Project="x64" />
-      <Platform Solution="Shared Profile|Win32" Project="x64" />
-      <Platform Solution="Shared Release|Win32" Project="x64" />
       <Build Solution="Shared Debug|*" Project="false" />
       <Build Solution="Shared Profile|*" Project="false" />
       <Build Solution="Shared Release|*" Project="false" />
@@ -310,9 +293,6 @@
       <BuildType Solution="Shared Debug|*" Project="Static Debug" />
       <BuildType Solution="Shared Profile|*" Project="Static Profile" />
       <BuildType Solution="Shared Release|*" Project="Static Release" />
-      <Platform Solution="Shared Debug|Win32" Project="x64" />
-      <Platform Solution="Shared Profile|Win32" Project="x64" />
-      <Platform Solution="Shared Release|Win32" Project="x64" />
       <Build Solution="Shared Debug|*" Project="false" />
       <Build Solution="Shared Profile|*" Project="false" />
       <Build Solution="Shared Release|*" Project="false" />

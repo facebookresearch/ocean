@@ -458,7 +458,7 @@ class SSE
 		 * <pre>
 		 * maxValue = (2^15 - 1) - 2^(rightShifts - 1) = 32767 - 2^(rightShifts - 1)
 		 * </pre>
-		 * @param value The eight int16_t values to be divided, with range [-maxValue, maxValue]
+		 * @param value_s16x8 The eight int16_t values to be divided, with range [-maxValue, maxValue]
 		 * @param rightShifts The number of right shifts which needs to be applied, with range [1, 15]
 		 * @return The divided values
 		 * @see maximalValueForRoundedDivisionByRightShiftSigned16Bit().

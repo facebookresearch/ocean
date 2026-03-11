@@ -574,7 +574,7 @@ inline void FrameMinMax::determineMinMaxValues(const T* frame, const unsigned in
 
 /// Forward declaration of template socialization
 template <>
-bool FrameMinMax::countElementsOutsideRange<uint8_t>(const uint8_t* frame, const uint32_t width, const uint32_t height, const uint32_t framePaddingElements, const uint8_t rangeStart, const uint8_t rangeEnd, uint32_t* elementsBelowRange, uint32_t* elementsAboveRange);
+OCEAN_CV_EXPORT bool FrameMinMax::countElementsOutsideRange<uint8_t>(const uint8_t* frame, const uint32_t width, const uint32_t height, const uint32_t framePaddingElements, const uint8_t rangeStart, const uint8_t rangeEnd, uint32_t* elementsBelowRange, uint32_t* elementsAboveRange);
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 

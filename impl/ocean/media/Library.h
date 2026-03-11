@@ -68,7 +68,7 @@ class OCEAN_MEDIA_EXPORT Library
 
 				/**
 				 * Returns the URL of the medium definition.
-				 * @retrn The medium's URL
+				 * @return The medium's URL
 				 */
 				inline const std::string& url() const;
 

@@ -1193,7 +1193,7 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 
 		/**
 		 * Sets the absolute exposure duration of this device.
-		 * @param duration The exposure duration to be set, in seconds, with range (0, infinity), 0 for auto exposure
+		 * @param value The exposure duration to be set, in seconds, with range (0, infinity), 0 for auto exposure
 		 * @return True, if succeeded
 		 * @see absoluteExposure().
 		 */

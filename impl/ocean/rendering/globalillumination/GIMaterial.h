@@ -25,7 +25,7 @@ namespace GlobalIllumination
 /**
  * This class implements a Global Illumination material object.
  * @see Material
- * @ingroup renderingi
+ * @ingroup renderinggi
  */
 class OCEAN_RENDERING_GI_EXPORT GIMaterial :
 	virtual public GIAttribute,

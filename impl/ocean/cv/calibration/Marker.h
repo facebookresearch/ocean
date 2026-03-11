@@ -149,7 +149,7 @@ class OCEAN_CV_CALIBRATION_EXPORT Marker
 		/**
 		 * Creates a new marker with valid marker id and known sign.
 		 * @param markerId The id of the marker, must be valid
-		 * @param The sign of the marker; True, if the marker is a positive marker (mainly black dot's on white background); False, if the marker is a negative marker (mainly white dot's on black background)
+		 * @param sign The sign of the marker; True, if the marker is a positive marker (mainly black dot's on white background); False, if the marker is a negative marker (mainly white dot's on black background)
 		 */
 		inline Marker(const size_t markerId, const bool sign);
 
