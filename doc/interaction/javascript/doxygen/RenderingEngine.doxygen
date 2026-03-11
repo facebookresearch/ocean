@@ -1,0 +1,308 @@
+
+/**
+ * This object wrapps an Ocean rendering engine.
+ * An engine allows access to the existing framebuffers and their views.<br>
+ * Use this engine to find and receive named rendering objects created before.<br>
+ * Additionally, the engine can create new rendering objects.<br>
+ * This object is a wrapper of an internal Ocean framework object and provides all important functions.<br>
+ *
+ * Most predefined Ocean JavaScript Interaction event functions receive the specific rendering engine as function parameter.<br>
+ * Therefore, developer must not create a RenderingEngine objects on their own, their have to use the provided object instead.
+ * @see RenderingObject
+ * @ingroup rendering
+ */
+struct RenderingEngine
+{
+	/**
+	 * Name of the rendering engine.
+	 * The property has read access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *    var engineName = engine.name;
+	 *
+	 *    // use the messaging service of Ocean to tell the user the name of the rendering enigne
+	 *    ocean.info("The rendering engine has the following name: ", engineName);
+	 * }
+	 * @endcode
+	 */
+	Number name [get];
+
+	/**
+	 * Creates a new rendering object specified by the object type.
+	 * If the rendering engine does not support this kind of rendering object an empty rendering object is returned.<br>
+	 * Use the RenderingObject::isValid() function to determine whether the specified object could be created.<br>
+	 * To date the following object types are supported:<br>
+	 *
+	 * <b>AttributeSet</b><br>
+	 * This object can hold several appearance attributes (like e.g. Material, Textures or ShaderProgramCg) to specify the appearance of a geometry.<br>
+	 * An AttributeSet object can be combined with several different renderable objects (like e.g. Box, Cone, Cylinder, Sphere, Triangles or Quads).
+	 *
+	 * <b>Billboard</b><br>
+	 * This object defines a billboard object to justify 3D objects.<br>
+	 * In addition to the justify properties a Billboard object has the entire functionality of a Group object.
+	 *
+	 * <b>BlendAttribute</b><br>
+	 * This object defines the blend behavior of geometry objects.
+	 * A BlendAttribute can be added to an AttributeSet object to specify the entire appearance of a Geometry.
+	 *
+	 * <b>Box</b><br>
+	 * A Box defines a solid cuboid with six faces.<br>
+	 * Add a Box object combined with an AttributeSet object to a Geometry object to define a 3D box object with a specific appearance.
+	 *
+	 * <b>Cone</b><br>
+	 * A Cone defines a solid cone.<br>
+	 * Add a cone object combined with an AttributeSet object to a Geometry object to define a 3D cone object with a specific appearance.
+	 *
+	 * <b>Cylinder</b><br>
+	 * The Cylinder object defined a solid cylinder.<br>
+	 * Add a cylinder object combined with an AttributeSet object to a Geometry object to define a 3D cylinder object with a specific appearance.
+	 *
+	 * <b>DepthAttribute</b><br>
+	 * A DepthAttribute defines the depth behavior of a 3D object.<br>
+	 * This attribute can be added to an AttributeSet object to specify the entire appearance of a Geometry.
+	 *
+	 * <b>DirectionalLight</b><br>
+	 * This DirectionalLight object defines a light source with a specific direction.<br>
+	 * Each light source can be added to an object providing group functionalities (like e.g. Billboard, Group, Transform)
+	 *
+	 * <b>Geometry</b><br>
+	 * A Geometry object defines a node holding different renderable objects in combination with attribute sets.<br>
+	 * Each geometry node can be added to a grouping node.
+	 *
+	 * <b>Group</b><br>
+	 * A Group object defines a group node holding different child objects.
+	 *
+	 * <b>LOD</b><br>
+	 * The LOD object defines a Level-Of-Detail node able to switch the visibility of all child nodes according to their detail property.
+	 *
+	 * <b>Material</b><br>
+	 * Each Material object specifies material attributes of geometry objects.<br>
+	 * Add a material object to an AttributeSet object to specify the entire appearance of a Geometry object.
+	 *
+	 * <b>ParallelView</b><br>
+	 * A framebuffer can use a ParallelView object to provide a parallel projection of the 3D scene.
+	 *
+	 * <b>PerspectiveView</b><br>
+	 * The PerspectiveView provides a perspective projection of the 3D scene.<br>
+	 * Each framebuffer holds a view specifying the projection type.
+	 *
+	 * <b>PointLight</b><br>
+	 * This PointLight object defines a light source with a specific position and an even light distribution.<br>
+	 * Add this light source to an object providing group functionalities (like e.g. Billboard, Group, Transform)
+	 *
+	 * <b>PrimitiveAttribute</b><br>
+	 * A PrimitiveAttribute defines the behavior of the geometry mesh.<br>
+	 * This attribute can be added to an AttributeSet object to specify the entire appearance of a Geometry.
+	 *
+	 * <b>Quads</b><br>
+	 * A Quads object defines a mesh compromised by independent quads.<br>
+	 * This object specifies the mesh topology only, the vertices are taken from an additionally vertex set node.
+	 *
+	 * <b>QuadStrips</b><br>
+	 * A QuadStrips object defines a mesh compromised by quad strips.<br>
+	 * This object specifies the mesh topology only, the vertices are taken from an additionally vertex set node.
+	 *
+	 * <b>Scene</b><br>
+	 * A Scene object defines a scene node.<br>
+	 * Set any grouping or geometry node as root node to specify a virtual 3D scene.
+	 *
+	 * <b>ShaderProgramCg</b><br>
+	 * The ShaderProgramCg object defines an shader attribute node.<br>
+	 * Add this shader object to an AttributeSet object to specify the entire appearance of a Geometry object.<br>
+	 * Shader objects overwrite material attributes.
+	 *
+	 * <b>Sphere</b><br>
+	 * A Sphere object defines a solid sphere.<br>
+	 * Add a Sphere object combined with an AttributeSet object to a Geometry object to define a 3D sphere object with a specific appearance.
+	 *
+	 * <b>SpotLight</b><br>
+	 * This SpotLight object defines a light source with a specific position, direction and lighting cone.<br>
+	 * Add this light source to an object providing group functionalities (like e.g. Billboard, Group, Transform)
+	 *
+	 * <b>StereoView</b><br>
+	 * A framebuffer can use a stereo view object to provide a stereo visualization.
+	 *
+	 * <b>Switch</b><br>
+	 * Use a Switch object to switch the visibility bettween different child nodes.<br>
+	 * A switch node has all grouping node functionalities.
+	 *
+	 * <b>Texture2D</b><br>
+	 * The Texture2D object defines a 2D texture object.<br>
+	 * Different texture objects can be added to a Textures object.
+	 *
+	 * <b>Textures</b><br>
+	 * The Textures object holds a layer of several single 2D texture objects.<br>
+	 * This attribute can be added to an AttributeSet object to specify the entire appearance of a Geometry.
+	 *
+	 * <b>Transform</b><br>
+	 * A Transform object defines a transform node with grouping functionalities.<br>
+	 * Use this object to transform e.g. child geometry objects in space.
+	 *
+	 * <b>Triangles</b><br>
+	 * A Triangles object defines a mesh compromised by independent triangles.<br>
+	 * This object specifies the mesh topology only, the vertices are taken from an additionally vertex set node.
+	 *
+	 * <b>TriangleFans</b><br>
+	 * A TriangleFans object defines a mesh compromised by several triangle fans.<br>
+	 * This object specifies the mesh topology only, the vertices are taken from an additionally vertex set node.
+	 *
+	 * <b>TriangleStrips</b><br>
+	 * A TriangleStrips object defines a mesh compromised by triangle strips.<br>
+	 * This object specifies the mesh topology only, the vertices are taken from an additionally vertex set node.
+	 *
+	 * <b>UndistortedBackground</b><br>
+	 * The UndistortedBackground object defines a background node showing a media object.<br>
+	 * Distortion parameters of the media object are used to provide an undistorted background image.<br>
+	 * A background node can be added to each view.
+	 *
+	 * <b>VertexSet</b><br>
+	 * A VertexSet object holds vertices, normals, texture coordinates or color values.<br>
+	 * This object can be combined with different primitive objects (like e.g. Quads, Triangles, etc.) to define a geometry mesh.
+	 * @param type Type of the rendering object to create
+	 * @return New specified rendering object
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *    var newGroup = engine.createObject("Group");
+	 *
+	 *    // use the messaging service of Ocean to tell the user whether the rendering engine can create group objects
+	 *    if (newGroup.isValid())
+	 *       ocean.info("Group object created successfully.");
+	 *    else
+	 *       ocean.error("The rendering engine does not support Group objects!");
+	 * }
+	 * @endcode
+	 * @see RenderingObject, RenderingObject::isValid()
+	 */
+	RenderingObject createObject(String type);
+
+	/**
+	 * Returns the first framebuffer of this rendering engine.
+	 * Beware: A rendering engine can hold more than one framebuffer, however this function returns the first created framebuffer only.
+	 * @return First created framebuffer object of this rendering enigne.
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined function which is called before each update process inside the Ocean framework.
+	 * function onOceanPreUpdate(engine, timestamp)
+	 * {
+	 *    var firstFramebuffer = engine.framebuffer();
+	 *
+	 *    // use the framebuffer for further operations
+	 * }
+	 * @endcode
+	 */
+	RenderingObject framebuffer();
+
+	/**
+	 * Returns whether this rendering object is connected to a real object inside the Ocean framework.
+	 * In general an engine object received by a predefined event function is valid always.<br>
+	 * However, there is no guarantee for any other engine object.
+	 * @return True, if the JavaScript object is connected with an Ocean framework object
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined function which is called before each update process inside the Ocean framework.
+	 * function onOceanPreUpdate(engine, timestamp)
+	 * {
+	 *    if (engine.isValid())
+	 *       ocean.info("The engine is valid");
+	 *    else
+	 *       ocean.error("The engine object has no connection to an internal Ocean framework object.");
+	 * }
+	 * @endcode
+	 */
+	Boolean isValid();
+
+	/**
+	 * Returns whether this rendering object is not connected to a real object inside the Ocean framework.
+	 * In general an engine object received by a predefined event function is valid always.<br>
+	 * However, there is no guarantee for any other engine object.
+	 * @return True, if the JavaScript object is not connected with an Ocean framework object
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined function which is called before each update process inside the Ocean framework.
+	 * function onOceanPreUpdate(engine, timestamp)
+	 * {
+	 *    if (engine.isInvalid())
+	 *       ocean.error("The engine object has no connection to an internal Ocean framework object.");
+	 * }
+	 * @endcode
+	 */
+	Boolean isInvalid();
+
+	/**
+	 * Finds and returns the first rendering object specified by it's name.
+	 * In general more than one object can exist with the first name, however this function returns the first registed object only.<br>
+	 * Beware: If no object could be found have the specified name an empty rendering object is returnd.<br>
+	 * Therefore, make sure that the object is connected with an Ocean framework object before accessing futher functions!<br>
+	 * Use the RenderingObject::isValid() function before any usage!
+	 * @param name Name of the rendering object to be found
+	 * @return First rendering object specified by it's name
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined function which is called before each update process inside the Ocean framework.
+	 * function onOceanPreUpdate(engine, timestamp)
+	 * {
+	 *    // seek a special rendering object
+	 *    var transformObject = engine.findObject("TRANSFORM");
+	 *
+	 *    // check whether a rendering object with name "TRANSFORM" could be found
+	 *    if (transformObject.isValid())
+	 *       transformObject.setTranslation(new Vector3(1.0, 0.0, 0.0));
+	 *    else
+	 *       ocean.error("Could not translate the object because it currently does not exist.");
+	 * }
+	 * @endcode
+	 */
+	RenderingObject findObject(String name);
+
+	/**
+	 * Finds and returns all rendering objects with a specified name.
+	 * The returns array holds found objects as RenderingObject elements.
+	 * @param name Name of the rendering objects to be found
+	 * @return All rendering objets specified by their (identical) names
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined function which is called before each update process inside the Ocean framework.
+	 * function onOceanPreUpdate(engine, timestamp)
+	 * {
+	 *    // seek all rendering object
+	 *    var transformObjects = engine.findObject("TRANSFORM");
+	 *
+	 *    // changes the translation of all found objects
+	 *    for (int n = 0; n < transformObjects.length; n++)
+	 *       transformObjects[n].setTranslation(new Vector3(1.0, 0.0, 0.0));
+	 * }
+	 * @endcode
+	 */
+	Array<RenderingObject> findObjects(String name);
+
+	/**
+	 * Returns the view objects of the first framebuffer of this rendering engine.
+	 * Beware: A rendering engine can hold more than one framebuffer (and therefore more than one view object), however this function returns the view of the first created framebuffer only.
+	 * @return View of the first created framebuffer object of this rendering enigne.
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined function which is called before each update process inside the Ocean framework.
+	 * function onOceanPreUpdate(engine, timestamp)
+	 * {
+	 *    var firstView = engine.view();
+	 *
+	 *    // use the view for further operations
+	 * }
+	 * @endcode
+	 */
+	RenderingObject view();
+};

@@ -1,0 +1,376 @@
+
+/**
+ * This object implements a color object.
+ * The object holds four different Number values for a red, green, blue and alpha channel.<br>
+ * All three color parameters should lie inside the range [0.0, 1.0]. However, values higher than 1.0 are allowed.<br>
+ * The alpha value must lie inside the range [0.0, 1.0].
+ * To ensure that all values are in the mentioned range normalize the color.<br>
+ * Use the isNormalized function to check whether all parameters lie inside the preferred range.<br>
+ * An alpha value of 0 means fully opaque, 1 means fully transparent. Therefore the alpha value specifies the amout of transparency.<br>
+ * A red color is defined by: (1, 0, 0, 0), a green color by (0, 1, 0, 0), a blue color by (0, 0, 1, 0) and white by (1, 1, 1, 0).
+ * @ingroup rendering
+ */
+struct Color
+{
+	/**
+	 * Red property holding the red color component.
+	 * The property has read and write access.<br>
+	 * The value must be positive and should lie inside the range [0.0, 1.0], however higher values than 1.0 are allowed.<br>
+	 * A value of 0 means black, a value of 1 means red.
+	 * @see green, blue, alpha.
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.0, 0.0, 1.0);
+	 *
+	 * var redChannel = color.red;
+	 * color.red += 0.5;
+	 * @endcode
+	 */
+	Number red [get, set];
+
+	/**
+	 * Green proeprty holding the blue color component.
+	 * The property has read and write access.<br>
+	 * The value must be positive and should lie inside the range [0.0, 1.0], however higher values than 1.0 are allowed.<br>
+	 * A value of 0 means black, a value of 1 means green.
+	 * @see red, blue, alpha.
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.0, 0.0, 1.0);
+	 *
+	 * var greenChannel = color.green;
+	 * color.green += 0.5;
+	 * @endcode
+	 */
+	Number green [get, set];
+
+	/**
+	 * Blue property holding the blue color component.
+	 * The property has read and write access.<br>
+	 * The value must be positive and should lie inside the range [0.0, 1.0], however higher values than 1.0 are allowed.<br>
+	 * A value of 0 means black, a value of 1 means blue.
+	 * @see red, green, alpha.
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.0, 0.0, 1.0);
+	 *
+	 * var blueChannel = color.blue;
+	 * color.blue += 0.5
+	 * @endcode
+	 */
+	Number blue [get, set];
+
+	/**
+	 * Alpha property holding the alpha color component.
+	 * The property has read and write access.<br>
+	 * The value must lie inside the range [0.0, 1.0], other values are not allowed.<br>
+	 * A value of 0 means fully opaque, a value of 1 means fully transparent.
+	 * @see red, green, blue
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.0, 0.0, 1.0);
+	 *
+	 * var alphaChannel = color.alpha;
+	 * color.alpha += 0.5
+	 * @endcode
+	 */
+	Number alpha [get, set];
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new Color object as an opaque white color.
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * // color is equal to Color(1.0, 1.0, 1.0, 0.0);
+	 * var color = new Color();
+	 * @endcode
+	 */
+	Color();
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a copy of a Color object.
+	 * @param color Color to copy
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(new Color(1.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Color(Color color);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new Color object by the definition of the first color channel component only.<br>
+	 * The second and third component is set to zero, alpha is set to zero resulting in an opaque color.
+	 * @param red Red value of the new color object
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * // color is equal to Color(1.0, 0.0, 0.0, 0.0) and defines a red color
+	 * var color = new Color(1.0);
+	 * @endcode
+	 */
+	Color(Number red);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new Color object by the definition of the first and second color channel component only.<br>
+	 * The third component is set to zero, alpha is set to zero resulting in an opaque color.
+	 * @param red Red value of the new color object
+	 * @param green Green value of the new color object
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * // color is equal to Color(0.0, 1.0, 0.0, 0.0) and defines a green color
+	 * var color = new Color(0.0, 1.0);
+	 * @endcode
+	 */
+	Color(Number red, Number green);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new opaque Color object by three Number values.
+	 * @param red Red value of the new color object
+	 * @param green Green value of the new color object
+	 * @param blue Blue value of the new color object
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * // color is equal to Color(0.0, 0.0, 1.0, 0.0) and defines a blue color
+	 * var color = new Color(0.0, 0.0, 1.0);
+	 * @endcode
+	 */
+	Color(Number red, Number green, Number blue);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new Color object by four Number values.
+	 * @param red Red value of the new color object
+	 * @param green Green value of the new color object
+	 * @param blue Blue value of the new color object
+	 * @param alpha Alpha value of the new color object
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * // color is a 50% transparent green color
+	 * var color = new Color(0.0, 1.0, 0.0, 0.0, 0.5);
+	 * @endcode
+	 */
+	Color(Number red, Number green, Number blue, Number alpha);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new opaque Color object by a 3D vector holding the red, green and blue color channels.
+	 * @param vector 3D vector holding color channels
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(new Vector3(1.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Color(Vector3 vector);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new Color object by a 3D vector holding the red, green and blue color channels and a Number value defining the transparency.
+	 * @param vector 3D vector holding color channels
+	 * @param alpha Alpha value defining the transparency of the new Color object
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(new Vector3(1.0, 0.0, 0.0), 0.5);
+	 * @endcode
+	 */
+	Color(Vector3 vector, Number alpha);
+
+	/**
+	 * Constructor of a color object.
+	 * Creates a new Color object by a 4D vector holding the red, green and blue color channels and the transparency value.
+	 * @param vector 4D vector holding color and alpha channels
+	 * @return New Color object
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(new Vector4(1.0, 0.0, 0.0, 0.5));
+	 * @endcode
+	 */
+	Color(Vector4 vector);
+
+	/**
+	 * Clamps the color values of this Color object into the range of [0.0, 1.0].
+	 * @see clamped().
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(4.0, 0.0, 3.0);
+	 *
+	 * // color will be equal to Color(1.0, 0.0, 1.0);
+	 * var color.clamp();
+	 * @endcode
+	 */
+	clamp();
+
+	/**
+	 * Returns a new Color object with clamped color values.
+	 * All color values will be inside the range of [0.0, 1.0].
+	 * @see clamp().
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(4.0, 0.0, 3.0);
+	 *
+	 * // clampedColor is equal to Color(1.0, 0.0, 1.0);
+	 * var clampedColor = color.clamped();
+	 * @endcode
+	 */
+	Color clamped();
+
+	/**
+	 * Interpolates between two Color objects and returns a new interpolated Color object.
+	 * The interpolation is done using the HSV color space.
+	 * @param color Second Color object used for interpolation
+	 * @param factor Factor defining the interpolation amount, with range [0.0, 1.0]: 0.0 means 100% of the first color, 1.0 means 100% of the second color.
+	 * @return New resulting Color object
+	 *
+	 * Example:
+	 * @code
+	 * var color0 = new Color(1.0, 0.0, 0.0);
+	 * var color1 = new Color(0.0, 1.0, 0.0);
+	 *
+	 * var interpolatedColor = color0.interpolate(color1, 0.5);
+	 * @endcode
+	 */
+	Color interpolate(Color color, Number factor);
+
+	/**
+	 * Inverts all color values of this Color object, the alpha value is untouched.
+	 * @see inverted().
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.5, 0.0, 0.0);
+	 *
+	 * // color will be equal to Color(0.0, 0.5, 1.0, 0.0)
+	 * color.invert();
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns a new Color object with inverted color channels, the alpha value will be copied.
+	 * @see invert().
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.5, 0.0, 0.0);
+	 *
+	 * // invertedColor is equal to Color(0.0, 0.5, 1.0, 0.0)
+	 * invertedColor = color.inverted();
+	 * @endcode
+	 */
+	Color inverted();
+
+	/**
+	 * Returns whether all channel values of two Color objects are equal.
+	 * @param color Second Color object to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var color0 = new Color(1.0, 0.5, 0.0);
+	 * var color1 = new Color(1.0, 0.5, 0.0, 0.0);
+	 *
+	 * var result = color0.isEqual(color1);
+	 * @endcode
+	 */
+	Boolean isEqual(Color color);
+
+	/**
+	 * Returns whether all channel values of this Color object are normalized, meaning that they lie inside the range [0.0, 1.0].
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.5, 0.0);
+	 *
+	 * var result = color.isNormalized();
+	 * @endcode
+	 */
+	Boolean isNormalized();
+
+	/**
+	 * Multiplies a scalar Number value with each for the first three color channles of this Color object and returns the new Color object.
+	 * However, the alpha channel is copied only.
+	 * @param value Scalar value to multiply
+	 * @return New resulting mulitplication color
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(0.5, 0.5, 0.5, 0.5);
+	 *
+	 * // multiplication is equal to Coolor(1.0, 1.0, 1.0, 0.5)
+	 * var multiplication = color.multiply(2.0);
+	 * @endcode
+	 */
+	Color multiply(Number value);
+
+	/**
+	 * Normalizes this Color object.
+	 * During normalization all color values are scaled with the same factor so that the largest color value will be 1.0<br>
+	 * However, if no color channel value is larger than 1.0 nothing will be done.<br>
+	 * @see normalized().
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(8.0, 4.0, 2.0);
+	 *
+	 * // color will be equal to Color(1.0, 0.5, 0.25);
+	 * color.normalize();
+	 * @endcode
+	 */
+	normalize();
+
+	/**
+	 * Returns the normalized vetor of this Color object.
+	 * During normalization all color values are scaled with the same factor so that the largest color value will be 1.0<br>
+	 * However, if no color channel value is larger than 1.0 nothing will be done.<br>
+	 * @see normalize().
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(8.0, 4.0, 2.0);
+	 *
+	 * // normalizedColor is equal to Color(1.0, 0.5, 0.25);
+	 * normalizedColor = color.normalized();
+	 * @endcode
+	 */
+	Color normalized();
+
+	/**
+	 * Returns a string holding the four color components separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var color = new Color(1.0, 0.0, 1.0, 0.5);
+	 *
+	 * // str holds "1.0, 0.0, 1.0, 0.5" as string without quotation marks
+	 * var str = color.string();
+	 * @endcode
+	 */
+	String string();
+};

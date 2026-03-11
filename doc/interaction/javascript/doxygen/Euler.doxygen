@@ -1,0 +1,217 @@
+
+/**
+ * This object implements an euler rotation object with yaw, pitch and roll angles.
+ * The yaw angle is defined about the positive y-axis with range [-PI, PI].<br>
+ * The pitch angle is defined about the positive x-axis with range [-PI/2, PI/2].<br>
+ * The roll angle is defined about the positive z-axis with range [-PI, PI].<br>
+ * Altogether the Euler rotation can be seperated into three successive rotation transformations: Ry(yaw) * Rx(pitch) * Rz(roll).<br>
+ * Thus, the pitch angle will be applied about the new x-axis defined by the yaw angle about the orignal y-axis.<br>
+ * Further, the roll angle will be applied about the new z-axis defined by the pitch angle about the new x-axis.<br>
+ *
+ * Comments: Euler rotations should not be used for e.g. rotation interpolation purposes, use Quaternion rotations instead.<br>
+ * Beware: All angles are defined in radian.<br>
+ * @see Rotation, Quaternion
+ * @ingroup math
+ */
+struct Euler
+{
+	/**
+	 * Yaw property holding the yaw angle of this euler object.
+	 * Beware: The yaw angle must lie inside the range [-PI, PI].<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(Math.PI / 2.0, 0.0, 0.0);
+	 *
+	 * var yawComponent = euler.yaw;
+	 * euler.yaw += Math.PI / 4.0;
+	 * @endcode
+	 */
+	Number yaw [get, set];
+
+	/**
+	 * Pitch proeprty holding the pitch angle of this euler object.
+	 * Beware: The pitch angle must lie inside the range [-PI/2, PI/2].<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(0.0, Math.PI / 4.0, 0.0);
+	 *
+	 * var pitchComponent = euler.pitch;
+	 * euler.pitch += Math.PI / 8.0;
+	 * @endcode
+	 */
+	Number pitch [get, set];
+
+	/**
+	 * Roll property holding the roll angle of this euler object.
+	 * Beware: The roll angle must lie inside the range [-PI, PI].<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(0.0, 0.0, Math.PI / 2.0);
+	 *
+	 * var rollComponent = euler.roll;
+	 * euler.roll += Math.PI / 4.0;
+	 * @endcode
+	 */
+	Number roll [get, set];
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object with three zero components defining a default rotation.
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * // euler is equal to Euler(0.0, 0.0, 0.0);
+	 * var euler = new Euler();
+	 * @endcode
+	 */
+	Euler();
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a copy of an Euler object.
+	 * @param euler Euler rotation to copy
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(new Euler(Math.PI / 4.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Euler(Euler euler);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by the definition of the first euler angle only.<br>
+	 * The second and third angle is set to zero.
+	 * @param yaw Yaw angle of the new euler object, defined in radian
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * // euler is equal to Euler(Math.PI / 2.0, 0.0, 0.0)
+	 * var euler = new Euler(Math.PI / 2.0);
+	 * @endcode
+	 */
+	Euler(Number yaw);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by the definition of the first and second angle component only.<br>
+	 * The third component is set to zero.
+	 * @param yaw Yaw angle of the new euler rotation, defined in radian
+	 * @param pitch Pitch angle of the new euler rotation, defined in radian
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * // euler is equal to Euler(Math.PI / 2.0, Math.PI / 4.0, 0.0)
+	 * var euler = new Euler(Math.PI / 2.0, Math.PI / 4.0);
+	 * @endcode
+	 */
+	Euler(Number yaw, Number pitch);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by three euler angles.
+	 * @param yaw Yaw angle of the new rotation object
+	 * @param pitch Pitch angle of the new rotation object
+	 * @param roll Roll angle of the new rotation object
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(Math.PI / 2.0, Math.PI / 4.0, -Math.PI / 3.0);
+	 * @endcode
+	 */
+	Euler(Number yaw, Number pitch, Number roll);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by the rotation component of a 4x4 homogenous matrix object.<br>
+	 * Possible translation, scale or shear components are ignored.
+	 * @param matrix 4x4 homogenous transformation matrix defining the equivalent rotation of the new euler object
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0)));
+	 * @endcode
+	 */
+	Euler(HomogenousMatrix4 matrix);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by a angle-axis rotation object.
+	 * @param rotation Angle-axis rotation object defining the equivalent euler object
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 * @endcode
+	 */
+	Euler(Rotation rotation);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by a quaternion rotation object.
+	 * @param quaternion Quaternion rotation object defining the equivalent euler object
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Euler(Quaternion quaternion);
+
+	/**
+	 * Constructor of a new euler object.
+	 * Creates a new Euler object by a 3x3 rotation matrix object.<br>
+	 * Possible scale or shear components are ignored.
+	 * @param matrix 3x3 rotation matrix object defining the equivalent euler object
+	 * @return New Euler object
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(new SquareMatrix3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	Euler(SquareMatrix3 matrix);
+
+	/**
+	 * Returns whether two euler objects represent the same rotation up to a small epsilon.
+	 * @param euler Second euler rotation to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var euler0 = new Euler(Math.PI / 5.0, 0.0, 0.0);
+	 * var euler1 = new Euler(0.0, -Math.PI / 3.0, 0.0);
+	 *
+	 * var result = euler0.isEqual(euler1);
+	 * @endcode
+	 */
+	Boolean isEqual(Euler euler);
+
+	/**
+	 * Returns a string holding the three euler angles separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var euler = new Euler(Math.PI / 3.0, 0.0, Math.PI / 8.0);
+	 *
+	 * // str holds "1.0471976, 0.0, 0.392699082" as string without quotation marks
+	 * var str = euler.string();
+	 * @endcode
+	 */
+	String string();
+};

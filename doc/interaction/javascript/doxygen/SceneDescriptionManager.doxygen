@@ -1,0 +1,87 @@
+
+/**
+ * This object implements the scene description manager.
+ * Use this manager to access already existing scene description node objects.<br>
+ *
+ * Beware: Check the validity of a returned scene description node object before usage.<br>
+ * To check whehter the JavaScript is connected to an Ocean framework object use the SceneDescriptionNode::isValid() function.<br>
+ *
+ * The scene description manager is accessible using the device property of the global ocean object.<br>
+ * Do not create a SceneDescriptionManager object on your own, use the global object instead.
+ *
+ * Example:
+ * @code
+ * /**
+ *  * Initialization function which is called once to initialize this script.
+ *  */
+ * function onOceanInitialize(engine, timestamp)
+ * {
+ *     // tells the user what this interaction script is doing
+ *     ocean.info("Ocean SceneDescriptionNode test: Accessing a scene description node object.");
+ *
+ *     // use the scene description manager property of the global ocean object to find a node
+ *     transformNode = ocean.sceneDescription.findNode("TRANSFORM");
+ *
+ *     // tests whether the node is valid and can be used
+ *     if (transformNode.isValid())
+ *     {
+ *         // sets a specific field of the scene description node
+ *         // in this case the node has a field with name 'translation' which can be changed
+ *         // Beware: different scene descrption nodes can have different fields with different field names
+ *         transformNode.setField("translation", new Vector3(10, 0, 0));
+ *     }
+ *     else
+ *     {
+ *         // tell the user that the specified scene descrption node object could not be found
+ *         ocean.warning("The specified scene descrption node could not be found");
+ *      }
+ * }
+ * @endcode
+ * @see Ocean, SceneDescriptionNode
+ * @ingroup scenedescription
+ */
+struct SceneDescriptionManager
+{
+	/**
+	 * Seeks a scene description node with specified name.
+	 * If more than one object exist an arbitrary node is returned having the specified name.
+	 * Beware: Check the validity of the returned scene description node object before usage.<br>
+	 * To check whehter the JavaScript object is connected to an Ocean framework object use the SceneDescriptionNode::isValid() function.<br>
+	 * @param name Name of the new scene description node to find
+	 * @return Scene description node object with specified name
+	 */
+	SceneDescriptionNode findNode(String name);
+
+	/**
+	 * Seeks a scene description node with specified name defined within a specified library.
+	 * If more than one object exist an arbitrary node is returned having the specified name.
+	 * Beware: Check the validity of the returned scene description node object before usage.<br>
+	 * To check whehter the JavaScript object is connected to an Ocean framework object use the SceneDescriptionNode::isValid() function.<br>
+	 * @param library Name of the scene description library holding the specified node
+	 * @param name Name of the new scene description node to find
+	 * @return Scene description node object with specified name
+	 */
+	SceneDescriptionNode findNode(String library, String name);
+
+	/**
+	 * Seeks all scene description node with specified name.
+	 * The return value is an array with scene descriptio node objects.
+	 * @param name Name of the new scene description nodes to be found
+	 * @return Scene description node objects with specified name
+	 */
+	Array<SceneDescriptionNode> findNodes(String name);
+
+	/**
+	 * Seeks all scene description node with specified name defined within a specified library.
+	 * @param library Name of the scene description library holding the specified node
+	 * @param name Name of the new scene description node to find
+	 * @return Scene description node objects with specified name
+	 */
+	Array<SceneDescriptionNode> findNodes(String library, String name);
+
+	/**
+	 * Returns the name of all scene description libraries accessible using this manager.
+	 * @return Names of accessible scene description libraries
+	 */
+	 Array<String> libraries();
+};

@@ -18,10 +18,10 @@ index 9c8024e..215da2f 100755
 +if(MATH_LIBRARY)
 +    target_link_libraries(tiff PUBLIC ${MATH_LIBRARY})
  endif()
- 
+
  set(tiff_libs_private_list "${tiff_libs_private_list}" PARENT_SCOPE)
  set(tiff_requires_private "${tiff_requires_private}" PARENT_SCOPE)
- 
+
 -set_target_properties(tiff PROPERTIES SOVERSION ${SO_COMPATVERSION})
 +#set_target_properties(tiff PROPERTIES SOVERSION ${SO_COMPATVERSION})
  if(NOT CYGWIN)

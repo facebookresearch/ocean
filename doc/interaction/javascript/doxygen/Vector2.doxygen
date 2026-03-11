@@ -1,0 +1,311 @@
+
+/**
+ * This object implements a 2D vector object.
+ * The vector holds two different Number values.
+ * @see Vector3
+ * @ingroup math
+ */
+struct Vector2
+{
+	/**
+	 * X property holding the first vector component.
+	 * The property has read and write access.
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 0.0);
+	 *
+	 * var xComponent = vector.x;
+	 * vector.x += 4.0;
+	 * @endcode
+	 */
+	Number x [get, set];
+
+	/**
+	 * Y proeprty holding the second vector component.
+	 * The property has read and write access.
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 0.0);
+	 *
+	 * var yComponent = vector.y;
+	 * vector.y += 4.0;
+	 * @endcode
+	 */
+	Number y [get, set];
+
+	/**
+	 * Constructor of a 2D vector object.
+	 * Creates a new Vector2 object with two zero components.
+	 * @return New Vector2 object
+	 *
+	 * Example:
+	 * @code
+	 * // vector is equal to Vector2(0.0, 0.0);
+	 * var vector = new Vector2();
+	 * @endcode
+	 */
+	Vector2();
+
+	/**
+	 * Constructor of a 2D vector object.
+	 * Creates a copy of a Vector2 object.
+	 * @param vector Vector to copy
+	 * @return New Vector2 object
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(new Vector2(1.0, 0.0));
+	 * @endcode
+	 */
+	Vector2(Vector2 vector);
+
+	/**
+	 * Constructor of a 2D vector object.
+	 * Creates a new Vector2 object by the definition of the first vector component only.<br>
+	 * The second is set to zero.
+	 * @param x X value of the new vector object
+	 * @return New Vector2 object
+	 *
+	 * Example:
+	 * @code
+	 * // vector is equal to Vector2(1.0, 0.0)
+	 * var vector = new Vector2(1.0);
+	 * @endcode
+	 */
+	Vector2(Number x);
+
+	/**
+	 * Constructor of a 2D vector object.
+	 * Creates a new Vector2 object by two Number values.
+	 * @param x X value of the new vector object
+	 * @param y Y value of the new vector object
+	 * @return New Vector2 object
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 2.0);
+	 * @endcode
+	 */
+	Vector2(Number x, Number y);
+
+	/**
+	 * Adds one scalar Number value to each component of the 2D vector and returns a new result vector object.
+	 * @param value Scalar value to add
+	 * @return New resulting 2D addition vector
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 0.0);
+	 *
+	 * // sum is equal to Vector2(4.0, 3.0);
+	 * var sum = vector.add(3.0);
+	 * @endcode
+	 */
+	Vector2 add(Number value);
+
+	/**
+	 * Adds two 2D vector objects and returns a new result vector object.
+	 * @param vector Second vector object to add
+	 * @return New resulting 2D addition vector
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(1.0, 0.0);
+	 * var vector1 = new Vector2(0.0, 2.0);
+	 *
+	 * // sum is equal to Vector2(1.0, 2.0);
+	 * var sum = vector0.add(vector1);
+	 * @endcode
+	 */
+	Vector2 add(Vector2 vector);
+
+	/**
+	 * Returns the angle between two 2D vector objects.
+	 * @param vector Second vector object for angle calculation
+	 * @return Angle between the two vectors, in radian
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(1.0, 0.0);
+	 * var vector1 = new Vector2(0.0, 1.0);
+	 *
+	 * // angleInRad is equal to PI/2 which is equivalent to 90 degree
+	 * var angleInRad = vector0.angle(vector1);
+	 * @endcode
+	 */
+	Number angle(Vector2 vector);
+
+	/**
+	 * Inverts this 2D vector object.
+	 * Each component of the vector object will be negated.
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, -0.5);
+	 *
+	 * // Invertation equal to Vector2(-1.0, 0.5)
+	 * vector.invert();
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns the inverted 2D vector of this vector object.
+	 * Each component of the new returning vector will be negated.
+	 * @return New inverted 2D vector object
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(1.0, -0.5);
+	 *
+	 * // vector1 is equal to Vector(-1.0, 0.5), vector0 is left unchanged
+	 * var vector1 = vector0.inverted();
+	 * @endcode
+	 */
+	Vector2 inverted();
+
+	/**
+	 * Returns whether all two component of two 2D vector objects are equal.
+	 * @param vector Second vector to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(1.0, -0.5);
+	 * var vector1 = new Vector2(1.0, -0.5);
+	 *
+	 * var result = vector0.isEqual(vector1);
+	 * @endcode
+	 */
+	Boolean isEqual(Vector2 vector);
+
+	/**
+	 * Returns the length of a vector as Number value.
+	 * The length value is calculated as following: sqrt(x*x + y*y)
+	 * @return 2D vector length
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 4.0);
+	 *
+	 * var result = vector.length();
+	 * @endcode
+	 */
+	Number length();
+
+	/**
+	 * Multiplies a scalar Number value with each component of this 2D vector object and returns the new vector object.
+	 * @param value Scalar value to multiply
+	 * @return New resulting mulitplication vector
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 4.0);
+	 *
+	 * // multiplication is equal to Vector2(2.0, 8.0)
+	 * var multiplication = vector.multiply(2.0);
+	 * @endcode
+	 */
+	Vector2 multiply(Number value);
+
+	/**
+	 * Returns the dot product of two 2D vector objects.
+	 * @param vector Second vector for the dot product
+	 * @return Resulting dot product as Number value
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(1.0, 0.0);
+	 * var vector1 = new Vector2(0.0, 1.0);
+	 *
+	 * // dot is zero because both vectors are perpendicular
+	 * var dot = vector0.multiply(vector1);
+	 * @endcode
+	 */
+	Number multiply(Vector2 vector);
+
+	/**
+	 * Normalizes this 2D vector object to a vector with length 1.
+	 * If this vector holds twpo zero component normalization is undefined and nothing will be done.
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(5.0, 0.0);
+	 *
+	 * // vector will be equal to Vector2(1.0, 0.0, 0.0);
+	 * vector.normalize();
+	 * @endcode
+	 */
+	normalize();
+
+	/**
+	 * Returns the normalized vetor of this 2D vector object.
+	 * The resulting vector object will have a length of 1, if the original vector is not a zero vector.<br>
+	 * In this case a new zero 2D vector object is returned.
+	 * @return Normalized 2D vector
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(5.0, 0.0);
+	 *
+	 * // vector1 will be equal to Vector2(1.0, 0.0);
+	 * var vector1 = vector0.normalized();
+	 * @endcode
+	 */
+	Vector2 normalized();
+
+	/**
+	 * Returns a string holding the two vector components separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 2.0);
+	 *
+	 * // str holds "1.0, 2.0" as string without quotation marks
+	 * var str = vector.string();
+	 * @endcode
+	 */
+	String string();
+
+	/**
+	 * Subtracts one scalar Number value from each component of the 2D vector and returns a new result vector object.
+	 * @param value Scalar value to subtract
+	 * @return New resulting 2D subtraction vector
+	 *
+	 * Example:
+	 * @code
+	 * var vector = new Vector2(1.0, 0.0);
+	 *
+	 * // difference is equal to Vector2(-1.0, -2.0);
+	 * var difference = vector.subtract(2.0);
+	 * @endcode
+	 */
+	Vector2 subtract(Number value);
+
+	/**
+	 * Subtracts two 2D vector objects and returns a new result vector object.
+	 * @param vector Second vector object to subtract
+	 * @return New resulting 2D subtraction vector
+	 *
+	 * Example:
+	 * @code
+	 * var vector0 = new Vector2(1.0, 0.0);
+	 * var vector1 = new Vector2(0.0, 2.0);
+	 *
+	 * // difference is equal to Vector2(1.0, -2.0);
+	 * var difference = vector0.add(vector1);
+	 * @endcode
+	 */
+	Vector2 subtract(Vector2 vector);
+};
+
+/**
+ * @example Vector2.js
+ * This is an example of how to use the Vector2 object.<br>
+ * The example uses the global JavaScript function "onOceanInitialize()" to do some Vector2 operations.<br>
+ * Additionally, the global "ocean" object is used to give the operation results back to the running application.<br>
+ * @see Vector2, Ocean::info().
+ */

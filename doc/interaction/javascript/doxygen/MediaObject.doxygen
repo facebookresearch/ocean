@@ -1,0 +1,485 @@
+
+/**
+ * This object wrapps an Ocean framework media object.<br>
+ * Use the media manager to create new media objects.<br>
+ *
+ * Beware: Check the validity of the returned media object before usage.<br>
+ * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+ * @see MediaManager
+ * @ingroup media
+ */
+struct MediaObject
+{
+	/**
+	 * URL proeprty holding the filename or url of the media object.
+	 * The property has read access.
+	 */
+	String url [get];
+
+	/**
+	 * Constructor of a new but not usable media object.
+	 * Use this constructor function to assign the type of an object only.<br>
+	 * Beware: Do not use this constructor to create a specific media object.<br>
+	 * To create a specific and functional media object use the media manager instead.
+	 * @see MediaManager
+	 */
+	MediaObject();
+
+	/**
+	 * Returns the current duraction of the media object in seconds.
+	 * The current duration is given respecting the current speed.
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Media duration in seconds
+	 */
+	Number duration();
+
+	/**
+	 * Returns whether the media object is played in a loop.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return True, if so
+	 */
+	Boolean loop();
+
+	/**
+	 * Returns the height of a frame media object in pixel.
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Frame height in pixel
+	 * @see preferredFrameHeight(), setPreferredFrameDimension().
+	 */
+	Integer frameHeight();
+
+	/**
+	 * Returns the width of a frame media object in pixel.
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Frame width in pixel
+	 * @see preferredFrameWidth(), setPreferredFrameDimension().
+	 */
+	Integer frameWidth();
+
+	/**
+	 * Returns the pixel format of a frame medium object.
+	 * Possible values are:<br>
+	 * "UNDEFINED" specifying an undefined pixel format<br>
+	 * "BGR24" specifying a pixel format with byte order BGR and 24bits per pixel.<br>
+	 * "BGR32" specifying a pixel format with byte order BGR and 24bits per pixel and 8 unused bits.<br>
+	 * "BGR4444" specifying a pixel format with entirely 16 bits per pixel, 12 bits for BGR and 4 unused bits.<br>
+	 * "BGR5551" specifying a pixel format with entirely 16 bits per pixel, 15 bits for BGR and 1 unused bit.<br>
+	 * "BGR565" specifying a pixel format with entirely 16 bits per pixel, 5 bits for blue, 6 bits for green and 5 bits for red.<br>
+	 * "BGRA32" specifying a pixel format with byte order BGRA and 32 bits per pixel.<br>
+	 * "BGRA4444" specifying a pixel format with entirely 15 bits per pixel, 4 bits for each channel.<br>
+	 * "RGB24" specifying a pixel format with byte order RGB and 24 bits per pixel.<br>
+	 * "RGB32" specifying a pixel format with byte order RGB and 24 bits per pixel and 8 unused bits.<br>
+	 * "RGB4444" specifying a pixel format with entirely 16 bits per pixel, 12 bits for RGB and 4 unused bits.<br>
+	 * "RGB5551" specifying a pixel format with entirely 16 bits per pixel, 15 bits for RGB and 1 unused bit.<br>
+	 * "RGB565" specifying a pixel format with entirely 16 bits per pixel, 5 bits for red, 6 bits for green and 5 bits for blue.<br>
+	 * "RGBA32" specifying a pixel format with byte order RGBA and 32bits per pixel.<br>
+	 * "RGBA4444" specifying a pixel format with entirely 16 bits per pixel, 4 bits for each channel.<br>
+	 * "YUV12" specifying a pixel format with 8 bits Y frame followed by 8 bits 2x2 subsampled U and V frames, resulting in 12 bits per pixel.<br>
+	 * "YVU12" specifying a pixel format with 8 bits Y frame followed by 8 bits 2x2 subsampled V and U frames, resulting in 12 bits per pixel.<br>
+	 * "YUY2"<br>
+	 * "Y8" specifying a pixel format with byte order Y and 8 bits per pixel.<br>
+	 * "Y16" specifying a pixel format with 16 bits Y frame.<br>
+	 * "Y32" specifying a pixel format with 32 bits Y frame.<br>
+	 * "YA16" specifying a pixel format with byte order YA and 16 bits per pixel.<br>
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return String holding the pixel format
+	 * @see preferredPixelFormat(), setPreferredPixelFormat().
+	 */
+	String framePixelFormat();
+
+	/**
+	 * Returns the pixel origin of a frame medium object.
+	 * Possible values are:<br>
+	 * "UNDEFINED" specifying a frame with unknown pixel origin.<br>
+	 * "LOWER LEFT" specifying a frame with pixel origin in the lower left corner.<br>
+	 * "UPPER LEFT" specifying a frame with pixel origin in the upper left corner.<br>
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return String holding the pixel origin
+	 * @see preferredPixelOrigin(), setPreferredPixelOrigin().
+	 */
+	String framePixelOrigin();
+
+	/**
+	 * Returns the number of bytes used to store one frame of this frame object.
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Frame size in bytes
+	 */
+	Integer frameSize();
+
+	/**
+	 * Returns the frequence of the frame object in Hz.
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Frame frequence in Hz
+	 * @see preferredFrameFrequence(), setPreferredFrameFrequence().
+	 */
+	Number frameFrequence();
+
+	/**
+	 * Returns the timestamp of the most recent frame.
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Frame timestamp of the most recent frame
+	 */
+	Number frameTimestamp();
+
+	/**
+	 * Returns whether the media object holds a frame.
+	 * Depending on the installed decoders e.g. a movie can not be processed correclty and therefore has audio output only.<br>
+	 * Use this function to check whether the media object has a valid frame output or not.<br>
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return True, if the media object holds a frame, false otherwise
+	 */
+	Boolean hasFrame();
+
+	/**
+	 * Returns the preferred frame width of a media object in pixel.
+	 * The media object tries to provide the preferred media dimension, however there is no guarantee for that.
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Preferred frame width in pixel
+	 * @see frameWidth(), setPreferredFrameDimension().
+	 */
+	Integer preferredFrameWidth();
+
+	/**
+	 * Returns the preferred frame height of the media object in pixel.
+	 * The media object tries to provide the preferred media dimension, however there is no guarantee for that.
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Preferred frame height in pixel
+	 * @see frameHeight(), setPreferredFrameDimension().
+	 */
+	Integer preferredFrameHeight();
+
+	/**
+	 * Returns the preferred frame frequence of the media object in Hz.
+	 * The media object tries to provide the preferred frame frequence, however there is no guarantee for that.
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return Preferred frame frequence in Hz
+	 * @see frameFrequence(), setPreferredFrameFrequence().
+	 */
+	Number preferredFrameFrequence();
+
+	/**
+	 * Returns the preferred frame pixel format of the media object.
+	 * The media object tries to provide the preferred pixel format, however there is no guarantee for that.
+	 *
+	 * This function can be used for the following objects: <b>FrameStream, Image, LiveVideo, Movie</b>
+	 * @return String holding the preferred pixel format
+	 * @see framePixelFormat(), setPreferredFramePixelFormat().
+	 */
+	String preferredFramePixelFormat();
+
+	/**
+	 * Returns the duration of the media object in seconds with the standard speed.
+	 * This duration is independent of the current speed.
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Standard media duration in seconds
+	 * @see duration(), speed(), setSpeed().
+	 */
+	Number normalDuration();
+
+	/**
+	 * Returns the absolute position of the media object in seconds starting at the beginning of the media.
+	 * This position is independent of the current speed.
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Current media position in seconds
+	 * @see setPosition().
+	 */
+	Number position();
+
+	/**
+	 * Returns the current speed of the media object as factor of the normal speed.
+	 * The default speed factor is 1.0, a media object played with the double speed has a speed factor of 2.0.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Current speed factor
+	 * @see duration(), normalDuration().
+	 */
+	Number speed();
+
+	/**
+	 * Returns whether the media object has a sound object.
+	 * Depending on the installed decoders e.g. a movie can not be processed correclty and therefore has video output only.<br>
+	 * Use this function to check whether the media object has a valid audio output or not.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return True, if the media object has a sound output, false otherwise
+	 * @see hasFrame().
+	 */
+	Boolean hasSound();
+
+	/**
+	 * Returns the number of channels the sound object provides.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Number of sound channels this media object provides, e.g. a stereo audio output has two channels
+	 */
+	Integer soundChannels();
+
+	/**
+	 * Returns the frequence of the sound object in Hz.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Sound frequence provided by the media object.
+	 */
+	Number soundFrequence();
+
+	/**
+	 * Returns the number of bits per sound samples provided by this media object.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Number of bits per sound sample
+	 */
+	Number soundBitsPerSample();
+
+	/**
+	 * Returns the sound volume of this media object.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Sound volume in db
+	 * @see setSoundVolume().
+	 */
+	Number soundVolume();
+
+	/**
+	 * Returns whether the sound of this media object is muted.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Sound mute state
+	 * @see setSoundMute().
+	 */
+	Boolean soundMute();
+
+	/**
+	 * Returns the preferred number of sound channels of this media object.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Preferred number of sound channels
+	 * @see soundChannels(), setPreferredSoundChannels().
+	 */
+	Integer preferredSoundChannels();
+
+	/**
+	 * Returns the preferred sound frequence of this media object.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Preferred sound frequence in Hz
+	 * @see soundFrequence(), setPreferredSoundFrequence().
+	 */
+	Number preferredSoundFrequence();
+
+	/**
+	 * Returns the preferred number of bits per sound samples of this media object.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @return Preferred number of bits per sample
+	 * @see soundBitsPerSample(), setPreferredSoundBitsPerSample().
+	 */
+	Integer preferredSoundBitsPerSample();
+
+	/**
+	 * Sets whether the media object will be played in a loop.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param loop True to set the media object into the loop mode, false otherwise
+	 * @return True, if succeeded
+	 */
+	Boolean setLoop(Boolean loop);
+
+	/**
+	 * Sets the absolute play position of the media object.
+	 * The position must lie in side the range[0.0, MediaObject::normalDuration()].<br>
+	 * The play position is independent from the current play speed.
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param position Absolute play position to set, specified in seconds
+	 * @return True, if succeeded
+	 * @see position(), normalDuration().
+	 */
+	Boolean setPosition(Number position);
+
+	/**
+	 * Sets the speed factor of the media object.
+	 * The default speed factor is 1.0, a media object played with the double speed has a speed factor of 2.0.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param speed Speed factor to set, must be larger than zero
+	 * @return True, if succeeded
+	 * @see speed(), duration(), normalDuration().
+	 */
+	Boolean setSpeed(Number speed);
+
+	/**
+	 * Sets the preferred frame dimension of this media object.
+	 * Specify the preferred dimension before starting the media object.<br>
+	 * The media object tries to provide the preferred frame dimension, however there is no guarantee for that.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param width Preferred frame width in pixel
+	 * @param height Preferred frame height in pixel
+	 * @return True, if succeeded
+	 * @see preferredFrameWidth(), preferredFrameHeight(), frameWidth(), frameHeight().
+	 */
+	Boolean setPreferredFrameDimension(Integer width, Integer height);
+
+	/**
+	 * Sets the preferred frame frequence of this media object.
+	 * Specify the preferred frame frequence before starting the media object.<br>
+	 * The media object tries to provide the preferred frame frequence, however there is no guarantee for that.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param frequence Preferred frame frequence in Hz
+	 * @return True, if succeeded
+	 * @see preferredFrameFrequence(), frameFrequence().
+	 */
+	Boolean setPreferredFrameFrequence(Number frequence);
+
+	/**
+	 * Sets the preferred frame pixel format of this media object.
+	 *
+	 * Possible values are:<br>
+	 * "UNDEFINED" specifying an undefined pixel format<br>
+	 * "BGR24" specifying a pixel format with byte order BGR and 24bits per pixel.<br>
+	 * "BGR32" specifying a pixel format with byte order BGR and 24bits per pixel and 8 unused bits.<br>
+	 * "BGR4444" specifying a pixel format with entirely 16 bits per pixel, 12 bits for BGR and 4 unused bits.<br>
+	 * "BGR5551" specifying a pixel format with entirely 16 bits per pixel, 15 bits for BGR and 1 unused bit.<br>
+	 * "BGR565" specifying a pixel format with entirely 16 bits per pixel, 5 bits for blue, 6 bits for green and 5 bits for red.<br>
+	 * "BGRA32" specifying a pixel format with byte order BGRA and 32 bits per pixel.<br>
+	 * "BGRA4444" specifying a pixel format with entirely 15 bits per pixel, 4 bits for each channel.<br>
+	 * "RGB24" specifying a pixel format with byte order RGB and 24 bits per pixel.<br>
+	 * "RGB32" specifying a pixel format with byte order RGB and 24 bits per pixel and 8 unused bits.<br>
+	 * "RGB4444" specifying a pixel format with entirely 16 bits per pixel, 12 bits for RGB and 4 unused bits.<br>
+	 * "RGB5551" specifying a pixel format with entirely 16 bits per pixel, 15 bits for RGB and 1 unused bit.<br>
+	 * "RGB565" specifying a pixel format with entirely 16 bits per pixel, 5 bits for red, 6 bits for green and 5 bits for blue.<br>
+	 * "RGBA32" specifying a pixel format with byte order RGBA and 32bits per pixel.<br>
+	 * "RGBA4444" specifying a pixel format with entirely 16 bits per pixel, 4 bits for each channel.<br>
+	 * "YUV12" specifying a pixel format with 8 bits Y frame followed by 8 bits 2x2 subsampled U and V frames, resulting in 12 bits per pixel.<br>
+	 * "YVU12" specifying a pixel format with 8 bits Y frame followed by 8 bits 2x2 subsampled V and U frames, resulting in 12 bits per pixel.<br>
+	 * "YUY2"<br>
+	 * "Y8" specifying a pixel format with byte order Y and 8 bits per pixel.<br>
+	 * "Y16" specifying a pixel format with 16 bits Y frame.<br>
+	 * "Y32" specifying a pixel format with 32 bits Y frame.<br>
+	 * "YA16" specifying a pixel format with byte order YA and 16 bits per pixel.<br>
+	 *
+	 * Specify the preferred frame pixel format before starting the media object.<br>
+	 * The media object tries to provide the preferred pixel format, however there is no guarantee for that.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param pixelFormat Preferred pixel format specified as string
+	 * @return True, if succeeded
+	 * @see preferredFramePixelFormat(), framePixelFormat().
+	 */
+	Boolean setPreferredFramePixelFormat(String pixelFormat);
+
+	/**
+	 * Sets the sound volume of a media object.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param volume Sound volume to set in db
+	 * @return True, if succeeded
+	 * @see soundVolume().
+	 */
+	Boolean setSoundVolume(Number volume);
+
+	/**
+	 * Sets whether the sound of a media object will be muted.
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param mute True, to mute the sound object
+	 * @return True, if succeeded
+	 * @see soundMute().
+	 */
+	Boolean setSoundMute(Boolean mute);
+
+	/**
+	 * Sets the preferred number of sound channels of this media object.
+	 * Specify the preferred number of sound channels before starting the media object.<br>
+	 * The media object tries to provide the preferred sound channels, however there is no guarantee for that.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param channels Preferred sound channel number
+	 * @return True, if succeeded
+	 * @see preferredSoundChannels(), soundChannels().
+	 */
+	Boolean setPreferredSoundChannels(Integer channels);
+
+	/**
+	 * Sets the preferred sound frequence of this media object.
+	 * Specify the preferred sound frequence before starting the media object.<br>
+	 * The media object tries to provide the preferred frequence, however there is no guarantee for that.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param frequence Preferred sound frequence to set
+	 * @return True, if succeeded
+	 * @see preferredSoundFrequence(), soundFrequence().
+	 */
+	Boolean setPreferredSoundFrequence(Number frequence);
+
+	/**
+	 * Sets the preferred number of bits per sound sample for this media object.
+	 * Specify the preferred sound sample rate before starting the media object.<br>
+	 * The media object tries to provide the preferred sample rate, however there is no guarantee for that.<br>
+	 *
+	 * This function can be used for the following objects: <b>Audio, Movie</b>
+	 * @param bitsPerSample Sample rate to set
+	 * @return True, if succeeded
+	 * @see preferredSoundBitsPerSample(), soundBitsPerSample().
+	 */
+	Boolean setPreferredSoundBitsPerSample(Integer bitsPerSample);
+
+	/**
+	 * Returns whehter this media object is connected to an Ocean framework media object.
+	 * Beware: Do not use a media object before the validation has been checked!
+	 * @return True, if the media object is valid and can be used
+	 * @see isInvalid().
+	 */
+	Boolean isValid();
+
+	/**
+	 * Returns whether this media object can be used exclusively.
+	 * @return True, if so
+	 */
+	Boolean isExclusive();
+
+	/**
+	 * Returns whether this media object is currently started.
+	 * @return True, if so
+	 */
+	Boolean isStarted();
+
+	/**
+	 * Returns whehter this media object is not connected to an Ocean framework media object.
+	 * Beware: Do not use a media object before the validation has been checked!
+	 * @return True, if the media object is not valid and must not be used
+	 * @see isValid().
+	 */
+	Boolean isInvalid();
+
+	/**
+	 * Starts the media object.
+	 * If the media object has been stopped before, the media will restart.<br>
+	 * The object will resume if it has been paused before.<br>
+	 * Each media object must be started to provide e.g. a image frame.
+	 * @return True, if the media object could be started
+	 * @see restart(), pause(), stop(), isStarted().
+	 */
+	Boolean start();
+
+	/**
+	 * Starts or restart the media object from the media beginning.
+	 * Each media object must be started to provide e.g. a image frame.
+	 * @return True, if the media object could be started
+	 * @see start(), pause(), stop(), isStarted().
+	 */
+	Boolean restart();
+
+	/**
+	 * Pauses a media object.
+	 * @return True, if the media object could be paused
+	 * @see start(), restart(), stop(), isStarted().
+	 */
+	Boolean pause();
+
+	/**
+	 * Stops the media object.
+	 * @return True, if the media object could be stopped
+	 * @see start(), restart(), pause(), isStarted().
+	 */
+	Boolean stop();
+};

@@ -1,0 +1,720 @@
+
+/**
+ * This object implements a 4x4 homogenous transformation matrix object.
+ * A homogenous transformation matrix for the 3D space can hold a translation, a rotation, a scale and a shear component.<br>
+ * Each matrix defines a transformation bettwen two different coordinate systems.<br>
+ * Matrix multiplication of a 3D vector defined inside a coordinate system A results in a new equivalent 3D vector representing the same point.<br>
+ * However the new point is defined for a second coordinate system B, if the the matrix defines a transformation from coordinate system A to B.<br>
+ * If a homogenous matrix contains a translation component the original coordinate system will be transformed using the translation component first, without any respect to a possible defined rotation or scale component.<br>
+ * Afterwards the translated coordinate system will be transformed respecting rotation, scale and shear components into another coordinate system.<br>
+ *
+ * The sixteen values are stored in a column aligned order with indices:<br>
+ * | 0  4  8  12 |<br>
+ * | 1  5  9  13 |<br>
+ * | 2  6  10 14 |<br>
+ * | 3  7  11 15 |<br>
+ *
+ * This matrix allowes homogenous transformations only.<br>
+ * A valid homogenous matrix has the following structure:<br>
+ * With basis vectors (rx1, ry1, rz1), (rx2, ry2, rz2), (rx3, ry3, rz3), and translation vector (tx, ty, tz):<br>
+ * | rx1 rx2 rx3 tx |<br>
+ * | ry1 ry2 ry3 ty |<br>
+ * | rz1 rz2 rz3 tz |<br>
+ * |  0   0   0   1 |<br>
+ * @see Euler, Quaternion, Rotation, SquareMatrix3, SquareMatrix4, Vector3, Vector4
+ * @ingroup math
+ */
+struct HomogenousMatrix4
+{
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new identity HomogenousMatrix4 object.
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4();
+	 *
+	 * // vector will be equal to the multiplied vector due the the identity property of the default homogenous matrix object.
+	 * var vector = matrix.multiply(new Vector3(1.0, 2.0, 3.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4();
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a copy of a HomogenousMatrix4 object.
+	 * @param matrix Matrix to copy
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new HomogenousMatrix4());
+	 * @endcode
+	 */
+	HomogenousMatrix4(HomogenousMatrix4 matrix);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by the definition of at most sixteen scalar Number values.<br>
+	 * The first parameter defines the matrix element of the first row and first colum,<br>
+	 * the second parameter defines the matrix element of the second row and the first column and so on.<br>
+	 * If less than sixteen Number values are defined the missing matrix elements are defined as default identity matrix elements.<br>
+	 * @param m0 Matrix element at row 1 and column 1
+	 * @param m1 Optional matrix element at row 2 and column 1
+	 * @param m2 Optional matrix element at row 3 and column 1
+	 * @param m3 Optional matrix element at row 4 and column 1 which must be 0
+	 * @param m4 Optional matrix element at row 1 and column 2
+	 * @param m5 Optional matrix element at row 2 and column 2
+	 * @param m6 Optional matrix element at row 3 and column 2
+	 * @param m7 Optional matrix element at row 4 and column 2 which must be 0
+	 * @param m8 Optional matrix element at row 1 and column 3
+	 * @param m9 Optional matrix element at row 2 and column 3
+	 * @param m10 Optional matrix element at row 3 and column 3
+	 * @param m11 Optional matrix element at row 4 and column 3 which must be 0
+	 * @param m12 Optional matrix element at row 1 and column 4 defining the translation in x direction
+	 * @param m13 Optional matrix element at row 2 and column 4 defining the translation in y direction
+	 * @param m14 Optional matrix element at row 3 and column 4 defining the translation in z direction
+	 * @param m15 Optional matrix element at row 4 and column 4 which must be 1
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix is equal to HomogenousMatrix4(new Vector3(5.0, 6.0, 7.0))
+	 * var matrix = new HomogenousMatrix(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 5.0, 6.0, 7.0, 1.0);
+	 * @endcode
+	 */
+	HomogenousMatrix4(Number m0, Number m1, Number m2, Number m3, Number m4, Number m5, Number m6, Number m7, Number m8, Number m9, Number m10, Number m11, Number m12, Number m13, Number m14, Number m15);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by the usage of an array with at most sixteen Number values.<br>
+	 * The first array element defines the matrix element of the first row and first column,<br>
+	 * The second array element defines the matrix element of the second row and first column and so on.<br>
+	 * If less than sixteen Number values are defined inside the array the missing matrix element are defined as default identity matrix elements.<br>
+	 * @param elements Array holding at most 16 matrix elements
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * elements = new Array(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 5.0, 6.0, 7.0, 1.0);
+	 *
+	 * // matrix is equal to HomogenousMatrix4(new Vector3(5.0, 6.0, 7.0))
+	 * var matrix = new HomogenousMatrix4(elements);
+	 * @endcode
+	 */
+	HomogenousMatrix4(Array elements);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector defining a transformation with a translation component only.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation, a unity scaling and no rotation
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by an euler rotation defining a transformation with a rotation component only.<br>
+	 * @param euler Euler rotation defining the rotation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, a unity scaling and no translation
+	 * var matrix = new HomogenousMatrix4(new Euler(Math.PI / 2.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Euler euler);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a quaternion rotation defining a transformation with a rotation component only.<br>
+	 * @param quaternion Quaternion rotation defining the rotation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, a unity scaling and no translation
+	 * var matrix = new HomogenousMatrix4(new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Quaternion quaternion);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by an angle-axis rotation defining a transformation with a rotation component only.<br>
+	 * @param rotation Angle-axis rotation defining the rotation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, a unity scaling and no translation
+	 * var matrix = new HomogenousMatrix4(new Rotation(1.0, 0.0, 0.0, Math.PI / 2.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Rotation rotation);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a 3x3 rotation matrix defining a tansformation with a rotation and scaling component.<br>
+	 * @param matrix 3x3 rotation matrix defining the rotation and scaling component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation and scaling but no translation
+	 * var matrix = new HomogenousMatrix4(new SquareMatrix3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(SquareMatrix3 matrix);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a 4x4 square matrix defining the entire tansformation matrix.<br>
+	 * @param matrix 4x4 square matrix defining the new transformation, the lower row of this matrix must be equal to [0.0, 0.0, 0.0, 1.0]
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a default homogenous transformation matrix
+	 * var matrix = new HomogenousMatrix4(new SquareMatrix4(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(SquareMatrix4 matrix);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector and an euler rotation defining the homogenous transformation.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @param euler Euler rotation defining the rotation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation and rotation and a unity scaling
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0), new Euler(Math.PI / 2.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation, Euler euler);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector and a quaterion rotation defining the homogenous transformation.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @param quaternion Quaternion rotation defining the rotation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation and rotation and a unity scaling
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0), new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation, Quaternion quaternion);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector and an angle-axis rotation defining the homogenous transformation.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @param rotation Angle-axis rotation defining the rotation component of the new transformation
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation and rotation and unity scaling
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0), new Rotation(1.0, 0.0, 0.0, Math.PI / 2.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation, Rotation rotation);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector, an euler rotation and a scaling vector defining the homogenous transformation.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @param euler Euler rotation defining the rotation component of the new transformation
+	 * @param scale Scale vector defining the scaling component for the rotated x-, y- and z-axis
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation, rotation and scale components
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0), new Euler(Math.PI / 2.0, 0.0, 0.0), new Vector3(0.1, 0.1, 0.1));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation, Euler euler, Vector3 scale);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector and a quaterion rotation defining the homogenous transformation.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @param quaternion Quaternion rotation defining the rotation component of the new transformation
+	 * @param scale Scale vector defining the scaling component for the rotated x-, y- and z-axis
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation, rotation and scale components
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0), new Quaternion(1.0, 0.0, 0.0, 0.0), new Vector3(0.1, 0.1, 0.1));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation, Quaternion quaternion, Vector3 scale);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by a translation vector and an angle-axis rotation defining the homogenous transformation.<br>
+	 * @param translation 3D translation vector defining the translation component of the new transformation
+	 * @param rotation Angle-axis rotation defining the rotation component of the new transformation
+	 * @param scale Scale vector defining the scaling component for the rotated x-, y- and z-axis
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined translation, rotation and scale components
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 2.0, 3.0), new Rotation(1.0, 0.0, 0.0, Math.PI / 2.0), new Vector3(0.1, 0.1, 0.1));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 translation, Rotation rotation, Vector3 scale);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by three 3D vectors defining the x-, y- and z-axis of the transformation.
+	 * @param xAxis X-axis of the homogenous transformation to create
+	 * @param yAxis Y-axis of the homogenous transformation to create
+	 * @param zAxis Z-ayis of the homogenous transformation to create
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined coordinate axis
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Vector3(0.0, 1.0, 0.0), new Vector3(0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis);
+
+	/**
+	 * Constructor of a 4x4 homogenous matrix  object.
+	 * Creates a new HomogenousMatrix4 object by three 3D vectors defining the x-, y- and z-axis of the transformation and a fourth 3D vector defining the translation.
+	 * @param xAxis X-axis of the homogenous transformation to create
+	 * @param yAxis Y-axis of the homogenous transformation to create
+	 * @param zAxis Z-ayis of the homogenous transformation to create
+	 * @param translation Translation of the homogenous transformation to create
+	 * @return New HomogenousMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined coordinate axis
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Vector3(0.0, 1.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	HomogenousMatrix4(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation);
+
+	/**
+	 * Returns the determinant of the 4x4 matrix.
+	 * @return Scalar matrix determinant
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4();
+	 *
+	 * // value is equal to 1
+	 * var value = matrix.determinant();
+	 * @endcode
+	 */
+	Number determinant();
+
+	/**
+	 * Inverts this 4x4 homogenous matrix object.
+	 * The multiplication of an inverted matrix and the original matrix results in the identity matrix.
+	 *
+	 * Example:
+	 * @code
+	 * // homogenous transformation matrix with a translation component only
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.5, -2.0));
+	 *
+	 * var iMatrix = new HomogenousMatrix4(matrix);
+	 * iMatrix.invert();
+	 *
+	 * var mMatrix = matrix.multiply(iMatrix);
+	 * var equal = mMatrix.isEqual(new HomogenousMatrix4());
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns the inverted 4x4 homogenous transformation matrix of this matrix object.
+	 * The multiplication of an inverted matrix and the original matrix results in the identity matrix.
+	 * @return New inverted matrix object
+	 *
+	 * Example:
+	 * @code
+	 * // homogenous transformation matrix with a translation component only
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.5, -2.0));
+	 * var iMatrix = matrix.inverted();
+	 *
+	 * var mMatrix = matrix.multiply(iMatrix);
+	 * var equal = mMatrix.isEqual(new HomogenousMatrix4());
+	 * @endcode
+	 */
+	HomogenousMatrix4 inverted();
+
+	/**
+	 * Returns whether all sixteen component of two 4x4 homogenous matrix objects are equal.
+	 * @param matrix Second matrix to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new HomogenousMatrix4(new Vector3(1.0, -0.5, 0.1));
+	 * var matrix1 = new HomogenousMatrix4(new Rotation(1.0, 0.0, 0.0, Math.PI / 4.0));
+	 *
+	 * var result = matrix0.isEqual(matrix1);
+	 * @endcode
+	 */
+	Boolean isEqual(HomogenousMatrix4 matrix);
+
+	/**
+	 * Returns whether all sixteen component of a 4x4 homogenous matrix object and a 4x4 square matrix object are equal.
+	 * @param matrix Second matrix to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new HomogenousMatrix4(new Vector3(0.0, 0.0, 0.0));
+	 * var matrix1 = new SquareMatrix4();
+	 *
+	 * var result = matrix0.isEqual(matrix1);
+	 * @endcode
+	 */
+	Boolean isEqual(SquareMatrix4 matrix);
+
+	/**
+	 * Multiplies this transformation with a euler rotation resulting in one new rotated homogenous transformation.
+	 * @param euler Euler rotation to multiply
+	 * @return New resulting rotated transformation matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var euler = new Euler(Math.PI / 4.0, 0.0, 0.0);
+	 *
+	 * // multiplication is equal to HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Euler(Math.PI / 4.0, 0.0, 0.0))
+	 * var multiplication = matrix.multiply(euler);
+	 * @endcode
+	 */
+	HomogenousMatrix4 multiply(Euler euler);
+
+	/**
+	 * Multiplies this transformation with a second homogenous transformation object resulting in one new concatenated homogenous transformation.
+	 * @param matrix Second transformation matrix to multiply
+	 * @return New resulting concatenated transformation matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var matrix1 = new HomogenousMatrix4(new Vector3(5.0, 0.0, 0.0));
+	 *
+	 * // multiplication is equal to HomogenousMatrix4(new Vector3(6.0, 0.0, 0.0))
+	 * var multiplication = matrix0.multiply(matrix1);
+	 * @endcode
+	 */
+	HomogenousMatrix4 multiply(HomogenousMatrix4 matrix);
+
+	/**
+	 * Multiplies this transformation with a quaternion rotation resulting in one new rotated homogenous transformation.
+	 * @param quaternion Quaternion rotation to multiply
+	 * @return New resulting rotated transformation matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var rotation = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 *
+	 * // multiplication is equal to HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0)), because the quaternion represents a default rotation
+	 * var multiplication = matrix.multiply(rotation);
+	 * @endcode
+	 */
+	HomogenousMatrix4 multiply(Quaternion quaternion);
+
+	/**
+	 * Multiplies this transformation with an angle-axis rotation resulting in one new rotated homogenous transformation.
+	 * @param rotation Angle-axis rotation to multiply
+	 * @return New resulting rotated transformation matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0);
+	 *
+	 * // multiplication is equal to HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0))
+	 * var multiplication = matrix.multiply(rotation);
+	 * @endcode
+	 */
+	HomogenousMatrix4 multiply(Rotation rotation);
+
+	/**
+	 * Multiplies this transformation with a 3D vector resulting in a new transformed and de-homogenised 3D vector.
+	 * The vector will be virtually extended with a fourth component with 1 before multiplication.
+	 * @param vector 3D vector to transform
+	 * @return New resulting transformed 3D vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var vector = new Vector3(0.0, 5.0, 0.0);
+	 *
+	 * // multiplication is equal to Vector3(1.0, 5.0, 0.0)
+	 * var multiplication = matrix.multiply(vector);
+	 * @endcode
+	 */
+	Vector3 multiply(Vector3 vector);
+
+	/**
+	 * Multiplies this transformation with a 4D vector resulting in a new transformed 4D vector.
+	 * @param vector 4D vector to transform
+	 * @return New resulting transformed 4D vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var vector = new Vector4(0.0, 5.0, 0.0, 1.0);
+	 *
+	 * // multiplication is equal to Vector4(1.0, 5.0, 0.0, 1.0)
+	 * var multiplication = matrix.multiply(vector);
+	 * @endcode
+	 */
+	Vector4 multiply(Vector4 vector);
+
+	/**
+	 * Returns the rotation component of this homogenous transformation matrix as unit quaternion.
+	 * @return Unit quaternion representing the rotation component
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0), new Vector3(1.0, 0.5, 0.1));
+	 *
+	 * // result will be equivalent to Rotation(0.0, 1.0, 0.0, Math.PI / 4.0), however is a quaternion object
+	 * var result = matrix.rotation();
+	 * @endcode
+	 */
+	Quaternion rotation();
+
+	/**
+	 * Returns the scale component of this homogenous transformation matrix.
+	 * @return 3D vector holding the scale component for the x-, y- and z-axis
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0), new Vector3(1.0, 0.5, 0.1));
+	 *
+	 * // result will be equal to Vector3(1.0, 0.5, 0.1)
+	 * var result = matrix.scale();
+	 * @endcode
+	 */
+	Vector3 scale();
+
+	/**
+	 * Returns the translation component of this homogenous transformation matrix.
+	 * @return 3D vector holding the translation component
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0), new Vector3(1.0, 0.5, 0.1));
+	 *
+	 * // result will be equal to Vector3(1.0, 0.0, 0.0)
+	 * var result = matrix.translation();
+	 * @endcode
+	 */
+	Vector3 translation();
+
+	/**
+	 * Returns the trace of this 4x4 matrix object.
+	 * The trace is the sum of the diagonal elements.
+	 * @return Scalar trace value
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * // result will be equal to 4
+	 * var result = matrix.trace();
+	 * @endcode
+	 */
+	Number trace();
+
+	/**
+	 * Returns the x-axis of this homogenous transformation matrix.
+	 * The x-axis is defined by the first three elements of the first column and can combine rotation, scale and shear components
+	 * @return 3D a-axis vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(5.0, 6.0, 7.0));
+	 *
+	 * // vector will be equal to Vector3(1.0, 0.0, 0.0);
+	 * var vector = matrix.xAxis();
+	 * @endcode
+	 */
+	Vector3 xAxis();
+
+	/**
+	 * Returns the y-axis of this homogenous transformation matrix.
+	 * The y-axis is defined by the first three elements of the first column and can combine rotation, scale and shear components
+	 * @return 3D y-axis vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(5.0, 6.0, 7.0));
+	 *
+	 * // vector will be equal to Vector3(0.0, 1.0, 0.0);
+	 * var vector = matrix.yAxis();
+	 * @endcode
+	 */
+	Vector3 yAxis();
+
+	/**
+	 * Returns the z-axis of this homogenous transformation matrix.
+	 * The z-axis is defined by the first three elements of the first column and can combine rotation, scale and shear components
+	 * @return 3D z-axis vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(5.0, 6.0, 7.0));
+	 *
+	 * // vector will be equal to Vector3(0.0, 0.0, 1.0);
+	 * var vector = matrix.zAxis();
+	 * @endcode
+	 */
+	Vector3 zAxis();
+
+	/**
+	 * Sets or changes the rotation component of this transformation matrix object.
+	 * @param euler Rotation to set defined by an euler rotation
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * matrix.setRotation(new Euler(Math.PI / 4.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	setRotation(Euler euler);
+
+	/**
+	 * Sets or changes the rotation component of this transformation matrix object.
+	 * @param quaternion Rotation to set defined by a unit quaternion rotation
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * matrix.setRotation(new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	setRotation(Quaternion quaternion);
+
+	/**
+	 * Sets or changes the rotation component of this transformation matrix object.
+	 * @param rotation Rotation to set defined by an angle-axis rotation
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * matrix.setRotation(new Rotation(1.0, 0.0, 0.0, Math.PI / 4.0));
+	 * @endcode
+	 */
+	setRotation(Rotation rotation);
+
+	/**
+	 * Sets or changes the rotation component of this transformation matrix object.
+	 * @param transformation 4x4 homogenous transformation matrix providing the rotation component to change the rotation
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * matrix.setRotation(new HomogenousMatrix4(new Rotation(1.0, 0.0, 0.0, Math.PI / 4.0)));
+	 * @endcode
+	 */
+	setRotation(HomogenousMatrix4 transformation);
+
+	/**
+	 * Sets or changes the rotation component of this transformation matrix object.
+	 * @param matrix 3x3 rotation matrix exchanging the upper left 3x3 matrix of this homogenous transformation matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * matrix.setRotation(new SquareMatrix3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	setRotation(SquareMatrix3 matrix);
+
+	/**
+	 * Sets or changes the translation component of this transformation matrix object.
+	 * @param vector 3D vector setting the new translation component of this transformation
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 *
+	 * matrix.setTranslation(new Vector3(2.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	setTranslation(Vector3 vector);
+
+	/**
+	 * Sets or changes the translation component of this transformation matrix object.
+	 * @param transformation 4x4 homogenous transformation matrix providing the translation component to change the translation
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var matrixChange = new HomogenousMatrix4(new Vector3(2.0, 0.0, 0.0));
+	 *
+	 * matrix.setTranslation(matrixChange);
+	 * @endcode
+	 */
+	setTranslation(HomogenousMatrix4 transformation);
+
+	/**
+	 * Returns an interpolation between two homogenous matrices.
+	 * The interpolation combines translation, rotation, scale and shear factors.<br>
+	 * An interpolation factor of 0.0 will return this transformation, a factor of 1.0 will return the second transformation.<br>
+	 * Thus, a factor of 0.5 will return a transformation exact in the 'middle' of both transformation.
+	 * @param transformation Second transformation to be used for interpolation
+	 * @param factor Interpolation factor with range between [0.0 and 1.0]
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0));
+	 * var matrixSecond = new HomogenousMatrix4(new Vector3(2.0, 0.0, 0.0));
+	 *
+	 * var interpolatedMatrix = matrix.interpolate(matrixSecond, 0.5);
+	 * @endcode
+	 */
+	HomogenousMatrix4 interpolate(HomogenousMatrix4 transformation, Number factor);
+
+	/**
+	 * Returns a string holding the sixteen matrix elements of this transformation separated by a comma.
+	 * Beware: The elements a stored in a colum aligned order, see the element index scheme for details.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new HomogenousMatrix4(new Vector3(5.0, 6.0, 7.0));
+	 *
+	 * // str holds "1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 5.0, 6.0, 7.0, 1.0" as string without quotation marks
+	 * var str = matrix.string();
+	 * @endcode
+	 */
+	String string();
+};

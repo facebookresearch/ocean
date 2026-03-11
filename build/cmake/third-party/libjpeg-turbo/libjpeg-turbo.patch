@@ -4,7 +4,7 @@ index ff9c9c2..444cae6 100644
 +++ b/CMakeLists.txt
 @@ -5,6 +5,8 @@ if(CMAKE_EXECUTABLE_SUFFIX)
  endif()
- 
+
  project(libjpeg-turbo C)
 +
 +
@@ -21,7 +21,7 @@ index ff9c9c2..444cae6 100644
 +#if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 +#  message(FATAL_ERROR "The libjpeg-turbo build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
 +#endif()
- 
+
  # CMake 3.14 and later sets CMAKE_MACOSX_BUNDLE to TRUE by default when
  # CMAKE_SYSTEM_NAME is iOS, tvOS, or watchOS, which breaks the libjpeg-turbo
 @@ -684,7 +686,7 @@ if(WITH_TURBOJPEG)
@@ -60,7 +60,7 @@ index eaed9e9..754bf6a 100644
  endif()
  add_library(jpeg SHARED ${JPEG_SRCS} ${DEFFILE} ${SIMD_TARGET_OBJECTS}
    ${SIMD_OBJS} $<TARGET_OBJECTS:jpeg12> $<TARGET_OBJECTS:jpeg16>)
- 
+
 -set_target_properties(jpeg PROPERTIES SOVERSION ${SO_MAJOR_VERSION}
 -  VERSION ${SO_MAJOR_VERSION}.${SO_AGE}.${SO_MINOR_VERSION})
 +#set_target_properties(jpeg PROPERTIES SOVERSION ${SO_MAJOR_VERSION}

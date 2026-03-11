@@ -1,0 +1,197 @@
+
+/**
+ * This object implements the media manager.
+ * Use this manager to create new media objects.<br>
+ * Media objects can be created in an exclusive and non exclusive manner.<br>
+ * The default mode is non exclusive meaning that the media object is shared and can be used at different positions.<br>
+ * A shared media object saves memory, however e.g. a shared movie object has a single play timestamp only.<br>
+ * Thus, create a media object exclusively to allow two different play timestamps.<br>
+ * However, there is no guarantee that the media object is exclusiv.<br>
+ * To check whether the media object is exclusive, use the MediaObject::isExclusive() function.<br>
+ *
+ * Beware: Check the validity of the returned media object before usage.<br>
+ * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+ *
+ * The media manager is accessible using the media property of the global ocean object.<br>
+ * Do not create a MediaManager object on your own, use the global object instead.
+ *
+ * Example:
+ * @code
+ * /**
+ *  * Initialization function which is called once to initialize this script.
+ *  */
+ * function onOceanInitialize(engine, timestamp)
+ * {
+ *    // tells the user what this interaction script is doing
+ *    ocean.info("Ocean MediaObject test: Creates a audio media object.");
+ *
+ *    // use the media manager property of the global ocean object to create a new audio object
+ *    audio = ocean.media.createAudio("soundfile.wav", true);
+ *
+ *    // tests whether the audio object is valid and can be used
+ *    if (audio.isValid())
+ *    {
+ *       // sets the sound speed
+ *       audio.setSpeed(2.0);
+ *
+ *       // starts the audio output
+ *       audio.start();
+ *    }
+ * }
+ * @endcode
+ * @see Ocean, MediaObject
+ * @ingroup media
+ */
+struct MediaManager
+{
+	/**
+	 * Creates a new media object with unknown type.
+	 * Although this function returns a valid media object if possible, type specific create function should be used instead.<br>
+	 * The media object will be created not exclusively.<br>
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the media object to create
+	 * @return New media object
+	 */
+	MediaObject create(String url);
+
+	/**
+	 * Creates a new media object with unknown type.
+	 * Although this function returns a valid media object if possible, type specific create function should be used instead.<br>
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the media object to create
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject create(String url, Boolean exclusive);
+
+	/**
+	 * Creates a new audio object able to play a sound file.
+	 * Beware: Check the validity of the returned audio object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the audio object to create
+	 * @return New media object
+	 */
+	MediaObject createAudio(String url);
+
+	/**
+	 * Creates a new audio object able to play a sound file.
+	 * Beware: Check the validity of the returned audio object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the audio object to create
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject createAudio(String url, Boolean exclusive);
+
+	/**
+	 * Creates a new frame stream object able to receive a frame stream from a remote streaming server.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the media object to create
+	 * @return New media object
+	 */
+	MediaObject createFrameStream(String url);
+
+	/**
+	 * Creates a new frame stream object able to receive a frame stream from a remote streaming server.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the media object to create
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject createFrameStream(String url, Boolean exclusive);
+
+	/**
+	 * Creates a new image object able to open an image file.
+	 * Beware: Check the validity of the returned image object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the image object to create
+	 * @return New media object
+	 */
+	MediaObject createImage(String url);
+
+	/**
+	 * Creates a new image object able to open an image file.
+	 * Beware: Check the validity of the returned image object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the image object to create
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject createImage(String url, Boolean exclusive);
+
+	/**
+	 * Creates a new live video object providing access to the first accessable webcams.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @return New media object
+	 */
+	MediaObject createLiveVideo();
+
+	/**
+	 * Creates a new live video object providing access to e.g. webcams.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the media object to create
+	 * @return New media object
+	 */
+	MediaObject createLiveVideo(String url);
+
+	/**
+	 * Creates a new live video object providing access to e.g. webcams.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param index Index of the device to be accessed, the first device has index 0, the second index 1 and so on
+	 * @return New media object
+	 */
+	MediaObject createLiveVideo(Integer index);
+
+	/**
+	 * Creates a new live video object providing access to e.g. webcams.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the media object to create
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject createLiveVideo(String url, Boolean exclusive);
+
+	/**
+	 * Creates a new live video object providing access to e.g. webcams.
+	 * Beware: Check the validity of the returned media object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param index Index of the device to be accessed, the first device has index 0, the second index 1 and so on
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject createLiveVideo(Integer index, Boolean exclusive);
+
+	/**
+	 * Creates a new movie object able to open and visualize a movie file.
+	 * Beware: Check the validity of the returned movie object before usage.<br>
+	 * The media object will be created not exclusively.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the movie object to create
+	 * @return New media object
+	 */
+	MediaObject createMovie(String url);
+
+	/**
+	 * Creates a new movie object able to open and visualize a movie file.
+	 * Beware: Check the validity of the returned movie object before usage.<br>
+	 * To check whehter the JavaScript is connected to an Ocean framework object use the MediaObject::isValid() function.<br>
+	 * @param url Filename or url of the movie object to create
+	 * @param exclusive Determines whether an exclusive media object is preferred
+	 * @return New media object
+	 */
+	MediaObject createMovie(String url, Boolean exclusive);
+};

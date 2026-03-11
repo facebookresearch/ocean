@@ -1,0 +1,85 @@
+
+/**
+ * This object implements the device manager.
+ * Use this manager to create new device objects.<br>
+ * Device objects can be created in an exclusive and non exclusive manner.<br>
+ * The default mode is non exclusive meaning that the device object is shared and can be used at different positions.<br>
+ * A shared device object saves memory and CPU load.<br>
+ * Thus, create a device object exclusively to allow two different device outputs.<br>
+ * However, there is no guarantee that the device object is exclusiv.<br>
+ * To check whether the device object is exclusive, use the DeviceObject::isExclusive() function.<br>
+ *
+ * Beware: Check the validity of the returned device object before usage.<br>
+ * To check whehter the JavaScript is connected to an Ocean framework object use the DeviceObject::isValid() function.<br>
+ *
+ * The device manager is accessible using the device property of the global ocean object.<br>
+ * Do not create a DeviceManager object on your own, use the global object instead.
+ *
+ * Example:
+ * @code
+ * /**
+ *  * Initialization function which is called once to initialize this script.
+ *  */
+ * function onOceanInitialize(engine, timestamp)
+ * {
+ *    // tells the user what this interaction script is doing
+ *    ocean.info("Ocean DeviceObject test: Creates a new device object.");
+ *
+ *    // use the device manager property of the global ocean object to create a new tracker object
+ *    tracker = ocean.device.create("ARToolKit 6DOF Marker Tracker");
+ *
+ *    // tests whether the tracker object is valid and can be used
+ *    if (tracker.isValid())
+ *    {
+ *       // create a new media object and uses the first webcam
+ *       liveVideo = ocean.media.createLiveVideo("LiveVideoId:0");
+ *
+ *       // checks whehter the live video object is valid
+ *       if (liveVideo.isValid())
+ *       {
+ *          // sets the live video as tracker input
+ *          tracker.setInput(liveVideo);
+ *
+ *          // start the live video object
+ *          liveVideo.start();
+ *
+ *          // starts the tracking device
+ *          tracker.start();
+ *       }
+ *    }
+ *    else
+ *    {
+ *       // tell the user that the specified tracker object could not be created
+ *       ocean.warning("The specified tracker could not be created, create one of the following devices: ", ocean.device.devices());
+ *    }
+ * }
+ * @endcode
+ * @see Ocean, DeviceObject
+ * @ingroup device
+ */
+struct DeviceManager
+{
+	/**
+	 * Creates a new device object specified by the device name.
+	 * Beware: Check the validity of the returned device object before usage.<br>
+	 * To check whehter the JavaScript object is connected to an Ocean framework object use the DeviceObject::isValid() function.<br>
+	 * @param device Name of the new device object to create
+	 * @param exclusive Determines whether an exclusive device object is preferred
+	 * @return New device object
+	 */
+	DeviceObject create(String device, Boolean exclusive);
+
+	/**
+	 * Returns a string array holding the names of all available devices.
+	 * @return Names of available devices
+	 */
+	Array<String> devices();
+
+	/**
+	 * Returns a string array holding the names of all available devices with specified major type.
+	 * Possible major device types are: "MEASUREMENT", "SENSOR", "TRACKER", "ADAPTER MEASUREMENT", "ADAPTER TRACKER"
+	 * @param majorType Major type of all returned devices
+	 * @return Names of available devices
+	 */
+	Array<String> devices(String majorType);
+};

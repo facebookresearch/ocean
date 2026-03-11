@@ -1,0 +1,240 @@
+
+/**
+ * This object wrapps an Ocean framework device object.<br>
+ * Use the device manager to create new device objects.<br>
+ *
+ * Beware: Check the validity of the returned device object before usage.<br>
+ * To check whehter the JavaScript is connected to an Ocean framework object use the DeviceObject::isValid() function.<br>
+ * @see DeviceManager
+ * @ingroup device
+ */
+struct DeviceObject
+{
+	/**
+	 * Name proeprty holding the name of the device object.
+	 * The property has read access.
+	 * @see library.
+	 */
+	String name [get];
+
+	/**
+	 * Library proeprty holding the name of the library providing this device object.
+	 * The property has read access.
+	 * @see name.
+	 */
+	String library [get];
+
+	/**
+	 * Constructor of a new but not usable device object.
+	 * Use this constructor function to assign the type of an object only.<br>
+	 * Beware: Do not use this constructor to create a specific device object.<br>
+	 * To create a specific and functional device object use the device manager instead.
+	 * @see DeviceManager
+	 */
+	DeviceObject();
+
+	/**
+	 * Returns the current frequence of the device object in Hz.
+	 * If this device object has no frequence -1 is returned.
+	 * @return Sample frequence of the device in Hz
+	 */
+	Number frequence();
+
+	/**
+	 * Returns the visual input source of this device.
+	 * If the device object has no visual input object an empty media object is returned.<br>
+	 * Thus, check the validation of the media object before usage!
+	 * @return Visual input device used for e.g. tracking
+	 * @see setInput().
+	 */
+	MediaObject input();
+
+	/**
+	 * Returns the most recent device measurement sample.
+	 * If the device object has no measurement sample an empty sample object is returned.<br>
+	 * Thus, check the validation of the sample object before usage!
+	 * @return Most recent measurement sample
+	 */
+	DeviceSample sample();
+
+	/**
+	 * Returns one of the most recent device measurement sample.
+	 * A device measurement sample can store a small amount of most recent measurement samples.<br>
+	 * If the device object has no measurement sample an empty sample object is returned.<br>
+	 * Thus, check the validation of the sample object before usage!
+	 * @param sampleTimestamp Timestamp of the sample to be returned
+	 * @return Most recent measurement sample
+	 */
+	DeviceSample sample(Number sampleTimestamp);
+
+	/**
+	 * Sets the callback function for found-object-events.
+	 * Each time an e.g. new tracking object has been found the event function will be called.<br>
+	 * The event function receives the id of the found object as first parameter and the event timestamp as second parameter.
+	 * @param function Callback function to be called
+	 * @return True, if succeeded
+	 * @see setLostObjectEventFunction().
+	 *
+	 * Example:
+	 * @code
+	 * /**
+ 	 *  * Callback function called by the device object every time a new e.g. tracking object has been found.
+ 	 *  * In the case of a visual marker tracker a new tracking object id is equivalent to a new visible marker.
+ 	 *  */
+	 * function onFoundObjectEvent(objectId, timestamp)
+	 * {
+	 *     ocean.info("A new visual marker has been found, the marker has the following id: ", objectId, "at time: ", timestamp);
+	 * }
+	 *
+	 * /**
+	 *  * Initialization function which is called once to initialize this script.
+	 *  */
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     // Specify which visual tracker to use
+	 *     tracker = ocean.device.create("ARToolKit 6DOF Marker Tracker");
+	 *
+	 *     // check whether the device is valid and can be used
+	 *     if (tracker.isValid())
+	 *     {
+	 *         markerIdKanji = tracker.registerMarker("patt.kanji", 0.08);
+	 *         if (markerIdKanji != -1)
+	 *             ocean.info("Succeeded to add the ARToolKit kanji marker pattern with object id 0 and size 80mm.");
+	 *
+	 *         markerIdHiro = tracker.registerMarker("patt.hiro", 1, 0.08);
+	 *         if (markerIdHiro != -1)
+	 *             ocean.info("Succeeded to add the ARToolKit hiro marker pattern with object id 1 and size 80mm.");
+	 *
+	 *         // sets the callback function for found object events
+	 *         tracker.setFoundObjectEventFunction(onFoundObjectEvent);
+	 *     }
+	 * }
+	 * @endcode
+	 */
+	Boolean setFoundObjectEventFunction(Function function);
+
+	/**
+	 * Sets the callback function for lost-object-events.
+	 * Each time an e.g. tracking object has been lost the event function will be called.<br>
+	 * The event function receives the id of the lost object as first parameter and the event timestamp as second parameter.
+	 * @param function Callback function to be called
+	 * @return True, if succeeded
+	 * @see setFoundObjectEventFunction().
+	 */
+	Boolean setLostObjectEventFunction(Function function);
+
+	/**
+	 * Sets the visual input media object for e.g. visual tracking devices.
+	 * The input object can be created with e.g. the media manager.<br>
+	 * If e.g. a visual tracking device uses the same media object as the background object of a renderer use this media object directly.
+	 * @param input Visual media object providing the image data used by this device object
+	 * @return True, if succeeded
+	 * @see input().
+	 *
+	 * @code
+	 *
+	 * // creates a new tracking device
+	 * tracker = ocean.device.create("ARToolKit 6DOF Marker Tracker");
+	 * if (tracker.isValid())
+	 * {
+	 *     trackerMedium = engine.view().background().medium();
+	 *
+	 *     if (!trackerMedium || trackerMedium.isInvalid())
+	 *         ocean.error("No valid background medium defined which could be used for tracking.");
+	 *     else
+	 *         tracker.setInput(trackerMedium);
+	 * }
+	 * @endcode
+	 */
+	Boolean setInput(MediaObject input);
+
+	/**
+	 * Sets the callback function for new-sample-events.
+	 * Each time an e.g. tracking devices produces a new tracking sample the defined event function will be called.<br>
+	 * The event function receives the new tracking sample as first parameter.
+	 * @param function Callback function to be called
+	 * @return True, if succeeded
+	 */
+	Boolean setSampleEventFunction(Function function);
+
+	/**
+	 * Sets a transformation for a specified object id defining a static transformation between object and world coordinate system.<br>
+	 * The transformation has to be defined that: a point specified inside the coordinate system of the tracking object will be transformed into a pointer specified inside the world coordinate system.
+	 * @param id Id of the object to specify the transformation for
+	 * @param transformation Homogenous transformation matrix specifying the transformation to be set
+	 * @return True, if succeeded
+	 */
+	Boolean setTransformation(Integer id, HomogenousMatrix4 transformation);
+
+	/**
+	 * Returns whether the device is connected with an Ocean framework object and therefore can be used.
+	 * Beware: Do not use a device object before the validation has been checked!
+	 * @return True, if the device object is valid and can be used
+	 * @see isInvalid().
+	 */
+	Boolean isValid();
+
+	/**
+	 * Returns whether the device is not connected with an Ocean framework object and therefore must not be used.
+	 * Beware: Do not use a device object before the validation has been checked!
+	 * @return True, if the device object is not valid and must not be used
+	 * @see isValid().
+	 */
+	Boolean isInvalid();
+
+	/**
+	 * Starts the device.
+	 * @return True, if succeeded
+	 * @see pause(), stop().
+	 */
+	Boolean start();
+
+	/**
+	 * Pauses the device.
+	 * @return True, if succeeded
+	 * @see start(), stop().
+	 */
+	Boolean pause();
+
+	/**
+	 * Stops the device.
+	 * @return True, if succeeded
+	 * @see start(), pause().
+	 */
+	Boolean stop();
+
+	/**
+	 * Resets the magnetic field of a device using magnetic sensors for e.g. tracking.
+	 * @return True, if succeeded
+	 */
+	Boolean resetMagneticField();
+
+	/**
+	 * Registers a new tracking pattern at this device.
+	 * @param name Name or filename of the pattern to register
+	 * @param size 3D vector defining the size of the tracking pattern, e.g. square markers use the first component of the 3D vector only
+	 * @return Unique id of the tracking pattern, this id will be used in the sample object or in the event callback functions to identify the pattern, if the registration fails -1 is returned
+	 * @see registerMarker(), registerFeatureMap().
+	 */
+	Integer registerPattern(String name, Vector3 size);
+
+	/**
+	 * Registers a new tracking makrer at this device.
+	 * This function calls registerPattern() and therefore has no additional functionality.
+	 * @param name Name or filename of the marker to register
+	 * @param size 3D vector defining the size of the tracking marker, e.g. square markers use the first component of the 3D vector only
+	 * @return Unique id of the tracking pattern, this id will be used in the sample object or in the event callback functions to identify the marker, if the registration fails -1 is returned
+	 * @see registerPattern(), registerFeatureMap().
+	 */
+	Integer registerMarker(String name, Vector3 size);
+
+	/**
+	 * Registers a new tracking feature map at this device.
+	 * This function calls registerPattern() and therefore has no additional functionality.
+	 * @param name Name or filename of the feature map to register
+	 * @param size 3D vector defining the size of the feature map, for 2D feature maps the first vector componentes are use, for 3D feature maps all three vector components are used
+	 * @return Unique id of the tracking pattern, this id will be used in the sample object or in the event callback functions to identify the feature map, if the registration fails -1 is returned
+	 * @see registerPattern(), registerMarker().
+	 */
+	Integer registerFeatureMap(String name, Vector3 size);
+};

@@ -8,7 +8,7 @@ index ad3f2427d..acb78dc68 100644
  set(PNGLIB_ABI_VERSION ${PNGLIB_MAJOR}${PNGLIB_MINOR})
 +set(PNGLIB_ABI_VERSION "")
  set(PNGLIB_SHARED_VERSION ${PNGLIB_ABI_VERSION}.${PNGLIB_REVISION}.${PNGLIB_SUBREVISION})
- 
+
  project(libpng
 @@ -676,15 +677,15 @@ if(UNIX
    # We are on a Unix or Unix-like toolchain like the GNU toolchain on Windows.
@@ -28,7 +28,7 @@ index ad3f2427d..acb78dc68 100644
 +  set(PNG_SHARED_OUTPUT_NAME "libpng")
 +  set(PNG_STATIC_OUTPUT_NAME "libpng")
  endif()
- 
+
  if(PNG_SHARED)
 @@ -693,9 +694,7 @@ if(PNG_SHARED)
    list(APPEND PNG_LIBRARY_TARGETS png_shared)
@@ -71,7 +71,7 @@ index ad3f2427d..acb78dc68 100644
                DESTINATION ${CMAKE_INSTALL_LIBDIR})
      endif()
 @@ -1075,7 +1076,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
- 
+
    if(PNG_STATIC)
      if(NOT WIN32 OR CYGWIN OR MINGW)
 -      create_symlink(libpng${CMAKE_STATIC_LIBRARY_SUFFIX} TARGET png_static)

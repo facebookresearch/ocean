@@ -202,7 +202,7 @@ if(BUILD_SHARED_LIBS)
   INSTALL ( TARGETS ${ly_lib_shared}
             LIBRARY DESTINATION lib
             RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib) 
+            ARCHIVE DESTINATION lib)
 else()
   INSTALL ( TARGETS ${ly_lib_static}						DESTINATION lib )
 endif()
