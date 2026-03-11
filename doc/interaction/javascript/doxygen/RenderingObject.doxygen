@@ -1,0 +1,1391 @@
+
+/**
+ * This object wrapps an Ocean rendering object.
+ * A rendering object encapsulates different Ocean rendering objects like transform nodes or material objects.<br>
+ * In JavaScript there is no difference between a rendering object providing access to a transform node or a rendering object allowing access to a material object.<br>
+ * However, the developer should known which type of rendering object is wrapped to avoid usage of function not supported for the kind of wrapped object.<br>
+ * @see RenderingEngine
+ * @ingroup rendering
+ */
+struct RenderingObject
+{
+	/**
+	 * Name of the rendering object.
+	 * The name of a rendering object can be used to find the object with usage of the rendering engine.
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *    var renderingObject = engine.findObject("OBJECT");
+	 *
+	 *    if (renderingObject.isInvalid())
+	 *       ocean.warning("Could not found a rendering object with name 'OBJECT'");
+	 * }
+	 * @endcode
+	 */
+	String name [get, set];
+
+	/**
+	 * Type of the rendering object.
+	 * The type of a rendering object can be used to determine which type of Ocean framework object is wrapped by this JavaScript rendering object.<br>
+	 * See RenderingEngine::createObject() for possible type values.<br>
+	 * The property has read.<br>
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var renderingObject = engine.findObject("OBJECT");
+	 *
+	 *     if (renderingObject.isValid())
+	 *         ocean.info("The rendering object wrapps a ", renderingObject.type, " object");
+	 * }
+	 * @endcode
+	 * @see RenderingEngine::createObject().
+	 */
+	String type [get];
+
+	/**
+	 * Creates a new rendering object.
+	 * The object is not connected to an Ocean rendering object by default.<br>
+	 * @return New empty rendering object
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *    var object = new RenderingObject();
+	 *
+	 *    if (object.isInvalid())
+	 *       ocean.info("A default rendering engine is not connected to an Ocean framework object.");
+	 * }
+	 * @endcode
+	 * @see RenderingObject::isValid(), RenderingObject::isInvalid()
+	 */
+	RenderingObject();
+
+	/**
+	 * Returns the index of the active node of a switch node object.
+	 * The first node has index 0, the second index 1, ...<br>
+	 * If no node is active -1 is returned.<br>
+	 *
+	 * This function can be used for the following objects: <b>Switch</b>
+	 * @return Index of the active node
+	 * @see setActiveNode().
+	 */
+	Integer activeNode();
+
+	/**
+	 * Sets the index of the active node of a switch node object.
+	 * The first node has index 0, the second index 1, ...<br>
+	 * An index of -1 inactivates all nodes.<br>
+	 *
+	 * This function can be used for the following objects: <b>Switch</b>
+	 * @param index Index of the node to activate
+	 * @return True, if succeeded
+	 * @see activeNode().
+	 */
+	Boolean setActiveNode(Integer index);
+
+	/**
+	 * Returns the ambient color of a material or light source object.<br>
+	 * This function can be used for the following objects: <b>Material, DirectionalLight, PointLight, SpotLight</b>
+	 * @return Ambient color object
+	 * @see setAmbientColor().
+	 */
+	Color ambientColor();
+
+	/**
+	 * Sets the ambient color of a material or light source object.<br>
+	 * This function can be used for the following objects: <b>Material, DirectionalLight, PointLight, SpotLight</b>
+	 * @param color Ambient color object to set
+	 * @return True, if succeeded
+	 * @see ambientColor().
+	 */
+	Boolean setAmbientColor(Color color);
+
+	/**
+	 * Returns the aspect ratio of a view.
+	 * The aspect ratio is the ratio between width and height of the projection plane.<br>
+	 *
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return View aspect ratio
+	 * @see setAspectRatio().
+	 */
+	Number aspectRatio();
+
+	/**
+	 * Sets the aspect ratio of a view.
+	 * The aspect ratio is the ratio between width and height of the projection plane.<br>
+	 *
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param ratio Aspect ratio to set
+	 * @return True, if succeeded
+	 * @see aspectRatio().
+	 */
+	Boolean setAspectRatio(Number ratio);
+
+	/**
+	 * Returns the constant, linear and quadratic attenuation factor of a light source.
+	 * This function can be used for the following objects: <b>PointLight, SpotLight</b>
+	 * @return 3D vector holding the three attenuation factors
+	 * @see setAttenuation().
+	 */
+	Vector3 attenuation();
+
+	/**
+	 * Sets the constant, linear and quadratic attenuation factor of a light source.
+	 * This function can be used for the following objects: <b>PointLight, SpotLight</b>
+	 * @param factors 3D vector holding the three attenuation factors
+	 * @return True, if succeeded
+	 * @see attenuation()
+	 */
+	Boolean setAttenuation(Vector3 factors);
+
+	/**
+	 * Returns an attribute object of a attribute specified by the index of the attribute to return.
+	 * Beware: Check the number of attributes before to ensure a valid index!<br>
+	 *
+	 * This function can be used for the following objects: <b>AttributeSet</b>
+	 * @param index Index of the attribute to return
+	 * @return Specified attribute object
+	 * @see RenderingObject::numberAttributes().
+	 */
+	RenderingObject attribute(Integer index);
+
+	/**
+	 * Returns the first background object of a view object.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return Background object
+	 * @see setBackground().
+	 */
+	RenderingObject background();
+
+	/**
+	 * Adds a new rendering object to this rendering object.
+	 * Some rendering object can hold child objects like e.g. a group node or a transformation node.<br>
+	 * Therefore, use this function to add new objects.<br>
+	 * This function can be used for the following objects: <b>Group, Transform, Switch, AttributeSet, Framebuffer</b>
+	 * @param object Rendering object to add
+	 * @return True, if succeeded
+	 * @see remove().
+	 */
+	Boolean add(RenderingObject object);
+
+	/**
+	 * Adds a new renderable object to this geometry object.
+	 * Geometry objects may hold individual renderable object with their own attribute sets..<br>
+	 * Therefore, use this function to add new objects.<br>
+	 * This function can be used for the following objects: <b>Geometry</b>
+	 * @param renderable Renderable object to add
+	 * @param attributeSet Attribute set to be combined with the renderable object
+	 * @return True, if succeeded
+	 * @see remove().
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *    box = engine.createObject("Box");
+	 *    if (box.isInvalid())
+	 *        return;
+	 *
+	 *    attributeSet = engine.createObject("AttributeSet");
+	 *    if (attributeSet.isInvalid())
+	 *        return;
+	 *
+	 *    material = engine.createObject("Material");
+	 *    if (material.isInvalid())
+	 *        return;
+	 *
+	 *    material.setDiffuseColor(new Color(1, 0, 0));
+	 *    attributeSet.add(material);
+	 *
+	 *    geometry = engine.createObject("Geometry");
+	 *    if (geometry.isInvalid())
+	 *        return;
+	 *
+	 *    // adding the box combined with the attribute set
+	 *    geometry.add(box, attributeSet);
+	 * }
+	 * @endcode
+	 */
+	Boolean add(RenderingObject renderable, RenderingObject attributeSet);
+
+	 /**
+	 * Removed a rendering object from this rendering object.
+	 * Some rendering object can hold child objects like e.g. a group node or a transformation node.<br>
+	 * Therefore, use this function to remove objects from these objects..<br>
+	 * This function can be used for the following objects: <b>Group, Transform, Switch, AttributeSet, Framebuffer, Geometry</b>
+	 * @param object Rendering object to remove
+	 * @return True, if succeeded
+	 * @see add().
+	 */
+	Boolean remove(RenderingObject object);
+
+	/**
+	 * Adds a new background object to a view object.
+	 * A view can holds more than one background object. However only the first background object is used for rendering.<br>
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param background Background rendering object to add
+	 * @return True, if succeeded
+	 * @see removeBackground(), background().
+	 */
+	Boolean addBackground(RenderingObject background);
+
+	/**
+	 * Removes a background object from a view object.
+	 * A view can holds more than one background object. However only the first background object is used for rendering.<br>
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param background Background rendering object to remove
+	 * @return True, if succeeded
+	 * @see addBackground(), background().
+	 */
+	Boolean removeBackground(RenderingObject background);
+
+	/**
+	 * Returns the background color of a view object.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return View background color
+	 * @see setBackgroundColor().
+	 */
+	Color backgroundColor();
+
+	/**
+	 * Sets the background color of a view object.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveViefw, StereoView</b>
+	 * @param color Background color to set
+	 * @return True, if succeeded
+	 * @see backgroundColor().
+	 */
+	Boolean setBackgroundColor(Color color);
+
+	/**
+	 * Returns a child node of a grouping node specified by the index of the child to return.
+	 * Beware: Check the number of children before to ensure a valid index!<br>
+	 *
+	 * This function can be used for the following objects: <b>Billboard, Group, LOD, Switch, Transform</b>
+	 * @param index Index of the child to return
+	 * @return Specified rendering object
+	 * @see RenderingObject::numberChildren().
+	 */
+	RenderingObject child(Integer index);
+
+	/**
+	 * Returns an array of color objects specified in vertex set object.
+	 * This function can be used for the following objeccts: <b>VertexSet</b>
+	 * @return Specified color objects
+	 * @see setColors().
+	 */
+	Array<Color> colors();
+
+	/**
+	 * Sets an array of color objects of a vertex set object.
+	 * This function can be used for the following objeccts: <b>VertexSet</b>
+	 * @param colors Array with color objects to set
+	 * @return True, if succeeded
+	 * @see colors().
+	 */
+	Boolean setColors(Array<Color> colors);
+
+	/**
+	 * Returns the cone angle of a spot light in radian.
+	 * This function can be used for the following objects: <b>SpotLight</b>
+	 * @return Angle of the light cone in radian with range [0.0, PI / 2.0]
+	 * @see setConeAngle();
+	 */
+	Number coneAngle();
+
+	/**
+	 * Sets the cone angle of a spot light in radian.
+	 * This function can be used for the following objects: <b>SpotLight</b>
+	 * @param angle Angle of the light cone to set, in radian with range [0.0, PI / 2.0]
+	 * @return True, if succeeded
+	 * @see coneAngle().
+	 */
+	Boolean setConeAngle(Number angle);
+
+	/**
+	 * Returns the culling mode of a primitive attribute.
+	 * Possible values are:<br>
+	 * "BACK" culling back faces (default),<br>
+	 * "FRONT" culling front faces,<br>
+	 * "NONE" culling neither front nor back faces,<br>
+	 * "BOTH" culling front and back faces<br>
+	 *
+	 * This function can be used for the following objects: <b>PrimitiveAttribute</b>
+	 * @return String hodling the primitive culling mode
+	 * @see setCullingMode().
+	 */
+	String cullingMode();
+
+	/**
+	 * Sets the culling mode of a primitive attribute.
+	 * Possible values are:<br>
+	 * "BACK" culling back faces (default),<br>
+	 * "FRONT" culling front faces,<br>
+	 * "NONE" culling neither front nor back faces,<br>
+	 * "BOTH" culling front and back faces<br>
+	 *
+	 * This function can be used for the following objects: <b>PrimitiveAttribute</b>
+	 * @param mode String holding the culling mode to set
+	 * @return True, if succeeded
+	 * @see cullingMode().
+	 */
+	Boolean setCullingMode(String mode);
+
+	/**
+	 * Returns the depth of a geometry box.
+	 * This function can be used for the following objects: <b>Box</b>
+	 * @return Box depth
+	 * @see setDepth().
+	 */
+	Number depth();
+
+	/**
+	 * Sets the depth of a geometry box.
+	 * This function can be used for the following objects: <b>Box</b>
+	 * @param value Depth value to set
+	 * @return True, if succeeded
+	 * @see depth().
+	 */
+	Boolean setDepth(Number value);
+
+	/**
+	 * Returns the light direction of a light source or the viewing direction of a view.
+	 * The returning 3D direction vector has a length of 1.<br>
+	 *
+	 * This function can be used for the following objects: <b>DirectionalLight, SpotLight, ParallelView, PerspectiveView, StereoView</b>
+	 * @return 3D unit vector
+	 * @see setDirection().
+	 */
+	Vector3 direction();
+
+	/**
+	 * Sets the light direction of a light source or the viewing direction of a view.
+	 * The given euler rotation rotates a standard view vector (0, 0, -1) which is used as new direction.<br>
+	 *
+	 * This function can be used for the following objects: <b>DirectionalLight, SpotLight, ParallelView, PerspectiveView, StereoView</b>
+	 * @param euler Euler rotation to specify the direction
+	 * @return True, if succeeded
+	 * @see direction().
+	 */
+	Boolean setDirection(Euler euler);
+
+	/**
+	 * Sets the light direction of a light source or the viewing direction of a view.
+	 * The given quaternion rotation rotates a standard view vector (0, 0, -1) which is used as new direction.<br>
+	 *
+	 * This function can be used for the following objects: <b>DirectionalLight, SpotLight, ParallelView, PerspectiveView, StereoView</b>
+	 * @param quaternion Quaternion rotation to specify the direction
+	 * @return True, if succeeded
+	 * @see direction().
+	 */
+	Boolean setDirection(Quaternion quaternion);
+
+	/**
+	 * Sets the light direction of a light source or the viewing direction of a view.
+	 * The given angle-axis rotation rotates a standard view vector (0, 0, -1) which is used as new direction.<br>
+	 *
+	 * This function can be used for the following objects: <b>DirectionalLight, SpotLight, ParallelView, PerspectiveView, StereoView</b>
+	 * @param rotation Angle-axis rotation to specify the direction
+	 * @return True, if succeeded
+	 * @see direction().
+	 */
+	Boolean setDirection(Rotation rotation);
+
+	/**
+	 * Sets the light direction of a light source or the viewing direction of a view.
+	 * The given 3x3 rotation matrix rotates a standard view vector (0, 0, -1) which is used as new direction.<br>
+	 *
+	 * This function can be used for the following objects: <b>DirectionalLight, SpotLight, ParallelView, PerspectiveView, StereoView</b>
+	 * @param matrix 3x3 rotation matrix to specify the direction
+	 * @return True, if succeeded
+	 * @see direction().
+	 */
+	Boolean setDirection(SquareMatrix3 matrix);
+
+	/**
+	 * Sets the light direction of a light source or the viewing direction of a view.
+	 * The given 3D direction vector will be normalized automatically.<br>
+	 *
+	 * This function can be used for the following objects: <b>DirectionalLight, SpotLight, ParallelView, PerspectiveView, StereoView</b>
+	 * @param vector 3D vector specifying the direction
+	 * @return True, if succeeded
+	 * @see direction().
+	 */
+	Boolean setDirection(Vector3 vector);
+
+	/**
+	 * Returns the diffuse color of a material or light source.
+	 * This function can be used for the following objects: <b>DirectionalLight, Material, PointLight, SpotLight</b>
+	 * @return Diffuse color object
+	 * @see setDiffuseColor().
+	 */
+	Color diffuseColor();
+
+	/**
+	 * Sets the diffuse color of a material or light source.
+	 * This function can be used for the following objects: <b>DirectionalLight, Material, PointLight, SpotLight</b>
+	 * @param color Diffuse color object to set
+	 * @return True, if succeeded
+	 * @see diffuseColor().
+	 */
+	Boolean setDiffuseColor(Color color);
+
+	/**
+	 * Returns the emissive color of a material object.
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @return Emissive color object
+	 * @see setEmissiveColor().
+	 */
+	Color emissiveColor();
+
+	/**
+	 * Sets the emissive color of a material object.
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @param color Emissive color to set
+	 * @return True, if succeeded
+	 * @see emissiveColor().
+	 */
+	Boolean setEmissiveColor(Color color);
+
+	/**
+	 * Returns whether a light source is enabled.
+	 * This function can be used for the following objects: <b>DirectionalLight, PointLight, SpotLight</b>
+	 * @return True, if the light source is enabled
+	 * @see setEnabled().
+	 */
+	Boolean enabled();
+
+	/**
+	 * Sets whehter a light source is enabled.
+	 * This function can be used for the following objects: <b>DirectionalLight, PointLight, SpotLight</b>
+	 * @param state True, to enable the light, false otherwise
+	 * @return True, if succeeded
+	 * @see enabled().
+	 */
+	Boolean setEnabled(Boolean state);
+
+	/**
+	 * Returns the environment mode of a texture object.
+	 * Possible values are:<br>
+	 * "ADD" adds color values and multiplies alpha values,<br>
+	 * "ADD SIGNED"<br>
+	 * "BLEND"<br>
+	 * "MODULATE" Multiplies color and alpha values<br>
+	 * "REPLACE" Replaced all color and alpha values<br>
+	 * "SUBTRACT"
+	 *
+	 * This functions can be used for the following objects: <b>Texture2D</b>
+	 * @return String holding the texture environment mode
+	 * @see setEnvironmentMode().
+	 */
+	String environmentMode();
+
+	/**
+	 * Sets the environment mode of a texture object.
+	 * Possible values are:<br>
+	 * "ADD" adds color values and multiplies alpha values,<br>
+	 * "ADD SIGNED"<br>
+	 * "BLEND"<br>
+	 * "MODULATE" Multiplies color and alpha values<br>
+	 * "REPLACE" Replaced all color and alpha values<br>
+	 * "SUBTRACT"
+	 *
+	 * This functions can be used for the following objects: <b>Texture2D</b>
+	 * @param mode String holding the texture environment mode to set
+	 * @return True, if succeeded
+	 * @see environmentMode().
+	 */
+	Boolean setEnvironmentMode(String mode);
+
+	/**
+	 * Returns whether a specified shader parameter exists.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to test
+	 * @return True, if the specified parameter exists
+	 */
+	Boolean existParameter(String name);
+
+	/**
+	 * Retturns the face mode of a primitive attribute.
+	 * Possible values are:<br>
+	 * "FACE" displays primitive faces,<br>
+	 * "LINE" displays primitive lines,<br>
+	 * "POINT" display primitive points<br>
+	 *
+	 * This function can be used for the following objects: <b>PrimitiveAttribute</b>
+	 * @return String holding the primitive face mode
+	 * @see setFaceMode().
+	 */
+	String faceMode();
+
+	/**
+	 * Sets the face mode of a primitive attribute.
+	 * Possible values are:<br>
+	 * "FACE" displays primitive faces,<br>
+	 * "LINE" displays primitive lines,<br>
+	 * "POINT" display primitive points<br>
+	 *
+	 * This function can be used for the following objects: <b>PrimitiveAttribute</b>
+	 * @param mode String holding the face mode to set
+	 * @return True, if succeeded
+	 * @see faceMode().
+	 */
+	Boolean setFaceMode(String mode);
+
+	/**
+	 * Returns the positive far distnace of the viewing frustum defined for a view object.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return Positive far distance
+	 * @see setFarDistance().
+	 */
+	Number farDistance();
+
+	/**
+	 * Sets the positive far distance of the viewing frustum of a view object.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param distance Positive far distance to set
+	 * @return True, if succeeded
+	 */
+	Boolean setFarDistance(Number distance);
+
+	/**
+	 * Returns whether the headlight of a view is enabled.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return True, if the headlight is enabled
+	 * @see setUseHeadlight().
+	 */
+	Boolean useHeadlight();
+
+	/**
+	 * Sets whether the headlight of a view is enabled.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param state True, to enabled the headlight, false otherwise
+	 * @return True, if succeeded
+	 * @see useHeadlight().
+	 */
+	Boolean setUseHeadlight(Boolean state);
+
+	/**
+	 * Returns the height of a geometry object.
+	 * This function can be used for the following objects: <b>Box, Cone, Cylinder</b>
+	 * @return Geometry height
+	 * @see setHeight().
+	 */
+	Number height();
+
+	/**
+	 * Sets the height of a geometry object.
+	 * This function can be used for the following objects: <b>Box, Cone, Cylinder</b>
+	 * @param height Positive height of the geometry object
+	 * @return True, if succeeded
+	 * @see height().
+	 */
+	Boolean setHeight(Number height);
+
+	/**
+	 * Returns the intensity of a light source.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return Light intensity value with range [0.0, 1.0]
+	 */
+	Number intensity();
+
+	/**
+	 * Sets the intensity of a light source.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param intensity Light intensity value to set, with range [0.0, 1.0]
+	 * @return True, if succeeded
+	 */
+	Boolean setIntensity(Number intensity);
+
+	/**
+	 * Sets the left projection of a stereo view.
+	 * This function can be used for the following objects: <b>StereoView</b>
+	 * @param matrix New projection to set
+	 * @return True, if succeeded
+	 * @see setRightProjection().
+	 */
+	Boolean setLeftProjectionMatrix(SquareMatrix4 matrix);
+
+	/**
+	 * Returns whether a shader program has been compiled successfully.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @return True, if the shader program is compiled and can be used
+	 */
+	Boolean isCompiled();
+
+	/**
+	 * Returns the magnification filter mode of a texture object.
+	 * Maginification: A large screen area corresponds to a single texel.<br>
+	 * Possible values are:<br>
+	 * "LINEAR" Linear interpolation mode<br>
+	 * "NEAREST" Nearest pixel mode<br>
+	 *
+	 * This function can be used for the following objects: <b>Texture2D</b>
+	 * @return String holding the magnification filter mode
+	 * @see setMagnificationFilterMode().
+	 */
+	String magnificationFilterMode();
+
+	/**
+	 * Sets the magnification filter mode of a texuture object.
+	 * Maginification: A large screen area corresponds to a single texel.<br>
+	 * Possible values are:<br>
+	 * "LINEAR" Linear interpolation mode<br>
+	 * "NEAREST" Nearest pixel mode<br>
+	 *
+	 * This function can be used for the following objects: <b>Texture2D</b>
+	 * @param mode String holding the magnification filter mode to set
+	 * @return True, if succeeded
+	 * @see magnificationFilterMode().
+	 */
+	Boolean setMagnificationFilterMode(String mode);
+
+	/**
+	 * Returns the media object of texture or undistorted panel object.
+	 * This function can be used for the following objects: <b>Texture2D, UndistortedBackground</b>
+	 * @return Media object used as display image
+	 * @see setMedium().
+	 */
+	MediaObject medium();
+
+	/**
+	 * Sets the media object of a texture or undistorted panel object.
+	 * This function can be used for the following objects: <b>Texture2D, UndistortedBackground</b>
+	 * @param medium Rendering media object holding the image to set
+	 * @return True, if succeeded
+	 * @see medium().
+	 */
+	Boolean setMedium(MediaObject medium);
+
+	/**
+	 * Returns the minification filter mode of a texture object.
+	 * Minification: One screen pixel corresponds to a large area of texels.<br>
+	 * Possible values are:<br>
+	 * "LINEAR" linear interpolation between neighbouring texel only in one texture layer,<br>
+	 * "NEAREST" chooses the nearest pixel only in one texture layer,<br>
+	 * "NEAREST MIPMAP NEAREST" chooses the nearest pixel in the nearest mipmap texture layer,<br>
+	 * "LINEAR MIPMAP NEAREST" linear interpolation between neighbouring texel in the nearest mipmap texture layer,<br>
+	 * "NEAREST MIPMAP LINEAR" chooses the nearest pixel and interpolates between neighbouring mipmap texture layers,<br>
+	 * "LINEAR MIPMAP LINEAR" linear interpolation between neighbouring texel between neighbouring mipmap texture layers,<br>
+	 *
+	 * This function can be used for the following objects: <b>Texture2D</b>
+	 * @return String holding the minification filter mode
+	 * @see setMinificationFilterMode().
+	 */
+	String minificationFilterMode();
+
+	/**
+	 * Sets the minification filter mode of a texture object.
+	 * Minification: One screen pixel corresponds to a large area of texels.<br>
+	 * Possible values are:<br>
+	 * "LINEAR" linear interpolation between neighbouring texel only in one texture layer,<br>
+	 * "NEAREST" chooses the nearest pixel only in one texture layer,<br>
+	 * "NEAREST MIPMAP NEAREST" chooses the nearest pixel in the nearest mipmap texture layer,<br>
+	 * "LINEAR MIPMAP NEAREST" linear interpolation between neighbouring texel in the nearest mipmap texture layer,<br>
+	 * "NEAREST MIPMAP LINEAR" chooses the nearest pixel and interpolates between neighbouring mipmap texture layers,<br>
+	 * "LINEAR MIPMAP LINEAR" linear interpolation between neighbouring texel between neighbouring mipmap texture layers,<br>
+	 *
+	 * This function can be used for the following objects: <b>Texture2D</b>
+	 * @param mode String holding the minification filter mode to set
+	 * @return True, if succeeded
+	 * @see minificationFilterMode().
+	 */
+	Boolean setMinificationFilterMode(String mode);
+
+	/**
+	 * Returns the positive near distance of the viewing frustum of a view.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @return Positive near distance
+	 * @see setNearDistance().
+	 */
+	Number nearDistance();
+
+	/**
+	 * Sets the positive near distance of the viewing frustum of a view.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView</b>
+	 * @param distance Positive near distance to set
+	 * @return True, if succeeded
+	 * @see nearDistance().
+	 */
+	Boolean setNearDistance(Number distance);
+
+	/**
+	 * Returns the specified normals of a vertex set object.
+	 * This function can be used for the following objects: <b>VertexSet></b>
+	 * @return Vertex set normals
+	 * @see setNormals().
+	 */
+	Array<Vector3> normals();
+
+	/**
+	 * Sets the normals of a vertex set object.
+	 * This function can be used for the following objects: <b>VertexSet></b>
+	 * @param normals Array holding 3D vector objects
+	 * @return True, if succeeded
+	 * @see normals().
+	 */
+	Boolean setNormals(Array<Vector3> normals);
+
+	/**
+	 * Returns the number of attributes specified in an attribute set object.
+	 * This function can be used for the following objects: <b>AttributeSet></b>
+	 * @return Number of specified attributes
+	 */
+	Integer numberAttributes();
+
+	/**
+	 * Returns the number of child nodes specified in a grouping node object.
+	 * This function can be used for the following objects: <b>Billboard, Group, LOD, Switch, Transform</b>
+	 * @return Number of specified children
+	 */
+	Integer numberChildren();
+
+	/**
+	 * Returns a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the shader parameter to return
+	 * @return Shader program parameter value
+	 * @see setParameter().
+	 */
+	Value parameter(String name);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Number value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Integer value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Boolean value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Array<Number> value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, HomogenousMatrix4 value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, SquareMatrix3 value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, SquareMatrix4 value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Vector2 value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Vector3 value);
+
+	/**
+	 * Sets a specified parameter of a shader program.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the parameter to set
+	 * @param value Value to set
+	 * @return True, if succeeded
+	 * @see parameter().
+	 */
+	Boolean setParameter(String name, Vector4 value);
+
+	/**
+	 * Returns the number of elements of a specified shader parameter.
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the shader parameter to return the number of elements for
+	 * @return Number of parameter elements
+	 */
+	Integer parameterElements(String name);
+
+	/**
+	 * Returns the type of a specified shader program as string.
+	 * Possible values are:<br>
+	 * "BOOL" defining a boolean value,<br>
+	 * "FLOAT" defining a float value,<br>
+	 * "INTEGER" defining an integer value,<br>
+	 * "MATRIX3" defining a 3x3 matrix,<br>
+	 * "MATRIX4" defining a 4x4 matrix,<br>
+	 * "SAMPLE1" defining a 1D sampler object,<br>
+	 * "SAMPLE2" defining a 2D sampler object,<br>
+	 * "SAMPLE3" defining a 3D sampler object,<br>
+	 * "STRUCT" defining a struct object,<br>
+	 * "VECTOR2" defining a 2D vector object,<br>
+	 * "VECTOR3" defining a 3D vector object,<br>
+	 * "VECTOR4" defining a 4D vector object,<br>
+	 * "UNKNOWN" if the parameter does not exist<br>
+	 *
+	 * This function can be used for the following objects: <b>ShaderProgramCg</b>
+	 * @param name Name of the shader parameter to return the type for
+	 * @return String holding the parameter type
+	 */
+	String parameterType(String name);
+
+	/**
+	 * Returns the 3D position of a view or of a light source.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView, PointLight, SpotLight</b>
+	 * @return 3D vector holding the position in space
+	 * @see setPosition().
+	 */
+	Vector3 position();
+
+	/**
+	 * Sets the 3D position of a view or of a light source.
+	 * This function can be used for the following objects: <b>ParallelView, PerspectiveView, StereoView, PointLight, SpotLight</b>
+	 * @param position New 3D position to set
+	 * @return True, if succeeded
+	 * @see position().
+	 */
+	Boolean setPosition(Vector3 position);
+
+	/**
+	 * Sets the projection of a view.
+	 * This function can be used for the following objects: <b>PerspectiveView, StereoView</b>
+	 * @param matrix New projection to set
+	 * @return True, if succeeded
+	 * @see setLeftProjection(), setRightProjection().
+	 */
+	Boolean setProjectionMatrix(SquareMatrix4 matrix);
+
+	/**
+	 * Returns the radius of a geometry object.
+	 * This function can be used for the following objects: <b>Cone, Cylinder, Sphere</b>
+	 * @return Geometry radius
+	 * @see setRadius().
+	 */
+	Number radius();
+
+	/**
+	 * Sets the radius of a geometry object.
+	 * This function can be used for the following objects: <b>Cone, Cylinder, Sphere</b>
+	 * @param radius Radius to set
+	 * @return True, if succeeded
+	 * @see radius().
+	 */
+	Boolean setRadius(Number radius);
+
+	/**
+	 * Sets the right projection of a stereo view.
+	 * This function can be used for the following objects: <b>StereoView</b>
+	 * @param matrix New projection to set
+	 * @return True, if succeeded
+	 * @see setLeftProjection().
+	 */
+	Boolean setRightProjectionMatrix(SquareMatrix4 matrix);
+
+	/**
+	 * Returns the reflectivity factor of a material object.
+	 * A reflectivity value of 0.0 defines a not reflecting material, 1.0 defines a fully reflecting material.<br>
+	 * Beware: Not all rendering engine support the reflectivity property.<br>
+	 *
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @return Material reflectifity factor with range [0.0, 1.0]
+	 * @see setReflectivity().
+	 */
+	Number reflectivity();
+
+	/**
+	 * Sets the reflectivity factor of a material object.
+	 * A reflectivity value of 0.0 defines a not reflecting material, 1.0 defines a fully reflecting material.<br>
+	 * Beware: Not all rendering engine support the reflectivity property.<br>
+	 *
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @param reflectivity Reflectivity factor to set with range [0.0, 1.0]
+	 * @return True, if succeeded
+	 * @see reflectivity().
+	 */
+	Boolean setReflectivity(Number reflectivity);
+
+	/**
+	 * Returns the rotation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @return Quaternion rotation of the rendering object
+	 * @see setRotation().
+	 */
+	Quaternion rotation();
+
+	/**
+	 * Sets the rotation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param euler Euler rotation to set
+	 * @return True, if succeeded
+	 * @see rotation().
+	 */
+	Boolean setRotation(Euler euler);
+
+	/**
+	 * Sets the rotation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param matrix 4x4 homogenous transformation matrix providing the rotation component
+	 * @return True, if succeeded
+	 * @see rotation().
+	 */
+	Boolean setRotation(HomogenousMatrix4 matrix);
+
+	/**
+	 * Sets the rotation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param quaternion Quaternion rotation defining the new rotation
+	 * @return True, if succeeded
+	 * @see rotation().
+	 */
+	Boolean setRotation(Quaternion quaternion);
+
+	/**
+	 * Sets the rotation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param rotation Angle-axis rotation defining the new rotation
+	 * @return True, if succeeded
+	 * @see rotation().
+	 */
+	Boolean setRotation(Rotation rotation);
+
+	/**
+	 * Sets the rotation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param matrix 3x3 rotation matrix defining the new rotation
+	 * @return True, if succeeded
+	 * @see rotation().
+	 */
+	Boolean setRotation(SquareMatrix3 matrix);
+
+	/**
+	 * Returns the scale of a transform or texture object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform</b>
+	 * @return 3D vector holding the scale for all three axes
+	 */
+	Vector3 scale();
+
+	/**
+	 * Returns the size of a geometry object.
+	 * This function can be used for the following objects: <b>Box</b>
+	 * @return 3D vector holding the size in all three axes
+	 * @see setSize().
+	 */
+	Vector size();
+
+	/**
+	 * Sets the size of a geometry object.
+	 * This function can be used for the following objects: <b>Box</b>
+	 * @param size 3D vector defining the new size in all three axes
+	 * @return True, if succeeded
+	 * @see size().
+	 */
+	Boolean setSize(Vector3 size);
+
+	/**
+	 * Returns the specular color of a material or light source.
+	 * This function can be used for the following objects: <b>Material, DirectionalLight, PointLight, SpotLight</b>
+	 * @return Color object specifying the specular color
+	 * @see setSpecularColor().
+	 */
+	Color specularColor();
+
+	/**
+	 * Sets the specular color of a material or light source.
+	 * This function can be used for the following objects: <b>Material, DirectionalLight, PointLight, SpotLight</b>
+	 * @param color Color object specifying the new specular color
+	 * @return True, if succeeded
+	 * @see specularColor().
+	 */
+	Boolean setSpecularColor(Color color);
+
+	/**
+	 * Returns the specular exponent value of a material object.
+	 * The higher the exponent the sharper the specular reflection.<br>
+	 *
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @return Material specular exponent value with range [0.0, 1.0]
+	 * @see setSpecularExponent().
+	 */
+	Number specularExponent();
+
+	/**
+	 * Sets the specular exponent value of a material object.
+	 * The higher the exponent the sharper the specular reflection.<br>
+	 *
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @param exponent Specular exponent value to set, with range [0.0, 1.0]
+	 * @return True, if succeeded
+	 * @see specularExponent().
+	 */
+	Boolean setSpecularExponent(Number exponent);
+
+	/**
+	 * Returns the sharpness of a spot light object as fall off exponent.
+	 * The higher the exponent the sharper the spot light.<br>
+	 *
+	 * This function can be used for the following objects: <b>SpotLight</b>
+	 * @return Spot light exponent
+	 * @see setSpotExponent().
+	 */
+	Number spotExponent();
+
+	/**
+	 * Sets the sharpness of a spot light object as fall of exponent.
+	 * The higher the exponent the sharper the spot light.<br>
+	 *
+	 * This function can be used for the following objects: <b>SpotLight</b>
+	 * @param exponent Spot light exponent to set
+	 * @return True, if succeeded
+	 * @see spotExponent()
+	 */
+	Boolean setSpotExponent(Number exponent);
+
+	/**
+	 * Returns the specified texture coordinates of a vertex set object.
+	 * This function can be used for the following objects: <b>VertexSet</b>
+	 * @param index Texture layer index to return the texture coordinates for with range [0, 7]
+	 * @return Specified texture coordinates
+	 * @see setTextureCoordinates().
+	 */
+	Array<Vector2> textureCoordinates(Integer index);
+
+	/**
+	 * Sets the texture coordinates of a vertex set object.
+	 * This function can be used for the following objects: <b>VertexSet</b>
+	 * @param textureCoordinates Array holding 2D vector objects defining the texture coordinates to set
+	 * @param index Index of the texture layer to set, with range [0, 7]
+	 * @return True, if succeeded
+	 * @see textureCoordinates().
+	 */
+	Boolean setTextureCoordinates(Array<Vector2> textureCoordinates, Integer index);
+
+	/**
+	 * Returns the translation of a transform, texture, view or light object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView, PointLight, SpotLight</b>
+	 * @return 3D vector holding the translation or position of the rendering object
+	 * @see setTranslation().
+	 */
+	Vector3 translation();
+
+	/**
+	 * Sets the translation of a transform, texture, view or light object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView, PointLight, SpotLight</b>
+	 * @param matrix 4x4 homogenous transformation matrix providing the translation component
+	 * @return True, if succeeded
+	 * @see translation().
+	 */
+	Boolean setTranslation(HomogenousMatrix4 matrix);
+
+	/**
+	 * Sets the translation of a transform, texture, view or light object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView, PointLight, SpotLight</b>
+	 * @param translation 3D vector holding the translation to set
+	 * @return True, if succeeded
+	 * @see translation().
+	 */
+	Boolean setTranslation(Vector3 translation);
+
+	/**
+	 * Returns the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @return Homogenous transformation matrix defining the transformation of the rendering object
+	 * @see setTransformation().
+	 */
+	HomogenousMatrix4 transformation();
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param matrix Homogenous transformation matrix defining the entire transformation to set
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(HomogenousMatrix4 matrix);
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param euler Euler rotation defining the entire transformation to set
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(Euler euler);
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param quaternion Quaternion rotation defining the entire transformation to set
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(Quaternion quaternion);
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param rotation Angle-axis rotation defining the entire transformation to set
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(Rotation rotation);
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param matrix 3x3 rotation matrix defining the entire transformation to set
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(SquareMatrix3 matrix);
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param matrix 4x4 square matrix defining the entire transformation to set
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(SquareMatrix4 matrix);
+
+	/**
+	 * Sets the transformation of a transform, texture or view object.
+	 * This function can be used for the following objects: <b>Texture2D, Transform, ParallelView, PerspectiveView, StereoView</b>
+	 * @param translation 3D vector defining a translation to be set as entire transformation
+	 * @return True, if succeeded
+	 * @see transformation().
+	 */
+	Boolean setTransformation(Vector3 translation);
+
+	/**
+	 * Returns the transparency value of a material object.
+	 * A transparency value of 0.0 means fully opaque, 1.0 means fully transparent.<br>
+	 *
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @return Transparency value with range [0.0, 1.0]
+	 * @see setTransparency().
+	 */
+	Number transparency();
+
+	/**
+	 * Sets the transparency value of a material object.
+	 * A transparency value of 0.0 means fully opaque, 1.0 means fully transparent.<br>
+	 *
+	 * This function can be used for the following objects: <b>Material</b>
+	 * @param transparency Transparency value to set, with range [0.0, 1.0]
+	 * @return True, if succeeded
+	 * @see transparency().
+	 */
+	Boolean setTransparency(Number transparency);
+
+	/**
+	 * Returns the vertices specified for a vertex set object.
+	 * This function can be used for the following objects: <b>VertexSet</b>
+	 * @return Specified vertices
+	 * @see setVertices().
+	 */
+	Array<Vector3> vertices();
+
+	/**
+	 * Sets the vertices of a vertex set object.
+	 * This function can be used for the following objects: <b>VertexSet</b>
+	 * @param vertices Array holding 3D vector objects defining the vertices to set
+	 * @return True, if succeeded
+	 * @see vertices().
+	 */
+	Boolean setVertices(Array<Vector3> vertices);
+
+	/**
+	 * Returns the vertex set specified for a primitive object.
+	 * This function can be used for the following objects: <b>Triangles, TriangleFans, TriangleStrips, Quads, QuadStrips</b>
+	 * @return Specified vertex set
+	 * @see setVertexSet().
+	 */
+	RenderingObject vertexSet();
+
+	/**
+	 * Sets the vertex set of a primitive object.
+	 * This function can be used for the following objects: <b>Triangles, TriangleFans, TriangleStrips, Quads, QuadStrips</b>
+	 * @param vertexSet VertexSet object to set
+	 * @return True, if succeeded
+	 * @see vertexSet().
+	 */
+	Boolean setVertexSet(RenderingObject vertexSet);
+
+	/**
+	 * Returns whether the rendering node is visible.
+	 * This function can be used for all rendering nodes like e.g. <b>Transform, Geometry, ...</b>
+	 * @return True, if the node is visible
+	 * @see setVisible().
+	 */
+	Boolean visible();
+
+	/**
+	 * Sets whether the rendering node is visible.
+	 * This function can be used for all rendering nodes like e.g. <b>Transform, Geometry, ...</b>
+	 * @param visible True, if the node has to be visible
+	 * @return True, if succeeded
+	 * @see visible().
+	 */
+	Boolean setVisible(Boolean visible);
+
+	/**
+	 * Returns the width of a geometry object.
+	 * This function can be used for the following objects: <b>Box</b>
+	 * @return Width of the geometry
+	 * @see setWidth().
+	 */
+	Number width();
+
+	/**
+	 * Sets the width of a geometry object.
+	 * This function can be used for the following objects: <b>Box</b>
+	 * @param size 3D vector defining the size in all three axes
+	 * @return True, if succeeded
+	 */
+	Boolean setWidth(Vector3 size);
+
+	/**
+	 * Returns one of the world transformations for the node.
+	 * A world transformation is determined by concatenating all transformations between the world coordinate system (the root node) and this node.<br>
+	 * Beware: If this node has more than one path to the root node the returning value is one world transformation only.
+	 * This function can be used for all node objects like e.g. <b>Transform, ...</b>
+	 * @return World transformation
+	 */
+	HomogenousMatrix4 worldTransformation();
+
+	/**
+	 * Sets the shader code of a shader program.
+	 * This function can be used for the follwing objects: <b>ShaderProgramCg</b>
+	 * @param code Shader code to set
+	 * @return True, if the code is valid and could be compiled
+	 * @see setCodeFile().
+	 */
+	Boolean setCode(String code);
+
+	/**
+	 * Sets the filename containing shader code for a shader program.
+	 * This function can be used for the follwing objects: <b>ShaderProgramCg</b>
+	 * @param filename Shader code filename to set
+	 * @return True, if the specified file could be loaded and the code could be compiled
+	 * @see setCode().
+	 */
+	Boolean setCodeFile(String filename);
+
+	/**
+	 * Sets the face indices of a primitive object.
+	 * If the object is a Triangles object the index array must have a size which is a multiple of three,<br>
+	 * if the object is a Quads object the array size must be a multiple of four.<br>
+	 * The indices must be defined continuously without any invalid or negative indices.<br>
+	 * This function can be used for the follwing objects: <b>Quads, Triangles</b>
+	 * @param faces Array holding vertex indices defining the faces
+	 * @return True, if succeeded
+	 * @see setStrips().
+	 */
+	Boolean setFaces(Array<Integer> faces);
+
+	/**
+	 * Sets a texture sampler of a shader program object.
+	 * This function can be used for the following objects: <b>Texture2D</b>
+	 * @param id Id of the texture sampler to set
+	 * @param texture Rendering object holding the texture to be set
+	 * @return True, if succeeded
+	 */
+	Boolean setSampler(Integer id, RenderingObject texture);
+
+	/**
+	 * Sets the strip indices of a stripped primitive object.
+	 * This function can be used for the following objects: <b>Quads, TriangleFans, TriangleStrips</b>
+	 * @param strips Array holding arrays of strip indices
+	 * @return True, if succeeded
+	 * @see setFaces().
+	 */
+	Boolean setStrips(Array<Array<Integer>> strips);
+
+	/**
+	 * Returns one of the parent rendering objects of this rendering object.
+	 * If an object has more than one parent an arbitary parent object is returned.
+	 * Beware: Check whether the returned object is connected to a valid Ocean framework object before usage!
+	 * @return One parent rendering object
+	 * @see parents(), isValid().
+	 */
+	RenderingObject parent();
+
+	/**
+	 * Returns all parent renndering objects of this rendering object.
+	 * @return All parent rendering object
+	 * @see parent(), isValid().
+	 */
+	Array<RenderingObject> parents();
+
+	/**
+	 * Returns whether this rendering object is connected to a real object inside the Ocean framework.
+	 * @return True, if the JavaScript object is connected with an Ocean framework object
+	 */
+	Boolean isValid();
+
+	/**
+	 * Returns whether this rendering object is not connected to a real object inside the Ocean framework.
+	 * @return True, if the JavaScript object is not connected with an Ocean framework object
+	 */
+	Boolean isInvalid();
+};

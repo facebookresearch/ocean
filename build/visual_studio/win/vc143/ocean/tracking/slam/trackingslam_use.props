@@ -3,15 +3,15 @@
   <PropertyGroup>
     <_PropertySheetDisplayName>Use Ocean Tracking SLAM</_PropertySheetDisplayName>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <ocean_trackingslam_use_imported>True</ocean_trackingslam_use_imported>
   </PropertyGroup>
-  
+
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_trackingslam_common_imported)' != 'True'" Project="trackingslam_common.props"/>
   </ImportGroup>
-  
+
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
     <Link>
       <AdditionalDependencies>OceanTrackingSLAMD.lib;%(AdditionalDependencies)</AdditionalDependencies>

@@ -1,0 +1,85 @@
+
+/**
+ * This object implements an invinite 3D line for the 3D space.
+ * A line mainly is defined by a base point which is part of the line and a direction vector with length 1.<br>
+ * Thus, a line is be defined by six parameters: 3 parameters for the base point and 3 parameters for the direction vector.<br>
+ * Use this line to determine the intersection between lines and planes.<br>
+ * @see Plane3, Vector3
+ * @ingroup math
+ */
+struct Line3
+{
+	/**
+	 * Constructor of an infinite 3D line object.
+	 * Creates a new line with base in the origin and direction equal to the positive y-axis.<br>
+	 * Thus, the line has a direction equal the y-axis unit vector (0, 1, 0).
+	 * @return New Line3 object
+	 *
+	 * Example:
+	 * @code
+	 * var line = new Line3();
+	 *
+	 * ocean.info("Line point: ", line.point().string());
+	 * ocean.info("Line direction: ", line.direction().string());
+	 * @endcode
+	 */
+	Line3();
+
+	/**
+	 * Constructor of a 3D line object.
+	 * Creates a new line by copy of a Line3 object.
+	 * @param line 3D line to copy
+	 * @return New Line3 object
+	 *
+	 * Example:
+	 * @code
+	 * var line = new Line3(new Line3());
+	 * @endcode
+	 */
+	Line3(Line3 line);
+
+	/**
+	 * Constructor of a 3D line object.
+	 * Creates a new 3D line object by the base point  and the direction of the new line.<br>
+	 * @param point Base point of the line
+	 * @param direction Direction vector of the line, must have length 1
+	 * @return New Line3 object
+	 *
+	 * Example:
+	 * @code
+	 * // line is equal to a default line "new Line3()"
+	 * var line = new Line3(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+	 * @endcode
+	 */
+	Line3(Vector3 point, Vector3 direction);
+
+	/**
+	 * Returns whether all six components of two Line3 objects are equal.
+	 * @param line Second line to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var line0 = new Line3(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 1.0, 0.0);
+	 * var line1 = new Line3();
+	 *
+	 * // the result is true
+	 * var result = line0.isEqual(line1);
+	 * @endcode
+	 */
+	Boolean isEqual(Line3 line);
+
+	/**
+	 * Returns a string holding the six line elements of this line separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var line = new Line3();
+	 *
+	 * // str holds "0.0, 0.0, 0.0, 0.0, 1.0, 0.0" as string without quotation marks
+	 * var str = line.string();
+	 * @endcode
+	 */
+	String string();
+};

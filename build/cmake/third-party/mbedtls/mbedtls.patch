@@ -4,7 +4,7 @@ index e0e5adec..cdb6accb 100644
 +++ b/3rdparty/everest/CMakeLists.txt
 @@ -1,6 +1,6 @@
  set(everest_target "${MBEDTLS_TARGET_PREFIX}everest")
- 
+
 -add_library(${everest_target}
 +add_library(${everest_target} STATIC
    library/everest.c
@@ -16,12 +16,12 @@ index 2ef0d48b..54653af6 100644
 +++ b/3rdparty/p256-m/CMakeLists.txt
 @@ -1,6 +1,6 @@
  set(p256m_target ${MBEDTLS_TARGET_PREFIX}p256m)
- 
+
 -add_library(${p256m_target}
 +add_library(${p256m_target} STATIC
      p256-m_driver_entrypoints.c
      p256-m/p256-m.c)
- 
+
 diff --git a/include/mbedtls/mbedtls_config.h b/include/mbedtls/mbedtls_config.h
 index 35921412..9a6d50e9 100644
 --- a/include/mbedtls/mbedtls_config.h
@@ -32,7 +32,7 @@ index 35921412..9a6d50e9 100644
   */
 -#define MBEDTLS_AESNI_C
 +//#define MBEDTLS_AESNI_C
- 
+
  /**
   * \def MBEDTLS_AESCE_C
 diff --git a/include/mbedtls/x509_crt.h b/include/mbedtls/x509_crt.h
@@ -42,7 +42,7 @@ index 1ce0d236..af11cf80 100644
 @@ -17,6 +17,17 @@
  #include "mbedtls/x509_crl.h"
  #include "mbedtls/bignum.h"
- 
+
 +#undef DLLEXPORT
 +#if defined(_MSC_VER) && defined(OCEAN_RUNTIME_SHARED)
 +#ifdef mbedx509_EXPORTS
@@ -63,7 +63,7 @@ index 1ce0d236..af11cf80 100644
   */
 -extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_default;
 +DLLEXPORT extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_default;
- 
+
  /**
   * Expected next default profile. Recommended for new deployments.
 @@ -333,7 +344,7 @@ extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_next;
@@ -72,7 +72,7 @@ index 1ce0d236..af11cf80 100644
   */
 -extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_suiteb;
 +DLLEXPORT extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_suiteb;
- 
+
  /**
   * Empty profile that allows nothing. Useful as a basis for constructing
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
@@ -82,7 +82,7 @@ index e6705de5..0f673820 100644
 @@ -3,6 +3,8 @@ option(USE_SHARED_MBEDTLS_LIBRARY "Build Mbed TLS shared library." OFF)
  option(LINK_WITH_PTHREAD "Explicitly link Mbed TLS library to pthread." OFF)
  option(LINK_WITH_TRUSTED_STORAGE "Explicitly link Mbed TLS library to trusted_storage." OFF)
- 
+
 +set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 +
  # Set the project root directory if it's not already defined, as may happen if
@@ -95,22 +95,22 @@ index e6705de5..0f673820 100644
 -    set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 3.6.0 SOVERSION 16)
 +    #set_target_properties(${mbedcrypto_target} PROPERTIES VERSION 3.6.0 SOVERSION 16)
      target_link_libraries(${mbedcrypto_target} PUBLIC ${libs})
- 
+
      if(TARGET ${everest_target})
 @@ -310,11 +312,11 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
      endif()
- 
+
      add_library(${mbedx509_target} SHARED ${src_x509})
 -    set_target_properties(${mbedx509_target} PROPERTIES VERSION 3.6.0 SOVERSION 7)
 +    #set_target_properties(${mbedx509_target} PROPERTIES VERSION 3.6.0 SOVERSION 7)
      target_link_libraries(${mbedx509_target} PUBLIC ${libs} ${mbedcrypto_target})
- 
+
      add_library(${mbedtls_target} SHARED ${src_tls})
 -    set_target_properties(${mbedtls_target} PROPERTIES VERSION 3.6.0 SOVERSION 21)
 +    #set_target_properties(${mbedtls_target} PROPERTIES VERSION 3.6.0 SOVERSION 21)
      target_link_libraries(${mbedtls_target} PUBLIC ${libs} ${mbedx509_target})
  endif(USE_SHARED_MBEDTLS_LIBRARY)
- 
+
 diff --git a/library/constant_time.c b/library/constant_time.c
 index d212ddfd..391dc8da 100644
 --- a/library/constant_time.c
@@ -122,7 +122,7 @@ index d212ddfd..391dc8da 100644
 -volatile mbedtls_ct_uint_t mbedtls_ct_zero = 0;
 +DLLEXPORT volatile mbedtls_ct_uint_t mbedtls_ct_zero = 0;
  #endif
- 
+
  /*
 diff --git a/library/constant_time_impl.h b/library/constant_time_impl.h
 index 2a4574ba..0c3e19f4 100644
@@ -131,7 +131,7 @@ index 2a4574ba..0c3e19f4 100644
 @@ -16,6 +16,17 @@
  #include "mbedtls/bignum.h"
  #endif
- 
+
 +#undef DLLEXPORT
 +#if defined(_MSC_VER) && defined(OCEAN_RUNTIME_SHARED)
 +#if defined(mbedcrypto_EXPORTS)
@@ -148,12 +148,12 @@ index 2a4574ba..0c3e19f4 100644
   * definitions are here, and constant_time_internal.h has only the declarations.
 @@ -81,7 +92,7 @@
   */
- 
+
  #if !defined(MBEDTLS_CT_ASM)
 -extern volatile mbedtls_ct_uint_t mbedtls_ct_zero;
 +DLLEXPORT extern volatile mbedtls_ct_uint_t mbedtls_ct_zero;
  #endif
- 
+
  /**
 diff --git a/library/psa_util_internal.h b/library/psa_util_internal.h
 index 70a08a02..cff832c3 100644
@@ -162,7 +162,7 @@ index 70a08a02..cff832c3 100644
 @@ -11,6 +11,17 @@
  #ifndef MBEDTLS_PSA_UTIL_INTERNAL_H
  #define MBEDTLS_PSA_UTIL_INTERNAL_H
- 
+
 +#undef DLLEXPORT
 +#if defined(_MSC_VER) && defined(OCEAN_RUNTIME_SHARED)
 +#if defined(mbedcrypto_EXPORTS)
@@ -176,24 +176,24 @@ index 70a08a02..cff832c3 100644
 +
  /* Include the public header so that users only need one include. */
  #include "mbedtls/psa_util.h"
- 
+
 @@ -61,7 +72,7 @@ extern const mbedtls_error_pair_t psa_to_lms_errors[3];
  #endif
- 
+
  #if defined(MBEDTLS_USE_PSA_CRYPTO) || defined(MBEDTLS_SSL_PROTO_TLS1_3)
 -extern const mbedtls_error_pair_t psa_to_ssl_errors[7];
 +DLLEXPORT extern const mbedtls_error_pair_t psa_to_ssl_errors[7];
  #endif
- 
+
  #if defined(PSA_WANT_KEY_TYPE_RSA_PUBLIC_KEY) ||    \
 diff --git a/library/x509_crt.c b/library/x509_crt.c
 index 2fd56fbd..437dd23f 100644
 --- a/library/x509_crt.c
 +++ b/library/x509_crt.c
 @@ -42,6 +42,17 @@
- 
+
  #include "mbedtls/platform.h"
- 
+
 +#undef DLLEXPORT
 +#if defined(_MSC_VER) && defined(OCEAN_RUNTIME_SHARED)
 +#ifdef mbedx509_EXPORTS
@@ -209,7 +209,7 @@ index 2fd56fbd..437dd23f 100644
  #include "mbedtls/threading.h"
  #endif
 @@ -84,7 +95,7 @@ typedef struct {
- 
+
  /* Default profile. Do not remove items unless there are serious security
   * concerns. */
 -const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_default =

@@ -3,11 +3,11 @@
   <PropertyGroup>
     <_PropertySheetDisplayName>Ocean Tracking MapBuilding (Common)</_PropertySheetDisplayName>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <ocean_trackingmapbuilding_common_imported>True</ocean_trackingmapbuilding_common_imported>
   </PropertyGroup>
-  
+
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
     <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>

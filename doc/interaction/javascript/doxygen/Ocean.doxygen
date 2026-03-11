@@ -1,0 +1,303 @@
+
+/**
+ * This object implements a global ocean object.
+ * The ocean object is globally accessible and provides access to a device and media manager.<br>
+ * The global JavaScript object has the name "ocean".<br>
+ * Beware: Do not create an Ocean object on your own, use the global object instead!
+ * @see DeviceManager, MediaManager.
+ * @ingroup global
+ */
+struct Ocean
+{
+	/**
+	 * Device object providing access to the device manager.
+	 * The object / property has read access only.<br>
+	 * @see DeviceManager.
+	 *
+	 * Example:
+	 * @code
+	 * // creates a new marker tracking device
+	 * trackerObject = ocean.device.create("ARToolKit 6DOF Marker Tracker");
+	 *
+	 * // checks whether the device object is valid
+	 * if (trackerObject.isValid())
+	 *    ocean.info("The tracker object has been created successfully.");
+	 * else
+	 *    ocean.error("Failed to create the tracker object.");
+	 * @endcode
+	 */
+	DeviceManager device [get];
+
+	/**
+	 * Media object providing access to the media manager.
+	 * The object / property has read access only.<br>
+	 * @see MediaManager.
+	 *
+	 * Example:
+	 * @code
+	 * // creates a new audio file
+	 * audioObject = ocean.media.createAudio("audiofile.wav");
+	 *
+	 * // checks whether the audio object is valid
+	 * if (audioObject.isValid())
+	 *    ocean.info("The audio object has been created successfully.");
+	 * else
+	 *    ocean.error("Failed to create an audio object.");
+	 * @endcode
+	 */
+	MediaManager media [get];
+
+	/**
+	 * Scene description object providing access to the scene description manager.
+	 * The object / property has read access only.<br>
+	 * @see SceneDescriptionManager.
+	 *
+	 * Example:
+	 * @code
+	 * // find a scene description object with specific name
+	 * node = ocean.sceneDescription.findNode("NODE_NAME");
+	 *
+	 * // checks whether the node exists and thus the node object is valid
+	 * if (node.isValid())
+	 *    ocean.info("The scene description node has been found.");
+	 * else
+	 *    ocean.error("Could not find the specified scene description node.");
+	 * @endcode
+	 */
+	SceneDescriptionManager sceneDescription [get];
+
+	/**
+	 * Posts an information message into Ocean's messaging service.
+	 * An information message should give informations about the application progress.<br>
+	 * This function accepts an arbitrary number of Boolean, Integer, Number or String parameters.<br>
+	 * @param first First information value to be pushed into the messaging service
+	 * @param second Second information value to be pushed into the messaging service
+	 * @param nth N-th information value to be pushed into the messaging service
+	 * @see warning(), error().
+	 *
+	 * Example:
+	 * @code
+	 * // posts some informations for the user
+	 * ocean.info("This is an information message with several parameters: ", 20.0, ", ", true, ", ", false, " and this is the end.");
+	 * @endcode
+	 */
+	info(String first, Number second, Boolean nth);
+
+	/**
+	 * Posts a warning message into Ocean's messaging service.
+	 * An warning message should be posted if a non critical problem has been occurred.<br>
+	 * This function accepts an arbitrary number of Boolean, Integer, Number or String parameters.<br>
+	 * @param first First information value to be pushed into the messaging service
+	 * @param second Second information value to be pushed into the messaging service
+	 * @param nth N-th information value to be pushed into the messaging service
+	 * @see info(), error().
+	 */
+	warning(Boolean first, String second, Boolean nth);
+
+	/**
+	 * Posts an error message into Ocean's messaging service.
+	 * An error message should be posted if a critical problem has been occurred.<br>
+	 * This function accepts an arbitrary number of Boolean, Integer, Number or String parameters.<br>
+	 * @param first First information value to be pushed into the messaging service
+	 * @param second Second information value to be pushed into the messaging service
+	 * @param nth N-th information value to be pushed into the messaging service
+	 * @see info(), warning().
+	 */
+	error(Number first, Number second, String nth);
+
+	/**
+	 * Returns the type of the current hardware platform.
+	 * Possible values are:<br>
+	 * "android" for android platforms,<br>
+	 * "mac" for apple platforms,<br>
+	 * "linux" for linux platforms,<br>
+	 * "win" for windows platforms<br>
+	 * @return String holding the current platform type.
+	 */
+	String platformType();
+
+	/**
+	 * Returns the type of the current hardware architecture.
+	 * Possible values are:<br>
+	 * "x86" for 32bit architectues,<br>
+	 * "x64" for 64bit architectues,<br>
+	 * "av5" for ARMv5 architectues<br>
+	 * "av7" for ARMv7 architectues<br>
+	 */
+	String architectureType();
+
+	/**
+	 * Returns the release type of the current Ocean software.
+	 * Possible values are:<br>
+	 * "debug" for debug mode<br>
+	 * "" for release mode (an empty string)
+	 */
+	String releaseType();
+
+	/**
+	 * Returns the compiler version of the current Ocean software.
+	 * Possible values are:<br>
+	 * "gc42" for GNU GCC compiler 4.2,<br>
+	 * "gc44" for GNU GCC compiler 4.4,<br>
+	 * "vc08" for Visual Studio 2005,<br>
+	 * "vc09" for Visual Studio 2008,<br>
+	 * "vc10" for Visual Studio 2010
+	 */
+	String compilerVersion();
+
+	/**
+	 * Adds one or more content objects (e.g. files) and adds them into the <em>Ocean</em> framework environment.
+	 * All already loaded files will be untouched.<br>
+	 * Beware: This function may return immediately while the content may be loaded eventually later.<br>
+	 * Use the returning event id in combination with the <b>setContentAddedEventFunction</b> event callback function to determine whether the content has been added successfully.<br>
+	 * @param firstFile First file to add
+	 * @param secondFile Second file to add
+	 * @param thirdFiles Array of files to add
+	 * @return Event id corresponding to the first content file (or object) to be removed
+	 * @see removeContent(), setContentAddedEventFunction()..
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined event functions for key events produced inside the Ocean framework
+	 * function onOceanKeyPress(engine, key, timestamp)
+	 * {
+	 *     if (key == "A")
+	 *     {
+	 *         // load and add a new scene file
+	 *         ocean.addContent("newscene.x3dv");
+	 *     }
+	 *     else if (key == "B")
+	 *     {
+	 *         // load and add two new scene files
+	 *         ocean.addContent("newsceneA.x3dv", "newsceneB.obj");
+	 *     }
+	 *     else if (key == "C")
+	 *     {
+	 *         // load and add a new project file
+	 *         ocean.addContent("newproject.oproj");
+	 *     }
+	 * }
+	 * @endcode
+	 */
+	Integer addContent(String firstFile, String secondFile, Array<String> thirdFiles, ...);
+
+	/**
+	 * Removes all currenlty loaded content objects registered inside the <em>Ocean</em> framework environment.
+	 * Beware: Event the script invoking this call may be removed afterwards!
+	 * @return True, if succeeded
+	 * @see removeContent().
+	 *
+	 * Example:
+	 * @code
+	 * // remove (close) all content objects (e.g. files)
+	 * ocean.removeContent();
+	 * @endcode
+	 */
+	Boolean removeContent();
+
+	/**
+	 * Removes one or more content object (e.g. files) already added into the <em>Ocean</em> framework environment.
+	 * Instead of removing each file defined e.g. by a project, the project must be removed only.<br>
+	 * Beware: This function may return immediately while the content may be removed eventually later.<br>
+	 * Use the returning event id in combination with the <b>setContentRemovedEventFunction</b> event callback function to determine whether the content has been removed successfully.<br>
+	 * @param firstFile First file to replace
+	 * @param secondFile Second file to replace
+	 * @param thirdFiles Array of files to replace
+	 * @return Event id corresponding to the first content file (or object) to be removed
+	 * @see addContent(), setContentRemovedEventFunction().
+	 *
+	 * Example:
+	 * @code
+	 * // load a new scene file
+	 * ocean.addContent("scene.x3dv");
+	 *
+	 * // do something inbetween
+	 *
+	 * // remove the scene file
+	 * ocean.removeContent("scene.x3dv");
+	 * @endcode
+	 */
+	Integer removeContent(String firstFile, String secondFile, Array<String> thirdFiles, ...);
+
+	/**
+	 * Sets the event callback function to receive events for added content objects.
+	 * The callback function must provide two parameters.<br>
+	 * The first parameter specifies the event id, the second parameter holds the event state.<br>
+	 * @param function Callback function to be set
+	 * @see setContentRemovedEventFunction().
+	 *
+	 * Example:
+	 * @code
+	 * function onContentAdded(eventId, contentState)
+	 * {
+	 *     if (contentState)
+	 *         ocean.info("Content with event id ", eventId, " loaded successfully.");
+	 *     else
+	 *         ocean.info("Failed to load content with event id ", eventId);
+	 * }
+	 *
+	 * function onContentRemoved(eventId, contentState)
+	 * {
+	 *     if (contentState)
+	 *         ocean.info("Content with event id ", eventId, " removed successfully.");
+	 *     else
+	 *         ocean.info("Failed to remove content with event id ", eventId);
+	 * }
+	 *
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     ocean.setContentAddedEventFunction(onContentAdded);
+	 *     ocean.setContentRemovedEventFunction(onContentRemoved);
+	 *
+	 *     // adds a new scene files to the viewing system
+	 *     addEventId = ocean.addContent("newContent.x3dv");
+	 *     ocean.info("A new content with event id ", addEventId, " will be added.");
+	 *
+	 *     // and directly removes the new scene afterwards
+	 *     removeEventId = ocean.removeContent("newContent.x3dv");
+	 *     ocean.info("The content with event id ", eventId, " will be removed.");
+	 * }
+	 * @endcode
+	 */
+	setContentAddedEventFunction(Function function);
+
+	/**
+	 * Sets the event callback function to receive events for removed content objects.
+	 * The callback function must provide two parameters.<br>
+	 * The first parameter specifies the event id, the second parameter holds the event state.<br>
+	 * @param function Callback function to be set
+	 * @see setContentAddedEventFunction().
+	 */
+	setContentRemovedEventFunction(Function function);
+
+	/**
+	 * Returns the current system timestamp.
+	 * The timestamp is a floating point number and holds the number of seconds since the 1. January 1970, 00:00:00, which is equivalent to a standard unix timestamp.<br>
+	 * Each predefined event function like e.g. onOceanPreUpdate() provides the unique event timestamp.<br>
+	 * However, sometimes the explicit timestamp is necessary to provide a valid application behavior.<br>
+	 * Thus, use this explicit and therefore most current timestamp if necessary!
+	 * @return Most current timestamp
+	 *
+	 * Example:
+	 * @code
+	 * // return the most current timestamp
+	 * var currentTimestamp = ocean.timestamp();
+	 * @endcode
+	 */
+	Number timestamp();
+};
+
+/**
+ * @example Ocean.js
+ * This is an example of how to use the Ocean object.<br>
+ * The example uses the global JavaScript function "onOceanInitialize()" to use some Ocean operations.<br>
+ * @see Ocean.
+ */
+
+/**
+ * @example Ocean-addContent-removeContent.js
+ * This is an example of how to use the addContent() and removeContent() function of the Ocean object.<br>
+ * The examples uses the global JavaScript function "onKeyPress()" to distinguish between different user inputs.<br>
+ * Two further project files are necessary to run this examples. However, these project files may hold arbitrary information or files.<br>
+ * @see Ocean.
+ */

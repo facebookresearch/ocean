@@ -1,0 +1,392 @@
+
+/**
+ * This object implements a 4x4 square matrix object.
+ * A 4x4 matrix can be used as e.g. projection matrix.<br>
+ *
+ * The sixteen matrix elements are stored in a column aligned order with indices:<br>
+ * | 0  4  8  12 |<br>
+ * | 1  5  9  13 |<br>
+ * | 2  6  10 14 |<br>
+ * | 3  7  11 15 |<br>
+ * @see HomogenousMatrix4, Vector4
+ * @ingroup math
+ */
+struct SquareMatrix4
+{
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a new identity SquareMatrix4 object.
+	 * @return New SquareMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4();
+	 *
+	 * // vector will be equal to the multiplied vector due the the identity property of the default matrix object.
+	 * var vector = matrix.multiply(new Vector4(1.0, 2.0, 3.0));
+	 * @endcode
+	 */
+	SquareMatrix4();
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a copy of a SquareMatrix4 object.
+	 * @param matrix Matrix to copy
+	 * @return New SquareMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4(new SquareMatrix4());
+	 * @endcode
+	 */
+	SquareMatrix4(SquareMatrix4 matrix);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a 4x4 projection matrix defined by the horizontal field of view, the aspect ratio and the near and far clipping plane.
+	 * @param fovX Horizontal field of view, in radian and with a range of [0, PI]
+	 * @param aspectRatio View aspect ratio which is width devided by the height of the projection window
+	 * @param nearDistance Positive distance to the near clipping plane
+	 * @param farDistance Positive distance to the far clipping lane, must be larger than the near distance
+	 */
+	SquareMatrix4(Number fovX, Number aspectRatio, Number nearDistance, Number farDistance);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a 4x4 projection matrix defined by the horizontal field of view, the aspect ratio and the near and far clipping plane.
+	 * The four Number values are defined by an array object with at least four Number values.<br>
+	 * The first array element defines the horizontal field of view, in radian and with a range of [0, PI].<br>
+	 * The second array element defines the view aspect ratio which is width devided by the height of the projection window.<br>
+	 * The third array element defines the positive distance to the near clipping plane.<br>
+	 * The fourth array element defines the positive distance to the far clipping lane, must be larger than the near distance
+	 * @param elements Array with at least four Number values
+	 */
+	SquareMatrix4(Array elements);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a projection matrix defined by an asymmetric viewing frustum.<br>
+	 * The shape of the frustum is defined by the rectangle on the near plane.<br>
+	 * Afterwards, the field of view is defined by the (positive) distance to the near clipping plane.<br>
+	 * Followed by the (positive) far clipping plane to determine the entire frustum.<br>
+	 * @param left Position of the left border of the rectangle on the near plane
+	 * @param right Position of the right border of the rectangle on the near plane
+	 * @param top Position of the top border of the rectangle on the near plane
+	 * @param bottom Position of the bottom border of the rectangle on the near plane
+	 * @param nearDistance Positive distance to the near clipping plane
+	 * @param farDistance Positive distance to the far clipping plane
+	 */
+	SquareMatrix4(Number left, Number right, Number top, Number bottom, Number nearDistance, Number farDistance);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a projection matrix defined by an asymmetric viewing frustum.<br>
+	 * The shape of the frustum is defined by the rectangle on the near plane.<br>
+	 * Afterwards, the field of view is defined by the (positive) distance to the near clipping plane.<br>
+	 * Followed by the (positive) far clipping plane to determine the entire frustum.<br>
+	 * The six Number values are defined by an array object with at least six Number values.<br>
+	 * The first array element defines the position of the left border of the rectangle on the near plane.<br>
+	 * The second array element defines the position of the right border of the rectangle on the near plane.<br>
+	 * The third array element defines the position of the top border of the rectangle on the near plane.<br>
+	 * The fourth array element defines the position of the bottom border of the rectangle on the near plane.<br>
+	 * The fifth array element defines the positive distance to the near clipping plane.<br>
+	 * The sixth array element defines the positive distance to the far clipping plane.<br>
+	 * @param elements Array with at least six Number values
+	 */
+	SquareMatrix4(Array elements);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a new SquareMatrix4 object by the definition of sixteen scalar Number values.<br>
+	 * The first parameter defines the matrix element of the first row and first colum,<br>
+	 * the second parameter defines the matrix element of the second row and the first column and so on.<br>
+	 * @param m0 Matrix element at row 1 and column 1
+	 * @param m1 Matrix element at row 2 and column 1
+	 * @param m2 Matrix element at row 3 and column 1
+	 * @param m3 Matrix element at row 4 and column 1
+	 * @param m4 Matrix element at row 1 and column 2
+	 * @param m5 Matrix element at row 2 and column 2
+	 * @param m6 Matrix element at row 3 and column 2
+	 * @param m7 Matrix element at row 4 and column 2
+	 * @param m8 Matrix element at row 1 and column 3
+	 * @param m9 Matrix element at row 2 and column 3
+	 * @param m10 Matrix element at row 3 and column 3
+	 * @param m11 Matrix element at row 4 and column 3
+	 * @param m12 Matrix element at row 1 and column 4
+	 * @param m13 Matrix element at row 2 and column 4
+	 * @param m14 Matrix element at row 3 and column 4
+	 * @param m15 Matrix element at row 4 and column 4
+	 * @return New SquareMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix is equal to SquareMatrix4()
+	 * var matrix = new SquareMatrix4(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+	 * @endcode
+	 */
+	SquareMatrix4(Number m0, Number m1, Number m2, Number m3, Number m4, Number m5, Number m6, Number m7, Number m8, Number m9, Number m10, Number m11, Number m12, Number m13, Number m14, Number m15);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a new SquareMatrix4 object by the usage of an array with sixteen Number values.<br>
+	 * The first array element defines the matrix element of the first row and first column,<br>
+	 * The second array element defines the matrix element of the second row and first column and so on.<br>
+	 * @param elements Array holding at most 16 matrix elements
+	 * @return New SquareMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * elements = new Array(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+	 *
+	 * // matrix is equal to SquareMatrix4()
+	 * var matrix = new SquareMatrix4(elements);
+	 * @endcode
+	 */
+	SquareMatrix4(Array elements);
+
+	/**
+	 * Constructor of a 4x4 square matrix object.
+	 * Creates a new SquareMatrix4 object by a 4x4 homogenous transformation matrix.<br>
+	 * @param matrix 4x4 homogenous transformation matrix which will be copied element-wise
+	 * @return New SquareMatrix4 object
+	 *
+	 * Example:
+	 * @code
+	 * // the sixteen elements of the new matrix object are identical to those of the transformation matrix
+	 * var matrix = new SquareMatrix4(new HomogenousMatrix4(new Vector(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0), new Vector3(0.1, 0.1, 0.1)));
+	 * @endcode
+	 */
+	SquareMatrix4(HomogenousMatrix4 matrix);
+
+	/**
+	 * Adds two 4x4 square matrix objects and returns the new resulting 4x4 square matrix object.
+	 * The resulting matrix is an element-wise summed matrix.<br>
+	 * @param matrix Second matrix object to add
+	 * @return New resulting sum matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix4();
+	 * var matrix1 = new SquareMatrix4();
+	 *
+	 * var sumMatrix = matrix0.add(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix4 add(SquareMatrix4 matrix);
+
+	/**
+	 * Returns the determinant of the 4x4 matrix.
+	 * @return Scalar matrix determinant
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4();
+	 *
+	 * var value = matrix.determinant();
+	 * @endcode
+	 */
+	Number determinant();
+
+	/**
+	 * Inverts this 4x4 square matrix object.
+	 * The multiplication of an inverted matrix and the original matrix results in the identity matrix.
+	 *
+	 * Example:
+	 * @code
+	 * // projection matrix
+	 * var matrix = new SquareMatrix4(Math.PI / 4.0, 4 / 3, 0.01, 10000.0);
+	 *
+	 * var iMatrix = new SquareMatrix4(matrix);
+	 * iMatrix.invert();
+	 *
+	 * var mMatrix = matrix.multiply(iMatrix);
+	 * var equal = mMatrix.isEqual(new SquareMatrix4());
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns the inverted 4x4 square matrix of this matrix object.
+	 * The multiplication of an inverted matrix and the original matrix results in the identity matrix.
+	 * @return New inverted matrix object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation matrix
+	 * var matrix = new SquareMatrix4(Math.PI / 4.0, 4 / 3, 0.01, 10000.0);
+	 * var iMatrix = matrix.inverted();
+	 *
+	 * var mMatrix = matrix.multiply(iMatrix);
+	 * var equal = mMatrix.isEqual(new SquareMatrix4());
+	 * @endcode
+	 */
+	SquareMatrix4 inverted();
+
+	/**
+	 * Returns whether all sixteen components of two 4x4 square matrix objects are equal.
+	 * @param matrix Second matrix to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix4();
+	 * var matrix1 = new SquareMatrix4();
+	 *
+	 * var result = matrix0.isEqual(matrix1);
+	 * @endcode
+	 */
+	Boolean isEqual(SquareMatrix4 matrix);
+
+	/**
+	 * Multiplies this 4x4 square matrix by a scalar Number value.
+	 * Each element of the new resulting matrix will be multiplied by the scalar value.
+	 * @param value Scalar value to multiply
+	 * @return New resulting multiplication matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4();
+	 *
+	 * // multiplication matrix is equal to a unity rotation matrix with scale 3.0
+	 * var multiplication = matrix.multiply(3.0);
+	 * @endcode
+	 */
+	SquareMatrix4 multiply(Number value);
+
+	/**
+	 * Multiplies this square matrix object with a 4x4 homogenous transformation matrix resulting in one new concatenated matrix.
+	 * Such concatenated matrix can e.g. combine a projection and coordinate system transformation.
+	 * @param matrix 4x4 homogenous transformation matrix to multiply
+	 * @return New resulting concatenated matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix4(Math.PI / 4.0, 4 / 3, 0.01, 10000.0);
+	 * var matrix1 = new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 *
+	 * // concatenated rotation matrix
+	 * var multiplication = matrix0.multiply(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix4 multiply(HomogenousMatrix4 matrix);
+
+	/**
+	 * Multiplies this square matrix object with another 4x4 square matrix resulting in one new concatenated matrix.
+	 * @param matrix 4x4 square matrix to multiply
+	 * @return New resulting concatenated matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix4(Math.PI / 4.0, 4 / 3, 0.01, 10000.0);
+	 * var matrix1 = new SquareMatrix4();
+	 *
+	 * // concatenated rotation matrix
+	 * var multiplication = matrix0.multiply(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix4 multiply(SquareMatrix4 matrix);
+
+	/**
+	 * Multiplies this 4x4 matrix with a 3D vector resulting in a new transformed 3D vector.
+	 * Beware: The vector will be multiplied with the first three matrix rows only!
+	 * @param vector 3D vector to multiply
+	 * @return New resulting transformed and de-homogenized 3D vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4(Math.PI / 4.0, 4 / 3, 0.01, 10000.0);
+	 * var vector = new Vector3(0.0, 5.0, -10.0);
+	 *
+	 * // projected 3D vector
+	 * var projectedVector = matrix.multiply(vector);
+	 * @endcode
+	 */
+	Vector3 multiply(Vector3 vector);
+
+	/**
+	 * Multiplies this 4x4 matrix with a 4D vector resulting in a new transformed 4D vector.
+	 * @param vector 4D vector to multiply
+	 * @return New resulting transformed 4D vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4(Math.PI / 4.0, 4 / 3, 0.01, 10000.0);
+	 * var vector = new Vector4(0.0, 5.0, -10.0, 1.0);
+	 *
+	 * // projected 4D vector
+	 * var projectedVector = matrix.multiply(vector);
+	 * @endcode
+	 */
+	Vector4 multiply(Vector4 vector);
+
+	/**
+	 * Returns a string holding the sixteen matrix elements of this 4x4 square matrix separated by a comma.
+	 * Beware: The elements a stored in a colum aligned order, see the element index scheme for details.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4();
+	 *
+	 * // str holds "1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0" as string without quotation marks
+	 * var str = matrix.string();
+	 * @endcode
+	 */
+	String string();
+
+	/**
+	 * Subtracts two 4x4 square matrix objects and returns the resulting 4x4 matrix.
+	 * The resulting matrix holds element-wise subtracted entries.
+	 * @param matrix Matrix to subtract from this one
+	 * @return new element-wise subtracted 4x4 matrix object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix4();
+	 * var matrix1 = new SquareMatrix4();
+	 *
+	 * // result will be equal to 4x4 matrix with all entries equal to zero.
+	 * var result = matrix0.subtract(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix4 subtract(SquareMatrix4 matrix);
+
+	/**
+	 * Returns the trace of this 4x4 square matrix object.
+	 * @return Trace of this matrix which is the sum the four diagonal matrix elements
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4();
+	 *
+	 * // result will be equal to 4
+	 * var result = matrix.trace();
+	 * @endcode
+	 */
+	Number trace();
+
+	/**
+	 * Transposes this 4x4 matrix object.
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4(Math.PI / 3.0, 4 / 3, 0.01, 10000.0);
+	 *
+	 * matrix.transpose();
+	 * @endcode
+	 */
+	transpose();
+
+	/**
+	 * Returns the transposed matrix of this 4x4 matrix object.
+	 * This matrix will be unchanged.
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix4(Math.PI / 3.0, 4 / 3, 0.01, 10000.0);
+	 *
+	 * var transposedMatrix = matrix.transposed();
+	 * @endcode
+	 */
+	SquareMatrix4 transposed();
+};

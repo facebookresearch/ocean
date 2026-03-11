@@ -1,0 +1,96 @@
+
+/**
+ * This object wrapps an Ocean framework device sample object.<br>
+ * Beware: Check the validity of a device sample object before usage.<br>
+ * To check whehter the JavaScript is connected to an Ocean framework sample object use the DeviceSample::isValid() function.<br>
+ * @see DeviceObject
+ * @ingroup device
+ */
+struct DeviceSample
+{
+	/**
+	 * Constructor of a new but not usable device sample object.
+	 * Use this constructor function to assign the type of a JavaScript object only.<br>
+	 * Beware: Do not use this constructor to create a specific device sample object.<br>
+	 * A valid device object must be received by a device object only.
+	 * @see DeviceObject
+	 */
+	DeviceSample();
+
+	/**
+	 * Timestamp proeprty holding the timestamp of the device sample object.
+	 * The property has read access.
+	 */
+	Number timestamp [get];
+
+	/**
+	 * Size property holding the number of e.g. concurrently tracked tracking objects.
+	 * The property has read access
+	 */
+	Integer size [get];
+
+	/**
+	 * Returns whether all tracking values of this device sample are defined in object space.
+	 * This means that the tracking devices is specifed in relation to the object space.
+	 * @return True, if so
+	 */
+	Boolean isDeviceInObject();
+
+	/**
+	 * Returns whether all tracking values of this device sample are defined in device space.
+	 * This means that the tracking objects are specified in relation to the tracking device.
+	 * @return True, if so
+	 */
+	Boolean isObjectInDevice();
+
+	/**
+	 * Returns whehter this device sample is connected to an Ocean framework device sample object.
+	 * Beware: Do not use a sample before the validation has been checked!
+	 * @return True, if the device sample object is valid and can be used
+	 */
+	Boolean isValid();
+
+	/**
+	 * Returns whehter this device sample is not connected to an Ocean framework device sample object.
+	 * Beware: Do not use a sample before the validation has been checked!
+	 * @return True, if the device sample object is not valid and must not be used
+	 */
+	Boolean isInvalid();
+
+	/**
+	 * Returns whether this sample holds e.g. tracking data for a specific tracking object (e.g. a specific marker).
+	 * @param objectId Id of the object to check
+	 * @return True, if the sample holds data for the object
+	 */
+	Boolean hasObject(Integer objectId);
+
+	/**
+	 * Returns the 3D tracking position value of a specific tracking object.
+	 * Beware: Check whehter this sample holds tracking values for the specified tracking object before!
+	 * @param objectId Id of the tracking object to return the 3D position from
+	 * @return Specified 3D tracking position
+	 */
+	Vector3 position(Integer objectId);
+
+	/**
+	 * Returns the tracking orientation value of a specific tracking object.
+	 * Beware: Check whether this sample holds tracking values for the specified tracking object before!
+	 * @param objectId Id of the tracking object to return the quaternion rotation from
+	 * @return Specified 3D tracking orientation
+	 */
+	Quaternion orientation(Integer objectId);
+
+	/**
+	 * Returns the tracking transformation value of a specific tracking object.
+	 * Beware: Check whether this sample holds tracking values for the specified tracking object before!
+	 * @param objectId Id of the tracking object to return the homogenous transformation from
+	 * @return Specified tracking transformation
+	 */
+	HomogenousMatrix4 transformation(Integer objectId);
+
+	/**
+	 * Returns an array with all object ids available in this sample.
+	 * @return Array with tracking object ids
+	 */
+	Array<Integer> objects();
+};

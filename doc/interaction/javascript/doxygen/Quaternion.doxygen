@@ -1,0 +1,393 @@
+
+/**
+ * This object implements a unit quaternion rotation object.
+ * A quaternion is defined by four values: w + xi + yj + zk, with i * i = -1, j * j = -1 and k * k = -1.<br>
+ * Valid quaternion rotations must have a norm of 1.<br>
+ * Instead of euler or angle-ayis rotations, quaternions are well suited for rotation interpolations.<br>
+ * @see Euler, Rotation
+ * @ingroup math
+ */
+struct Quaternion
+{
+	/**
+	 * W property holding the real component of this quaternion object.
+	 * After setting the property, the quaternion object will be normalized automatically.<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 *
+	 * var wComponent = quaternion.w;
+	 * quaternion.w = 0.9;
+	 * @endcode
+	 */
+	Number w [get, set];
+
+	/**
+	 * X proeprty holding the first imaginary component of this quaternion object.
+	 * After setting the property, the quaternion object will be normalized automatically.<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 *
+	 * var xComponent = quaternion.x;
+	 * quaternion.x = 1.0;
+	 * @endcode
+	 */
+	Number x [get, set];
+
+	/**
+	 * Y property holding the second imaginary component of this quaternion object.
+	 * After setting the property the quaternion object will be normalized automatically.<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 *
+	 * var yComponent = quaternion.y;
+	 * quaternion.y = 1.0;
+	 * @endcode
+	 */
+	Number y [get, set];
+
+	/**
+	 * Z property holding the third imaginary component of this quaternion object.
+	 * After setting the property the quaternion object will be normalized automatically.<br>
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 *
+	 * var zComponent = quaternion.z;
+	 * quaternion.z = 1.0;
+	 * @endcode
+	 */
+	Number z [get, set];
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object with 1 as real component and zeros for each imaginary component.<br>
+	 * This quaternion defines a default rotation.<br>
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * // quaternion is equal to Quaternion(1.0, 0.0, 0.0, 0.0);
+	 * var quaternion = new Quaternion();
+	 * @endcode
+	 */
+	Quaternion();
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a copy of a Quaternion object.
+	 * @param quaternion Quaternion rotation to copy
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Quaternion(Quaternion quaternion);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by the definition of the first quaternion component only.<br>
+	 * The second, third and fourth components are set to zero.<br>
+	 * The quaternion object will be normalized automatically.
+	 * @param w Real component of the new quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * // quaternion is equal to Quaternion(1.0, 0.0, 0.0, 0.0)
+	 * var quaternion = new Quaternion(1.0);
+	 * @endcode
+	 */
+	Quaternion(Number w);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by the definition of the first and second quaternion component only.<br>
+	 * The third and fourth component is set to zero.
+	 * @param w Real component of the new quaternion object
+	 * @param x First imaginary component of the new quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * // quaternion is equal to Quaternion(1.0, 0.0, 0.0, 0.0)
+	 * var quaternion = new Quaternion(1.0, 0.0);
+	 * @endcode
+	 */
+	Quaternion(Number w, Number x);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by the definition of the first, second and third quaternion component.<br>
+	 * The fourth component is set to zero.
+	 * @param w Real component of the new quaternion object
+	 * @param x First imaginary component of the new quaternion object
+	 * @param y Second imaginary component of the new quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * // quaternion is equal to Quaternion(1.0, 0.0, 0.0, 0.0)
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0);
+	 * @endcode
+	 */
+	Quaternion(Number w, Number x, Number y);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by four scalar values.
+	 * @param w Real component of the new quaternion object
+	 * @param x First imaginary component of the new quaternion object
+	 * @param y Second imaginary component of the new quaternion object
+	 * @param z Third imaginary component of the new quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 * @endcode
+	 */
+	Quaternion(Number w, Number x, Number y, Number z);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new equivalent Quaternion object by a specified euler rotation object.<br>
+	 * @param euler Euler object to create a equivalent quaternion object from
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Euler(Math.PI / 4.0, Math.PI / 2.0, 0.0));
+	 * @endcode
+	 */
+	Quaternion(Euler euler);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by the rotation component of a 4x4 homogenous matrix object.<br>
+	 * Possible translation, scale or shear components are ignored.
+	 * @param matrix 4x4 homogenous transformation matrix defining the equivalent rotation of the new quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0)));
+	 * @endcode
+	 */
+	Quaternion(HomogenousMatrix4 matrix);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by a angle-axis rotation object.
+	 * @param rotation Angle-axis rotation object defining the equivalent quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 * @endcode
+	 */
+	Quaternion(Rotation rotation);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by a 3x3 rotation matrix object.<br>
+	 * Possible scale or shear components are ignored.
+	 * @param matrix 3x3 rotation matrix object defining the equivalent quaternion object
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new SquareMatrix3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	Quaternion(SquareMatrix3 matrix);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by a given rotation axis and a corresponding rotation angle.<br>
+	 * The rotation axis will be normalized automatically.
+	 * @param axis 3D rotation axis
+	 * @param angle Rotation angle defined in radian
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector3(0.0, 1.0, 0.0), Math.PI / 3.0);
+	 * @endcode
+	 */
+	Quaternion(Vector3 axis, Number angle);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object defining a rotation between two 3D vectors.<br>
+	 * Both axes will be normalized automatically.
+	 * @param firstAxis Reference vector defining the default e.g. view direction
+	 * @param secondAxis Offset vector defining the new e.g. view direction
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Quaternion(Vector3 firstAxis, Vector3 secondAxis);
+
+	/**
+	 * Constructor of a new quaternion object.
+	 * Creates a new Quaternion object by the definition of a 4D vector.<br>
+	 * Beware: The w component of the quaternion is not the same as the w component of the 4D vector.<br>
+	 * The follwing mapping will be done: vX -> qW, vY -> qX, vZ -> qY, vW -> qZ, with 4D vector v* and quaternion object q*.<br>
+	 * @param vector 4D vector defining the four components of the quaternion
+	 * @return New Quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector4(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Quaternion(Vector4 vector);
+
+	/**
+	 * Inverts this quaternion rotation object.
+	 * The multiplication of an inverted quaternion and the original quaternion results in the identity quaternion (default quaternion).
+	 *
+	 * Example:
+	 * @code
+	 * // quaternion object to invert
+	 * var quaternion = new Quaternion(new Vector3(0.0, 1.0, 0.0), Math.PI / 2.0);
+	 *
+	 * var iQuaternion = new Quaternion(quaternion);
+	 * iQuaternion.invert();
+	 *
+	 * var mQuaternion = quaternion.multiply(iQuaternion);
+	 * var equal = mQuaternion.isEqual(new Quaternion());
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns the inverted quaternion rotation object of this quaternion object.
+	 * The multiplication of an inverted quaternion and the original quaternion results in the identity quaternion (default quaternion).
+	 * @return New inverted quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * // quaternion object to invert
+	 * var quaternion = new Quaternion(new Vector3(1.0, 0.0, 0.0), -Math.PI / 4.0);
+	 * var iQuaternion = quaternion.inverted();
+	 *
+	 * var mQuaternion = quaternion.multiply(iQuaternion);
+	 * var equal = mQuaternion.isEqual(new Quaternion());
+	 * @endcode
+	 */
+	Quaternion inverted();
+
+	/**
+	 * Returns whether two quaternion objects represent the same rotation up to a small epsilon.
+	 * @param quaternion Second quaternion rotation to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion0 = new Quaternion(new Vector3(0.0, 1.0, 0.0), Math.PI / 5.0);
+	 * var quaternion1 = new Quaternion(new Rotation(0.0, 1.0, 0.0, Math.PI / 5.0));
+	 *
+	 * var result = quaternion0.isEqual(quaternion1);
+	 * @endcode
+	 */
+	Boolean isEqual(Quaternion quaternion);
+
+	/**
+	 * Multiplies this quaternion with a second quaternion rotation resulting in one new concatenated quaternion rotation.
+	 * @param quaternion Second quaternion rotation to multiply
+	 * @return New resulting rotation quaternion
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector3(1.0, 0.0, 0.0), Math.PI / 3.0);
+	 * var secondQuaternion = new Quaternion(new Vector3(0.0, 1.0, 0.0), -Math.PI / 5.0);
+	 *
+	 * // multiplication represents a new rotation
+	 * var multiplication = quaternion.multiply(secondQuaternion);
+	 * @endcode
+	 */
+	Quaternion multiply(Quaternion quaternion);
+
+	/**
+	 * Multiplies this quaternion with an angle-axis rotation resulting in one new concatenated quaternion rotation.
+	 * @param rotation Angle-axis rotation to multiply
+	 * @return New resulting rotation quaternion
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector3(1.0, 0.0, 0.0), Math.PI / 3.0);
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0);
+	 *
+	 * // multiplication represents a new rotation
+	 * var multiplication = quaternion.multiply(rotation);
+	 * @endcode
+	 */
+	Quaternion multiply(Rotation rotation);
+
+	/**
+	 * Multiplies this quaternion with a 3D vector resulting in a new rotated 3D vector.
+	 * @param vector 3D vector to rotate by this quaternion rotation
+	 * @return New resulting rotated 3D vector
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector3(1.0, 0.0, 0.0), Math.PI / 2.0);
+	 * var vector = new Vector3(0.0, 5.0, 0.0);
+	 *
+	 * // multiplication is the new rotated 3D vector
+	 * var multiplication = quaternion.multiply(vector);
+	 * @endcode
+	 */
+	Vector3 multiply(Vector3 vector);
+
+	/**
+	 * Interpolates between two quaternion rotation objects.
+	 * Spherical linear interpolation with interpolation factor 0.0 returns this quaternion object,<br>
+	 * a factor of 1.0 returns the second quaternion object, a factor of e.g. 0.5 returns the 'middle' of two rotations.
+	 * @param quaternion Second quaternion object to interpolate between
+	 * @param factor Interpolation factor defining the interpolation amount, must lie inside the range [0.0, 1.0]
+	 * @return New interpolated quaternion object
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(new Vector3(1.0, 0.0, 0.0), Math.PI / 2.0);
+	 * var secondQuaternion = new Quaternion(new Vector3(0.0, 1.0, 0.0), -Math.PI / 3.0);
+	 *
+	 * // interpolated quaternion rotation object
+	 * var interpolated = quaternion.slerp(secondQuaternion, 0.5);
+	 * @endcode
+	 */
+	Quaternion slerp(Quaternion quaternion, Number factor);
+
+	/**
+	 * Returns a string holding the four quaternion component separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var quaternion = new Quaternion(1.0, 0.0, 0.0, 0.0);
+	 *
+	 * // str holds "1.0, 0.0, 0.0, 0.0" as string without quotation marks
+	 * var str = quaternion.string();
+	 * @endcode
+	 */
+	String string();
+};

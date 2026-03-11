@@ -1,0 +1,181 @@
+
+/**
+ * @mainpage
+ * @htmlonly
+ * <h2>1) About</h2>
+ * <p>The JavaScript Application Interaction (JSAI) plugin of the <em>Ocean</em> Mixed Reality framework allows developers to get access to most of the framework features using a JavaScript interface.<br />
+ * The interface hides most of the framework complexity especially for developers without much programming experiences.<br />
+ * <h2>2) Content</h2>
+ * <p>This document describes the functionality and usage of the JavaScript Application Interaction plugin of the <em>Ocean</em> framework.</p><br />
+ * <h2>3) Usage</h2>
+ * <p>The plugin  can be used with a running Ocean framework instance only. Therefore, use e.g. the  <em>Orca</em> viewer of the <em>Ocean</em> framework and make sure that the JavaScript  Application Interaction (<em>JSAI</em>) plugin has been loaded successfully. Afterwards  you can load any plugin specific JavaScript file (with file extension js) to  interact with virtual object or manipulate their appearance or behavior.</p>
+ * <p>Developer can use all <a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm" target="_blank">ECMA-262 5th edition</a> features (not part of this document).<br />
+ * However, the <em>JSAI</em> plugin defines further <em>Ocean</em> specific JavaScript objects and functions which are defined and explained in  this document.</p>
+ * <h3>3.1) Objects:</h3>
+ * <p>Depending  on their tasks the <em>Ocean</em> specific JavaScript objects can be divided into different categories:<br />
+ * <a href="group__global.html">Global Ocean   objects</a>, <a href="group__math.html">Math objects</a>, <a href="group__device.html">Device objects</a>, <a href="group__media.html">Media objects</a>, <a href="group__rendering.html">Rendering objects</a> and <a href="group__scenedescription.html">SceneDescription objects</a>.<br/>
+ * See <a href="modules.html">Modules</a> for a more detailed description of each category.</p>
+ * <h3>3.2) Event Functions:</h3>
+ * <p>The JSAI plugin provides several predefined functions which will be called by the Ocean framework instance automatically if they are defined inside the JavaScript file.<br />Of course, developers can use a subset or even none of the predefined functions in their interaction file.<br />Each function has the event timestamp as parameter. The timestamp is a floating point number and holds the number of seconds since the 1. January 1970, 00:00:00, which is equivalent to a standard unix timestamp.</p>
+ * <p>To date the following functions are supported:</p>
+ * <ul>
+ * <li> <strong>onOceanInitialize(RenderingEngine engine, Number timestamp)</strong></li>
+ * If this function is defined inside the JavaScript file it will be called once after the successfully compilation and integration of the file.<br />Therefore, the developer can e.g. initialize some objects for later usage or give same output information for the user.<br />
+ * The function receives two objects as parameters.<br />
+ * The first parameter allows access to the currently used rendering engine inside the <em>Ocean</em> framework and can be used to create new rendering objects or to receive and change current rendering properties.<br />
+ * The second parameter is the event timestamp as described above.<br /><br />
+ * Beware: This function can return (optionally) a different update timestamp which then will be used as update timestamp in further application interaction plugins and more important in the rendering update process of the <em>Ocean</em> framework.<br /><br />
+ * <li> <strong>onOceanRelease(RenderingEngine engine, Number timestamp)</strong></li>
+ * If this function is defined inside the JavaScript file it will be called before the javascript file will be removed from the framework system.<br />Therefore, the developer can e.g. remove some objects or change the behavior of existing objects.<br />
+ * The function receives two objects as parameters.<br />
+ * The first parameter allows access to the currently used rendering engine inside the <em>Ocean</em> framework and can be used to create new rendering objects or to receive and change current rendering properties.<br />
+ * The second parameter is the event timestamp as described above.<br /><br /><br /><br />
+ * <li><strong>Number onOceanPreUpdate(RenderingEngine engine, Number timestamp)</strong></li>
+ * This function will be called before each rendering update process inside the <em>Ocean</em> framework application takes place.<br />
+ * Thus, every modification of e.g. rendering objects inside this function will be visible in the next rendered frame.<br /> The two parameters are equivalent to the <em>onOceanInitialize</em> function.<br /><br />
+ * <li><strong>onOceanPostUpdate(RenderingEngine engine, Number timestamp)</strong></li>
+ * This function will be called after each rendering update process inside the <em>Ocean</em> framework application.<br />
+ * The two parameters are equivalent to the <em>onOceanInitialize</em> function.<br /><br /><br />
+ * <li><strong>onOceanMousePress(RenderingEngine engine, String button, Vector2 screenPosition, Line3 ray, String pickedObject, Vector3 pickedPosition, Number timestamp)</strong></li>
+ * This function will be called whenever the user presses a mouse button inside the <em>Ocean</em> framework application.<br />
+ * The first parameters <em>engine</em> allows access to the currently used rendering engine inside the <em>Ocean</em> framework and can be used to create new rendering objects or the receive current rendering properties.<br />
+ * The second parameter <em>button</em> determines which button has been pressed. Possible values are <strong>"LEFT"</strong>, <strong>"MIDDLE"</strong> and <strong>"RIGHT"</strong> for the left, middle and right mouse button respectively.<br />
+ * The third parameter <em>screenPosition</em> holds the actual 2D mouse cursor position.<br />
+ * The fourth parameter <em>ray</em> provides a picking ray defined in relation to the view position.<br />
+ * The fifth parameter <em>pickedObject</em> provides the name of the picked rendering object. If the hit geometry object is unnamed or the cursor points into an empty region the name is empty.<br />
+ * The sixth parameter <em>pickedPosition</em> holds the actual 3D position of the intersection between the cursor-picking-ray and the hit 3D object (if any object has been hit).<br />
+ * The last parameter <em>timestamp</em> provides the timestamp the mouse press event occurs.<br /><br />
+ * <li><strong>onOceanMouseMove(RenderingEngine engine, String button, Vector2 screenPosition, Line3 ray, String pickedObject, Vector3 pickedPosition, Number timestamp)</strong></li>
+ * This function will be called whenever the user moves the mouse inside the <em>Ocean</em> framework application.<br />
+ * See <em>onOceanMousePress()</em> for parameter explanations.<br /><br />
+ * <li><strong>onOceanMouseRelease(RenderingEngine engine, String button, Vector2 screenPosition, Line3 ray, String pickedObject, Vector3 pickedPosition, Number timestamp)</strong></li>
+ * This function will be called whenever the user releases a mouse button inside the <em>Ocean</em> framework application.<br />
+ * See <em>onOceanMousePress()</em> for parameter explanations.<br /><br /><br />
+ * <li><strong>onOceanKeyPress(RenderingEngine engine, String key, Number timestamp)</strong></li>
+ * This function is called whenever the user presses a key inside the <em>Ocean</em> framework application.<br />
+ * The first parameters <em>engine</em> allows access to the currently used rendering engine inside the <em>Ocean</em> framework and can be used to create new rendering objects or the receive current rendering properties.<br />
+ * This function will be called whenever the user presses a key inside the <em>Ocean</em> framework application.<br />
+ * The second parameter <em>key</em> holds the pressed key, the third parameter <em>timestamp</em> is the event timestamp.<br /><br />
+ * <li><strong>onOceanKeyRelease(RenderingEngine engine, String key, Number timestamp)</strong></li>
+ * This function is called whenever the user releases a key inside the <em>Ocean</em> framework application.<br />
+ * See <em>onOceanKeyPress()</em> for parameter explanations.<br /><br />
+ * </ul>
+ * <h3>3.3) Include Function:</h3>
+ * <p>The JSAI plugin allows to include further JavaScript interaction files to reduce redundant code and to incrase the development speed.<br />
+ * Beware: Make sure that at most one predefined event function (with the same type) exists to avoid unwanted behavior.<br />
+ * To include a second interaction file with filename e.g. "second.js" call the include function with the filename: <strong>include("second.js")</strong> at the beginning of the main JavaScript file.</p><br />
+ * <h2>4) Examples</h2>
+ * @endhtmlonly
+ * Hallo world example:
+ * @code
+ * /**
+ *  * This example demonstrates a hallo world JavaScript interaction file for the Ocean famework.
+ *  * Save this script as JavaScript file (e.g. "halloworld.js") and open it with e.g. the Orca viewer.
+ *  * Take a look at the information output window...
+ *  * Author: Jan Herling, janherling@meta.com
+ *  */
+ *
+ * /**
+ *  * Predefined initialization function which is called once to initialize this script.
+ *  * @param engine Engine object giving access to the current rendering engine used inside the Ocean framework
+ *  * @param timestamp Initialization timestamp
+ *  */
+ * function onOceanInitialize(engine, timestamp)
+ * {
+ *    // Uses the messaging service of the Ocean framework to give an information output for the user.
+ *    ocean.info("Hallo world!");
+ * }
+ * @endcode
+ *
+ * @htmlonly
+ * <br><br><br><br>
+ * @endhtmlonly
+ * Rendering Object example (Material):
+ * @code
+ * /**
+ *  * This example demonstrates the usage of a rendering object wrapping a material.
+ *  * Save this script as JavaScript file (e.g. "material.js").
+ *  * The Orca viewer can be used to open a e.g. X3D scene file containing a material node with name "MATERIAL" and afterwards to open the script file.
+ *  * Author: Jan Herling, janherling@meta.com
+ *  */
+ *
+ * /**
+ *  * Predefined initialization function which is called once to initialize this script.
+ *  * @param engine Engine object giving access to the current rendering engine used inside the Ocean framework
+ *  * @param timestamp Initialization timestamp
+ *  */
+ * function onOceanInitialize(engine, timestamp)
+ * {
+ *    // finds and returns the first rendering object have the name "MATERIAL"
+ *    materialObject = engine.findObject("MATERIAL");
+ *
+ *    // check whether a material object has been found and can be accessed
+ *    if (materialObject.isValid())
+ *    {
+ *       // changes the diffuse color of the material to red
+ *       materialObject.setDiffuseColor(new Color(1, 0, 0));
+ *    }
+ *    else
+ *    {
+ *       // Uses the messaging service of the Ocean framework to inform the user about the error
+ *       ocean.error("The material could not be changed because no material object with name 'MATERIAL' could be found.");
+ *       ocean.error("Make sure a 3D scene with a named material node has been loaded before you load this script file.");
+ *    }
+ * }
+ * @endcode
+ *
+ * @htmlonly
+ * <p><a href="meta.com" target="_blank">Meta Platforms, Inc.</a></p>
+ * @endhtmlonly
+ */
+
+/**
+ * @defgroup device JavaScript device objects
+ * @{
+ * This group holds all Ocean specific JavaScript objects providing access to all types of devices.<br>
+ * Use the DeviceManager to create new DeviceObject elements.<br>
+ * An DeviceObject elements provides access to all device functions and properties.<br>
+ * Devices are e.g. 6DOF Tracker like a GPS sensor.<br>
+ * @see DeviceManager, DeviceObject.
+ * @}
+ */
+
+/**
+ * @defgroup global JavaScript global objects
+ * @{
+ * This group holds all Ocean specific JavaScript objects globally accessible.<br>
+ * @}
+ */
+
+/**
+ * @defgroup math JavaScript math objects
+ * @{
+ * This group holds all Ocean specific JavaScript objects for mathematical operations like vectors, matrices or rotation objects.<br>
+ * All operations and objects are defined for a right-handed coordinate system.
+ * @}
+ */
+
+ /**
+ * @defgroup media JavaScript media objects
+ * @{
+ * This group holds all Ocean specific JavaScript objects providing access to media functionalities.<br>
+ * @}
+ */
+
+/**
+ * @defgroup rendering JavaScript rendering objects
+ * @{
+ * This group holds all Ocean specific JavaScript objects for rendering operations like color or renderning engine objects.<br>
+ * @}
+ */
+
+ /**
+ * @defgroup scenedescription JavaScript scene description objects
+ * @{
+ * This group holds all Ocean specific JavaScript objects for scene description access.<br>
+ * A scene description may be an abstract description of a virtual 3D scene or a virtual scene defined by a well known an specified 3D scene description file.<br>
+ * Ocean supports currently OBJ and X3D / VRML scene description files.<br>
+ * However, because OBJ files provides no permanent scene description properties the properties of X3D scene descriptions are accessible only.<br>
+ * Thus, normally an already loaded e.g. X3D file or VRML file can be manipulated using the objects defined in the scene description group.
+ * @}
+ */

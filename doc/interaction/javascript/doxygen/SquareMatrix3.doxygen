@@ -1,0 +1,416 @@
+
+/**
+ * This object implements a 3x3 square matrix object.
+ * A 3x3 matrix can be used as e.g. rotation matrix containing a rotation, a scale and a shear component.<br>
+ *
+ * The nine values are stored in a column aligned order with indices:<br>
+ * | 0 3 6 |<br>
+ * | 1 4 7 |<br>
+ * | 2 5 8 |<br>
+ *
+ * This matrix can be interpreted as a linear transformation between two coordinate systems.<br>
+ * With basis vectors (rx1, ry1, rz1), (rx2, ry2, rz2), (rx3, ry3, rz3):<br>
+ * | rx1 rx2 rx3 |<br>
+ * | ry1 ry2 ry3 |<br>
+ * | rz1 rz2 rz3 |<br>
+ * @see Euler, HomogenousMatrix4, Rotation, Quaternion, Vector3
+ * @ingroup math
+ */
+struct SquareMatrix3
+{
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new identity SquareMatrix3 object.
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * // vector will be equal to the multiplied vector due the the identity property of the default matrix object.
+	 * var vector = matrix.multiply(new Vector3(1.0, 2.0, 3.0));
+	 * @endcode
+	 */
+	SquareMatrix3();
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a copy of a SquareMatrix3 object.
+	 * @param matrix Matrix to copy
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3(new SquareMatrix3());
+	 * @endcode
+	 */
+	SquareMatrix3(SquareMatrix3 matrix);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by the definition of at most nine scalar Number values.<br>
+	 * The first parameter defines the matrix element of the first row and first colum,<br>
+	 * the second parameter defines the matrix element of the second row and the first column and so on.<br>
+	 * If less than nine Number values are defined the missing matrix elements are defined as default identity matrix elements.<br>
+	 * @param m0 Matrix element at row 1 and column 1
+	 * @param m1 Optional matrix element at row 2 and column 1
+	 * @param m2 Optional matrix element at row 3 and column 1
+	 * @param m3 Optional matrix element at row 1 and column 2
+	 * @param m4 Optional matrix element at row 2 and column 2
+	 * @param m5 Optional matrix element at row 3 and column 2
+	 * @param m6 Optional matrix element at row 1 and column 3
+	 * @param m7 Optional matrix element at row 2 and column 3
+	 * @param m8 Optional matrix element at row 3 and column 3
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix is equal to SquareMatrix3()
+	 * var matrix = new SquareMatrix3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
+	 * @endcode
+	 */
+	SquareMatrix3(Number m0, Number m1, Number m2, Number m3, Number m4, Number m5, Number m6, Number m7, Number m8);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by the usage of an array with at most nine Number values.<br>
+	 * The first array element defines the matrix element of the first row and first column,<br>
+	 * The second array element defines the matrix element of the second row and first column and so on.<br>
+	 * If less than nine Number values are defined inside the array the missing matrix element are defined as default identity matrix elements.<br>
+	 * @param elements Array holding at most 9 matrix elements
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * elements = new Array(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
+	 *
+	 * // matrix is equal to SquareMatrix3()
+	 * var matrix = new SquareMatrix3(elements);
+	 * @endcode
+	 */
+	SquareMatrix3(Array elements);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by an euler rotation.<br>
+	 * @param euler Euler rotation defining the rotation matrix
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, a unity scaling and no shear
+	 * var matrix = new SquareMatrix3(new Euler(Math.PI / 2.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	SquareMatrix3(Euler euler);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by a quaternion rotation.<br>
+	 * @param quaternion Quaternion rotation defining the rotation matrix
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, a unity scaling and no shear
+	 * var matrix = new SquareMatrix3(new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	SquareMatrix3(Quaternion quaternion);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by an angle-axis rotation.<br>
+	 * @param rotation Angle-axis rotation defining the rotation matrix
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, a unity scaling and no shear
+	 * var matrix = new SquareMatrix3(new Rotation(1.0, 0.0, 0.0, Math.PI / 2.0));
+	 * @endcode
+	 */
+	SquareMatrix3(Rotation rotation);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by a 4x4 homogenous transformation matrix defining the rotation, scale and shear components.<br>
+	 * @param matrix 4x4 homogenous transformation matrix defining the rotation matrix
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined rotation, scaling and shear components
+	 * var matrix = new SquareMatrix3(new HomogenousMatrix4(new Vector(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0), new Vector3(0.1, 0.1, 0.1)));
+	 * @endcode
+	 */
+	SquareMatrix3(HomogenousMatrix4 matrix);
+
+	/**
+	 * Constructor of a 3x3 square matrix object.
+	 * Creates a new SquareMatrix3 object by three 3D vectors defining the x-, y- and z-axis of the rotation transformation.
+	 * @param xAxis X-axis of the rotation transformation to create
+	 * @param yAxis Y-axis of the rotation transformation to create
+	 * @param zAxis Z-ayis of the rotation transformation to create
+	 * @return New SquareMatrix3 object
+	 *
+	 * Example:
+	 * @code
+	 * // matrix defines a transformation with the defined coordinate axis
+	 * var matrix = new SquareMatrix3(new Vector3(1.0, 0.0, 0.0), new Vector3(0.0, 1.0, 0.0), new Vector3(0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	SquareMatrix3(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis);
+
+	/**
+	 * Adds two 3x3 square matrix objects and returns the new resulting 3x3 square matrix object.
+	 * The resulting matrix is an element-wise summed matrix.<br>
+	 * @param matrix Second matrix object to add
+	 * @return New resulting sum matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix3();
+	 * var matrix1 = new SquareMatrix3();
+	 *
+	 * var sumMatrix = matrix0.add(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix3 add(SquareMatrix3 matrix);
+
+	/**
+	 * Returns the determinant of the 3x3 matrix.
+	 * @return Scalar matrix determinant
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * var value = matrix.determinant();
+	 * @endcode
+	 */
+	Number determinant();
+
+	/**
+	 * Inverts this 3x3 square matrix object.
+	 * The multiplication of an inverted matrix and the original matrix results in the identity matrix.
+	 *
+	 * Example:
+	 * @code
+	 * // rotation matrix
+	 * var matrix = new SquareMatrix3(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 *
+	 * var iMatrix = new SquareMatrix3(matrix);
+	 * iMatrix.invert();
+	 *
+	 * var mMatrix = matrix.multiply(iMatrix);
+	 * var equal = mMatrix.isEqual(new SquareMatrix3());
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns the inverted 3x3 square matrix of this matrix object.
+	 * The multiplication of an inverted matrix and the original matrix results in the identity matrix.
+	 * @return New inverted matrix object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation matrix
+	 * var matrix = new SquareMatrix3(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 * var iMatrix = matrix.inverted();
+	 *
+	 * var mMatrix = matrix.multiply(iMatrix);
+	 * var equal = mMatrix.isEqual(new SquareMatrix3());
+	 * @endcode
+	 */
+	SquareMatrix3 inverted();
+
+	/**
+	 * Returns whether all nine components of two 3x3 square matrix objects are equal.
+	 * @param matrix Second matrix to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix3(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 * var matrix1 = new SquareMatrix3(new Rotation(1.0, 0.0, 0.0, Math.PI / 4.0));
+	 *
+	 * var result = matrix0.isEqual(matrix1);
+	 * @endcode
+	 */
+	Boolean isEqual(SquareMatrix3 matrix);
+
+	/**
+	 * Multiplies this 3x3 square matrix by a scalar Number value.
+	 * Each element of the new resulting matrix will be multiplied by the scalar value.
+	 * @param value Scalar value to multiply
+	 * @return New resulting multiplication matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * // multiplication matrix is equal to a unity rotation matrix with scale 3.0
+	 * var multiplication = matrix.multiply(3.0);
+	 * @endcode
+	 */
+	SquareMatrix3 multiply(Number value);
+
+	/**
+	 * Multiplies this square matrix with a 3x3 rotation matrix resulting in one new concatenated rotation matrix.
+	 * @param matrix 3x3 square matrix to multiply
+	 * @return New resulting concatenated rotation matrix
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix3(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0);
+	 * var matrix1 = new SquareMatrix3(new Rotation(0.0, 0.0, 1.0, -Math.PI / 3.0);
+	 *
+	 * // concatenated rotation matrix
+	 * var multiplication = matrix0.multiply(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix3 multiply(SquareMatrix3 matrix);
+
+	/**
+	 * Multiplies this 3x3 matrix with a 2D vector resulting in a new transformed 2D vector.
+	 * The matrix is multiplied an augmented 2D vector with third component equal to 1.<br>
+	 * The resulting 2D vector is dehomogenizated by the third component of the multiplication result.<br>
+	 * @param vector 2D vector to transform
+	 * @return New resulting 2D vector
+	 */
+	Vector2 multiply(Vector2 vector);
+
+	/**
+	 * Multiplies this 3x3 matrix with a 3D vector resulting in a new transformed 3D vector.
+	 * @param vector 3D vector to transform
+	 * @return New resulting  3D vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3(new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 * var vector = new Vector3(0.0, 5.0, 0.0);
+	 *
+	 * // rotated 3D vector
+	 * var rotatedVector = matrix.multiply(vector);
+	 * @endcode
+	 */
+	Vector3 multiply(Vector3 vector);
+
+	/**
+	 * Returns a string holding the nine matrix elements of this 3x3 square matrix separated by a comma.
+	 * Beware: The elements a stored in a colum aligned order, see the element index scheme for details.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3(new Vector3(1.0, 2.0, 3.0), new Vector3(4.0, 5.0, 6.0), new Vector3(7.0, 8.0, 9.0));
+	 *
+	 * // str holds "1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0" as string without quotation marks
+	 * var str = matrix.string();
+	 * @endcode
+	 */
+	String string();
+
+	/**
+	 * Subtracts two 3x3 square matrix objects and returns the resulting 3x3 matrix.
+	 * The resulting matrix holds element-wise subtracted entries.
+	 * @param matrix Matrix to subtract from this one
+	 * @return new element-wise subtracted 3x3 matrix object
+	 *
+	 * Example:
+	 * @code
+	 * var matrix0 = new SquareMatrix3();
+	 * var matrix1 = new SquareMatrix3();
+	 *
+	 * // result will be equal to 3x3 matrix with all entries equal to zero.
+	 * var result = matrix0.subtract(matrix1);
+	 * @endcode
+	 */
+	SquareMatrix3 subtract(SquareMatrix3 matrix);
+
+	/**
+	 * Returns the trace of this 3x3 square matrix object.
+	 * @return Trace of this matrix which is the sum the three diagonal matrix elements
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * // result will be equal to 3
+	 * var result = matrix.trace();
+	 * @endcode
+	 */
+	Number trace();
+
+	/**
+	 * Transposes this 3x3 matrix object.
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3(new Vector3(2.0, 0.0, 1.0), new Vector3(0.0, 0.0, 3.0), new Vector3(1.0, 1.0, 1.0));
+	 *
+	 * matrix.transpose();
+	 * @endcode
+	 */
+	transpose();
+
+	/**
+	 * Returns the transposed matrix of this 3x3 matrix object.
+	 * This matrix will be unchanged.
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3(new Vector3(2.0, 0.0, 1.0), new Vector3(0.0, 0.0, 3.0), new Vector3(1.0, 1.0, 1.0));
+	 *
+	 * var transposedMatrix = matrix.transposed();
+	 * @endcode
+	 */
+	SquareMatrix3 transposed();
+
+	/**
+	 * Returns the x-axis of this square matrix.
+	 * The x-axis is defined by the first three elements of the first column and can combine rotation, scale and shear components
+	 * @return 3D a-axis vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * // vector will be equal to Vector3(1.0, 0.0, 0.0);
+	 * var vector = matrix.xAxis();
+	 * @endcode
+	 */
+	Vector3 xAxis();
+
+	/**
+	 * Returns the y-axis of this square matrix.
+	 * The y-axis is defined by the first three elements of the first column and can combine rotation, scale and shear components
+	 * @return 3D y-axis vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * // vector will be equal to Vector3(0.0, 1.0, 0.0);
+	 * var vector = matrix.yAxis();
+	 * @endcode
+	 */
+	Vector3 yAxis();
+
+	/**
+	 * Returns the z-axis of this square matrix.
+	 * The z-axis is defined by the first three elements of the first column and can combine rotation, scale and shear components
+	 * @return 3D z-axis vector
+	 *
+	 * Example:
+	 * @code
+	 * var matrix = new SquareMatrix3();
+	 *
+	 * // vector will be equal to Vector3(0.0, 0.0, 1.0);
+	 * var vector = matrix.zAxis();
+	 * @endcode
+	 */
+	Vector3 zAxis();
+};

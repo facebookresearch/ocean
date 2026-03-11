@@ -1,0 +1,155 @@
+
+/**
+ * This object implements a plane for the 3D space.
+ * A plane mainly is defined by normal vector with length 1 (perpendicular to the plane surface) and the smallest distance between the coordinate origin and the plane.<br>
+ * Thus, a plane can be defined by four parameters: 3 parameters for the normal and one parameter for the distance.<br>
+ * Use this plane to determine the intersection between rays and this plane.<br>
+ * @see Line3, Vector3
+ * @ingroup math
+ */
+struct Plane3
+{
+	/**
+	 * Constructor of a 3D plane object.
+	 * Creates a new plane with base in the origin defined in the x-z-axis.<br>
+	 * Thus, the plane has a normal equal the y-axis unit vector (0, 1, 0).
+	 * @return New Plane3 object
+	 *
+	 * Example:
+	 * @code
+	 * var plane = new Plane3();
+	 *
+	 * ocean.info("Plane distance: ", plane.distance().string());
+	 * ocean.info("Plane normal: ", plane.normal().string());
+	 * @endcode
+	 */
+	Plane3();
+
+	/**
+	 * Constructor of a 3D plane object.
+	 * Creates a new plane by copy of a Plane3 object.
+	 * @param plane 3D plane to copy
+	 * @return New Plane3 object
+	 *
+	 * Example:
+	 * @code
+	 * var plane = new Plane3(new Plane3());
+	 * @endcode
+	 */
+	Plane3(Plane3 plane);
+
+	/**
+	 * Constructor of a 3D plane object.
+	 * Creates a new 3D plane object by the normal and the distance of the new plane.<br>
+	 * @param normal Normal vector of the plane, must have length 1
+	 * @param distance Distance between plane and origin
+	 * @return New Plane3 object
+	 *
+	 * Example:
+	 * @code
+	 * // plane is equal to a default plane "new Plane3()"
+	 * var plane = new Plane3(new Vector3(0, 1, 0), 0);
+	 * @endcode
+	 */
+	Plane3(Vector3 normal, Number distance);
+
+	/**
+	 * Constructor of a 3D plane object.
+	 * Creates a new plane object by a given 3D point lying inside the plane and a plane normal.<br>
+	 * @param point 3D point lying inside the new plane
+	 * @param normal 3D normal with unit length which is perpendicular to the new plane
+	 * @return New Plane3 object
+	 *
+	 * Example:
+	 * @code
+	 * // plane defines a default 3D plane
+	 * var plane = new Plane3(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 1.0, 0.0));
+	 * @endcode
+	 */
+	Plane3(Vector3 point, Vector3 normal);
+
+	/**
+	 * Constructor of a 3D plane object.
+	 * Creates a new plane object by three given 3D points lying inside the plane.<br>
+	 * Beware: The given points must be unique to allow a unique plane, otherwise the result is undefined.<br>
+	 * @param point0 First 3D point which will be part of the new plane
+	 * @param point1 Second 3D point which will be part of the new plane
+	 * @param point2 Third 3D point which will be part of the new plane
+	 * @return New Plane3 object
+	 *
+	 * Example:
+	 * @code
+	 * // plane is equal to a default plane
+	 * var plane = new Plane3(new Vecto3(0, 0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+	 * @endcode
+	 */
+	Plane3(Vector3 point0, Vector3 point1, Vector3 point2);
+
+	/**
+	 * Returns whether a line a given 3D line is parallel to this plane, thus no unique intersection would exist.
+	 * @param line Line to check the parallel state for
+	 * @return True, if so
+	 * @see intersection().
+	 *
+	 * Example:
+	 * @code
+	 * // default plane
+	 * var plane = new Plane3();
+	 *
+	 * // line parallel to the Plane3
+	 * var line = new Line3(new Vector3(0, 5, 0), new Vector3(1, 0, 0));
+	 *
+	 * var result = plane.isParallel(line);
+	 * @endcode
+	 */
+	Boolean isParallel(Line3 line);
+
+	/**
+	 * Calculates the intersection point between this plane and a given 3D line.
+	 * Beware: Check whether the plane and the line are not parallel, oterwise the result is undefined.<br>
+	 * @param line Line to calculate the intersection point for
+	 * @return Intersection point, if valid
+	 * @see isParallel().
+	 *
+	 * Example:
+	 * @code
+	 * // default plane
+	 * var plane = new Plane3();
+	 *
+	 * // line parallel to the Plane3
+	 * var line = new Line3(new Vector3(0, 5, 0), new Vector3(0, 1, 0));
+	 *
+	 * var point = plane.intersection(line);
+	 * @endcode
+	 */
+	Vector3 intersection(Line3 line);
+
+	/**
+	 * Returns whether all four components of two Plane3 objects are equal.
+	 * @param plane Second plane to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var plane0 = new Plane3(new Vector3(0.0, 1.0, 0.0), 5.0);
+	 * var plane1 = new Plane3(new Vector3(0.0, 5.0, 0.0), new Vector3(1.0, 5.0, 0.0), new Vector3(0.0, 5.0, 1.0));
+	 *
+	 * var result = plane0.isEqual(plane1);
+	 * @endcode
+	 */
+	Boolean isEqual(Plane3 plane);
+
+	/**
+	 * Returns a string holding the four plane elements of this plane separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var plane = new Plane3();
+	 *
+	 * // str holds "0.0, 1.0, 0.0, 0.0" as string without quotation marks
+	 * var str = plane.string();
+	 * @endcode
+	 */
+	String string();
+};

@@ -11,5 +11,5 @@ index 7632022..2ddaf6b 100644
 +#    VERSION "${tinyxml2_VERSION}"
 +#    SOVERSION "${tinyxml2_VERSION_MAJOR}"
  )
- 
+
  if (tinyxml2_BUILD_TESTING)

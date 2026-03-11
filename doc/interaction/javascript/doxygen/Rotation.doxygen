@@ -1,0 +1,385 @@
+
+/**
+ * This object implements an angle-axis rotation object.
+ * A rotation is defined by a rotation axis with length 1 and an rotation angle wich is applied about the defined axis.<br>
+ * For interpolations between rotations objects use quaternions instead!<br>
+ *
+ * Beware: Angles are defined in radian.<br>
+ * @see Euler, Quaternion
+ * @ingroup math
+ */
+struct Rotation
+{
+	/**
+	 * X property holding the x component of the rotation axis.
+	 * The property has read access only.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0);
+	 *
+	 * var xComponent = rotation.x;
+	 * @endcode
+	 */
+	Number x [get];
+
+	/**
+	 * Y proeprty holding the y component of the rotation axis.
+	 * The property has read access only.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0);
+	 *
+	 * var yComponent = rotation.y;
+	 * @endcode
+	 */
+	Number y [get];
+
+	/**
+	 * Z property holding the z component of the rotation axis.
+	 * The property has read access only.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0);
+	 *
+	 * var zComponent = rotation.z;
+	 * @endcode
+	 */
+	Number z [get];
+
+	/**
+	 * A property holding the rotation angle defined in radian.
+	 * The angle must be defined inside the range [0.0, 2 * PI).<br>
+	 * Instead of a, angle can be used as alias property.<br>
+	 * The property has read access only.<br>
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0);
+	 *
+	 * var aComponent = rotation.a;
+	 * var aComponentAlias = rotation.angle;
+	 * @endcode
+	 */
+	Number a [get];
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object defining a default rotation.<br>
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation is equal to Rotation(0.0, 1.0, 0.0, 0.0);
+	 * var rotation = new Rotation();
+	 * @endcode
+	 */
+	Rotation();
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a copy of a Rotation object.
+	 * @param rotation Rotation object to copy
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Rotation(0.0, 1.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Rotation(Rotation rotation);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by the definition of the first rotation axis component only.<br>
+	 * The second, third axis component and the angle are set to zero.<br>
+	 * The rotation axis will be normalized automatically.
+	 * @param x X component of the rotation axis
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation is equal to Rotation(1.0, 0.0, 0.0, 0.0)
+	 * var rotation = new Rotation(1.0);
+	 * @endcode
+	 */
+	Rotation(Number x);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by the definition of the first and second axis component only.<br>
+	 * The third axis component and the rotation angle are set to zero.<br>
+	 * The rotation axis will be normalized automatically.
+	 * @param x X component of the rotation axis
+	 * @param y Y component of the rotation axis
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation is equal to Rotation(1.0, 0.0, 0.0, 0.0)
+	 * var rotation = new Rotation(1.0, 0.0);
+	 * @endcode
+	 */
+	Rotation(Number x, Number y);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by the definition of the rotation axis only.<br>
+	 * The rotation angle is set to zero.<br>
+	 * The rotation axis will be normalized automatically.
+	 * @param x X component of the rotation axis
+	 * @param y Y component of the rotation axis
+	 * @param z Z component of the rotation axis
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation is equal to Rotation(1.0, 0.0, 0.0, 0.0)
+	 * var rotation = new Rotation(1.0, 0.0, 0.0);
+	 * @endcode
+	 */
+	Rotation(Number x, Number y, Number z);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by the definition of the rotation axis and the rotation angle.<br>
+	 * The rotation axis will be normalized automatically, the rotation angle will be converted into the range [0.0, 2 * PI).
+	 * @param x X component of the rotation axis
+	 * @param y Y component of the rotation axis
+	 * @param z Z component of the rotation axis
+	 * @param a Rotation angle with range, defined in radian
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 3.0);
+	 * @endcode
+	 */
+	Rotation(Number x, Number y, Number z, Number a);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new equivalent angle-axis rotation object by a specified euler rotation object.<br>
+	 * @param euler Euler object to create a equivalent angle-axis rotation object from
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Euler(Math.PI / 4.0, Math.PI / 2.0, 0.0));
+	 * @endcode
+	 */
+	Rotation(Euler euler);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by the rotation component of a 4x4 homogenous matrix object.<br>
+	 * Possible translation, scale or shear components are ignored.
+	 * @param matrix 4x4 homogenous transformation matrix defining the equivalent rotation of the new rotation object
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new HomogenousMatrix4(new Vector3(1.0, 0.0, 0.0), new Rotation(0.0, 1.0, 0.0, Math.PI / 2.0)));
+	 * @endcode
+	 */
+	Rotation(HomogenousMatrix4 matrix);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new equivalent angle-axis rotation object by a specified unit quaternion rotation object.
+	 * @param quaternion Unit quaternion object defining the equivalent angle-axis rotation object
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Quaternion(1.0, 0.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Rotation(Quaternion quaternion);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by a 3x3 rotation matrix object.<br>
+	 * Possible scale or shear components are ignored.
+	 * @param matrix 3x3 rotation matrix object defining the equivalent rotation object
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new SquareMatrix3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0));
+	 * @endcode
+	 */
+	Rotation(SquareMatrix3 matrix);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by a given rotation axis.<br>
+	 * The rotation axis will be normalized automatically, the rotation angle is set to zero.
+	 * @param axis 3D rotation axis
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Vector3(0.0, 1.0, 0.0));
+	 * @endcode
+	 */
+	Rotation(Vector3 axis);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by a given rotation axis and a corresponding rotation angle.<br>
+	 * The rotation axis will be normalized automatically, the rotation angle will be converted into the range [0.0, 2 * PI).
+	 * @param axis 3D rotation axis
+	 * @param angle Rotation angle defined in radian
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Vector3(0.0, 1.0, 0.0), Math.PI / 3.0);
+	 * @endcode
+	 */
+	Rotation(Vector3 axis, Number angle);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new angle-axis rotation object defining a rotation between two 3D vectors.<br>
+	 * Both vectors will be normalized automatically.
+	 * @param firstAxis Reference vector defining e.g. the old viewing direction
+	 * @param secondAxis Offset vector defining e.g. the new viewing direction
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0));
+	 * @endcode
+	 */
+	Rotation(Vector3 firstAxis, Vector3 secondAxis);
+
+	/**
+	 * Constructor of a new rotation object.
+	 * Creates a new Rotation object by the definition of a 4D vector.<br>
+	 * The follwing mapping will be done: vX -> rX, vY -> rY, vZ -> rT, vW -> rA, with 4D vector v* and rotation r*.<br>
+	 * @param vector 4D vector defining the four components of the rotation
+	 * @return New Rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Vector4(0.0, 1.0, 0.0, Math.PI / 2.0));
+	 * @endcode
+	 */
+	Rotation(Vector4 vector);
+
+	/**
+	 * Inverts this rotation object.
+	 * The multiplication of an inverted rotation and the original rotation results in the identity rotation (default rotation).
+	 *
+	 * Example:
+	 * @code
+	 * // rotation object to invert
+	 * var rotation = new Rotation(new Vector3(0.0, 1.0, 0.0), Math.PI / 2.0);
+	 *
+	 * var iRotation = new Rotation(rotation);
+	 * iRotation.invert();
+	 *
+	 * var mRotation = rotation.multiply(iRotation);
+	 * var equal = mRotation.isEqual(new Rotation());
+	 * @endcode
+	 */
+	invert();
+
+	/**
+	 * Returns the inverted angle-axis rotation of this rotation object.
+	 * The multiplication of an inverted rotation and the original rotation results in the identity rotation (default rotation).
+	 * @return New inverted rotation object
+	 *
+	 * Example:
+	 * @code
+	 * // rotation object to invert
+	 * var rotation = new Rotation(new Vector3(1.0, 0.0, 0.0), -Math.PI / 4.0);
+	 * var iRotation = rotation.inverted();
+	 *
+	 * var mRotation = rotation.multiply(iRotation);
+	 * var equal = mRotation.isEqual(new Rotation());
+	 * @endcode
+	 */
+	Rotation inverted();
+
+	/**
+	 * Returns whether two rotation objects represent the same rotation up to a small epsilon.
+	 * @param rotation Second rotation to compare
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * var rotation0 = new Rotation(new Vector3(0.0, 1.0, 0.0), Math.PI / 5.0);
+	 * var rotation1 = new Rotation(new Rotation(0.0, 1.0, 0.0, Math.PI / 5.0));
+	 *
+	 * var result = rotation0.isEqual(rotation1);
+	 * @endcode
+	 */
+	Boolean isEqual(Rotation rotation);
+
+	/**
+	 * Multiplies this rotation with a second rotation resulting in one new concatenated rotation object.
+	 * @param rotation Second angle-axis rotation to multiply
+	 * @return New resulting rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Vector3(1.0, 0.0, 0.0), Math.PI / 3.0);
+	 * var secondRotation = new Rotation(new Vector3(0.0, 1.0, 0.0), -Math.PI / 5.0);
+	 *
+	 * // multiplication represents a new rotation
+	 * var multiplication = rotation.multiply(secondRotation);
+	 * @endcode
+	 */
+	Rotation multiply(Rotation rotation);
+
+	/**
+	 * Multiplies this angle-axis rotation object with a unit quaternion rotation object resulting in one new concatenated angle-axis rotation object.
+	 * @param quaternion Unit quaternion rotation to multiply
+	 * @return New resulting angle-axis rotation object
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, Math.PI / 4.0);
+	 * var quaternion = new Quaternion(new Vector3(1.0, 0.0, 0.0), Math.PI / 3.0);
+	 *
+	 * // multiplication represents a new rotation
+	 * var multiplication = rotation.multiply(quaternion);
+	 * @endcode
+	 */
+	Rotation multiply(Quaternion quaternion);
+
+	/**
+	 * Multiplies this rotation with a 3D vector resulting in a new rotated 3D vector.
+	 * @param vector 3D vector to rotate by this angle-axis rotation
+	 * @return New resulting rotated 3D vector
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(new Vector3(1.0, 0.0, 0.0), Math.PI / 2.0);
+	 * var vector = new Vector3(0.0, 5.0, 0.0);
+	 *
+	 * // multiplication is the new rotated 3D vector
+	 * var multiplication = rotation.multiply(vector);
+	 * @endcode
+	 */
+	Vector3 multiply(Vector3 vector);
+
+	/**
+	 * Returns a string holding the four rotation component separated by a comma.
+	 * @return String with component values
+	 *
+	 * Example:
+	 * @code
+	 * var rotation = new Rotation(0.0, 1.0, 0.0, 0.0);
+	 *
+	 * // str holds "0.0, 1.0, 0.0, 0.0" as string without quotation marks
+	 * var str = rotation.string();
+	 * @endcode
+	 */
+	String string();
+};

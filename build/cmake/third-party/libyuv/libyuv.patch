@@ -33,7 +33,7 @@ index 6dfc93ce..75ad4aa7 100644
 @@ -6,6 +12,11 @@ PROJECT ( YUV C CXX )	# "C" is required even for C++ projects
  CMAKE_MINIMUM_REQUIRED( VERSION 2.8.12 )
  OPTION( UNIT_TEST "Built unit tests" OFF )
- 
+
 +if(MSVC AND BUILD_SHARED_LIBS)
 +  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 +endif()
@@ -45,7 +45,7 @@ index 6dfc93ce..75ad4aa7 100644
 @@ -116,30 +127,34 @@ endif()
  # this creates the static library (.a)
  ADD_LIBRARY( ${ly_lib_static} STATIC ${ly_lib_parts})
- 
+
 -# this creates the shared library (.so)
 -ADD_LIBRARY( ${ly_lib_shared} SHARED ${ly_lib_parts})
 -SET_TARGET_PROPERTIES( ${ly_lib_shared} PROPERTIES OUTPUT_NAME "${ly_lib_name}" )
@@ -61,25 +61,25 @@ index 6dfc93ce..75ad4aa7 100644
 +    SET_TARGET_PROPERTIES( ${ly_lib_shared} PROPERTIES IMPORT_PREFIX "lib" )
 +  endif()
  endif()
- 
+
  # this creates the cpuid tool
 -ADD_EXECUTABLE      ( cpuid ${ly_base_dir}/util/cpuid.c )
 -TARGET_LINK_LIBRARIES  ( cpuid ${ly_lib_static} )
 +#ADD_EXECUTABLE      ( cpuid ${ly_base_dir}/util/cpuid.c )
 +#TARGET_LINK_LIBRARIES  ( cpuid ${ly_lib_static} )
- 
+
  # this creates the conversion tool
 -ADD_EXECUTABLE			( yuvconvert ${ly_base_dir}/util/yuvconvert.cc )
 -TARGET_LINK_LIBRARIES	( yuvconvert ${ly_lib_static} )
 +#ADD_EXECUTABLE			( yuvconvert ${ly_base_dir}/util/yuvconvert.cc )
 +#TARGET_LINK_LIBRARIES	( yuvconvert ${ly_lib_static} )
- 
+
  # this creates the yuvconstants tool
 -ADD_EXECUTABLE      ( yuvconstants ${ly_base_dir}/util/yuvconstants.c )
 -TARGET_LINK_LIBRARIES  ( yuvconstants ${ly_lib_static} )
 +#ADD_EXECUTABLE      ( yuvconstants ${ly_base_dir}/util/yuvconstants.c )
 +#TARGET_LINK_LIBRARIES  ( yuvconstants ${ly_lib_static} )
- 
+
  find_package ( JPEG )
  if (JPEG_FOUND)
    include_directories( ${JPEG_INCLUDE_DIR} )
@@ -89,10 +89,10 @@ index 6dfc93ce..75ad4aa7 100644
 +  endif()
    add_definitions( -DHAVE_JPEG )
  endif()
- 
+
 @@ -186,9 +201,15 @@ endif()
- 
- 
+
+
  # install the conversion tool, .so, .a, and all the header files
 -INSTALL ( PROGRAMS ${CMAKE_BINARY_DIR}/yuvconvert			DESTINATION bin )
 -INSTALL ( TARGETS ${ly_lib_static}						DESTINATION lib )
@@ -102,10 +102,10 @@ index 6dfc93ce..75ad4aa7 100644
 +  INSTALL ( TARGETS ${ly_lib_shared}
 +            LIBRARY DESTINATION lib
 +            RUNTIME DESTINATION bin
-+            ARCHIVE DESTINATION lib) 
++            ARCHIVE DESTINATION lib)
 +else()
 +  INSTALL ( TARGETS ${ly_lib_static}						DESTINATION lib )
 +endif()
  INSTALL ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/		DESTINATION include )
- 
+
  # create the .deb and .rpm packages using cpack

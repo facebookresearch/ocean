@@ -13,7 +13,7 @@ index a9aa072..452ec59 100644
 -  set_target_properties(gmock_main PROPERTIES VERSION ${GOOGLETEST_VERSION})
 +  #set_target_properties(gmock_main PROPERTIES VERSION ${GOOGLETEST_VERSION})
  endif()
- 
+
  string(REPLACE ";" "$<SEMICOLON>" dirs "${gmock_build_include_dirs}")
 diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
 index caafa8c..0305463 100644

@@ -1,0 +1,1050 @@
+
+/**
+ * This object wrapps an Ocean scene description node object.
+ * A scene description node object can encapsulate arbitrary scene description nodes defined inside the Ocean framework.<br>
+ * In this JavaScript plugin all type of scene description nodes can be accessed by the same JavaScript object type.<br>
+ * Properties of scene description nodes can be changed or accessed using the field() or setField() functions.<br>
+ * However, the developer should known which type of scene descriptoin node is wrapped to avoid usage of field not available for the kind of wrapped object.<br>
+ * @see SceneDescriptionManager
+ * @ingroup scenedescription
+ */
+struct SceneDescriptionNode
+{
+	/**
+	 * Name of the scene description node.
+	 * The name of a scene description node can be used to find the object with usage of the SceneDescriptionManager.
+	 * The property has read and write access.<br>
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("NODE");
+	 *
+	 *     if (sceneNode.isInvalid())
+	 *         ocean.warning("Could not found a scene description node with name 'NODE'");
+	 *     else
+	 *         ocean.info("The node has the following name: ", sceneNode.name);
+	 * }
+	 * @endcode
+	 * @see SceneDescrptionManager::findNode().
+	 */
+	String name [get, set];
+
+	/**
+	 * Type of the scene description node.
+	 * The type of a scene description node can be used to determine which type of Ocean framework object is wrapped by this JavaScript scene description node.<br>
+	 * All possible node types depend on the used scene description plugin.<br>
+	 * The property has read.<br>
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("NODE");
+	 *
+	 *     if (sceneNode.isValid())
+	 *         ocean.info("The scene description node wrapps a ", sceneNode.type, " node");
+	 * }
+	 * @endcode
+	 * @see SceneDescrptionManager::findNode().
+	 */
+	String type [get];
+
+	/**
+	 * Creates a new scene description node object.
+	 * The object is not connected to an Ocean scene object by default.<br>
+	 * @return New empty scene description node object
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *    var node = new SceneDescriptionNode();
+	 *
+	 *    if (node.isInvalid())
+	 *       ocean.info("A default scene description node object is not connected to an Ocean framework object.");
+	 * }
+	 * @endcode
+	 * @see SceneDescriptionNode::isValid(), SceneDescriptionNode::isInvalid()
+	 */
+	SceneDescrptionNode();
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Boolean field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Boolean> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Color field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Color> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Number field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Number> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Integer field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Integer> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Matrix3 field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Matrix3> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Matrix4 field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Matrix4> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	SceneDescriptionNode field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<SceneDescriptionNode> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Rotation field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Rotation> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	String field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<String> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Time field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Time> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Vector2 field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Vector2> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("TRANSFORM");
+	 *     var translationValue = new Vector3();
+	 *
+	 *     if (sceneNode.isValid())
+	 *         translationValue = sceneNode.field("translation");
+	 * }
+	 * @endcode
+	 * @see setField().
+	 */
+	Vector3 field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Vector3> field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Vector4 field(String name);
+
+	/**
+	 * Returns the value of a specific field of this scene description node object.
+	 * The type of the returning value depends on the type of the field.
+	 * @param name Name of the field to return the value for
+	 * @return Specified field value
+	 * @see setField().
+	 */
+	Array<Vector4> field(String name);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("CONE");
+	 *
+	 *     if (sceneNode.isValid())
+	 *         sceneNode.setField("solid", true);
+	 * }
+	 * @endcode
+	 * @see field().
+	 */
+	Boolean setField(String name, Boolean value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("CONE");
+	 *
+	 *     if (sceneNode.isValid())
+	 *         sceneNode.setField("solid", true, timestamp);
+	 * }
+	 * @endcode
+	 * @see field().
+	 */
+	Boolean setField(String name, Boolean value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Boolean> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Boolean> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Color value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Color value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Color> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Color> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Number value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Number value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Number> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Number> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Integer value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Integer value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Integer> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Integer> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Matrix3 value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Matrix3 value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Matrix3> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Matrix3> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Matrix4 value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Matix4 value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Matrix4> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Matix4> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, SceneDescriptionNode value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, SceneDescriptionNode value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<SceneDescriptionNode> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<SceneDescriptionNode> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Rotation value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Rotation value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Rotation> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Rotation> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, String value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, String value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<String> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<String> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Time value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Time value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Time> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Time> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Vector2 value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Vector2 value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Vector2> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Vector2> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("TRANSFORM");
+	 *
+	 *     if (sceneNode.isValid())
+	 *         sceneNode.setField("translation", new Vector3(10, 0, 0));
+	 * }
+	 * @endcode
+	 * @see field().
+	 */
+	Boolean setField(String name, Vector3 value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses an explicit timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("TRANSFORM");
+	 *
+	 *     if (sceneNode.isValid())
+	 *         sceneNode.setField("translation", new Vector3(10, 0, 0), timestamp);
+	 * }
+	 * @endcode
+	 * @see field().
+	 */
+	Boolean setField(String name, Vector3 value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Vector3> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Vector3> value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Vector4 value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Vector4 value, Number timestamp);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * The timestamp of the field will be updated to the current time.
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Vector4> value);
+
+	/**
+	 * Sets the value of a specific field of this scene description node object and uses a specific timestamp.
+	 * The type of the value to be set depends on the type of the field.<br>
+	 * @param name Name of the field to be changed
+	 * @param value Value to assign to the specified field
+	 * @param timestamp New explicit field timestamp
+	 * @return True, if succeeded
+	 * @see field().
+	 */
+	Boolean setField(String name, Array<Vector4> value, Number timestamp);
+
+	/**
+	 * Returns whether the scene description node object is connected to a Ocean framework node providing a specified field.
+	 * @param name Name of the field to be checked
+	 * @return True, if so
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("TRANSFORM");
+	 *
+	 *     if (sceneNode.isValid())
+	 *     {
+	 *         if (sceneNode.hasField("translation"))
+	 *             sceneNode.setField("translation", new Vector3(10, 0, 0), timestamp);
+	 *         else
+	 *             ocean.warning("The scene description node with name 'TRANSFORM' does not provide a field with name 'translation'");
+	 *     }
+	 *     else
+	 *         ocean.warning("A scene description node with name 'TRANSFORM' could not be found");
+	 * }
+	 * @endcode
+	 */
+	Boolean hasField(String name);
+
+	/**
+	 * Returns the type of a specified field of this scene description node object.
+	 * Possible field types are: <b>INVALID, BOOLEAN, COLOR, NUMBER, INTEGER, MATRIX3, MATRIX4, SCENEDESCRIPTIONNODE, ROTATION, STRING, TIME, VECTOR2, VECTOR3, VECTOR4</b>.
+	 * @param name Name of the field to return the field type for
+	 * @return Type of the specified field, if the field does not exist INVALID is returned
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("TRANSFORM");
+	 *
+	 *     if (sceneNode.isValid())
+	 *     {
+	 *         if (sceneNode.fieldType("translation") == "VECTOR3")
+	 *             sceneNode.setField("translation", new Vector3(10, 0, 0), timestamp);
+	 *         else
+	 *             ocean.warning("The scene description node with name 'TRANSFORM' does not provide a valid field with name 'translation'");
+	 *     }
+	 *     else
+	 *         ocean.warning("A scene description node with name 'TRANSFORM' could not be found");
+	 * }
+	 * @endcode
+	 */
+	String fieldType(String name);
+
+	 /**
+	 * Returns the dimension of a specified field of this scene description node object.
+	 * A field with a scalar value has dimension 0, a field with an array value has dimesion 1.
+	 * @param name Name of the field to return the field dimension for
+	 * @return Value dimension of the specified field, if the field does not exist -1 is returned
+	 *
+	 * Example:
+	 * @code
+	 * // Predefined initialization function which is called once to initialize this script.
+	 * function onOceanInitialize(engine, timestamp)
+	 * {
+	 *     var sceneNode = ocean.sceneDescription.findNode("TRANSFORM");
+	 *
+	 *     if (sceneNode.isValid())
+	 *     {
+	 *         if (sceneNode.fieldDimension("translation") == 0)
+	 *             sceneNode.setField("translation", new Vector3(10, 0, 0), timestamp);
+	 *         else
+	 *             ocean.warning("The scene description node with name 'TRANSFORM' does not provide a valid field with name 'translation'");
+	 *     }
+	 *     else
+	 *         ocean.warning("A scene description node with name 'TRANSFORM' could not be found");
+	 * }
+	 * @endcode
+	 */
+	Integer fieldDimension(String name);
+
+	/**
+	 * Returns one of the parent node objects of this scene description node object.
+	 * If a node has more than one parent an arbitary parent node object is returned.
+	 * Beware: Check whether the returned object is connected to a valid Ocean framework object before usage!
+	 * @return One parent scene description node object
+	 * @see parents(), isValid().
+	 */
+	SceneDescriptionNode parent();
+
+	 /**
+	 * Returns all parent node objects of this scene description node object.
+	 * @return All  parent scene description node objects
+	 * @see parent(), isValid().
+	 */
+	Array<SceneDescriptionNode> parents();
+
+	/**
+	 * Returns whether this scene description node object is connected to a real object inside the Ocean framework.
+	 * @return True, if the JavaScript object is connected with an Ocean framework object
+	 */
+	Boolean isValid();
+
+	/**
+	 * Returns whether this rendering object is not connected to a real object inside the Ocean framework.
+	 * @return True, if the JavaScript object is not connected with an Ocean framework object
+	 */
+	Boolean isInvalid();
+};
