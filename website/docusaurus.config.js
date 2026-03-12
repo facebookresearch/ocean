@@ -34,6 +34,18 @@ import {themes as prismThemes} from 'prism-react-renderer';
     [
       'docusaurus-plugin-remote-content',
       {
+        name: 'building-docs-images',
+        sourceBaseUrl: 'https://raw.githubusercontent.com/facebookresearch/ocean/main/doc/images/',
+        outDir: 'docs/building/images',
+        documents: [
+          'vs_solution_explorer_android.png',
+          'vs_solution_explorer_windows.png',
+        ],
+      },
+    ],
+    [
+      'docusaurus-plugin-remote-content',
+      {
         name: 'building-docs',
         sourceBaseUrl: 'https://raw.githubusercontent.com/facebookresearch/ocean/main/',
         outDir: 'docs/building',
@@ -47,9 +59,9 @@ import {themes as prismThemes} from 'prism-react-renderer';
           'doc/building_with_visual_studio.md',
         ],
         modifyContent(filename, content) {
-          // Convert relative links to absolute GitHub URLs
+          // Convert relative links (but not images) to absolute GitHub URLs
           let modifiedContent = content
-            .replace(/\]\((?!https?:\/\/|#)([^)]+)\)/g, '](https://github.com/facebookresearch/ocean/blob/main/doc/$1)');
+            .replace(/(?<!!)\]\((?!https?:\/\/|#)([^)]+)\)/g, '](https://github.com/facebookresearch/ocean/blob/main/doc/$1)');
 
           // Remove the first H1 heading since we add our own title in frontmatter
           modifiedContent = modifiedContent.replace(/^# .+\n\n?/, '');
