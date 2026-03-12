@@ -51,6 +51,17 @@ bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned in
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("suppressioninframeminimum"))
+	{
+		testResult = testSuppressionInFrameMinimum(width, height, true, testDuration, worker);
+		Log::info() << " ";
+		testResult = testSuppressionInFrameMinimum(width, height, false, testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("suppressioninstrengthpositions"))
 	{
 		testResult = testSuppressionInStrengthPositions(testDuration);
@@ -122,6 +133,19 @@ TEST(TestNonMaximumSuppression, SuppressionInSubFrame_1920x1080_NonStrict)
 {
 	Worker worker;
 	EXPECT_TRUE(TestNonMaximumSuppression::testSuppressionInFrame(1920u, 1080u, 1920u * 75u / 100u, 1080u * 75u / 100u, false, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestNonMaximumSuppression, SuppressionInFrameMinimum_1920x1080_Strict)
+{
+	Worker worker;
+	EXPECT_TRUE(TestNonMaximumSuppression::testSuppressionInFrameMinimum(1920u, 1080u, true, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestNonMaximumSuppression, SuppressionInFrameMinimum_1920x1080_NonStrict)
+{
+	Worker worker;
+	EXPECT_TRUE(TestNonMaximumSuppression::testSuppressionInFrameMinimum(1920u, 1080u, false, GTEST_TEST_DURATION, worker));
 }
 
 
@@ -277,6 +301,145 @@ bool TestNonMaximumSuppression::testSuppressionInFrame(const unsigned int width,
 	}
 
 	Log::info() << " ";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestNonMaximumSuppression::testSuppressionInFrameMinimum(const unsigned int width, const unsigned int height, const bool strictMaximum, const double testDuration, Worker& worker)
+{
+	ocean_assert(width >= 3u && height >= 3u);
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test non minimum suppression (" << (strictMaximum ? "strict" : "non-strict") << ") in " << width << "x" << height << " frame:";
+	Log::info() << " ";
+
+	using SignedNonMaximumSuppression = CV::NonMaximumSuppressionT<int32_t>;
+	using SignedStrengthPosition = SignedNonMaximumSuppression::StrengthPosition<int, int32_t>;
+	using SignedStrengthPositions = std::vector<SignedStrengthPosition>;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const unsigned int features = 1000u;
+
+	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+
+	for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
+	{
+		Worker* useWorker = workerIteration == 0u ? nullptr : &worker;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			const int32_t negativeThreshold = -int32_t(RandomI::random(randomGenerator, 40u, 150u));
+
+			Frame yFrame(FrameType(width, height, FrameType::genericPixelFormat<int32_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT));
+
+			{
+				Frame yFrame8(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+				createFeaturePoints(yFrame8, features);
+
+				for (unsigned int y = 0u; y < height; ++y)
+				{
+					const uint8_t* row8 = yFrame8.constrow<uint8_t>(y);
+					int32_t* row32 = yFrame.row<int32_t>(y);
+
+					for (unsigned int x = 0u; x < width; ++x)
+					{
+						row32[x] = -int32_t(row8[x]);
+					}
+				}
+			}
+
+			SignedNonMaximumSuppression nonMaximumSuppression(width, height, 0u);
+
+			for (unsigned int y = 0u; y < height; ++y)
+			{
+				const int32_t* row = yFrame.constrow<int32_t>(y);
+
+				for (unsigned int x = 0u; x < width; ++x)
+				{
+					if (row[x] <= negativeThreshold)
+					{
+						nonMaximumSuppression.addCandidate(x, y, row[x]);
+					}
+				}
+			}
+
+			SignedStrengthPositions locations;
+
+			if (strictMaximum)
+			{
+				if (!nonMaximumSuppression.suppressNonMaximum<int, int32_t, true, false>(0u, width, 0u, height, locations, useWorker, nullptr))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+			else
+			{
+				if (!nonMaximumSuppression.suppressNonMaximum<int, int32_t, false, false>(0u, width, 0u, height, locations, useWorker, nullptr))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			// naive brute-force reference: find local minima in the negated frame
+
+			SignedStrengthPositions naiveLocations;
+
+			for (unsigned int y = 1u; y < height - 1u; ++y)
+			{
+				for (unsigned int x = 1u; x < width - 1u; ++x)
+				{
+					const int32_t centerValue = yFrame.constpixel<int32_t>(x, y)[0];
+
+					if (centerValue > negativeThreshold)
+					{
+						continue;
+					}
+
+					const int32_t northWest  = yFrame.constpixel<int32_t>(x - 1u, y - 1u)[0];
+					const int32_t north      = yFrame.constpixel<int32_t>(x + 0u, y - 1u)[0];
+					const int32_t northEast  = yFrame.constpixel<int32_t>(x + 1u, y - 1u)[0];
+					const int32_t west       = yFrame.constpixel<int32_t>(x - 1u, y + 0u)[0];
+					const int32_t east       = yFrame.constpixel<int32_t>(x + 1u, y + 0u)[0];
+					const int32_t southWest  = yFrame.constpixel<int32_t>(x - 1u, y + 1u)[0];
+					const int32_t south      = yFrame.constpixel<int32_t>(x + 0u, y + 1u)[0];
+					const int32_t southEast  = yFrame.constpixel<int32_t>(x + 1u, y + 1u)[0];
+
+					if (strictMaximum)
+					{
+						// strict minimum: center must be strictly less than all 8 neighbors
+						if (centerValue < northWest && centerValue < north && centerValue < northEast
+							&& centerValue < west && centerValue < east
+							&& centerValue < southWest && centerValue < south && centerValue < southEast)
+						{
+							naiveLocations.emplace_back(int(x), int(y), centerValue);
+						}
+					}
+					else
+					{
+						// non-strict minimum: center is less-or-equal in upper-left neighborhood, strictly less in lower-right
+						if (centerValue <= northWest && centerValue <= north && centerValue <= northEast
+							&& centerValue <= west && centerValue < east
+							&& centerValue <= southWest && centerValue < south && centerValue < southEast)
+						{
+							naiveLocations.emplace_back(int(x), int(y), centerValue);
+						}
+					}
+				}
+			}
+
+			std::set<SignedStrengthPosition> locationSet(locations.begin(), locations.end());
+			std::set<SignedStrengthPosition> naiveLocationSet(naiveLocations.begin(), naiveLocations.end());
+
+			OCEAN_EXPECT_EQUAL(validation, locationSet, naiveLocationSet);
+		}
+		while (!startTimestamp.hasTimePassed(testDuration));
+	}
 
 	Log::info() << "Validation: " << validation;
 

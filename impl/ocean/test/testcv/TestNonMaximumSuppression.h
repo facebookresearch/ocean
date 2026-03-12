@@ -76,6 +76,17 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		static bool testSuppressionInFrame(const unsigned int width, const unsigned int height, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const bool strictMaximum, const double testDuration, Worker& worker);
 
 		/**
+		 * Tests the non minimum suppression within a frame (finding local minima).
+		 * @param width The width of the test frame in pixel, with range [3, infinity)
+		 * @param height The height of the test frame in pixel, with range [3, infinity)
+		 * @param strictMaximum True, to search for a strict minimum (smaller than all eight neighbors); False, to allow equal values in the lower right neighborhood
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testSuppressionInFrameMinimum(const unsigned int width, const unsigned int height, const bool strictMaximum, const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the non maximum suppression within a dataset of strength positions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
