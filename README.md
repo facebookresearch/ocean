@@ -26,13 +26,13 @@ For a general overview, the [project website](https://facebookresearch.github.io
 
 Please refer to the platform-specific instructions when building Ocean:
 
-* [Android](building_for_android.md)
-* [iOS](building_for_ios.md)
-* [Linux](building_for_linux.md)
-* [macOS](building_for_macos.md)
-* [Meta Quest](building_for_meta_quest.md)
-* [Windows](building_for_windows.md)
-* [Visual Studio](building_with_visual_studio.md) (Windows, Android, and OpenXR from VS)
+* [Android](doc/building_for_android.md)
+* [iOS](doc/building_for_ios.md)
+* [Linux](doc/building_for_linux.md)
+* [macOS](doc/building_for_macos.md)
+* [Meta Quest](doc/building_for_meta_quest.md)
+* [Windows](doc/building_for_windows.md)
+* [Visual Studio](doc/building_with_visual_studio.md) (Windows, Android, and OpenXR from VS)
 
 Note that we provide no pre-built binaries. To use Ocean, you must build it from source.
 
