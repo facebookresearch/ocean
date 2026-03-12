@@ -5,13 +5,13 @@ This document describes the process to build Ocean for macOS. It covers:
 1. General requirements
 2. Building required third-party libraries
 3. Building Ocean
-4. Using XCode to build the macOS apps that come with Ocean
+4. Using Xcode to build the macOS apps that come with Ocean
 
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](README.md)
 * Python 3.8 or higher
-* XCode is required (recommended version: 15 or higher)
+* Xcode is required (recommended version: 15 or higher)
 
 ## 2 Building the third-party libraries
 
@@ -152,4 +152,4 @@ open ${HOME}/build_ocean_macos_release/ocean.xcodeproj
 
 If Xcode asks whether schemes should be created automatically or manually, select automatically.
 
-Then search for the demo/test apps at the top of the Xcode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._osx`. Select an app and build and install as normal. For inspiration checkout the list of available demos on the [project website](https://facebookresearch.github.io/ocean/docs/introduction/).
+Then search for the demo/test apps at the top of the Xcode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._osx`. Select an app and build and install as normal. For inspiration, check out the list of available demos on the [project website](https://facebookresearch.github.io/ocean/docs/introduction/).

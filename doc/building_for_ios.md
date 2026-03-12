@@ -17,7 +17,7 @@ This document describes the process of building Ocean for iOS. It covers:
   * [find it in your local keychain](https://stackoverflow.com/a/47732584)
 * Install a recent version of [Xcode](https://developer.apple.com/xcode/) (recommended version is Xcode 15).
 * Install all required resources to build iOS following these [instructions](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators).
-* This document assumes the use a physical iPhone with ARM64-based CPUs, not a simulator. Building for old iPhones should be possible but hasn't been tested.
+* This document assumes the use of a physical iPhone with ARM64-based CPUs, not a simulator. Building for old iPhones should be possible but hasn't been tested.
 
 ## 2 Building the third-party libraries
 
@@ -177,7 +177,7 @@ open ${HOME}/build_ocean_ios_release/ocean.xcodeproj
 
 If Xcode asks whether schemes should be created automatically or manually, select automatically.
 
-Then search for the demo/test apps at the top of the Xcode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._ios`. Select an app and build and install as normal. For inspiration checkout the list of available demos on the [project website](https://facebookresearch.github.io/ocean/docs/introduction/).
+Then search for the demo/test apps at the top of the Xcode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._ios`. Select an app and build and install as normal. For inspiration, check out the list of available demos on the [project website](https://facebookresearch.github.io/ocean/docs/introduction/).
 
 Ocean contains many demo and test apps. So, if you're using an unpaid Apple developer account, you may run into the following limitation:
 

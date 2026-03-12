@@ -6,7 +6,7 @@ This document describes the process to build Ocean on Linux.
 
 * [General prerequisites listed on the main page](README.md)
 * Python 3.8 or higher
-* Currently some packages will have to be installed using the package manager of your distributions (example commands and package names given below are for Fedora and Ubuntu, but they should be similar for other distributions):
+* Currently some packages will have to be installed using the package manager of your distribution (example commands and package names given below are for Fedora and Ubuntu, but they should be similar for other distributions):
   ```
   # Fedora
   sudo dnf install libX11-devel-1.7.0-9.el9.x86_64 \

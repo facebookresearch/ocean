@@ -40,12 +40,12 @@ If your device does not appear, ensure that your USB drivers are correctly insta
 
 **Oculus (OVR) Platform SDK (Optional)**
 
-While this SDK is optional some of the Ocean demo apps for Quest require this setup, for example Microphone demo for Quest devices.
+While this SDK is optional, some of the Ocean demo apps for Quest require this setup, for example the Microphone demo for Quest devices.
 * Download the most recent SDK: [Oculus Platform SDK](https://developer.oculus.com/downloads/package/oculus-platform-sdk/)
 * Uncompress the archive and move the uncompressed directory to its destination folder
 * Define the following environment variable:
     * `OVRPlatformSDK_ROOT` - points to root directory of unzipped Oculus Platform SDK files, e.g. `${HOME}/Downloads/ovr_platform_sdk_XX.Y` where `XX.Y` needs to be replaced with the version that was downloaded.
-* When setup properly, following files should exist in the directory structure located at `${OVRPlatformSDK_ROOT}`:
+* When set up properly, the following files should exist in the directory structure located at `${OVRPlatformSDK_ROOT}`:
     * `${OVRPlatformSDK_ROOT}/Android/libs/arm64-v8a/libovrplatformloader.so`
     * `${OVRPlatformSDK_ROOT}/Include/OVR_Platform.h` (and other header files in the same directory)
 
@@ -106,11 +106,11 @@ The Gradle build configurations for Quest demo apps can be found under the direc
 
 To build Quest demo apps, first build the required third-party libraries as described above. Then find the Gradle configuration of a Quest app that you want to build, for example [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts).
 
-To build the APK, run "gradlew" from the directory in the manner examplified below.
+To build the APK, run "gradlew" from the directory in the manner exemplified below.
 
 ```
 # Adjust this to your location of the third-party libraries
-export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android
+export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android"
 
 cd /path/to/ocean/build/gradle/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest
 
@@ -124,7 +124,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 adb install app/build/outputs/apk/release/app-release.apk
 ```
 
-The don the device and start the app from the menu. Log messages can be displayed using:
+Then don the device and start the app from the menu. Log messages can be displayed using:
 
 ```
 adb logcat -s Ocean
