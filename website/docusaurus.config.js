@@ -38,18 +38,18 @@ import {themes as prismThemes} from 'prism-react-renderer';
         sourceBaseUrl: 'https://raw.githubusercontent.com/facebookresearch/ocean/main/',
         outDir: 'docs/building',
         documents: [
-          'building_for_android.md',
-          'building_for_ios.md',
-          'building_for_linux.md',
-          'building_for_macos.md',
-          'building_for_meta_quest.md',
-          'building_for_windows.md',
-          'building_with_visual_studio.md',
+          'doc/building_for_android.md',
+          'doc/building_for_ios.md',
+          'doc/building_for_linux.md',
+          'doc/building_for_macos.md',
+          'doc/building_for_meta_quest.md',
+          'doc/building_for_windows.md',
+          'doc/building_with_visual_studio.md',
         ],
         modifyContent(filename, content) {
           // Convert relative links to absolute GitHub URLs
           let modifiedContent = content
-            .replace(/\]\((?!https?:\/\/|#)([^)]+)\)/g, '](https://github.com/facebookresearch/ocean/blob/main/$1)');
+            .replace(/\]\((?!https?:\/\/|#)([^)]+)\)/g, '](https://github.com/facebookresearch/ocean/blob/main/doc/$1)');
 
           // Remove the first H1 heading since we add our own title in frontmatter
           modifiedContent = modifiedContent.replace(/^# .+\n\n?/, '');
@@ -59,13 +59,13 @@ import {themes as prismThemes} from 'prism-react-renderer';
           modifiedContent = modifiedContent.replace(/\$\{([^}]+)\}/g, "{'{$$$1}'}");
 
           const platformMap = {
-            'building_for_android.md': { title: 'Building for Android', position: 2 },
-            'building_for_ios.md': { title: 'Building for iOS', position: 3 },
-            'building_for_linux.md': { title: 'Building for Linux', position: 4 },
-            'building_for_macos.md': { title: 'Building for macOS', position: 5 },
-            'building_for_meta_quest.md': { title: 'Building for Meta Quest', position: 6 },
-            'building_for_windows.md': { title: 'Building for Windows', position: 7 },
-            'building_with_visual_studio.md': { title: 'Building with Visual Studio', position: 8 },
+            'doc/building_for_android.md': { title: 'Building for Android', position: 2 },
+            'doc/building_for_ios.md': { title: 'Building for iOS', position: 3 },
+            'doc/building_for_linux.md': { title: 'Building for Linux', position: 4 },
+            'doc/building_for_macos.md': { title: 'Building for macOS', position: 5 },
+            'doc/building_for_meta_quest.md': { title: 'Building for Meta Quest', position: 6 },
+            'doc/building_for_windows.md': { title: 'Building for Windows', position: 7 },
+            'doc/building_with_visual_studio.md': { title: 'Building with Visual Studio', position: 8 },
           };
 
           const platform = platformMap[filename];
@@ -74,7 +74,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
             const tip = `\n\n:::tip\nThis documentation is also available on [GitHub](${githubUrl}).\n:::\n`;
 
             return {
-              filename: filename,
+              filename: filename.replace(/^doc\//, ''),
               content: `---
 title: ${platform.title}
 sidebar_position: ${platform.position}
