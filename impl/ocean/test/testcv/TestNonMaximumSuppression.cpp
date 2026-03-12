@@ -373,14 +373,14 @@ bool TestNonMaximumSuppression::testSuppressionInFrameMinimum(const unsigned int
 
 			if (strictMaximum)
 			{
-				if (!nonMaximumSuppression.suppressNonMaximum<int, int32_t, true, false>(0u, width, 0u, height, locations, useWorker, nullptr))
+				if (!nonMaximumSuppression.suppressNonMaximum<int, int32_t, true, CV::NonMaximumSuppression::SM_MINIMUM>(0u, width, 0u, height, locations, useWorker, nullptr))
 				{
 					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				if (!nonMaximumSuppression.suppressNonMaximum<int, int32_t, false, false>(0u, width, 0u, height, locations, useWorker, nullptr))
+				if (!nonMaximumSuppression.suppressNonMaximum<int, int32_t, false, CV::NonMaximumSuppression::SM_MINIMUM>(0u, width, 0u, height, locations, useWorker, nullptr))
 				{
 					OCEAN_SET_FAILED(validation);
 				}

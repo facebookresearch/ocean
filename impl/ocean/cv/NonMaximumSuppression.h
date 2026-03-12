@@ -34,6 +34,21 @@ class NonMaximumSuppression
 	public:
 
 		/**
+		 * Definition of individual suppression modes for extremum search.
+		 */
+		enum SuppressionMode : uint32_t
+		{
+			/// Finds the maximum values, any value is allowed.
+			SM_MAXIMUM,
+			/// Finds the minimum values, any value is allowed.
+			SM_MINIMUM,
+			/// Finds the maximum values, only positive values are allowed (> 0).
+			SM_MAXIMUM_POSITIVE_ONLY,
+			/// Finds the minimum values, only negative values are allowed (< 0).
+			SM_MINIMUM_NEGATIVE_ONLY
+		};
+
+		/**
 		 * This class extends a 2D position by a third parameter storing a strength value.
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
@@ -279,9 +294,9 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
 		 * @tparam tStrictMaximum True, to search for a strict maximum (larger than all eight neighbors); False, to allow equal values in the upper left neighborhood
-		 * @tparam tFindMaximum True, to find local maxima (strongest positive peaks); False, to find local minima (strongest negative peaks)
+		 * @tparam tSuppressionMode The suppression mode defining whether to find maximum/minimum and whether to enforce sign constraints
 		 */
-		template <typename TCoordinate, typename TStrength, bool tStrictMaximum = true, bool tFindMaximum = true>
+		template <typename TCoordinate, typename TStrength, bool tStrictMaximum = true, NonMaximumSuppression::SuppressionMode tSuppressionMode = NonMaximumSuppression::SM_MAXIMUM>
 		bool suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker = nullptr, const PositionCallback<TCoordinate, TStrength>* positionCallback = nullptr) const;
 
 		/**
@@ -373,8 +388,9 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
 		 * @tparam tStrictMaximum True, to search for a strict maximum (larger than all eight neighbors); False, to allow equal values in the upper left neighborhood
+		 * @tparam tOnlyPositive True, to only consider positive values (> 0); False, to consider all values
 		 */
-		template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
+		template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tOnlyPositive = false>
 		void suppressNonMaximumSubset(StrengthPositions<TCoordinate, TStrength>* strengthPositions, const unsigned int firstColumn, const unsigned int numberColumns, Lock* lock, const PositionCallback<TCoordinate, TStrength>* positionCallback, const unsigned int firstRow, const unsigned int numberRows) const;
 
 		/**
@@ -390,8 +406,9 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
 		 * @tparam tStrictMaximum True, to search for a strict minimum (smaller than all eight neighbors); False, to allow equal values in the lower right neighborhood
+		 * @tparam tOnlyNegative True, to only consider negative values (< 0); False, to consider all values
 		 */
-		template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
+		template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tOnlyNegative = false>
 		void suppressNonMinimumSubset(StrengthPositions<TCoordinate, TStrength>* strengthPositions, const unsigned int firstColumn, const unsigned int numberColumns, Lock* lock, const PositionCallback<TCoordinate, TStrength>* positionCallback, const unsigned int firstRow, const unsigned int numberRows) const;
 
 	private:
@@ -632,7 +649,7 @@ void NonMaximumSuppressionT<T>::candidates(const unsigned int firstColumn, const
 }
 
 template <typename T>
-template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tFindMaximum>
+template <typename TCoordinate, typename TStrength, bool tStrictMaximum, NonMaximumSuppression::SuppressionMode tSuppressionMode>
 bool NonMaximumSuppressionT<T>::suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<TCoordinate, TStrength>& strengthPositions, Worker* worker, const PositionCallback<TCoordinate, TStrength>* positionCallback) const
 {
 	ocean_assert(firstColumn + numberColumns <= width_);
@@ -650,28 +667,34 @@ bool NonMaximumSuppressionT<T>::suppressNonMaximum(const unsigned int firstColum
 
 	strengthPositions.reserve(strengthPositions.size() + 128);
 
-	if constexpr (tFindMaximum)
+	if constexpr (tSuppressionMode == NonMaximumSuppression::SM_MAXIMUM || tSuppressionMode == NonMaximumSuppression::SM_MAXIMUM_POSITIVE_ONLY)
 	{
+		constexpr bool tOnlyPositive = tSuppressionMode == NonMaximumSuppression::SM_MAXIMUM_POSITIVE_ONLY;
+
 		if (worker != nullptr)
 		{
 			Lock lock;
-			worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppressionT<T>::suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
+			worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppressionT<T>::suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum, tOnlyPositive>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
 		}
 		else
 		{
-			suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
+			suppressNonMaximumSubset<TCoordinate, TStrength, tStrictMaximum, tOnlyPositive>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
 		}
 	}
 	else
 	{
+		static_assert(tSuppressionMode == NonMaximumSuppression::SM_MINIMUM || tSuppressionMode == NonMaximumSuppression::SM_MINIMUM_NEGATIVE_ONLY);
+
+		constexpr bool tOnlyNegative = tSuppressionMode == NonMaximumSuppression::SM_MINIMUM_NEGATIVE_ONLY;
+
 		if (worker != nullptr)
 		{
 			Lock lock;
-			worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppressionT<T>::suppressNonMinimumSubset<TCoordinate, TStrength, tStrictMaximum>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
+			worker->executeFunction(Worker::Function::create(*this, &NonMaximumSuppressionT<T>::suppressNonMinimumSubset<TCoordinate, TStrength, tStrictMaximum, tOnlyNegative>, &strengthPositions, firstColumn, numberColumns, &lock, positionCallback, 0u, 0u), firstRow, numberRows, 5u, 6u, 3u);
 		}
 		else
 		{
-			suppressNonMinimumSubset<TCoordinate, TStrength, tStrictMaximum>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
+			suppressNonMinimumSubset<TCoordinate, TStrength, tStrictMaximum, tOnlyNegative>(&strengthPositions, firstColumn, numberColumns, nullptr, positionCallback, firstRow, numberRows);
 		}
 	}
 
@@ -1005,7 +1028,7 @@ void NonMaximumSuppressionT<T>::addCandidatesSubset(const T* values, const unsig
 }
 
 template <typename T>
-template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
+template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tOnlyPositive>
 void NonMaximumSuppressionT<T>::suppressNonMaximumSubset(StrengthPositions<TCoordinate, TStrength>* strengthPositions, const unsigned int firstColumn, const unsigned int numberColumns, Lock* lock, const PositionCallback<TCoordinate, TStrength>* positionCallback, const unsigned int firstRow, const unsigned int numberRows) const
 {
 	ocean_assert(strengthPositions);
@@ -1045,6 +1068,15 @@ void NonMaximumSuppressionT<T>::suppressNonMaximumSubset(StrengthPositions<TCoor
 		for (typename StrengthCandidateRow::const_iterator iRow1 = row1.begin(); iRow1 != row1.end(); ++iRow1)
 		{
 			ocean_assert(iRow1->x() >= 0u && iRow1->x() + 1u <= width_);
+
+			// check value constraint if enabled
+			if constexpr (tOnlyPositive)
+			{
+				if (iRow1->strength() <= T(0))
+				{
+					goto next;
+				}
+			}
 
 			// check left candidate (west)
 			if (iRow1->x() >= firstCenterColumn && iRow1->x() < endCenterColumn && (iRow1Minus == row1.end() || iRow1Minus->x() + 1u != iRow1->x() || (tStrictMaximum && iRow1Minus->strength() < iRow1->strength()) || (!tStrictMaximum && iRow1Minus->strength() <= iRow1->strength())))
@@ -1204,7 +1236,7 @@ next:
 }
 
 template <typename T>
-template <typename TCoordinate, typename TStrength, bool tStrictMaximum>
+template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tOnlyNegative>
 void NonMaximumSuppressionT<T>::suppressNonMinimumSubset(StrengthPositions<TCoordinate, TStrength>* strengthPositions, const unsigned int firstColumn, const unsigned int numberColumns, Lock* lock, const PositionCallback<TCoordinate, TStrength>* positionCallback, const unsigned int firstRow, const unsigned int numberRows) const
 {
 	ocean_assert(strengthPositions);
@@ -1244,6 +1276,15 @@ void NonMaximumSuppressionT<T>::suppressNonMinimumSubset(StrengthPositions<TCoor
 		for (typename StrengthCandidateRow::const_iterator iRow1 = row1.begin(); iRow1 != row1.end(); ++iRow1)
 		{
 			ocean_assert(iRow1->x() >= 0u && iRow1->x() + 1u <= width_);
+
+			// check value constraint if enabled
+			if constexpr (tOnlyNegative)
+			{
+				if (iRow1->strength() >= T(0))
+				{
+					goto nextMinimum;
+				}
+			}
 
 			// check left candidate (west)
 			if (iRow1->x() >= firstCenterColumn && iRow1->x() < endCenterColumn && (iRow1Minus == row1.end() || iRow1Minus->x() + 1u != iRow1->x() || (tStrictMaximum && iRow1Minus->strength() > iRow1->strength()) || (!tStrictMaximum && iRow1Minus->strength() >= iRow1->strength())))
