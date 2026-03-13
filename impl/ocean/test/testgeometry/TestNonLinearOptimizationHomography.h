@@ -85,7 +85,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationHomography
 		 * Determines the average pixel error between set of left points transform to the right points.
 		 * @param homography The homography that will be checked transforming left points to right points (right = homography * left), must be valid
 		 * @param pointsLeft Image points defined in the left camera frame
-		 * @param pointsRight Image points defined int he right camerea frame, each point corresponds the one point in the left camera frame
+		 * @param pointsRight Image points defined int he right camera frame, each point corresponds the one point in the left camera frame
 		 * @param maximalSqrDistance Optional resulting maximal square distance between a right image point and the corresponding transformed left image point
 		 * @return The average square distance between the right image points and the transformed left image points in pixel, with range [0, infinity)
 		 */

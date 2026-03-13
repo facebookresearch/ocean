@@ -61,7 +61,7 @@ OCEAN_TEST_GEOMETRY_EXPORT bool testGeometry(const double testDuration, Worker& 
 /**
  * Tests the entire Geometry library.
  * This function returns directly as the actual test is invoked in an own thread.<br>
- * Use this function in intendet for non-console applications like e.g., mobile devices.
+ * Use this function in intended for non-console applications like e.g., mobile devices.
  * @param testDuration Number of seconds for each test, with range (0, infinity)
  * @param testFunctions Optional name of the functions to be tested
  * @ingroup testgeometry

@@ -295,7 +295,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(45));
 
 	Scalar averageSqrPixelErrorHomography = 0;
-	Scalar averageSqrPixelErrorOpimization = 0;
+	Scalar averageSqrPixelErrorOptimization = 0;
 
 	Scalars medianSqrPixelErrors;
 	Scalars medianOptimizedSqrPixelErrors;
@@ -435,7 +435,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 				const Scalar averageSqrDistance = determineHomographyError(optimizedHomography, pointsLeft, perfectImagePointsRight);
 
-				averageSqrPixelErrorOpimization += averageSqrDistance;
+				averageSqrPixelErrorOptimization += averageSqrDistance;
 				medianOptimizedSqrPixelErrors.push_back(averageSqrDistance);
 
 				if (standardDeviation == 0 && numberOutliers == 0u)
@@ -464,13 +464,13 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 	// output errors
 	averageSqrPixelErrorHomography /= Scalar(validation.iterations());
-	averageSqrPixelErrorOpimization /= Scalar(validation.iterations());
+	averageSqrPixelErrorOptimization /= Scalar(validation.iterations());
 
 	const Scalar medianPixelErrorFaulty = Median::constMedian(medianSqrPixelErrors.data(), medianSqrPixelErrors.size());
-	const Scalar medianPixelErrorOpimization = Median::constMedian(medianOptimizedSqrPixelErrors.data(), medianOptimizedSqrPixelErrors.size());
+	const Scalar medianPixelErrorOptimization = Median::constMedian(medianOptimizedSqrPixelErrors.data(), medianOptimizedSqrPixelErrors.size());
 
-	Log::info() << "Average sqr pixel error: " << String::toAString(averageSqrPixelErrorHomography, 1u) << "px -> " << String::toAString(averageSqrPixelErrorOpimization, 1u) << "px";
-	Log::info() << "Median sqr pixel error: " << String::toAString(medianPixelErrorFaulty, 1u) << "px -> " << String::toAString(medianPixelErrorOpimization, 1u) << "px";
+	Log::info() << "Average sqr pixel error: " << String::toAString(averageSqrPixelErrorHomography, 1u) << "px -> " << String::toAString(averageSqrPixelErrorOptimization, 1u) << "px";
+	Log::info() << "Median sqr pixel error: " << String::toAString(medianPixelErrorFaulty, 1u) << "px -> " << String::toAString(medianPixelErrorOptimization, 1u) << "px";
 	Log::info() << "Performance Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms average: " << String::toAString(performance.averageMseconds(), 4u) << "ms first: " << String::toAString(performance.firstMseconds(), 4u) << "ms";
 
 	Log::info() << "Validation: " << validation;
@@ -494,7 +494,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 	constexpr unsigned int height = 720u;
 
 	Scalar averageSqrPixelErrorSimilarity = 0;
-	Scalar averageSqrPixelErrorOpimization = 0;
+	Scalar averageSqrPixelErrorOptimization = 0;
 
 	Scalars medianSqrPixelErrors;
 	Scalars medianOptimizedSqrPixelErrors;
@@ -633,7 +633,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 				const Scalar averageSqrDistance = determineHomographyError(optimizedSimilarity, pointsLeft, perfectImagePointsRight);
 
-				averageSqrPixelErrorOpimization += averageSqrDistance;
+				averageSqrPixelErrorOptimization += averageSqrDistance;
 				medianOptimizedSqrPixelErrors.push_back(averageSqrDistance);
 
 				if (standardDeviation == 0 && numberOutliers == 0u)
@@ -662,13 +662,13 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 	// output errors
 	averageSqrPixelErrorSimilarity /= Scalar(validation.iterations());
-	averageSqrPixelErrorOpimization /= Scalar(validation.iterations());
+	averageSqrPixelErrorOptimization /= Scalar(validation.iterations());
 
 	const Scalar medianPixelErrorFaulty = Median::constMedian(medianSqrPixelErrors.data(), medianSqrPixelErrors.size());
-	const Scalar medianPixelErrorOpimization = Median::constMedian(medianOptimizedSqrPixelErrors.data(), medianOptimizedSqrPixelErrors.size());
+	const Scalar medianPixelErrorOptimization = Median::constMedian(medianOptimizedSqrPixelErrors.data(), medianOptimizedSqrPixelErrors.size());
 
-	Log::info() << "Average sqr pixel error: " << String::toAString(averageSqrPixelErrorSimilarity, 1u) << "px -> " << String::toAString(averageSqrPixelErrorOpimization, 1u) << "px";
-	Log::info() << "Median sqr pixel error: " << String::toAString(medianPixelErrorFaulty, 1u) << "px -> " << String::toAString(medianPixelErrorOpimization, 1u) << "px";
+	Log::info() << "Average sqr pixel error: " << String::toAString(averageSqrPixelErrorSimilarity, 1u) << "px -> " << String::toAString(averageSqrPixelErrorOptimization, 1u) << "px";
+	Log::info() << "Median sqr pixel error: " << String::toAString(medianPixelErrorFaulty, 1u) << "px -> " << String::toAString(medianPixelErrorOptimization, 1u) << "px";
 	Log::info() << "Performance Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms average: " << String::toAString(performance.averageMseconds(), 4u) << "ms first: " << String::toAString(performance.firstMseconds(), 4u) << "ms";
 
 	Log::info() << "Validation: " << validation;
