@@ -13,7 +13,7 @@
  * @ingroup applicationdemomediaimagereceiver
  * @defgroup applicationdemomediaimagereceivermacos Image Receiver (macOS)
  * @{
- * The demo application demonstrates the implementation of a simple image reciever (via network) application.<br>
+ * The demo application demonstrates the implementation of a simple image receiver (via network) application.<br>
  * This application is available for macOS platforms only (but sibling applications exist for other platforms).
  * @}
  */
