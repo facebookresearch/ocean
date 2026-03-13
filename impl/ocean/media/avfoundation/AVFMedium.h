@@ -28,7 +28,7 @@ namespace AVFoundation
 /**
  * This is the base class for all AVFoundation mediums.
  * Beware: When using AV foundation objects within a console application on macOS, the main loop needs to be executed regularly.<br>
- * The main loop is handling events neccessary in AVFoundation, however a console application commonly is a blocking application and therefore never invokes the main loop.
+ * The main loop is handling events necessary in AVFoundation, however a console application commonly is a blocking application and therefore never invokes the main loop.
  * @see Platform::Apple::System::runMainLoop().
  * @ingroup mediaavf
  */
