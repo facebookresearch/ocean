@@ -23,7 +23,7 @@
   <!-- Link against debug shared library -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\openxr\lib\android_arm64_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\openxr\lib\$(Ocean3rdPartySharedConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>openxr_loader;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -31,7 +31,7 @@
   <!-- Link against release shared library -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\openxr\lib\android_arm64_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\openxr\lib\$(Ocean3rdPartySharedConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>openxr_loader;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
