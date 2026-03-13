@@ -315,6 +315,11 @@ bool VideoEncoder::pushFrame(const Frame& frame, const uint64_t presentationTime
 
 	CVPixelBufferUnlockBaseAddress(*scopedPixelBuffer, 0);
 
+#ifdef OCEAN_DEBUG
+	ocean_assert(debugPreviousSubmittedTimestamp_ <= int64_t(presentationTime));
+	debugPreviousSubmittedTimestamp_ = int64_t(presentationTime);
+#endif
+
 	CMTime pts = CMTimeMake(int64_t(presentationTime), 1000000);
 	CMTime duration = kCMTimeInvalid;
 
@@ -372,6 +377,11 @@ void VideoEncoder::release()
 
 	width_ = 0u;
 	height_ = 0u;
+
+#ifdef OCEAN_DEBUG
+	debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
+	debugPreviousEncodedTimestamp_ = NumericT<int64_t>::minValue();
+#endif
 }
 
 void VideoEncoder::compressionOutputCallback(void* outputCallbackReferenceConstant, void* sourceFrameReferenceConstant, OSStatus status, VTEncodeInfoFlags infoFlags, CMSampleBufferRef sampleBuffer)
@@ -394,6 +404,11 @@ void VideoEncoder::compressionOutputCallback(void* outputCallbackReferenceConsta
 		Log::warning() << "VideoEncoder: Null sample buffer in callback";
 		return;
 	}
+
+#ifdef OCEAN_DEBUG
+	ocean_assert(encoder->debugPreviousEncodedTimestamp_ <= presentationTime);
+	encoder->debugPreviousEncodedTimestamp_ = presentationTime;
+#endif
 
 	// Check if this is a key frame
 	CFArrayRef attachments = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, false);

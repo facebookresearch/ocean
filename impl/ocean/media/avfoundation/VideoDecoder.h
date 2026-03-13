@@ -13,6 +13,8 @@
 #include "ocean/base/Frame.h"
 #include "ocean/base/Lock.h"
 
+#include "ocean/math/Numeric.h"
+
 #include <VideoToolbox/VideoToolbox.h>
 
 #include <deque>
@@ -310,6 +312,14 @@ class VideoDecoder
 
 		/// The lock for the decoded frames queue.
 		mutable Lock decodedFramesLock_;
+
+#ifdef OCEAN_DEBUG
+		/// The previous presentation timestamp submitted via pushSample(), in microseconds, NumericT<int64_t>::minValue() if no sample has been submitted yet.
+		int64_t debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
+
+		/// The previous presentation timestamp of a decoded frame in the decompression callback, in microseconds, NumericT<int64_t>::minValue() if no frame has been decoded yet.
+		int64_t debugPreviousDecodedTimestamp_ = NumericT<int64_t>::minValue();
+#endif
 };
 
 inline VideoDecoder::VideoDecoder(VideoDecoder&& videoDecoder) noexcept
@@ -352,6 +362,14 @@ inline VideoDecoder& VideoDecoder::operator=(VideoDecoder&& videoDecoder) noexce
 
 		isStarted_ = videoDecoder.isStarted_;
 		videoDecoder.isStarted_ = false;
+
+#ifdef OCEAN_DEBUG
+		debugPreviousSubmittedTimestamp_ = videoDecoder.debugPreviousSubmittedTimestamp_;
+		videoDecoder.debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
+
+		debugPreviousDecodedTimestamp_ = videoDecoder.debugPreviousDecodedTimestamp_;
+		videoDecoder.debugPreviousDecodedTimestamp_ = NumericT<int64_t>::minValue();
+#endif
 	}
 
 	return *this;

@@ -313,6 +313,11 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 		return false;
 	}
 
+#ifdef OCEAN_DEBUG
+	ocean_assert(debugPreviousSubmittedTimestamp_ <= int64_t(presentationTime));
+	debugPreviousSubmittedTimestamp_ = int64_t(presentationTime);
+#endif
+
 	// store the presentation time for the callback
 	int64_t* presentationTimePtr = new int64_t(int64_t(presentationTime));
 
@@ -375,6 +380,11 @@ void VideoDecoder::release()
 
 	width_ = 0u;
 	height_ = 0u;
+
+#ifdef OCEAN_DEBUG
+	debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
+	debugPreviousDecodedTimestamp_ = NumericT<int64_t>::minValue();
+#endif
 }
 
 void VideoDecoder::decompressionOutputCallback(void* decompressionOutputReferenceConstant, void* sourceFrameReferenceConstant, OSStatus status, VTDecodeInfoFlags infoFlags, CVImageBufferRef imageBuffer, CMTime presentationTimeStamp, CMTime presentationDuration)
@@ -424,6 +434,11 @@ void VideoDecoder::decompressionOutputCallback(void* decompressionOutputReferenc
 		Log::warning() << "VideoDecoder: Null image buffer in callback";
 		return;
 	}
+
+#ifdef OCEAN_DEBUG
+	ocean_assert(decoder->debugPreviousDecodedTimestamp_ <= presentationTime);
+	decoder->debugPreviousDecodedTimestamp_ = presentationTime;
+#endif
 
 	PixelBufferAccessor pixelBufferAccessor(imageBuffer, true);
 

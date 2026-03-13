@@ -402,6 +402,14 @@ class VideoEncoder
 
 		/// The lock for the encoded samples queue.
 		mutable Lock encodedSamplesLock_;
+
+#ifdef OCEAN_DEBUG
+		/// The previous presentation timestamp submitted via pushFrame(), in microseconds, -1 if no frame has been submitted yet.
+		int64_t debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
+
+		/// The previous presentation timestamp of an encoded sample in the compression callback, in microseconds, NumericT<int64_t>::minValue() if no sample has been encoded yet.
+		int64_t debugPreviousEncodedTimestamp_ = NumericT<int64_t>::minValue();
+#endif
 };
 
 inline VideoEncoder::Sample::Sample(std::vector<uint8_t>&& data, const int64_t presentationTime, const BufferFlags bufferFlags) :
@@ -520,6 +528,14 @@ inline VideoEncoder& VideoEncoder::operator=(VideoEncoder&& videoEncoder) noexce
 
 		isStarted_ = videoEncoder.isStarted_;
 		videoEncoder.isStarted_ = false;
+
+#ifdef OCEAN_DEBUG
+		debugPreviousSubmittedTimestamp_ = videoEncoder.debugPreviousSubmittedTimestamp_;
+		videoEncoder.debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
+
+		debugPreviousEncodedTimestamp_ = videoEncoder.debugPreviousEncodedTimestamp_;
+		videoEncoder.debugPreviousEncodedTimestamp_ = NumericT<int64_t>::minValue();
+#endif
 	}
 
 	return *this;
