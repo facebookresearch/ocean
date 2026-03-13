@@ -62,9 +62,9 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 				/**
 				 * Creates a new scoped options object.
 				 * @param options The actual options which will be destroyed once this object is disposed, must be valid
-				 * @param destoryFunction The destroy function for the given options, must be valid
+				 * @param destroyFunction The destroy function for the given options, must be valid
 				 */
-				inline ScopedOptions(const T& options, const DestroyFunction& destoryFunction);
+				inline ScopedOptions(const T& options, const DestroyFunction& destroyFunction);
 
 				/**
 				 * Destructs the object and destroys the options.
@@ -233,7 +233,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 
 		/**
 		 * Subscribes a callback function for response messages with specific type.
-		 * @param messageType The type of the message for wich the callback function will be subscibed, ovrMessage_Unknown to subscribe to all messages
+		 * @param messageType The type of the message for which the callback function will be subscribed, ovrMessage_Unknown to subscribe to all messages
 		 * @param responseCallback The callback member function which will be called whenever a response message with the specified type arrives
 		 * @return The subscription object, the subscription is active as long as the subscription object exists
 		 * @see unsubscribeForMessageResponse().
@@ -251,7 +251,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 
 		/**
 		 * Subscribes a callback function for response messages with specific type.
-		 * @param messageType The type of the message for wich the callback function will be subscibed, ovrMessage_Unknown to subscribe to all messages
+		 * @param messageType The type of the message for which the callback function will be subscribed, ovrMessage_Unknown to subscribe to all messages
 		 * @param responseCallback The callback function which will be called whenever a response message with the specified type arrives
 		 * @return The subscription object, the subscription is active as long as the subscription object exists
 		 * @see unsubscribeForMessageResponse().
