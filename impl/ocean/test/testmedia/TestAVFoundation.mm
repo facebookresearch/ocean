@@ -462,12 +462,15 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 
 	Log::info() << "Video encoder/decoder test:";
 
-	Validation validation;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	constexpr unsigned int bitrate = 2000000u; // 2 Mbps
 	constexpr double frameRate = 30.0;
+
+	constexpr unsigned int maxNumberFrames = 100u;
 
 	const Timestamp startTimestamp(true);
 
@@ -492,8 +495,10 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 		{
 			for (const int iFrameInterval : iFrameIntervals)
 			{
+				const unsigned int numberFrames = RandomI::random(randomGenerator, 1u, maxNumberFrames);
+
 				Log::info() << " ";
-				Log::info() << "Testing MIME type: " << mimeType << ", I-frame interval: " << iFrameInterval << " seconds";
+				Log::info() << "Testing MIME type: " << mimeType << ", I-frame interval: " << iFrameInterval << " seconds, " << numberFrames << " frames:";
 
 				Media::AVFoundation::VideoEncoder videoEncoder;
 
@@ -511,27 +516,31 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 					continue;
 				}
 
-			Media::AVFoundation::VideoDecoder videoDecoder;
-
-				constexpr unsigned int numberFrames = 10u;
+				Media::AVFoundation::VideoDecoder videoDecoder;
 
 				Frames testFrames;
-				Media::AVFoundation::VideoEncoder::Samples encodedSamples;
 				Frames decodedFrames;
+
+				Media::AVFoundation::VideoEncoder::Samples encodedSamples;
+				size_t numberEncodedDataSamples = 0;
 
 				std::vector<uint8_t> codecConfigData;
 
 				{
 					// first, let's encode several frames
 
+					int64_t previousPresentationTimeUs = NumericT<int64_t>::minValue();
+
 					for (unsigned int frameIndex = 0u; frameIndex < numberFrames; ++frameIndex)
 					{
-						// Create a test frame with a unique pattern
+						const double presentationTimeSeconds = double(frameIndex) / frameRate;
+
 						Frame testFrame = createTestFrame(width, height, frameIndex);
+						testFrame.setRelativeTimestamp(Timestamp(presentationTimeSeconds));
 
-						const uint64_t presentationTime = uint64_t(1.0e6 * double(frameIndex) / frameRate);
+						const int64_t presentationTimeUs = Timestamp::seconds2microseconds(presentationTimeSeconds);
 
-						if (!videoEncoder.pushFrame(testFrame, presentationTime))
+						if (!videoEncoder.pushFrame(testFrame, presentationTimeUs))
 						{
 							Log::error() << "Failed to push frame " << frameIndex;
 							OCEAN_SET_FAILED(validation);
@@ -545,21 +554,37 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 
 						if (sample)
 						{
+							OCEAN_EXPECT_LESS_EQUAL(validation, previousPresentationTimeUs, sample.presentationTime());
+							previousPresentationTimeUs = sample.presentationTime();
+
+							if (!sample.isConfiguration())
+							{
+								++numberEncodedDataSamples;
+							}
+
 							encodedSamples.push_back(std::move(sample));
 						}
 					}
 
-					// Stop the encoder to flush all pending samples
+					// stop the encoder to flush all pending samples
 					videoEncoder.stop();
 
 					Timestamp timeoutTimestamp(true);
 
-					while (!timeoutTimestamp.hasTimePassed(2.0))
+					while (numberEncodedDataSamples < numberFrames && !timeoutTimestamp.hasTimePassed(2.0))
 					{
 						Media::AVFoundation::VideoEncoder::Sample sample = videoEncoder.popSample();
 
 						if (sample)
 						{
+							OCEAN_EXPECT_LESS_EQUAL(validation, previousPresentationTimeUs, sample.presentationTime());
+							previousPresentationTimeUs = sample.presentationTime();
+
+							if (!sample.isConfiguration())
+							{
+								++numberEncodedDataSamples;
+							}
+
 							encodedSamples.push_back(std::move(sample));
 
 							timeoutTimestamp.toNow();
@@ -569,9 +594,12 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 							Thread::sleep(1u);
 						}
 					}
+
+					OCEAN_EXPECT_GREATER_EQUAL(validation, numberEncodedDataSamples, size_t(numberFrames));
 				}
 
-				// Find the codec config sample and extract the data
+				// find the codec config sample and extract the data
+
 				for (const Media::AVFoundation::VideoEncoder::Sample& sample : encodedSamples)
 				{
 					if (sample.isConfiguration())
@@ -581,7 +609,8 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 					}
 				}
 
-				// Initialize the decoder with codec config data
+				// initialize the decoder with codec config data
+
 				if (!videoDecoder.initialize(mimeType, width, height, codecConfigData.data(), codecConfigData.size()))
 				{
 					Log::error() << "Failed to initialize decoder for " << mimeType;
@@ -601,11 +630,13 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 				{
 					// now, we decode the frames again (skip codec config samples)
 
+					int64_t previousPresentationTimeUs = NumericT<int64_t>::minValue();
+
 					for (const Media::AVFoundation::VideoEncoder::Sample& sample : encodedSamples)
 					{
-						// Skip codec config samples - they're only used for decoder initialization
 						if (sample.isConfiguration())
 						{
+							// skip codec config samples - they're only used for decoder initialization
 							continue;
 						}
 
@@ -622,6 +653,9 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 
 						if (decodedFrame.isValid())
 						{
+							OCEAN_EXPECT_LESS_EQUAL(validation, previousPresentationTimeUs, decodedPresentationTime);
+							previousPresentationTimeUs = decodedPresentationTime;
+
 							decodedFrames.push_back(std::move(decodedFrame));
 						}
 					}
@@ -635,6 +669,9 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 
 						if (decodedFrame.isValid())
 						{
+							OCEAN_EXPECT_LESS_EQUAL(validation, previousPresentationTimeUs, decodedPresentationTime);
+							previousPresentationTimeUs = decodedPresentationTime;
+
 							decodedFrames.push_back(std::move(decodedFrame));
 						}
 						else
@@ -650,6 +687,11 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 				{
 					const Frame& testFrame = testFrames[n];
 					const Frame& decodedFrame = decodedFrames[n];
+
+					const double lowerBound = double(testFrame.relativeTimestamp()) - 0.001;
+					const double upperBound = double(testFrame.relativeTimestamp()) + 0.001;
+
+					OCEAN_EXPECT_INSIDE_RANGE(validation, lowerBound, double(decodedFrame.relativeTimestamp()), upperBound);
 
 					OCEAN_EXPECT_TRUE(validation, validateTestFrame(testFrame, decodedFrame));
 				}
