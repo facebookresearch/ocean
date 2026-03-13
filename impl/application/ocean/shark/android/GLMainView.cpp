@@ -155,7 +155,7 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 	}
 	catch(...)
 	{
-		Log::error() << "Uncaught exception occured!";
+		Log::error() << "Uncaught exception occurred!";
 		return false;
 	}
 
@@ -192,7 +192,7 @@ bool GLMainView::unloadScenes()
 	}
 	catch(...)
 	{
-		Log::error() << "Uncaught exception occured!";
+		Log::error() << "Uncaught exception occurred!";
 	}
 
 	return result;
@@ -264,7 +264,7 @@ bool GLMainView::render()
 	}
 	catch(...)
 	{
-		Log::error() << "Uncaught exception occured during rendering!";
+		Log::error() << "Uncaught exception occurred during rendering!";
 	}
 
 	return false;
