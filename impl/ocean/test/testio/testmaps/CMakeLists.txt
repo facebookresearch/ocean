@@ -5,7 +5,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS OR IOS OR LINUX OR WIN32)
+find_path(VTZERO_INCLUDE_DIR NAMES vtzero/feature.hpp)
+
+if ((MACOS OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
 
     set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps")
 
@@ -60,7 +62,7 @@ if (MACOS OR IOS OR LINUX OR WIN32)
 
 endif()
 
-if (LINUX OR MACOS OR WIN32)
+if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
 
     set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps_gtest")
 

@@ -5,9 +5,11 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(rendering)
+find_path(VTZERO_INCLUDE_DIR NAMES vtzero/feature.hpp)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
+if ((MACOS OR ANDROID OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
+
+    add_subdirectory(rendering)
 
     set(OCEAN_TARGET_NAME "ocean_io_maps")
 
