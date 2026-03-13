@@ -26,7 +26,7 @@
   <!-- Link against debug libraries -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\libpng\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\libtiff\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\giflib\lib\android_arm64_static_debug;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libtiff\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\giflib\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>jpeg;png16d;tiff;gif;z;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -34,7 +34,7 @@
   <!-- Link against release libraries -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\android_arm64_static;$(OceanRootPath)3rdparty\libpng\lib\android_arm64_static;$(OceanRootPath)3rdparty\libtiff\lib\android_arm64_static;$(OceanRootPath)3rdparty\giflib\lib\android_arm64_static;$(OceanRootPath)3rdparty\zlib\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\libjpeg-turbo\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libpng\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\libtiff\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\giflib\lib\$(Ocean3rdPartyConfigFolder);$(OceanRootPath)3rdparty\zlib\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>jpeg;png16;tiff;gif;z;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
