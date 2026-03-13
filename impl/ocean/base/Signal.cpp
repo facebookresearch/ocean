@@ -232,7 +232,7 @@ void Signal::release()
 		dispatch_semaphore_signal(semaphoreObject);
 
 		// as we cannot invoke dispatch_release() here (as another thread may wait/block for this semaphore)
-		// therefore, we set the release state here and destory the object in the destructor
+		// therefore, we set the release state here and destroy the object in the destructor
 		semaphoreObjectReleased = true;
 	}
 
@@ -243,7 +243,7 @@ void Signal::release()
 		sem_post(&semaphoreObject);
 
 		// as we cannot invoke sem_destroy() here (as another thread may wait/block for this semaphore)
-		// therefore, we set the release state here and destory the object in the destructor
+		// therefore, we set the release state here and destroy the object in the destructor
 		semaphoreObjectReleased = true;
 	}
 
