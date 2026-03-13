@@ -28,14 +28,14 @@
 
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\android_native_app_glue\lib\android_arm64_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\android_native_app_glue\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>-Wl,--whole-archive -Wl,-Bstatic -lnative_app_glue -Wl,-Bdynamic -Wl,--no-whole-archive %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
 
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
     <Link>
-      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\android_native_app_glue\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OceanRootPath)3rdparty\android_native_app_glue\lib\$(Ocean3rdPartyConfigFolder);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>-Wl,--whole-archive -Wl,-Bstatic -lnative_app_glue -Wl,-Bdynamic -Wl,--no-whole-archive %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
