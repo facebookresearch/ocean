@@ -284,7 +284,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 	ocean_assert(numberOutliers <= correspondences);
 	ocean_assert(modelParameter >= 8u && modelParameter <= 9u);
 
-	const double threshold = (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
@@ -483,7 +483,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	const double threshold = (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (correspondences >= 20u && standardDeviation == 0 && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);

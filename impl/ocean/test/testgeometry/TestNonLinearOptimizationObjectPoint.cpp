@@ -786,7 +786,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
@@ -967,7 +967,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
@@ -1146,7 +1146,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
@@ -1378,7 +1378,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
@@ -1559,7 +1559,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.0;
+	const double threshold = (Numeric::isEqualEps(standardDeviation) && numberOutliers == 0u) ? 0.99 : 0.01;
 
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(threshold, randomGenerator);
