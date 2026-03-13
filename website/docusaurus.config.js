@@ -7,6 +7,8 @@
 
 // Force staticdocs rebuild #1
 
+const fs = require('fs');
+const path = require('path');
 const {fbContent, fbInternalOnly} = require('docusaurus-plugin-internaldocs-fb/internal');
 const repoUrl = 'https://github.com/facebookresearch/ocean';
 
@@ -31,18 +33,21 @@ import {themes as prismThemes} from 'prism-react-renderer';
   },
 
   plugins: [
-    [
-      'docusaurus-plugin-remote-content',
-      {
-        name: 'building-docs-images',
-        sourceBaseUrl: 'https://raw.githubusercontent.com/facebookresearch/ocean/main/doc/images/',
-        outDir: 'docs/building/images',
-        documents: [
-          'vs_solution_explorer_android.png',
-          'vs_solution_explorer_windows.png',
-        ],
-      },
-    ],
+    // Copy images from doc/images/ into static/img/building/ at build time,
+    // so building docs can reference them without duplicating files in the repo.
+    function copyBuildingImages() {
+      return {
+        name: 'copy-building-images',
+        async loadContent() {
+          const src = path.resolve(__dirname, '..', 'doc', 'images');
+          const dest = path.resolve(__dirname, 'static', 'img', 'building');
+          fs.mkdirSync(dest, {recursive: true});
+          for (const file of fs.readdirSync(src)) {
+            fs.copyFileSync(path.join(src, file), path.join(dest, file));
+          }
+        },
+      };
+    },
     [
       'docusaurus-plugin-remote-content',
       {
@@ -59,9 +64,14 @@ import {themes as prismThemes} from 'prism-react-renderer';
           'doc/building_with_visual_studio.md',
         ],
         modifyContent(filename, content) {
-          // Convert relative links (but not images) to absolute GitHub URLs
+          // Convert relative image paths to website static assets
           let modifiedContent = content
-            .replace(/(?<!!)\]\((?!https?:\/\/|#)([^)]+)\)/g, '](https://github.com/facebookresearch/ocean/blob/main/doc/$1)');
+            .replace(/!\[([^\]]*)\]\(images\/([^)]+)\)/g,
+              '![$1](/img/building/$2)');
+
+          // Convert remaining relative links to GitHub blob URLs
+          modifiedContent = modifiedContent
+            .replace(/(?<!!)\]\((?!https?:\/\/|#|\/img\/)([^)]+)\)/g, '](https://github.com/facebookresearch/ocean/blob/main/doc/$1)');
 
           // Remove the first H1 heading since we add our own title in frontmatter
           modifiedContent = modifiedContent.replace(/^# .+\n\n?/, '');

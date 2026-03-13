@@ -8,6 +8,7 @@
 .docusaurus
 .cache-loader
 /static/doxygen
+/static/img/building
 
 # Misc
 .DS_Store
