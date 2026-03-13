@@ -28,14 +28,14 @@
 
   <!-- Bundle the OpenXR loader shared library into apps that use OpenXR -->
   <ItemGroup Condition="$(Configuration.Contains('Debug'))">
-    <OceanNativeSharedLibrary Include="$(OceanRootPath)3rdparty\openxr\lib\android_arm64_shared_debug\libopenxr_loader.so" />
+    <OceanNativeSharedLibrary Include="$(OceanRootPath)3rdparty\openxr\lib\$(Ocean3rdPartySharedConfigFolder)\libopenxr_loader.so" />
   </ItemGroup>
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
     <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libopenxr_loader.so</OceanNativeSharedLibraries>
   </PropertyGroup>
 
   <ItemGroup Condition="!$(Configuration.Contains('Debug'))">
-    <OceanNativeSharedLibrary Include="$(OceanRootPath)3rdparty\openxr\lib\android_arm64_shared\libopenxr_loader.so" />
+    <OceanNativeSharedLibrary Include="$(OceanRootPath)3rdparty\openxr\lib\$(Ocean3rdPartySharedConfigFolder)\libopenxr_loader.so" />
   </ItemGroup>
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
     <OceanNativeSharedLibraries>$(OceanNativeSharedLibraries);libopenxr_loader.so</OceanNativeSharedLibraries>
