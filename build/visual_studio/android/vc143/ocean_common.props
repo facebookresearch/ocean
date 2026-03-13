@@ -21,8 +21,8 @@
   <!-- Platform suffix based on target ABI -->
   <PropertyGroup>
     <OceanPlatformSuffix Condition="'$(Platform)'=='ARM64'">arm64</OceanPlatformSuffix>
-    <OceanPlatformSuffix Condition="'$(Platform)'=='ARM'">arm</OceanPlatformSuffix>
-    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x64</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='ARM'">armv7</OceanPlatformSuffix>
+    <OceanPlatformSuffix Condition="'$(Platform)'=='x64'">x86_64</OceanPlatformSuffix>
     <OceanPlatformSuffix Condition="'$(Platform)'=='x86'">x86</OceanPlatformSuffix>
   </PropertyGroup>
 
@@ -46,6 +46,11 @@
   <!-- 3rd-party library configuration folder (always uses static linking) -->
   <PropertyGroup>
     <Ocean3rdPartyConfigFolder>android_$(OceanPlatformSuffix)_static$(OceanConfigSuffix)</Ocean3rdPartyConfigFolder>
+  </PropertyGroup>
+
+  <!-- 3rd-party library configuration folder for shared libraries (e.g., OpenXR) -->
+  <PropertyGroup>
+    <Ocean3rdPartySharedConfigFolder>android_$(OceanPlatformSuffix)_shared$(OceanConfigSuffix)</Ocean3rdPartySharedConfigFolder>
   </PropertyGroup>
 
   <!-- Common compiler settings for all configurations -->
