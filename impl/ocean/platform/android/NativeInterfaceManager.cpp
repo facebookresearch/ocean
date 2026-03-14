@@ -19,7 +19,7 @@
  * @return JNI version
  * @ingroup platformandroid
  */
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
+JNIEXPORT __attribute__((weak)) jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
 {
 	Ocean::Log::info() << "JNI_OnLoad invoked.";
 	Ocean::Platform::Android::NativeInterfaceManager::get().setVirtualMachine(vm);

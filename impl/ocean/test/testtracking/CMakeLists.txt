@@ -88,7 +88,6 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
     list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestTracking.cpp")
-    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestPatternTracker.cpp")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -121,6 +120,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_math
             ocean_system
             ocean_test
+            ocean_tracking_pattern
             ocean_tracking_point
     )
 
