@@ -1288,7 +1288,7 @@ unsigned int TestHistogram::validateTileLookupTables(const unsigned char* source
 	else
 	{
 		// Need a continuous version of the source frame for CV::FrameEnlarger::addBorderMirror()
-		// This mimicks cv::copyMakeBorder()
+		// This mimics cv::copyMakeBorder()
 		const Frame continuousSourceFrame(sourceFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 		ocean_assert(continuousSourceFrame.isContinuous());
 
@@ -1636,7 +1636,7 @@ bool TestHistogram::validateEqualization8BitPerChannel(const unsigned char* cons
 		}
 	}
 
-	// Pre-compute the paramaters that are required for the horizontal part of the bilinear interpolation
+	// Pre-compute the parameters that are required for the horizontal part of the bilinear interpolation
 	Indices32 leftBins(width);
 	Indices32 rightBins(width);
 	std::vector<float> leftFactors(width);
