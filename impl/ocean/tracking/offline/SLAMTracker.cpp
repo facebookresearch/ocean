@@ -233,7 +233,7 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 			return false;
 		}
 
-		// now we try to determine as less key frames as possible in which the plane's object points are visible
+		// now we try to determine as few key frames as possible in which the plane's object points are visible
 
 		HomogenousMatrix4 pose;
 		IndexSet32 keyFrameCandidateIdSet;
@@ -603,7 +603,7 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 					maximalPointCorrespondences = max(maximalPointCorrespondences, correspondences);
 				}
 
-				Log::info() << "We tracked " << maximalPointCorrespondences << " points in the region of interest towards one neighboring frames, we are happy with 30.";
+				Log::info() << "We tracked " << maximalPointCorrespondences << " points in the region of interest towards one neighboring frame, we are happy with 30.";
 
 				if (maximalPointCorrespondences >= 30u)
 					break;
@@ -981,7 +981,7 @@ bool SLAMTracker::determineInitialObjectPoints(const PinholeCamera& pinholeCamer
 
 		if (!Solver3::determineInitialObjectPointsFromDenseFrames(database, pinholeCamera, randomGenerator, lowerFrame, *startFrame, upperFrame, regionOfInterest, Scalar(0.1), objectPoints, objectPointIds, Solver3::RelativeThreshold(20u, Scalar(0.4), 100u), Scalar(0.1), minimalKeyframes, maximalKeyframes, Scalar(3.5 * 3.5), &poseIds, nullptr, abort))
 		{
-			// the initial object determination failed, thus we either have to less object points or/and our threshold were too strict
+			// the initial object determination failed, thus we either have too few object points or/and our thresholds were too strict
 
 			Log::info() << "Dense initial point determination failed";
 
@@ -1060,7 +1060,7 @@ bool SLAMTracker::determineInitialObjectPoints(const PinholeCamera& pinholeCamer
 	ocean_assert(objectPoints.size() == objectPointIds.size());
 	database.setObjectPoints<false>(objectPointIds.data(), objectPoints.data(), objectPoints.size());
 
-	// we determine the minimal number of 2D/3D point correspondences which are neccessary for a valid pose:
+	// we determine the minimal number of 2D/3D point correspondences which are necessary for a valid pose:
 	// if we have less than 20 initial object points: number of initial object points; else: 75% of the object points but at least 20
 	unsigned int minimalCorrespondences = max(min((unsigned int)objectPoints.size(), 20u), (unsigned int)objectPoints.size() * 3u / 4u);
 	ocean_assert(minimalCorrespondences >= 5u);
@@ -1128,7 +1128,7 @@ bool SLAMTracker::determineInitialObjectPoints(const PinholeCamera& pinholeCamer
 	Log::info() << "Valid pose range [" << lowerValidPose << "; " << upperValidPose << "] = " << upperValidPose - lowerValidPose + 1u;
 	Log::info() << timer.mseconds() << "ms";
 
-	// we do not remove inaccurate initial object points as we still may have too less object points so that we need any initial object point as long as it is almost accurate
+	// we do not remove inaccurate initial object points as we still may have too few object points so that we need any initial object point as long as it is almost accurate
 
 	if (finalLowerValidPoseRange)
 	{
@@ -1163,7 +1163,7 @@ bool SLAMTracker::extendInitialObjectPoints(const PinholeCamera& pinholeCamera, 
 
 	// we add the first set of new unknown object (object points with unknown 3D locations)
 
-	// we determine the ids of all un-located object points and sort them according their number of observations
+	// we determine the ids of all un-located object points and sort them according to their number of observations
 	IndexPairs32 objectPointPairs(database.objectPointIdsWithNumberOfObservations<false, true>(Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Scalar(-1), WorkerPool::get().scopedWorker()()));
 	if (objectPointPairs.empty())
 	{
@@ -1417,7 +1417,7 @@ bool SLAMTracker::extendStableObjectPoints(const PinholeCamera& pinholeCamera, D
 
 	if (validLowerFrame == lowerFrame && validUpperFrame == upperFrame)
 	{
-		// if we have camera poses for the maximal possible pose range we can apply a more 'relaxed' strategy as we seem to have a simple scene which could be coverd within the initialization step already
+		// if we have camera poses for the maximal possible pose range we can apply a more 'relaxed' strategy as we seem to have a simple scene which could be covered within the initialization step already
 		if (!extendStableObjectPointsFull(pinholeCamera, database, internalCameraMotion, lowerFrame, upperFrame, correspondenceThreshold, finalLowerValidPoseRange, finalUpperValidPoseRange, abort, progress))
 		{
 			return false;
@@ -1612,7 +1612,7 @@ bool SLAMTracker::optimizeObjectPointsAndPosesIndividuallyIteratively(const Pinh
 
 		// we reset all object points which were intended to be optimized
 		database.setObjectPoints<false>(objectPointIds.data(), objectPointIds.size(), Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
-		// now we set all optimized object points (so that we loose all object points which could not be optimized)
+		// now we set all optimized object points (so that we lose all object points which could not be optimized)
 		database.setObjectPoints<false>(optimizedObjectPointIds.data(), optimizedObjectPoints.data(), optimizedObjectPointIds.size());
 
 		objectPointIds = optimizedObjectPointIds;
@@ -2060,7 +2060,7 @@ bool SLAMTracker::adjustPosesToCameraWithoutDistortion(const PinholeCamera& oldC
 		// real rotation without scale and shear (transformation from normal coordinate system to world coordinate system)
 		const SquareMatrix3 wRn = wRs.orthonormalMatrix();
 
-		// transformation transforming the scale-shear coordinate system to the normal coordinate systeem
+		// transformation transforming the scale-shear coordinate system to the normal coordinate system
 		const SquareMatrix3 nRs = wRn.inverted() * wRs;
 
 		// the translation is not affected by the scale-shear problem
@@ -2132,8 +2132,8 @@ bool SLAMTracker::adjustPosesAndPlaneToCamera(const PinholeCamera& oldCamera, co
 		environmentBoundingBox += oldPoses[n].transformation().translation();
 	}
 
-	const Scalar enviornmentSize = environmentBoundingBox.diagonal();
-	const Scalar nonPlaneObjectPointDistance = max(Scalar(5), enviornmentSize * Scalar(5));
+	const Scalar environmentSize = environmentBoundingBox.diagonal();
+	const Scalar nonPlaneObjectPointDistance = max(Scalar(5), environmentSize * Scalar(5));
 
 	const Scalar minimalDistanceToCamera = Numeric::eps() * 100;
 
