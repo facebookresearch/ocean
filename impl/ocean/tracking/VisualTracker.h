@@ -58,7 +58,7 @@ class OCEAN_TRACKING_EXPORT VisualTracker : public Tracker
 			public:
 
 				/**
-				 * Creates a new sample object with in valid parameters.
+				 * Creates a new sample object with invalid parameters.
 				 */
 				TransformationSample() = default;
 
@@ -130,7 +130,7 @@ class OCEAN_TRACKING_EXPORT VisualTracker : public Tracker
 		 * This function allows to specify an absolute orientation 'absoluteOrientation' provided by e.g., an IMU sensor.<br>
 		 * This orientation can be defined in relation to an independent coordinate system not related with the tracking objects (as long as this coordinate system does not change between successive calls).<br>
 		 * The tracker can use the provided orientation to improve tracking robustness.
-		 * @note The base implementation will only accept a single frame and camera and will return false for multiple frames and cameras. If the camera type is not a pinhole camera, the input frame will be undistorted and the camera will be converted to a pinhole camera, which is an expensive operation. For customization this function needs to be overriden.
+		 * @note The base implementation will only accept a single frame and camera and will return false for multiple frames and cameras. If the camera type is not a pinhole camera, the input frame will be undistorted and the camera will be converted to a pinhole camera, which is an expensive operation. For customization this function needs to be overridden.
 		 * @note Once the deprecated function below has been removed, this function will become purely virtual. For any derived class, it is strongly suggested to provide an override of this function.
 		 * @param frames The frames to be used for tracking, must have at least one element and have same number of elements as `anyCameras`, all elements must be valid
 		 * @param anyCameras The camera objects associated with the frames, with width and height must match that of each corresponding frame, must have same number of elements as `frames`, all elements must be valid
@@ -150,7 +150,7 @@ class OCEAN_TRACKING_EXPORT VisualTracker : public Tracker
 		 * The tracker can use the provided orientation to improve tracking robustness.
 		 * @param frame The frame to be used for tracking, must be valid
 		 * @param pinholeCamera The pinhole camera object associated with the frame, with width and height matching with the frame's resolution
-		 * @param frameIsUndistorted True, if the original input frame is undistorted and thus feature must not be undistorted explicitly
+		 * @param frameIsUndistorted True, if the original input frame is undistorted and thus features must not be undistorted explicitly
 		 * @param transformations Resulting 6DOF poses combined with the tracking ids
 		 * @param world_R_camera Optional absolute orientation of the camera in the moment the frame was taken, defined in a coordinate system (e.g., world) not related with the tracking objects, an invalid object otherwise
 		 * @param worker Optional worker object
