@@ -136,22 +136,21 @@ bool SharedLock::tryLock()
 		if (!createSemaphore())
 		{
 			ocean_assert(false && "This should never happen!");
-			return false;
 		}
-
-		const int semaphoreId = int(size_t(handle_));
-
-		// finally we have to lock the semaphore
-		sembuf semaphoreLock = {0, -1, SEM_UNDO | IPC_NOWAIT};
-		const int result = semop(semaphoreId, &semaphoreLock, 1);
-
-		if (result != 0)
+		else
 		{
-			return false;
-		}
+			const int semaphoreId = int(size_t(handle_));
 
-		localCounter_ = 1u;
-		return true;
+			// finally we have to lock the semaphore
+			sembuf semaphoreLock = {0, -1, SEM_UNDO | IPC_NOWAIT};
+			const int result = semop(semaphoreId, &semaphoreLock, 1);
+
+			if (result == 0)
+			{
+				localCounter_ = 1u;
+				return true;
+			}
+		}
 
 #else
 

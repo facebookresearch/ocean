@@ -1110,9 +1110,11 @@ double AVFLiveVideo::bestMatchingFieldOfView(AVCaptureDevice* device, const unsi
 
 	return bestFovX;
 
-#endif
+#else
 
 	return -1.0;
+
+#endif
 }
 
 AVFLiveVideo::StreamConfigurations AVFLiveVideo::determineAvailableStreamConfigurations() const

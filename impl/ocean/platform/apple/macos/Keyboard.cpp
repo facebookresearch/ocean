@@ -29,8 +29,6 @@ bool Keyboard::translateVirtualkey(const unsigned short vKey, std::string& key)
 			ocean_assert(false && "Missing implementation!");
 			return false;
 	}
-
-	return true;
 }
 
 bool Keyboard::allKeysDown(const Key keys, const bool synchron)

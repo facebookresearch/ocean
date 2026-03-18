@@ -366,7 +366,7 @@ ProcessorInstructions Processor::realInstructions()
 
 	#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
-		return PI_NEON;
+		instructions = PI_NEON;
 
 	#else
 
@@ -426,8 +426,6 @@ ProcessorInstructions Processor::realInstructions()
 				instructions = ProcessorInstructions(instructions | PI_AES);
 			}
 		}
-
-		return instructions;
 
 	#endif
 
