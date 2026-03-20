@@ -3536,10 +3536,10 @@ OCEAN_FORCE_INLINE void FrameConverter::unpack5ElementsBayerMosaicPacked10Bit(co
 template <bool tAllowLastOverlappingElement>
 OCEAN_FORCE_INLINE void FrameConverter::unpack15ElementsBayerMosaicPacked10BitNEON(const uint8_t* const packed, uint16x8_t& unpackedAB_u_16x8, uint16x4_t& unpackedC_u_16x4)
 {
-	constexpr uint8x8_t shuffleC_u_8x8 = NEON::create_uint8x8(6u, 2u, 6u, 3u, 6u, 4u, 6u, 5u);
+	const uint8x8_t shuffleC_u_8x8 = NEON::create_uint8x8(6u, 2u, 6u, 3u, 6u, 4u, 6u, 5u);
 
-	constexpr int8x16_t leftShifts_s_8x16 = NEON::create_int8x16(6, 0, 4, 0, 2, 0, 0, 0, 6, 0, 4, 0, 2, 0, 0, 0);
-	constexpr int16x8_t rightShifts_s_16x8 = NEON::create_int16x8(-6, -6, -6, -6, -6, -6, -6, -6);
+	const int8x16_t leftShifts_s_8x16 = NEON::create_int8x16(6, 0, 4, 0, 2, 0, 0, 0, 6, 0, 4, 0, 2, 0, 0, 0);
+	const int16x8_t rightShifts_s_16x8 = NEON::create_int16x8(-6, -6, -6, -6, -6, -6, -6, -6);
 
 	const uint8x16_t packed_u_8x16 = tAllowLastOverlappingElement ? vld1q_u8(packed) : vcombine_u8(vld1_u8(packed), vext_u8(vld1_u8(packed + 7), shuffleC_u_8x8, 1)); // shuffleC_u_8x8 is just a dummy value
 
@@ -3547,13 +3547,13 @@ OCEAN_FORCE_INLINE void FrameConverter::unpack15ElementsBayerMosaicPacked10BitNE
 	// 8 9 7 9 6 9 5 9 3 4 2 4 1 4 0 4
 
 #ifdef __aarch64__
-	constexpr uint8x16_t shuffle_u_8x16 = NEON::create_uint8x16(4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u, 9u, 5u, 9u, 6u, 9u, 7u, 9u, 8u);
+	const uint8x16_t shuffle_u_8x16 = NEON::create_uint8x16(4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u, 9u, 5u, 9u, 6u, 9u, 7u, 9u, 8u);
 	const uint8x16_t intermediateAB_u_8x16 = vqtbl1q_u8(packed_u_8x16, shuffle_u_8x16);
 #else
 	const uint8x8_t packedA_u_8x8 = vget_low_u8(packed_u_8x16);
 	const uint8x8_t packedB_u_8x8 = vget_low_u8(vextq_u8(packed_u_8x16, packed_u_8x16, 5));
 
-	constexpr uint8x8_t shuffleAB_u_8x8 = NEON::create_uint8x8(4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u);
+	const uint8x8_t shuffleAB_u_8x8 = NEON::create_uint8x8(4u, 0u, 4u, 1u, 4u, 2u, 4u, 3u);
 	const uint8x16_t intermediateAB_u_8x16 = vcombine_u8(vtbl1_u8(packedA_u_8x8, shuffleAB_u_8x8), vtbl1_u8(packedB_u_8x8, shuffleAB_u_8x8));
 #endif // __aarch64__
 
@@ -3567,14 +3567,14 @@ OCEAN_FORCE_INLINE void FrameConverter::unpack15ElementsBayerMosaicPacked10BitNE
 	// ... 99------ 33333333 44------ 22222222 44------ 11111111 44------ 00000000 44------
 	const uint16x8_t intermediateAB_u_16x8 = vreinterpretq_u16_u8(vshlq_u8(intermediateAB_u_8x16, leftShifts_s_8x16));
 
-	const uint16x4_t intermediateC_u_16x4 = vreinterpret_u16_u8(vshl_u8(intermediateC_u_8x8, vget_low_u8(leftShifts_s_8x16)));
+	const uint16x4_t intermediateC_u_16x4 = vreinterpret_u16_u8(vshl_u8(intermediateC_u_8x8, vget_low_s8(leftShifts_s_8x16)));
 
 
 	// ... 99------ 33333333 44------ 22222222 44------ 11111111 44------ 00000000 44------
 	// ... 55555599 ------33 33333344 ------22 22222244 ------11 11111144 ------00 00000044
 	unpackedAB_u_16x8 = vshlq_u16(intermediateAB_u_16x8, rightShifts_s_16x8);
 
-	unpackedC_u_16x4 = vshl_u16(intermediateC_u_16x4, vget_low_u8(rightShifts_s_16x8));
+	unpackedC_u_16x4 = vshl_u16(intermediateC_u_16x4, vget_low_s16(rightShifts_s_16x8));
 }
 
 #endif // OCEAN_HARDWARE_NEON_VERSION
