@@ -67,6 +67,8 @@ if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
     set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps_gtest")
 
     find_package(GTest REQUIRED)
+    find_package(CURL QUIET)
+    find_package(ZLIB REQUIRED)
 
     enable_testing()
 
@@ -104,6 +106,17 @@ if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
             ocean_math
             ocean_network
     )
+
+    if (CURL_FOUND)
+        # Explicitly restate curl/zlib for this static gtest executable so the
+        # final link line places libcurl before libz and resolves content-encoding
+        # symbols pulled from curl.
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PRIVATE
+                CURL::libcurl
+                ZLIB::ZLIB
+        )
+    endif()
 
     include(GoogleTest)
     gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)

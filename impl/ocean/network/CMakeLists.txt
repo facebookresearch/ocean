@@ -50,10 +50,21 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     )
 
     if ((ANDROID OR LINUX) AND CURL_FOUND)
+        # For static builds, consumers of ocean_network may need curl's transitive
+        # dependencies at final link time. Keep curl public so it propagates, and
+        # add zlib after curl to ensure a valid static link order when libcurl uses
+        # content-encoding support.
         target_link_libraries(${OCEAN_TARGET_NAME}
-            PRIVATE
+            PUBLIC
                 CURL::libcurl
         )
+
+        if (TARGET ZLIB::ZLIB)
+            target_link_libraries(${OCEAN_TARGET_NAME}
+                PUBLIC
+                    ZLIB::ZLIB
+            )
+        endif()
     endif()
 
     if (WIN32)
