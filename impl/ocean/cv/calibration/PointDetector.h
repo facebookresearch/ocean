@@ -42,6 +42,20 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 	public:
 
 		/**
+		 * Definition of a pair combining an index with a distance.
+		 */
+		using IndexDistancePair = std::pair<Index32, Scalar>;
+
+		/**
+		 * Definition of a static vector holding IndexDistancePair objects.
+		 * @tparam tNumber The number of elements the vector can hold at most, with range [1, infinity)
+		 */
+		template <unsigned int tNumber>
+		using IndexDistancePairs = StaticVector<IndexDistancePair, tNumber>;
+
+	protected:
+
+		/**
 		 * This class implements a pattern for fast point detection.
 		 * The pattern is defined by a radius and an inner radius defining a ring area around the center pixel.<br>
 		 * Points can be detected by comparing the color intensity of the center pixel with the color intensities of the surrounding pixels in the ring area.
@@ -238,18 +252,6 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		 * Definition of a vector holding point patterns.
 		 */
 		using PointPatterns = std::vector<PointPattern>;
-
-		/**
-		 * Definition of a pair combining an index with a distance.
-		 */
-		using IndexDistancePair = std::pair<Index32, Scalar>;
-
-		/**
-		 * Definition of a static vector holding IndexDistancePair objects.
-		 * @tparam tNumber The number of elements the vector can hold at most, with range [1, infinity)
-		 */
-		template <unsigned int tNumber>
-		using IndexDistancePairs = StaticVector<IndexDistancePair, tNumber>;
 
 	public:
 
