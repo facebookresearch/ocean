@@ -11,9 +11,19 @@ if ((MACOS OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
 
     set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps")
 
+    if (LINUX)
+        find_package(CURL QUIET)
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
+
+    # TestBasemap requires HTTPSClient which depends on Curl on Linux
+    if (LINUX AND NOT CURL_FOUND)
+        list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.h")
+        list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.cpp")
+    endif()
 
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -76,6 +86,12 @@ if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
     list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestIOMaps.cpp")
+
+    # TestBasemap requires HTTPSClient which depends on Curl on Linux
+    if (LINUX AND NOT CURL_FOUND)
+        list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.h")
+        list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.cpp")
+    endif()
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
