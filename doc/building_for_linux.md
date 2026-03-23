@@ -73,6 +73,25 @@ Once the build is complete, the compiled binaries can be found in `ocean_install
 
 Run `python build/python/build_ocean.py --help` to see all available options.
 
+### CMake options for Linux x86_64
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `OCEAN_ENABLE_AVX2` | `ON` | Emit AVX2 instructions (`-mavx2`). Turn `OFF` when targeting generic x86_64 hosts (CI runners, VMs) that may only support SSE4.1. |
+
+To disable AVX2, pass the option when invoking CMake directly (see [Using CMake Directly](#using-cmake-directly)):
+
+```bash
+cmake -S . -B build_linux \
+    -DOCEAN_ENABLE_AVX2=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DOCEAN_THIRD_PARTY_LAYOUT=python \
+    -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
+```
+
+> **Note:** This option only affects Ocean's own code. Third-party libraries are built separately and do not use AVX2 instructions.
+
 ### Using CMake Directly
 
 Alternatively, you can invoke CMake directly:
