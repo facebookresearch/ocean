@@ -187,6 +187,15 @@ libraries:
         HAVE_LD_VERSION_SCRIPT: OFF
         # Disable C++ wrapper library - fails to link on iOS shared builds
         cxx: OFF
+        # Disable optional codecs that would require additional libraries
+        # (jbig, zstd, webp, lerc, libdeflate) not built by Ocean's 3P system.
+        # Without this, libtiff auto-detects system libraries and links against
+        # them, causing undefined reference errors in static builds.
+        jbig: OFF
+        zstd: OFF
+        webp: OFF
+        lerc: OFF
+        libdeflate: OFF
     dependencies:
       - zlib
     platforms: all
