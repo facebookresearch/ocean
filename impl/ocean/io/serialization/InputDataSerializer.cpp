@@ -564,7 +564,6 @@ void InputDataSerializer::threadRun()
 
 	stream_ = nullptr;
 	state_ = S_STOPPED;
-
 }
 
 bool FileInputDataSerializer::setFilename(const std::string& filename)

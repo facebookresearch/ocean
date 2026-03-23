@@ -305,7 +305,7 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 		[[nodiscard]] virtual bool isStarted() const = 0;
 
 		/**
-		 * Returns whether the serializer has stopped but does not check wehther remaining samples have not yet been processed or retrieved.
+		 * Returns whether the serializer has stopped but does not check whether remaining samples have not yet been processed or retrieved.
 		 * @return True, if so
 		 */
 		[[nodiscard]] virtual bool hasStopped() const;
