@@ -6,7 +6,10 @@
  */
 
 #include "ocean/test/testio/testmaps/TestIOMaps.h"
-#include "ocean/test/testio/testmaps/TestBasemap.h"
+
+#ifdef OCEAN_TEST_TESTIO_TESTMAPS_HAS_BASEMAP
+	#include "ocean/test/testio/testmaps/TestBasemap.h"
+#endif
 
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
@@ -48,6 +51,7 @@ bool testIOMaps(const double testDuration, Worker& /*worker*/, const std::string
 	Strings tests(Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
+#ifdef OCEAN_TEST_TESTIO_TESTMAPS_HAS_BASEMAP
 	if (testSet.empty() || testSet.find("basemap") != testSet.end())
 	{
 		Log::info() << " ";
@@ -56,6 +60,7 @@ bool testIOMaps(const double testDuration, Worker& /*worker*/, const std::string
 		Log::info() << " ";
 		allSucceeded = TestBasemap::test(testDuration) && allSucceeded;
 	}
+#endif
 
 	Log::info() << " ";
 	Log::info() << " ";

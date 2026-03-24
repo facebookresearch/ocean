@@ -35,6 +35,10 @@ if ((MACOS OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
             "${OCEAN_PREPROCESSOR_FLAGS}"
     )
 
+    if (NOT LINUX OR CURL_FOUND)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "OCEAN_TEST_TESTIO_TESTMAPS_HAS_BASEMAP")
+    endif()
+
     if (BUILD_SHARED_LIBS)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_IO_MAPS_EXPORT")
     endif()
