@@ -404,6 +404,21 @@ if (OCEAN_THIRD_PARTY_LAYOUT STREQUAL "python")
         endif()
     endif()
 
+    # CURL library - needed by ocean_network for HTTPSClient on Linux/Android
+    set(_curl_lib_path "${OCEAN_THIRD_PARTY_ROOT}/curl/lib/${_ocean_3p_target}")
+    if (EXISTS "${_curl_lib_path}")
+        if (WIN32)
+            set(_curl_lib_name "libcurl${_debug_suffix}.lib")
+        else()
+            set(_curl_lib_name "libcurl${_debug_suffix}.a")
+        endif()
+        if (EXISTS "${_curl_lib_path}/${_curl_lib_name}")
+            set(CURL_LIBRARY "${_curl_lib_path}/${_curl_lib_name}" CACHE FILEPATH "CURL library" FORCE)
+            set(CURL_INCLUDE_DIR "${OCEAN_THIRD_PARTY_ROOT}/curl/h/${_ocean_3p_platform}" CACHE PATH "CURL include dir" FORCE)
+            message(STATUS "  CURL_LIBRARY = ${CURL_LIBRARY}")
+        endif()
+    endif()
+
     # libusb library
     set(_libusb_lib_path "${OCEAN_THIRD_PARTY_ROOT}/libusb/lib/${_ocean_3p_target}")
     if (EXISTS "${_libusb_lib_path}")
