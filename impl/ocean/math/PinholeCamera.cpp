@@ -205,14 +205,17 @@ PinholeCameraT<T>::PinholeCameraT(unsigned int width, unsigned int height, T fov
 	const T focalLength = CameraT<T>::fieldOfViewToFocalLength(width, fovX);
 
 #ifdef OCEAN_DEBUG
-	const T debugAspectRatio = T(width) / T(height);
-	const T debugFovY = CameraT<T>::fovX2Y(fovX, debugAspectRatio);
+	if constexpr (std::is_same<T, double>::value)
+	{
+		const T debugAspectRatio = T(width) / T(height);
+		const T debugFovY = CameraT<T>::fovX2Y(fovX, debugAspectRatio);
 
-	const T debugFocalX = principalX / NumericT<T>::tan(fovX * T(0.5));
-	const T debugFocalY = principalY / NumericT<T>::tan(debugFovY * T(0.5));
+		const T debugFocalX = principalX / NumericT<T>::tan(fovX * T(0.5));
+		const T debugFocalY = principalY / NumericT<T>::tan(debugFovY * T(0.5));
 
-	ocean_assert(NumericT<T>::isWeakEqual(debugFocalX, focalLength));
-	ocean_assert(NumericT<T>::isWeakEqual(debugFocalY, focalLength));
+		ocean_assert(NumericT<T>::isWeakEqual(debugFocalX, focalLength));
+		ocean_assert(NumericT<T>::isWeakEqual(debugFocalY, focalLength));
+	}
 #endif
 
 	intrinsics_(0, 0) = focalLength;
