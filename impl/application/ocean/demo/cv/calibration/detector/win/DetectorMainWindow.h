@@ -10,12 +10,15 @@
 
 #include "ocean/base/Frame.h"
 
+#include "ocean/cv/calibration/MetricCalibrationBoard.h"
+
 #include "ocean/media/FrameMedium.h"
 
 #include "ocean/platform/win/ApplicationWindow.h"
 #include "ocean/platform/win/BitmapWindow.h"
 
 using namespace Ocean;
+using namespace Ocean::CV::Calibration;
 
 /**
  * This class implements the main window of the demo application.
@@ -47,9 +50,10 @@ class DetectorMainWindow :
 		 * Creates a new main window.
 		 * @param instance Application instance
 		 * @param name The name of the main window
+		 * @param calibrationBoard The calibration board to detect
 		 * @param file Optional media file
 		 */
-		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file = std::string());
+		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file = std::string());
 
 		/**
 		 * Destructs the main window.
@@ -96,6 +100,9 @@ class DetectorMainWindow :
 
 		/// Optional media file to be used.
 		std::string mediaFile_;
+
+		/// The calibration board to detect.
+		MetricCalibrationBoard calibrationBoard_;
 
 		/// True, to save an image.
 		bool saveImage_ = false;

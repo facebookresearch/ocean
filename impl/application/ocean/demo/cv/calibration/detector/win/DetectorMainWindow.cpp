@@ -26,11 +26,12 @@
 
 using namespace Ocean::CV::Calibration;
 
-DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file) :
+DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
-	mediaFile_(file)
+	mediaFile_(file),
+	calibrationBoard_(calibrationBoard)
 {
 	// nothing to do here
 }
@@ -181,18 +182,20 @@ void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& came
 
 		if (camera)
 		{
-			MetricCalibrationBoard calibrationBoard;
-
-			if (MetricCalibrationBoard::createMetricCalibrationBoard(0u, 8, 13, MetricSize(260.5, MetricSize::UT_MILLIMETER), MetricSize(420.0, MetricSize::UT_MILLIMETER), calibrationBoard))
+			if (calibrationBoard_.isValid())
 			{
 				CalibrationBoardObservation observation;
 
 				constexpr Scalar maximalProjectionError = Scalar(3.5);
 
-				if (CalibrationBoardDetector::detectCalibrationBoard(*camera, yFrame, calibrationBoard, observation, maximalProjectionError, WorkerPool::get().scopedWorker()()))
+				if (CalibrationBoardDetector::detectCalibrationBoard(*camera, yFrame, calibrationBoard_, observation, maximalProjectionError, WorkerPool::get().scopedWorker()()))
 				{
-					CV::Calibration::Utilities::paintCalibrationBoardObservation(outputFrame, calibrationBoard, observation, true);
+					CV::Calibration::Utilities::paintCalibrationBoardObservation(outputFrame, calibrationBoard_, observation, true);
 				}
+			}
+			else
+			{
+				CV::Canvas::drawText(outputFrame, "No valid calibration board!", 5, 5, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
 			}
 		}
 		else
