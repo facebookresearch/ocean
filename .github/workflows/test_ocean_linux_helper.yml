@@ -149,9 +149,9 @@ jobs:
         run: |
           mkdir -p $INSTALL_PATH/bin
           cd $TEST_PATH
-          if !(ctest $CTEST_ARGS); then
+          if !(ctest --output-on-failure $CTEST_ARGS); then
             echo "::warning::Re-running failed tests"
-            ctest $CTEST_ARGS --rerun-failed
+            ctest --output-on-failure $CTEST_ARGS --rerun-failed
           fi
         env:
           INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux/${{ steps.build-config.outputs.arch }}_${{ env.OCEAN_LINK_TYPE }}_${{ matrix.build_config }}
