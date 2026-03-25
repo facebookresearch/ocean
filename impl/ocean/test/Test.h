@@ -37,10 +37,13 @@ namespace Test
 // The default test duration for gtest in seconds we select 0.5 seconds to keep a test as short as possible (while still receiving a meaningful result)
 #define GTEST_TEST_DURATION 0.5
 
-// The default image size for gtest in pixels. For mobile (Android and iOS), we use smaller values because Android instrumentation tests tend to time-out if the images are "too large".
+// The default image size for gtest in pixels. For mobile (Android and iOS) and AppleMac CI, we use smaller values to avoid timeouts.
 #if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
 	#define GTEST_TEST_IMAGE_WIDTH 320u
 	#define GTEST_TEST_IMAGE_HEIGHT 180u
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
+	#define GTEST_TEST_IMAGE_WIDTH 640u
+	#define GTEST_TEST_IMAGE_HEIGHT 480u
 #else
 	#define GTEST_TEST_IMAGE_WIDTH 1920u
 	#define GTEST_TEST_IMAGE_HEIGHT 250u
