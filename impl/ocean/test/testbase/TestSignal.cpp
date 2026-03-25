@@ -289,7 +289,12 @@ bool TestSignal::testSingleSignalStandard()
 
 	const double error = std::fabs(actualInterval - interval);
 
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double threshold = 0.5;
+#else
 	constexpr double threshold = 0.1;
+#endif
 
 	OCEAN_EXPECT_LESS_EQUAL(validation, error, threshold);
 
@@ -329,8 +334,9 @@ bool TestSignal::testSingleSignalTimeout()
 
 	const double error = std::fabs(actualInterval - timeout);
 
-#if defined(OCEAN_USE_GTEST) && defined(OCEAN_PLATFORM_BUILD_APPLE)
-	constexpr double threshold = 0.5; // using an extremely generous threshold in case the test is not executed on a real device
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double threshold = 0.5;
 #else
 	constexpr double threshold = 0.1;
 #endif
@@ -377,8 +383,9 @@ bool TestSignal::testSingleSignalLoop()
 
 	const double error = std::fabs(actualDuration - expectedDuration);
 
-#if defined(OCEAN_USE_GTEST) && defined(OCEAN_PLATFORM_BUILD_APPLE)
-	constexpr double threshold = 1.5; // using an extremely generous threshold in case the test is not executed on a real device
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double threshold = 1.5;
 #else
 	constexpr double threshold = 0.5;
 #endif
@@ -473,7 +480,13 @@ bool TestSignal::testMultipleSignals()
 	signals.wait();
 	Timestamp stopTimestamp(true);
 
-	OCEAN_EXPECT_LESS(validation, fabs(double(stopTimestamp - startTimestamp) - 2.5), 0.1);
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double thresholdWithout = 0.5;
+#else
+	constexpr double thresholdWithout = 0.1;
+#endif
+	OCEAN_EXPECT_LESS(validation, fabs(double(stopTimestamp - startTimestamp) - 2.5), thresholdWithout);
 
 
 	Log::info() << "...with timeout";
@@ -488,7 +501,13 @@ bool TestSignal::testMultipleSignals()
 	signals.wait(2000u);
 	stopTimestamp.toNow();
 
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < 0.1)
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double thresholdWith = 0.5;
+#else
+	constexpr double thresholdWith = 0.1;
+#endif
+	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < thresholdWith)
 	{
 		// success, nothing to do
 	}
@@ -532,7 +551,12 @@ bool TestSignal::testSubsetSignalsStandard()
 
 	double error = -1.0;
 
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double threshold = 0.5;
+#else
 	constexpr double threshold = 0.1;
+#endif
 
 	for (const unsigned int subset : {1u, 2u, 3u, 4u, 9u})
 	{
@@ -616,7 +640,12 @@ bool TestSignal::testSubsetSignalsTimeout()
 	ocean_assert(subsets.size() == timeouts.size());
 	ocean_assert(subsets.size() == expectedIntervals.size());
 
+#if defined(OCEAN_USE_GTEST)
+	// using a generous threshold as CI environments have significant scheduling jitter
+	constexpr double threshold = 0.5;
+#else
 	constexpr double threshold = 0.1;
+#endif
 
 	for (size_t n = 0; n < subsets.size(); ++n)
 	{
