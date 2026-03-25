@@ -15,7 +15,7 @@ runs:
       shell: bash
     - name: Apply path filters to get list of changes
       id: path-filter
-      uses: dorny/paths-filter@v3
+      uses: dorny/paths-filter@v4
       with:
         filters: path_filters.yml
     - name: Filter config by changes

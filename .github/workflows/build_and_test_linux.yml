@@ -30,10 +30,10 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Cache third-party install
         id: cache-thirdparty
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: thirdparty-python-${{ matrix.build_config }}-${{ hashFiles('build/python/') }}
           path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
@@ -76,10 +76,10 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
@@ -96,7 +96,7 @@ jobs:
             libdeflate-dev libudev-dev zlib1g-dev
 
       - name: Restore third-party cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: thirdparty-python-${{ matrix.build_config }}-${{ hashFiles('build/python/') }}
           path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
@@ -104,7 +104,7 @@ jobs:
 
       - name: Cache Ocean build
         id: cache-ocean
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: ocean-python-build-${{ matrix.build_config }}-${{ github.sha }}
           path: ${{ env.OCEAN_BUILD_PATH }}
@@ -149,10 +149,10 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Restore Ocean build cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ${{ env.OCEAN_BUILD_PATH }}
           key: ocean-python-build-${{ matrix.build_config }}-${{ github.sha }}

@@ -25,13 +25,13 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.commit_sha }}
 
       - name: Cache install artifacts
         id: cache-thirdparty-install
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: thirdparty-install-${{ matrix.build_config }}-${{ hashFiles('build/cmake/') }}
           path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
@@ -68,7 +68,7 @@ jobs:
         run: echo "${{ inputs.commit_sha }}" > commit_sha.txt
 
       - name: Upload commit SHA artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ocean-build-sha-${{ matrix.build_config }}
           path: commit_sha.txt
