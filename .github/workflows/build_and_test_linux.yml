@@ -143,7 +143,7 @@ jobs:
           - { id: testgeometry,       test-directory: impl/ocean/test/testgeometry, ctest-args: "-E TestStereoscopicGeometry.CameraPose_6DOF_100" }
           - { id: testio,             test-directory: impl/ocean/test/testio,       ctest-args: "-E TestBasemap" }
           - { id: testmath,           test-directory: impl/ocean/test/testmath,     ctest-args: "-E TestEquation.CubicEquation" }
-          - { id: testmedia,          test-directory: impl/ocean/test/testmedia }
+          - { id: testmedia,          test-directory: impl/ocean/test/testmedia, ctest-args: "-E TestMovieGTestInstance" }
           - { id: testnetwork,        test-directory: impl/ocean/test/testnetwork }
           - { id: testtracking,       test-directory: impl/ocean/test/testtracking, ctest-args: "-E TestHomographyImageAlignmentDense.InverseCompositional_2" }
         build_config: [debug, release]

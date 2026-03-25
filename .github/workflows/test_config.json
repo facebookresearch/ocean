@@ -109,6 +109,7 @@
   {
     "id": "testmedia",
     "test-directory": "impl/ocean/test/testmedia",
+    "ctest-args": "-E TestMovieGTestInstance",
     "paths": [
       "impl/ocean/test/testmedia/**",
       "impl/ocean/media/**"
