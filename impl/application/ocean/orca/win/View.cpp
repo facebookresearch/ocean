@@ -97,7 +97,7 @@ View::ViewType View::type() const
 		}
 
 		const Rendering::ParallelViewRef parallelView(renderingFramebuffer_->view());
-		if (stereoView)
+		if (parallelView)
 			return TYPE_PARALLEL_VIEW;
 
 		const Rendering::PerspectiveViewRef perspectiveView(renderingFramebuffer_->view());
