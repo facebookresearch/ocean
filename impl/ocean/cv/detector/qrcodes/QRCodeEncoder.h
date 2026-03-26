@@ -492,16 +492,24 @@ inline unsigned int QRCodeEncoder::totalNumberRawDataModules(const unsigned int 
 {
 	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 
-	// TODO Improve documentation of this calculation
-
-	// Number of total modules (4 * version + 17)^2 minus the modules for the
-	// * finder patterns
-	// * separators
-	// * timing patterns
-	// * version information
+	// Computes the number of modules available for data and error correction (i.e., excluding
+	// function patterns). Starting from the total number of modules, (4v + 17)^2, subtract:
+	//
+	//   3 finder patterns (7x7 each):                     3 * 49 = 147
+	//   3 separators (15 modules each):                   3 * 15 =  45
+	//   2 timing patterns (horizontal + vertical, 4v+1):          8v + 2
+	//   2 format information areas + dark module (15 + 15 + 1):   31
+	//                                                     ----------------
+	//   Total subtracted:                                       8v + 225
+	//
+	// (4v + 17)^2 - (8v + 225) = 16v^2 + 128v + 64 = (16v + 128) * v + 64
 	unsigned int rawDataModules = (16u * version + 128u) * version + 64u;
 
-	// Subtract the modules for the alignment patterns, if applicable
+	// Subtract the modules for the alignment patterns (version >= 2 only).
+	// There are a = floor(v/7) + 2 alignment pattern positions per axis, forming an a*a grid.
+	// Three of these overlap with finder patterns, leaving (a^2 - 3) actual patterns (each 5x5 = 25 modules).
+	// Of those, 2*(a - 2) lie on timing patterns, each overlapping 5 timing modules already subtracted above.
+	// Net: 25 * (a^2 - 3) - 5 * 2 * (a - 2) = 25a^2 - 10a - 55
 	if (version >= 2u)
 	{
 		const unsigned int alignmentPatterns = (version / 7u) + 2u;
@@ -509,6 +517,7 @@ inline unsigned int QRCodeEncoder::totalNumberRawDataModules(const unsigned int 
 		ocean_assert(rawDataModules >= (25u * alignmentPatterns - 10u) * alignmentPatterns - 55u);
 		rawDataModules -= (25u * alignmentPatterns - 10u) * alignmentPatterns - 55u;
 
+		// Version information areas (two 6x3 blocks) exist for version >= 7
 		if (version >= 7u)
 		{
 			ocean_assert(rawDataModules >= 36u);
