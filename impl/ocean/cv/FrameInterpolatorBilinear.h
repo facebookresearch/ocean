@@ -3949,8 +3949,8 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	// ARM64 is not affected.
 #if defined(__aarch64__)
 
-	constexpr uint8x8_t m64_mask0 = NEON::create_uint8x8(0, 4, 1, 1, 1, 1, 1, 1);
-	constexpr uint8x8_t m64_mask1 = NEON::create_uint8x8(1, 1, 0, 4, 1, 1, 1, 1);
+	const uint8x8_t m64_mask0 = NEON::create_uint8x8(0, 4, 1, 1, 1, 1, 1, 1);
+	const uint8x8_t m64_mask1 = NEON::create_uint8x8(1, 1, 0, 4, 1, 1, 1, 1);
 
 	const uint8x8_t m64_interpolation01 = vtbl1_u8(vget_low_u8(m128_interpolation), m64_mask0);
 	const uint8x8_t m64_interpolation23 = vtbl1_u8(vget_high_u8(m128_interpolation), m64_mask1);
