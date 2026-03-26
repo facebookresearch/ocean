@@ -270,6 +270,7 @@ inline MappingF& MappingF::operator=(MappingF&& mappingObject) noexcept
 {
 	if (this != &mappingObject)
 	{
+		free(mappingF_);
 		mappingF_ = mappingObject.mappingF_;
 		mappingObject.mappingF_ = nullptr;
 

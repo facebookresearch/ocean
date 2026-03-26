@@ -351,6 +351,7 @@ inline MappingI& MappingI::operator=(MappingI&& pixelMapping) noexcept
 {
 	if (this != &pixelMapping)
 	{
+		free(mappingI_);
 		Mapping::operator=(std::move(pixelMapping));
 
 		mappingI_ = pixelMapping.mappingI_;
