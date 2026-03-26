@@ -357,7 +357,10 @@ bool View::recorderEncoderConfiguration()
 	const Media::FrameRecorderRef frameRecorder(recorder_);
 
 	if (frameRecorder)
+	{
 		frameRecorder->frameEncoderConfiguration(long long(m_hWnd));
+		return true;
+	}
 
 	return false;
 }
