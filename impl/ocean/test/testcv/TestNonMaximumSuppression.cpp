@@ -104,6 +104,17 @@ bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned in
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("determineprecisepeaklocationiterativenxn"))
+	{
+		testResult = testDeterminePrecisePeakLocationIterativeNxN<float>();
+		Log::info() << " ";
+		testResult = testDeterminePrecisePeakLocationIterativeNxN<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("candidate"))
 	{
 		testResult = testCandidate(testDuration);
@@ -200,6 +211,16 @@ TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationNxN_float)
 TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationNxN_double)
 {
 	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationNxN<double>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationIterativeNxN_float)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN<float>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationIterativeNxN_double)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN<double>());
 }
 
 TEST(TestNonMaximumSuppression, Candidate)
@@ -996,6 +1017,157 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationNxN()
 	return validation.succeeded();
 }
 
+template <typename T>
+bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
+{
+	Log::info() << "Test iterative precise peak location, with " << TypeNamer::name<T>() << ":";
+
+	Validation validation;
+
+	constexpr unsigned int frameWidth = 100u;
+	constexpr unsigned int frameHeight = 100u;
+
+	{
+		// bright blob (find maximum), grid size 3
+
+		T truePeakX = T(50.3);
+		T truePeakY = T(40.7);
+		const T sigma = T(3);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, false);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+
+		const bool resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(41), preciseX, preciseY);
+
+		OCEAN_EXPECT_TRUE(validation, resultTopLeft);
+
+		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
+
+		truePeakX += T(0.5);
+		truePeakY += T(0.5);
+
+		preciseX = NumericT<T>::minValue();
+		preciseY = NumericT<T>::minValue();
+
+		const bool resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50) + T(0.5), T(41) + T(0.5), preciseX, preciseY);
+
+		OCEAN_EXPECT_TRUE(validation, resultCenter);
+
+		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
+	}
+
+	{
+		// dark blob (find minimum), grid size 3
+
+		T truePeakX = T(60.4);
+		T truePeakY = T(30.2);
+		const T sigma = T(3);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, true);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+
+		const bool resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60), T(30), preciseX, preciseY);
+
+		OCEAN_EXPECT_TRUE(validation, resultTopLeft);
+
+		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
+
+		truePeakX += T(0.5);
+		truePeakY += T(0.5);
+
+		preciseX = NumericT<T>::minValue();
+		preciseY = NumericT<T>::minValue();
+
+		const bool resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60) + T(0.5), T(30) + T(0.5), preciseX, preciseY);
+
+		OCEAN_EXPECT_TRUE(validation, resultCenter);
+
+		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
+	}
+
+	{
+		// bright blob, grid size 5
+
+		T truePeakX = T(45.6);
+		T truePeakY = T(55.8);
+		const T sigma = T(4);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, false);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+
+		const bool resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46), T(56), preciseX, preciseY);
+
+		OCEAN_EXPECT_TRUE(validation, resultTopLeft);
+
+		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
+
+		truePeakX += T(0.5);
+		truePeakY += T(0.5);
+
+		preciseX = NumericT<T>::minValue();
+		preciseY = NumericT<T>::minValue();
+
+		const bool resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46) + T(0.5), T(56) + T(0.5), preciseX, preciseY);
+
+		OCEAN_EXPECT_TRUE(validation, resultCenter);
+
+		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
+	}
+
+	{
+		// peak at border -> returns false with RS_BORDER
+
+		const T truePeakX = T(0.5);
+		const T truePeakY = T(0.5);
+		const T sigma = T(3);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, false);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+		CV::NonMaximumSuppression::RefinementStatus status = CV::NonMaximumSuppression::RS_INVALID;
+
+		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(0), T(0), preciseX, preciseY, &status);
+
+		OCEAN_EXPECT_FALSE(validation, result);
+		OCEAN_EXPECT_TRUE(validation, status == CV::NonMaximumSuppression::RS_BORDER);
+	}
+
+	{
+		// flat region -> returns true with RS_CONVERGED at input position
+
+		Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+		frame.setValue(128u);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+		CV::NonMaximumSuppression::RefinementStatus status = CV::NonMaximumSuppression::RS_INVALID;
+
+		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(50), preciseX, preciseY, &status);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+		OCEAN_EXPECT_TRUE(validation, status == CV::NonMaximumSuppression::RS_CONVERGED);
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(preciseX, T(50), T(0.01)));
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(preciseY, T(50), T(0.01)));
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
 bool TestNonMaximumSuppression::testCandidate(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -1159,6 +1331,35 @@ void TestNonMaximumSuppression::determineFeaturePointsSubset(const Frame* yFrame
 	const OptionalScopedLock scopedLock(lock);
 
 	locations->insert(locations->end(), localLocations.begin(), localLocations.end());
+}
+
+template <typename T>
+Frame TestNonMaximumSuppression::createGaussianFrame(const unsigned int frameWidth, const unsigned int frameHeight, const T centerX, const T centerY, const T sigma, const bool darkBlob)
+{
+	Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+
+	for (unsigned int y = 0u; y < frameHeight; ++y)
+	{
+		uint8_t* row = frame.row<uint8_t>(y);
+
+		for (unsigned int x = 0u; x < frameWidth; ++x)
+		{
+			const T dx = T(x) - centerX;
+			const T dy = T(y) - centerY;
+			const T gaussValue = NumericT<T>::exp(T(-0.5) * (dx * dx + dy * dy) / (sigma * sigma));
+
+			if (darkBlob)
+			{
+				row[x] = uint8_t(T(255) * (T(1) - gaussValue));
+			}
+			else
+			{
+				row[x] = uint8_t(T(255) * gaussValue);
+			}
+		}
+	}
+
+	return frame;
 }
 
 }

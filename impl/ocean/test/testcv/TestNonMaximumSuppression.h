@@ -128,6 +128,14 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		static bool testDeterminePrecisePeakLocationNxN();
 
 		/**
+		 * Tests the iterative precise peak location function.
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testDeterminePrecisePeakLocationIterativeNxN();
+
+		/**
 		 * Tests the candidate lookup function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -171,6 +179,22 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		 * @param numberRows The number of rows to be handled, with range [1, height - firstRow - 1]
 		 */
 		static void determineFeaturePointsSubset(const Frame* yFrame, const uint8_t minimalThreshold, const bool strictMaximum, Lock* lock, StrengthPositions* locations, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
+
+		/**
+		 * Creates a Y8 frame containing a Gaussian blob at a sub-pixel position.
+		 * The frame is filled with a 2D Gaussian centered at `(centerX, centerY)` with the given standard deviation.
+		 * When `darkBlob` is false the result is a bright blob on a dark background (pixel = 255 * gauss);
+		 * when `darkBlob` is true the result is a dark blob on a bright background (pixel = 255 * (1 - gauss)).
+		 * @param frameWidth The width of the resulting frame in pixels, with range [1, infinity)
+		 * @param frameHeight The height of the resulting frame in pixels, with range [1, infinity)
+		 * @param centerX The horizontal sub-pixel center of the Gaussian blob
+		 * @param centerY The vertical sub-pixel center of the Gaussian blob
+		 * @param sigma The standard deviation of the Gaussian, with range (0, infinity)
+		 * @param darkBlob True, to create a dark blob on a bright background; False, to create a bright blob on a dark background
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static Frame createGaussianFrame(const unsigned int frameWidth, const unsigned int frameHeight, const T centerX, const T centerY, const T sigma, const bool darkBlob);
 
 		/**
 		 * Compares two IndexPair32 positions by y-coordinate first, then by x-coordinate.
