@@ -120,6 +120,14 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		static bool testDeterminePrecisePeakLocation2();
 
 		/**
+		 * Tests the determinePrecisePeakLocationNxN function.
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testDeterminePrecisePeakLocationNxN();
+
+		/**
 		 * Tests the candidate lookup function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
