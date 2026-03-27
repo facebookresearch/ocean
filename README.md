@@ -2,7 +2,7 @@
 
 Ocean is a C++ framework for Computer Vision (CV) And Augmented Reality (AR) Applications.
 
-[![Build and test Ocean on Linux (Python, static)](https://github.com/facebookresearch/ocean/actions/workflows/build_and_test_linux.yml/badge.svg)](https://github.com/facebookresearch/ocean/actions/workflows/build_and_test_linux.yml)
+[![Build and test Ocean](https://github.com/facebookresearch/ocean/actions/workflows/build_and_test_linux.yml/badge.svg)](https://github.com/facebookresearch/ocean/actions/workflows/build_and_test_linux.yml)
 [![Build and deploy website](https://github.com/facebookresearch/ocean/actions/workflows/build_and_deploy_website.yml/badge.svg)](https://github.com/facebookresearch/ocean/actions/workflows/build_and_deploy_website.yml)
 
 # Contributing
