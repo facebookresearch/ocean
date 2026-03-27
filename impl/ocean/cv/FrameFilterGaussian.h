@@ -192,6 +192,25 @@ class OCEAN_CV_EXPORT FrameFilterGaussian
 		static inline void filter1Channel8Bit121NEON(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, ReusableMemory* reusableMemory);
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+		/**
+		 * Applies a horizontal and vertical filtering with a Gaussian kernel with size 3, applying a horizontal and vertical 121 filter kernel.
+		 * The frame must be a 1 channel 8 bit per pixel image.<br>
+		 * Instead of applying a separated horizontal and vertical filter, the function applies the 2D filter directly to speed up the process significantly.<br>
+		 * This function applies SSE4.1 instructions and can handle frames with width >= 18 pixels only.
+		 * @param source The source frame to be filtered, must be valid
+		 * @param target The target frame receiving the filtered results, must be valid
+		 * @param width The width of the source (and target) frame in pixel, with range [18, infinity)
+		 * @param height The height of the source (and target) frame in pixel, with range [1, infinity)
+		 * @param sourcePaddingElements Optional padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements Optional padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param reusableMemory An optional object holding reusable memory which can be used during filtering, nullptr otherwise
+		 */
+		static inline void filter1Channel8Bit121SSE(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, ReusableMemory* reusableMemory);
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
 };
 
 template <typename T>
@@ -423,6 +442,21 @@ bool FrameFilterGaussian::filter(const T* source, T* target, const unsigned int 
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+	// we have a special implementation for small filter kernels
+
+	if (std::is_same<T, uint8_t>::value && std::is_same<TFilter, unsigned int>::value)
+	{
+		if (width >= 18u && channels == 1u && horizontalFilterSize == 3u && verticalFilterSize == 3u && sigma <= 0.0f)
+		{
+			filter1Channel8Bit121SSE((const uint8_t*)(source), (uint8_t*)(target), width, height, sourcePaddingElements, targetPaddingElements, reusableMemory);
+			return true;
+		}
+	}
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
+
 	FrameFilterSeparable::ReusableMemory* separableReusableMemory = reusableMemory != nullptr ? &reusableMemory->separableReusableMemory_ : nullptr;
 
 	std::vector<TFilter> localHorizontalFilter;
@@ -494,6 +528,228 @@ inline bool FrameFilterGaussian::filter(T* frame, const unsigned int width, cons
 {
 	return filter<T, TFilter>(frame, frame, width, height, channels, framePaddingElements, framePaddingElements, horizontalFilterSize, verticalFilterSize, sigma, worker, reusableMemory, processorInstructions);
 }
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+inline void FrameFilterGaussian::filter1Channel8Bit121SSE(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, ReusableMemory* reusableMemory)
+{
+	ocean_assert(source != nullptr);
+	ocean_assert(target != nullptr);
+	ocean_assert(width >= 18u);
+	ocean_assert(height >= 1u);
+
+	const __m128i constant_2_u_16x8 = _mm_set1_epi16(2);
+	const __m128i constant_8_u_16x8 = _mm_set1_epi16(8);
+	const __m128i zero_128 = _mm_setzero_si128();
+
+	const unsigned int sourceStrideElements = width * 1u + sourcePaddingElements;
+	const unsigned int targetStrideElements = width * 1u + targetPaddingElements;
+
+	const unsigned int innerPixels = width - 2u;
+
+	Memory memoryResponseRows; // memory for three response rows, each row contains 'innerPixels' uint16_t elements
+	uint16_t* responseRows = nullptr;
+
+	const unsigned int reusableMemoryNecessaryElements = width * 4u;
+
+	if (reusableMemory != nullptr)
+	{
+		if (reusableMemory->responseRowsMemory_.size() != reusableMemoryNecessaryElements * sizeof(uint16_t))
+		{
+			reusableMemory->responseRowsMemory_ = Memory::create<uint16_t>(reusableMemoryNecessaryElements);
+		}
+
+		responseRows = reusableMemory->responseRowsMemory_.data<uint16_t>();
+	}
+	else
+	{
+		memoryResponseRows = Memory::create<uint16_t>(reusableMemoryNecessaryElements);
+		responseRows = memoryResponseRows.data<uint16_t>();
+	}
+
+	ocean_assert(responseRows != nullptr);
+
+	uint16_t* responseTopRow = responseRows + width * 0u;
+
+	// first, we determine the horizontal filter response for the 1D filter [1 2 1]
+
+	responseTopRow[0] = source[0] * 3u + source[1]; // special handling for first pixel response
+
+	for (unsigned int n = 0u; n < innerPixels; n += 16u)
+	{
+		if (n + 16u > innerPixels)
+		{
+			ocean_assert(n >= 16u && innerPixels > 16u);
+			const unsigned int newN = innerPixels - 16u;
+
+			const unsigned int offset = n - newN;
+			ocean_assert_and_suppress_unused(offset < innerPixels, offset);
+
+			ocean_assert(n > newN);
+
+			n = newN;
+
+			// the for loop will stop after this iteration
+			ocean_assert(n + 16u == innerPixels);
+			ocean_assert(!(n + 16u < innerPixels));
+		}
+
+		const __m128i source_0_u_8x16 = _mm_loadu_si128((const __m128i*)(source + n + 0u));
+		const __m128i source_1_u_8x16 = _mm_loadu_si128((const __m128i*)(source + n + 1u));
+		const __m128i source_2_u_8x16 = _mm_loadu_si128((const __m128i*)(source + n + 2u));
+
+		// result = source0 + source2 (widening to 16-bit)
+		const __m128i source_0_low_u_16x8 = _mm_unpacklo_epi8(source_0_u_8x16, zero_128);
+		const __m128i source_0_high_u_16x8 = _mm_unpackhi_epi8(source_0_u_8x16, zero_128);
+		const __m128i source_2_low_u_16x8 = _mm_unpacklo_epi8(source_2_u_8x16, zero_128);
+		const __m128i source_2_high_u_16x8 = _mm_unpackhi_epi8(source_2_u_8x16, zero_128);
+
+		__m128i low_u_16x8 = _mm_add_epi16(source_0_low_u_16x8, source_2_low_u_16x8);
+		__m128i high_u_16x8 = _mm_add_epi16(source_0_high_u_16x8, source_2_high_u_16x8);
+
+		// result += 2 * source1
+		const __m128i source_1_low_u_16x8 = _mm_unpacklo_epi8(source_1_u_8x16, zero_128);
+		const __m128i source_1_high_u_16x8 = _mm_unpackhi_epi8(source_1_u_8x16, zero_128);
+
+		low_u_16x8 = _mm_add_epi16(low_u_16x8, _mm_mullo_epi16(source_1_low_u_16x8, constant_2_u_16x8));
+		high_u_16x8 = _mm_add_epi16(high_u_16x8, _mm_mullo_epi16(source_1_high_u_16x8, constant_2_u_16x8));
+
+		_mm_storeu_si128((__m128i*)(responseTopRow + 1u + n + 0u), low_u_16x8);
+		_mm_storeu_si128((__m128i*)(responseTopRow + 1u + n + 8u), high_u_16x8);
+	}
+
+	responseTopRow[width - 1u] = source[width - 2u] + source[width - 1u] * 3u; // special handling for last pixel response
+
+	// due to border mirroring, our top and center row is identical for the first iteration
+	uint16_t* responseCenterRow = responseTopRow;
+	uint16_t* responseBottomRow = responseRows + width * 2u;
+	uint8_t* const sourceExtraCopy = (uint8_t*)(responseRows + width * 3u);
+
+	source += sourceStrideElements;
+
+	for (unsigned int y = 0u; y < height; ++y)
+	{
+		if (y == height - 2u)
+		{
+			// we need to make a copy of the last source row for in-place filtering
+			memcpy(sourceExtraCopy, source, width * sizeof(uint8_t));
+		}
+
+		// for each iteration, we have a pre-calculated (horizontal) response for the top and center row already
+
+		responseBottomRow[0u] = source[0] * 3u + source[1];
+
+		// handle left pixel:                       (outside) (inside)
+		// |  3  1                                         1 |  2  1
+		// | [6] 2                                         2 | [4] 2
+		// |  3  1     the filter factors are based on:    1 |  2  1
+
+		// using scoped value for intermediate storage as source and target can be identical e.g., for in-place filtering
+		const ScopedValueT<uint8_t> firstPixelValue(*target, uint8_t((responseTopRow[0] + responseCenterRow[0] * 2u + responseBottomRow[0] + 8u) / 16u));
+
+		for (unsigned int n = 0u; n < innerPixels; n += 16u)
+		{
+			if (n + 16u > innerPixels)
+			{
+				ocean_assert(n >= 16u && innerPixels > 16u);
+				const unsigned int newN = innerPixels - 16u;
+
+				const unsigned int offset = n - newN;
+				ocean_assert_and_suppress_unused(offset < innerPixels, offset);
+
+				ocean_assert(n > newN);
+
+				n = newN;
+
+				// the for loop will stop after this iteration
+				ocean_assert(n + 16u == innerPixels);
+				ocean_assert(!(n + 16u < innerPixels));
+			}
+
+			const __m128i sourceBottom_0_u_8x16 = _mm_loadu_si128((const __m128i*)(source + n + 0u));
+			const __m128i sourceBottom_1_u_8x16 = _mm_loadu_si128((const __m128i*)(source + n + 1u));
+			const __m128i sourceBottom_2_u_8x16 = _mm_loadu_si128((const __m128i*)(source + n + 2u));
+
+			// bottomResult = bottomSource0 + bottomSource2 (widening to 16-bit)
+			const __m128i bottomSource_0_low_u_16x8 = _mm_unpacklo_epi8(sourceBottom_0_u_8x16, zero_128);
+			const __m128i bottomSource_0_high_u_16x8 = _mm_unpackhi_epi8(sourceBottom_0_u_8x16, zero_128);
+			const __m128i bottomSource_2_low_u_16x8 = _mm_unpacklo_epi8(sourceBottom_2_u_8x16, zero_128);
+			const __m128i bottomSource_2_high_u_16x8 = _mm_unpackhi_epi8(sourceBottom_2_u_8x16, zero_128);
+
+			__m128i bottomLow_u_16x8 = _mm_add_epi16(bottomSource_0_low_u_16x8, bottomSource_2_low_u_16x8);
+			__m128i bottomHigh_u_16x8 = _mm_add_epi16(bottomSource_0_high_u_16x8, bottomSource_2_high_u_16x8);
+
+			// bottomResult += 2 * bottomSource1
+			const __m128i bottomSource_1_low_u_16x8 = _mm_unpacklo_epi8(sourceBottom_1_u_8x16, zero_128);
+			const __m128i bottomSource_1_high_u_16x8 = _mm_unpackhi_epi8(sourceBottom_1_u_8x16, zero_128);
+
+			bottomLow_u_16x8 = _mm_add_epi16(bottomLow_u_16x8, _mm_mullo_epi16(bottomSource_1_low_u_16x8, constant_2_u_16x8));
+			bottomHigh_u_16x8 = _mm_add_epi16(bottomHigh_u_16x8, _mm_mullo_epi16(bottomSource_1_high_u_16x8, constant_2_u_16x8));
+
+
+			// load the pre-calculated values for top
+			const __m128i topLow_u_16x8 = _mm_loadu_si128((const __m128i*)(responseTopRow + 1u + n + 0u));
+			const __m128i topHigh_u_16x8 = _mm_loadu_si128((const __m128i*)(responseTopRow + 1u + n + 8u));
+
+			// load the pre-calculated values for center
+			const __m128i centerLow_u_16x8 = _mm_loadu_si128((const __m128i*)(responseCenterRow + 1u + n + 0u));
+			const __m128i centerHigh_u_16x8 = _mm_loadu_si128((const __m128i*)(responseCenterRow + 1u + n + 8u));
+
+			// result = top + bottom
+			__m128i resultLow_u_16x8 = _mm_add_epi16(topLow_u_16x8, bottomLow_u_16x8);
+			__m128i resultHigh_u_16x8 = _mm_add_epi16(topHigh_u_16x8, bottomHigh_u_16x8);
+
+			// result += 2 * center
+			resultLow_u_16x8 = _mm_add_epi16(resultLow_u_16x8, _mm_mullo_epi16(centerLow_u_16x8, constant_2_u_16x8));
+			resultHigh_u_16x8 = _mm_add_epi16(resultHigh_u_16x8, _mm_mullo_epi16(centerHigh_u_16x8, constant_2_u_16x8));
+
+			// write the results for the bottom row so that we can use them as new pre-calculated values in the next iteration
+			// as we may re-calculate the last 16 pixels once again in the very last iteration, we cannot simply write the results to the center row
+			_mm_storeu_si128((__m128i*)(responseBottomRow + 1u + n + 0u), bottomLow_u_16x8);
+			_mm_storeu_si128((__m128i*)(responseBottomRow + 1u + n + 8u), bottomHigh_u_16x8);
+
+			// result = (result + 8) / 16, with rounding, then narrow to 8-bit
+			resultLow_u_16x8 = _mm_srli_epi16(_mm_add_epi16(resultLow_u_16x8, constant_8_u_16x8), 4);
+			resultHigh_u_16x8 = _mm_srli_epi16(_mm_add_epi16(resultHigh_u_16x8, constant_8_u_16x8), 4);
+
+			const __m128i result_u_8x16 = _mm_packus_epi16(resultLow_u_16x8, resultHigh_u_16x8);
+
+			_mm_storeu_si128((__m128i*)(target + 1u + n), result_u_8x16);
+		}
+
+		responseBottomRow[width - 1u] = source[width - 2u] + source[width - 1u] * 3u;
+
+		// handle right pixel:                      (inside) (outside)
+		// 1  3  |                                    1  2  | 1
+		// 2 [6] |                                    2 [4] | 2
+		// 1  3  |                                    1  2  | 1
+
+		target[width - 1u] = uint8_t((responseTopRow[width - 1u] + responseCenterRow[width - 1u] * 2u + responseBottomRow[width - 1u] + 8u) / 16u);
+
+		source += sourceStrideElements;
+		target += targetStrideElements;
+
+		std::swap(responseTopRow, responseCenterRow);
+
+		if (y == 0u)
+		{
+			// the next row will not have any border mirroring anymore
+
+			responseCenterRow = responseRows + width * 1u;
+		}
+		else if (y == height - 2u)
+		{
+			// the next iteration will handle the last row in the frame
+			// the bottom row will be mirrored which is actually the last row again
+
+			source = sourceExtraCopy;
+		}
+
+		std::swap(responseCenterRow, responseBottomRow);
+	}
+}
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
