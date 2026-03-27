@@ -9,6 +9,7 @@
 #define META_OCEAN_CV_NON_MAXIMUM_SUPPRESSION_H
 
 #include "ocean/cv/CV.h"
+#include "ocean/cv/FrameInterpolatorBilinear.h"
 
 #include "ocean/base/ShiftVector.h"
 #include "ocean/base/Worker.h"
@@ -46,6 +47,23 @@ class NonMaximumSuppression
 			SM_MAXIMUM_POSITIVE_ONLY,
 			/// Finds the minimum values, only negative values are allowed (< 0).
 			SM_MINIMUM_NEGATIVE_ONLY
+		};
+
+		/**
+		 * Definition of individual refinement status values for iterative sub-pixel peak refinement.
+		 */
+		enum RefinementStatus : uint32_t
+		{
+			/// Invalid status, no refinement was applied.
+			RS_INVALID = 0u,
+			/// The refinement converged, the offset is below the convergence threshold.
+			RS_CONVERGED,
+			/// The sample position fell outside the frame bounds.
+			RS_BORDER,
+			/// The fitted offset exceeded the step size, indicating divergence.
+			RS_DIVERGED,
+			/// The refinement did not converge within the maximum number of iterations.
+			RS_MAX_ITERATIONS
 		};
 
 		/**
@@ -376,6 +394,30 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 */
 		template <typename TFloat, unsigned int tSize, bool tFindMaximum = true>
 		static bool determinePrecisePeakLocationNxN(const TFloat* values, const size_t valuesStrideElements, TFloat& offsetX, TFloat& offsetY);
+
+		/**
+		 * Determines the precise sub-pixel peak location by iteratively sampling image intensity values at sub-pixel positions.
+		 * The function uses bilinear interpolation to sample a tSize x tSize grid of intensity values around the current estimate, calls determinePrecisePeakLocationNxN() to find the sub-pixel offset, and iterates with decreasing step size until convergence.<br>
+		 * The valid sampling range is [0, width - 1]x[0, height - 1] for PC_TOP_LEFT or [0, width]x[0, height] for PC_CENTER.
+		 * @param frame Pointer to the first pixel of the grayscale frame (single channel, uint8_t), must be valid
+		 * @param width The width of the frame in pixels, with range [tSize, infinity)
+		 * @param height The height of the frame in pixels, with range [tSize, infinity)
+		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param x The horizontal position of the initial peak estimate, in the coordinate system defined by tPixelCenter
+		 * @param y The vertical position of the initial peak estimate, in the coordinate system defined by tPixelCenter
+		 * @param preciseX The resulting precise horizontal position, in the coordinate system defined by tPixelCenter
+		 * @param preciseY The resulting precise vertical position, in the coordinate system defined by tPixelCenter
+		 * @param refinementStatus Optional resulting refinement status (RS_CONVERGED, RS_MAX_ITERATIONS, RS_BORDER, or RS_DIVERGED), nullptr if not needed
+		 * @param maxIterations The maximum number of refinement iterations, with range [1, infinity)
+		 * @param convergenceThreshold The threshold for the pixel offset magnitude below which convergence is declared, with range (0, infinity)
+		 * @return True, if the refinement converged (RS_CONVERGED) or reached max iterations (RS_MAX_ITERATIONS); False, if the sampling hit the frame border (RS_BORDER) or the quadratic fit diverged or had wrong curvature (RS_DIVERGED)
+		 * @tparam TFloat The floating point data type to be used for calculation, either 'float' or 'double'
+		 * @tparam tSize The size of the sampling grid, must be odd and >= 3
+		 * @tparam tFindMaximum True, to find the intensity maximum; False, to find the intensity minimum
+		 * @tparam tPixelCenter The pixel center to be used during interpolation, either 'PC_TOP_LEFT' or 'PC_CENTER'
+		 */
+		template <typename TFloat, unsigned int tSize = 3u, bool tFindMaximum = true, PixelCenter tPixelCenter = PC_TOP_LEFT>
+		static bool determinePrecisePeakLocationIterativeNxN(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const TFloat x, const TFloat y, TFloat& preciseX, TFloat& preciseY, NonMaximumSuppression::RefinementStatus* refinementStatus = nullptr, const unsigned int maxIterations = 5u, const TFloat convergenceThreshold = TFloat(0.01));
 
 	private:
 
@@ -1134,6 +1176,134 @@ bool NonMaximumSuppressionT<T>::determinePrecisePeakLocationNxN(const TFloat* va
 	if (offsetX < TFloat(-1) || offsetX > TFloat(1) || offsetY < TFloat(-1) || offsetY > TFloat(1))
 	{
 		return false;
+	}
+
+	return true;
+}
+
+template <typename T>
+template <typename TFloat, unsigned int tSize, bool tFindMaximum, PixelCenter tPixelCenter>
+bool NonMaximumSuppressionT<T>::determinePrecisePeakLocationIterativeNxN(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const TFloat x, const TFloat y, TFloat& preciseX, TFloat& preciseY, NonMaximumSuppression::RefinementStatus* refinementStatus, const unsigned int maxIterations, const TFloat convergenceThreshold)
+{
+	static_assert(std::is_floating_point<TFloat>::value, "Invalid floating point data type!");
+	static_assert(tSize >= 3u && tSize % 2u == 1u, "Grid size must be odd and >= 3");
+
+	ocean_assert(frame != nullptr);
+	ocean_assert(width >= tSize && height >= tSize);
+	ocean_assert(maxIterations >= 1u);
+	ocean_assert(convergenceThreshold > TFloat(0));
+
+	constexpr unsigned int tSize_2 = tSize / 2u;
+
+	const TFloat maxSampleX = (tPixelCenter == PC_TOP_LEFT) ? TFloat(width - 1u) : TFloat(width);
+	const TFloat maxSampleY = (tPixelCenter == PC_TOP_LEFT) ? TFloat(height - 1u) : TFloat(height);
+
+	ocean_assert(x >= TFloat(0) && x <= maxSampleX);
+	ocean_assert(y >= TFloat(0) && y <= maxSampleY);
+
+	if (x < TFloat(0) || x > maxSampleX || y < TFloat(0) || y > maxSampleY)
+	{
+		if (refinementStatus != nullptr)
+		{
+			*refinementStatus = NonMaximumSuppression::RS_INVALID;
+		}
+
+		return false;
+	}
+
+	TFloat iterationX = x;
+	TFloat iterationY = y;
+	TFloat step = TFloat(1);
+
+	const TFloat sqrConvergenceThreshold = convergenceThreshold * convergenceThreshold;
+
+	for (unsigned int iteration = 0u; iteration < maxIterations; ++iteration)
+	{
+		TFloat interpolatedValues[tSize * tSize];
+
+		for (unsigned int yy = 0u; yy < tSize; ++yy)
+		{
+			for (unsigned int xx = 0u; xx < tSize; ++xx)
+			{
+				const TFloat sampleX = iterationX + TFloat(int(xx) - int(tSize_2)) * step;
+				const TFloat sampleY = iterationY + TFloat(int(yy) - int(tSize_2)) * step;
+
+				if (sampleX < TFloat(0) || sampleX > maxSampleX || sampleY < TFloat(0) || sampleY > maxSampleY)
+				{
+					preciseX = iterationX;
+					preciseY = iterationY;
+
+					if (refinementStatus != nullptr)
+					{
+						*refinementStatus = NonMaximumSuppression::RS_BORDER;
+					}
+
+					return false;
+				}
+
+				const VectorT2<TFloat> samplePos(sampleX, sampleY);
+
+				FrameInterpolatorBilinear::interpolatePixel<uint8_t, TFloat, 1u, tPixelCenter, TFloat>(frame, width, height, framePaddingElements, samplePos, &interpolatedValues[yy * tSize + xx]);
+			}
+		}
+
+		TFloat fitOffsetX;
+		TFloat fitOffsetY;
+
+		if (!determinePrecisePeakLocationNxN<TFloat, tSize, tFindMaximum>(interpolatedValues, tSize, fitOffsetX, fitOffsetY))
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			if (refinementStatus != nullptr)
+			{
+				*refinementStatus = NonMaximumSuppression::RS_CONVERGED;
+			}
+
+			return true; // flat region, position is valid
+		}
+
+		const TFloat pixelOffsetX = fitOffsetX * step;
+		const TFloat pixelOffsetY = fitOffsetY * step;
+
+		if (NumericT<TFloat>::abs(pixelOffsetX) > step || NumericT<TFloat>::abs(pixelOffsetY) > step)
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			if (refinementStatus != nullptr)
+			{
+				*refinementStatus = NonMaximumSuppression::RS_DIVERGED;
+			}
+
+			return false;
+		}
+
+		iterationX += pixelOffsetX;
+		iterationY += pixelOffsetY;
+
+		step *= TFloat(0.5);
+
+		if (pixelOffsetX * pixelOffsetX + pixelOffsetY * pixelOffsetY < sqrConvergenceThreshold)
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			if (refinementStatus != nullptr)
+			{
+				*refinementStatus = NonMaximumSuppression::RS_CONVERGED;
+			}
+
+			return true;
+		}
+	}
+
+	preciseX = iterationX;
+	preciseY = iterationY;
+
+	if (refinementStatus != nullptr)
+	{
+		*refinementStatus = NonMaximumSuppression::RS_MAX_ITERATIONS;
 	}
 
 	return true;
