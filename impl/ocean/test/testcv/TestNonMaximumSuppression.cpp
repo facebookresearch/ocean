@@ -1039,9 +1039,9 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 		T preciseX = NumericT<T>::minValue();
 		T preciseY = NumericT<T>::minValue();
 
-		const bool resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(41), preciseX, preciseY);
+		const CV::NonMaximumSuppression::RefinementStatus resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(41), preciseX, preciseY);
 
-		OCEAN_EXPECT_TRUE(validation, resultTopLeft);
+		OCEAN_EXPECT_EQUAL(validation, resultTopLeft, CV::NonMaximumSuppression::RS_CONVERGED);
 
 		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
 		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
@@ -1052,9 +1052,9 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 		preciseX = NumericT<T>::minValue();
 		preciseY = NumericT<T>::minValue();
 
-		const bool resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50) + T(0.5), T(41) + T(0.5), preciseX, preciseY);
+		const CV::NonMaximumSuppression::RefinementStatus resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50) + T(0.5), T(41) + T(0.5), preciseX, preciseY);
 
-		OCEAN_EXPECT_TRUE(validation, resultCenter);
+		OCEAN_EXPECT_EQUAL(validation, resultCenter, CV::NonMaximumSuppression::RS_CONVERGED);
 
 		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
 		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
@@ -1072,9 +1072,9 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 		T preciseX = NumericT<T>::minValue();
 		T preciseY = NumericT<T>::minValue();
 
-		const bool resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60), T(30), preciseX, preciseY);
+		const CV::NonMaximumSuppression::RefinementStatus resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60), T(30), preciseX, preciseY);
 
-		OCEAN_EXPECT_TRUE(validation, resultTopLeft);
+		OCEAN_EXPECT_EQUAL(validation, resultTopLeft, CV::NonMaximumSuppression::RS_CONVERGED);
 
 		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
 		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
@@ -1085,9 +1085,9 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 		preciseX = NumericT<T>::minValue();
 		preciseY = NumericT<T>::minValue();
 
-		const bool resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60) + T(0.5), T(30) + T(0.5), preciseX, preciseY);
+		const CV::NonMaximumSuppression::RefinementStatus resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60) + T(0.5), T(30) + T(0.5), preciseX, preciseY);
 
-		OCEAN_EXPECT_TRUE(validation, resultCenter);
+		OCEAN_EXPECT_EQUAL(validation, resultCenter, CV::NonMaximumSuppression::RS_CONVERGED);
 
 		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
 		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
@@ -1105,9 +1105,9 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 		T preciseX = NumericT<T>::minValue();
 		T preciseY = NumericT<T>::minValue();
 
-		const bool resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46), T(56), preciseX, preciseY);
+		const CV::NonMaximumSuppression::RefinementStatus resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46), T(56), preciseX, preciseY);
 
-		OCEAN_EXPECT_TRUE(validation, resultTopLeft);
+		OCEAN_EXPECT_EQUAL(validation, resultTopLeft, CV::NonMaximumSuppression::RS_CONVERGED);
 
 		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
 		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
@@ -1118,9 +1118,9 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 		preciseX = NumericT<T>::minValue();
 		preciseY = NumericT<T>::minValue();
 
-		const bool resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46) + T(0.5), T(56) + T(0.5), preciseX, preciseY);
+		const CV::NonMaximumSuppression::RefinementStatus resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46) + T(0.5), T(56) + T(0.5), preciseX, preciseY);
 
-		OCEAN_EXPECT_TRUE(validation, resultCenter);
+		OCEAN_EXPECT_EQUAL(validation, resultCenter, CV::NonMaximumSuppression::RS_CONVERGED);
 
 		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
 		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
@@ -1137,28 +1137,22 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
 
 		T preciseX = NumericT<T>::minValue();
 		T preciseY = NumericT<T>::minValue();
-		CV::NonMaximumSuppression::RefinementStatus status = CV::NonMaximumSuppression::RS_INVALID;
+		const CV::NonMaximumSuppression::RefinementStatus result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(0), T(0), preciseX, preciseY);
 
-		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(0), T(0), preciseX, preciseY, &status);
-
-		OCEAN_EXPECT_FALSE(validation, result);
-		OCEAN_EXPECT_TRUE(validation, status == CV::NonMaximumSuppression::RS_BORDER);
+		OCEAN_EXPECT_EQUAL(validation, result, CV::NonMaximumSuppression::RS_BORDER);
 	}
 
 	{
-		// flat region -> returns true with RS_CONVERGED at input position
+		// flat region -> quadratic fit returns (0, 0), position is valid
 
 		Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 		frame.setValue(128u);
 
 		T preciseX = NumericT<T>::minValue();
 		T preciseY = NumericT<T>::minValue();
-		CV::NonMaximumSuppression::RefinementStatus status = CV::NonMaximumSuppression::RS_INVALID;
+		const CV::NonMaximumSuppression::RefinementStatus result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(50), preciseX, preciseY);
 
-		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(50), preciseX, preciseY, &status);
-
-		OCEAN_EXPECT_TRUE(validation, result);
-		OCEAN_EXPECT_TRUE(validation, status == CV::NonMaximumSuppression::RS_CONVERGED);
+		OCEAN_EXPECT_EQUAL(validation, result, CV::NonMaximumSuppression::RS_CONVERGED);
 		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(preciseX, T(50), T(0.01)));
 		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(preciseY, T(50), T(0.01)));
 	}
