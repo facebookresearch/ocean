@@ -1111,14 +1111,14 @@ bool NonMaximumSuppressionT<T>::determinePrecisePeakLocationNxN(const TFloat* va
 	TFloat sumYYValues = TFloat(0);
 	TFloat sumXYValues = TFloat(0);
 
-	for (unsigned int gy = 0u; gy < tSize; ++gy)
+	for (unsigned int yy = 0u; yy < tSize; ++yy)
 	{
-		const TFloat yj = TFloat(int(gy) - tSize_2);
+		const TFloat yj = TFloat(int(yy) - tSize_2);
 
-		for (unsigned int gx = 0u; gx < tSize; ++gx)
+		for (unsigned int xx = 0u; xx < tSize; ++xx)
 		{
-			const TFloat xi = TFloat(int(gx) - tSize_2);
-			const TFloat z = values[gy * valuesStrideElements + gx];
+			const TFloat xi = TFloat(int(xx) - tSize_2);
+			const TFloat z = values[yy * valuesStrideElements + xx];
 
 			sumValues += z;
 			sumXValues += xi * z;
@@ -1219,6 +1219,14 @@ NonMaximumSuppression::RefinementStatus NonMaximumSuppressionT<T>::determinePrec
 
 	for (unsigned int iteration = 0u; iteration < maxIterations; ++iteration)
 	{
+		if (iterationX - TFloat(tSize_2) < TFloat(0) || iterationX + TFloat(tSize_2) > maxSampleX || iterationY - TFloat(tSize_2) < TFloat(0) || iterationY + TFloat(tSize_2) > maxSampleY)
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			return NonMaximumSuppression::RS_BORDER;
+		}
+
 		TFloat interpolatedValues[tSize * tSize];
 
 		for (unsigned int yy = 0u; yy < tSize; ++yy)
@@ -1228,13 +1236,8 @@ NonMaximumSuppression::RefinementStatus NonMaximumSuppressionT<T>::determinePrec
 				const TFloat sampleX = iterationX + TFloat(int(xx) - int(tSize_2));
 				const TFloat sampleY = iterationY + TFloat(int(yy) - int(tSize_2));
 
-				if (sampleX < TFloat(0) || sampleX > maxSampleX || sampleY < TFloat(0) || sampleY > maxSampleY)
-				{
-					preciseX = iterationX;
-					preciseY = iterationY;
-
-					return NonMaximumSuppression::RS_BORDER;
-				}
+				ocean_assert(sampleX >= TFloat(0) && sampleX <= maxSampleX);
+				ocean_assert(sampleY >= TFloat(0) && sampleY <= maxSampleY);
 
 				const VectorT2<TFloat> samplePos(sampleX, sampleY);
 
