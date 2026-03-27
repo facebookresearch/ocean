@@ -360,6 +360,23 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		template <typename TFloat>
 		static bool determinePrecisePeakLocation2(const T* const topValues, const T* const centerValues, const T* const bottomValues, VectorT2<TFloat>& location);
 
+		/**
+		 * Determines the precise peak location in 2D space by fitting a quadratic surface via least-squares to a tSize x tSize grid of values.
+		 * Uses all tSize * tSize samples to fit F(x,y) = a + bx + cy + dx^2 + exy + fy^2 and solves for the peak of the fitted surface.<br>
+		 * For a 3x3 grid this reduces to central differences; for larger grids the least-squares fit uses all samples for a more robust estimate.<br>
+		 * The function validates that the fitted surface has the correct curvature (negative-definite Hessian for maximum, positive-definite for minimum).
+		 * @param values The grid values in row-major order, must have at least (tSize - 1) * valuesStrideElements + tSize elements
+		 * @param valuesStrideElements The number of elements between the start of two consecutive rows, with range [tSize, infinity)
+		 * @param offsetX The resulting horizontal offset of the peak from the grid center, in range (-1, 1)
+		 * @param offsetY The resulting vertical offset of the peak from the grid center, in range (-1, 1)
+		 * @return True, if the fit succeeded, the curvature is correct, and the offset is within range; False, if the surface is degenerate, has wrong curvature, or the offset is out of range
+		 * @tparam TFloat The floating point data type to be used for calculation, either 'float' or 'double'
+		 * @tparam tSize The size of the sampling grid, must be odd and >= 3
+		 * @tparam tFindMaximum True, to find the maximum of the fitted surface; False, to find the minimum
+		 */
+		template <typename TFloat, unsigned int tSize, bool tFindMaximum = true>
+		static bool determinePrecisePeakLocationNxN(const TFloat* values, const size_t valuesStrideElements, TFloat& offsetX, TFloat& offsetY);
+
 	private:
 
 		/**
@@ -996,6 +1013,129 @@ bool NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(const T* const top
 	}
 
 	location = VectorT2<TFloat>(offsetX, offsetY);
+
+	return true;
+}
+
+template <typename T>
+template <typename TFloat, unsigned int tSize, bool tFindMaximum>
+bool NonMaximumSuppressionT<T>::determinePrecisePeakLocationNxN(const TFloat* values, const size_t valuesStrideElements, TFloat& offsetX, TFloat& offsetY)
+{
+	static_assert(std::is_floating_point<TFloat>::value, "Invalid floating point data type!");
+	static_assert(tSize >= 3u && tSize % 2u == 1u, "Grid size must be odd and >= 3");
+
+	ocean_assert(valuesStrideElements >= tSize);
+
+	// Least-squares fit of F(x,y) = a + bx + cy + dx^2 + exy + fy^2 to all NxN grid samples.
+	//
+	// Grid coordinates: x_i = gx - tSize_2, y_j = gy - tSize_2, for gx,gy in [0, tSize).
+	// On a symmetric grid, cross-terms in the normal equations vanish, yielding closed-form coefficients:
+	//
+	//   gradient:  dx = Sxz / (n * S2),  dy = Syz / (n * S2)
+	//   Hessian:   dxx = 2 * (Sxxz - S2 * Sz / n) / (n * S4 - S2^2)
+	//              dyy = 2 * (Syyz - S2 * Sz / n) / (n * S4 - S2^2)
+	//              dxy = Sxyz / S2^2
+	//
+	// where S2 = sum(i^2) and S4 = sum(i^4) over i in [-tSize_2, tSize_2].
+
+	constexpr int tSize_2 = int(tSize / 2u);
+	constexpr unsigned int n = tSize;
+
+	// Precomputed grid sums for coordinates in [-tSize_2, tSize_2]:
+	// sumOfSquaredCoordinates = sum(i^2) = tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1) / 3
+	// sumOfFourthPowerCoordinates = sum(i^4) = tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1) * (3 * tSize_2^2 + 3 * tSize_2 - 1) / 15
+
+	const TFloat sumOfSquaredCoordinates = TFloat(tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1)) / TFloat(3);
+	const TFloat sumOfFourthPowerCoordinates = TFloat(tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1) * (3 * tSize_2 * tSize_2 + 3 * tSize_2 - 1)) / TFloat(15);
+
+	const TFloat normalEquationGradientDenominator = TFloat(n) * sumOfSquaredCoordinates;
+	const TFloat squaredSumOfSquaredCoordinates = sumOfSquaredCoordinates * sumOfSquaredCoordinates;
+	const TFloat normalEquationHessianDenominator = TFloat(n) * sumOfFourthPowerCoordinates - squaredSumOfSquaredCoordinates;
+
+	if (NumericT<TFloat>::isEqualEps(normalEquationGradientDenominator) || NumericT<TFloat>::isEqualEps(normalEquationHessianDenominator))
+	{
+		offsetX = TFloat(0);
+		offsetY = TFloat(0);
+		return true;
+	}
+
+	// Accumulate weighted sums in a single pass
+
+	TFloat sumValues = TFloat(0);
+	TFloat sumXValues = TFloat(0);
+	TFloat sumYValues = TFloat(0);
+	TFloat sumXXValues = TFloat(0);
+	TFloat sumYYValues = TFloat(0);
+	TFloat sumXYValues = TFloat(0);
+
+	for (unsigned int gy = 0u; gy < tSize; ++gy)
+	{
+		const TFloat yj = TFloat(int(gy) - tSize_2);
+
+		for (unsigned int gx = 0u; gx < tSize; ++gx)
+		{
+			const TFloat xi = TFloat(int(gx) - tSize_2);
+			const TFloat z = values[gy * valuesStrideElements + gx];
+
+			sumValues += z;
+			sumXValues += xi * z;
+			sumYValues += yj * z;
+			sumXXValues += xi * xi * z;
+			sumYYValues += yj * yj * z;
+			sumXYValues += xi * yj * z;
+		}
+	}
+
+	// Derivatives at the grid center from the least-squares quadratic fit
+
+	const TFloat dx = sumXValues / normalEquationGradientDenominator;
+	const TFloat dy = sumYValues / normalEquationGradientDenominator;
+	const TFloat dxy = sumXYValues / squaredSumOfSquaredCoordinates;
+
+	const TFloat meanValue = sumValues / TFloat(n);
+	const TFloat dxx = TFloat(2) * (sumXXValues - sumOfSquaredCoordinates * meanValue) / normalEquationHessianDenominator;
+	const TFloat dyy = TFloat(2) * (sumYYValues - sumOfSquaredCoordinates * meanValue) / normalEquationHessianDenominator;
+
+	const TFloat hessianDeterminant = dxx * dyy - dxy * dxy;
+
+	if (NumericT<TFloat>::isEqualEps(hessianDeterminant))
+	{
+		offsetX = TFloat(0);
+		offsetY = TFloat(0);
+		return true;
+	}
+
+	// For a maximum, the Hessian must be negative-definite (dxx < 0 and det > 0)
+	// For a minimum, the Hessian must be positive-definite (dxx > 0 and det > 0)
+	if constexpr (tFindMaximum)
+	{
+		if (dxx >= TFloat(0) || hessianDeterminant <= TFloat(0))
+		{
+			offsetX = TFloat(0);
+			offsetY = TFloat(0);
+			return false;
+		}
+	}
+	else
+	{
+		if (dxx <= TFloat(0) || hessianDeterminant <= TFloat(0))
+		{
+			offsetX = TFloat(0);
+			offsetY = TFloat(0);
+			return false;
+		}
+	}
+
+	const TFloat inverseHessianDeterminant = TFloat(1) / hessianDeterminant;
+
+	offsetX = -(dyy * dx - dxy * dy) * inverseHessianDeterminant;
+	offsetY = -(dxx * dy - dxy * dx) * inverseHessianDeterminant;
+
+	if (offsetX < TFloat(-1) || offsetX > TFloat(1) || offsetY < TFloat(-1) || offsetY > TFloat(1))
+	{
+		return false;
+	}
+
 	return true;
 }
 
