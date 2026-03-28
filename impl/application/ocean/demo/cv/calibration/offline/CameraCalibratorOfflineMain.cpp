@@ -14,6 +14,7 @@
 
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/FrameFilterGaussian.h"
 
 #include "ocean/cv/calibration/CalibrationDebugElements.h"
 #include "ocean/cv/calibration/CameraCalibrator.h"
@@ -51,6 +52,7 @@ using namespace Ocean::CV::Calibration;
 	commandArguments.registerParameter("cameraModel", "cm", "The camera model to be used, e.g., 'pinhole' or 'fisheye', if not defined the model is determined automatically");
 	commandArguments.registerParameter("output", "o", "The optional output directory for the calibration information");
 	commandArguments.registerParameter("debugOutput", "do", "The optional output directory for the debug images");
+	commandArguments.registerParameter("gaussianFilter", "gf", "The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable (default), e.g., 3, 5, 7", Value(0));
 	commandArguments.registerParameter("help", "h", "Showing this help output.");
 
 	if (!commandArguments.parse(argv, argc))
@@ -160,6 +162,14 @@ using namespace Ocean::CV::Calibration;
 		}
 	}
 
+	const uint32_t gaussianFilterSize = commandArguments.value<uint32_t>("gaussianFilter", 0u, true);
+
+	if (gaussianFilterSize != 0u && (gaussianFilterSize < 3u || (gaussianFilterSize % 2u) == 0u))
+	{
+		Log::error() << "Invalid Gaussian filter size '" << gaussianFilterSize << "', must be 0 (disabled), or an odd value >= 3, e.g., 3, 5, 7.";
+		return 1;
+	}
+
 	const CameraCalibrator::InitialCameraProperties initialCameraProperties(anyCameraType);
 
 	CameraCalibrator cameraCalibrator(calibrationBoard, initialCameraProperties);
@@ -170,7 +180,20 @@ using namespace Ocean::CV::Calibration;
 		{
 			const IO::File& imageFile = imageFiles[imageIndex];
 
-			const Frame frame = IO::Image::readImage(imageFile());
+			Frame frame = IO::Image::readImage(imageFile());
+
+			if (gaussianFilterSize != 0u)
+			{
+				if (frame.numberPlanes() != 1u || frame.dataType() != FrameType::DT_UNSIGNED_INTEGER_8)
+				{
+					CV::FrameConverter::Comfort::change(frame, FrameType::FORMAT_Y8, WorkerPool::get().scopedWorker()());
+				}
+
+				if (!CV::FrameFilterGaussian::filter(frame, gaussianFilterSize, WorkerPool::get().scopedWorker()()))
+				{
+					Log::warning() << "Failed to apply Gaussian filter to image '" << imageFile.name() << "'.";
+				}
+			}
 
 			Log::info() << "Handling image " << imageFile.name() << " ...";
 
