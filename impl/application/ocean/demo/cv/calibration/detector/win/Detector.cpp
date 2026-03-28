@@ -41,6 +41,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 	commandArguments.registerParameter("measuredHeight", "mh", "The measured height of the calibration board in millimeters.");
 	commandArguments.registerParameter("cameraCalibration", "cc", "The filename of a camera calibration file containing the calibration for the input source (*.occ)");
 	commandArguments.registerParameter("input", "i", "Optional media file to use instead of live video");
+	commandArguments.registerParameter("gaussianFilter", "gf", "The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable (default), e.g., 3, 5, 7", Value(0));
 	commandArguments.registerParameter("help", "h", "Show this help output");
 
 	commandArguments.parse(lpCmdLine);
@@ -78,11 +79,19 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 
 	std::string mediaFile = commandArguments.value<std::string>("input", std::string(), false);
 
+	const uint32_t gaussianFilterSize = commandArguments.value<uint32_t>("gaussianFilter", 0u, true);
+
+	if (gaussianFilterSize != 0u && (gaussianFilterSize < 3u || (gaussianFilterSize % 2u) == 0u))
+	{
+		Log::error() << "Invalid Gaussian filter size '" << gaussianFilterSize << "', must be 0 (disabled), or an odd value >= 3, e.g., 3, 5, 7.";
+		return 1;
+	}
+
 	const MetricCalibrationBoard calibrationBoard = determineCalibrationBoard(commandArguments);
 
 	try
 	{
-		DetectorMainWindow mainWindow(hInstance, String::toWString(std::string("Calibration Pattern (") + Build::buildString() + std::string(")")), calibrationBoard, mediaFile);
+		DetectorMainWindow mainWindow(hInstance, String::toWString(std::string("Calibration Pattern (") + Build::buildString() + std::string(")")), calibrationBoard, mediaFile, gaussianFilterSize);
 		mainWindow.initialize();
 		mainWindow.start();
 	}
@@ -151,4 +160,3 @@ MetricCalibrationBoard determineCalibrationBoard(const CommandArguments& command
 
 	return MetricCalibrationBoard(std::move(calibrationBoard), measuredWidth, measuredHeight);
 }
-

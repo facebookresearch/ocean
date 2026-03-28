@@ -12,6 +12,7 @@
 
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/FrameFilterGaussian.h"
 
 #include "ocean/cv/calibration/CalibrationBoardDetector.h"
 #include "ocean/cv/calibration/PointDetector.h"
@@ -26,12 +27,13 @@
 
 using namespace Ocean::CV::Calibration;
 
-DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file) :
+DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file, const unsigned int gaussianFilterSize) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
 	mediaFile_(file),
-	calibrationBoard_(calibrationBoard)
+	calibrationBoard_(calibrationBoard),
+	gaussianFilterSize_(gaussianFilterSize)
 {
 	// nothing to do here
 }
@@ -124,17 +126,29 @@ void DetectorMainWindow::onKeyDown(const int key)
 
 void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& camera)
 {
+	Frame frameToProcess(frame, Frame::ACM_USE_KEEP_LAYOUT);
+
+	if (gaussianFilterSize_ != 0u)
+	{
+		frameToProcess.makeOwner();
+
+		if (!CV::FrameFilterGaussian::filter(frameToProcess, gaussianFilterSize_, WorkerPool::get().scopedWorker()()))
+		{
+			Log::warning() << "Failed to apply Gaussian filter.";
+		}
+	}
+
 	if (saveImage_)
 	{
 		saveImage_= false;
 
 		static unsigned int counter = 0u;
 
-		IO::Image::writeImage(frame, "image" + String::toAString(counter++, 5u) + ".png");
+		IO::Image::writeImage(frameToProcess, "image" + String::toAString(counter++, 5u) + ".png");
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+	if (!CV::FrameConverter::Comfort::convert(frameToProcess, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;

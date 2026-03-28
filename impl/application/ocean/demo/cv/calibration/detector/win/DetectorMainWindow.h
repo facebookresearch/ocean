@@ -52,8 +52,9 @@ class DetectorMainWindow :
 		 * @param name The name of the main window
 		 * @param calibrationBoard The calibration board to detect
 		 * @param file Optional media file
+		 * @param gaussianFilterSize The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable, must be odd if non-zero
 		 */
-		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file = std::string());
+		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file = std::string(), const unsigned int gaussianFilterSize = 0u);
 
 		/**
 		 * Destructs the main window.
@@ -103,6 +104,9 @@ class DetectorMainWindow :
 
 		/// The calibration board to detect.
 		MetricCalibrationBoard calibrationBoard_;
+
+		/// The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable.
+		unsigned int gaussianFilterSize_ = 0u;
 
 		/// True, to save an image.
 		bool saveImage_ = false;
