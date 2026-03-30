@@ -3938,7 +3938,7 @@ bool TestJacobian::testPinholeCameraJacobian2x8(const double testDuration)
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width), T(0), T(height));
-			const VectorT3<T> objectPoint = camera.vectorIF(distortedImagePoint);
+			const VectorT3<T> objectPoint = camera.vectorIF(distortedImagePoint, false /*makeUnitVector*/);
 			ocean_assert(objectPoint.z() > NumericT<T>::eps());
 
 			const VectorT2<T> normalizedUndistortedImagePoint = VectorT2<T>(objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z());
@@ -4086,7 +4086,7 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width), T(0), T(height));
-			const VectorT3<T> objectPoint = fisheyeCamera.vectorIF(distortedImagePoint);
+			const VectorT3<T> objectPoint = fisheyeCamera.vectorIF(distortedImagePoint, false /*makeUnitVector*/);
 			ocean_assert(objectPoint.z() > NumericT<T>::eps());
 
 			const VectorT2<T> normalizedUndistortedImagePoint = VectorT2<T>(objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z());
