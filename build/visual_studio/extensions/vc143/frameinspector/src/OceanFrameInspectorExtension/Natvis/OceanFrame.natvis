@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+
+  This source code is licensed under the MIT license found in the
+  LICENSE file in the root directory of this source tree.
+
+  Natvis visualizers for Ocean::FrameType, Ocean::Frame, and Ocean::Frame::Plane.
+  Provides structured display in Visual Studio Watch/Locals/Autos windows.
+-->
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <!-- Ocean::FrameType::PixelFormatUnion
+       Handles predefined vs generic pixel formats.
+       Predefined formats (predefinedPixelFormat_ != 0) show the enum name.
+       Generic formats show "Generic(Nch, dataType)". -->
+  <Type Name="Ocean::FrameType::PixelFormatUnion">
+    <DisplayString Condition="properties_.predefinedPixelFormat_ != 0">{pixelFormat_}</DisplayString>
+    <DisplayString>Generic({properties_.channels_}ch, {properties_.dataType_})</DisplayString>
+    <Expand>
+      <Item Name="Pixel Format">pixelFormat_</Item>
+      <Item Name="Properties">properties_</Item>
+    </Expand>
+  </Type>
+
+  <!-- Ocean::FrameType::PixelFormatProperties -->
+  <Type Name="Ocean::FrameType::PixelFormatProperties">
+    <DisplayString>channels={channels_}, dataType={dataType_}, planes={planes_}</DisplayString>
+    <Expand>
+      <Item Name="Predefined Format ID">predefinedPixelFormat_</Item>
+      <Item Name="Channels">channels_</Item>
+      <Item Name="Data Type">dataType_</Item>
+      <Item Name="Planes">planes_</Item>
+      <Item Name="Width Multiple">widthMultiple_</Item>
+      <Item Name="Height Multiple">heightMultiple_</Item>
+    </Expand>
+  </Type>
+
+  <!-- Ocean::FrameType
+       Uses {pixelFormat_} which delegates to PixelFormatUnion's DisplayString,
+       so predefined formats show the enum name and generic formats show "Generic(...)". -->
+  <Type Name="Ocean::FrameType">
+    <DisplayString Condition="pixelOrigin_ == 1">{width_}x{height_}, {pixelFormat_}, UpperLeft</DisplayString>
+    <DisplayString Condition="pixelOrigin_ == 2">{width_}x{height_}, {pixelFormat_}, LowerLeft</DisplayString>
+    <DisplayString>{width_}x{height_}, {pixelFormat_}</DisplayString>
+    <Expand>
+      <Item Name="Width">width_</Item>
+      <Item Name="Height">height_</Item>
+      <Item Name="Pixel Format">pixelFormat_</Item>
+      <Item Name="Pixel Origin">pixelOrigin_</Item>
+    </Expand>
+  </Type>
+
+  <!-- Ocean::Frame -->
+  <Type Name="Ocean::Frame">
+    <DisplayString Condition="pixelOrigin_ == 1 &amp;&amp; planes_.size_ == 1">{width_}x{height_}, {pixelFormat_}, UpperLeft, 1 Plane</DisplayString>
+    <DisplayString Condition="pixelOrigin_ == 2 &amp;&amp; planes_.size_ == 1">{width_}x{height_}, {pixelFormat_}, LowerLeft, 1 Plane</DisplayString>
+    <DisplayString Condition="pixelOrigin_ == 1">{width_}x{height_}, {pixelFormat_}, UpperLeft, {planes_.size_} Planes</DisplayString>
+    <DisplayString Condition="pixelOrigin_ == 2">{width_}x{height_}, {pixelFormat_}, LowerLeft, {planes_.size_} Planes</DisplayString>
+    <DisplayString>{width_}x{height_}, {pixelFormat_}, {planes_.size_} Planes</DisplayString>
+    <Expand>
+      <Item Name="Width">width_</Item>
+      <Item Name="Height">height_</Item>
+      <Item Name="Pixel Format">pixelFormat_</Item>
+      <Item Name="Pixel Origin">pixelOrigin_</Item>
+      <Item Name="Plane Count">planes_.size_</Item>
+      <Item Name="Timestamp">timestamp_</Item>
+      <Item Name="Relative Timestamp">relativeTimestamp_</Item>
+      <Synthetic Name="Planes">
+        <Expand>
+          <ArrayItems>
+            <Size>planes_.size_</Size>
+            <ValuePointer>planes_.stackElements_</ValuePointer>
+          </ArrayItems>
+        </Expand>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <!-- Ocean::Frame::Plane -->
+  <Type Name="Ocean::Frame::Plane">
+    <DisplayString>{width_}x{height_}, {channels_}ch, stride={strideBytes_}B</DisplayString>
+    <Expand>
+      <Item Name="Width">width_</Item>
+      <Item Name="Height">height_</Item>
+      <Item Name="Channels">channels_</Item>
+      <Item Name="Element Type Size">elementTypeSize_</Item>
+      <Item Name="Padding Elements">paddingElements_</Item>
+      <Item Name="Stride (bytes)">strideBytes_</Item>
+      <Item Name="Bytes Per Pixel">bytesPerPixel_</Item>
+      <Item Name="Const Data">constData_</Item>
+      <Item Name="Data">data_</Item>
+      <Item Name="Allocated Data">allocatedData_</Item>
+    </Expand>
+  </Type>
+
+  <!-- Ocean::StackHeapVector -->
+  <Type Name="Ocean::StackHeapVector&lt;*,*&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>size_</Size>
+        <ValuePointer>stackElements_</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

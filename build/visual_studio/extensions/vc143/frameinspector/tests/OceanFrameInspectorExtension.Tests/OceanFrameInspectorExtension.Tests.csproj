@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+
+  <!-- Link imaging source files directly since the main project is old-style VSIX
+       and cannot be referenced from an SDK-style project -->
+  <ItemGroup>
+    <Compile Include="..\..\src\OceanFrameInspectorExtension\Imaging\FrameData.cs" Link="Imaging\FrameData.cs" />
+    <Compile Include="..\..\src\OceanFrameInspectorExtension\Imaging\PixelFormatInfo.cs" Link="Imaging\PixelFormatInfo.cs" />
+    <Compile Include="..\..\src\OceanFrameInspectorExtension\Imaging\PixelFormatConverter.cs" Link="Imaging\PixelFormatConverter.cs" />
+    <Compile Include="..\..\src\OceanFrameInspectorExtension\Imaging\HistogramCalculator.cs" Link="Imaging\HistogramCalculator.cs" />
+    <Compile Include="..\..\src\OceanFrameInspectorExtension\Imaging\ColorMapGenerator.cs" Link="Imaging\ColorMapGenerator.cs" />
+    <Compile Include="..\..\src\OceanFrameInspectorExtension\Imaging\ChannelSplitter.cs" Link="Imaging\ChannelSplitter.cs" />
+  </ItemGroup>
+
+</Project>
