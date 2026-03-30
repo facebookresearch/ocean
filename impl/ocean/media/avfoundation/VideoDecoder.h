@@ -29,31 +29,6 @@ namespace AVFoundation
 {
 
 /**
- * Definition of a scoped object holding a CMFormatDescriptionRef object.
- * The wrapped CMFormatDescriptionRef object will be released automatically once the scoped object does not exist anymore.
- */
-using ScopedCMFormatDescriptionRef = ScopedObjectCompileTimeT<CMFormatDescriptionRef, CFTypeRef, void, CFRelease>;
-
-/**
- * Release function for VTDecompressionSessionRef that invalidates and releases the session.
- * @param session The session to release
- */
-inline void releaseVTDecompressionSession(VTDecompressionSessionRef session)
-{
-	if (session != nullptr)
-	{
-		VTDecompressionSessionInvalidate(session);
-		CFRelease(session);
-	}
-}
-
-/**
- * Definition of a scoped object holding a VTDecompressionSessionRef object.
- * The wrapped VTDecompressionSessionRef object will be invalidated and released automatically once the scoped object does not exist anymore.
- */
-using ScopedVTDecompressionSessionRef = ScopedObjectCompileTimeT<VTDecompressionSessionRef, VTDecompressionSessionRef, void, releaseVTDecompressionSession>;
-
-/**
  * This class implements a simple video decoder for iOS/macOS using encoded media samples from memory as input.
  * The decoder uses Apple's VideoToolbox framework (VTDecompressionSession) for hardware-accelerated decoding.
  *
@@ -113,6 +88,25 @@ using ScopedVTDecompressionSessionRef = ScopedObjectCompileTimeT<VTDecompression
  */
 class VideoDecoder
 {
+	public:
+
+		/**
+		 * Definition of the decoding mode controlling frame delivery order and latency.
+		 */
+		enum DecodingMode
+		{
+			/// Frames are decoded and delivered with minimal latency.
+			/// Frame ordering is not guaranteed - decoded frames may arrive out of presentation-timestamp order,
+			/// e.g., for codecs with B-frames or under heavy CPU load.
+			/// Use this when low latency is more important than frame order.
+			DM_PERFORMANCE,
+
+			/// Frames are decoded and delivered in presentation-timestamp order.
+			/// Adds ~1-2 frames of latency due to internal reorder buffering.
+			/// Use this when correct frame ordering is more important than latency.
+			DM_ORDERED
+		};
+
     protected:
 
         /**
@@ -120,6 +114,24 @@ class VideoDecoder
 		 * The wrapped CMBlockBufferRef object will be released automatically once the scoped object does not exist anymore.
 		 */
 		using ScopedCMBlockBufferRef = ScopedObjectCompileTimeT<CMBlockBufferRef, CFTypeRef, void, CFRelease>;
+
+		/**
+		 * Definition of a scoped object holding a CMFormatDescriptionRef object.
+		 * The wrapped CMFormatDescriptionRef object will be released automatically once the scoped object does not exist anymore.
+		 */
+		using ScopedCMFormatDescriptionRef = ScopedObjectCompileTimeT<CMFormatDescriptionRef, CFTypeRef, void, CFRelease>;
+
+		/**
+		 * Release function for VTDecompressionSessionRef that invalidates and releases the session.
+		 * @param session The session to release
+		 */
+		static inline void releaseVTDecompressionSession(VTDecompressionSessionRef session);
+
+		/**
+		* Definition of a scoped object holding a VTDecompressionSessionRef object.
+		* The wrapped VTDecompressionSessionRef object will be invalidated and released automatically once the scoped object does not exist anymore.
+		*/
+		using ScopedVTDecompressionSessionRef = ScopedObjectCompileTimeT<VTDecompressionSessionRef, VTDecompressionSessionRef, void, releaseVTDecompressionSession>;
 
         /**
 		 * Definition of a decoded frame entry.
@@ -161,7 +173,7 @@ class VideoDecoder
 		 * @return True, if succeeded
 		 * @see isInitialized().
 		 */
-		bool initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData = nullptr, const size_t codecConfigSize = 0);
+		bool initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData = nullptr, const size_t codecConfigSize = 0, const DecodingMode decodingMode = DM_PERFORMANCE);
 
 		/**
 		 * Starts the video decoder.
@@ -304,6 +316,9 @@ class VideoDecoder
 		/// The height of the video.
 		unsigned int height_ = 0u;
 
+		/// The decoding mode.
+		DecodingMode decodingMode_ = DM_PERFORMANCE;
+
 		/// True, if the decoder is currently started.
 		bool isStarted_ = false;
 
@@ -360,6 +375,9 @@ inline VideoDecoder& VideoDecoder::operator=(VideoDecoder&& videoDecoder) noexce
 		height_ = videoDecoder.height_;
 		videoDecoder.height_ = 0u;
 
+		decodingMode_ = videoDecoder.decodingMode_;
+		videoDecoder.decodingMode_ = DM_PERFORMANCE;
+
 		isStarted_ = videoDecoder.isStarted_;
 		videoDecoder.isStarted_ = false;
 
@@ -373,6 +391,15 @@ inline VideoDecoder& VideoDecoder::operator=(VideoDecoder&& videoDecoder) noexce
 	}
 
 	return *this;
+}
+
+inline void VideoDecoder::releaseVTDecompressionSession(VTDecompressionSessionRef session)
+{
+	if (session != nullptr)
+	{
+		VTDecompressionSessionInvalidate(session);
+		CFRelease(session);
+	}
 }
 
 }

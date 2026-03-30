@@ -31,7 +31,7 @@ VideoDecoder::~VideoDecoder()
 	release();
 }
 
-bool VideoDecoder::initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData, const size_t codecConfigSize)
+bool VideoDecoder::initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData, const size_t codecConfigSize, const DecodingMode decodingMode)
 {
 	ocean_assert(!mime.empty());
 	ocean_assert(width != 0u && height != 0u);
@@ -59,6 +59,7 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 
 	width_ = width;
 	height_ = height;
+	decodingMode_ = decodingMode;
 
 	const OSType pixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
 
@@ -322,6 +323,11 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 	int64_t* presentationTimePtr = new int64_t(int64_t(presentationTime));
 
 	VTDecodeFrameFlags decodeFlags = kVTDecodeFrame_EnableAsynchronousDecompression;
+
+	if (decodingMode_ == DM_ORDERED)
+	{
+		decodeFlags |= kVTDecodeFrame_EnableTemporalProcessing;
+	}
 	VTDecodeInfoFlags infoFlagsOut = 0;
 
 	status = VTDecompressionSessionDecodeFrame(*decompressionSession_, *scopedSampleBuffer, decodeFlags, presentationTimePtr, &infoFlagsOut);
@@ -436,7 +442,11 @@ void VideoDecoder::decompressionOutputCallback(void* decompressionOutputReferenc
 	}
 
 #ifdef OCEAN_DEBUG
-	ocean_assert(decoder->debugPreviousDecodedTimestamp_ <= presentationTime);
+	if (decoder->decodingMode_ == DM_ORDERED)
+	{
+		ocean_assert(decoder->debugPreviousDecodedTimestamp_ <= presentationTime);
+	}
+
 	decoder->debugPreviousDecodedTimestamp_ = presentationTime;
 #endif
 
