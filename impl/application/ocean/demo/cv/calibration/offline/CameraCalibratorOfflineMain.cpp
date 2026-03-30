@@ -254,6 +254,11 @@ using namespace Ocean::CV::Calibration;
 		ocean_assert(iteration == 0 && "Only the very first iteration should need an additional iteration");
 	}
 
+	if (cameraCalibrator.camera() == nullptr)
+	{
+		return 1;
+	}
+
 	if (outputDirectory.isValid())
 	{
 		if (Frame outputFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_COVERAGE))
