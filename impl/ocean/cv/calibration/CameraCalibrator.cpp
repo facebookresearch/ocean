@@ -240,9 +240,9 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 		Scalar finalError;
 
 		constexpr bool startWithFocalLength = true;
-		constexpr Scalar distortionConstrainmentFactor = Scalar(2);
+		constexpr Scalar distortionRestrictionFactor = Scalar(2);
 
-		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
+		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionRestrictionFactor, &initialError, &finalError);
 
 		if (!optimizedCamera)
 		{
@@ -280,7 +280,7 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 		observation = CalibrationBoardObservation(imageId, optimizedCamera, board_T_camera, std::move(objectPointIds), std::move(objectPoints), std::move(imagePoints));
 
 		board_T_optimizedCameras.clear();
-		optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
+		optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionRestrictionFactor, &initialError, &finalError);
 
 		if (!optimizedCamera)
 		{
@@ -365,9 +365,9 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 		Scalar finalError;
 
 		constexpr bool startWithFocalLength = true;
-		constexpr Scalar distortionConstrainmentFactor = Scalar(2);
+		constexpr Scalar distortionRestrictionFactor = Scalar(2);
 
-		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
+		SharedAnyCamera optimizedCamera = determinePreciseCamera(&observation, 1, optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionRestrictionFactor, &initialError, &finalError);
 
 		if (!optimizedCamera)
 		{
@@ -413,19 +413,19 @@ bool CameraCalibrator::finalize(bool& needAdditionalIteration)
 		HomogenousMatrices4 board_T_optimizedCameras;
 
 		bool startWithFocalLength = true;
-		Scalar distortionConstrainmentFactor = Scalar(2);
+		Scalar distortionRestrictionFactor = Scalar(2);
 		const CameraCalibrator::OptimizationStrategy optimizationStrategy = CameraCalibrator::OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER;
 
 		if (iteration == 1)
 		{
 			startWithFocalLength = false;
-			distortionConstrainmentFactor = Scalar(2.5);
+			distortionRestrictionFactor = Scalar(2.5);
 		}
 
 		Scalar initialError = Numeric::maxValue();
 		Scalar finalError = Numeric::maxValue();
 
-		camera_ = CameraCalibrator::determinePreciseCamera(observations_.data(), observations_.size(), optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionConstrainmentFactor, &initialError, &finalError);
+		camera_ = CameraCalibrator::determinePreciseCamera(observations_.data(), observations_.size(), optimizationStrategy, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, startWithFocalLength, distortionRestrictionFactor, &initialError, &finalError);
 
 		if (!camera_)
 		{
@@ -911,10 +911,10 @@ SharedAnyCamera CameraCalibrator::optimizeCamera(const AnyCamera& camera, const 
 
 	constexpr unsigned int iterations = 20u;
 
-	constexpr Scalar distortionConstrainmentFactor = Scalar(2);
+	constexpr Scalar distortionRestrictionFactor = Scalar(2);
 
 	Scalars debugIntermediateErrors;
-	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(camera, ConstElementAccessor<HomogenousMatrix4>(1, board_T_camera), ConstElementAccessor<Vectors3>(1, objectPoints), ConstElementAccessor<Vectors2>(1, imagePoints), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, distortionConstrainmentFactor, initialError, finalError, &debugIntermediateErrors))
+	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(camera, ConstElementAccessor<HomogenousMatrix4>(1, board_T_camera), ConstElementAccessor<Vectors3>(1, objectPoints), ConstElementAccessor<Vectors2>(1, imagePoints), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, distortionRestrictionFactor, initialError, finalError, &debugIntermediateErrors))
 	{
 		return nullptr;
 	}
@@ -963,7 +963,7 @@ SharedAnyCamera CameraCalibrator::determineInitialCameraFieldOfView(const unsign
 	return nullptr;
 }
 
-SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardObservation* observations, const size_t numberObservations, const Geometry::NonLinearOptimizationCamera::OptimizationStrategy optimizationStrategy, HomogenousMatrices4* board_T_optimizedCameras, const Geometry::Estimator::EstimatorType estimatorType, const bool startWithFocalLength, const Scalar distortionConstrainmentFactor, Scalar* initialError, Scalar* finalError)
+SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardObservation* observations, const size_t numberObservations, const Geometry::NonLinearOptimizationCamera::OptimizationStrategy optimizationStrategy, HomogenousMatrices4* board_T_optimizedCameras, const Geometry::Estimator::EstimatorType estimatorType, const bool startWithFocalLength, const Scalar distortionRestrictionFactor, Scalar* initialError, Scalar* finalError)
 {
 	ocean_assert(observations != nullptr && numberObservations >= 1);
 	ocean_assert(optimizationStrategy != Geometry::NonLinearOptimizationCamera::OS_INVALID);
@@ -1033,7 +1033,7 @@ SharedAnyCamera CameraCalibrator::determinePreciseCamera(const CalibrationBoardO
 	constexpr unsigned int iterations = 100u;
 
 	Scalars debugIntermediateErrors;
-	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_cameras), ConstArrayAccessor<Vectors3>(objectPointGroups), ConstArrayAccessor<Vectors2>(imagePointGroups), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, distortionConstrainmentFactor, initialError, finalError, &debugIntermediateErrors))
+	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_cameras), ConstArrayAccessor<Vectors3>(objectPointGroups), ConstArrayAccessor<Vectors2>(imagePointGroups), optimizedCamera, &optimizedPoses, iterations, optimizationStrategy, estimatorType, Scalar(0.001), Scalar(5), true, distortionRestrictionFactor, initialError, finalError, &debugIntermediateErrors))
 	{
 		return nullptr;
 	}
