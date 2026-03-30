@@ -1246,7 +1246,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		 * @param imagePointGroups Groups of 2D observation image points
 		 * @param onlyFrontObjectPoints True, to allow only object points in front of the camera
 		 */
-		inline CameraPosesOptimizationProvider(SharedAnyCamera& camera, NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, const bool onlyFrontObjectPoints, const size_t numberActualCameraParameters, const Scalar distortionConstrainmentFactor) :
+		inline CameraPosesOptimizationProvider(SharedAnyCamera& camera, NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, const bool onlyFrontObjectPoints, const size_t numberActualCameraParameters, const Scalar distortionRestrictionFactor) :
 			camera_(camera),
 			candidateCamera_(camera),
 			flippedCameras_T_world_(flippedCameras_T_world),
@@ -1254,7 +1254,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 			candidateFlippedCameras_T_world_(Accessor::accessor2elements(flippedCameras_T_world)),
 			imagePointGroups_(imagePointGroups),
 			onlyFrontObjectPoints_(onlyFrontObjectPoints),
-			distortionConstrainmentFactor_(distortionConstrainmentFactor)
+			distortionRestrictionFactor_(distortionRestrictionFactor)
 		{
 			ocean_assert(flippedCameras_T_world_.size() == objectPointGroups_.size());
 			ocean_assert(objectPointGroups_.size() == imagePointGroups_.size());
@@ -1537,13 +1537,13 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				{
 					cameraParameters[nParameter] -= deltas[nParameter];
 
-					if (distortionConstrainmentFactor_ > 0)
+				if (distortionRestrictionFactor_ > 0)
 					{
 						if (nParameter >= 5 && nParameter <= 9)
 						{
 							// let's constraint the radial distortion parameters, the magnitude should not be larger than the previous magnitude
 
-							const Scalar maxValueRange = std::abs(cameraParameters[nParameter - 1]) * distortionConstrainmentFactor_;
+							const Scalar maxValueRange = std::abs(cameraParameters[nParameter - 1]) * distortionRestrictionFactor_;
 
 							cameraParameters[nParameter] = minmax(-maxValueRange, cameraParameters[nParameter], maxValueRange);
 						}
@@ -1551,7 +1551,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 						{
 							// let's constraint the tangential distortion parameters, the magnitude should not be larger than the previous magnitude
 
-							const Scalar maxValueRange = std::abs(cameraParameters[10]) * distortionConstrainmentFactor_;
+							const Scalar maxValueRange = std::abs(cameraParameters[10]) * distortionRestrictionFactor_;
 
 							cameraParameters[11] = minmax(-maxValueRange, cameraParameters[11], maxValueRange);
 						}
@@ -1580,13 +1580,13 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				{
 					cameraParameters[nParameter] -= deltas[nParameter];
 
-					if (distortionConstrainmentFactor_ > 0)
+				if (distortionRestrictionFactor_ > 0)
 					{
 						if (nParameter == 5 || nParameter == 7)
 						{
 							// let's constraint the radial distortion parameters, the magnitude should not be larger than the previous magnitude
 
-							const Scalar maxValueRange = std::abs(cameraParameters[nParameter - 1]) * distortionConstrainmentFactor_;
+							const Scalar maxValueRange = std::abs(cameraParameters[nParameter - 1]) * distortionRestrictionFactor_;
 
 							cameraParameters[nParameter] = minmax(-maxValueRange, cameraParameters[nParameter], maxValueRange);
 						}
@@ -1632,10 +1632,10 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		/// The actual number of camera parameters which will be optimized.
 		size_t numberActualCameraParameters_ = 0;
 
-		Scalar distortionConstrainmentFactor_ = 0;
+		Scalar distortionRestrictionFactor_ = 0;
 };
 
-bool NonLinearOptimizationCamera::optimizeCameraPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const OptimizationStrategy optimizationStrategy, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, const Scalar distortionConstrainmentFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationCamera::optimizeCameraPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const OptimizationStrategy optimizationStrategy, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, const Scalar distortionRestrictionFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(camera.isValid());
 
@@ -1648,7 +1648,7 @@ bool NonLinearOptimizationCamera::optimizeCameraPoses(const AnyCamera& camera, c
 	HomogenousMatrices4 optimizedFlippedCameras_T_world;
 	NonconstArrayAccessor<HomogenousMatrix4> accessor_optimizedFlippedCameras_T_world(optimizedFlippedCameras_T_world, world_T_optimizedCameras != nullptr ? world_T_cameras.size() : 0);
 
-	if (!optimizeCameraPosesIF(camera, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_T_world), objectPointGroups, imagePointGroups, optimizedCamera, accessor_optimizedFlippedCameras_T_world.pointer(), iterations, optimizationStrategy, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, distortionConstrainmentFactor, initialError, finalError, intermediateErrors))
+	if (!optimizeCameraPosesIF(camera, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_T_world), objectPointGroups, imagePointGroups, optimizedCamera, accessor_optimizedFlippedCameras_T_world.pointer(), iterations, optimizationStrategy, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, distortionRestrictionFactor, initialError, finalError, intermediateErrors))
 	{
 		return false;
 	}
@@ -1664,7 +1664,7 @@ bool NonLinearOptimizationCamera::optimizeCameraPoses(const AnyCamera& camera, c
 	return true;
 }
 
-bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const OptimizationStrategy optimizationStrategy, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, const Scalar distortionConstrainmentFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const OptimizationStrategy optimizationStrategy, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, const Scalar distortionRestrictionFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(objectPointGroups.size() == imagePointGroups.size());
@@ -1705,7 +1705,7 @@ bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const AnyCamera& camera,
 
 		iterationIntermedidateErrors.clear();
 
-		CameraPosesOptimizationProvider provider(optimizedCamera, accessor_flippedOptimizedCameras_T_world, objectPointGroups, imagePointGroups, onlyFrontObjectPoints, numberActualCameraParameters, distortionConstrainmentFactor);
+		CameraPosesOptimizationProvider provider(optimizedCamera, accessor_flippedOptimizedCameras_T_world, objectPointGroups, imagePointGroups, onlyFrontObjectPoints, numberActualCameraParameters, distortionRestrictionFactor);
 		if (!sparseOptimization<CameraPosesOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, &iterationInitialError, &iterationFinalError, nullptr, &iterationIntermedidateErrors))
 		{
 			return false;
