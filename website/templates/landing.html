@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ocean - A C++ Framework For Computer Vision And Augmented Reality</title>
+  <meta name="description" content="Ocean is a C++ framework for Computer Vision (CV) and Augmented Reality (AR) applications.">
+  <link rel="icon" href="{base_url}img/ocean_favicon.ico">
+  <link rel="stylesheet" href="{base_url}css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('ocean-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
+  <script src="{base_url}js/main.js" defer></script>
+</head>
+<body class="landing-page">
+  <nav class="navbar">
+    <a class="navbar__brand" href="{base_url}">
+      <img class="navbar__logo" src="{base_url}img/ocean_logo_circular.svg" alt="Ocean">
+      <span>Ocean</span>
+    </a>
+    <div class="navbar__links">
+      <a class="navbar__link" href="{base_url}docs/introduction/">Documentation</a>
+      <a class="navbar__link" href="{base_url}doxygen/index.html">Reference</a>
+    </div>
+    <div class="navbar__right">
+      <a class="navbar__github-link" href="https://github.com/facebookresearch/ocean" target="_blank" rel="noopener">GitHub</a>
+      <button class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="theme-toggle__light">&#9790;</span>
+        <span class="theme-toggle__dark">&#9728;</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="layout">
+    <main class="content">
+      <section class="hero">
+        <div>
+          <img class="hero__logo hero__logo--light" src="{base_url}img/ocean_logo_full_light-theme.svg" alt="Ocean Logo" width="800">
+          <img class="hero__logo hero__logo--dark" src="{base_url}img/ocean_logo_full_dark-theme.svg" alt="Ocean Logo" width="800">
+          <p class="hero__tagline">A C++ Framework For Computer Vision (CV) And Augmented Reality (AR) Applications</p>
+          <a class="hero__cta" href="{base_url}docs/introduction/">Get Started</a>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="feature">
+          <h3 class="feature__title">Features</h3>
+          <p class="feature__description">
+            Image Processing<br>
+            Photogrammetry &amp; Computer Vision algorithms<br>
+            Visualization &amp; Rendering
+          </p>
+        </div>
+        <div class="feature">
+          <h3 class="feature__title">Multi-platform</h3>
+          <p class="feature__description">
+            iOS/Android/Quest<br>
+            Windows/macOS/Linux
+          </p>
+        </div>
+        <div class="feature">
+          <h3 class="feature__title">Usability</h3>
+          <p class="feature__description">
+            High performance<br>
+            Low binary impact<br>
+            Detailed documentation and examples
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__title">Documentation</div>
+        <ul class="footer__links">
+          <li><a href="{base_url}docs/introduction/">Introduction</a></li>
+          <li><a href="{base_url}docs/building/">Building</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__title">Legal</div>
+        <ul class="footer__links">
+          <li><a href="https://opensource.facebook.com/legal/privacy/">Privacy</a></li>
+          <li><a href="https://opensource.facebook.com/legal/terms/">Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__title">Legal (continued)</div>
+        <ul class="footer__links">
+          <li><a href="https://opensource.facebook.com/legal/data-policy/">Data Policy</a></li>
+          <li><a href="https://opensource.facebook.com/legal/cookie-policy/">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__copyright">
+      Copyright &copy; {year} Meta Platforms, Inc. Built with Python.
+    </div>
+  </footer>
+</body>
+</html>

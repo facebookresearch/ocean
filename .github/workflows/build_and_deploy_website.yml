@@ -12,43 +12,26 @@ on:
 
 jobs:
   build:
-    name: Build Docusaurus
+    name: Build website
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-python@v5
         with:
-          node-version: 20
-          cache: yarn
-          cache-dependency-path: ${{ github.workspace }}/website/yarn.lock
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get upgrade -y
           sudo apt-get install -y -o Acquire::Retries=5 \
-                doxygen graphviz nodejs
-
-      # Install a newer version of yarn; required when testing locally with `act`
-      # - name: Install a newer version of yarn
-      #   run: |
-      #     sudo apt-get remove -y cmdtest yarn
-      #     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-      #     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      #     sudo apt-get update
-      #     sudo apt-get install -y yarn
-
-      - name: Install yarn dependencies
-        run: |
-          cd ${{ github.workspace }}/website
-          yarn install
+                doxygen graphviz
 
       - name: Build website
         run: |
           cd ${{ github.workspace }}/website
-          yarn run build
+          python build.py --with-doxygen
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v4

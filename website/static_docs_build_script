@@ -1,0 +1,19 @@
+#!/bin/bash
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+# Static Docs build script for the Ocean documentation website.
+# Called by the Sandcastle publish-static-docs job.
+# Output directory: website/build/
+
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+# The markdown package is vendored in third_party/ — no pip needed.
+# --skip-fetch: Sandcastle has no external network access, so we skip
+# fetching build guides from GitHub. These are only needed for the
+# external GitHub Pages site, not the internal StaticDocs build.
+python3 build.py --skip-fetch
