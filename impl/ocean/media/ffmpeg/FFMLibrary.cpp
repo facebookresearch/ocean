@@ -79,7 +79,7 @@ MediumRef FFMLibrary::newMedium(const std::string& url, const Medium::Type type,
 	return MediumRef();
 }
 
-RecorderRef FFMLibrary::newRecorder(const Recorder::Type type)
+RecorderRef FFMLibrary::newRecorder(const Recorder::Type /*type*/)
 {
 	return RecorderRef();
 }
