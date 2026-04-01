@@ -42,7 +42,6 @@ import argparse
 
 # Add lib to path for imports - import platform module directly to avoid yaml dependency
 import importlib.util
-import os
 import shutil
 import subprocess
 import sys
