@@ -1120,13 +1120,10 @@ def main():
     print("6. Generating landing page...")
     build_landing_page()
 
-    # 8. Copy static assets
-    print("7. Copying static assets...")
-    copy_static_assets(build_dir)
-
-    # 9. Doxygen (optional)
+    # 8. Doxygen (optional, must run before copy_static_assets so that
+    #    the generated files in static/doxygen/ get copied to build/)
     if args.with_doxygen:
-        print("8. Running Doxygen...")
+        print("7. Running Doxygen...")
         doxygen_cfg = (
             _get_script_dir().parent
             / "build"
@@ -1136,8 +1133,6 @@ def main():
             / "doxygen-website.cfg"
         )
         if doxygen_cfg.exists():
-            doxygen_out = build_dir / "doxygen"
-            doxygen_out.mkdir(parents=True, exist_ok=True)
             try:
                 subprocess.run(
                     ["doxygen", str(doxygen_cfg)],
@@ -1151,6 +1146,10 @@ def main():
                 print(f"  WARNING: doxygen failed: {e}")
         else:
             print(f"  WARNING: {doxygen_cfg} not found")
+
+    # 9. Copy static assets (includes doxygen output from static/doxygen/)
+    print("8. Copying static assets...")
+    copy_static_assets(build_dir)
 
     # Summary
     elapsed = (datetime.now() - start_time).total_seconds()
