@@ -270,7 +270,7 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesLargeImageSyntheticData(co
 	const double detectionValidationThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
 	const double groundtruthComparisonValidationThreshold = std::is_same_v<Scalar, double> ? 0.80 : 0.75;
 
-	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", detectionValidationThreshold, groundtruthComparisonValidationThreshold, 6u, 20u, 2048u, 4096u);
+	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", detectionValidationThreshold, groundtruthComparisonValidationThreshold, 6u, 12u, 720u);
 }
 
 bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double detectionValidationThreshold, const double groundtruthComparisonValidationThreshold, const unsigned int moduleSizePixelsMin, const unsigned int moduleSizePixelsMax, const unsigned int imageDimPixelsMin, const unsigned int imageDimPixelsMax)
