@@ -32,9 +32,9 @@ SpatialDistribution::DistributionArray::DistributionArray(const DistributionArra
 
 				// we iterate over the 8-neighborhood and add all indices to `resultBin`
 
-				for (unsigned int y = (unsigned int)(max(0, int(vertical) - 1)); y < min(vertical + 2u, verticalBins_); ++y)
+				for (unsigned int y = beginBinVertical<1u>(vertical); y < endBinVertical<1u>(vertical); ++y)
 				{
-					for (unsigned int x = (unsigned int)(max(0, int(horizontal) - 1)); x < min(horizontal + 2u, horizontalBins_); ++x)
+					for (unsigned int x = beginBinHorizontal<1u>(horizontal); x < endBinHorizontal<1u>(horizontal); ++x)
 					{
 						if (x != horizontal || y != vertical)
 						{
@@ -55,9 +55,9 @@ Indices32 SpatialDistribution::DistributionArray::indicesNeighborhood9(const uns
 	ocean_assert(vertical < verticalBins_);
 
 	size_t number = 0;
-	for (unsigned int y = max(0, int(vertical) - 1); y < min(vertical + 2u, verticalBins_); ++y)
+	for (unsigned int y = beginBinVertical<1u>(vertical); y < endBinVertical<1u>(vertical); ++y)
 	{
-		for (unsigned int x = max(0, int(horizontal) - 1); x < min(horizontal + 2u, horizontalBins_); ++x)
+		for (unsigned int x = beginBinHorizontal<1u>(horizontal); x < endBinHorizontal<1u>(horizontal); ++x)
 		{
 			number += (*this)(x, y).size();
 		}
@@ -66,9 +66,9 @@ Indices32 SpatialDistribution::DistributionArray::indicesNeighborhood9(const uns
 	Indices32 result;
 	result.reserve(number);
 
-	for (unsigned int y = max(0, int(vertical) - 1); y < min(vertical + 2u, verticalBins_); ++y)
+	for (unsigned int y = beginBinVertical<1u>(vertical); y < endBinVertical<1u>(vertical); ++y)
 	{
-		for (unsigned int x = max(0, int(horizontal) - 1); x < min(horizontal + 2u, horizontalBins_); ++x)
+		for (unsigned int x = beginBinHorizontal<1u>(horizontal); x < endBinHorizontal<1u>(horizontal); ++x)
 		{
 			const Indices32& indices = (*this)(x, y);
 			result.insert(result.end(), indices.begin(), indices.end());
@@ -85,9 +85,9 @@ void SpatialDistribution::DistributionArray::indicesNeighborhood9(const unsigned
 
 	ocean_assert(indices.empty());
 
-	for (unsigned int y = max(0, int(vertical) - 1); y < min(vertical + 2u, verticalBins_); ++y)
+	for (unsigned int y = beginBinVertical<1u>(vertical); y < endBinVertical<1u>(vertical); ++y)
 	{
-		for (unsigned int x = max(0, int(horizontal) - 1); x < min(horizontal + 2u, horizontalBins_); ++x)
+		for (unsigned int x = beginBinHorizontal<1u>(horizontal); x < endBinHorizontal<1u>(horizontal); ++x)
 		{
 			const Indices32& localIndices = (*this)(x, y);
 			indices.insert(indices.end(), localIndices.begin(), localIndices.end());
@@ -494,9 +494,9 @@ Scalar SpatialDistribution::determineMinimalSqrDistance(const Vector2* imagePoin
 
 	Scalar minDistance = Numeric::maxValue();
 
-	for (int y = max(0, yBin - 1); y <= min(yBin + 1, int(distributionElements.verticalBins()) - 1); ++y)
+	for (unsigned int y = distributionElements.beginBinVertical<1u>((unsigned int)yBin); y < distributionElements.endBinVertical<1u>((unsigned int)yBin); ++y)
 	{
-		for (int x = max(0, xBin - 1); x <= min(xBin + 1, int(distributionElements.horizontalBins()) - 1); ++x)
+		for (unsigned int x = distributionElements.beginBinHorizontal<1u>((unsigned int)xBin); x < distributionElements.endBinHorizontal<1u>((unsigned int)xBin); ++x)
 		{
 			const Indices32& neighborArrayVector = distributionElements(x, y);
 
