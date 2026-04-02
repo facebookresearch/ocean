@@ -296,7 +296,7 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @param numberRows The number of rows for which candidates will be returned, with range [1, height() - firstRow]
 		 * @param strengthPositions The resulting strength positions
 		 */
-		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions);
+		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions) const;
 
 		/**
 		 * Applies a non-maximum-suppression search on a given 2D frame in a 3x3 neighborhood (eight neighbors).
@@ -679,7 +679,7 @@ bool NonMaximumSuppressionT<T>::candidate(const unsigned int x, const unsigned i
 }
 
 template <typename T>
-void NonMaximumSuppressionT<T>::candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, NonMaximumSuppressionT<T>::StrengthPositions<unsigned int, T>& strengthPositions)
+void NonMaximumSuppressionT<T>::candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, NonMaximumSuppressionT<T>::StrengthPositions<unsigned int, T>& strengthPositions) const
 {
 	ocean_assert(firstColumn + numberColumns <= width_);
 	ocean_assert(firstRow + numberRows <= (unsigned int)(rows_.endIndex()));
