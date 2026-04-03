@@ -77,7 +77,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		}
 	}
 
-	std::string mediaFile = commandArguments.value<std::string>("input", std::string(), false);
+	const std::string mediaFile = commandArguments.value<std::string>("input", std::string(), false);
 
 	const uint32_t gaussianFilterSize = commandArguments.value<uint32_t>("gaussianFilter", 0u, true);
 
