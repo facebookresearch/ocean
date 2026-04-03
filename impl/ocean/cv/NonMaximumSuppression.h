@@ -464,7 +464,7 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @param numberRows Number of rows to be handled
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
-		 * @tparam tStrictMaximum True, to search for a strict minimum (smaller than all eight neighbors); False, to allow equal values in the lower right neighborhood
+		 * @tparam tStrictMaximum True, to search for a strict minimum (smaller than all eight neighbors); False, to allow equal values in the upper left neighborhood
 		 * @tparam tOnlyNegative True, to only consider negative values (< 0); False, to consider all values
 		 */
 		template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tOnlyNegative = false>
