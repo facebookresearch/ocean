@@ -11,7 +11,7 @@
 #include "ocean/cv/calibration/Calibration.h"
 #include "ocean/cv/calibration/CalibrationBoardObservation.h"
 #include "ocean/cv/calibration/MetricCalibrationBoard.h"
-#include "ocean/cv/calibration/LegacyPointDetector.h"
+#include "ocean/cv/calibration/PointDetector.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
@@ -299,7 +299,7 @@ class OCEAN_CV_CALIBRATION_EXPORT CameraCalibrator
 		Frame yFrame_;
 
 		/// The point detector which is used to detect the marker points of the calibration board.
-		LegacyPointDetector pointDetector_;
+		PointDetector pointDetector_;
 
 		/// The marker candidates which have been detected in the current image.
 		MarkerCandidates markerCandidates_;

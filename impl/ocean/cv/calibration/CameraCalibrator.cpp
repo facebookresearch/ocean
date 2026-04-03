@@ -800,7 +800,7 @@ bool CameraCalibrator::determineAdditionalCorrespondences(const MetricCalibratio
 				Scalar closestSqrDistance = Numeric::maxValue();
 				Scalar secondClosestSqrDistance = Numeric::maxValue();
 
-				if (!LegacyPointDetector::closestPoints(projectedObjectPoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
+				if (!PointDetector::closestPoints(projectedObjectPoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
 				{
 					continue;
 				}
