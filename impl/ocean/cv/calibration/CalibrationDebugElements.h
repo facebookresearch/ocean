@@ -54,7 +54,7 @@ class CalibrationDebugElements final :
 			/// An invalid element id.
 			EI_INVALID = 0u,
 
-			/// LegacyPointDetector: Image visualizing the detected point candidates.
+			/// Image visualizing the detected point candidates.
 			EI_POINT_DETECTOR_POINTS_CANDIDATES,
 			/// LegacyPointDetector: Image visualizing the detected points without non-maximum suppression.
 			EI_POINT_DETECTOR_POINTS_NON_SUPPRESSED,
@@ -64,7 +64,7 @@ class CalibrationDebugElements final :
 			EI_POINT_DETECTOR_POINTS_OPTIMIZATION,
 			/// LegacyPointDetector: Image visualizing the point patterns used for optimization.
 			EI_POINT_DETECTOR_POINTS_OPTIMIZATION_POINT_PATTERNS,
-			/// LegacyPointDetector: Image visualizing the detected points after optimization.
+			/// Image visualizing the detected points after optimization.
 			EI_POINT_DETECTOR_POINTS_OPTIMIZED,
 
 			/// CameraCalibrator: Image visualizing the detected points.
