@@ -305,7 +305,9 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * Tests the Jacobian for the extrinsic camera parameters (including the zoom parameter).
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testPoseZoomJacobian2nx7(const double testDuration);
 
 		/**
