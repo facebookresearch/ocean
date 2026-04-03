@@ -15,7 +15,7 @@
 #include "ocean/cv/FrameFilterGaussian.h"
 
 #include "ocean/cv/calibration/CalibrationBoardDetector.h"
-#include "ocean/cv/calibration/PointDetector.h"
+#include "ocean/cv/calibration/LegacyPointDetector.h"
 #include "ocean/cv/calibration/Utilities.h"
 
 #include "ocean/io/image/Image.h"
@@ -168,7 +168,7 @@ void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& came
 
 		HighPerformanceTimer timer;
 
-		PointDetector pointDetector;
+		LegacyPointDetector pointDetector;
 
 		if (pointDetector.detectPoints(yFrame, WorkerPool::get().scopedWorker()()))
 		{

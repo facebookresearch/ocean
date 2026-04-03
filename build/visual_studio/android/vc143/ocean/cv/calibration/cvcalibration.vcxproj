@@ -113,7 +113,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MarkerCandidate.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricCalibrationBoard.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricSize.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\PointDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\LegacyPointDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\SVGImage.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Utilities.cpp" />
   </ItemGroup>
@@ -129,7 +129,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricCalibrationBoard.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricSize.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Point.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\PointDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\LegacyPointDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\SVGImage.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Utilities.h" />
   </ItemGroup>

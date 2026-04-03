@@ -11,7 +11,7 @@
 #include "ocean/cv/calibration/Calibration.h"
 #include "ocean/cv/calibration/CalibrationBoardObservation.h"
 #include "ocean/cv/calibration/Point.h"
-#include "ocean/cv/calibration/PointDetector.h"
+#include "ocean/cv/calibration/LegacyPointDetector.h"
 #include "ocean/cv/calibration/MarkerCandidate.h"
 #include "ocean/cv/calibration/MetricCalibrationBoard.h"
 
@@ -54,17 +54,17 @@ class CalibrationDebugElements final :
 			/// An invalid element id.
 			EI_INVALID = 0u,
 
-			/// PointDetector: Image visualizing the detected point candidates.
+			/// LegacyPointDetector: Image visualizing the detected point candidates.
 			EI_POINT_DETECTOR_POINTS_CANDIDATES,
-			/// PointDetector: Image visualizing the detected points without non-maximum suppression.
+			/// LegacyPointDetector: Image visualizing the detected points without non-maximum suppression.
 			EI_POINT_DETECTOR_POINTS_NON_SUPPRESSED,
-			/// PointDetector: Image visualizing the detected points after non-maximum suppression.
+			/// LegacyPointDetector: Image visualizing the detected points after non-maximum suppression.
 			EI_POINT_DETECTOR_POINTS_SUPPRESSED,
-			/// PointDetector:: Image visualizing the optimization process.
+			/// LegacyPointDetector:: Image visualizing the optimization process.
 			EI_POINT_DETECTOR_POINTS_OPTIMIZATION,
-			/// PointDetector: Image visualizing the point patterns used for optimization.
+			/// LegacyPointDetector: Image visualizing the point patterns used for optimization.
 			EI_POINT_DETECTOR_POINTS_OPTIMIZATION_POINT_PATTERNS,
-			/// PointDetector: Image visualizing the detected points after optimization.
+			/// LegacyPointDetector: Image visualizing the detected points after optimization.
 			EI_POINT_DETECTOR_POINTS_OPTIMIZED,
 
 			/// CameraCalibrator: Image visualizing the detected points.
@@ -142,7 +142,7 @@ class CalibrationDebugElements final :
 		 * @param pointPatterns The point patterns to be visualized
 		 * @param imageSize The size of the resulting image with the point patterns, in pixel
 		 */
-		void updatePointDetectorPointsOptimizationPointPatterns(const PointDetector::PointPatterns& pointPatterns, const unsigned int imageSize);
+		void updatePointDetectorPointsOptimizationPointPatterns(const LegacyPointDetector::PointPatterns& pointPatterns, const unsigned int imageSize);
 
 		/**
 		 * Updates the point element visualizing the detected points after optimization.

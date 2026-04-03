@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/cv/calibration/PointDetector.h"
+#include "ocean/cv/calibration/LegacyPointDetector.h"
 #include "ocean/cv/calibration/CalibrationDebugElements.h"
 
 #include "ocean/cv/Canvas.h"
@@ -25,13 +25,13 @@ namespace CV
 namespace Calibration
 {
 
-PointDetector::PointPattern::PointPattern(const PointPattern& pointPattern, const unsigned int frameStrideElements) :
+LegacyPointDetector::PointPattern::PointPattern(const PointPattern& pointPattern, const unsigned int frameStrideElements) :
 	PointPattern(pointPattern.radius_, pointPattern.innerRadius_, frameStrideElements, pointPattern.isCircle_)
 {
 	// nothing to do here
 }
 
-PointDetector::PointPattern::PointPattern(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle)
+LegacyPointDetector::PointPattern::PointPattern(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle)
 {
 	if (determineOffsets(radius, innerRadius, frameStrideElements, useCircle, negativeOffset_, positiveOffsets_, &offsets_))
 	{
@@ -54,7 +54,7 @@ PointDetector::PointPattern::PointPattern(const unsigned int radius, const unsig
 	}
 }
 
-bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const
+bool LegacyPointDetector::PointPattern::determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const
 {
 	ocean_assert(isValid());
 
@@ -107,7 +107,7 @@ bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, co
 	return true;
 }
 
-bool PointDetector::PointPattern::determineOffsets(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle, Index32& negativeOffset, Indices32& positiveOffsets, CV::PixelPositionsI* offsets)
+bool LegacyPointDetector::PointPattern::determineOffsets(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle, Index32& negativeOffset, Indices32& positiveOffsets, CV::PixelPositionsI* offsets)
 {
 	ocean_assert(radius >= 1u);
 	ocean_assert(innerRadius < radius);
@@ -213,7 +213,7 @@ bool PointDetector::PointPattern::determineOffsets(const unsigned int radius, co
 	return true;
 }
 
-bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
+bool LegacyPointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 {
 	ocean_assert(yFrame.isValid());
 	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
@@ -340,7 +340,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 	return true;
 }
 
-size_t PointDetector::closestPoint(const Vector2& queryPoint, const bool sign, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance)
+size_t LegacyPointDetector::closestPoint(const Vector2& queryPoint, const bool sign, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance)
 {
 	size_t bestIndex = size_t(-1);
 	Scalar bestSqrDistance = Numeric::maxValue();
@@ -380,7 +380,7 @@ size_t PointDetector::closestPoint(const Vector2& queryPoint, const bool sign, c
 	return bestIndex;
 }
 
-bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, Index32& closestPointIndex, Index32& secondClosestPointIndex, Scalar& closestSqrDistance, Scalar& secondClosestSqrDistance)
+bool LegacyPointDetector::closestPoints(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, Index32& closestPointIndex, Index32& secondClosestPointIndex, Scalar& closestSqrDistance, Scalar& secondClosestSqrDistance)
 {
 	const unsigned int xBinCenter = pointsDistributionArray.horizontalBin(queryPoint.x());
 	const unsigned int yBinCenter = pointsDistributionArray.verticalBin(queryPoint.y());
@@ -428,7 +428,7 @@ bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::Spa
 	return closestPointIndex != Index32(-1);
 }
 
-bool PointDetector::optimizePoints(const Frame& yFrame, const Points& points, const PointPatterns& pointPatterns, Points& optimizedPoints, Worker* worker) const
+bool LegacyPointDetector::optimizePoints(const Frame& yFrame, const Points& points, const PointPatterns& pointPatterns, Points& optimizedPoints, Worker* worker) const
 {
 	ocean_assert(optimizedPoints.empty());
 	optimizedPoints.clear();
@@ -592,7 +592,7 @@ bool PointDetector::optimizePoints(const Frame& yFrame, const Points& points, co
 	return true;
 }
 
-bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& pointPatterns, const unsigned int minDifference, const unsigned int maxVariance, Points& points, const bool suppressNonMaximum, const unsigned int detectionScaleSteps, Worker* worker)
+bool LegacyPointDetector::detectPoints(const Frame& yFrame, const PointPatterns& pointPatterns, const unsigned int minDifference, const unsigned int maxVariance, Points& points, const bool suppressNonMaximum, const unsigned int detectionScaleSteps, Worker* worker)
 {
 	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
@@ -818,7 +818,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& point
 
 
 template <bool tDarkPoint>
-void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppression, Worker* worker)
+void LegacyPointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppression, Worker* worker)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(pointPattern.isValid());
@@ -836,11 +836,11 @@ void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned 
 	{
 		if (mask != nullptr)
 		{
-			worker->executeFunction(Worker::Function::createStatic(&PointDetector::detectPointCandidatesSubset<tDarkPoint, true>, yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, 0u, 0u), firstRow, numberRows);
+			worker->executeFunction(Worker::Function::createStatic(&LegacyPointDetector::detectPointCandidatesSubset<tDarkPoint, true>, yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, 0u, 0u), firstRow, numberRows);
 		}
 		else
 		{
-			worker->executeFunction(Worker::Function::createStatic(&PointDetector::detectPointCandidatesSubset<tDarkPoint, false>, yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, 0u, 0u), firstRow, numberRows);
+			worker->executeFunction(Worker::Function::createStatic(&LegacyPointDetector::detectPointCandidatesSubset<tDarkPoint, false>, yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, 0u, 0u), firstRow, numberRows);
 		}
 	}
 	else
@@ -857,7 +857,7 @@ void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned 
 }
 
 template <bool tDarkPoint, bool tUseMask>
-void PointDetector::detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
+void LegacyPointDetector::detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(pointPattern != nullptr && pointPattern->isValid());
@@ -937,7 +937,7 @@ void PointDetector::detectPointCandidatesSubset(const uint8_t* yFrame, const uns
 }
 
 template <bool tDarkPoint>
-bool PointDetector::determinePointRadius(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const CV::PixelPosition& pixelPosition, const unsigned int currentRadius, const PointPattern* pointPatterns, const size_t numberPointPatterns, const uint8_t minDifference, const unsigned int maxVariance, unsigned int& radius, unsigned int& strength)
+bool LegacyPointDetector::determinePointRadius(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const CV::PixelPosition& pixelPosition, const unsigned int currentRadius, const PointPattern* pointPatterns, const size_t numberPointPatterns, const uint8_t minDifference, const unsigned int maxVariance, unsigned int& radius, unsigned int& strength)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(pointPatterns != nullptr);
@@ -1003,7 +1003,7 @@ bool PointDetector::determinePointRadius(const uint8_t* yFrame, const unsigned i
 	return false;
 }
 
-void PointDetector::removeDuplicatedPoints(const unsigned int width, const unsigned int height, Points& points, const Scalar maxDistance)
+void LegacyPointDetector::removeDuplicatedPoints(const unsigned int width, const unsigned int height, Points& points, const Scalar maxDistance)
 {
 	ocean_assert(width >= 2u && height >= 2u);
 	ocean_assert(points.size() >= 2);
@@ -1103,7 +1103,7 @@ void PointDetector::removeDuplicatedPoints(const unsigned int width, const unsig
 	}
 }
 
-bool PointDetector::hasClosePoint(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance)
+bool LegacyPointDetector::hasClosePoint(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance)
 {
 	const unsigned int xBinCenter = pointsDistributionArray.horizontalBin(queryPoint.x());
 	const unsigned int yBinCenter = pointsDistributionArray.verticalBin(queryPoint.y());
@@ -1129,7 +1129,7 @@ bool PointDetector::hasClosePoint(const Vector2& queryPoint, const Geometry::Spa
 	return false;
 }
 
-bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance, Indices32& pointIndices)
+bool LegacyPointDetector::closestPoints(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance, Indices32& pointIndices)
 {
 	ocean_assert(pointIndices.empty());
 
@@ -1164,7 +1164,7 @@ bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::Spa
 	return !pointIndices.empty();
 }
 
-PointDetector::PointPatterns PointDetector::createPointPatterns(const unsigned int radius, const unsigned int innerRadius,  const bool useCircle, const unsigned int frameStrideElements)
+LegacyPointDetector::PointPatterns LegacyPointDetector::createPointPatterns(const unsigned int radius, const unsigned int innerRadius,  const bool useCircle, const unsigned int frameStrideElements)
 {
 	ocean_assert(radius >= 1u);
 	ocean_assert(innerRadius < radius);
@@ -1176,7 +1176,7 @@ PointDetector::PointPatterns PointDetector::createPointPatterns(const unsigned i
 	{
 		const unsigned int ir = std::min(r - 1u, innerRadius);
 
-		PointDetector::PointPattern pointPattern(r, ir, frameStrideElements, useCircle);
+		LegacyPointDetector::PointPattern pointPattern(r, ir, frameStrideElements, useCircle);
 
 		// let's ensure that we use enough pixels in the pattern
 		if (pointPattern.offsets().size() < 8)
@@ -1192,7 +1192,7 @@ PointDetector::PointPatterns PointDetector::createPointPatterns(const unsigned i
 	return pointPatterns;
 }
 
-void PointDetector::updatePointPatterns(PointPatterns& pointPatterns, const unsigned int frameStrideElements)
+void LegacyPointDetector::updatePointPatterns(PointPatterns& pointPatterns, const unsigned int frameStrideElements)
 {
 	ocean_assert(!pointPatterns.empty());
 
@@ -1205,7 +1205,7 @@ void PointDetector::updatePointPatterns(PointPatterns& pointPatterns, const unsi
 	}
 }
 
-bool PointDetector::paintPointPattern(Frame& yFrame, const unsigned int radius, const uint8_t pointColor)
+bool LegacyPointDetector::paintPointPattern(Frame& yFrame, const unsigned int radius, const uint8_t pointColor)
 {
 	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 

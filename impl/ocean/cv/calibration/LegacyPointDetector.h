@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_CV_CALIBRATION_POINT_DETECTOR_H
-#define META_OCEAN_CV_CALIBRATION_POINT_DETECTOR_H
+#ifndef META_OCEAN_CV_CALIBRATION_LEGACY_POINT_DETECTOR_H
+#define META_OCEAN_CV_CALIBRATION_LEGACY_POINT_DETECTOR_H
 
 #include "ocean/cv/calibration/Calibration.h"
 #include "ocean/cv/calibration/Point.h"
@@ -35,7 +35,7 @@ namespace Calibration
  * This class implements a point detector for marker points.
  * @ingroup cvcalibration
  */
-class OCEAN_CV_CALIBRATION_EXPORT PointDetector
+class OCEAN_CV_CALIBRATION_EXPORT LegacyPointDetector
 {
 	friend class CalibrationDebugElements;
 
@@ -258,7 +258,7 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		/**
 		 * Creates a new point detector.
 		 */
-		PointDetector() = default;
+		LegacyPointDetector() = default;
 
 		/**
 		 * Detects points in a new frame.
@@ -467,7 +467,7 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		Scalar maxDistanceBetweenDuplicatePoints_ = Scalar(2);
 
 		/// The point patterns to be used for point detection.
-		PointDetector::PointPatterns pointPatterns_;
+		LegacyPointDetector::PointPatterns pointPatterns_;
 
 		/// Rough intermediate points.
 		Points roughPoints_;
@@ -485,48 +485,48 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		static constexpr unsigned int pointPatternImageSize_ = 31u;
 };
 
-inline unsigned int PointDetector::PointPattern::radius() const
+inline unsigned int LegacyPointDetector::PointPattern::radius() const
 {
 	return radius_;
 }
 
-inline unsigned int PointDetector::PointPattern::diameter() const
+inline unsigned int LegacyPointDetector::PointPattern::diameter() const
 {
 	ocean_assert(isValid());
 	return radius_ * 2u + 1u;
 }
 
-inline unsigned int PointDetector::PointPattern::innerRadius() const
+inline unsigned int LegacyPointDetector::PointPattern::innerRadius() const
 {
 	return innerRadius_;
 }
 
-inline unsigned int PointDetector::PointPattern::frameStrideElements() const
+inline unsigned int LegacyPointDetector::PointPattern::frameStrideElements() const
 {
 	return frameStrideElements_;
 }
 
-inline bool PointDetector::PointPattern::isCircle() const
+inline bool LegacyPointDetector::PointPattern::isCircle() const
 {
 	return isCircle_;
 }
 
-inline unsigned int PointDetector::PointPattern::negativeOffset() const
+inline unsigned int LegacyPointDetector::PointPattern::negativeOffset() const
 {
 	return negativeOffset_;
 }
 
-inline const Indices32& PointDetector::PointPattern::positiveOffsets() const
+inline const Indices32& LegacyPointDetector::PointPattern::positiveOffsets() const
 {
 	return positiveOffsets_;
 }
 
-inline const CV::PixelPositionsI& PointDetector::PointPattern::offsets() const
+inline const CV::PixelPositionsI& LegacyPointDetector::PointPattern::offsets() const
 {
 	return offsets_;
 }
 
-inline float PointDetector::PointPattern::normalizedStrength(const unsigned int strength) const
+inline float LegacyPointDetector::PointPattern::normalizedStrength(const unsigned int strength) const
 {
 	ocean_assert(strengthNormalization_ != 0.0f);
 
@@ -534,7 +534,7 @@ inline float PointDetector::PointPattern::normalizedStrength(const unsigned int 
 }
 
 template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineDarkPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance) const
+inline uint32_t LegacyPointDetector::PointPattern::determineDarkPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance) const
 {
 	ocean_assert(isValid());
 	ocean_assert(firstSurroundingPixel != nullptr);
@@ -584,7 +584,7 @@ inline uint32_t PointDetector::PointPattern::determineDarkPointStrength(const ui
 }
 
 template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineDarkPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance) const
+inline uint32_t LegacyPointDetector::PointPattern::determineDarkPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance) const
 {
 	ocean_assert(yPoint != nullptr);
 
@@ -594,7 +594,7 @@ inline uint32_t PointDetector::PointPattern::determineDarkPointStrength(const ui
 }
 
 template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineBrightPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance) const
+inline uint32_t LegacyPointDetector::PointPattern::determineBrightPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance) const
 {
 	ocean_assert(isValid());
 	ocean_assert(firstSurroundingPixel != nullptr);
@@ -644,7 +644,7 @@ inline uint32_t PointDetector::PointPattern::determineBrightPointStrength(const 
 }
 
 template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineBrightPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance) const
+inline uint32_t LegacyPointDetector::PointPattern::determineBrightPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance) const
 {
 	ocean_assert(yPoint != nullptr);
 
@@ -653,7 +653,7 @@ inline uint32_t PointDetector::PointPattern::determineBrightPointStrength(const 
 	return determineBrightPointStrength<tMinCenterColorFixed, tMaxSurroundingColorFixed>(centerPixelValue, yPoint - negativeOffset_, minDifference, maxVariance);
 }
 
-inline bool PointDetector::PointPattern::isValid() const
+inline bool LegacyPointDetector::PointPattern::isValid() const
 {
 	ocean_assert(radius_ == 0u || innerRadius_ < radius_);
 	ocean_assert(radius_ == 0u || frameStrideElements_ != 0u);
@@ -662,7 +662,7 @@ inline bool PointDetector::PointPattern::isValid() const
 }
 
 template <unsigned int tNumber, bool tMatchSign>
-void PointDetector::closestPoints(const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const size_t queryPointIndex, const Points& points, IndexDistancePairs<tNumber>& indexDistancePairs, const Scalar maxSqrDistance)
+void LegacyPointDetector::closestPoints(const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const size_t queryPointIndex, const Points& points, IndexDistancePairs<tNumber>& indexDistancePairs, const Scalar maxSqrDistance)
 {
 	static_assert(tNumber >= 1u, "Invalid number of points!");
 
@@ -738,12 +738,12 @@ void PointDetector::closestPoints(const Geometry::SpatialDistribution::Distribut
 	}
 }
 
-inline const Points& PointDetector::points() const
+inline const Points& LegacyPointDetector::points() const
 {
 	return points_;
 }
 
-inline const Geometry::SpatialDistribution::DistributionArray& PointDetector::pointsDistributionArray() const
+inline const Geometry::SpatialDistribution::DistributionArray& LegacyPointDetector::pointsDistributionArray() const
 {
 	return pointsDistributionArray_;
 }
@@ -754,4 +754,4 @@ inline const Geometry::SpatialDistribution::DistributionArray& PointDetector::po
 
 }
 
-#endif // META_OCEAN_CV_CALIBRATION_POINT_DETECTOR_H
+#endif // META_OCEAN_CV_CALIBRATION_LEGACY_POINT_DETECTOR_H

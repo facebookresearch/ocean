@@ -21,7 +21,7 @@ namespace CV
 namespace Calibration
 {
 
-void CalibrationDebugElements::updatePointDetectorPointsOptimizationPointPatterns(const PointDetector::PointPatterns& pointPatterns, const unsigned int imageSize)
+void CalibrationDebugElements::updatePointDetectorPointsOptimizationPointPatterns(const LegacyPointDetector::PointPatterns& pointPatterns, const unsigned int imageSize)
 {
 	if (!isElementActive(EI_POINT_DETECTOR_POINTS_OPTIMIZATION_POINT_PATTERNS))
 	{
@@ -36,10 +36,10 @@ void CalibrationDebugElements::updatePointDetectorPointsOptimizationPointPattern
 		Frame yDarkPointPatternImage = yPointPatternImages.subFrame(imageSize, imageSize * nPointPattern, imageSize, imageSize);
 		Frame yBrightPointPatternImage = yPointPatternImages.subFrame(imageSize * 2u, imageSize * nPointPattern, imageSize, imageSize);
 
-		const PointDetector::PointPattern& pointPattern = pointPatterns[nPointPattern];
+		const LegacyPointDetector::PointPattern& pointPattern = pointPatterns[nPointPattern];
 
-		PointDetector::paintPointPattern(yDarkPointPatternImage, pointPattern.radius(), 0x00u);
-		PointDetector::paintPointPattern(yBrightPointPatternImage, pointPattern.radius(), 0xFFu);
+		LegacyPointDetector::paintPointPattern(yDarkPointPatternImage, pointPattern.radius(), 0x00u);
+		LegacyPointDetector::paintPointPattern(yBrightPointPatternImage, pointPattern.radius(), 0xFFu);
 
 		CV::Canvas::drawText(yPointPatternImages, String::toAString(pointPattern.radius()), 5, 5 + int(imageSize * nPointPattern), CV::Canvas::black(), CV::Canvas::white());
 	}
