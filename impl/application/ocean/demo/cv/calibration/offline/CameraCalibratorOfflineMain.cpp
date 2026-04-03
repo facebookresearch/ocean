@@ -492,9 +492,9 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 		}
 	}
 
-	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_NON_SUPPRESSED, true))
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_OPTIMIZED, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_01_pointdetector_candidates.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_01_pointdetector_optimized.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -502,19 +502,9 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 		}
 	}
 
-	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_SUPPRESSED, true))
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_REDUNDANT_REMOVED, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_02_pointdetector_suppressed.png"));
-
-		if (!IO::Image::writeImage(debugFrame, outputFile()))
-		{
-			Log::warning() << "Failed to write debug image '" << outputFile() << "'";
-		}
-	}
-
-	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_OPTIMIZATION, true))
-	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_03_pointdetector_optimization.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_02_pointdetector_redundantremoved.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -524,7 +514,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DETECTED_POINTS, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_04_cameracalibrator_detectedpoints.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_03_cameracalibrator_detectedpoints.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -534,7 +524,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_05_cameracalibrator_markercandidates.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_04_cameracalibrator_markercandidates.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -544,7 +534,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_06_cameracalibrator_markercandidates_with_ids.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_05_cameracalibrator_markercandidates_with_ids.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -554,7 +544,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_07_cameracalibrator_markercandidates_with_coordinates.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_06_cameracalibrator_markercandidates_with_coordinates.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -564,7 +554,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_INITIAL_CAMERA_POSE_WITH_VALID_MARKER_CANDIDATES, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_08_cameracalibrator_markercandidates_with_validmarkercandidates.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_07_cameracalibrator_markercandidates_with_validmarkercandidates.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -574,7 +564,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_INITIAL_CAMERA_POSE_WITH_VALID_MARKER_CANDIDATES_OPTIMIZED_CAMERA, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_09_cameracalibrator_markercandidates_with_validmarkercandidates_optimizedcamera.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_08_cameracalibrator_markercandidates_with_validmarkercandidates_optimizedcamera.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -584,7 +574,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_OPTIMIZED_CAMERA_POSE_WITH_ADDITIONAL_POINTS, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_10_cameracalibrator_optimized_camera_pose_with_additional_points.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_09_cameracalibrator_optimized_camera_pose_with_additional_points.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -594,7 +584,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_OPTIMIZED_INITIAL_FOV_ITERATION_0, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_optimized_initial_fov_iteration0.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_10_cameracalibrator_optimized_initial_fov_iteration0.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -604,7 +594,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_OPTIMIZED_INITIAL_FOV_ITERATION_1, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_optimized_initial_fov_iteration1.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_10_cameracalibrator_optimized_initial_fov_iteration1.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -614,7 +604,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_OPTIMIZED_INITIAL_FOV_ITERATION_2, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_optimized_initial_fov_iteration2.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_10_cameracalibrator_optimized_initial_fov_iteration2.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -624,7 +614,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences0.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_additional_correspondences0.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -634,7 +624,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_0_FINAL, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences0_final.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_additional_correspondences0_final.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -644,7 +634,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences1.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_additional_correspondences1.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -654,7 +644,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_ADDITIONAL_CORRESPONDENCES_1_FINAL, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_14_cameracalibrator_additional_correspondences1_final.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_11_cameracalibrator_additional_correspondences1_final.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -664,7 +654,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_CALIBRATION_BOARD, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_15_cameracalibrator_calibration_board.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_12_cameracalibrator_calibration_board.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
@@ -674,7 +664,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 
 	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY, true))
 	{
-		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_16_cameracalibrator_camera_boundary.png"));
+		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_13_cameracalibrator_camera_boundary.png"));
 
 		if (!IO::Image::writeImage(debugFrame, outputFile()))
 		{
