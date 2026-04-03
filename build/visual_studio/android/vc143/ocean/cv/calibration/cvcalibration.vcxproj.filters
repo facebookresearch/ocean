@@ -45,6 +45,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\LegacyPointDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\PointDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\SVGImage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\LegacyPointDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\PointDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\SVGImage.h">
