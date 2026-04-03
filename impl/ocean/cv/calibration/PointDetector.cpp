@@ -246,6 +246,11 @@ bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 		removeDuplicatedPoints(yFrame.width(), yFrame.height(), points_, maxDistanceBetweenDuplicatePoints_);
 	}
 
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updatePointDetectorPointsRedundantRemoved(yFrame, points_);
+	}
+
 	if (pointsDistributionArray_.isValid() && pointsDistributionArray_.width() == Scalar(yFrame.width()) && pointsDistributionArray_.height() == Scalar(yFrame.height()))
 	{
 		pointsDistributionArray_.clear();
@@ -331,6 +336,11 @@ bool PointDetector::detectPoints(const Frame& yFrame, Points& points, const uint
 	else
 	{
 		detectPointCandidatesSubset(&yFrame, &nonMaximumSuppression, borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference, firstRow, numberRows);
+	}
+
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updatePointDetectorPointsNonSuppressed(yFrame, nonMaximumSuppression);
 	}
 
 	const PointPeakDetector pointPeakDetector(yFrame);
