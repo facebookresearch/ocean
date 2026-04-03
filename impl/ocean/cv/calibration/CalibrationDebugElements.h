@@ -18,6 +18,8 @@
 #include "ocean/base/DebugElements.h"
 #include "ocean/base/Frame.h"
 
+#include "ocean/cv/NonMaximumSuppression.h"
+
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
 
@@ -66,6 +68,8 @@ class CalibrationDebugElements final :
 			EI_POINT_DETECTOR_POINTS_OPTIMIZATION_POINT_PATTERNS,
 			/// Image visualizing the detected points after optimization.
 			EI_POINT_DETECTOR_POINTS_OPTIMIZED,
+			/// Image visualizing the detected points after removal of redundant points.
+			EI_POINT_DETECTOR_POINTS_REDUNDANT_REMOVED,
 
 			/// CameraCalibrator: Image visualizing the detected points.
 			EI_CAMERA_CALIBRATOR_DETECTED_POINTS,
@@ -114,6 +118,13 @@ class CalibrationDebugElements final :
 	public:
 
 		/**
+		 * Updates the point element visualizing the candidates of detected points.
+		 * @param yFrame The frame in which the points have been detected, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object holding the candidates, must be valid
+		 */
+		void updatePointDetectorPointsNonSuppressed(const Frame& yFrame, const CV::NonMaximumSuppressionT<int32_t>& nonMaximumSuppression);
+
+		/**
 		 * Updates the point element visualizing the detected points without non-maximum suppression.
 		 * @param yFrame The frame in which the points have been detected, must be valid
 		 * @param points The points to be visualized before non-maximum suppression
@@ -150,6 +161,13 @@ class CalibrationDebugElements final :
 		 * @param points The points to be visualized after optimization
 		 */
 		inline void updatePointDetectorPointsOptimized(const Frame& yFrame, const Points& points);
+
+		/**
+		 * Updates the point element visualizing the detected points after removal of redundant points.
+		 * @param yFrame The frame in which the points have been detected, must be valid
+		 * @param points The points to be visualized after removal of redundant points
+		 */
+		inline void updatePointDetectorPointsRedundantRemoved(const Frame& yFrame, const Points& points);
 
 		/**
 		 * Updates a camera calibrator element visualizing the detected points.
@@ -261,6 +279,11 @@ inline void CalibrationDebugElements::updatePointDetectorPointsSuppressed(const 
 inline void CalibrationDebugElements::updatePointDetectorPointsOptimized(const Frame& yFrame, const Points& points)
 {
 	updatePointsElement(EI_POINT_DETECTOR_POINTS_OPTIMIZED, yFrame, points);
+}
+
+inline void CalibrationDebugElements::updatePointDetectorPointsRedundantRemoved(const Frame& yFrame, const Points& points)
+{
+	updatePointsElement(EI_POINT_DETECTOR_POINTS_REDUNDANT_REMOVED, yFrame, points);
 }
 
 inline void CalibrationDebugElements::updateCameraCalibratorDetectedPoints(const Frame& yFrame, const Points& points)
