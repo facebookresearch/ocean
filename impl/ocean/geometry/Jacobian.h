@@ -197,9 +197,11 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param flippedCamera_P_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
 		 * @param objectPoint 3D object point to determine the jacobian for
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 * @see calculatePoseJacobianRodrigues2nx6().
 		 */
-		static inline void calculatePoseJacobianRodrigues2x6(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const Vector3& objectPoint, const bool distortImagePoint);
+		template <typename T>
+		static inline void calculatePoseJacobianRodrigues2x6(T* jx, T* jy, const PinholeCameraT<T>& pinholeCamera, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>& objectPoint, const bool distortImagePoint);
 
 		/**
 		 * Deprecated.
@@ -223,9 +225,11 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwz Rotation matrix derived to wz, as determined by calculateRotationRodriguesDerivative()
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 * @see calculateRotationRodriguesDerivative().
 		 */
-		static void calculatePoseJacobianRodrigues2x6(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_P_world, const Vector3& objectPoint, const bool distortImagePoint, const SquareMatrix3& dwx, const SquareMatrix3& dwy, const SquareMatrix3& dwz);
+		template <typename T>
+		static void calculatePoseJacobianRodrigues2x6(T* jx, T* jy, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_P_world, const VectorT3<T>& objectPoint, const bool distortImagePoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz);
 
 		/**
 		 * Deprecated.
@@ -911,10 +915,11 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculateFisheyeDistortNormalized2x2(T* jx, T* jy, const T x, const T y, const T* radialDistortion, const T* tangentialDistortion);
 };
 
-inline void Jacobian::calculatePoseJacobianRodrigues2x6(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const Vector3& objectPoint, const bool distortImagePoint)
+template <typename T>
+inline void Jacobian::calculatePoseJacobianRodrigues2x6(T* jx, T* jy, const PinholeCameraT<T>& pinholeCamera, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>& objectPoint, const bool distortImagePoint)
 {
-	SquareMatrix3 dwx, dwy, dwz;
-	calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), dwx, dwy, dwz);
+	SquareMatrixT3<T> dwx, dwy, dwz;
+	calculateRotationRodriguesDerivative(ExponentialMapT<T>(VectorT3<T>(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), dwx, dwy, dwz);
 
 	calculatePoseJacobianRodrigues2x6(jx, jy, pinholeCamera, flippedCamera_P_world.transformation(), objectPoint, distortImagePoint, dwx, dwy, dwz);
 }
