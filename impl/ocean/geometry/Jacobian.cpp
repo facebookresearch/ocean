@@ -2904,52 +2904,57 @@ void Jacobian::calculateCameraJacobian2x12(const FisheyeCameraT<T>& fisheyeCamer
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(const FisheyeCameraT<float>& fisheyeCamera, const VectorT2<float>& normalizedUndistortedImagePoint, float* jx, float* jy);
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(const FisheyeCameraT<double>& fisheyeCamera, const VectorT2<double>& normalizedUndistortedImagePoint, double* jx, double* jy);
 
-void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scalar* jacobianY, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint)
+template <typename T>
+void Jacobian::calculateJacobianCameraPoseRodrigues2x12(T* jacobianX, T* jacobianY, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint)
 {
 	ocean_assert(jacobianX && jacobianY && pinholeCamera.isValid());
 
-	const Pose flippedCamera_P_world(flippedCamera_T_world);
+	const PoseT<T> flippedCamera_P_world(flippedCamera_T_world);
 
-	SquareMatrix3 Rwx, Rwy, Rwz;
-	calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+	SquareMatrixT3<T> Rwx, Rwy, Rwz;
+	calculateRotationRodriguesDerivative(ExponentialMapT<T>(VectorT3<T>(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
 
 	calculateJacobianCameraPoseRodrigues2x12(jacobianX, jacobianY, pinholeCamera, flippedCamera_T_world, flippedCamera_P_world, objectPoint, Rwx, Rwy, Rwz);
 }
 
-void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scalar* jacobianY, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& flippedCamera_P_world, const Vector3& objectPoint, const SquareMatrix3& dwx, const SquareMatrix3& dwy, const SquareMatrix3& dwz)
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x12(float* jx, float* jy, const PinholeCameraT<float>& pinholeCamera, const HomogenousMatrixT4<float>& flippedCamera_T_world, const VectorT3<float>& objectPoint);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x12(double* jx, double* jy, const PinholeCameraT<double>& pinholeCamera, const HomogenousMatrixT4<double>& flippedCamera_T_world, const VectorT3<double>& objectPoint);
+
+template <typename T>
+void Jacobian::calculateJacobianCameraPoseRodrigues2x12(T* jacobianX, T* jacobianY, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>& objectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz)
 {
 	ocean_assert(jacobianX && jacobianY && pinholeCamera.isValid());
 
-	ocean_assert_and_suppress_unused((std::is_same<Scalar, float>::value) || flippedCamera_P_world.transformation().isEqual(flippedCamera_T_world, Numeric::weakEps()), flippedCamera_P_world);
+	ocean_assert_and_suppress_unused((std::is_same<T, float>::value) || flippedCamera_P_world.transformation().isEqual(flippedCamera_T_world, NumericT<T>::weakEps()), flippedCamera_P_world);
 
-	const Scalar k1 = pinholeCamera.radialDistortion().first;
-	const Scalar k2 = pinholeCamera.radialDistortion().second;
-	const Scalar p1 = pinholeCamera.tangentialDistortion().first;
-	const Scalar p2 = pinholeCamera.tangentialDistortion().second;
+	const T k1 = pinholeCamera.radialDistortion().first;
+	const T k2 = pinholeCamera.radialDistortion().second;
+	const T p1 = pinholeCamera.tangentialDistortion().first;
+	const T p2 = pinholeCamera.tangentialDistortion().second;
 
-	const Vector3 transformedObjectPoint = flippedCamera_T_world * objectPoint;
+	const VectorT3<T> transformedObjectPoint = flippedCamera_T_world * objectPoint;
 
-	ocean_assert(Numeric::isNotEqualEps(transformedObjectPoint.z()));
-	const Scalar scaleFactor = Scalar(1) / transformedObjectPoint.z();
+	ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
+	const T scaleFactor = T(1) / transformedObjectPoint.z();
 
-	const Scalar u = transformedObjectPoint.x() * scaleFactor;
-	const Scalar v = transformedObjectPoint.y() * scaleFactor;
+	const T u = transformedObjectPoint.x() * scaleFactor;
+	const T v = transformedObjectPoint.y() * scaleFactor;
 
-	const Scalar dist1_u = Scalar(1) + Scalar(6) * p2 * u + Scalar(2) * p1 * v + k1 * (Scalar(3) * u * u + v * v) + k2 * (u * u + v * v) * (Scalar(5) * u * u + v * v);
-	const Scalar dist2_u_1_v = Scalar(2) * (p1 * u + v * (p2 + u * (k1 + Scalar(2) * k2 * (u * u + v * v))));
-	const Scalar dist2_v = Scalar(1) + Scalar(2) * p2 * u + Scalar(6) * p1 * v + k1 * (u * u + Scalar(3) * v * v) + k2 * (u * u + v * v) * (u * u + Scalar(5) * v * v);
+	const T dist1_u = T(1) + T(6) * p2 * u + T(2) * p1 * v + k1 * (T(3) * u * u + v * v) + k2 * (u * u + v * v) * (T(5) * u * u + v * v);
+	const T dist2_u_1_v = T(2) * (p1 * u + v * (p2 + u * (k1 + T(2) * k2 * (u * u + v * v))));
+	const T dist2_v = T(1) + T(2) * p2 * u + T(6) * p1 * v + k1 * (u * u + T(3) * v * v) + k2 * (u * u + v * v) * (u * u + T(5) * v * v);
 
-	const Scalar uv2 = u * u + v * v;
+	const T uv2 = u * u + v * v;
 
-	const Scalar dist1_k1 = u * uv2;
-	const Scalar dist1_k2 = u * uv2 * uv2;
+	const T dist1_k1 = u * uv2;
+	const T dist1_k2 = u * uv2 * uv2;
 
-	const Scalar dist2_k1 = v * uv2;
-	const Scalar dist2_k2 = v * uv2 * uv2;
+	const T dist2_k1 = v * uv2;
+	const T dist2_k2 = v * uv2 * uv2;
 
-	const Vector3 dwxObject(dwx * objectPoint);
-	const Vector3 dwyObject(dwy * objectPoint);
-	const Vector3 dwzObject(dwz * objectPoint);
+	const VectorT3<T> dwxObject(dwx * objectPoint);
+	const VectorT3<T> dwyObject(dwy * objectPoint);
+	const VectorT3<T> dwzObject(dwz * objectPoint);
 
 	*jacobianX++ = pinholeCamera.focalLengthX() * dist1_k1;
 	*jacobianX++ = pinholeCamera.focalLengthX() * dist1_k2;
@@ -2958,9 +2963,9 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scala
 	*jacobianX++ = 1;
 	*jacobianX++ = 0;
 
-	const Scalar intermediate1_1 = pinholeCamera.focalLengthX() * scaleFactor * dist1_u;
-	const Scalar intermediate1_2 = pinholeCamera.focalLengthX() * scaleFactor * dist2_u_1_v;
-	const Scalar intermediate1_3 = -pinholeCamera.focalLengthX() * scaleFactor * scaleFactor * (transformedObjectPoint.x() * dist1_u + transformedObjectPoint.y() * dist2_u_1_v);
+	const T intermediate1_1 = pinholeCamera.focalLengthX() * scaleFactor * dist1_u;
+	const T intermediate1_2 = pinholeCamera.focalLengthX() * scaleFactor * dist2_u_1_v;
+	const T intermediate1_3 = -pinholeCamera.focalLengthX() * scaleFactor * scaleFactor * (transformedObjectPoint.x() * dist1_u + transformedObjectPoint.y() * dist2_u_1_v);
 
 	*jacobianX++ = intermediate1_1 * dwxObject[0] + intermediate1_2 * dwxObject[1] + intermediate1_3 * dwxObject[2];
 	*jacobianX++ = intermediate1_1 * dwyObject[0] + intermediate1_2 * dwyObject[1] + intermediate1_3 * dwyObject[2];
@@ -2976,9 +2981,9 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scala
 	*jacobianY++ = 0;
 	*jacobianY++ = 1;
 
-	const Scalar intermediate2_1 = pinholeCamera.focalLengthY() * scaleFactor * dist2_u_1_v;
-	const Scalar intermediate2_2 = pinholeCamera.focalLengthY() * scaleFactor * dist2_v;
-	const Scalar intermediate2_3 = -pinholeCamera.focalLengthY() * scaleFactor * scaleFactor * (transformedObjectPoint.x() * dist2_u_1_v + transformedObjectPoint.y() * dist2_v);
+	const T intermediate2_1 = pinholeCamera.focalLengthY() * scaleFactor * dist2_u_1_v;
+	const T intermediate2_2 = pinholeCamera.focalLengthY() * scaleFactor * dist2_v;
+	const T intermediate2_3 = -pinholeCamera.focalLengthY() * scaleFactor * scaleFactor * (transformedObjectPoint.x() * dist2_u_1_v + transformedObjectPoint.y() * dist2_v);
 
 	*jacobianY++ = intermediate2_1 * dwxObject[0] + intermediate2_2 * dwxObject[1] + intermediate2_3 * dwxObject[2];
 	*jacobianY++ = intermediate2_1 * dwyObject[0] + intermediate2_2 * dwyObject[1] + intermediate2_3 * dwyObject[2];
@@ -2987,6 +2992,9 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scala
 	*jacobianY++ = intermediate2_2;
 	*jacobianY++ = intermediate2_3;
 }
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x12(float* jx, float* jy, const PinholeCameraT<float>& pinholeCamera, const HomogenousMatrixT4<float>& flippedCamera_T_world, const PoseT<float>& flippedCamera_P_world, const VectorT3<float>& objectPoint, const SquareMatrixT3<float>& dwx, const SquareMatrixT3<float>& dwy, const SquareMatrixT3<float>& dwz);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x12(double* jx, double* jy, const PinholeCameraT<double>& pinholeCamera, const HomogenousMatrixT4<double>& flippedCamera_T_world, const PoseT<double>& flippedCamera_P_world, const VectorT3<double>& objectPoint, const SquareMatrixT3<double>& dwx, const SquareMatrixT3<double>& dwy, const SquareMatrixT3<double>& dwz);
 
 template <typename T>
 void Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jacobianCameraX, T* jacobianCameraY, T* jacobianPoseX, T* jacobianPoseY)

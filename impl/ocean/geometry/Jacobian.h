@@ -719,8 +719,10 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
 		 * @param flippedCamera_T_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
 		 * @param objectPoint 3D object point to determine the jacobian for
+		 * @tparam T The data type of the scalar, either 'float' or 'double'
 		 */
-		static void calculateJacobianCameraPoseRodrigues2x12(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint);
+		template <typename T>
+		static void calculateJacobianCameraPoseRodrigues2x12(T* jx, T* jy, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint);
 
 		/**
 		 * Calculates the entire jacobian matrix for an object point to image point transformation covering a flexible 6-DOF camera pose, the four intrinsic camera parameters and two parameters for radial distortion.
@@ -738,8 +740,10 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwz Rotation matrix derived to wz, as determined by calculateRotationRodriguesDerivative()
 		 * @param objectPoint 3D object point to determine the jacobian for
+		 * @tparam T The data type of the scalar, either 'float' or 'double'
 		 */
-		static void calculateJacobianCameraPoseRodrigues2x12(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& flippedCamera_P_world, const Vector3& objectPoint, const SquareMatrix3& dwx, const SquareMatrix3& dwy, const SquareMatrix3& dwz);
+		template <typename T>
+		static void calculateJacobianCameraPoseRodrigues2x12(T* jx, T* jy, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>& objectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz);
 
 		/**
 		 * Calculates the entire jacobian matrix for an object point to image point transformation covering a flexible 6-DOF camera pose and a pinhole camera.
