@@ -271,9 +271,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * Deprecated.
 		 *
 		 * Tests the Jacobian for the extrinsic camera parameters and a pinhole camera.
+		 * @tparam T The data type of the scalar, either 'float' or 'double'
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
+		template <typename T>
 		static bool testPinholeCameraPoseJacobian2nx6(const double testDuration);
 
 		/**
