@@ -835,10 +835,11 @@ void Jacobian::calculatePoseJacobianRodrigues2nx6IF(T* jacobian, const AnyCamera
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculatePoseJacobianRodrigues2nx6IF(float* jacobian, const AnyCameraT<float>& camera, const PoseT<float>& flippedCamera_P_world, const VectorT3<float>* objectPoints, const size_t numberObjectPoints);
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculatePoseJacobianRodrigues2nx6IF(double* jacobian, const AnyCameraT<double>& camera, const PoseT<double>& flippedCamera_P_world, const VectorT3<double>* objectPoints, const size_t numberObjectPoints);
 
-void Jacobian::calculatePoseJacobianRodrigues2nx6(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const Vector3* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints)
+template <typename T>
+void Jacobian::calculatePoseJacobianRodrigues2nx6(T* jacobian, const PinholeCameraT<T>& pinholeCamera, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints)
 {
-	SquareMatrix3 Rwx, Rwy, Rwz;
-	calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+	SquareMatrixT3<T> Rwx, Rwy, Rwz;
+	calculateRotationRodriguesDerivative(ExponentialMapT<T>(VectorT3<T>(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
 
 	if (!distortImagePoints)
 	{
@@ -872,26 +873,26 @@ void Jacobian::calculatePoseJacobianRodrigues2nx6(Scalar* jacobian, const Pinhol
 		 *   |    0   , Fy / Z', Fy Y' / Z'^2 | * | dR(w) / dw, dft / dt | = | ..., ..., ..., ..., ..., ... |
 		 */
 
-		const HomogenousMatrix4 flippedCamera_T_world(flippedCamera_P_world.transformation());
+		const HomogenousMatrixT4<T> flippedCamera_T_world(flippedCamera_P_world.transformation());
 
 		for (size_t n = 0; n < numberObjectPoints; ++n)
 		{
-			const ObjectPoint& objectPoint = objectPoints[n];
+			const VectorT3<T>& objectPoint = objectPoints[n];
 
-			const Vector3 transformedObjectPoint(flippedCamera_T_world * objectPoint);
+			const VectorT3<T> transformedObjectPoint(flippedCamera_T_world * objectPoint);
 
-			ocean_assert(Numeric::isNotEqualEps(transformedObjectPoint.z()));
-			const Scalar scaleFactor = 1 / transformedObjectPoint.z();
+			ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
+			const T scaleFactor = T(1) / transformedObjectPoint.z();
 
-			const Scalar fx_z = pinholeCamera.focalLengthX() * scaleFactor;
-			const Scalar fy_z = pinholeCamera.focalLengthY() * scaleFactor;
+			const T fx_z = pinholeCamera.focalLengthX() * scaleFactor;
+			const T fy_z = pinholeCamera.focalLengthY() * scaleFactor;
 
-			const Scalar fx_x_z2 = -fx_z * transformedObjectPoint.x() * scaleFactor;
-			const Scalar fy_y_z2 = -fy_z * transformedObjectPoint.y() * scaleFactor;
+			const T fx_x_z2 = -fx_z * transformedObjectPoint.x() * scaleFactor;
+			const T fy_y_z2 = -fy_z * transformedObjectPoint.y() * scaleFactor;
 
-			const Vector3 dwx(Rwx * objectPoint);
-			const Vector3 dwy(Rwy * objectPoint);
-			const Vector3 dwz(Rwz * objectPoint);
+			const VectorT3<T> dwx(Rwx * objectPoint);
+			const VectorT3<T> dwy(Rwy * objectPoint);
+			const VectorT3<T> dwz(Rwz * objectPoint);
 
 			*jacobian++ = fx_z * dwx[0] + fx_x_z2 * dwx[2];
 			*jacobian++ = fx_z * dwy[0] + fx_x_z2 * dwy[2];
@@ -938,42 +939,42 @@ void Jacobian::calculatePoseJacobianRodrigues2nx6(Scalar* jacobian, const Pinhol
 		 * | Fy / W * fdisty / du, Fy / W * fdisty / dv, -Fy / W^2 * (U * fdisty / du + V * fdisty / dv) | * | dR(w) / dw, dft / dt |
 		 */
 
-		const Scalar k1 = pinholeCamera.radialDistortion().first;
-		const Scalar k2 = pinholeCamera.radialDistortion().second;
+		const T k1 = pinholeCamera.radialDistortion().first;
+		const T k2 = pinholeCamera.radialDistortion().second;
 
-		const Scalar p1 = pinholeCamera.tangentialDistortion().first;
-		const Scalar p2 = pinholeCamera.tangentialDistortion().second;
+		const T p1 = pinholeCamera.tangentialDistortion().first;
+		const T p2 = pinholeCamera.tangentialDistortion().second;
 
-		const HomogenousMatrix4 flippedCamera_T_world(flippedCamera_P_world.transformation());
+		const HomogenousMatrixT4<T> flippedCamera_T_world(flippedCamera_P_world.transformation());
 
 		for (size_t n = 0; n < numberObjectPoints; ++n)
 		{
-			const ObjectPoint& objectPoint = objectPoints[n];
+			const VectorT3<T>& objectPoint = objectPoints[n];
 
-			const Vector3 transformedObjectPoint(flippedCamera_T_world * objectPoint);
+			const VectorT3<T> transformedObjectPoint(flippedCamera_T_world * objectPoint);
 
-			ocean_assert(Numeric::isNotEqualEps(transformedObjectPoint.z()));
-			const Scalar factor = Scalar(1) / transformedObjectPoint.z();
+			ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
+			const T factor = T(1) / transformedObjectPoint.z();
 
-			const Scalar u = transformedObjectPoint.x() * factor;
-			const Scalar v = transformedObjectPoint.y() * factor;
+			const T u = transformedObjectPoint.x() * factor;
+			const T v = transformedObjectPoint.y() * factor;
 
-			const Scalar dist1_u = Scalar(1) + Scalar(6) * p2 * u + Scalar(2) * p1 * v + k1 * (Scalar(3) * u * u + v * v) + k2 * (u * u + v * v) * (Scalar(5) * u * u + v * v);
-			const Scalar dist2_u_1_v = Scalar(2) * (p1 * u + v * (p2 + u * (k1 + Scalar(2) * k2 * (u * u + v * v))));
-			const Scalar dist2_v = Scalar(1) + Scalar(2) * p2 * u + Scalar(6) * p1 * v + k1 * (u * u + Scalar(3) * v * v) + k2 * (u * u + v * v) * (u * u + Scalar(5) * v * v);
+			const T dist1_u = T(1) + T(6) * p2 * u + T(2) * p1 * v + k1 * (T(3) * u * u + v * v) + k2 * (u * u + v * v) * (T(5) * u * u + v * v);
+			const T dist2_u_1_v = T(2) * (p1 * u + v * (p2 + u * (k1 + T(2) * k2 * (u * u + v * v))));
+			const T dist2_v = T(1) + T(2) * p2 * u + T(6) * p1 * v + k1 * (u * u + T(3) * v * v) + k2 * (u * u + v * v) * (u * u + T(5) * v * v);
 
-			const Scalar Fx_w_dist1_u = pinholeCamera.focalLengthX() * factor * dist1_u;
-			const Scalar Fy_w_dist2_u = pinholeCamera.focalLengthY() * factor * dist2_u_1_v;
+			const T Fx_w_dist1_u = pinholeCamera.focalLengthX() * factor * dist1_u;
+			const T Fy_w_dist2_u = pinholeCamera.focalLengthY() * factor * dist2_u_1_v;
 
-			const Scalar Fx_w_dist1_v = pinholeCamera.focalLengthX() * factor * dist2_u_1_v;
-			const Scalar Fy_w_dist2_v = pinholeCamera.focalLengthY() * factor * dist2_v;
+			const T Fx_w_dist1_v = pinholeCamera.focalLengthX() * factor * dist2_u_1_v;
+			const T Fy_w_dist2_v = pinholeCamera.focalLengthY() * factor * dist2_v;
 
-			const Scalar Fx_w2__ = -pinholeCamera.focalLengthX() * factor * factor * (transformedObjectPoint.x() * dist1_u + transformedObjectPoint.y() * dist2_u_1_v);
-			const Scalar Fy_w2__ = -pinholeCamera.focalLengthY() * factor * factor * (transformedObjectPoint.x() * dist2_u_1_v + transformedObjectPoint.y() * dist2_v);
+			const T Fx_w2__ = -pinholeCamera.focalLengthX() * factor * factor * (transformedObjectPoint.x() * dist1_u + transformedObjectPoint.y() * dist2_u_1_v);
+			const T Fy_w2__ = -pinholeCamera.focalLengthY() * factor * factor * (transformedObjectPoint.x() * dist2_u_1_v + transformedObjectPoint.y() * dist2_v);
 
-			const Vector3 dwx(Rwx * objectPoint);
-			const Vector3 dwy(Rwy * objectPoint);
-			const Vector3 dwz(Rwz * objectPoint);
+			const VectorT3<T> dwx(Rwx * objectPoint);
+			const VectorT3<T> dwy(Rwy * objectPoint);
+			const VectorT3<T> dwz(Rwz * objectPoint);
 
 			*jacobian++ = Fx_w_dist1_u * dwx[0] + Fx_w_dist1_v * dwx[1] + Fx_w2__ * dwx[2];
 			*jacobian++ = Fx_w_dist1_u * dwy[0] + Fx_w_dist1_v * dwy[1] + Fx_w2__ * dwy[2];
@@ -991,6 +992,9 @@ void Jacobian::calculatePoseJacobianRodrigues2nx6(Scalar* jacobian, const Pinhol
 		}
 	}
 }
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculatePoseJacobianRodrigues2nx6(float* jacobian, const PinholeCameraT<float>& pinholeCamera, const PoseT<float>& flippedCamera_P_world, const VectorT3<float>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculatePoseJacobianRodrigues2nx6(double* jacobian, const PinholeCameraT<double>& pinholeCamera, const PoseT<double>& flippedCamera_P_world, const VectorT3<double>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints);
 
 void Jacobian::calculatePoseJacobianRodriguesDampedDistortion2nx6(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const Scalar dampingFactor, const Vector3* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints)
 {
