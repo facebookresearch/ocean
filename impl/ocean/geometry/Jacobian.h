@@ -343,9 +343,11 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param objectPoints 3D object points to determine the jacobian for
 		 * @param numberObjectPoints Number of given object points
 		 * @param distortImagePoints True, to force the distortion of the image points using the distortion parameters of this camera object
+		 * @tparam T The scalar data type, either 'float' or 'double'
 		 * @see calculatePoseJacobianRodrigues2x6().
 		 */
-		static void calculatePoseJacobianRodriguesDampedDistortion2nx6(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const Scalar dampingFactor, const Vector3* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints);
+		template <typename T>
+		static void calculatePoseJacobianRodriguesDampedDistortion2nx6(T* jacobian, const PinholeCameraT<T>& pinholeCamera, const PoseT<T>& flippedCamera_P_world, const T dampingFactor, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints);
 
 		/**
 		 * Calculates the two jacobian rows for a given (flexible) pose with (flexible) zoom factor and one static 3D object point.
