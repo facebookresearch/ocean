@@ -242,7 +242,7 @@ bool TestJacobian::test(const double testDuration, const TestSelector& selector)
 
 	if (selector.shouldRun("posepinholecamerajacobian2x12"))
 	{
-		testResult = testPosePinholeCameraJacobian2x12(testDuration);
+		testResult = testPosePinholeCameraJacobian2x12<double>(testDuration);
 
 		Log::info() << " ";
 		Log::info() << "-";
@@ -476,9 +476,9 @@ TEST(TestJacobian, OrientationPinholeCameraJacobian2x11)
 	EXPECT_TRUE(TestJacobian::testOrientationPinholeCameraJacobian2x11(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, PosePinholeCameraJacobian2x12)
+TEST(TestJacobian, PosePinholeCameraJacobian2x12_double)
 {
-	EXPECT_TRUE(TestJacobian::testPosePinholeCameraJacobian2x12(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testPosePinholeCameraJacobian2x12<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestJacobian, PosePinholeCameraJacobian2x14_float)
@@ -4507,16 +4507,17 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 		PinholeCameraD::ParameterConfiguration cameraParameterConfiguration_ = PinholeCameraD::PC_UNKNOWN;
 };
 
+template <typename T>
 bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	constexpr unsigned int numberPoints = 50u;
 
-	Log::info() << "Testing camera pose jacobian 2x12 for " << numberPoints << " points:";
+	Log::info() << "Testing camera pose jacobian 2x12 for " << numberPoints << " points" << " with " << sizeof(T) * 8 << "-bit precision:";
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.99, randomGenerator);
+	ValidationPrecision validation(std::is_same<float, T>::value ? 0.95 : 0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -4532,46 +4533,46 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		constexpr unsigned int width = 640u;
 		constexpr unsigned int height = 480u;
 
-		constexpr Scalar width2 = Scalar(width) * Scalar(0.5);
-		constexpr Scalar height2 = Scalar(height) * Scalar(0.5);
+		constexpr T width2 = T(width) * T(0.5);
+		constexpr T height2 = T(height) * T(0.5);
 
-		const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(40), NumericT<T>::deg2rad(70));
 
-		const Scalar principalX = Random::scalar(randomGenerator, width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(randomGenerator, height2 - Scalar(50), height2 + Scalar(50));
+		const T principalX = RandomT<T>::scalar(randomGenerator, width2 - T(50), width2 + T(50));
+		const T principalY = RandomT<T>::scalar(randomGenerator, height2 - T(50), height2 + T(50));
 
-		const Vector3 world_t_camera = Random::vector3(randomGenerator, -1, 1);
-		const Quaternion world_Q_camera = Random::quaternion(randomGenerator);
+		const VectorT3<T> world_t_camera = RandomT<T>::vector3(randomGenerator, -1, 1);
+		const QuaternionT<T> world_Q_camera = RandomT<T>::quaternion(randomGenerator);
 
-		const HomogenousMatrix4 flippedCamera_T_world(world_t_camera, world_Q_camera);
-		const Pose flippedCamera_P_world(flippedCamera_T_world);
+		const HomogenousMatrixT4<T> flippedCamera_T_world(world_t_camera, world_Q_camera);
+		const PoseT<T> flippedCamera_P_world(flippedCamera_T_world);
 
-		PinholeCamera camera(width, height, fovX, principalX, principalY);
+		PinholeCameraT<T> camera(width, height, fovX, principalX, principalY);
 
 		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
 		{
-			const Scalar k1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
-			const Scalar k2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
-			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
+			const T k1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+			const T k2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+			camera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(k1, k2));
 		}
 
 		if (distortionIteration % 3u == 2u)
 		{
-			const Scalar p1 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
-			const Scalar p2 = Random::scalar(randomGenerator, Scalar(-0.5), Scalar(0.5));
-			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
+			const T p1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+			const T p2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+			camera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(p1, p2));
 		}
 
 		distortionIteration++;
 
-		Vectors3 objectPoints;
+		VectorsT3<T> objectPoints;
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			const Scalar imagePointX = Random::scalar(randomGenerator, 40u, width - 40u);
-			const Scalar imagePointY = Random::scalar(randomGenerator, 40u, height - 40u);
+			const T imagePointX = RandomT<T>::scalar(randomGenerator, 40u, width - 40u);
+			const T imagePointY = RandomT<T>::scalar(randomGenerator, 40u, height - 40u);
 
-			objectPoints.push_back(camera.ray(Vector2(imagePointX, imagePointY), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(randomGenerator, 1, 10)));
+			objectPoints.push_back(camera.ray(VectorT2<T>(imagePointX, imagePointY), PinholeCameraT<T>::invertedFlipped2Standard(flippedCamera_T_world)).point(RandomT<T>::scalar(randomGenerator, 1, 10)));
 		}
 
 
@@ -4580,14 +4581,14 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		 * | dfy / dk1, dfy / dk2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |<br>
 		 */
 
-		Matrix jacobian(2 * objectPoints.size(), 12);
+		MatrixT<T> jacobian(2 * objectPoints.size(), 12);
 
 		performance.start();
 
-		const Pose flippedCamera_P_world_copy(flippedCamera_T_world);
+		const PoseT<T> flippedCamera_P_world_copy(flippedCamera_T_world);
 
-		SquareMatrix3 Rwx, Rwy, Rwz;
-		Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world_copy.rx(), flippedCamera_P_world_copy.ry(), flippedCamera_P_world_copy.rz())), Rwx, Rwy, Rwz);
+		SquareMatrixT3<T> Rwx, Rwy, Rwz;
+		Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMapT<T>(VectorT3<T>(flippedCamera_P_world_copy.rx(), flippedCamera_P_world_copy.ry(), flippedCamera_P_world_copy.rz())), Rwx, Rwy, Rwz);
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
@@ -4597,34 +4598,34 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		performance.stop();
 
 		{
-			Matrix naiveJacobian(2 * objectPoints.size(), 12);
+			MatrixT<T> naiveJacobian(2 * objectPoints.size(), 12);
 
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
 
-			const HomogenousMatrix4 flippedCamera_T_world_matrix(flippedCamera_P_world.transformation());
+			const HomogenousMatrixT4<T> flippedCamera_T_world_matrix(flippedCamera_P_world.transformation());
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world_matrix, objectPoint, camera.hasDistortionParameters()));
+				const VectorT3<T>& objectPoint = objectPoints[n];
+				const VectorT2<T> imagePoint(camera.template projectToImageIF<false>(flippedCamera_T_world_matrix, objectPoint, camera.hasDistortionParameters()));
 
 				for (unsigned int i = 0u; i < 12u; ++i)
 				{
-					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
+					PoseT<T> flippedCamera_P_world_delta(flippedCamera_P_world);
 
-					SquareMatrix3 intrinsicDelta(camera.intrinsic());
-					PinholeCamera::DistortionPair radialDistortionDelta(camera.radialDistortion());
-					PinholeCamera::DistortionPair tangentialDistortionDelta(camera.tangentialDistortion());
+					SquareMatrixT3<T> intrinsicDelta(camera.intrinsic());
+					typename PinholeCameraT<T>::DistortionPair radialDistortionDelta(camera.radialDistortion());
+					typename PinholeCameraT<T>::DistortionPair tangentialDistortionDelta(camera.tangentialDistortion());
 
 					if (i >= 6u && i < 6u + 6u)
 					{
 						if (i < 6u + 3u)
 						{
-							flippedCamera_P_world_delta[i - 6u + 3u] += Numeric::weakEps();
+							flippedCamera_P_world_delta[i - 6u + 3u] += NumericT<T>::weakEps();
 						}
 						else
 						{
-							flippedCamera_P_world_delta[i - 6u - 3u] += Numeric::weakEps();
+							flippedCamera_P_world_delta[i - 6u - 3u] += NumericT<T>::weakEps();
 						}
 					}
 					else
@@ -4632,27 +4633,27 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 						switch (i)
 						{
 							case 0u:
-								radialDistortionDelta.first += Numeric::weakEps();
+								radialDistortionDelta.first += NumericT<T>::weakEps();
 								break;
 
 							case 1u:
-								radialDistortionDelta.second += Numeric::weakEps();
+								radialDistortionDelta.second += NumericT<T>::weakEps();
 								break;
 
 							case 2u:
-								intrinsicDelta(0, 0) += Numeric::weakEps();
+								intrinsicDelta(0, 0) += NumericT<T>::weakEps();
 								break;
 
 							case 3u:
-								intrinsicDelta(1, 1) += Numeric::weakEps();
+								intrinsicDelta(1, 1) += NumericT<T>::weakEps();
 								break;
 
 							case 4u:
-								intrinsicDelta(2, 0) += Numeric::weakEps();
+								intrinsicDelta(2, 0) += NumericT<T>::weakEps();
 								break;
 
 							case 5u:
-								intrinsicDelta(2, 1) += Numeric::weakEps();
+								intrinsicDelta(2, 1) += NumericT<T>::weakEps();
 								break;
 
 							default:
@@ -4660,10 +4661,10 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 						}
 					}
 
-					const PinholeCamera cameraDelta(intrinsicDelta, camera.width(), camera.height(), radialDistortionDelta, tangentialDistortionDelta);
+					const PinholeCameraT<T> cameraDelta(intrinsicDelta, camera.width(), camera.height(), radialDistortionDelta, tangentialDistortionDelta);
 
-					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters()));
-					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
+					const VectorT2<T> imagePointDelta(cameraDelta.template projectToImageIF<false>(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const VectorT2<T> derivative = (imagePointDelta - imagePoint) / NumericT<T>::weakEps();
 
 					naiveJacobian[n * 2u + 0u][i] = derivative.x();
 					naiveJacobian[n * 2u + 1u][i] = derivative.y();
@@ -4671,28 +4672,28 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 			}
 		}
 
-		const DerivativeCalculatorPosePinholeCameraJacobian2x12<Scalar> derivativeCalculator(camera, flippedCamera_P_world);
+		const DerivativeCalculatorPosePinholeCameraJacobian2x12<T> derivativeCalculator(camera, flippedCamera_P_world);
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
-			const Vector3& objectPoint = objectPoints[n];
+			const VectorT3<T>& objectPoint = objectPoints[n];
 
-			const Scalar* jacobianX = jacobian[2u * n + 0u];
-			const Scalar* jacobianY = jacobian[2u * n + 1u];
+			const T* jacobianX = jacobian[2u * n + 0u];
+			const T* jacobianY = jacobian[2u * n + 1u];
 
 			{
 				// we also test the implementation for one object point
 
-				Scalar singleJacobianX[12];
-				Scalar singleJacobianY[12];
+				T singleJacobianX[12];
+				T singleJacobianY[12];
 				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x12(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, objectPoint);
 
 				for (unsigned int i = 0u; i < 12u; ++i)
 				{
-					ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
-					ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
+					ocean_assert(NumericT<T>::isWeakEqual(jacobianX[i], singleJacobianX[i]));
+					ocean_assert(NumericT<T>::isWeakEqual(jacobianY[i], singleJacobianY[i]));
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::weakEps()) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::weakEps()))
+					if (NumericT<T>::isNotEqual(jacobianX[i], singleJacobianX[i], NumericT<T>::weakEps()) || NumericT<T>::isNotEqual(jacobianY[i], singleJacobianY[i], NumericT<T>::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
