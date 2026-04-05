@@ -202,10 +202,23 @@ void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& came
 
 				constexpr Scalar maximalProjectionError = Scalar(3.5);
 
-				if (CalibrationBoardDetector::detectCalibrationBoard(*camera, yFrame, calibrationBoard_, observation, maximalProjectionError, WorkerPool::get().scopedWorker()()))
+				HighPerformanceTimer timer;
+
+				const bool detected = CalibrationBoardDetector::detectCalibrationBoard(*camera, yFrame, calibrationBoard_, observation, maximalProjectionError, WorkerPool::get().scopedWorker()());
+
+				const double time = timer.mseconds();
+
+				if (detected)
 				{
 					CV::Calibration::Utilities::paintCalibrationBoardObservation(outputFrame, calibrationBoard_, observation, true);
 				}
+
+				const size_t detectedPoints = detected ? observation.objectPointIds().size() : 0;
+				const size_t maxPoints = calibrationBoard_.numberPoints();
+				const double percentage = NumericD::ratio(double(detectedPoints), double(maxPoints), 0.0) * 100.0;
+
+				CV::Canvas::drawText(outputFrame, "Board detection: " + String::toAString(time, 2u) + "ms", 5, 5, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
+				CV::Canvas::drawText(outputFrame, "Detected points: " + String::toAString(detectedPoints) + " / " + String::toAString(maxPoints) + " (" + String::toAString(percentage, 1u) + "%)", 5, 25, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
 			}
 			else
 			{
