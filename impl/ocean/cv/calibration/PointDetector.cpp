@@ -420,11 +420,16 @@ bool PointDetector::createFilterResponseFrame(const Frame& yFrame, Frame& respon
 
 size_t PointDetector::closestPoint(const Vector2& queryPoint, const bool sign, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance)
 {
-	size_t bestIndex = size_t(-1);
-	Scalar bestSqrDistance = Numeric::maxValue();
-
 	const unsigned int xBinCenter = pointsDistributionArray.horizontalBin(queryPoint.x());
 	const unsigned int yBinCenter = pointsDistributionArray.verticalBin(queryPoint.y());
+
+	if (xBinCenter >= pointsDistributionArray.horizontalBins() || yBinCenter >= pointsDistributionArray.verticalBins())
+	{
+		return size_t(-1);
+	}
+
+	size_t bestIndex = size_t(-1);
+	Scalar bestSqrDistance = Numeric::maxValue();
 
 	for (unsigned int xBin = pointsDistributionArray.beginBinHorizontal<1u>(xBinCenter); xBin < pointsDistributionArray.endBinHorizontal<1u>(xBinCenter); ++xBin)
 	{
