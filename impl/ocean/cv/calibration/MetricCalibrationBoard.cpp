@@ -6,7 +6,7 @@
  */
 
 #include "ocean/cv/calibration/MetricCalibrationBoard.h"
-#include "ocean/cv/calibration/LegacyPointDetector.h"
+#include "ocean/cv/calibration/PointDetector.h"
 
 #include "ocean/geometry/RANSAC.h"
 #include "ocean/geometry/NonLinearOptimizationPose.h"
@@ -341,7 +341,7 @@ bool MetricCalibrationBoard::optimizeCameraPose(const AnyCamera& camera, const H
 			Scalar closestSqrDistance = Numeric::maxValue();
 			Scalar secondClosestSqrDistance = Numeric::maxValue();
 
-			if (!LegacyPointDetector::closestPoints(predictedImagePoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
+			if (!PointDetector::closestPoints(predictedImagePoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
 			{
 				continue;
 			}
