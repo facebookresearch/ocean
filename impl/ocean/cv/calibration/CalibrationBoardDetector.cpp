@@ -6,7 +6,7 @@
  */
 
 #include "ocean/cv/calibration/CalibrationBoardDetector.h"
-#include "ocean/cv/calibration/LegacyPointDetector.h"
+#include "ocean/cv/calibration/PointDetector.h"
 
 #include "ocean/geometry/NonLinearOptimizationPose.h"
 #include "ocean/geometry/RANSAC.h"
@@ -29,7 +29,7 @@ bool CalibrationBoardDetector::determineMarkerCandidates(const Points& points, c
 	ocean_assert(markerCandidates.empty());
 	markerCandidates.clear();
 
-	LegacyPointDetector::IndexDistancePairs<4> indexDistancePairs;
+	PointDetector::IndexDistancePairs<4> indexDistancePairs;
 
 	ContinuousLineIndices continuousLineIndices;
 
@@ -44,7 +44,7 @@ bool CalibrationBoardDetector::determineMarkerCandidates(const Points& points, c
 
 		indexDistancePairs.weakClear();
 
-		LegacyPointDetector::closestPoints<4, false>(pointsDistributionArray, pointIndex, points, indexDistancePairs, Numeric::sqr(maximalDistance));
+		PointDetector::closestPoints<4, false>(pointsDistributionArray, pointIndex, points, indexDistancePairs, Numeric::sqr(maximalDistance));
 
 		for (size_t nClosest = 0; nClosest < indexDistancePairs.size(); ++nClosest)
 		{
@@ -142,7 +142,7 @@ bool CalibrationBoardDetector::determineClosedRectangle(ContinuousLineIndices& l
 			const Scalar maxSqrDistance = endVector.sqr() * Numeric::sqr(maxDistancePercentage);
 			ocean_assert(Numeric::isWeakEqual(Numeric::sqrt(maxSqrDistance), endVector.length() * maxDistancePercentage));
 
-			const size_t predictedPointIndex = LegacyPointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
+			const size_t predictedPointIndex = PointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
 
 			if (predictedPointIndex == size_t(-1))
 			{
@@ -509,7 +509,7 @@ bool CalibrationBoardDetector::determineRemainingMarkerPointIndices(const AnyCam
 			Scalar closestSqrDistance = Numeric::maxValue();
 			Scalar secondClosestSqrDistance = Numeric::maxValue();
 
-			if (!LegacyPointDetector::closestPoints(projectedObjectPoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
+			if (!PointDetector::closestPoints(projectedObjectPoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
 			{
 				return false;
 			}
@@ -654,7 +654,7 @@ bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, c
 		return false;
 	}
 
-	LegacyPointDetector pointDetector;
+	PointDetector pointDetector;
 	if (!pointDetector.detectPoints(yFrame, worker))
 	{
 		return false;
@@ -812,7 +812,7 @@ bool CalibrationBoardDetector::determineContinuousLine(const size_t pointIndexA,
 		const Scalar maxSqrDistance = updatedOffset.sqr() * Numeric::sqr(maxDistancePercentage);
 		ocean_assert(Numeric::isWeakEqual(Numeric::sqrt(maxSqrDistance), updatedOffset.length() * maxDistancePercentage));
 
-		const size_t index = LegacyPointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
+		const size_t index = PointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
 
 		if (index == size_t(-1))
 		{
@@ -848,7 +848,7 @@ bool CalibrationBoardDetector::determineContinuousLine(const size_t pointIndexA,
 		const Scalar maxSqrDistance = updatedOffset.sqr() * Numeric::sqr(maxDistancePercentage);
 		ocean_assert(Numeric::isWeakEqual(Numeric::sqrt(maxSqrDistance), updatedOffset.length() * maxDistancePercentage));
 
-		const size_t index = LegacyPointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
+		const size_t index = PointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
 
 		if (index == size_t(-1))
 		{
