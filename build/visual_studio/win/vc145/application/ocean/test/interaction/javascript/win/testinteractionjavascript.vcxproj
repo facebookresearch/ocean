@@ -51,10 +51,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\win\JavaScriptMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\TestJavaScript.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\win\JavaScriptMain.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\TestJavaScript.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DF4DBFD0-B498-4F9A-B7A5-447DE7EB8F58}</ProjectGuid>
