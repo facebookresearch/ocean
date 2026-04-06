@@ -51,13 +51,8 @@ JSLibrary::JSLibrary() :
 {
 	registerFileExtension("js", "JavaScript interaction scripting file");
 
-#if defined(OCEAN_V8_VERSION) && OCEAN_V8_VERSION > 70000
 	platform_ = v8::platform::NewDefaultPlatform();
 	v8::V8::InitializePlatform(platform_.get());
-#else
-	platform_ = std::unique_ptr<v8::Platform>(v8::platform::CreateDefaultPlatform());
-	v8::V8::InitializePlatform(platform_.get());
-#endif
 
 	v8::V8::Initialize();
 
@@ -70,10 +65,7 @@ JSLibrary::~JSLibrary()
 {
 	ocean_assert(isolate_ != nullptr);
 
-	while (!isolate_->IdleNotificationDeadline(0.1))
-	{
-		Thread::sleep(1u);
-	}
+	isolate_->MemoryPressureNotification(v8::MemoryPressureLevel::kCritical);
 
 	{
 		const v8::Isolate::Scope isolateScope(isolate_);
@@ -81,10 +73,7 @@ JSLibrary::~JSLibrary()
 
 		jsContexts_.clear();
 
-		while (!isolate_->IdleNotificationDeadline(0.1))
-		{
-			Thread::sleep(1u);
-		}
+		isolate_->MemoryPressureNotification(v8::MemoryPressureLevel::kCritical);
 
 		releaseGlobalTemplate();
 	}
@@ -94,11 +83,7 @@ JSLibrary::~JSLibrary()
 
 	v8::V8::Dispose();
 
-#if defined(OCEAN_V8_VERSION) && OCEAN_V8_VERSION >= 90900
 	v8::V8::DisposePlatform();
-#else
-	v8::V8::ShutdownPlatform();
-#endif
 
 	delete createParams_.array_buffer_allocator;
 }
@@ -251,7 +236,7 @@ Timestamp JSLibrary::preUpdate(const UserInterface& /*userInterface*/, const Ren
 		changedTimestamp = jsContext->preUpdate(engine, changedTimestamp);
 	}
 
-	isolate_->AdjustAmountOfExternalAllocatedMemory(512 * 1024 * 1024); // forcing GC to run (at least a good hint)
+	isolate_->MemoryPressureNotification(v8::MemoryPressureLevel::kModerate); // encouraging GC to run
 
 	return changedTimestamp;
 }
@@ -273,7 +258,7 @@ void JSLibrary::postUpdate(const UserInterface& /*userInterface*/, const Renderi
 		jsContext->postUpdate(engine, timestamp);
 	}
 
-	isolate_->AdjustAmountOfExternalAllocatedMemory(512 * 1024 * 1024); // forcing GC to run (at least a good hint)
+	isolate_->MemoryPressureNotification(v8::MemoryPressureLevel::kModerate); // encouraging GC to run
 }
 
 void JSLibrary::onMousePress(const UserInterface& /*userInterface*/, const Rendering::EngineRef& engine, const std::string& button, const Vector2& screenPosition, const Line3& ray, const Rendering::ObjectId pickedObject, const Vector3& pickedPosition, const Timestamp timestamp)

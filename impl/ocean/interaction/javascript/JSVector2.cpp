@@ -28,8 +28,8 @@ void JSVector2::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate = functionTemplate->InstanceTemplate();
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("x", isolate), propertyGetter<NativeType, AI_X>, propertySetter<NativeType, AI_X>);
-	objectTemplate->SetAccessor(newString("y", isolate), propertyGetter<NativeType, AI_Y>, propertySetter<NativeType, AI_Y>);
+	objectTemplate->SetNativeDataProperty(newString("x", isolate), propertyGetter<NativeType, AI_X>, propertySetter<NativeType, AI_X>);
+	objectTemplate->SetNativeDataProperty(newString("y", isolate), propertyGetter<NativeType, AI_Y>, propertySetter<NativeType, AI_Y>);
 
 	objectTemplate->Set(newString("add", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_ADD>));
 	objectTemplate->Set(newString("angle", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_ANGLE>));

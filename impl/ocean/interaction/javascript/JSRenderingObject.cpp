@@ -65,8 +65,8 @@ void JSRenderingObject::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("name", isolate), propertyGetter<NativeType, AI_NAME>, propertySetter<NativeType, AI_NAME>);
-	objectTemplate->SetAccessor(newString("type", isolate), propertyGetter<NativeType, AI_TYPE>);
+	objectTemplate->SetNativeDataProperty(newString("name", isolate), propertyGetter<NativeType, AI_NAME>, propertySetter<NativeType, AI_NAME>);
+	objectTemplate->SetNativeDataProperty(newString("type", isolate), propertyGetter<NativeType, AI_TYPE>);
 
 	objectTemplate->Set(newString("isValid", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_VALID>));
 	objectTemplate->Set(newString("isInvalid", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_INVALID>));

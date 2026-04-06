@@ -30,7 +30,7 @@ void JSRenderingEngine::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("name", isolate), propertyGetter<NativeType, AI_NAME>);
+	objectTemplate->SetNativeDataProperty(newString("name", isolate), propertyGetter<NativeType, AI_NAME>);
 
 	objectTemplate->Set(newString("createObject", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_CREATE_OBJECT>));
 	objectTemplate->Set(newString("framebuffer", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_FRAMEBUFFER>));

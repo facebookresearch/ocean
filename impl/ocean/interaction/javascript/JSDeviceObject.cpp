@@ -178,8 +178,8 @@ void JSDeviceObject::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("name", isolate), propertyGetter<NativeType, AI_NAME>);
-	objectTemplate->SetAccessor(newString("library", isolate), propertyGetter<NativeType, AI_LIBRARY>);
+	objectTemplate->SetNativeDataProperty(newString("name", isolate), propertyGetter<NativeType, AI_NAME>);
+	objectTemplate->SetNativeDataProperty(newString("library", isolate), propertyGetter<NativeType, AI_LIBRARY>);
 
 	objectTemplate->Set(newString("frequency", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_FREQUENCY>));
 	objectTemplate->Set(newString("input", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_INPUT>));

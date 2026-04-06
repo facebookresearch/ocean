@@ -45,7 +45,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSContext
 		/**
 		 * Definition of a vector holding value handles.
 		 */
-		using Values = std::vector<v8::Handle<v8::Value>>;
+		using Values = std::vector<v8::Local<v8::Value>>;
 
 		/**
 		 * Definition of a caller object returning JavaScript parameters.

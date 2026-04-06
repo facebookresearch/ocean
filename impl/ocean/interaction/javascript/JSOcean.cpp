@@ -183,7 +183,7 @@ void JSOcean::OceanContainer::onContentEvent(const ApplicationInterface::EventId
 	}
 }
 
-std::vector< v8::Handle<v8::Value> > JSOcean::OceanContainer::parameter(const ApplicationInterface::EventId eventId, const bool state)
+std::vector< v8::Local<v8::Value> > JSOcean::OceanContainer::parameter(const ApplicationInterface::EventId eventId, const bool state)
 {
 	JSContext::Values values;
 	values.reserve(2);

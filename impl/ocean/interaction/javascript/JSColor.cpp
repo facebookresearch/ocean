@@ -31,10 +31,10 @@ void JSColor::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("red", isolate), propertyGetter<NativeType, AI_RED>, propertySetter<NativeType, AI_RED>);
-	objectTemplate->SetAccessor(newString("green", isolate), propertyGetter<NativeType, AI_GREEN>, propertySetter<NativeType, AI_GREEN>);
-	objectTemplate->SetAccessor(newString("blue", isolate), propertyGetter<NativeType, AI_BLUE>, propertySetter<NativeType, AI_BLUE>);
-	objectTemplate->SetAccessor(newString("alpha", isolate), propertyGetter<NativeType, AI_ALPHA>, propertySetter<NativeType, AI_ALPHA>);
+	objectTemplate->SetNativeDataProperty(newString("red", isolate), propertyGetter<NativeType, AI_RED>, propertySetter<NativeType, AI_RED>);
+	objectTemplate->SetNativeDataProperty(newString("green", isolate), propertyGetter<NativeType, AI_GREEN>, propertySetter<NativeType, AI_GREEN>);
+	objectTemplate->SetNativeDataProperty(newString("blue", isolate), propertyGetter<NativeType, AI_BLUE>, propertySetter<NativeType, AI_BLUE>);
+	objectTemplate->SetNativeDataProperty(newString("alpha", isolate), propertyGetter<NativeType, AI_ALPHA>, propertySetter<NativeType, AI_ALPHA>);
 
 	objectTemplate->Set(newString("clamp", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_CLAMP>));
 	objectTemplate->Set(newString("Clamped", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_CLAMPED>));

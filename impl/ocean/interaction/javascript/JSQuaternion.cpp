@@ -29,10 +29,10 @@ void JSQuaternion::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("x", isolate), propertyGetter<NativeType, AI_X>, propertySetter<NativeType, AI_X>);
-	objectTemplate->SetAccessor(newString("y", isolate), propertyGetter<NativeType, AI_Y>, propertySetter<NativeType, AI_X>);
-	objectTemplate->SetAccessor(newString("z", isolate), propertyGetter<NativeType, AI_Z>, propertySetter<NativeType, AI_X>);
-	objectTemplate->SetAccessor(newString("w", isolate), propertyGetter<NativeType, AI_W>, propertySetter<NativeType, AI_X>);
+	objectTemplate->SetNativeDataProperty(newString("x", isolate), propertyGetter<NativeType, AI_X>, propertySetter<NativeType, AI_X>);
+	objectTemplate->SetNativeDataProperty(newString("y", isolate), propertyGetter<NativeType, AI_Y>, propertySetter<NativeType, AI_X>);
+	objectTemplate->SetNativeDataProperty(newString("z", isolate), propertyGetter<NativeType, AI_Z>, propertySetter<NativeType, AI_X>);
+	objectTemplate->SetNativeDataProperty(newString("w", isolate), propertyGetter<NativeType, AI_W>, propertySetter<NativeType, AI_X>);
 
 	objectTemplate->Set(newString("invert", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_INVERT>));
 	objectTemplate->Set(newString("inverted", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_INVERTED>));

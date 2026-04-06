@@ -48,7 +48,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSScript
 		 * @param errorMessage Resulting error message, if any
 		 * @return True, if no error occurred
 		 */
-		bool run(v8::Handle<v8::Value>& returnValue, std::string& errorMessage);
+		bool run(v8::Local<v8::Value>& returnValue, std::string& errorMessage);
 
 		/**
 		 * Returns whether the script has been compiled successfully.
