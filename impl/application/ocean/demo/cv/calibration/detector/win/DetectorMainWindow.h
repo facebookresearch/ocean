@@ -8,6 +8,7 @@
 #ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_CV_CALIBBRATION_DETECTOR__WIN_DETECTOR_MAIN_WINDOW_H
 #define META_OCEAN_APPLICATION_OCEAN_DEMO_CV_CALIBBRATION_DETECTOR__WIN_DETECTOR_MAIN_WINDOW_H
 
+#include "ocean/base/DebugElements.h"
 #include "ocean/base/Frame.h"
 
 #include "ocean/cv/calibration/MetricCalibrationBoard.h"
@@ -19,6 +20,8 @@
 
 using namespace Ocean;
 using namespace Ocean::CV::Calibration;
+
+// #define ENABLE_DEBUG_ELEMENTS
 
 /**
  * This class implements the main window of the demo application.
@@ -87,6 +90,14 @@ class DetectorMainWindow :
 		 * @param camera The camera profile of the frame, if known
 		 */
 		void onFrame(const Frame& frame, const SharedAnyCamera& camera);
+
+		/**
+		 * Callback function invoked when a debug element has been updated.
+		 * @param elementId The identifier of the debug element that was updated
+		 * @param frame The optional debug frame associated with the element, nullptr if not available
+		 * @param hierarchy The optional hierarchy of the debug element, nullptr if not available
+		 */
+		void onDebugElement(const uint32_t elementId, const Frame* frame, const DebugElements::Hierarchy* hierarchy);
 
 	protected:
 

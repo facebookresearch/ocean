@@ -15,6 +15,7 @@
 #include "ocean/cv/FrameFilterGaussian.h"
 
 #include "ocean/cv/calibration/CalibrationBoardDetector.h"
+#include "ocean/cv/calibration/CalibrationDebugElements.h"
 #include "ocean/cv/calibration/PointDetector.h"
 #include "ocean/cv/calibration/Utilities.h"
 
@@ -35,7 +36,11 @@ DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& n
 	calibrationBoard_(calibrationBoard),
 	gaussianFilterSize_(gaussianFilterSize)
 {
-	// nothing to do here
+#ifdef ENABLE_DEBUG_ELEMENTS
+	static_assert(CV::Calibration::CalibrationDebugElements::allowDebugging_);
+	CV::Calibration::CalibrationDebugElements::get().setElementUpdateCallback(CV::Calibration::CalibrationDebugElements::ElementUpdateCallback::create(*this, &DetectorMainWindow::onDebugElement));
+	CV::Calibration::CalibrationDebugElements::get().activateAllElements();
+#endif
 }
 
 DetectorMainWindow::~DetectorMainWindow()
@@ -239,4 +244,14 @@ void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& came
 	}
 
 	repaint();
+}
+
+void DetectorMainWindow::onDebugElement(const uint32_t elementId, const Frame* frame, const DebugElements::Hierarchy* hierarchy)
+{
+#ifdef ENABLE_DEBUG_ELEMENTS
+	Log::debug() << "New debug element id: " << elementId;
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(frame);
+	OCEAN_SUPPRESS_UNUSED_WARNING(hierarchy);
+#endif
 }
