@@ -6,6 +6,7 @@
  */
 
 #include "ocean/cv/calibration/CalibrationBoardDetector.h"
+#include "ocean/cv/calibration/CalibrationDebugElements.h"
 #include "ocean/cv/calibration/PointDetector.h"
 
 #include "ocean/geometry/NonLinearOptimizationPose.h"
@@ -631,6 +632,74 @@ bool CalibrationBoardDetector::determineStartMarkerCandidates(const unsigned int
 	return true;
 }
 
+bool CalibrationBoardDetector::identifyAndLocateMarkerCandidates(const AnyCamera& camera, const CalibrationBoard& calibrationBoard, const Frame& yFrame, const Points& points, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, MarkerCandidates& markerCandidates, const Scalar maximalProjectionError)
+{
+	ocean_assert(camera.isValid());
+
+	for (size_t nMarkerCandidate = 0; nMarkerCandidate < markerCandidates.size(); /*noop*/)
+	{
+		MarkerCandidate& markerCandidate = markerCandidates[nMarkerCandidate];
+
+		HomogenousMatrix4 markerCandidate_T_camera(false);
+		if (determineCameraPoseForMarker(camera, markerCandidate, points, markerCandidate_T_camera, maximalProjectionError))
+		{
+			if (determineRemainingMarkerPointIndices(camera, markerCandidate_T_camera, markerCandidate, points, pointsDistributionArray, maximalProjectionError))
+			{
+				if (markerCandidate.determineMarkerId(points))
+				{
+					++nMarkerCandidate;
+					continue;
+				}
+			}
+		}
+
+		MarkerCandidate::removeMarkerCandidate(markerCandidates, nMarkerCandidate);
+	}
+
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updateCalibrationBoardDetectorMarkerCandidates(CalibrationDebugElements::EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS, yFrame, points, markerCandidates);
+	}
+
+	if (markerCandidates.empty())
+	{
+		return false;
+	}
+
+	// now let's determine the correctness of the neighborhood of marker candidates
+
+	for (size_t markerCandidateIndex = 0; markerCandidateIndex < markerCandidates.size(); ++markerCandidateIndex)
+	{
+		MarkerCandidate& markerCandidate = markerCandidates[markerCandidateIndex];
+
+		if (markerCandidate.hasMarkerId())
+		{
+			ocean_assert(markerCandidate.neighbors().size() <= 4);
+
+			if (markerCandidate.hasNeighborWithMarkerId(markerCandidates))
+			{
+				CalibrationBoard::MarkerCoordinate markerCoordinate;
+				CalibrationBoard::NeighborMarkerCoordinateMap neighborMarkerCoordinateMap;
+
+				if (calibrationBoard.containsMarkerCandidateWithNeighborhood(markerCandidates, markerCandidateIndex, &markerCoordinate, &neighborMarkerCoordinateMap))
+				{
+					if (neighborMarkerCoordinateMap.size() >= 1) // TODO expect more neighbors?
+					{
+						markerCandidate.setMarkerCoordinate(markerCoordinate);
+					}
+				}
+			}
+		}
+	}
+
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updateCalibrationBoardDetectorMarkerCandidates(CalibrationDebugElements::EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES, yFrame, points, markerCandidates);
+	}
+
+	return true;
+}
+
 bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, CalibrationBoardObservation& observation, const Scalar maximalProjectionError, Worker* worker)
 {
 	ocean_assert(camera.isValid());
@@ -678,78 +747,24 @@ bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, c
 		return false;
 	}
 
-	for (size_t nMarkerCandidate = 0; nMarkerCandidate < markerCandidates.size(); /*noop*/)
-	{
-		MarkerCandidate& markerCandidate = markerCandidates[nMarkerCandidate];
-
-		HomogenousMatrix4 markerCandidate_T_camera(false);
-		if (CalibrationBoardDetector::determineCameraPoseForMarker(camera, markerCandidate, points, markerCandidate_T_camera, Scalar(maximalProjectionError)))
-		{
-			if (CalibrationBoardDetector::determineRemainingMarkerPointIndices(camera, markerCandidate_T_camera, markerCandidate, points, pointsDistributionArray, maximalProjectionError))
-			{
-				if (markerCandidate.determineMarkerId(points))
-				{
-					++nMarkerCandidate;
-					continue;
-				}
-			}
-		}
-
-		MarkerCandidate::removeMarkerCandidate(markerCandidates, nMarkerCandidate);
-	}
-
-	if (markerCandidates.empty())
+	if (!identifyAndLocateMarkerCandidates(camera, calibrationBoard, yFrame, points, pointsDistributionArray, markerCandidates, maximalProjectionError))
 	{
 		return false;
 	}
 
-	// now let's determine the correctness of the neighborhood of marker candidates
-
-
-	Indices32 markerCandidatesWithCoordinates;
-	markerCandidatesWithCoordinates.reserve(markerCandidates.size());
-
-
-	for (size_t markerCandidateIndex = 0; markerCandidateIndex < markerCandidates.size(); /*noop*/)
+	for (size_t n = 0; n < markerCandidates.size(); /*noop*/)
 	{
-		bool keepMarkerCandidate = false;
-
-		CV::Calibration::MarkerCandidate& markerCandidate = markerCandidates[markerCandidateIndex];
-
-		if (markerCandidate.hasMarkerId())
+		if (markerCandidates[n].hasMarkerCoordinate())
 		{
-			ocean_assert(markerCandidate.neighbors().size() <= 4);
-
-			if (markerCandidate.hasNeighborWithMarkerId(markerCandidates))
-			{
-				CalibrationBoard::MarkerCoordinate markerCoordinate;
-				CalibrationBoard::NeighborMarkerCoordinateMap neighborMarkerCoordinateMap;
-
-				if (calibrationBoard.containsMarkerCandidateWithNeighborhood(markerCandidates, markerCandidateIndex, &markerCoordinate, &neighborMarkerCoordinateMap))
-				{
-					if (neighborMarkerCoordinateMap.size() >= 1) // TODO expect more neighbors?
-					{
-						markerCandidate.setMarkerCoordinate(markerCoordinate);
-
-						markerCandidatesWithCoordinates.emplace_back(Index32(markerCandidateIndex));
-
-						keepMarkerCandidate = true;
-					}
-				}
-			}
-		}
-
-		if (keepMarkerCandidate)
-		{
-			++markerCandidateIndex;
+			++n;
 		}
 		else
 		{
-			MarkerCandidate::removeMarkerCandidate(markerCandidates, markerCandidateIndex);
+			MarkerCandidate::removeMarkerCandidate(markerCandidates, n);
 		}
 	}
 
-	if (markerCandidatesWithCoordinates.empty())
+	if (markerCandidates.empty())
 	{
 		return false;
 	}

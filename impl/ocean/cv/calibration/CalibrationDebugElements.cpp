@@ -124,9 +124,9 @@ void CalibrationDebugElements::updatePointDetectorPointsOptimization(const Frame
 	updateElement(EI_POINT_DETECTOR_POINTS_OPTIMIZATION, std::move(rgbFrame));
 }
 
-void CalibrationDebugElements::updateCameraCalibratorMarkerCandidates(const ElementId elementId, const Frame& yFrame, const Points& points, const MarkerCandidates& markerCandidates)
+void CalibrationDebugElements::updateCalibrationBoardDetectorMarkerCandidates(const ElementId elementId, const Frame& yFrame, const Points& points, const MarkerCandidates& markerCandidates)
 {
-	ocean_assert(elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES || elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES);
+	ocean_assert(elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES || elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES);
 
 	if (!isElementActive(elementId))
 	{
@@ -164,7 +164,7 @@ void CalibrationDebugElements::updateCameraCalibratorMarkerCandidates(const Elem
 		}
 	}
 
-	if (elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
+	if (elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
 	{
 		for (const MarkerCandidate& markerCandidate : markerCandidates)
 		{
@@ -181,7 +181,7 @@ void CalibrationDebugElements::updateCameraCalibratorMarkerCandidates(const Elem
 
 			std::string text = String::toAString(markerId);
 
-			if (elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
+			if (elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
 			{
 				if (markerCandidate.hasMarkerCoordinate())
 				{

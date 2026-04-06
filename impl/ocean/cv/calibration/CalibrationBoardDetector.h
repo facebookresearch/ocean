@@ -118,6 +118,23 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoardDetector
 		static bool determineStartMarkerCandidates(const unsigned int width, const unsigned int height, const MarkerCandidates& markerCandidates, const Points& points, Indices32& bestMarkerCandidateIndices);
 
 		/**
+		 * Identifies and locates marker candidates on a calibration board.
+		 * For each marker candidate, this function determines the camera pose, the remaining (inner) point indices, and the marker ID.
+		 * Invalid marker candidates are removed.
+		 * Then, the function assigns board coordinates to marker candidates based on their neighborhood relationship.
+		 * Marker candidates without valid board coordinates are not removed as they may still be useful.
+		 * @param camera The camera profile to be used, must be valid
+		 * @param calibrationBoard The calibration board defining the marker layout, must be valid
+		 * @param yFrame The grayscale frame in which the points have been detected, used for debug visualizations, must be valid
+		 * @param points The marker points detected in the image, must be valid
+		 * @param pointsDistributionArray The distribution array associated with the detected marker points, must be valid
+		 * @param markerCandidates The marker candidates to be identified and located, will be modified in place (invalid candidates removed, coordinates assigned)
+		 * @param maximalProjectionError The maximal projection error between the 3D object points and the 2D image points, in pixel, with range [0, infinity)
+		 * @return True, if at least one marker candidate with a valid marker ID remains
+		 */
+		static bool identifyAndLocateMarkerCandidates(const AnyCamera& camera, const CalibrationBoard& calibrationBoard, const Frame& yFrame, const Points& points, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, MarkerCandidates& markerCandidates, const Scalar maximalProjectionError);
+
+		/**
 		 * Detects a calibration board in an image.
 		 * @param camera The camera profile to be used, must be valid
 		 * @param yFrame The image in which the calibration board will be detected, must be valid

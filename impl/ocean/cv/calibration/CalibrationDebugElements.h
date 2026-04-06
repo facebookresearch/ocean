@@ -75,10 +75,10 @@ class CalibrationDebugElements final :
 			EI_CAMERA_CALIBRATOR_DETECTED_POINTS,
 			/// CameraCalibrator: Image visualizing the detected marker candidates with valid board indices and sign.
 			EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES,
-			/// CameraCalibrator: Image visualizing the detected marker candidates with valid ids.
-			EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS,
-			/// CameraCalibrator: Image visualizing the detected marker candidates with valid marker coordinates.
-			EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES,
+			/// CalibrationBoardDetector: Image visualizing the detected marker candidates with valid ids.
+			EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS,
+			/// CalibrationBoardDetector: Image visualizing the detected marker candidates with valid marker coordinates.
+			EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES,
 			/// CameraCalibrator: Image visualizing the initial camera pose based on valid marker candidates.
 			EI_CAMERA_CALIBRATOR_INITIAL_CAMERA_POSE_WITH_VALID_MARKER_CANDIDATES,
 			/// CameraCalibrator: Image visualizing the initial camera pose based on valid marker candidates after the camera profile has been optimized.
@@ -183,7 +183,7 @@ class CalibrationDebugElements final :
 		 * @param points The points associated with the marker candidates
 		 * @param markerCandidates The marker candidates to be visualized
 		 */
-		void updateCameraCalibratorMarkerCandidates(const ElementId elementId, const Frame& yFrame, const Points& points, const MarkerCandidates& markerCandidates);
+		void updateCalibrationBoardDetectorMarkerCandidates(const ElementId elementId, const Frame& yFrame, const Points& points, const MarkerCandidates& markerCandidates);
 
 		/**
 		 * Updates a camera calibrator element visualizing the initial camera pose based on valid marker candidates.

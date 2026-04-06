@@ -532,7 +532,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 		}
 	}
 
-	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS, true))
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS, true))
 	{
 		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_05_cameracalibrator_markercandidates_with_ids.png"));
 
@@ -542,7 +542,7 @@ void writeDebugOutput(const IO::File& inputFile, const IO::Directory& outputDire
 		}
 	}
 
-	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES, true))
+	if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES, true))
 	{
 		const IO::File outputFile(outputDirectory + IO::File(inputFile.baseName() + "_06_cameracalibrator_markercandidates_with_coordinates.png"));
 

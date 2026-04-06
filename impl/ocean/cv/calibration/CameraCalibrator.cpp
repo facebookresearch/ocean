@@ -79,7 +79,7 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 
 	if constexpr (CalibrationDebugElements::allowDebugging_)
 	{
-		CalibrationDebugElements::get().updateCameraCalibratorMarkerCandidates(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES, yFrame_, points, markerCandidates_);
+		CalibrationDebugElements::get().updateCalibrationBoardDetectorMarkerCandidates(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES, yFrame_, points, markerCandidates_);
 	}
 
 	if (markerCandidates_.empty())
@@ -106,67 +106,11 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 
 	ocean_assert(initialCamera);
 
-	for (size_t nMarkerCandidate = 0; nMarkerCandidate < markerCandidates_.size(); /*noop*/)
-	{
-		MarkerCandidate& markerCandidate = markerCandidates_[nMarkerCandidate];
+	constexpr Scalar maximalProjectionError = Scalar(10);
 
-		constexpr Scalar maximalProjectionError = Scalar(10);
-
-		HomogenousMatrix4 markerCandidate_T_camera(false);
-		if (CalibrationBoardDetector::determineCameraPoseForMarker(*initialCamera, markerCandidate, points, markerCandidate_T_camera, Scalar(maximalProjectionError)))
-		{
-			if (CalibrationBoardDetector::determineRemainingMarkerPointIndices(*initialCamera, markerCandidate_T_camera, markerCandidate, points, pointsDistributionArray, maximalProjectionError))
-			{
-				if (markerCandidate.determineMarkerId(points))
-				{
-					++nMarkerCandidate;
-					continue;
-				}
-			}
-		}
-
-		MarkerCandidate::removeMarkerCandidate(markerCandidates_, nMarkerCandidate);
-	}
-
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		CalibrationDebugElements::get().updateCameraCalibratorMarkerCandidates(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS, yFrame_, points, markerCandidates_);
-	}
-
-	if (markerCandidates_.empty())
+	if (!CalibrationBoardDetector::identifyAndLocateMarkerCandidates(*initialCamera, metricCalibrationBoard_, yFrame_, points, pointsDistributionArray, markerCandidates_, maximalProjectionError))
 	{
 		return IR_BOARD_WAS_NOT_DETECTED;
-	}
-
-	// now let's determine the correctness of the neighborhood of marker candidates
-
-	for (size_t markerCandidateIndex = 0; markerCandidateIndex < markerCandidates_.size(); ++markerCandidateIndex)
-	{
-		CV::Calibration::MarkerCandidate& markerCandidate = markerCandidates_[markerCandidateIndex];
-
-		if (markerCandidate.hasMarkerId())
-		{
-			ocean_assert(markerCandidate.neighbors().size() <= 4);
-
-			if (markerCandidate.hasNeighborWithMarkerId(markerCandidates_))
-			{
-				CalibrationBoard::MarkerCoordinate markerCoordinate;
-				CalibrationBoard::NeighborMarkerCoordinateMap neighborMarkerCoordinateMap;
-
-				if (metricCalibrationBoard_.containsMarkerCandidateWithNeighborhood(markerCandidates_, markerCandidateIndex, &markerCoordinate, &neighborMarkerCoordinateMap))
-				{
-					if (neighborMarkerCoordinateMap.size() >= 1) // **TODO** expect more neighbors?
-					{
-						markerCandidate.setMarkerCoordinate(markerCoordinate);
-					}
-				}
-			}
-		}
-	}
-
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		CalibrationDebugElements::get().updateCameraCalibratorMarkerCandidates(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES, yFrame_, points, markerCandidates_);
 	}
 
 	HomogenousMatrix4 board_T_initialCamera(false);
@@ -209,10 +153,10 @@ CameraCalibrator::ImageResult CameraCalibrator::handleImage(const size_t imageId
 	Vectors3 objectPoints;
 	Vectors2 imagePoints;
 
-	constexpr Scalar maximalProjectionError = Scalar(10); // **TODO** change depending on the stage
+	constexpr Scalar maximalProjectionErrorForAdditionalPoints = Scalar(10); // **TODO** change depending on the stage
 
 	board_T_initialCamera = board_T_camera;
-	if (!optimizeCameraPoseWithAdditionalPointsFromMarkerCandidates(*camera, board_T_initialCamera, points, pointsDistributionArray, usedInitialMarkerCandidateIndices, maximalProjectionError, board_T_camera, objectPointIds, objectPoints, imagePoints))
+	if (!optimizeCameraPoseWithAdditionalPointsFromMarkerCandidates(*camera, board_T_initialCamera, points, pointsDistributionArray, usedInitialMarkerCandidateIndices, maximalProjectionErrorForAdditionalPoints, board_T_camera, objectPointIds, objectPoints, imagePoints))
 	{
 		return IR_BOARD_WAS_NOT_DETECTED;
 	}
