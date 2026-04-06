@@ -239,15 +239,23 @@ bool ParserEan13Upca::decodeDigits(const uint32_t* leftDigitsSegmentData, const 
 		0b100101u, // 9
 	};
 
+	bool parityPatternFound = false;
+
 	for (uint8_t patternIndex = 0u; patternIndex < 10u; ++patternIndex)
 	{
 		if (leftParityBits == parityPatterns[patternIndex])
 		{
 			ocean_assert(patternIndex < 10u);
 			digits[0] = patternIndex;
+			parityPatternFound = true;
 
 			break;
 		}
+	}
+
+	if (!parityPatternFound)
+	{
+		return false;
 	}
 
 	if (verifyCheckDigit(digits.data(), digits.size()))

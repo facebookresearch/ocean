@@ -462,7 +462,7 @@ class LineEvaluator
 		 * @param complexMatchMaximalGapPixelThreshold The maximal gap between valid evaluation lines, in pixels (defined in the domain of the line coordinates), with range [0, infinity)
 		 */
 		template <typename T>
-		static LineMatchRef determineComplexMatch(const std::unordered_map<Id, FiniteLineT2<T>>& linesGroundTruth, const std::unordered_map<Id, FiniteLineT2<T>>& linesEvaluation, const IdToIdSetMap& groundTruthToEvaluationMap, const IdToIdSetMap evaluationToGroundTruthMap, const Id groundTruthId, const Id64Set& groundTruthEvaluationSet, const T complexMatchMaximalGapPixelThreshold);
+		static LineMatchRef determineComplexMatch(const std::unordered_map<Id, FiniteLineT2<T>>& linesGroundTruth, const std::unordered_map<Id, FiniteLineT2<T>>& linesEvaluation, const IdToIdSetMap& groundTruthToEvaluationMap, const IdToIdSetMap& evaluationToGroundTruthMap, const Id groundTruthId, const Id64Set& groundTruthEvaluationSet, const T complexMatchMaximalGapPixelThreshold);
 
 		/**
 		 * Combines two (32 bit) ids to one 64 bit value.
@@ -1176,7 +1176,7 @@ SegmentUnion<T> LineEvaluator::determineProjectedSegmentUnion(const FiniteLineT2
 }
 
 template <typename T>
-LineEvaluator::LineMatchRef LineEvaluator::determineComplexMatch(const std::unordered_map<Id, FiniteLineT2<T>>& linesGroundTruth, const std::unordered_map<Id, FiniteLineT2<T>>& linesEvaluation, const IdToIdSetMap& groundTruthToEvaluationMap, const IdToIdSetMap evaluationToGroundTruthMap, const Id groundTruthId, const Id64Set& groundTruthEvaluationSet, const T complexMatchMaximalGapPixelThreshold)
+LineEvaluator::LineMatchRef LineEvaluator::determineComplexMatch(const std::unordered_map<Id, FiniteLineT2<T>>& linesGroundTruth, const std::unordered_map<Id, FiniteLineT2<T>>& linesEvaluation, const IdToIdSetMap& groundTruthToEvaluationMap, const IdToIdSetMap& evaluationToGroundTruthMap, const Id groundTruthId, const Id64Set& groundTruthEvaluationSet, const T complexMatchMaximalGapPixelThreshold)
 {
 	ocean_assert(complexMatchMaximalGapPixelThreshold >= 0);
 
