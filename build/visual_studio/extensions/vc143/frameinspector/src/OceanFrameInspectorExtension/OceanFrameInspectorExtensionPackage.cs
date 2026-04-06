@@ -119,7 +119,14 @@ namespace OceanFrameInspectorExtension
         /// Only show "Inspect in Ocean FrameInspector" when:
         /// 1. The debugger is in break mode
         /// 2. The word under cursor (or selection) evaluates to an Ocean::Frame
-        ///    (checked by probing for the width_ member)
+        ///    (checked by probing for the width_ member via dot and arrow access)
+        ///
+        /// Supported expression types:
+        ///   - Ocean::Frame value or Frame&amp; reference  (dot access)
+        ///   - Ocean::Frame* raw pointer                   (arrow access)
+        ///   - Ocean::FrameRef (ObjectRef&lt;Frame&gt;)    (arrow access)
+        ///   - std::shared_ptr&lt;Ocean::Frame&gt;         (arrow access)
+        ///   - std::unique_ptr&lt;Ocean::Frame&gt;         (arrow access)
         /// </summary>
         private void OnBeforeQueryInspectFrameStatus(object sender, EventArgs e)
         {
@@ -136,20 +143,31 @@ namespace OceanFrameInspectorExtension
             if (string.IsNullOrWhiteSpace(expression)) return;
 
             // Probe: check if the expression has a width_ member (i.e., is an Ocean::Frame/FrameType)
+            // Try dot access first (values and references), then arrow access (pointers and smart pointers).
             try
             {
                 if (!(GetService(typeof(EnvDTE.DTE)) is EnvDTE.DTE dte)) return;
 
+                // Probe 1: dot access - works for Frame values and Frame& references
                 EnvDTE.Expression result = dte.Debugger.GetExpression($"({expression}).width_", false, 1000);
+                if (result != null && result.IsValidValue)
+                {
+                    cmd.Visible = true;
+                    _pendingContextExpression = expression;
+                    return;
+                }
+
+                // Probe 2: arrow access - works for Frame*, FrameRef, shared_ptr<Frame>, unique_ptr<Frame>
+                result = dte.Debugger.GetExpression($"({expression})->width_", false, 1000);
                 if (result == null || !result.IsValidValue) return;
 
-                // It's a Frame — show the menu item and cache the expression
+                // Dereference so FrameReader can use uniform dot access on the underlying Frame
                 cmd.Visible = true;
-                _pendingContextExpression = expression;
+                _pendingContextExpression = $"(*({expression}))";
             }
             catch
             {
-                // Not a Frame or evaluation failed — keep hidden
+                // Not a Frame or evaluation failed - keep hidden
             }
         }
 
@@ -224,7 +242,7 @@ namespace OceanFrameInspectorExtension
             }
             catch
             {
-                // Natvis deployment is best-effort — don't break the extension if it fails
+                // Natvis deployment is best-effort - don't break the extension if it fails
             }
         }
 
@@ -233,7 +251,7 @@ namespace OceanFrameInspectorExtension
         ///
         /// Strategy (most robust to least):
         /// 1. Read AppDataFolder from HKCU\Software\Microsoft\VisualStudio\{instanceId}
-        ///    — works with side-by-side installs, non-default locations, and all VS versions.
+        ///    - works with side-by-side installs, non-default locations, and all VS versions.
         ///    We get the instance registry root from IVsShell to avoid guessing.
         /// 2. Fallback: scan Documents for "Visual Studio *" folders.
         /// </summary>
@@ -241,7 +259,7 @@ namespace OceanFrameInspectorExtension
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            // Strategy 1: Registry-based — get AppDataFolder for this VS instance
+            // Strategy 1: Registry-based - get AppDataFolder for this VS instance
             try
             {
                 if (GetService(typeof(SVsShell)) is IVsShell shell)
