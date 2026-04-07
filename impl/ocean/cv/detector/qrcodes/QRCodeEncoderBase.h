@@ -394,7 +394,7 @@ std::string QRCodeEncoderBase::translateStatusCode(const StatusCode statusCode)
 	}
 
 	ocean_assert(false && "Never be here!");
-	return "UNKOWN";
+	return "UNKNOWN_ERROR";
 }
 
 } // namespace QRCodes

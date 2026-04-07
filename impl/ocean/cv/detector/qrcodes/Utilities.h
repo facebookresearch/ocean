@@ -796,7 +796,7 @@ void Utilities::drawCoordinateSystemIF(Frame& frame, const HomogenousMatrix4& fl
 	static_assert(tBackgroundLineWidth == 0u || tBackgroundLineWidth % 2u == 1u, "The line width must be either zero (in which case it will not be drawn) or non-zero and odd.");
 
 	ocean_assert(frame && flippedCamera_T_world.isValid() && anyCamera.isValid() && world_T_coordinateSystem.isValid());
-	ocean_assert(frame.width() == anyCamera.width() && frame.height() == frame.height());
+	ocean_assert(frame.width() == anyCamera.width() && frame.height() == anyCamera.height());
 
 	const uint8_t* const red = CV::Canvas::red(frame.pixelFormat());
 	const uint8_t* const green = CV::Canvas::green(frame.pixelFormat());

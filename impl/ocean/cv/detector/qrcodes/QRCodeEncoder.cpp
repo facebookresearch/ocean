@@ -207,7 +207,7 @@ QRCodeEncoderBase::StatusCode QRCodeEncoder::encodeSegments(const Segments& segm
 {
 	ocean_assert(segments.empty() == false);
 	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= QRCode::MAX_VERSION);
-	ocean_assert(mask == (unsigned int)(-1) || (mask >= 1u && mask <= 7u));
+	ocean_assert(mask == (unsigned int)(-1) || mask <= 7u);
 
 	// Determine the lowest version that can hold the data (in range [minVersion, maxVersion], if it exists)
 
