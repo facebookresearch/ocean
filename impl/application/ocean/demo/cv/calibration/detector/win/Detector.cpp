@@ -55,6 +55,8 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		return 0;
 	}
 
+	SharedAnyCamera explicitCamera;
+
 	std::string cameraCalibrationFile;
 	if (commandArguments.hasValue("cameraCalibration", cameraCalibrationFile))
 	{
@@ -68,7 +70,16 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 			}
 			else
 			{
-				Log::warning() << "Failed to load camera calibration from file: " << cameraCalibrationFile;
+				explicitCamera = IO::CameraCalibrationManager::get().parseCamera(file());
+
+				if (explicitCamera)
+				{
+					Log::info() << "Loaded explicit camera calibration from file: " << cameraCalibrationFile;
+				}
+				else
+				{
+					Log::warning() << "Failed to load camera calibration from file: " << cameraCalibrationFile;
+				}
 			}
 		}
 		else
@@ -91,7 +102,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 
 	try
 	{
-		DetectorMainWindow mainWindow(hInstance, String::toWString(std::string("Calibration Pattern (") + Build::buildString() + std::string(")")), calibrationBoard, mediaFile, gaussianFilterSize);
+		DetectorMainWindow mainWindow(hInstance, String::toWString(std::string("Calibration Pattern Detector (") + Build::buildString() + std::string(")")), calibrationBoard, mediaFile, gaussianFilterSize, std::move(explicitCamera));
 		mainWindow.initialize();
 		mainWindow.start();
 	}

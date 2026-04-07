@@ -28,13 +28,14 @@
 
 using namespace Ocean::CV::Calibration;
 
-DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file, const unsigned int gaussianFilterSize) :
+DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file, const unsigned int gaussianFilterSize, SharedAnyCamera explicitCamera) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
 	mediaFile_(file),
 	calibrationBoard_(calibrationBoard),
-	gaussianFilterSize_(gaussianFilterSize)
+	gaussianFilterSize_(gaussianFilterSize),
+	explicitCamera_(std::move(explicitCamera))
 {
 #ifdef ENABLE_DEBUG_ELEMENTS
 	static_assert(CV::Calibration::CalibrationDebugElements::allowDebugging_);
@@ -96,6 +97,11 @@ void DetectorMainWindow::onIdle()
 
 		if (frame && *frame && (frame->timestamp() != frameTimestamp_))
 		{
+			if (!camera)
+			{
+				camera = explicitCamera_;
+			}
+
 			ocean_assert(camera && "The camera profile needs to be known, set it manually if needed");
 
 			if (camera)
@@ -250,8 +256,9 @@ void DetectorMainWindow::onDebugElement(const uint32_t elementId, const Frame* f
 {
 #ifdef ENABLE_DEBUG_ELEMENTS
 	Log::debug() << "New debug element id: " << elementId;
+#endif
 
+	OCEAN_SUPPRESS_UNUSED_WARNING(elementId);
 	OCEAN_SUPPRESS_UNUSED_WARNING(frame);
 	OCEAN_SUPPRESS_UNUSED_WARNING(hierarchy);
-#endif
 }

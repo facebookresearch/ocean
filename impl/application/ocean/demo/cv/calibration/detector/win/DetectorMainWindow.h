@@ -56,8 +56,9 @@ class DetectorMainWindow :
 		 * @param calibrationBoard The calibration board to detect
 		 * @param file Optional media file
 		 * @param gaussianFilterSize The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable, must be odd if non-zero
+		 * @param explicitCamera Optional explicit camera calibration to use when the frame medium does not provide a camera profile
 		 */
-		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file = std::string(), const unsigned int gaussianFilterSize = 0u);
+		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file = std::string(), const unsigned int gaussianFilterSize = 0u, SharedAnyCamera explicitCamera = nullptr);
 
 		/**
 		 * Destructs the main window.
@@ -118,6 +119,9 @@ class DetectorMainWindow :
 
 		/// The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable.
 		unsigned int gaussianFilterSize_ = 0u;
+
+		/// Optional explicit camera calibration to use when the frame medium does not provide a camera profile.
+		SharedAnyCamera explicitCamera_;
 
 		/// True, to save an image.
 		bool saveImage_ = false;
