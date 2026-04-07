@@ -18,6 +18,8 @@
 #include "ocean/platform/win/ApplicationWindow.h"
 #include "ocean/platform/win/BitmapWindow.h"
 
+#include <atomic>
+
 using namespace Ocean;
 using namespace Ocean::CV::Calibration;
 
@@ -124,7 +126,10 @@ class DetectorMainWindow :
 		SharedAnyCamera explicitCamera_;
 
 		/// True, to save an image.
-		bool saveImage_ = false;
+		std::atomic_bool saveImage_ = false;
+
+		/// True, to ignore frame timestamps.
+		std::atomic_bool ignoreFrameTimestamp_ = false;
 };
 
 #endif // META_OCEAN_APPLICATION_OCEAN_DEMO_CV_CALIBBRATION_DETECTOR__WIN_DETECTOR_MAIN_WINDOW_H

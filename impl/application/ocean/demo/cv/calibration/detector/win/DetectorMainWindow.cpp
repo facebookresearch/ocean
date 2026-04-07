@@ -95,22 +95,25 @@ void DetectorMainWindow::onIdle()
 		SharedAnyCamera camera;
 		const FrameRef frame(frameMedium_->frame(&camera));
 
-		if (frame && *frame && (frame->timestamp() != frameTimestamp_))
+		if (frame && *frame)
 		{
-			if (!camera)
+			if (ignoreFrameTimestamp_ || frame->timestamp() != frameTimestamp_)
 			{
-				camera = explicitCamera_;
+				if (!camera)
+				{
+					camera = explicitCamera_;
+				}
+
+				ocean_assert(camera && "The camera profile needs to be known, set it manually if needed");
+
+				if (camera)
+				{
+					onFrame(*frame, camera);
+				}
+
+				frameTimestamp_ = frame->timestamp();
+				return;
 			}
-
-			ocean_assert(camera && "The camera profile needs to be known, set it manually if needed");
-
-			if (camera)
-			{
-				onFrame(*frame, camera);
-			}
-
-			frameTimestamp_ = frame->timestamp();
-			return;
 		}
 	}
 
@@ -132,6 +135,10 @@ void DetectorMainWindow::onKeyDown(const int key)
 	else if (keyValue == "S")
 	{
 		saveImage_ = true;
+	}
+	else if (keyValue == "I")
+	{
+		ignoreFrameTimestamp_ = !ignoreFrameTimestamp_;
 	}
 }
 
