@@ -700,7 +700,7 @@ bool CalibrationBoardDetector::identifyAndLocateMarkerCandidates(const AnyCamera
 	return true;
 }
 
-bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, CalibrationBoardObservation& observation, const Scalar maximalProjectionError, Worker* worker)
+bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, CalibrationBoardObservation& observation, const Scalar maximalProjectionError, size_t* numberVisibleBoardPoints, Worker* worker)
 {
 	ocean_assert(camera.isValid());
 	if (!camera.isValid())
@@ -776,12 +776,134 @@ bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, c
 	Vectors3 usedObjectPoints;
 	Vectors2 usedImagePoints;
 
+	// let's determine the initial camera pose based on all marker candidates with coordinates
+
 	if (!calibrationBoard.determineCameraPose(camera, ConstArrayAccessor<MarkerCandidate>(markerCandidates), points, randomGenerator, board_T_camera, maximalProjectionError, nullptr, &usedObjectPointIds, &usedObjectPoints, &usedImagePoints))
 	{
 		return false;
 	}
 
+	// now we can add new point correspondences based on the initial camera pose
+
+	HomogenousMatrix4 board_T_optimizedCamera(false);
+
+	if (optimizeCameraPoseWithAdditionalCorrespondences(camera, calibrationBoard, board_T_camera, points, pointsDistributionArray, board_T_optimizedCamera, maximalProjectionError, usedObjectPointIds, usedObjectPoints, usedImagePoints, numberVisibleBoardPoints))
+	{
+		board_T_camera = board_T_optimizedCamera;
+	}
+
 	observation = CalibrationBoardObservation(0, camera.clone(), board_T_camera, std::move(usedObjectPointIds), std::move(usedObjectPoints), std::move(usedImagePoints));
+
+	return true;
+}
+
+bool CalibrationBoardDetector::optimizeCameraPoseWithAdditionalCorrespondences(const AnyCamera& camera, const MetricCalibrationBoard& calibrationBoard, const HomogenousMatrix4& board_T_camera, const Points& points, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, HomogenousMatrix4& board_T_optimizedCamera, const Scalar maximalProjectionError, CalibrationBoard::ObjectPointIds& usedObjectPointIds, Vectors3& usedObjectPoints, Vectors2& usedImagePoints, size_t* numberVisibleBoardPoints)
+{
+	ocean_assert(camera.isValid());
+	ocean_assert(calibrationBoard.isValid());
+	ocean_assert(board_T_camera.isValid());
+
+	ocean_assert(usedObjectPointIds.size() == usedObjectPoints.size());
+	ocean_assert(usedObjectPointIds.size() == usedImagePoints.size());
+
+	// build a set of already used object point ids for fast lookup
+
+	CalibrationBoard::ObjectPointIdSet usedObjectPointIdSet(usedObjectPointIds.cbegin(), usedObjectPointIds.cend());
+	ocean_assert(usedObjectPointIdSet.size() == usedObjectPointIds.size());
+
+	const HomogenousMatrix4 flippedCamera_T_board = Camera::standard2InvertedFlipped(board_T_camera);
+
+	const size_t initialSize = usedObjectPointIds.size();
+
+	size_t numberVisiblePoints = usedObjectPointIdSet.size();
+
+	for (size_t yMarker = 0; yMarker < calibrationBoard.yMarkers(); ++yMarker)
+	{
+		for (size_t xMarker = 0; xMarker < calibrationBoard.xMarkers(); ++xMarker)
+		{
+			const CalibrationBoard::MarkerCoordinate markerCoordinate((unsigned int)(xMarker), (unsigned int)(yMarker));
+
+			const CalibrationBoard::BoardMarker& boardMarker = calibrationBoard.marker(markerCoordinate);
+
+			const Vector3 markerPosition = calibrationBoard.markerCenterPosition(markerCoordinate);
+
+			for (size_t indexInMarker = 0; indexInMarker < 25; ++indexInMarker)
+			{
+				const CalibrationBoard::ObjectPointId objectPointId(markerCoordinate, indexInMarker);
+
+				if (usedObjectPointIdSet.contains(objectPointId))
+				{
+					continue;
+				}
+
+				const Vector3 objectPoint = boardMarker.objectPoint(markerPosition, calibrationBoard.xMetricMarkerSize(), calibrationBoard.zMetricMarkerSize(), indexInMarker);
+
+				const Vector2 predictedImagePoint = camera.projectToImageIF(flippedCamera_T_board, objectPoint);
+
+				if (!camera.isInside(predictedImagePoint, 10))
+				{
+					continue;
+				}
+
+				++numberVisiblePoints;
+
+				Index32 closestPointIndex = Index32(-1);
+				Index32 secondClosestPointIndex = Index32(-1);
+				Scalar closestSqrDistance = Numeric::maxValue();
+				Scalar secondClosestSqrDistance = Numeric::maxValue();
+
+				if (!PointDetector::closestPoints(predictedImagePoint, pointsDistributionArray, points, closestPointIndex, secondClosestPointIndex, closestSqrDistance, secondClosestSqrDistance))
+				{
+					continue;
+				}
+
+				if (closestSqrDistance > Numeric::sqr(maximalProjectionError))
+				{
+					continue;
+				}
+
+				if (secondClosestSqrDistance <= closestSqrDistance * Numeric::sqr(Scalar(2)))
+				{
+					continue;
+				}
+
+				const Point& closestPoint = points[closestPointIndex];
+
+				if (closestPoint.sign() != boardMarker.pointSign<true>(indexInMarker))
+				{
+					continue;
+				}
+
+				usedObjectPointIds.emplace_back(objectPointId);
+				usedObjectPoints.emplace_back(objectPoint);
+				usedImagePoints.emplace_back(closestPoint.observation());
+
+				usedObjectPointIdSet.emplace(objectPointId);
+			}
+		}
+	}
+
+	const size_t numberNewCorrespondences = usedObjectPointIds.size() - initialSize;
+
+	if (numberVisibleBoardPoints != nullptr)
+	{
+		*numberVisibleBoardPoints = numberVisiblePoints;
+	}
+
+	if (numberNewCorrespondences == 0)
+	{
+		return false;
+	}
+
+	// optimize the camera pose based on all correspondences (initial + additional)
+
+	HomogenousMatrix4 optimizedFlippedCamera_T_board;
+	if (!Geometry::NonLinearOptimizationPose::optimizePoseIF(camera, flippedCamera_T_board, ConstArrayAccessor<Vector3>(usedObjectPoints), ConstArrayAccessor<Vector2>(usedImagePoints), optimizedFlippedCamera_T_board, 20u, Geometry::Estimator::ET_HUBER))
+	{
+		return false;
+	}
+
+	board_T_optimizedCamera = Camera::invertedFlipped2Standard(optimizedFlippedCamera_T_board);
 
 	return true;
 }

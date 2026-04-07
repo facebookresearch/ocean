@@ -141,10 +141,29 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoardDetector
 		 * @param calibrationBoard The calibration board to be detected, must be valid
 		 * @param observation The resulting observation of the calibration board
 		 * @param maximalProjectionError The maximal projection error between the 3D object points and the 2D image points, in pixel, with range [0, infinity)
+		 * @param numberVisibleBoardPoints Optional resulting number of board points that projected inside the camera image and could theoretically be used for pose estimation, nullptr if not of interest
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool detectCalibrationBoard(const AnyCamera& camera, const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, CalibrationBoardObservation& observation, const Scalar maximalProjectionError, Worker* worker = nullptr);
+		static bool detectCalibrationBoard(const AnyCamera& camera, const Frame& yFrame, const MetricCalibrationBoard& calibrationBoard, CalibrationBoardObservation& observation, const Scalar maximalProjectionError, size_t* numberVisibleBoardPoints = nullptr, Worker* worker = nullptr);
+
+		/**
+		 * Optimizes the camera pose by determining additional 2D/3D correspondences from all board points that are not yet part of the used correspondences.
+		 * For each unused board point, the function projects the 3D object point into the image using the given camera pose and checks whether a matching detected point exists nearby.
+		 * @param camera The camera profile to be used, must be valid
+		 * @param calibrationBoard The calibration board defining the marker layout, must be valid
+		 * @param board_T_camera The initial camera pose transforming camera to board, with default camera looking towards the positive z-space with y-axis upwards, must be valid
+		 * @param points The detected points in the image, must be valid
+		 * @param pointsDistributionArray The distribution array associated with the detected points, must be valid
+		 * @param board_T_optimizedCamera The resulting optimized camera pose, with default camera looking towards the positive z-space with y-axis upwards
+		 * @param maximalProjectionError The maximal projection error between projected 3D object points and their corresponding 2D observations, with range [0, infinity)
+		 * @param usedObjectPointIds The ids of already used object points, will be extended with newly found correspondences
+		 * @param usedObjectPoints The 3D object points already used, will be extended with newly found correspondences
+		 * @param usedImagePoints The 2D image points already used, will be extended with newly found correspondences
+		 * @param numberVisibleBoardPoints Optional resulting number of board points that projected inside the camera image and could theoretically be used for pose estimation, nullptr if not of interest
+		 * @return True, if succeeded
+		 */
+		static bool optimizeCameraPoseWithAdditionalCorrespondences(const AnyCamera& camera, const MetricCalibrationBoard& calibrationBoard, const HomogenousMatrix4& board_T_camera, const Points& points, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, HomogenousMatrix4& board_T_optimizedCamera, const Scalar maximalProjectionError, CalibrationBoard::ObjectPointIds& usedObjectPointIds, Vectors3& usedObjectPoints, Vectors2& usedImagePoints, size_t* numberVisibleBoardPoints = nullptr);
 
 	protected:
 
