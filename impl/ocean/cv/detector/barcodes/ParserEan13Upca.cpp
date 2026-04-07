@@ -78,7 +78,7 @@ bool ParserEan13Upca::parse(const uint32_t* segmentData, const size_t size, Barc
 						for (size_t digitIndex = startDigitIndex; digitIndex < digits.size(); ++digitIndex)
 						{
 							ocean_assert(digits[digitIndex] < 10u);
-							barcodeData[digitIndex] = '0' + digits[digitIndex];
+							barcodeData[digitIndex - startDigitIndex] = '0' + digits[digitIndex];
 						}
 
 						ocean_assert(barcodeType != BarcodeType::INVALID && !barcodeData.empty());
