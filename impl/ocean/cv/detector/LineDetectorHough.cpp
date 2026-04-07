@@ -601,24 +601,26 @@ void LineDetectorHough::Accumulator::detectPeaksSubset(const unsigned int voteTh
 					// 1/det = 1/(dd * aa - da * da)
 
 					const Scalar denominator = dd * aa - da * da;
-					ocean_assert(Numeric::isNotEqualEps(denominator));
 
-					const Scalar factor = 1 / denominator;
-
-					// [ dd da ]^-1   [ d ]       [  aa  -da ]       [ d ]       [  aa * f   -da * f ]   [ d ]
-					// [ da aa ]    * [ a ]   =   [ -da   dd ] * f * [ a ]   =   [ -da * f    dd * f ] * [ a ]
-
-					// [ offsetD ]   [ (aa * d - da * a) * f ]
-					// [ offsetA ] = [ (dd * a - da * d) * f ]
-
-					const Scalar offsetD = (aa * d - da * a) * factor;
-					const Scalar offsetA = (dd * a - da * d) * factor;
-
-					// check for invalid maximum
-					if (offsetD >= -2 && offsetD <= 2 && offsetA >= -2 && offsetA <= 2)
+					if (Numeric::isNotEqualEps(denominator))
 					{
-						correctedD = Scalar(distance) - offsetD;
-						correctedA = Scalar(angle) - offsetA;
+						const Scalar factor = Scalar(1) / denominator;
+
+						// [ dd da ]^-1   [ d ]       [  aa  -da ]       [ d ]       [  aa * f   -da * f ]   [ d ]
+						// [ da aa ]    * [ a ]   =   [ -da   dd ] * f * [ a ]   =   [ -da * f    dd * f ] * [ a ]
+
+						// [ offsetD ]   [ (aa * d - da * a) * f ]
+						// [ offsetA ] = [ (dd * a - da * d) * f ]
+
+						const Scalar offsetD = (aa * d - da * a) * factor;
+						const Scalar offsetA = (dd * a - da * d) * factor;
+
+						// check for invalid maximum
+						if (offsetD >= -2 && offsetD <= 2 && offsetA >= -2 && offsetA <= 2)
+						{
+							correctedD = Scalar(distance) - offsetD;
+							correctedA = Scalar(angle) - offsetA;
+						}
 					}
 				}
 
@@ -1585,7 +1587,7 @@ void LineDetectorHough::detectFiniteLines(const InfiniteLine& infiniteLine, cons
 
 	bool matchingResponse = false;
 
-	while (x0 != x1 && y0 != y1)
+	while (x0 != x1 || y0 != y1)
 	{
 		switch (filterResponse)
 		{
@@ -1846,7 +1848,7 @@ void LineDetectorHough::optimizeInfiniteLinesSubset(const InfiniteLine* infinite
 
 		unsigned int iteration = 0u;
 
-		while (x0 != x1 && y0 != y1)
+		while (x0 != x1 || y0 != y1)
 		{
 			if (iteration++ % sampingSteps == 0u)
 			{
