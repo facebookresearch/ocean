@@ -89,6 +89,42 @@ Vectors3 MetricCalibrationBoard::objectPoints(ObjectPointIds* objectPointIds) co
 	return result;
 }
 
+Vectors3 MetricCalibrationBoard::markerCornerPositions(CV::PixelPositions* cornerCoordinates) const
+{
+	ocean_assert(isValid());
+
+	const size_t xCorners = xMarkers_ + 1;
+	const size_t yCorners = yMarkers_ + 1;
+
+	Vectors3 result;
+	result.reserve(xCorners * yCorners);
+
+	if (cornerCoordinates != nullptr)
+	{
+		ocean_assert(cornerCoordinates->empty());
+		cornerCoordinates->clear();
+		cornerCoordinates->reserve(xCorners * yCorners);
+	}
+
+	const Scalar totalWidth = Scalar(xMarkers_) * xMetricMarkerSize_;
+	const Scalar totalHeight = Scalar(yMarkers_) * zMetricMarkerSize_;
+
+	for (size_t yCorner = 0; yCorner < yCorners; ++yCorner)
+	{
+		for (size_t xCorner = 0; xCorner < xCorners; ++xCorner)
+		{
+			result.emplace_back(Scalar(xCorner) * xMetricMarkerSize_ - totalWidth * Scalar(0.5), Scalar(0), Scalar(yCorner) * zMetricMarkerSize_ - totalHeight * Scalar(0.5));
+
+			if (cornerCoordinates != nullptr)
+			{
+				cornerCoordinates->emplace_back((unsigned int)(xCorner), (unsigned int)(yCorner));
+			}
+		}
+	}
+
+	return result;
+}
+
 bool MetricCalibrationBoard::determineCameraPose(const AnyCamera& camera, const ConstIndexedAccessor<MarkerCandidate>& markerCandidates, const Points& points, RandomGenerator& randomGenerator, HomogenousMatrix4& board_T_camera, const Scalar maximalProjectionError, Indices32* usedMarkerCandidates, ObjectPointIds* usedObjectPointIds, Vectors3* usedObjectPoints, Vectors2* usedImagePoints) const
 {
 	ocean_assert(isValid());

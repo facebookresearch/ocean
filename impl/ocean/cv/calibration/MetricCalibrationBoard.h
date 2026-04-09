@@ -112,6 +112,15 @@ class OCEAN_CV_CALIBRATION_EXPORT MetricCalibrationBoard : public CalibrationBoa
 		Vectors3 objectPoints(ObjectPointIds* objectPointIds = nullptr) const;
 
 		/**
+		 * Returns the 3D positions of all unique marker corner points of this calibration board.
+		 * The corners form a (xMarkers + 1) x (yMarkers + 1) grid and are returned in row-major order (iterating xMarker first, then yMarker).<br>
+		 * Note: corner coordinates are not identical to marker coordinates as they include one additional row and column.
+		 * @param cornerCoordinates Optional resulting coordinates of the corners, with range [0, xMarkers]x[0, yMarkers], one for each returned position, nullptr if not of interest
+		 * @return The unique corner positions in the coordinate system of the calibration board, defined in the board's xz-plane, will be (xMarkers + 1) * (yMarkers + 1)
+		 */
+		Vectors3 markerCornerPositions(CV::PixelPositions* cornerCoordinates = nullptr) const;
+
+		/**
 		 * Determines the camera pose using only 2D/3D correspondences from given marker candidates.
 		 * @param camera The camera profile to be used, must be valid
 		 * @param markerCandidates The marker candidates with valid marker coordinate, at least one
