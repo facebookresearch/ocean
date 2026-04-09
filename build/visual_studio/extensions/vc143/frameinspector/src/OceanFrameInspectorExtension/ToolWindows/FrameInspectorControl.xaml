@@ -7,6 +7,8 @@
              xmlns:vsh="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
+             UseLayoutRounding="True"
+             SnapsToDevicePixels="True"
              Background="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBackgroundKey}}"
              Foreground="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowTextKey}}">
 
@@ -104,7 +106,7 @@
                         <Image x:Name="FrameImage"
                                Source="{Binding BitmapSource}"
                                Stretch="None"
-                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               RenderOptions.BitmapScalingMode="HighQuality"
                                MouseMove="FrameImage_MouseMove">
                             <Image.LayoutTransform>
                                 <ScaleTransform ScaleX="{Binding ZoomLevel}" ScaleY="{Binding ZoomLevel}"/>

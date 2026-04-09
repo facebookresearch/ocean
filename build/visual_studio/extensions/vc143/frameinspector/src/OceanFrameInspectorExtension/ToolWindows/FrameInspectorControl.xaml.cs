@@ -49,6 +49,23 @@ namespace OceanFrameInspectorExtension.ToolWindows
             {
                 DrawHistogram();
             }
+            else if (e.PropertyName == nameof(InspectorViewModel.ZoomLevel))
+            {
+                UpdateBitmapScalingMode();
+            }
+        }
+
+        /// <summary>
+        /// At zoom > 1x use NearestNeighbor so individual pixels are sharp.
+        /// At zoom &lt;= 1x use HighQuality to avoid nearest-neighbor snapping
+        /// artifacts caused by any sub-pixel offset in the layout.
+        /// </summary>
+        private void UpdateBitmapScalingMode()
+        {
+            var mode = _viewModel.ZoomLevel > 1.0
+                ? BitmapScalingMode.NearestNeighbor
+                : BitmapScalingMode.HighQuality;
+            RenderOptions.SetBitmapScalingMode(FrameImage, mode);
         }
 
         /// <summary>
