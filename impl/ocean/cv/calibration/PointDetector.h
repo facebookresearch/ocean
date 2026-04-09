@@ -244,6 +244,17 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		static bool createFilterResponseFrame(const Frame& yFrame, Frame& responseFrame, const unsigned int filterSize, const BorderShape borderShape, const int32_t minimalDifference = 25, const int32_t maximalDifference = 25 * 4, Worker* worker = nullptr);
 
 		/**
+		 * Refines the sub-pixel position of a point by snapping it to the nearest peak in the image.
+		 * The function rounds the given sub-pixel position to the nearest pixel, then applies iterative peak refinement to determine the precise sub-pixel center of the dot.
+		 * @param yFrame The grayscale frame in which the point will be refined, with pixel format FORMAT_Y8, must be valid
+		 * @param roughPosition The rough sub-pixel position of the point to be refined, with range [1, width - 2]x[1, height - 2]
+		 * @param positiveSign True, if the point is a dark dot on a bright background (positive sign); False, if the point is a bright dot on a dark background (negative sign)
+		 * @param refinedPosition The resulting refined sub-pixel position
+		 * @return True, if the refinement succeeded
+		 */
+		static bool refinePointPosition(const Frame& yFrame, const Vector2& roughPosition, const bool positiveSign, Vector2& refinedPosition);
+
+		/**
 		 * Returns the closest point to a given point.
 		 * @param queryPoint The query point for which the closest point will be determined
 		 * @param sign The sign of the point the closest point must have, true for dark points, false for bright points

@@ -205,6 +205,36 @@ bool PointDetector::PointPeakDetector::determinePrecisePosition(const unsigned i
 	return true;
 }
 
+bool PointDetector::refinePointPosition(const Frame& yFrame, const Vector2& roughPosition, const bool positiveSign, Vector2& refinedPosition)
+{
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+
+	const unsigned int x = (unsigned int)(Numeric::round32(roughPosition.x()));
+	const unsigned int y = (unsigned int)(Numeric::round32(roughPosition.y()));
+
+	if (x < 1u || x >= yFrame.width() - 1u || y < 1u || y >= yFrame.height() - 1u)
+	{
+		return false;
+	}
+
+	const int32_t strength = positiveSign ? 1 : -1;
+
+	Scalar preciseX;
+	Scalar preciseY;
+	int32_t preciseStrength;
+
+	const PointPeakDetector pointPeakDetector(yFrame);
+
+	if (!pointPeakDetector.determinePrecisePosition(x, y, strength, preciseX, preciseY, preciseStrength))
+	{
+		return false;
+	}
+
+	refinedPosition = Vector2(preciseX, preciseY);
+
+	return true;
+}
+
 bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 {
 	ocean_assert(yFrame.isValid());
