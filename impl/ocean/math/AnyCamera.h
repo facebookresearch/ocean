@@ -566,6 +566,14 @@ class AnyCameraClipperT
 		void update(const SharedAnyCameraT<T>& camera, const size_t segmentSteps = 10);
 
 		/**
+		 * Updates the clipper with a new camera model based on a cloned copy of the provided camera.
+		 * If the new camera is equal to the current camera, the function will return immediately without any updates.
+		 * @param camera The camera model defining the projection, must be valid
+		 * @param segmentSteps The number of segments to be used to determine the camera boundary, with range [1, infinity)
+		 */
+		void update(const AnyCameraT<T>& camera, const size_t segmentSteps = 10);
+
+		/**
 		 * Returns the 2D line segments defined in the camera's normalized image plane defining the camera's boundary.
 		 * @return The camera boundary segments
 		 */
@@ -1802,6 +1810,36 @@ void AnyCameraClipperT<T>::update(const SharedAnyCameraT<T>& camera, const size_
 	if (determineCameraBoundary(*camera, cameraBoundarySegments_, segmentSteps))
 	{
 		camera_ = camera;
+	}
+	else
+	{
+		camera_ = nullptr;
+		cameraBoundarySegments_.clear();
+	}
+
+	ocean_assert(isValid());
+}
+
+template <typename T>
+void AnyCameraClipperT<T>::update(const AnyCameraT<T>& camera, const size_t segmentSteps)
+{
+	ocean_assert(camera.isValid() && segmentSteps >= 1);
+	if (!camera.isValid() || segmentSteps == 0)
+	{
+		return;
+	}
+
+	if (camera_ && camera_->isEqual(camera))
+	{
+		ocean_assert(isValid());
+		return;
+	}
+
+	cameraBoundarySegments_.clear();
+
+	if (determineCameraBoundary(camera, cameraBoundarySegments_, segmentSteps))
+	{
+		camera_ = camera.clone();
 	}
 	else
 	{
