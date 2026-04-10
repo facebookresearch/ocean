@@ -70,7 +70,9 @@ bool OILImageSequenceRecorder::setMode(const RecorderMode mode)
 	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
+	{
 		return false;
+	}
 
 	return ImageSequenceRecorder::setMode(mode);
 }
@@ -123,10 +125,14 @@ bool OILImageSequenceRecorder::start()
 	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
+	{
 		return true;
+	}
 
 	if (filename_.empty())
+	{
 		return false;
+	}
 
 	frameCounter_ = 0u;
 	while (!frameQueue_.empty())
@@ -150,7 +156,9 @@ bool OILImageSequenceRecorder::stop()
 	const ScopedLock scopedLock(lock_);
 
 	if (!isRecording_)
+	{
 		return true;
+	}
 
 	isRecording_ = false;
 	return true;
