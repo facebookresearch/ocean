@@ -13,8 +13,7 @@ namespace Ocean
 namespace Media
 {
 
-BufferImageRecorder::BufferImageRecorder() :
-	saveImage_(false)
+BufferImageRecorder::BufferImageRecorder()
 {
 	recorderType_ = Type(recorderType_ | BUFFER_IMAGE_RECORDER);
 }

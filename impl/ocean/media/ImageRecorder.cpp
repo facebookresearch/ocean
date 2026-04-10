@@ -13,8 +13,7 @@ namespace Ocean
 namespace Media
 {
 
-ImageRecorder::ImageRecorder() :
-	saveImage_(false)
+ImageRecorder::ImageRecorder()
 {
 	recorderType_ = Type(recorderType_ | IMAGE_RECORDER);
 }
