@@ -14,7 +14,7 @@ namespace Media
 {
 
 ImageRecorder::ImageRecorder() :
-	recorderSaveImage(false)
+	saveImage_(false)
 {
 	recorderType_ = Type(recorderType_ | IMAGE_RECORDER);
 }
@@ -28,10 +28,10 @@ bool ImageRecorder::start()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (recorderSaveImage)
+	if (saveImage_)
 		return false;
 
-	recorderSaveImage = true;
+	saveImage_ = true;
 	return true;
 }
 
@@ -42,7 +42,7 @@ bool ImageRecorder::stop()
 
 bool ImageRecorder::isRecording() const
 {
-	return recorderSaveImage;
+	return saveImage_;
 }
 
 bool ImageRecorder::lockBufferToFill(Frame& /*recorderFrame*/, const bool /*respectFrameFrequency*/)

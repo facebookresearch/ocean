@@ -60,7 +60,7 @@ bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respe
 		return false;
 	}
 
-	if (!recorderSaveImage)
+	if (!saveImage_)
 	{
 		return false;
 	}
@@ -71,7 +71,7 @@ bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respe
 		return false;
 	}
 
-	recorderSaveImage = false;
+	saveImage_ = false;
 
 	recorderFrame = Frame(recorderFrame_, Frame::ACM_USE_KEEP_LAYOUT);
 
