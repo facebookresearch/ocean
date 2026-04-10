@@ -29,7 +29,9 @@ bool BufferImageRecorder::start()
 	const ScopedLock scopedLock(lock_);
 
 	if (saveImage_)
+	{
 		return false;
+	}
 
 	saveImage_ = true;
 	return true;
