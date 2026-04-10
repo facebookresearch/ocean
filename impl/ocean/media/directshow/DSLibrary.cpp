@@ -231,7 +231,9 @@ MediumRef DSLibrary::newLiveVideo(const std::string& url, bool useExclusive)
 		DSDeviceEnumerator::Names names(enumerator.names());
 
 		if (index < names.size())
+		{
 			newUrl = names[index];
+		}
 	}
 
 	if (!useExclusive)
