@@ -33,7 +33,7 @@ OILImageSequenceRecorder::~OILImageSequenceRecorder()
 
 OILImageSequenceRecorder::RecorderMode OILImageSequenceRecorder::mode() const
 {
-	return recorderMode;
+	return recorderMode_;
 }
 
 unsigned int OILImageSequenceRecorder::pendingImages() const
@@ -103,9 +103,9 @@ bool OILImageSequenceRecorder::addImage(const Frame& frame)
 
 	const ScopedLock scopedLock(lock_);
 
-	if (recorderMode == RM_IMMEDIATE)
+	if (recorderMode_ == RM_IMMEDIATE)
 	{
-		imageRecorder_.saveImage(*frameRef, addOptionalSuffixToFilename(filename_, frameCounter_ + recorderStartIndex, filenameSuffixed_));
+		imageRecorder_.saveImage(*frameRef, addOptionalSuffixToFilename(filename_, frameCounter_ + startIndex_, filenameSuffixed_));
 	}
 	else
 	{
@@ -136,7 +136,7 @@ bool OILImageSequenceRecorder::start()
 
 	startTimestamp_.toNow();
 
-	if (recorderMode == RM_PARALLEL && !isThreadInvokedToStart())
+	if (recorderMode_ == RM_PARALLEL && !isThreadInvokedToStart())
 	{
 		startThread();
 	}
@@ -165,7 +165,7 @@ bool OILImageSequenceRecorder::forceSaving()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (isRecording_ || recorderMode != RM_EXPLICIT)
+	if (isRecording_ || recorderMode_ != RM_EXPLICIT)
 	{
 		return false;
 	}
@@ -182,7 +182,7 @@ bool OILImageSequenceRecorder::forceSaving()
 		const unsigned int frameIndex = frameQueue_.front().second;
 		frameQueue_.pop();
 
-		result = imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(filename_, frameIndex + recorderStartIndex, filenameSuffixed_)) && result;
+		result = imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(filename_, frameIndex + startIndex_, filenameSuffixed_)) && result;
 	}
 
 	return result;
@@ -235,9 +235,9 @@ void OILImageSequenceRecorder::unlockBufferToFill()
 
 	ocean_assert(frame_);
 
-	if (recorderMode == RM_IMMEDIATE)
+	if (recorderMode_ == RM_IMMEDIATE)
 	{
-		imageRecorder_.saveImage(frame_, addOptionalSuffixToFilename(filename_, frameCounter_ + recorderStartIndex, filenameSuffixed_));
+		imageRecorder_.saveImage(frame_, addOptionalSuffixToFilename(filename_, frameCounter_ + startIndex_, filenameSuffixed_));
 	}
 	else
 	{
@@ -271,7 +271,7 @@ void OILImageSequenceRecorder::threadRun()
 		if (frame)
 		{
 			ocean_assert(frameIndex != (unsigned int)(-1));
-			imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(filename_, frameIndex + recorderStartIndex, filenameSuffixed_));
+			imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(filename_, frameIndex + startIndex_, filenameSuffixed_));
 		}
 		else
 		{
