@@ -55,7 +55,7 @@ IIOImageRecorder::Encoders IIOImageRecorder::frameEncoders() const
 
 bool IIOImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFrameFrequency)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderFrame_)
 	{
@@ -83,7 +83,7 @@ bool IIOImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 
 void IIOImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{

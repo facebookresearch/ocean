@@ -34,7 +34,7 @@ bool IIOBufferImageRecorder::saveImage(const Frame& frame, const std::string& im
 
 bool IIOBufferImageRecorder::buffer(std::vector<uint8_t>& data) const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	data = recorderBuffer;
 	return true;
@@ -61,7 +61,7 @@ IIOBufferImageRecorder::Encoders IIOBufferImageRecorder::frameEncoders() const
 
 bool IIOBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFrameFrequency)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderFrame_)
 	{
@@ -89,7 +89,7 @@ bool IIOBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool r
 
 void IIOBufferImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{

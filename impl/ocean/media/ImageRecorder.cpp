@@ -16,7 +16,7 @@ namespace Media
 ImageRecorder::ImageRecorder() :
 	recorderSaveImage(false)
 {
-	recorderType = Type(recorderType | IMAGE_RECORDER);
+	recorderType_ = Type(recorderType_ | IMAGE_RECORDER);
 }
 
 ImageRecorder::~ImageRecorder()
@@ -26,7 +26,7 @@ ImageRecorder::~ImageRecorder()
 
 bool ImageRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderSaveImage)
 		return false;

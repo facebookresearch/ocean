@@ -16,7 +16,7 @@ namespace Media
 BufferImageRecorder::BufferImageRecorder() :
 	recorderSaveImage(false)
 {
-	recorderType = Type(recorderType | BUFFER_IMAGE_RECORDER);
+	recorderType_ = Type(recorderType_ | BUFFER_IMAGE_RECORDER);
 }
 
 BufferImageRecorder::~BufferImageRecorder()
@@ -26,7 +26,7 @@ BufferImageRecorder::~BufferImageRecorder()
 
 bool BufferImageRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderSaveImage)
 		return false;

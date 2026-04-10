@@ -16,7 +16,7 @@ namespace Media
 MovieRecorder::MovieRecorder() :
 	FrameRecorder()
 {
-	recorderType = Type(recorderType | MOVIE_RECORDER);
+	recorderType_ = Type(recorderType_ | MOVIE_RECORDER);
 }
 
 MovieRecorder::~MovieRecorder()

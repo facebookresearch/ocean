@@ -81,7 +81,7 @@ bool DSFrameRecorder::setPreferredFrameType(const FrameType& type)
 
 	FrameType newFrameType(width4, height4, pixelFormat, type.pixelOrigin());
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (newFrameType == recorderFrameType)
 	{

@@ -46,7 +46,7 @@ AMovieRecorder::~AMovieRecorder()
 
 bool AMovieRecorder::setFilename(const std::string& filename)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ != nullptr)
 	{
@@ -84,7 +84,7 @@ bool AMovieRecorder::setPreferredFrameType(const FrameType& type)
 
 bool AMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ != nullptr || isRecording_)
 	{
@@ -111,7 +111,7 @@ bool AMovieRecorder::start()
 		return false;
 	}
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ != nullptr || isRecording_)
 	{
@@ -133,7 +133,7 @@ bool AMovieRecorder::start()
 
 bool AMovieRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ == nullptr || isRecording_ == false)
 	{
@@ -147,7 +147,7 @@ bool AMovieRecorder::stop()
 
 bool AMovieRecorder::isRecording() const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	return isRecording_;
 }
@@ -167,7 +167,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 {
 	ocean_assert_and_suppress_unused(respectFrameFrequency == false && "currently not supported!", respectFrameFrequency);
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ == nullptr)
 	{
@@ -468,7 +468,7 @@ void AMovieRecorder::release()
 		// Signal an end-of-stream to the codec and gather the remaining frames, if any.
 		if (wasRecording)
 		{
-			const ScopedLock scopedLock(recorderLock);
+			const ScopedLock scopedLock(lock_);
 
 			ssize_t bufferIndex = ssize_t(-1);
 

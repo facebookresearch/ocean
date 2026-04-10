@@ -14,7 +14,7 @@ namespace Media
 {
 
 Recorder::Recorder() :
-	recorderType(RECORDER)
+	recorderType_(RECORDER)
 {
 	// nothing to do here
 }

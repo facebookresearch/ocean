@@ -52,7 +52,7 @@ OILImageRecorder::Encoders OILImageRecorder::frameEncoders() const
 
 bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respectFrameFrequency*/)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderFrame_)
 	{
@@ -80,7 +80,7 @@ bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respe
 
 void OILImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{

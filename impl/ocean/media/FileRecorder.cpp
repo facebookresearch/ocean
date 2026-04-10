@@ -22,7 +22,7 @@ FileRecorder::FileRecorder() :
 	Recorder(),
 	recorderFilenameSuffixed(true)
 {
-	recorderType = Type(recorderType | FILE_RECORDER);
+	recorderType_ = Type(recorderType_ | FILE_RECORDER);
 }
 
 FileRecorder::~FileRecorder()

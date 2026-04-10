@@ -38,7 +38,7 @@ bool OILBufferImageRecorder::saveImage(const Frame& frame, const std::string& im
 
 bool OILBufferImageRecorder::buffer(std::vector<unsigned char>& data) const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	data = recorderBuffer;
 	return true;
@@ -69,7 +69,7 @@ OILBufferImageRecorder::Encoders OILBufferImageRecorder::frameEncoders() const
 
 bool OILBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respectFrameFrequency*/)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderFrame_)
 	{
@@ -97,7 +97,7 @@ bool OILBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /
 
 void OILBufferImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{

@@ -45,7 +45,7 @@ AVFMovieRecorder::~AVFMovieRecorder()
 
 bool AVFMovieRecorder::setFilename(const std::string& filename)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ != nullptr)
 	{
@@ -58,7 +58,7 @@ bool AVFMovieRecorder::setFilename(const std::string& filename)
 
 bool AVFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ != nullptr)
 	{
@@ -73,7 +73,7 @@ bool AVFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 
 bool AVFMovieRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ != nullptr || isRecording_)
 	{
@@ -105,7 +105,7 @@ bool AVFMovieRecorder::start()
 
 bool AVFMovieRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ == nullptr || isRecording_ == false)
 	{
@@ -129,7 +129,7 @@ bool AVFMovieRecorder::stop()
 
 bool AVFMovieRecorder::isRecording() const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	return isRecording_;
 }
@@ -152,7 +152,7 @@ bool AVFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 {
 	ocean_assert(respectFrameFrequency == false && "currently not supported!");
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ == nullptr)
 	{
@@ -198,7 +198,7 @@ void AVFMovieRecorder::unlockBufferToFill()
 	ocean_assert(assetWriterInputPixelBufferAdaptor_ != nullptr);
 	ocean_assert(pixelBuffer_ != nullptr);
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriterInputPixelBufferAdaptor_ != nullptr && pixelBuffer_ != nullptr)
 	{

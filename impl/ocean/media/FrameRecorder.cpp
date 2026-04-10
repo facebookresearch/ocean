@@ -17,7 +17,7 @@ FrameRecorder::FrameRecorder() :
 	Recorder(),
 	recorderFrameFrequency(25)
 {
-	recorderType = Type(recorderType | FRAME_RECORDER);
+	recorderType_ = Type(recorderType_ | FRAME_RECORDER);
 }
 
 FrameRecorder::~FrameRecorder()

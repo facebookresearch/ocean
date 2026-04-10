@@ -67,7 +67,7 @@ OILImageSequenceRecorder::Encoders OILImageSequenceRecorder::frameEncoders() con
 
 bool OILImageSequenceRecorder::setMode(const RecorderMode mode)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
 		return false;
@@ -77,7 +77,7 @@ bool OILImageSequenceRecorder::setMode(const RecorderMode mode)
 
 bool OILImageSequenceRecorder::setStartIndex(const unsigned int index)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
 	{
@@ -101,7 +101,7 @@ bool OILImageSequenceRecorder::addImage(const Frame& frame)
 
 	const FrameRef frameRef(new Frame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA));
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderMode == RM_IMMEDIATE)
 	{
@@ -120,7 +120,7 @@ bool OILImageSequenceRecorder::addImage(const Frame& frame)
 
 bool OILImageSequenceRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
 		return true;
@@ -147,7 +147,7 @@ bool OILImageSequenceRecorder::start()
 
 bool OILImageSequenceRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!isRecording_)
 		return true;
@@ -163,7 +163,7 @@ bool OILImageSequenceRecorder::isRecording() const
 
 bool OILImageSequenceRecorder::forceSaving()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_ || recorderMode != RM_EXPLICIT)
 	{
@@ -190,7 +190,7 @@ bool OILImageSequenceRecorder::forceSaving()
 
 bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFrameFrequency)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!isRecording_)
 	{
@@ -231,7 +231,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 
 void OILImageSequenceRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	ocean_assert(frame_);
 

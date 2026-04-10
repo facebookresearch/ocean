@@ -34,7 +34,7 @@ bool WICBufferImageRecorder::saveImage(const Frame& frame, const std::string& im
 
 bool WICBufferImageRecorder::buffer(std::vector<uint8_t>& data) const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	data = recorderBuffer;
 	return true;
@@ -61,7 +61,7 @@ WICBufferImageRecorder::Encoders WICBufferImageRecorder::frameEncoders() const
 
 bool WICBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respectFrameFrequency*/)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	// **TODO** missing implementation, handle 'respectFrameFrequency'
 
@@ -91,7 +91,7 @@ bool WICBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /
 
 void WICBufferImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{

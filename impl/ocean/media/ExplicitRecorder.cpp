@@ -15,7 +15,7 @@ namespace Media
 
 ExplicitRecorder::ExplicitRecorder()
 {
-	recorderType = Type(recorderType | EXPLICIT_RECORDER);
+	recorderType_ = Type(recorderType_ | EXPLICIT_RECORDER);
 }
 
 ExplicitRecorder::~ExplicitRecorder()

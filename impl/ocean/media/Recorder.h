@@ -115,15 +115,15 @@ class OCEAN_MEDIA_EXPORT Recorder
 	protected:
 
 		/// Type of this recorder.
-		Type recorderType;
+		Type recorderType_;
 
 		/// Lock of this recorder.
-		mutable Lock recorderLock;
+		mutable Lock lock_;
 };
 
 inline Recorder::Type Recorder::type() const
 {
-	return recorderType;
+	return recorderType_;
 }
 
 }

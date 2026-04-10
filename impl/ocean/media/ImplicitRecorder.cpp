@@ -15,7 +15,7 @@ namespace Media
 
 ImplicitRecorder::ImplicitRecorder()
 {
-	recorderType = Type(recorderType | IMPLICIT_RECORDER);
+	recorderType_ = Type(recorderType_ | IMPLICIT_RECORDER);
 }
 
 ImplicitRecorder::~ImplicitRecorder()

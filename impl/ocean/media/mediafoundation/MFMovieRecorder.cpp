@@ -36,7 +36,7 @@ MFMovieRecorder::~MFMovieRecorder()
 
 bool MFMovieRecorder::setFilename(const std::string& filename)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (sinkWriter_.isValid())
 	{
@@ -54,7 +54,7 @@ bool MFMovieRecorder::setPreferredFrameType(const FrameType& type)
 		return false;
 	}
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (sinkWriter_.isValid())
 	{
@@ -72,7 +72,7 @@ bool MFMovieRecorder::setPreferredFrameType(const FrameType& type)
 
 bool MFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (sinkWriter_.isValid())
 	{
@@ -94,7 +94,7 @@ bool MFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 
 bool MFMovieRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (sinkWriter_.isValid())
 	{
@@ -120,7 +120,7 @@ bool MFMovieRecorder::start()
 
 bool MFMovieRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!sinkWriter_.isValid() || isRecording_ == false)
 	{
@@ -141,7 +141,7 @@ bool MFMovieRecorder::stop()
 
 bool MFMovieRecorder::isRecording() const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	return isRecording_;
 }
@@ -159,7 +159,7 @@ MFMovieRecorder::Encoders MFMovieRecorder::frameEncoders() const
 
 bool MFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respectFrameFrequency*/)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	// **TODO** missing implementation, handle 'respectFrameFrequency'
 
@@ -212,7 +212,7 @@ bool MFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respec
 
 void MFMovieRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	ocean_assert(mediaBuffer_.isValid() && sinkWriter_.isValid());
 	if (!mediaBuffer_.isValid() || !sinkWriter_.isValid())

@@ -18,7 +18,7 @@ ImageSequenceRecorder::ImageSequenceRecorder() :
 	recorderMode(RM_IMMEDIATE),
 	recorderStartIndex(0u)
 {
-	recorderType = Type(recorderType | IMAGE_SEQUENCE_RECORDER);
+	recorderType_ = Type(recorderType_ | IMAGE_SEQUENCE_RECORDER);
 }
 
 ImageSequenceRecorder::~ImageSequenceRecorder()

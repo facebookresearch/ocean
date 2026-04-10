@@ -16,7 +16,7 @@ namespace Media
 BufferRecorder::BufferRecorder() :
 	Recorder()
 {
-	recorderType = Type(recorderType | BUFFER_RECORDER);
+	recorderType_ = Type(recorderType_ | BUFFER_RECORDER);
 }
 
 BufferRecorder::~BufferRecorder()
