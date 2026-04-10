@@ -140,22 +140,22 @@ class OCEAN_MEDIA_EXPORT ImageSequence :
 	protected:
 
 		/// Index of the first frame.
-		unsigned int frameStartIndex_;
+		unsigned int frameStartIndex_ = 0u;
 
 		/// Index of the recent frame.
-		unsigned int frameIndex_;
+		unsigned int frameIndex_ = 0u;
 
 		/// Number of sequence frames.
-		mutable unsigned int images_;
+		mutable unsigned int images_ = (unsigned int)(-1);
 
 		/// State determining whether the sequence filenames have a constant length.
-		unsigned int filenameIndexLength_;
+		unsigned int filenameIndexLength_ = 0u;
 
 		/// Sequence mode of this image sequence object.
-		SequenceMode sequenceMode_;
+		SequenceMode sequenceMode_ = SM_AUTOMATIC;
 
 		/// State determining whether the explicit sequence mode has been started.
-		bool explicitSequenceModeStarted_;
+		bool explicitSequenceModeStarted_ = false;
 };
 
 }

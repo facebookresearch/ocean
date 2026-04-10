@@ -22,13 +22,7 @@ namespace Media
 ImageSequence::ImageSequence(const std::string& url) :
 	Medium(url),
 	FiniteMedium(url),
-	FrameMedium(url),
-	frameStartIndex_(0u),
-	frameIndex_(0u),
-	images_((unsigned int)(-1)),
-	filenameIndexLength_(0u),
-	sequenceMode_(SM_AUTOMATIC),
-	explicitSequenceModeStarted_(false)
+	FrameMedium(url)
 {
 	type_ = Type(type_ | IMAGE_SEQUENCE);
 
