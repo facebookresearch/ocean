@@ -170,7 +170,7 @@ OceanUSBManager::DeviceDescriptors USBLibrary::androidEnumerateCameraDevices()
 
 MediumRef USBLibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	MediumRef medium = newLiveVideo(url, useExclusive);
 
@@ -179,7 +179,7 @@ MediumRef USBLibrary::newMedium(const std::string& url, bool useExclusive)
 
 MediumRef USBLibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (type == Medium::LIVE_VIDEO || type == Medium::FRAME_MEDIUM)
 	{
@@ -202,7 +202,7 @@ RecorderRef USBLibrary::newRecorder(const Recorder::Type /*type*/)
 
 USBLibrary::Definitions USBLibrary::selectableMedia() const
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	updateAvailableDevices();
 
@@ -253,7 +253,7 @@ std::string USBLibrary::resolveUrl(const std::string& url, std::string& deviceNa
 		}
 	}
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	updateAvailableDevices();
 

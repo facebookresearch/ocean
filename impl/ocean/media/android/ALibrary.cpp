@@ -83,7 +83,7 @@ bool ALibrary::unregisterLibrary()
 
 MediumRef ALibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (String::toLower(url).find("microphone") != std::string::npos)
 	{
@@ -112,7 +112,7 @@ MediumRef ALibrary::newMedium(const std::string& url, bool useExclusive)
 
 MediumRef ALibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (type == Medium::LIVE_VIDEO || type == Medium::FRAME_MEDIUM)
 	{
@@ -171,7 +171,7 @@ ALibrary::Definitions ALibrary::selectableMedia() const
 
 ALibrary::Definitions ALibrary::selectableMedia(const Medium::Type type) const
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	Definitions definitions;
 

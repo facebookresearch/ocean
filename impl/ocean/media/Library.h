@@ -239,18 +239,18 @@ class OCEAN_MEDIA_EXPORT Library
 	protected:
 
 		/// The name of the library.
-		std::string libraryName;
+		std::string name_;
 
 		/// Priority of this library, the higher the value, the higher the priority.
-		unsigned int libraryPriority;
+		unsigned int priority_;
 
 		/// Library lock.
-		mutable Lock lock;
+		mutable Lock lock_;
 
 	private:
 
 		/// Set holding file extensions which are not supported by this library.
-		ExtensionSet notSupportedExtensionSet;
+		ExtensionSet notSupportedExtensionSet_;
 };
 
 inline Library::Definition::Definition(std::string url, const Medium::Type type, std::string library, std::string uniqueIdentifier) :
@@ -284,12 +284,12 @@ inline const std::string& Library::Definition::uniqueIdentifier() const
 
 inline const std::string& Library::name() const
 {
-	return libraryName;
+	return name_;
 }
 
 inline unsigned int Library::priority() const
 {
-	return libraryPriority;
+	return priority_;
 }
 
 }
