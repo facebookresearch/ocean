@@ -33,7 +33,7 @@ DSFrameRecorder::Encoders DSFrameRecorder::frameEncoders() const
 
 bool DSFrameRecorder::frameEncoderHasConfiguration()
 {
-	if (recorderFrameEncoder.empty())
+	if (frameEncoder_.empty())
 	{
 		return false;
 	}
@@ -83,7 +83,7 @@ bool DSFrameRecorder::setPreferredFrameType(const FrameType& type)
 
 	const ScopedLock scopedLock(lock_);
 
-	if (newFrameType == recorderFrameType)
+	if (newFrameType == frameType_)
 	{
 		return true;
 	}
@@ -95,9 +95,9 @@ bool DSFrameRecorder::setPreferredFrameType(const FrameType& type)
 
 	releaseGraph();
 
-	recorderFrameType = newFrameType;
+	frameType_ = newFrameType;
 
-	if (recorderFrameEncoder.empty())
+	if (frameEncoder_.empty())
 	{
 		return true;
 	}
@@ -107,7 +107,7 @@ bool DSFrameRecorder::setPreferredFrameType(const FrameType& type)
 
 bool DSFrameRecorder::setFrameFrequency(const double frequency)
 {
-	if (recorderFrameFrequency == frequency)
+	if (frameFrequency_ == frequency)
 	{
 		return true;
 	}
@@ -134,7 +134,7 @@ bool DSFrameRecorder::setFrameFrequency(const double frequency)
 
 bool DSFrameRecorder::setFrameEncoder(const std::string& encoder)
 {
-	if (recorderFrameEncoder == encoder)
+	if (frameEncoder_ == encoder)
 	{
 		return true;
 	}
@@ -146,9 +146,9 @@ bool DSFrameRecorder::setFrameEncoder(const std::string& encoder)
 
 	releaseGraph();
 
-	recorderFrameEncoder = encoder;
+	frameEncoder_ = encoder;
 
-	if (recorderFrameEncoder.empty())
+	if (frameEncoder_.empty())
 	{
 		return true;
 	}
@@ -158,7 +158,7 @@ bool DSFrameRecorder::setFrameEncoder(const std::string& encoder)
 
 bool DSFrameRecorder::frameEncoderConfiguration(long long data)
 {
-	if (recorderFrameEncoder.empty())
+	if (frameEncoder_.empty())
 	{
 		return false;
 	}
@@ -245,7 +245,7 @@ bool DSFrameRecorder::insertSourceFilter(ScopedIPin& sourceOutputPin)
 
 	ScopedFunctionVoid scopedReleaseFrameSourceFilterFunction(std::bind(&DSFrameRecorder::releaseFrameSourceFilter, this)); // scoped function which will be invoked in case we don't reach the both of this function
 
-	if (!sampleSourceFilter_->setFormat(recorderFrameType, recorderFrameFrequency))
+	if (!sampleSourceFilter_->setFormat(frameType_, frameFrequency_))
 	{
 		Log::error() << "Could not set the defined frame type.";
 
@@ -293,29 +293,29 @@ bool DSFrameRecorder::insertFrameEncoderFilter(IPin* outputPin, ScopedIPin& enco
 		return true;
 	}
 
-	if (recorderFrameEncoder.empty())
+	if (frameEncoder_.empty())
 	{
 		return false;
 	}
 
-	ScopedIMoniker encoderMoniker = DSEnumerators::get().enumerator(CLSID_VideoCompressorCategory).moniker(recorderFrameEncoder);
+	ScopedIMoniker encoderMoniker = DSEnumerators::get().enumerator(CLSID_VideoCompressorCategory).moniker(frameEncoder_);
 	if (!encoderMoniker.isValid())
 	{
-		Log::error() << "A frame encoder with name \"" << recorderFrameEncoder << "\" does not exist.";
+		Log::error() << "A frame encoder with name \"" << frameEncoder_ << "\" does not exist.";
 
 		return false;
 	}
 
 	if (S_OK != encoderMoniker->BindToObject(nullptr, nullptr, IID_IBaseFilter, (void**)(&frameEncoderFilter_.resetObject())))
 	{
-		Log::error() << "Could not create the frame encoder filter \"" << recorderFrameEncoder << "\".";
+		Log::error() << "Could not create the frame encoder filter \"" << frameEncoder_ << "\".";
 
 		return false;
 	}
 
 	ScopedFunctionVoid scopedReleaseFrameEncoderFilterFunction(std::bind(&DSFrameRecorder::releaseFrameEncoderFilter, this)); // scoped function which will be invoked in case we don't reach the both of this function
 
-	if (S_OK != filterGraph_->AddFilter(*frameEncoderFilter_, String::toWString(recorderFrameEncoder).c_str()))
+	if (S_OK != filterGraph_->AddFilter(*frameEncoderFilter_, String::toWString(frameEncoder_).c_str()))
 	{
 		Log::error() << "Could not add the encoder filter to the filter graph.";
 

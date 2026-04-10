@@ -24,8 +24,8 @@ namespace MediaFoundation
 
 MFMovieRecorder::MFMovieRecorder()
 {
-	recorderFrameEncoder = "h264";
-	recorderFrameFrequency = 30.0;
+	frameEncoder_ = "h264";
+	frameFrequency_ = 30.0;
 	filenameSuffixed_ = false;
 }
 
@@ -170,7 +170,7 @@ bool MFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respec
 
 	ocean_assert(!mediaBuffer_.isValid());
 
-	const DWORD bufferSize = DWORD(recorderFrameType.frameTypeSize());
+	const DWORD bufferSize = DWORD(frameType_.frameTypeSize());
 
 	if (bufferSize == DWORD(0))
 	{
@@ -201,11 +201,11 @@ bool MFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respec
 		return false;
 	}
 
-	ocean_assert(recorderFrameType.numberPlanes() == 1u);
+	ocean_assert(frameType_.numberPlanes() == 1u);
 
 	constexpr unsigned int dataPaddingElements = 0u;
 
-	recorderFrame = Frame(recorderFrameType, data, Frame::CM_USE_KEEP_LAYOUT, dataPaddingElements);
+	recorderFrame = Frame(frameType_, data, Frame::CM_USE_KEEP_LAYOUT, dataPaddingElements);
 
 	return true;
 }
@@ -238,8 +238,8 @@ void MFMovieRecorder::unlockBufferToFill()
 		noError = false;
 	}
 
-	ocean_assert(recorderFrameFrequency > 0.0);
-	const double frameDuration = 1.0 / recorderFrameFrequency;
+	ocean_assert(frameFrequency_ > 0.0);
+	const double frameDuration = 1.0 / frameFrequency_;
 
 	const LONGLONG sampleTime100ns = LONGLONG(nextFrameTimestamp_ * 10000000.0);
 
@@ -302,13 +302,13 @@ bool MFMovieRecorder::createSinkWriter()
 	}
 
 	GUID videoFormat = GUID_NULL;
-	if (!encoderToVideoFormat(recorderFrameEncoder, videoFormat))
+	if (!encoderToVideoFormat(frameEncoder_, videoFormat))
 	{
 		Log::error() << "Invalid frame encoder!";
 		return false;
 	}
 
-	const GUID videoInput = Utilities::convertPixelFormat(recorderFrameType.pixelFormat());
+	const GUID videoInput = Utilities::convertPixelFormat(frameType_.pixelFormat());
 
 	if (videoInput == GUID_NULL)
 	{
@@ -317,7 +317,7 @@ bool MFMovieRecorder::createSinkWriter()
 	}
 
 	constexpr unsigned int frameRateDenominator = 600u;
-	const unsigned int frameRateNumerator = (unsigned int)(recorderFrameFrequency * double(frameRateDenominator) + 0.5);
+	const unsigned int frameRateNumerator = (unsigned int)(frameFrequency_ * double(frameRateDenominator) + 0.5);
 
 	bool noError = true;
 
@@ -358,7 +358,7 @@ bool MFMovieRecorder::createSinkWriter()
 		}
 	}
 
-	if (noError && S_OK != MFSetAttributeSize(*mediaTypeOutput, MF_MT_FRAME_SIZE, recorderFrameType.width(), recorderFrameType.height()))
+	if (noError && S_OK != MFSetAttributeSize(*mediaTypeOutput, MF_MT_FRAME_SIZE, frameType_.width(), frameType_.height()))
 	{
 		noError = false;
 	}
@@ -401,17 +401,17 @@ bool MFMovieRecorder::createSinkWriter()
 		noError = false;
 	}
 
-	if (noError && S_OK != MFSetAttributeSize(*mediaTypeInput, MF_MT_FRAME_SIZE, recorderFrameType.width(), recorderFrameType.height()))
+	if (noError && S_OK != MFSetAttributeSize(*mediaTypeInput, MF_MT_FRAME_SIZE, frameType_.width(), frameType_.height()))
 	{
 		noError = false;
 	}
 
-	ocean_assert(recorderFrameType.numberPlanes() == 1u);
-	ocean_assert(FrameType::formatIsGeneric(recorderFrameType.pixelFormat()));
+	ocean_assert(frameType_.numberPlanes() == 1u);
+	ocean_assert(FrameType::formatIsGeneric(frameType_.pixelFormat()));
 
-	unsigned int strideBytes = recorderFrameType.width() * recorderFrameType.bytesPerDataType() * recorderFrameType.channels();
+	unsigned int strideBytes = frameType_.width() * frameType_.bytesPerDataType() * frameType_.channels();
 
-	if (recorderFrameType.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT)
+	if (frameType_.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT)
 	{
 		// the stride for bottom frames is negative (and then casted to an unsigned int)
 		strideBytes = (unsigned int)(-int(strideBytes));

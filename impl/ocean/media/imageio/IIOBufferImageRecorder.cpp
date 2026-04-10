@@ -74,7 +74,7 @@ bool IIOBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool r
 		return false;
 	}
 
-	recorderFrame_ = Frame(recorderFrameType);
+	recorderFrame_ = Frame(frameType_);
 	if (!recorderFrame_.isValid())
 	{
 		return false;

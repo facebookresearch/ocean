@@ -76,7 +76,7 @@ bool WICBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /
 		return false;
 	}
 
-	recorderFrame_ = Frame(recorderFrameType);
+	recorderFrame_ = Frame(frameType_);
 	if (!recorderFrame_.isValid())
 	{
 		return false;

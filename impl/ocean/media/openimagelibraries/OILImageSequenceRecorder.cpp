@@ -197,7 +197,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 		return false;
 	}
 
-	if (!recorderFrameType.isValid() || recorderFrameFrequency <= 0.0f)
+	if (!frameType_.isValid() || frameFrequency_ <= 0.0f)
 	{
 		return false;
 	}
@@ -206,7 +206,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 	{
 		ocean_assert(startTimestamp_.isValid());
 
-		const double seconds = float(frameCounter_) / recorderFrameFrequency;
+		const double seconds = float(frameCounter_) / frameFrequency_;
 
 		const Timestamp next(startTimestamp_ + seconds);
 		if (Timestamp(true) < next)
@@ -221,7 +221,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 		return false;
 	}
 
-	frame_ = Frame(recorderFrameType);
+	frame_ = Frame(frameType_);
 	ocean_assert(frame_);
 
 	recorderFrame = Frame(frame_, Frame::ACM_USE_KEEP_LAYOUT);

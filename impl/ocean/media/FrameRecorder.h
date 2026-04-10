@@ -130,28 +130,28 @@ class OCEAN_MEDIA_EXPORT FrameRecorder : virtual public Recorder
 	protected:
 
 		/// Type of the frame to record.
-		FrameType recorderFrameType;
+		FrameType frameType_;
 
 		/// Frame frequency used by the recorder.
-		double recorderFrameFrequency;
+		double frameFrequency_;
 
 		/// Name of the frame encoder used to encode the frames.
-		std::string recorderFrameEncoder;
+		std::string frameEncoder_;
 };
 
 inline const FrameType& FrameRecorder::frameType() const
 {
-	return recorderFrameType;
+	return frameType_;
 }
 
 inline double FrameRecorder::frameFrequency() const
 {
-	return recorderFrameFrequency;
+	return frameFrequency_;
 }
 
 inline const std::string& FrameRecorder::frameEncoder() const
 {
-	return recorderFrameEncoder;
+	return frameEncoder_;
 }
 
 }
