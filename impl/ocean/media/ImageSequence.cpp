@@ -23,12 +23,12 @@ ImageSequence::ImageSequence(const std::string& url) :
 	Medium(url),
 	FiniteMedium(url),
 	FrameMedium(url),
-	mediumFrameStartIndex(0u),
-	mediumFrameIndex(0u),
-	mediumImages((unsigned int)(-1)),
-	mediumFilenameIndexLength(0u),
-	mediumSequenceMode(SM_AUTOMATIC),
-	mediumExplicitSequenceModeStarted(false)
+	frameStartIndex_(0u),
+	frameIndex_(0u),
+	images_((unsigned int)(-1)),
+	filenameIndexLength_(0u),
+	sequenceMode_(SM_AUTOMATIC),
+	explicitSequenceModeStarted_(false)
 {
 	type_ = Type(type_ | IMAGE_SEQUENCE);
 
@@ -51,12 +51,12 @@ ImageSequence::~ImageSequence()
 
 ImageSequence::SequenceMode ImageSequence::mode() const
 {
-	return mediumSequenceMode;
+	return sequenceMode_;
 }
 
 unsigned int ImageSequence::index() const
 {
-	return mediumFrameIndex;
+	return frameIndex_;
 }
 
 bool ImageSequence::setMode(const SequenceMode mode)
@@ -67,7 +67,7 @@ bool ImageSequence::setMode(const SequenceMode mode)
 		return false;
 	}
 
-	mediumSequenceMode = mode;
+	sequenceMode_ = mode;
 	return true;
 }
 

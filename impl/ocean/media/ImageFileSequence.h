@@ -181,22 +181,22 @@ class OCEAN_MEDIA_EXPORT ImageFileSequence :
 	protected:
 
 		/// Start timestamp.
-		Timestamp mediumStartTimestamp;
+		Timestamp startTimestamp_;
 
 		/// Pause timestamp.
-		Timestamp mediumPauseTimestamp;
+		Timestamp pauseTimestamp_;
 
 		/// Stop timestamp.
-		Timestamp mediumStopTimestamp;
+		Timestamp stopTimestamp_;
 
 		/// Image sequence prefix filename.
-		std::string mediumFilenamePrefix;
+		std::string filenamePrefix_;
 
 		/// Image sequence filename type.
-		std::string mediumFilenameType;
+		std::string filenameType_;
 
 		/// Next frame in the sequence.
-		Frame mediumNextFrame;
+		Frame nextFrame_;
 
 		/// The camera profile for all images.
 		SharedAnyCamera camera_;

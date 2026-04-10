@@ -52,10 +52,10 @@ double ImageFileSequence::position() const
 
 	if (NumericD::isEqualEps(preferredFrameType_.frequency()))
 	{
-		return double(mediumFrameIndex - mediumFrameStartIndex);
+		return double(frameIndex_ - frameStartIndex_);
 	}
 
-	return double(mediumFrameIndex - mediumFrameStartIndex) / double(preferredFrameType_.frequency());
+	return double(frameIndex_ - frameStartIndex_) / double(preferredFrameType_.frequency());
 }
 
 float ImageFileSequence::speed() const
@@ -76,21 +76,21 @@ unsigned int ImageFileSequence::images() const
 
 	if (isValid_)
 	{
-		if (mediumImages == (unsigned int)(-1))
+		if (images_ == (unsigned int)(-1))
 		{
-			unsigned int index = mediumFrameStartIndex;
+			unsigned int index = frameStartIndex_;
 
 			while (IO::File(imageFilename(index)).exists())
 			{
 				++index;
 			}
 
-			mediumImages = index - mediumFrameStartIndex;
+			images_ = index - frameStartIndex_;
 
-			return mediumImages;
+			return images_;
 		}
 
-		return mediumImages;
+		return images_;
 	}
 
 	return 0u;
@@ -105,33 +105,33 @@ bool ImageFileSequence::start()
 		return false;
 	}
 
-	if (mediumStartTimestamp.isValid())
+	if (startTimestamp_.isValid())
 	{
 		return false;
 	}
 
-	if (mediumSequenceMode == SM_EXPLICIT)
+	if (sequenceMode_ == SM_EXPLICIT)
 	{
-		mediumExplicitSequenceModeStarted = true;
+		explicitSequenceModeStarted_ = true;
 
 		// try to load the next frame
-		IO::File nextFile(imageFilename(mediumFrameIndex));
+		IO::File nextFile(imageFilename(frameIndex_));
 
 		if (!nextFile.exists())
 		{
 			return false;
 		}
 
-		if (!loadImage(nextFile(), Timestamp(true), &mediumNextFrame))
+		if (!loadImage(nextFile(), Timestamp(true), &nextFrame_))
 		{
 			return false;
 		}
 
-		deliverNewFrame(std::move(mediumNextFrame), SharedAnyCamera(camera_));
+		deliverNewFrame(std::move(nextFrame_), SharedAnyCamera(camera_));
 
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp.toInvalid();
-		mediumStopTimestamp.toInvalid();
+		startTimestamp_.toNow();
+		pauseTimestamp_.toInvalid();
+		stopTimestamp_.toInvalid();
 
 		return true;
 	}
@@ -143,9 +143,9 @@ bool ImageFileSequence::start()
 
 	if (startThread())
 	{
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp.toInvalid();
-		mediumStopTimestamp.toInvalid();
+		startTimestamp_.toNow();
+		pauseTimestamp_.toInvalid();
+		stopTimestamp_.toInvalid();
 
 		return true;
 	}
@@ -157,9 +157,9 @@ bool ImageFileSequence::pause()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (mediumSequenceMode == SM_EXPLICIT)
+	if (sequenceMode_ == SM_EXPLICIT)
 	{
-		mediumExplicitSequenceModeStarted = false;
+		explicitSequenceModeStarted_ = false;
 		return true;
 	}
 
@@ -171,42 +171,42 @@ bool ImageFileSequence::stop()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (mediumSequenceMode == SM_EXPLICIT)
+	if (sequenceMode_ == SM_EXPLICIT)
 	{
-		mediumExplicitSequenceModeStarted = false;
+		explicitSequenceModeStarted_ = false;
 		return true;
 	}
 
 	stopThread();
 
-	mediumFrameIndex = mediumFrameStartIndex;
-	mediumStartTimestamp.toInvalid();
-	mediumPauseTimestamp.toInvalid();
-	mediumStopTimestamp.toNow();
+	frameIndex_ = frameStartIndex_;
+	startTimestamp_.toInvalid();
+	pauseTimestamp_.toInvalid();
+	stopTimestamp_.toNow();
 
-	mediumNextFrame.release();
+	nextFrame_.release();
 
 	return true;
 }
 
 bool ImageFileSequence::isStarted() const
 {
-	return mediumExplicitSequenceModeStarted || isThreadActive();
+	return explicitSequenceModeStarted_ || isThreadActive();
 }
 
 Timestamp ImageFileSequence::startTimestamp() const
 {
-	return mediumStartTimestamp;
+	return startTimestamp_;
 }
 
 Timestamp ImageFileSequence::pauseTimestamp() const
 {
-	return mediumPauseTimestamp;
+	return pauseTimestamp_;
 }
 
 Timestamp ImageFileSequence::stopTimestamp() const
 {
-	return mediumStopTimestamp;
+	return stopTimestamp_;
 }
 
 bool ImageFileSequence::setPosition(const double position)
@@ -224,7 +224,7 @@ bool ImageFileSequence::setPosition(const double position)
 		return false;
 	}
 
-	mediumFrameIndex = (unsigned int)(frameIndex);
+	frameIndex_ = (unsigned int)(frameIndex);
 	return true;
 }
 
@@ -246,12 +246,12 @@ bool ImageFileSequence::forceNextFrame()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (mediumSequenceMode != SM_EXPLICIT)
+	if (sequenceMode_ != SM_EXPLICIT)
 	{
 		return false;
 	}
 
-	if (!mediumExplicitSequenceModeStarted)
+	if (!explicitSequenceModeStarted_)
 	{
 		return false;
 	}
@@ -262,29 +262,29 @@ bool ImageFileSequence::forceNextFrame()
 	}
 
 	// try to load the next frame
-	++mediumFrameIndex;
-	IO::File nextFile(imageFilename(mediumFrameIndex));
+	++frameIndex_;
+	IO::File nextFile(imageFilename(frameIndex_));
 
 	if (!nextFile.exists())
 	{
 		if (!loop_)
 		{
-			mediumStartTimestamp.toInvalid();
-			mediumPauseTimestamp.toInvalid();
-			mediumStopTimestamp.toNow();
+			startTimestamp_.toInvalid();
+			pauseTimestamp_.toInvalid();
+			stopTimestamp_.toNow();
 			return false;
 		}
 
-		mediumFrameIndex = mediumFrameStartIndex;
-		nextFile = IO::File(imageFilename(mediumFrameIndex));
+		frameIndex_ = frameStartIndex_;
+		nextFile = IO::File(imageFilename(frameIndex_));
 	}
 
-	if (!loadImage(nextFile(), Timestamp(true), &mediumNextFrame))
+	if (!loadImage(nextFile(), Timestamp(true), &nextFrame_))
 	{
 		return false;
 	}
 
-	return deliverNewFrame(std::move(mediumNextFrame), SharedAnyCamera(camera_));
+	return deliverNewFrame(std::move(nextFrame_), SharedAnyCamera(camera_));
 }
 
 void ImageFileSequence::threadRun()
@@ -323,34 +323,34 @@ void ImageFileSequence::threadRun()
 		const ScopedLock scopedLock(lock_);
 
 		// use already loaded frame or load the next frame explicitly
-		if (mediumNextFrame)
+		if (nextFrame_)
 		{
-			deliverNewFrame(std::move(mediumNextFrame), SharedAnyCamera(camera_));
+			deliverNewFrame(std::move(nextFrame_), SharedAnyCamera(camera_));
 		}
 		else
 		{
-			if (!loadImage(imageFilename(mediumFrameIndex), timestamp))
+			if (!loadImage(imageFilename(frameIndex_), timestamp))
 			{
 				break;
 			}
 		}
 
 		// try to load the next frame
-		++mediumFrameIndex;
-		const IO::File nextFile(imageFilename(mediumFrameIndex));
+		++frameIndex_;
+		const IO::File nextFile(imageFilename(frameIndex_));
 
 		if (nextFile.exists())
 		{
-			if (!loadImage(nextFile(), timestamp, &mediumNextFrame))
+			if (!loadImage(nextFile(), timestamp, &nextFrame_))
 			{
 				break;
 			}
 		}
 		else
 		{
-			mediumFrameIndex = mediumFrameStartIndex;
+			frameIndex_ = frameStartIndex_;
 
-			if (!loadImage(imageFilename(mediumFrameIndex), timestamp, &mediumNextFrame))
+			if (!loadImage(imageFilename(frameIndex_), timestamp, &nextFrame_))
 			{
 				break;
 			}
@@ -363,7 +363,7 @@ void ImageFileSequence::threadRun()
 
 		if (preferredFrameType_.frequency() <= NumericD::eps())
 		{
-			mediumPauseTimestamp = timestamp;
+			pauseTimestamp_ = timestamp;
 		}
 		else
 		{
@@ -371,7 +371,7 @@ void ImageFileSequence::threadRun()
 		}
 	}
 
-	mediumStopTimestamp.toNow();
+	stopTimestamp_.toNow();
 }
 
 bool ImageFileSequence::determineSequence()
@@ -408,12 +408,12 @@ bool ImageFileSequence::determineSequence()
 		return false;
 	}
 
-	mediumFilenameIndexLength = (unsigned int)digits.length();
-	mediumFrameStartIndex = atoi(digits.c_str());
-	mediumFrameIndex = mediumFrameStartIndex;
+	filenameIndexLength_ = (unsigned int)digits.length();
+	frameStartIndex_ = atoi(digits.c_str());
+	frameIndex_ = frameStartIndex_;
 
-	mediumFilenamePrefix = fileBase.substr(0u, pos);
-	mediumFilenameType = file.extension();
+	filenamePrefix_ = fileBase.substr(0u, pos);
+	filenameType_ = file.extension();
 
 	return true;
 }
@@ -421,7 +421,7 @@ bool ImageFileSequence::determineSequence()
 std::string ImageFileSequence::imageFilename(const unsigned int index) const
 {
 	const std::string numberString(String::toAString(index));
-	const std::string filename(mediumFilenamePrefix + std::string(max(0, int(mediumFilenameIndexLength - numberString.size())), '0') + numberString + std::string(".") + mediumFilenameType);
+	const std::string filename(filenamePrefix_ + std::string(max(0, int(filenameIndexLength_ - numberString.size())), '0') + numberString + std::string(".") + filenameType_);
 
 	return filename;
 }
