@@ -13,10 +13,7 @@ namespace Ocean
 namespace Media
 {
 
-ImageSequenceRecorder::ImageSequenceRecorder() :
-	FrameRecorder(),
-	recorderMode_(RM_IMMEDIATE),
-	startIndex_(0u)
+ImageSequenceRecorder::ImageSequenceRecorder()
 {
 	recorderType_ = Type(recorderType_ | IMAGE_SEQUENCE_RECORDER);
 }
