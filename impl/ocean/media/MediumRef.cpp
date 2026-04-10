@@ -37,8 +37,11 @@ MediumRef MediumRefManager::medium(const std::string& url)
 	const ScopedLock scopedLock(lock_);
 
 	MediumMap::const_iterator i = mediumMap_.find(url);
+
 	if (i != mediumMap_.end())
+	{
 		return i->second;
+	}
 
 	return MediumRef();
 }
@@ -53,10 +56,16 @@ MediumRef MediumRefManager::medium(const std::string& url, const Medium::Type ty
 	MediumMap::const_iterator end = mediumMap_.upper_bound(url);
 
 	while (i != end)
+	{
 		if (i->second->isType(type))
+		{
 			return i->second;
+		}
 		else
+		{
 			++i;
+		}
+	}
 
 	return MediumRef();
 }
@@ -71,10 +80,16 @@ MediumRef MediumRefManager::medium(const std::string& url, const std::string& li
 	MediumMap::const_iterator end = mediumMap_.upper_bound(url);
 
 	while (i != end)
+	{
 		if (i->second->isType(type) && i->second->library() == library)
+		{
 			return i->second;
+		}
 		else
+		{
 			++i;
+		}
+	}
 
 	return MediumRef();
 }
@@ -84,8 +99,12 @@ bool MediumRefManager::isRegistered(const Medium* medium)
 	const ScopedLock scopedLock(lock_);
 
 	for (MediumMap::iterator i = mediumMap_.begin(); i != mediumMap_.end(); ++i)
+	{
 		if (&*i->second == medium)
+		{
 			return true;
+		}
+	}
 
 	return false;
 }
@@ -95,11 +114,13 @@ void MediumRefManager::unregisterMedium(const Medium* medium)
 	const ScopedLock scopedLock(lock_);
 
 	for (MediumMap::iterator i = mediumMap_.begin(); i != mediumMap_.end(); ++i)
+	{
 		if (&*i->second == medium)
 		{
 			mediumMap_.erase(i);
 			break;
 		}
+	}
 }
 
 }
