@@ -62,10 +62,10 @@ class AVFDevices
 			protected:
 
 				/// The user-friendly name of this device.
-				std::wstring deviceFriendlyName;
+				std::wstring friendlyName_;
 
 				/// The unique id of this device.
-				std::wstring deviceUniqueId;
+				std::wstring uniqueId_;
 		};
 
 		/**
@@ -83,20 +83,20 @@ class AVFDevices
 };
 
 inline AVFDevices::Device::Device(const std::wstring& friendlyName, const std::wstring& uniqueId) :
-	deviceFriendlyName(friendlyName),
-	deviceUniqueId(uniqueId)
+	friendlyName_(friendlyName),
+	uniqueId_(uniqueId)
 {
 	// nothing to do here
 }
 
 inline const std::wstring& AVFDevices::Device::friendlyName() const
 {
-	return deviceFriendlyName;
+	return friendlyName_;
 }
 
 inline const std::wstring& AVFDevices::Device::uniqueId() const
 {
-	return deviceUniqueId;
+	return uniqueId_;
 }
 
 }
