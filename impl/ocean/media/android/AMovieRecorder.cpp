@@ -31,7 +31,7 @@ AMovieRecorder::AMovieRecorder()
 {
 	recorderFrameEncoder = "h264";
 	recorderFrameFrequency = 30.0;
-	recorderFilenameSuffixed = false;
+	filenameSuffixed_ = false;
 }
 
 AMovieRecorder::~AMovieRecorder()
@@ -317,7 +317,7 @@ bool AMovieRecorder::createNewMediaCodec()
 
 	ocean_assert(mediaCodec_ == nullptr);
 
-	const std::string filename = addOptionalSuffixToFilename(recorderFilename, recorderFilenameSuffixed);
+	const std::string filename = addOptionalSuffixToFilename(filename_, filenameSuffixed_);
 
 	if (IO::File(filename).exists())
 	{

@@ -31,7 +31,7 @@ IIOImageRecorder::~IIOImageRecorder()
 
 bool IIOImageRecorder::saveImage(const Frame& frame, const std::string& filename)
 {
-	return ImageIO::Image::writeImage(frame, addOptionalSuffixToFilename(filename, recorderFilenameSuffixed), true);
+	return ImageIO::Image::writeImage(frame, addOptionalSuffixToFilename(filename, filenameSuffixed_), true);
 }
 
 IIOImageRecorder::Encoders IIOImageRecorder::frameEncoders() const
@@ -91,7 +91,7 @@ void IIOImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, recorderFilename);
+		saveImage(recorderFrame_, filename_);
 	}
 
 	recorderFrame_.release();

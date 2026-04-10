@@ -30,7 +30,7 @@ AVFMovieRecorder::AVFMovieRecorder()
 {
 	recorderFrameEncoder = "h264";
 	recorderFrameFrequency = 30.0;
-	recorderFilenameSuffixed = false;
+	filenameSuffixed_ = false;
 }
 
 AVFMovieRecorder::~AVFMovieRecorder()
@@ -313,7 +313,7 @@ bool AVFMovieRecorder::createNewAssetWriter()
 
 	ocean_assert(assetWriter_ == nullptr);
 
-	const IO::File file(recorderFilename);
+	const IO::File file(filename_);
 
 	const AVFileType avFileType = fileExtensionToFileType(file.extension());
 
@@ -323,7 +323,7 @@ bool AVFMovieRecorder::createNewAssetWriter()
 		return false;
 	}
 
-	const std::string filename = addOptionalSuffixToFilename(recorderFilename, recorderFilenameSuffixed);
+	const std::string filename = addOptionalSuffixToFilename(filename_, filenameSuffixed_);
 
 	if (IO::File(filename).exists())
 	{

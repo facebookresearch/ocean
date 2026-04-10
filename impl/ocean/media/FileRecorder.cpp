@@ -20,7 +20,7 @@ namespace Media
 
 FileRecorder::FileRecorder() :
 	Recorder(),
-	recorderFilenameSuffixed(true)
+	filenameSuffixed_(true)
 {
 	recorderType_ = Type(recorderType_ | FILE_RECORDER);
 }
@@ -32,13 +32,13 @@ FileRecorder::~FileRecorder()
 
 bool FileRecorder::setFilename(const std::string& filename)
 {
-	recorderFilename = filename;
+	filename_ = filename;
 	return true;
 }
 
 bool FileRecorder::setFilenameSuffixed(const bool suffixed)
 {
-	recorderFilenameSuffixed = suffixed;
+	filenameSuffixed_ = suffixed;
 	return true;
 }
 

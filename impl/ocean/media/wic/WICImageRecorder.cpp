@@ -91,7 +91,7 @@ void WICImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, recorderFilename);
+		saveImage(recorderFrame_, filename_);
 	}
 
 	recorderFrame_.release();

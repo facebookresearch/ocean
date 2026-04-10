@@ -104,20 +104,20 @@ class OCEAN_MEDIA_EXPORT FileRecorder : virtual public ExplicitRecorder
 	protected:
 
 		/// Filename of this recorder.
-		std::string recorderFilename;
+		std::string filename_;
 
 		/// Flag determining whether the filename will be suffixed with date and time.
-		bool recorderFilenameSuffixed;
+		bool filenameSuffixed_;
 };
 
 inline const std::string& FileRecorder::filename() const
 {
-	return recorderFilename;
+	return filename_;
 }
 
 inline bool FileRecorder::filenameSuffixed() const
 {
-	return recorderFilenameSuffixed;
+	return filenameSuffixed_;
 }
 
 }

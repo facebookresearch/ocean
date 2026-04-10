@@ -26,7 +26,7 @@ MFMovieRecorder::MFMovieRecorder()
 {
 	recorderFrameEncoder = "h264";
 	recorderFrameFrequency = 30.0;
-	recorderFilenameSuffixed = false;
+	filenameSuffixed_ = false;
 }
 
 MFMovieRecorder::~MFMovieRecorder()
@@ -294,7 +294,7 @@ bool MFMovieRecorder::encoderToVideoFormat(const std::string& encoder, GUID& vid
 
 bool MFMovieRecorder::createSinkWriter()
 {
-	const std::string filename = addOptionalSuffixToFilename(recorderFilename, recorderFilenameSuffixed);
+	const std::string filename = addOptionalSuffixToFilename(filename_, filenameSuffixed_);
 
 	if (filename.empty())
 	{
