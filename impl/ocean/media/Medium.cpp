@@ -90,25 +90,45 @@ std::string Medium::convertType(const Type type)
 Medium::Type Medium::convertType(const std::string& type)
 {
 	if (type == "FrameMedium")
+	{
 		return FRAME_MEDIUM;
+	}
 	else if (type == "SoundMedium")
+	{
 		return SOUND_MEDIUM;
+	}
 	else if (type == "FiniteMedium")
+	{
 		return FINITE_MEDIUM;
+	}
 	else if (type == "LiveMedium")
+	{
 		return LIVE_MEDIUM;
+	}
 	else if (type == "ConfigMedium")
+	{
 		return CONFIG_MEDIUM;
+	}
 	else if (type == "Audio")
+	{
 		return AUDIO;
+	}
 	else if (type == "Image")
+	{
 		return IMAGE;
+	}
 	else if (type == "LiveAudio")
+	{
 		return LIVE_AUDIO;
+	}
 	else if (type == "LiveVideo")
+	{
 		return LIVE_VIDEO;
+	}
 	else if (type == "Movie")
+	{
 		return MOVIE;
+	}
 
 	return MEDIUM;
 }
