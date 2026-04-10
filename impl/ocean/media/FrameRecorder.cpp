@@ -13,9 +13,7 @@ namespace Ocean
 namespace Media
 {
 
-FrameRecorder::FrameRecorder() :
-	Recorder(),
-	frameFrequency_(25)
+FrameRecorder::FrameRecorder()
 {
 	recorderType_ = Type(recorderType_ | FRAME_RECORDER);
 }

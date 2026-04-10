@@ -133,7 +133,7 @@ class OCEAN_MEDIA_EXPORT FrameRecorder : virtual public Recorder
 		FrameType frameType_;
 
 		/// Frame frequency used by the recorder.
-		double frameFrequency_;
+		double frameFrequency_ = 25.0;
 
 		/// Name of the frame encoder used to encode the frames.
 		std::string frameEncoder_;
