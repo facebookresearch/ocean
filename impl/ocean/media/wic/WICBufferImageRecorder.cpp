@@ -36,7 +36,7 @@ bool WICBufferImageRecorder::buffer(std::vector<uint8_t>& data) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	data = recorderBuffer;
+	data = buffer_;
 	return true;
 }
 
@@ -99,7 +99,7 @@ void WICBufferImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, bufferType_, recorderBuffer);
+		saveImage(recorderFrame_, bufferType_, buffer_);
 	}
 
 	recorderFrame_.release();
