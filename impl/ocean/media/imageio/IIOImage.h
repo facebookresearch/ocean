@@ -117,19 +117,19 @@ class OCEAN_MEDIA_IIO_EXPORT IIOImage :
 	protected:
 
 		/// Recent frame type.
-		FrameType imageRecentFrameType;
+		FrameType recentFrameType_;
 
 		/// Start timestamp.
-		Timestamp mediumStartTimestamp;
+		Timestamp startTimestamp_;
 
 		/// Pause timestamp.
-		Timestamp mediumPauseTimestamp;
+		Timestamp pauseTimestamp_;
 
 		/// Stop timestamp.
-		Timestamp mediumStopTimestamp;
+		Timestamp stopTimestamp_;
 
 		/// Determining whether this image is 'started' and holds valid image data.
-		bool imageStarted;
+		bool started_;
 };
 
 }
