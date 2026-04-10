@@ -105,7 +105,7 @@ void OILBufferImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, recorderBufferType, recorderBuffer);
+		saveImage(recorderFrame_, bufferType_, recorderBuffer);
 	}
 
 	recorderFrame_.release();

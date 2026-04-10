@@ -26,12 +26,12 @@ BufferRecorder::~BufferRecorder()
 
 const std::string& BufferRecorder::bufferType() const
 {
-	return recorderBufferType;
+	return bufferType_;
 }
 
 bool BufferRecorder::setBufferType(const std::string& bufferType)
 {
-	recorderBufferType = bufferType;
+	bufferType_ = bufferType;
 	return true;
 }
 

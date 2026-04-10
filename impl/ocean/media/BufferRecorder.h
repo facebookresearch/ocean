@@ -73,7 +73,7 @@ class OCEAN_MEDIA_EXPORT BufferRecorder : virtual public ExplicitRecorder
 	protected:
 
 		/// Buffer type of this recorder.
-		std::string recorderBufferType;
+		std::string bufferType_;
 };
 
 }
