@@ -18,9 +18,7 @@ namespace Ocean
 namespace Media
 {
 
-FileRecorder::FileRecorder() :
-	Recorder(),
-	filenameSuffixed_(true)
+FileRecorder::FileRecorder()
 {
 	recorderType_ = Type(recorderType_ | FILE_RECORDER);
 }
