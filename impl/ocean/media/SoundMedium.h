@@ -53,7 +53,7 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 				/**
 				 * Creates a new sound type with invalid parameters.
 				 */
-				inline SoundType();
+				SoundType() = default;
 
 				/**
 				 * Creates a new sound type.
@@ -116,13 +116,13 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 			private:
 
 				/// Sound frequency in Hz.
-				SoundFrequency frequency_;
+				SoundFrequency frequency_ = 0;
 
 				/// Sound channels.
-				unsigned int channels_;
+				unsigned int channels_ = 0u;
 
 				/// Bits per sound sample.
-				unsigned int bitsPerSample_;
+				unsigned int bitsPerSample_ = 0u;
 		};
 
 	protected:
@@ -282,14 +282,6 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 		/// Timestamp of the recent sound frame type.
 		Timestamp soundTypeTimestamp_;
 };
-
-inline SoundMedium::SoundType::SoundType() :
-	frequency_(0),
-	channels_(0),
-	bitsPerSample_(0)
-{
-	// nothing to do here
-}
 
 inline SoundMedium::SoundType::SoundType(const SoundFrequency frequency, const unsigned int channels, const unsigned int bitsPerSample) :
 	frequency_(frequency),
