@@ -7,6 +7,7 @@
 
 #include "ocean/media/ImageFileSequence.h"
 
+#include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
 #include "ocean/math/Numeric.h"
@@ -285,6 +286,75 @@ bool ImageFileSequence::forceNextFrame()
 	}
 
 	return deliverNewFrame(std::move(nextFrame_), SharedAnyCamera(camera_));
+}
+
+bool ImageFileSequence::isFileSequence(const std::string& filename, bool* isIndividualImage)
+{
+	if (isIndividualImage != nullptr)
+	{
+		*isIndividualImage = false;
+	}
+
+	const IO::File file(filename);
+
+	if (!file.exists())
+	{
+		return false;
+	}
+
+	const std::string baseName = file.baseName();
+	if (baseName.empty())
+	{
+		return false;
+	}
+
+	ocean_assert(baseName.length() > 0u);
+	std::string::size_type pos = baseName.length() - 1u;
+
+	while (std::isdigit((unsigned char)(baseName[pos])) && pos > 0u)
+	{
+		--pos;
+	}
+
+	if (!std::isdigit((unsigned char)(baseName[pos])))
+	{
+		++pos;
+	}
+
+	const std::string digits = baseName.substr(pos);
+	if (digits.empty())
+	{
+		if (isIndividualImage != nullptr)
+		{
+			*isIndividualImage = true;
+		}
+
+		return false;
+	}
+
+	const unsigned int startIndex = (unsigned int)(atoi(digits.c_str()));
+	const unsigned int nextIndex = startIndex + 1u;
+
+	const unsigned int indexLength = (unsigned int)(digits.length());
+
+	const std::string nextNumberString(String::toAString(nextIndex, indexLength));
+
+	const std::string filenamePrefix = baseName.substr(0u, pos);
+	const std::string filenameType = file.extension();
+
+	IO::File nextFilename = IO::Directory(file) + IO::File(filenamePrefix + nextNumberString + std::string(".") + filenameType);
+
+	if (IO::File(nextFilename).exists())
+	{
+		return true;
+	}
+
+	if (isIndividualImage != nullptr)
+	{
+		*isIndividualImage = true;
+	}
+
+	return false;
 }
 
 void ImageFileSequence::threadRun()

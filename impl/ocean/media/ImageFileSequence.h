@@ -137,6 +137,15 @@ class OCEAN_MEDIA_EXPORT ImageFileSequence :
 		 */
 		bool forceNextFrame() override;
 
+		/**
+		 * Returns whether a given filename is the start of an image file sequence.
+		 * The function checks whether the file exists, whether the filename ends with a numeric index pattern, and whether a subsequent image file exists at the next index.
+		 * @param filename The path of the file to check, must be valid
+		 * @param isIndividualImage Optional resulting flag; True, if the file is an individual image (not part of a sequence); False, otherwise
+		 * @return True, if the file is the start of an image file sequence
+		 */
+		static bool isFileSequence(const std::string& filename, bool* isIndividualImage = nullptr);
+
 	protected:
 
 		/**
