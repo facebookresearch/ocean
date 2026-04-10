@@ -16,25 +16,25 @@ namespace Media
 {
 
 SoundMedium::SortableSoundType::SortableSoundType(const SoundType& soundType) :
-	preferableSoundType(soundType)
+	preferableSoundType_(soundType)
 {
 	// nothing to do here
 }
 
 SoundMedium::SortableSoundType::SortableSoundType(const SoundFrequency frequency, const unsigned int channels, const unsigned int bitsPerSample) :
-	preferableSoundType(frequency, channels, bitsPerSample)
+	preferableSoundType_(frequency, channels, bitsPerSample)
 {
 	// nothing to do here
 }
 
 bool SoundMedium::SortableSoundType::operator<(const SortableSoundType& right) const
 {
-	ocean_assert(preferableSoundType == right.preferableSoundType);
+	ocean_assert(preferableSoundType_ == right.preferableSoundType_);
 
-	if (preferableSoundType.channels() != 0)
+	if (preferableSoundType_.channels() != 0)
 	{
-		int leftDifference = abs(int(preferableSoundType.channels()) - int(actualSoundType.channels()));
-		int rightDifference = abs(int(preferableSoundType.channels()) - int(right.actualSoundType.channels()));
+		int leftDifference = abs(int(preferableSoundType_.channels()) - int(actualSoundType_.channels()));
+		int rightDifference = abs(int(preferableSoundType_.channels()) - int(right.actualSoundType_.channels()));
 
 		if (leftDifference < rightDifference)
 			return true;
@@ -42,10 +42,10 @@ bool SoundMedium::SortableSoundType::operator<(const SortableSoundType& right) c
 			return false;
 	}
 
-	if (preferableSoundType.frequency() != 0)
+	if (preferableSoundType_.frequency() != 0)
 	{
-		SoundFrequency leftDifference = NumericT<SoundFrequency>::abs(preferableSoundType.frequency() - actualSoundType.frequency());
-		SoundFrequency rightDifference = NumericT<SoundFrequency>::abs(preferableSoundType.frequency() - right.actualSoundType.frequency());
+		SoundFrequency leftDifference = NumericT<SoundFrequency>::abs(preferableSoundType_.frequency() - actualSoundType_.frequency());
+		SoundFrequency rightDifference = NumericT<SoundFrequency>::abs(preferableSoundType_.frequency() - right.actualSoundType_.frequency());
 
 		if (leftDifference < rightDifference)
 			return true;
@@ -58,17 +58,17 @@ bool SoundMedium::SortableSoundType::operator<(const SortableSoundType& right) c
 
 SoundMedium::SoundMedium(const std::string& url) :
 	Medium(url),
-	mediumSoundType(),
-	mediumPreferredSoundType(),
-	mediumSoundTimestamp(),
-	mediumSoundTypeTimestamp()
+	soundType_(),
+	preferredSoundType_(),
+	soundTimestamp_(),
+	soundTypeTimestamp_()
 {
 	type_ = Type(type_ | SOUND_MEDIUM);
 }
 
 bool SoundMedium::setPreferredSoundChannels(const unsigned int channels)
 {
-	mediumPreferredSoundType.setChannels(channels);
+	preferredSoundType_.setChannels(channels);
 	return true;
 }
 
@@ -77,13 +77,13 @@ bool SoundMedium::setPreferredSoundFrequency(const SoundFrequency frequency)
 	if (frequency < 0 || frequency > 1000000)
 		return false;
 
-	mediumPreferredSoundType.setFrequency(frequency);
+	preferredSoundType_.setFrequency(frequency);
 	return true;
 }
 
 bool SoundMedium::setPreferredSoundBitsPerSample(const unsigned int bits)
 {
-	mediumPreferredSoundType.setBitsPerSoundSample(bits);
+	preferredSoundType_.setBitsPerSoundSample(bits);
 	return true;
 }
 
