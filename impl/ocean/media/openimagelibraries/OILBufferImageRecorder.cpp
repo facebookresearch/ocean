@@ -40,7 +40,7 @@ bool OILBufferImageRecorder::buffer(std::vector<unsigned char>& data) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	data = recorderBuffer;
+	data = buffer_;
 	return true;
 }
 
@@ -105,7 +105,7 @@ void OILBufferImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, bufferType_, recorderBuffer);
+		saveImage(recorderFrame_, bufferType_, buffer_);
 	}
 
 	recorderFrame_.release();
