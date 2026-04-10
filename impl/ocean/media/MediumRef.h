@@ -149,10 +149,10 @@ class OCEAN_MEDIA_EXPORT MediumRefManager : public Singleton<MediumRefManager>
 	protected:
 
 		/// Map holding all medium references.
-		MediumMap mediumMap;
+		MediumMap mediumMap_;
 
 		/// Lock for the medium map
-		Lock lock;
+		Lock lock_;
 };
 
 template <typename T>
