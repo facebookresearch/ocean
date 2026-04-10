@@ -105,7 +105,7 @@ class OCEAN_MEDIA_EXPORT Recorder
 		/**
 		 * Creates a new recorder.
 		 */
-		Recorder();
+		Recorder() = default;
 
 		/**
 		 * Destructs a recorder.
@@ -115,7 +115,7 @@ class OCEAN_MEDIA_EXPORT Recorder
 	protected:
 
 		/// Type of this recorder.
-		Type recorderType_;
+		Type recorderType_ = RECORDER;
 
 		/// Lock of this recorder.
 		mutable Lock lock_;

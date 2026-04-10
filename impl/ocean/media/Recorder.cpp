@@ -13,12 +13,6 @@ namespace Ocean
 namespace Media
 {
 
-Recorder::Recorder() :
-	recorderType_(RECORDER)
-{
-	// nothing to do here
-}
-
 Recorder::~Recorder()
 {
 	// nothing to do here
