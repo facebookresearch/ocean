@@ -167,8 +167,14 @@ Barcodes BarcodeDetector2D::detectBarcodes(const Frame& yFrame, const uint32_t d
 
 							// Determine the image location where this barcode has been detected.
 
-							const Index32 xScanlineStart = Index32(rowSegmenter.position()) + xCoordinates.first;
-							const Index32 xScanlineEnd = Index32(rowSegmenter.position()) + xCoordinates.second; // Inclusive!
+							const size_t xScanlineStart = size_t(rowSegmenter.position()) + size_t(xCoordinates.first);
+							const size_t xScanlineEnd = size_t(rowSegmenter.position()) + size_t(xCoordinates.second); // Inclusive!
+
+							if (xScanlineStart >= scanlinePositions.size() || xScanlineEnd >= scanlinePositions.size())
+							{
+								ocean_assert(false && "Scanline position index out of bounds");
+								continue;
+							}
 
 							const CV::PixelPositionI& barcodeStart = scanlinePositions[xScanlineStart];
 							const CV::PixelPositionI& barcodeEnd = scanlinePositions[xScanlineEnd];
