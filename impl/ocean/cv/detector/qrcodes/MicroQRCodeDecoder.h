@@ -48,7 +48,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeDecoder
 				/**
 				 * Returns the number of bits remaining in the bit stream
 				 */
-				inline unsigned int bitsRemaining();
+				inline unsigned int bitsRemaining() const;
 
 				/**
 				 * Consumes a number of bits from the bit stream
@@ -94,7 +94,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeDecoder
 		static bool decodeMicroQRCode(const std::vector<uint8_t>& modules, MicroQRCode& code);
 };
 
-unsigned int MicroQRCodeDecoder::BitStream::bitsRemaining()
+inline unsigned int MicroQRCodeDecoder::BitStream::bitsRemaining() const
 {
 	return bitsRemaining_;
 }

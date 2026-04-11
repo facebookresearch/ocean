@@ -377,7 +377,7 @@ inline uint32_t QRCodeEncoderBase::computeHammingWeight(uint32_t value)
 	return weight;
 }
 
-std::string QRCodeEncoderBase::translateStatusCode(const StatusCode statusCode)
+inline std::string QRCodeEncoderBase::translateStatusCode(const StatusCode statusCode)
 {
 	switch (statusCode)
 	{

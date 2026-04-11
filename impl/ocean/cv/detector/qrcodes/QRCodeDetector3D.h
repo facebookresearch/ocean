@@ -154,7 +154,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector3D : public QRCodeDetector
 		static Scalar computeSquaredProjectionError(const SharedAnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& world_T_code, const FinderPatternTriplet& finderPatternTriplet, const unsigned int version, const Scalar codeSize_2);
 };
 
-Scalar QRCodeDetector3D::getInvalidCodeSize()
+inline Scalar QRCodeDetector3D::getInvalidCodeSize()
 {
 	return Scalar(-1.0);
 }
