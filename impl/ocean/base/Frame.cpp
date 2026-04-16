@@ -2191,6 +2191,7 @@ Frame::Plane::Plane(const unsigned int width, const unsigned int height, const u
 	ocean_assert(elementTypeSize_ != 0u);
 
 	allocatedData_ = alignedMemory(size(), elementTypeSize, data_);
+	allocatedCapacity_ = size();
 	constData_ = data_;
 
 	ocean_assert(strideBytes_ == calculateStrideBytes());
@@ -2263,6 +2264,7 @@ Frame::Plane::Plane(const unsigned int width, const unsigned int height, const u
 	ocean_assert(elementTypeSize >= 1u);
 
 	allocatedData_ = alignedMemory(size(), elementTypeSize, data_);
+	allocatedCapacity_ = size();
 	constData_ = data_;
 
 	ocean_assert(isProductInsideValueRange(width, channels));
@@ -2312,6 +2314,7 @@ Frame::Plane::Plane(const unsigned int width, const unsigned int height, const u
 		// all three copy modes copy the memory
 
 		allocatedData_ = alignedMemory(size(), elementTypeSize, data_);
+		allocatedCapacity_ = size();
 		constData_ = data_;
 
 		ocean_assert(isProductInsideValueRange(width, channels));
@@ -2336,6 +2339,8 @@ void Frame::Plane::release()
 		free(allocatedData_);
 		allocatedData_ = nullptr;
 	}
+
+	allocatedCapacity_ = 0u;
 
 	constData_ = nullptr;
 	data_ = nullptr;
@@ -2394,9 +2399,7 @@ bool Frame::Plane::copy(const Plane& sourcePlane, const AdvancedCopyMode advance
 
 	const unsigned int newMemorySize = newStrideBytes * sourcePlane.height_;
 
-	const unsigned int thisOldMemorySize = size();
-
-	if (newMemorySize != thisOldMemorySize || !isOwner() || isReadOnly())
+	if (newMemorySize > allocatedCapacity_ || !isOwner() || isReadOnly())
 	{
 		if (reallocateIfNecessary)
 		{
@@ -2426,6 +2429,7 @@ bool Frame::Plane::copy(const Plane& sourcePlane, const AdvancedCopyMode advance
 			return false;
 		}
 
+		allocatedCapacity_ = newMemorySize;
 		constData_ = data_;
 	}
 
@@ -2527,6 +2531,7 @@ Frame::Plane& Frame::Plane::operator=(Plane&& plane) noexcept
 		release();
 
 		allocatedData_ = plane.allocatedData_;
+		allocatedCapacity_ = plane.allocatedCapacity_;
 		constData_ = plane.constData_;
 		data_ = plane.data_;
 
@@ -2539,6 +2544,7 @@ Frame::Plane& Frame::Plane::operator=(Plane&& plane) noexcept
 		bytesPerPixel_ = plane.bytesPerPixel_;
 
 		plane.allocatedData_ = nullptr;
+		plane.allocatedCapacity_ = 0u;
 		plane.constData_ = nullptr;
 		plane.data_ = nullptr;
 

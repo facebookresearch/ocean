@@ -2302,6 +2302,9 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 				/// The pointer to the memory which this plane has allocated, this pointer is pointing to the memory which needs to be freed when disposing the plane object, nullptr if the plane is not owner of the memory.
 				void* allocatedData_ = nullptr;
 
+				/// The usable capacity of the allocated buffer in bytes, used for buffer reuse when sizes differ but the existing buffer is large enough.
+				unsigned int allocatedCapacity_ = 0u;
+
 				/// The pointer to the read-only memory of the plane (not the pointer to the allocated memory), nullptr, if the plane is not read-only, or invalid.
 				const void* constData_ = nullptr;
 
