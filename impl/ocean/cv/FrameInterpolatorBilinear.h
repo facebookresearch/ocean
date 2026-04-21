@@ -34,6 +34,8 @@
 namespace Ocean
 {
 
+namespace Test { namespace TestCV { class TestFrameInterpolatorBilinearNEON; } }
+
 namespace CV
 {
 
@@ -43,6 +45,8 @@ namespace CV
  */
 class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 {
+	friend class Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON;
+
 	public:
 
 		/**
