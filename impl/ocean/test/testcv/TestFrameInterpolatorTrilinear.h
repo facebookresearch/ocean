@@ -72,6 +72,42 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorTrilinear
 		 * @return True, if succeeded
 		 */
 		static bool testInterpolatePosition(const double testDuration);
+
+		/**
+		 * Stress test: large random shrink/enlarge with random padding and many
+		 * channel counts; verifies worker vs single-thread output equality.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testWorkerEquivalenceStress(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: aggressive shrink (sub-pixel target sampling) and aggressive
+		 * enlarge (super-pixel target sampling) keep target valid.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testExtremeScaleStress(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: random homography on a random source frame produces a
+		 * valid output frame and writes every pixel.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testHomographyStress(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: random parameter combinations exercise the resize path
+		 * across many pixel formats / sizes / paddings.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testRandomParametersStress(const double testDuration, Worker& worker);
 };
 
 }
