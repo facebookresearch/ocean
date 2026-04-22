@@ -78,6 +78,42 @@ class OCEAN_TEST_CV_EXPORT TestFrequencyAnalysis
 		 * @return True, if succeeded
 		 */
 		static bool testMagnitudeFrame(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: large random frames and many channel counts; verifies
+		 * worker vs single-thread output equality for image2frequencies.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testWorkerEquivalenceStress(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: round-trip identity holds for many random parameter
+		 * combinations (sizes/pixelFormats/paddings).
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testRoundTripStress(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: a constant-input frame produces a frequency spectrum
+		 * with a single non-zero DC component (per channel).
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testConstantInputSpectrumStress(const double testDuration, Worker& worker);
+
+		/**
+		 * Stress test: source frames with random padding produce identical
+		 * frequency output to padding-free frames carrying the same content.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @param worker Worker object
+		 * @return True, if succeeded
+		 */
+		static bool testPaddingInvarianceStress(const double testDuration, Worker& worker);
 };
 
 }

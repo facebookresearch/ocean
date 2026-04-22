@@ -67,6 +67,38 @@ bool TestFrequencyAnalysis::test(const double testDuration, Worker& worker, cons
 	{
 		testResult = testMagnitudeFrame(testDuration, worker);
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("workerequivalencestress"))
+	{
+		testResult = testWorkerEquivalenceStress(testDuration, worker);
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("roundtripstress"))
+	{
+		testResult = testRoundTripStress(testDuration, worker);
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("constantinputspectrumstress"))
+	{
+		testResult = testConstantInputSpectrumStress(testDuration, worker);
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("paddinginvariancestress"))
+	{
+		testResult = testPaddingInvarianceStress(testDuration, worker);
+		Log::info() << " ";
 	}
 
 	Log::info() << " ";
@@ -98,6 +130,30 @@ TEST(TestFrequencyAnalysis, MagnitudeFrame)
 {
 	Worker worker;
 	EXPECT_TRUE(TestFrequencyAnalysis::testMagnitudeFrame(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrequencyAnalysis, WorkerEquivalenceStress)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrequencyAnalysis::testWorkerEquivalenceStress(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrequencyAnalysis, RoundTripStress)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrequencyAnalysis::testRoundTripStress(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrequencyAnalysis, ConstantInputSpectrumStress)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrequencyAnalysis::testConstantInputSpectrumStress(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrequencyAnalysis, PaddingInvarianceStress)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrequencyAnalysis::testPaddingInvarianceStress(GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -328,6 +384,195 @@ bool TestFrequencyAnalysis::testMagnitudeFrame(const double testDuration, Worker
 		OCEAN_EXPECT_TRUE(validation, magnitudeFrame.isValid());
 		OCEAN_EXPECT_EQUAL(validation, magnitudeFrame.width(), width);
 		OCEAN_EXPECT_EQUAL(validation, magnitudeFrame.height(), height);
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestFrequencyAnalysis::testWorkerEquivalenceStress(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress: image2frequencies worker vs single-thread output equivalence:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = randomPixelFormat(randomGenerator);
+		const unsigned int width = RandomI::random(randomGenerator, 8u, 64u);
+		const unsigned int height = RandomI::random(randomGenerator, 8u, 64u);
+
+		Frame source(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
+		fillRandomFrame(randomGenerator, source);
+
+		Complexes freqSingle;
+		Complexes freqWorker;
+
+		const bool ok1 = CV::FrequencyAnalysis::image2frequencies(source, freqSingle, nullptr);
+		const bool ok2 = CV::FrequencyAnalysis::image2frequencies(source, freqWorker, &worker);
+
+		OCEAN_EXPECT_TRUE(validation, ok1);
+		OCEAN_EXPECT_TRUE(validation, ok2);
+		OCEAN_EXPECT_EQUAL(validation, freqSingle.size(), freqWorker.size());
+
+		const Scalar tolerance = Scalar(1e-3);
+		for (size_t i = 0u; i < freqSingle.size(); ++i)
+		{
+			OCEAN_EXPECT_TRUE(validation, Numeric::abs(freqSingle[i].real() - freqWorker[i].real()) <= tolerance);
+			OCEAN_EXPECT_TRUE(validation, Numeric::abs(freqSingle[i].imag() - freqWorker[i].imag()) <= tolerance);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestFrequencyAnalysis::testRoundTripStress(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress: round-trip identity across many parameter combinations:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = randomPixelFormat(randomGenerator);
+		const unsigned int width = RandomI::random(randomGenerator, 2u, 64u);
+		const unsigned int height = RandomI::random(randomGenerator, 2u, 64u);
+		const unsigned int sourcePadding = RandomI::random(randomGenerator, 0u, 32u);
+
+		Frame source(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePadding);
+		fillRandomFrame(randomGenerator, source);
+
+		Complexes frequencies;
+		Worker* w = (RandomI::random(randomGenerator, 1u) == 0u) ? nullptr : &worker;
+
+		const bool ok1 = CV::FrequencyAnalysis::image2frequencies(source, frequencies, w);
+		OCEAN_EXPECT_TRUE(validation, ok1);
+
+		Frame target(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
+		const bool ok2 = CV::FrequencyAnalysis::frequencies2image(frequencies.data(), target, w);
+		OCEAN_EXPECT_TRUE(validation, ok2);
+
+		const unsigned int channels = source.channels();
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			const uint8_t* rowS = source.constrow<uint8_t>(y);
+			const uint8_t* rowT = target.constrow<uint8_t>(y);
+			for (unsigned int x = 0u; x < width * channels; ++x)
+			{
+				const int diff = int(rowS[x]) - int(rowT[x]);
+				OCEAN_EXPECT_TRUE(validation, diff >= -1 && diff <= 1);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestFrequencyAnalysis::testConstantInputSpectrumStress(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress: constant-input spectrum: only DC is non-zero:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = randomPixelFormat(randomGenerator);
+		const unsigned int width = RandomI::random(randomGenerator, 4u, 24u);
+		const unsigned int height = RandomI::random(randomGenerator, 4u, 24u);
+		const uint8_t value = uint8_t(RandomI::random(randomGenerator, 0u, 255u));
+
+		Frame source(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
+		source.setValue(value);
+
+		const unsigned int channels = source.channels();
+
+		Complexes frequencies;
+		Worker* w = (RandomI::random(randomGenerator, 1u) == 0u) ? nullptr : &worker;
+		const bool ok = CV::FrequencyAnalysis::image2frequencies(source, frequencies, w);
+		OCEAN_EXPECT_TRUE(validation, ok);
+
+		const unsigned int channelStride = width * height;
+		const Scalar tolerance = Scalar(1e-3);
+
+		for (unsigned int c = 0u; c < channels; ++c)
+		{
+			// DC == width * height * value (real, imag ~0)
+			const Complex dc = frequencies[c * channelStride + 0u];
+			const Scalar expectedDC = Scalar(width) * Scalar(height) * Scalar(value);
+
+			OCEAN_EXPECT_TRUE(validation, Numeric::abs(dc.real() - expectedDC) <= tolerance + Numeric::abs(expectedDC) * Scalar(1e-5));
+			OCEAN_EXPECT_TRUE(validation, Numeric::abs(dc.imag()) <= tolerance);
+
+			// All other components ~ 0.
+			for (unsigned int k = 1u; k < channelStride; ++k)
+			{
+				const Complex& f = frequencies[c * channelStride + k];
+				OCEAN_EXPECT_TRUE(validation, Numeric::abs(f.real()) <= tolerance);
+				OCEAN_EXPECT_TRUE(validation, Numeric::abs(f.imag()) <= tolerance);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestFrequencyAnalysis::testPaddingInvarianceStress(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress: source padding does not change image2frequencies output:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = randomPixelFormat(randomGenerator);
+		const unsigned int width = RandomI::random(randomGenerator, 4u, 24u);
+		const unsigned int height = RandomI::random(randomGenerator, 4u, 24u);
+
+		Frame source0(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), 0u);
+		fillRandomFrame(randomGenerator, source0);
+
+		const unsigned int sourcePaddingP = RandomI::random(randomGenerator, 1u, 32u);
+		Frame sourceP(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingP);
+
+		const unsigned int channels = source0.channels();
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			memcpy(sourceP.row<uint8_t>(y), source0.constrow<uint8_t>(y), width * channels);
+		}
+
+		Complexes freq0;
+		Complexes freqP;
+		Worker* w = (RandomI::random(randomGenerator, 1u) == 0u) ? nullptr : &worker;
+
+		OCEAN_EXPECT_TRUE(validation, CV::FrequencyAnalysis::image2frequencies(source0, freq0, w));
+		OCEAN_EXPECT_TRUE(validation, CV::FrequencyAnalysis::image2frequencies(sourceP, freqP, w));
+		OCEAN_EXPECT_EQUAL(validation, freq0.size(), freqP.size());
+
+		const Scalar tolerance = Scalar(1e-3);
+		for (size_t i = 0u; i < freq0.size(); ++i)
+		{
+			OCEAN_EXPECT_TRUE(validation, Numeric::abs(freq0[i].real() - freqP[i].real()) <= tolerance);
+			OCEAN_EXPECT_TRUE(validation, Numeric::abs(freq0[i].imag() - freqP[i].imag()) <= tolerance);
+		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
