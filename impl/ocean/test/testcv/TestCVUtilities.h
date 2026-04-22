@@ -90,6 +90,37 @@ class OCEAN_TEST_CV_EXPORT TestCVUtilities
 		 * @return True, if succeeded
 		 */
 		static bool testCopyPixel(const double testDuration);
+
+		/**
+		 * Stress test: random indices through the mirrorIndex() function and
+		 * verifies the index always lands inside [0, elements - 1].
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testMirrorIndexStress(const double testDuration);
+
+		/**
+		 * Stress test: randomized large frame, randomly randomized many times
+		 * across all defined data types, ensures padding is preserved when
+		 * skipPaddingArea is requested.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testRandomizedFrameStress(const double testDuration);
+
+		/**
+		 * Stress test: copyPixel patch-style overload over random frame
+		 * coordinates, validates against a manual byte-wise copy.
+		 * @param testDuration Number of seconds for the test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCopyPixelStress(const double testDuration);
+
+		/**
+		 * Stress test: createCheckerboardImage with extreme/edge sizes.
+		 * @return True, if succeeded
+		 */
+		static bool testCheckerboardImageEdge();
 };
 
 }

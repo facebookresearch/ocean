@@ -94,6 +94,38 @@ bool TestCVUtilities::test(const double testDuration, const TestSelector& select
 	{
 		testResult = testCopyPixel(testDuration);
 		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("mirrorindexstress"))
+	{
+		testResult = testMirrorIndexStress(testDuration);
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("randomizedframestress"))
+	{
+		testResult = testRandomizedFrameStress(testDuration);
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("copypixelstress"))
+	{
+		testResult = testCopyPixelStress(testDuration);
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("checkerboardedge"))
+	{
+		testResult = testCheckerboardImageEdge();
+		Log::info() << " ";
 	}
 
 	Log::info() << " ";
@@ -141,6 +173,26 @@ TEST(TestCVUtilities, RandomizedBinaryMask)
 TEST(TestCVUtilities, CopyPixel)
 {
 	EXPECT_TRUE(TestCVUtilities::testCopyPixel(GTEST_TEST_DURATION));
+}
+
+TEST(TestCVUtilities, MirrorIndexStress)
+{
+	EXPECT_TRUE(TestCVUtilities::testMirrorIndexStress(GTEST_TEST_DURATION));
+}
+
+TEST(TestCVUtilities, RandomizedFrameStress)
+{
+	EXPECT_TRUE(TestCVUtilities::testRandomizedFrameStress(GTEST_TEST_DURATION));
+}
+
+TEST(TestCVUtilities, CopyPixelStress)
+{
+	EXPECT_TRUE(TestCVUtilities::testCopyPixelStress(GTEST_TEST_DURATION));
+}
+
+TEST(TestCVUtilities, CheckerboardImageEdge)
+{
+	EXPECT_TRUE(TestCVUtilities::testCheckerboardImageEdge());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -494,6 +546,212 @@ bool TestCVUtilities::testCopyPixel(const double testDuration)
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestCVUtilities::testMirrorIndexStress(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress testing mirrorIndex():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	uint64_t calls = 0u;
+
+	do
+	{
+		const unsigned int elements = RandomI::random(randomGenerator, 1u, 4096u);
+
+		const int half = int(elements) / 2;
+		const int low = -half;
+		const int high = int(elements) + half;
+
+		for (int n = 0; n < 64; ++n)
+		{
+			const int index = RandomI::random(randomGenerator, low, high);
+
+			const unsigned int mirrored = CV::CVUtilities::mirrorIndex(index, elements);
+
+			// The mirrored index must always be a valid in-range index.
+			OCEAN_EXPECT_TRUE(validation, mirrored < elements);
+
+			// And the offset must be self-consistent: mirroredIndex == index + offset.
+			const int offset = CV::CVUtilities::mirrorOffset(index, elements);
+			OCEAN_EXPECT_EQUAL(validation, int(mirrored), index + offset);
+
+			++calls;
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Calls: " << calls;
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestCVUtilities::testRandomizedFrameStress(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress testing randomizedFrame() over many pixel formats:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
+	OCEAN_EXPECT_FALSE(validation, pixelFormats.empty());
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = pixelFormats[RandomI::random(randomGenerator, (unsigned int)(pixelFormats.size() - 1u))];
+
+		// Some non-generic formats need width/height multiples; pick a generous
+		// multiple to avoid invalid frame types being created.
+		const unsigned int wMul = std::max(2u, FrameType::widthMultiple(pixelFormat));
+		const unsigned int hMul = std::max(2u, FrameType::heightMultiple(pixelFormat));
+
+		const unsigned int width = wMul * RandomI::random(randomGenerator, 1u, 64u);
+		const unsigned int height = hMul * RandomI::random(randomGenerator, 1u, 64u);
+
+		const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+		if (!frameType.isValid())
+		{
+			continue;
+		}
+
+		const Frame frame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+		OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	// Skip-padding behaviour: padding bytes must be left untouched.
+	{
+		const unsigned int width = 32u;
+		const unsigned int height = 32u;
+		const unsigned int padding = 16u;
+
+		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), padding);
+
+		// Set whole memory to a sentinel.
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			memset(frame.row<uint8_t>(y), 0xCDu, frame.strideElements());
+		}
+
+		// Randomize but preserve padding.
+		CV::CVUtilities::randomizeFrame(frame, true /* skipPaddingArea */, &randomGenerator);
+
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			const uint8_t* row = frame.constrow<uint8_t>(y);
+			for (unsigned int p = 0u; p < padding; ++p)
+			{
+				OCEAN_EXPECT_EQUAL(validation, row[width + p], uint8_t(0xCDu));
+			}
+		}
+	}
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestCVUtilities::testCopyPixelStress(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+	Log::info() << "Stress testing copyPixel() patch overload:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		constexpr unsigned int channels = 3u;
+
+		const unsigned int sourceWidth = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int sourceHeight = RandomI::random(randomGenerator, 1u, 1080u);
+		const unsigned int targetWidth = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int targetHeight = RandomI::random(randomGenerator, 1u, 1080u);
+
+		const unsigned int sourcePadding = RandomI::random(randomGenerator, 0u, 32u);
+		const unsigned int targetPadding = RandomI::random(randomGenerator, 0u, 32u);
+
+		Frame source(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<uint8_t, channels>(), FrameType::ORIGIN_UPPER_LEFT), sourcePadding);
+		Frame target(FrameType(targetWidth, targetHeight, FrameType::genericPixelFormat<uint8_t, channels>(), FrameType::ORIGIN_UPPER_LEFT), targetPadding);
+
+		CV::CVUtilities::randomizeFrame(source, true, &randomGenerator);
+		CV::CVUtilities::randomizeFrame(target, true, &randomGenerator);
+
+		const unsigned int xs = RandomI::random(randomGenerator, sourceWidth - 1u);
+		const unsigned int ys = RandomI::random(randomGenerator, sourceHeight - 1u);
+		const unsigned int xt = RandomI::random(randomGenerator, targetWidth - 1u);
+		const unsigned int yt = RandomI::random(randomGenerator, targetHeight - 1u);
+
+		uint8_t expected[channels];
+		for (unsigned int c = 0u; c < channels; ++c)
+		{
+			expected[c] = source.constpixel<uint8_t>(xs, ys)[c];
+		}
+
+		CV::CVUtilities::copyPixel<uint8_t, channels>(target.data<uint8_t>(), source.constdata<uint8_t>(), xt, yt, xs, ys, targetWidth, sourceWidth, targetPadding, sourcePadding);
+
+		for (unsigned int c = 0u; c < channels; ++c)
+		{
+			OCEAN_EXPECT_EQUAL(validation, target.constpixel<uint8_t>(xt, yt)[c], expected[c]);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+	return validation.succeeded();
+}
+
+bool TestCVUtilities::testCheckerboardImageEdge()
+{
+	Log::info() << "Edge case test for createCheckerboardImage():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	// Smallest possible checkerboard: 1x1 with 1 element each direction. Single dark pixel.
+	{
+		const Frame board = CV::CVUtilities::createCheckerboardImage(1u, 1u, 1u, 1u, 0u);
+		OCEAN_EXPECT_TRUE(validation, board.isValid());
+		OCEAN_EXPECT_EQUAL(validation, board.constpixel<uint8_t>(0u, 0u)[0], uint8_t(0x00u));
+	}
+
+	// 2x2 board with 2 horizontal/vertical elements: alternates dark and bright.
+	{
+		const Frame board = CV::CVUtilities::createCheckerboardImage(2u, 2u, 2u, 2u, 0u, 0xFFu, 0x00u);
+		OCEAN_EXPECT_EQUAL(validation, board.constpixel<uint8_t>(0u, 0u)[0], uint8_t(0x00u));
+		OCEAN_EXPECT_EQUAL(validation, board.constpixel<uint8_t>(1u, 0u)[0], uint8_t(0xFFu));
+		OCEAN_EXPECT_EQUAL(validation, board.constpixel<uint8_t>(0u, 1u)[0], uint8_t(0xFFu));
+		OCEAN_EXPECT_EQUAL(validation, board.constpixel<uint8_t>(1u, 1u)[0], uint8_t(0x00u));
+	}
+
+	// Single-element board with large dimensions and padding.
+	{
+		const Frame board = CV::CVUtilities::createCheckerboardImage(64u, 64u, 1u, 1u, 7u, 0xFFu, 0x40u);
+		OCEAN_EXPECT_TRUE(validation, board.isValid());
+		OCEAN_EXPECT_EQUAL(validation, board.paddingElements(), 7u);
+
+		// All pixels should be dark since there is just one element which is dark.
+		for (unsigned int y = 0u; y < board.height(); ++y)
+		{
+			for (unsigned int x = 0u; x < board.width(); ++x)
+			{
+				OCEAN_EXPECT_EQUAL(validation, board.constpixel<uint8_t>(x, y)[0], uint8_t(0x40u));
+			}
+		}
+	}
 
 	Log::info() << "Validation: " << validation;
 	return validation.succeeded();
