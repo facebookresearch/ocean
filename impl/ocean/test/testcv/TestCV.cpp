@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/TestCV.h"
 #include "ocean/test/testcv/TestBresenham.h"
 #include "ocean/test/testcv/TestCanvas.h"
+#include "ocean/test/testcv/TestCVUtilities.h"
 #include "ocean/test/testcv/TestEigenUtilities.h"
 #include "ocean/test/testcv/TestFrameBlender.h"
 #include "ocean/test/testcv/TestFrameChannels.h"
@@ -1011,6 +1012,16 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		Log::info() << " ";
 
 		testResult = TestEigenUtilities::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("cvutilities"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestCVUtilities::test(testDuration, subSelector);
 	}
 
 	Log::info() << " ";
