@@ -68,6 +68,7 @@
 #include "ocean/test/testcv/TestFrameInterpolatorBilinear.h"
 #include "ocean/test/testcv/TestFrameInterpolatorBilinearAlpha.h"
 #include "ocean/test/testcv/TestFrameInterpolatorNearestPixel.h"
+#include "ocean/test/testcv/TestFrameInterpolatorTrilinear.h"
 #include "ocean/test/testcv/TestFrameInverter.h"
 #include "ocean/test/testcv/TestFrameMean.h"
 #include "ocean/test/testcv/TestFrameMinMax.h"
@@ -1033,6 +1034,16 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		Log::info() << " ";
 
 		testResult = TestFrameFilterMorphology::test(testDuration, worker, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolatortrilinear"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestFrameInterpolatorTrilinear::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
