@@ -61,6 +61,13 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinearNEON
 		 * @return True, if succeeded
 		 */
 		static bool testLookup4ChannelOptimizedNEONConsistency(const double testDuration);
+
+		/**
+		 * Tests all four combinations of useOptimizedNEON and useOptimizedBilinearValuesAndFactorCalculation, verifying output consistency and comparing performance.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testLookup4ChannelOptimizedFlagCombinations(const double testDuration);
 };
 
 }
