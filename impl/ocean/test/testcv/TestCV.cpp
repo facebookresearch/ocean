@@ -80,6 +80,7 @@
 #include "ocean/test/testcv/TestFrameShrinkerAlpha.h"
 #include "ocean/test/testcv/TestFrameTransposer.h"
 #include "ocean/test/testcv/TestFrameVariance.h"
+#include "ocean/test/testcv/TestFrequencyAnalysis.h"
 #include "ocean/test/testcv/TestHistogram.h"
 #include "ocean/test/testcv/TestImageQuality.h"
 #include "ocean/test/testcv/TestIntegralImage.h"
@@ -1044,6 +1045,16 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		Log::info() << " ";
 
 		testResult = TestFrameInterpolatorTrilinear::test(testDuration, worker, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("frequencyanalysis"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestFrequencyAnalysis::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
