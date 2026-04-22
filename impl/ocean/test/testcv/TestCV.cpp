@@ -52,6 +52,7 @@
 #include "ocean/test/testcv/TestFrameFilterLaplace.h"
 #include "ocean/test/testcv/TestFrameFilterMean.h"
 #include "ocean/test/testcv/TestFrameFilterMedian.h"
+#include "ocean/test/testcv/TestFrameFilterMorphology.h"
 #include "ocean/test/testcv/TestFrameFilterMax.h"
 #include "ocean/test/testcv/TestFrameFilterMin.h"
 #include "ocean/test/testcv/TestFrameFilterPrewitt.h"
@@ -1022,6 +1023,16 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		Log::info() << " ";
 
 		testResult = TestCVUtilities::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("framefiltermorphology"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestFrameFilterMorphology::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";
