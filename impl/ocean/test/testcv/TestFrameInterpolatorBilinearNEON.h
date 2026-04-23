@@ -67,7 +67,15 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinearNEON
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testLookup4ChannelOptimizedFlagCombinations(const double testDuration);
+		static bool testLookup4ChannelOptimizedNEONAndBilinearFlags(const double testDuration);
+
+		/**
+		 * Tests all six meaningful combinations of useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, and useOptimizedNEONFactorReplication, verifying output consistency and comparing performance.
+		 * The two [useOptimizedNEON=false, useOptimizedNEONFactorReplication=true] combinations are omitted because useOptimizedNEONFactorReplication only takes effect when useOptimizedNEON=true.
+		 * @param testDuration Number of seconds for each combination, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(const double testDuration);
 };
 
 }

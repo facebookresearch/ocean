@@ -47,9 +47,14 @@ TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedNEONConsistency)
 	EXPECT_TRUE(Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONConsistency(GTEST_TEST_DURATION));
 }
 
-TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedFlagCombinations)
+TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedNEONAndBilinearFlags)
 {
-	EXPECT_TRUE(Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedFlagCombinations(GTEST_TEST_DURATION));
+	EXPECT_TRUE(Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONAndBilinearFlags(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrameInterpolatorBilinearNEON, Lookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags)
+{
+	EXPECT_TRUE(Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(GTEST_TEST_DURATION));
 }
 
 #endif
@@ -138,7 +143,11 @@ bool TestFrameInterpolatorBilinearNEON::test(const double testDuration)
 
 	Log::info() << " ";
 
-	allSucceeded = testLookup4ChannelOptimizedFlagCombinations(testDuration) && allSucceeded;
+	allSucceeded = testLookup4ChannelOptimizedNEONAndBilinearFlags(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -636,7 +645,7 @@ bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONConsisten
 	return validation.succeeded();
 }
 
-bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedFlagCombinations(const double testDuration)
+bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONAndBilinearFlags(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -738,6 +747,135 @@ bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedFlagCombinati
 		std::cout << std::endl;
 
 		for (unsigned int c = 1u; c < 4u; ++c)
+		{
+			const double avg = performances[c].averageMseconds();
+
+			if (avg > 0.0)
+			{
+				std::cout << "  Speedup " << combinations[c].label << " vs baseline: " << String::toAString(avgBaseline / avg, 2u) << "x" << std::endl;
+			}
+		}
+	}
+
+	std::cout << "Validation: " << (validation.succeeded() ? "succeeded" : "FAILED") << std::endl;
+
+	return validation.succeeded();
+
+#else
+
+	Log::info() << "Skipped (no NEON support).";
+	return true;
+
+#endif
+}
+
+bool TestFrameInterpolatorBilinearNEON::testLookup4ChannelOptimizedNEONBilinearAndFactorReplicationFlags(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing lookup<uint8_t, 4u> with all flag combinations [useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication]:";
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	constexpr unsigned int tChannels = 4u;
+	constexpr unsigned int width = 1920u;
+	constexpr unsigned int height = 1080u;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(tChannels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+	CV::FrameInterpolatorBilinear::LookupTable lookupTable(width, height, 20u, 20u);
+
+	const bool offset = true;
+
+	for (unsigned int yBin = 0u; yBin <= lookupTable.binsY(); ++yBin)
+	{
+		for (unsigned int xBin = 0u; xBin <= lookupTable.binsX(); ++xBin)
+		{
+			const Vector2 value = Random::vector2(randomGenerator, -10, 10);
+			lookupTable.setBinTopLeftCornerValue(xBin, yBin, value);
+		}
+	}
+
+	uint8_t borderColor[tChannels];
+	for (unsigned int n = 0u; n < tChannels; ++n)
+	{
+		borderColor[n] = (uint8_t)RandomI::random(randomGenerator, 255u);
+	}
+
+	struct FlagCombination
+	{
+		bool useOptimizedNEON;
+		bool useOptimizedBilinearValuesAndFactorCalculation;
+		bool useOptimizedNEONFactorReplication;
+		const char* label;
+	};
+
+	// factorRep only takes effect when NEON=true (it gates a branch inside the NEON kernel),
+	// so the [NEON=false, *, factorRep=true] combinations are omitted as duplicates.
+	const FlagCombination combinations[6] =
+	{
+		{false, false, false, "[NEON=false, bilinear=false, factorRep=false]"},
+		{false, true,  false, "[NEON=false, bilinear=true,  factorRep=false]"},
+		{true,  false, false, "[NEON=true,  bilinear=false, factorRep=false]"},
+		{true,  true,  false, "[NEON=true,  bilinear=true,  factorRep=false]"},
+		{true,  false, true,  "[NEON=true,  bilinear=false, factorRep=true ]"},
+		{true,  true,  true,  "[NEON=true,  bilinear=true,  factorRep=true ]"},
+	};
+
+	Frame targets[6];
+	HighPerformanceStatistic performances[6];
+
+	for (unsigned int c = 0u; c < 6u; ++c)
+	{
+		targets[c] = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), &randomGenerator);
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			performances[c].start();
+			CV::FrameInterpolatorBilinear::lookup<uint8_t, tChannels>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), lookupTable, offset, borderColor, targets[c].data<uint8_t>(), sourceFrame.paddingElements(), targets[c].paddingElements(), nullptr, combinations[c].useOptimizedNEON, combinations[c].useOptimizedBilinearValuesAndFactorCalculation, combinations[c].useOptimizedNEONFactorReplication);
+			performances[c].stop();
+		}
+		while (startTimestamp + testDuration > Timestamp(true));
+	}
+
+	// Validate: all combinations must produce identical output compared to baseline [false, false, false]
+	for (unsigned int c = 1u; c < 6u; ++c)
+	{
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			const uint8_t* rowBaseline = targets[0].constrow<uint8_t>(y);
+			const uint8_t* rowCurrent = targets[c].constrow<uint8_t>(y);
+
+			for (unsigned int x = 0u; x < width * tChannels; ++x)
+			{
+				if (rowBaseline[x] != rowCurrent[x])
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+	}
+
+	std::cout << std::endl;
+	std::cout << "Frame: " << width << "x" << height << ", " << tChannels << " channels" << std::endl;
+
+	for (unsigned int c = 0u; c < 6u; ++c)
+	{
+		std::cout << "  " << combinations[c].label << ": " << performances[c].toString() << std::endl;
+	}
+
+	const double avgBaseline = performances[0].averageMseconds();
+
+	if (avgBaseline > 0.0)
+	{
+		std::cout << std::endl;
+
+		for (unsigned int c = 1u; c < 6u; ++c)
 		{
 			const double avg = performances[c].averageMseconds();
 
