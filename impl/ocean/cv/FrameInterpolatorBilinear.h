@@ -5131,6 +5131,10 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 	const float32x4_t constantInputWidth1_f_32x4 = vdupq_n_f32(float(inputWidth - 1u));
 	const float32x4_t constantInputHeight1_f_32x4 = vdupq_n_f32(float(inputHeight - 1u));
 
+#if defined(__aarch64__)
+	const float32x4_t constant128_f_32x4 = vdupq_n_f32(128.0f);
+#endif
+
 	const uint32x4_t constantInputStrideElements_u_32x4 = vdupq_n_u32(inputStrideElements);
 	const uint32x4_t constantInputWidth1_u_32x4 = vdupq_n_u32(inputWidth - 1u);
 	const uint32x4_t constantInputHeight1_u_32x4 = vdupq_n_u32(inputHeight - 1u);
@@ -5210,15 +5214,34 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 			const uint32x4_t bottomRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
 
 			// we determine the fractional portions of the x' and y':
-			float32x4_t tx_f_32x4 = vsubq_f32(inputPositionsX_f_32x4, vcvtq_f32_u32(inputPositionsLeft_u_32x4));
-			float32x4_t ty_f_32x4 = vsubq_f32(inputPositionsY_f_32x4, vcvtq_f32_u32(inputPositionsTop_u_32x4));
+			uint32x4_t tx_128_u_32x4;
+			uint32x4_t ty_128_u_32x4;
 
-			// we use integer interpolation [0.0, 1.0] -> [0, 128]
-			tx_f_32x4 = vmulq_f32(tx_f_32x4, vdupq_n_f32(128.0f));
-			ty_f_32x4 = vmulq_f32(ty_f_32x4, vdupq_n_f32(128.0f));
+#if defined(__aarch64__)
+			// vrndmq_f32 / vcvtaq_u32_f32 are AArch64-only intrinsics; ARMv7 falls through to the original sequence.
+			if (useOptimizedBilinearValuesAndFactorCalculation)
+			{
+				// Compute fractional part independently of left/top, allowing parallel execution with bounds
+				const float32x4_t tx_f_32x4 = vmulq_f32(vsubq_f32(inputPositionsX_f_32x4, vrndmq_f32(inputPositionsX_f_32x4)), constant128_f_32x4);
+				const float32x4_t ty_f_32x4 = vmulq_f32(vsubq_f32(inputPositionsY_f_32x4, vrndmq_f32(inputPositionsY_f_32x4)), constant128_f_32x4);
 
-			const uint32x4_t tx_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(tx_f_32x4, vdupq_n_f32(0.5)));
-			const uint32x4_t ty_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(ty_f_32x4, vdupq_n_f32(0.5)));
+				tx_128_u_32x4 = vcvtaq_u32_f32(tx_f_32x4);
+				ty_128_u_32x4 = vcvtaq_u32_f32(ty_f_32x4);
+			}
+			else
+#endif
+			{
+				// Original: subtract, scale, round
+				float32x4_t tx_f_32x4 = vsubq_f32(inputPositionsX_f_32x4, vcvtq_f32_u32(inputPositionsLeft_u_32x4));
+				float32x4_t ty_f_32x4 = vsubq_f32(inputPositionsY_f_32x4, vcvtq_f32_u32(inputPositionsTop_u_32x4));
+
+				// we use integer interpolation [0.0, 1.0] -> [0, 128]
+				tx_f_32x4 = vmulq_f32(tx_f_32x4, vdupq_n_f32(128.0f));
+				ty_f_32x4 = vmulq_f32(ty_f_32x4, vdupq_n_f32(128.0f));
+
+				tx_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(tx_f_32x4, vdupq_n_f32(0.5)));
+				ty_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(ty_f_32x4, vdupq_n_f32(0.5)));
+			}
 
 			if constexpr (tChannels == 4u)
 			{
