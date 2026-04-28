@@ -11,6 +11,8 @@
 
 #import <sys/utsname.h>
 
+#import <FBNullabilityMacros/FBNullabilityMacros.h>
+
 namespace Ocean
 {
 
@@ -40,7 +42,7 @@ bool System::iphoneModelName(std::string& name)
 
 bool System::iosVersion(std::string& version)
 {
-	version = [[[UIDevice currentDevice] systemVersion] UTF8String];
+	version = FB_INVARIANT_NONNULL_CAST([[[UIDevice currentDevice] systemVersion] UTF8String]);
 	return true;
 }
 
