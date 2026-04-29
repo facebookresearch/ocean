@@ -116,7 +116,7 @@ std::string FontManager::systemDefaultFontFamily(std::string* styleName)
 		*styleName = "Regular";
 	}
 
-#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 	return std::string("Calibri");
 #elif defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
 	return std::string("Helvetica");
