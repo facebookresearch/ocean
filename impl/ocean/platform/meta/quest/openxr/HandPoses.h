@@ -249,6 +249,13 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 				inline const XrHandJointVelocityEXT* xrHandJointVelocitiesEXT() const;
 
 				/**
+				 * Returns the hand tracking aim state.
+				 * The aim state provides a stabilized aim pose and pinch detection flags.
+				 * @return The hand tracking aim state
+				 */
+				inline const XrHandTrackingAimStateFB& xrHandTrackingAimStateFB() const;
+
+				/**
 				 * Returns whether this hand pose is valid.
 				 * @return True, if so
 				 */
@@ -271,6 +278,9 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 
 				/// The hand joint velocities of this hand pose.
 				XrHandJointVelocityEXT xrHandJointVelocitiesEXT_[XR_HAND_JOINT_COUNT_EXT];
+
+				/// The hand tracking aim state (stabilized aim pose and pinch flags).
+				XrHandTrackingAimStateFB xrHandTrackingAimStateFB_ = xrCreateObject<XrHandTrackingAimStateFB>(XR_TYPE_HAND_TRACKING_AIM_STATE_FB);
 		};
 
 	public:
@@ -461,6 +471,11 @@ inline const XrHandJointLocationEXT* HandPoses::Pose::xrHandJointLocationsEXT() 
 inline const XrHandJointVelocityEXT* HandPoses::Pose::xrHandJointVelocitiesEXT() const
 {
 	return xrHandJointVelocitiesEXT_;
+}
+
+inline const XrHandTrackingAimStateFB& HandPoses::Pose::xrHandTrackingAimStateFB() const
+{
+	return xrHandTrackingAimStateFB_;
 }
 
 inline bool HandPoses::Pose::isValid() const
