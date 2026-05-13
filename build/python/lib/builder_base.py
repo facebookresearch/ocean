@@ -76,26 +76,36 @@ class BuildContext:
     def get_dependency_include_dir(self, dep: str) -> Optional[Path]:
         """Get include directory for a dependency.
 
-        Uses Ocean's layout: h/<platform>/ for headers.
+        Standard layout: <dep>/include/
+        External-integration layout: <dep>/h/<platform>/
         """
         if dep in self.dependency_dirs:
-            # Ocean layout: h/<platform>/
-            platform_str = self.target.to_platform_component()
-            inc = self.dependency_dirs[dep] / "h" / platform_str
+            # Standard layout: include/
+            inc = self.dependency_dirs[dep] / "include"
             if inc.exists():
                 return inc
-            # Fallback to standard include/ layout
-            inc = self.dependency_dirs[dep] / "include"
+            # External-integration layout: h/<platform>/
+            platform_str = self.target.to_platform_component()
+            inc = self.dependency_dirs[dep] / "h" / platform_str
             if inc.exists():
                 return inc
         return None
 
     def get_dependency_lib_dir(self, dep: str) -> Optional[Path]:
-        """Get lib directory for a dependency."""
+        """Get lib directory for a dependency.
+
+        Standard layout: <dep>/lib/
+        External-integration layout: <dep>/lib/<target>/
+        """
         if dep in self.dependency_dirs:
+            # External-integration layout has a per-target subdirectory
             lib_dir = (
                 self.dependency_dirs[dep] / "lib" / self.target.to_path_component()
             )
+            if lib_dir.exists():
+                return lib_dir
+            # Standard layout: lib/ directly under the per-library prefix
+            lib_dir = self.dependency_dirs[dep] / "lib"
             if lib_dir.exists():
                 return lib_dir
         return None
