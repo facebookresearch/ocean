@@ -53,16 +53,15 @@ Ocean is built using a Python build script that invokes CMake with the correct c
 cd /path/to/ocean
 
 # Build Ocean using the new Python 3P layout
-python build/python/build_ocean.py --third-party-layout python
-
+python build/python/build_ocean.py
 # Build for a specific configuration
-python build/python/build_ocean.py --third-party-layout python --config release
+python build/python/build_ocean.py --config release
 
 # Specify a custom third-party directory
-python build/python/build_ocean.py --third-party-layout python --third-party-dir /path/to/ocean_3rdparty/install
+python build/python/build_ocean.py --third-party-dir /path/to/ocean_3rdparty/install
 
 # Show build plan without building
-python build/python/build_ocean.py --third-party-layout python --dry-run
+python build/python/build_ocean.py --dry-run
 ```
 
 Once the build is complete, the compiled binaries can be found in `ocean_install/macos_arm64_static_debug` and `.../macos_arm64_static_release` (or `macos_x86_64_static_*` on Intel Macs).
@@ -81,7 +80,6 @@ cmake -S . -B build_macos \
     -G Xcode \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
 
 # Build
@@ -100,7 +98,7 @@ Build Ocean and then open the generated Xcode project:
 cd /path/to/ocean
 
 # Configure only (to generate Xcode project)
-python build/python/build_ocean.py --third-party-layout python --configure-only
+python build/python/build_ocean.py --configure-only
 
 # Open in Xcode
 open ocean_build/macos_arm64_static_debug/ocean.xcodeproj
@@ -117,7 +115,6 @@ cmake -S . \
     -B "${HOME}/build_ocean_macos_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DBUILD_SHARED_LIBS="OFF"
 ```
@@ -131,7 +128,6 @@ cmake -S . \
     -B "${HOME}/build_ocean_macos_release" \
     -DCMAKE_BUILD_TYPE="Release" \
     -G Xcode \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DBUILD_SHARED_LIBS="OFF"
 ```

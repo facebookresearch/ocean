@@ -62,13 +62,12 @@ Make sure that the third-party libraries have been built and installed as descri
 cd /path/to/ocean
 
 # Build Ocean for iOS
-python build/python/build_ocean.py --target ios_arm64 --third-party-layout python
-
+python build/python/build_ocean.py --target ios_arm64
 # Build for a specific configuration
-python build/python/build_ocean.py --target ios_arm64 --third-party-layout python --config release
+python build/python/build_ocean.py --target ios_arm64 --config release
 
 # Specify custom directories
-python build/python/build_ocean.py --target ios_arm64 --third-party-layout python \
+python build/python/build_ocean.py --target ios_arm64 \
     --build-dir "${HOME}/build_ocean" \
     --install-dir "${HOME}/install_ocean" \
     --third-party-dir /path/to/ocean_3rdparty/install
@@ -93,7 +92,6 @@ cmake -S . -B build_ios \
     -DDEPLOYMENT_TARGET=15.0 \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install
 
 cmake --build build_ios --target install
@@ -115,7 +113,7 @@ Build Ocean and then open the generated Xcode project:
 cd /path/to/ocean
 
 # Configure only (to generate Xcode project)
-python build/python/build_ocean.py --target ios_arm64 --third-party-layout python --configure-only
+python build/python/build_ocean.py --target ios_arm64 --configure-only
 
 # Open in Xcode (adjust the path to match your build config)
 open ocean_build/ios_arm64_static_debug/ocean.xcodeproj
@@ -135,7 +133,6 @@ cmake -S . \
     -DCMAKE_TOOLCHAIN_FILE=build/python/toolchains/ios.toolchain.cmake \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
@@ -153,7 +150,6 @@ cmake -S . \
     -DCMAKE_TOOLCHAIN_FILE=build/python/toolchains/ios.toolchain.cmake \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
