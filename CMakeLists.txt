@@ -302,6 +302,21 @@ if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "standard")
     endif()
 
     message(STATUS "  Standard-layout prefixes on CMAKE_PREFIX_PATH: ${_ocean_3p_added_libs}")
+
+    # libtiff's exported TiffTargets.cmake references CMath::CMath as an
+    # interface link library without providing it for downstream consumers
+    # (the target is created inside libtiff's own build and not exported).
+    # Provide a no-op stub so find_package(TIFF CONFIG) doesn't fail when
+    # the standard layout exposes the upstream config. On Linux GCC
+    # auto-links libm when needed; on Apple/Android/Windows libm isn't a
+    # separate library.
+    if (NOT TARGET CMath::CMath)
+        add_library(CMath::CMath INTERFACE IMPORTED)
+        if (UNIX AND NOT APPLE AND NOT ANDROID)
+            set_target_properties(CMath::CMath PROPERTIES
+                INTERFACE_LINK_LIBRARIES "m")
+        endif()
+    endif()
 endif()
 
 # ----------------------------------------------------------------------------

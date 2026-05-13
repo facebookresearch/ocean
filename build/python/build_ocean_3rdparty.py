@@ -863,13 +863,29 @@ def _install_standard_layout(
     if not install_dir.exists():
         return
 
+    # Detect which library kinds the install actually contains so we only
+    # apply the link-type filter when both kinds exist (e.g., libpng installs
+    # both libpng.a and libpng.dylib regardless of BUILD_SHARED_LIBS). When
+    # only one kind is present (e.g., imported_shared libraries like ARCore
+    # that always ship a .so), keep what's there.
+    has_static_libs = any(install_dir.rglob("*.a")) or any(
+        install_dir.rglob("*.lib")
+    )
+    has_shared_libs = (
+        any(install_dir.rglob("*.so"))
+        or any(install_dir.rglob("*.dylib"))
+        or any(install_dir.rglob("*.dll"))
+    )
+
     is_shared = target.link_type == LinkType.SHARED
-    if is_shared:
+    skip_patterns: List[str] = []
+    if is_shared and has_static_libs and has_shared_libs:
         skip_extensions = {".a"}
-        skip_patterns: List[str] = []
-    else:
+    elif not is_shared and has_static_libs and has_shared_libs:
         skip_extensions = {".dylib", ".so", ".dll"}
         skip_patterns = [".so."]
+    else:
+        skip_extensions = set()
 
     def should_skip(path: Path) -> bool:
         if path.suffix in skip_extensions:
