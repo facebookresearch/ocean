@@ -75,23 +75,7 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 	for (const TrackedController::ControllerType controllerType : {TrackedController::CT_LEFT, TrackedController::CT_RIGHT})
 	{
 		HomogenousMatrix4 baseSpace_T_controllerGrip;
-		if (trackedController.pose(controllerType, nullptr /*baseSpace_T_controllerAim*/, &baseSpace_T_controllerGrip) && baseSpace_T_controllerGrip.isValid())
-		{
-			// we may need to apply a manual shift to align the aim space with the controller's origin
-
-			ocean_assert(controllerAim_t_controllerModel_.x() != Numeric::minValue());
-
-			baseSpace_T_controllerGrip *= HomogenousMatrix4(controllerAim_t_controllerModel_);
-
-			// previously this used the aim pose for the controller position
-			// this was changed to use the grip pose instead,
-			// but to place the model at the correct location
-			// we have to offset the grip pose to make it match the old aim pose
-			baseSpace_T_controllerGrip *= HomogenousMatrix4(
-				Vector3(0.000000, -0.019641, -0.100981),
-				Quaternion(0.866025, -0.500000, 0.000000, 0.000000));
-		}
-		else
+		if (!baseSpaceFromControllerModel(trackedController, controllerType, baseSpace_T_controllerGrip))
 		{
 			baseSpace_T_controllerGrip.toNull();
 		}
@@ -109,6 +93,34 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 
 		visualizeControllerInWorld(controllerType == TrackedController::CT_LEFT ? CT_LEFT : CT_RIGHT, baseSpace_T_controllerGrip, controllerRayLength);
 	}
+}
+
+bool VRControllerVisualizer::baseSpaceFromControllerModel(const TrackedController& trackedController, const TrackedController::ControllerType controllerType, HomogenousMatrix4& baseSpace_T_controllerModel) const
+{
+	ocean_assert(trackedController.isValid());
+
+	HomogenousMatrix4 baseSpace_T_controllerGrip;
+	if (!trackedController.pose(controllerType, nullptr /*baseSpace_T_controllerAim*/, &baseSpace_T_controllerGrip) || !baseSpace_T_controllerGrip.isValid())
+	{
+		return false;
+	}
+
+	// we may need to apply a manual shift to align the aim space with the controller's origin
+
+	ocean_assert(controllerAim_t_controllerModel_.x() != Numeric::minValue());
+
+	baseSpace_T_controllerGrip *= HomogenousMatrix4(controllerAim_t_controllerModel_);
+
+	// previously this used the aim pose for the controller position
+	// this was changed to use the grip pose instead,
+	// but to place the model at the correct location
+	// we have to offset the grip pose to make it match the old aim pose
+	baseSpace_T_controllerGrip *= HomogenousMatrix4(
+		Vector3(0.000000, -0.019641, -0.100981),
+		Quaternion(0.866025, -0.500000, 0.000000, 0.000000));
+
+	baseSpace_T_controllerModel = baseSpace_T_controllerGrip;
+	return true;
 }
 
 void VRControllerVisualizer::visualizeControllerCoordinateSystem(const size_t controllerIndex, const HomogenousMatrix4& world_T_controller)

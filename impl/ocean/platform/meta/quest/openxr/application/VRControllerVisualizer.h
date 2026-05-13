@@ -82,6 +82,17 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRControllerVisualizer
 		void visualizeControllersInWorld(const TrackedController& trackedController, const Scalar controllerRayLength = -1);
 
 		/**
+		 * Computes the transformation of the controller render model relative to base space.
+		 * Applies the same offsets that visualizeControllersInWorld uses to place the rendered controller model,
+		 * so callers can align other content (e.g. virtual markers or coordinate systems) with the rendered controller.
+		 * @param trackedController The instance of a tracked controller used to query the controller pose, must be valid
+		 * @param controllerType The type of the controller (CT_LEFT or CT_RIGHT)
+		 * @param baseSpace_T_controllerModel The resulting transformation of the controller model in base space (only valid if true is returned)
+		 * @return True if the pose could be obtained and the transformation was computed; false otherwise
+		 */
+		bool baseSpaceFromControllerModel(const TrackedController& trackedController, const TrackedController::ControllerType controllerType, HomogenousMatrix4& baseSpace_T_controllerModel) const;
+
+		/**
 		 * Sets whether the controller coordinate systems are shown.
 		 * @param show True to show the coordinate systems; False to hide them
 		 */
