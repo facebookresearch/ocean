@@ -77,7 +77,7 @@ def _windows_process_map() -> Dict[int, tuple]:
     return processes
 
 
-def _detect_windows_shell() -> str:
+def detect_windows_shell() -> str:
     """Best-effort detection of the parent shell on Windows.
 
     Walks up the parent-process chain (skipping the Python interpreter /
@@ -172,7 +172,7 @@ def _format_pyyaml_install_help() -> str:
     if os.name != "nt":
         return intro + _VENV_HINT_POSIX
 
-    shell = _detect_windows_shell()
+    shell = detect_windows_shell()
     return intro + _VENV_HINTS_NT.get(shell, _VENV_HINT_NT_UNKNOWN)
 
 

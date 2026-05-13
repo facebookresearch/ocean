@@ -1655,6 +1655,56 @@ def parse_platforms(
     return platforms or None
 
 
+def _print_post_build_instructions(install_dir: Path) -> None:
+    """Print next-step instructions after a successful 3rd-party build.
+
+    Tells the user how to point downstream Ocean builds (CMake / Gradle apps
+    such as the PointTracker demo) at the freshly built third-party install
+    directory. Skipped for non-CMake layouts (see ``--for-external-integration``).
+    """
+    from lib.manifest import detect_windows_shell
+
+    abs_install = install_dir.resolve()
+    host_os = detect_host_os()
+
+    print(f"\n{'═' * 70}")
+    print("Next steps")
+    print(f"{'═' * 70}")
+    print(f"Third-party libraries installed at:\n  {abs_install}\n")
+    print(
+        "Set OCEAN_THIRDPARTY_PATH so the Ocean Gradle apps (e.g. the "
+        "PointTracker demo) can find them:"
+    )
+
+    if host_os == OS.WINDOWS:
+        # Both Windows PowerShell 5.x ("powershell") and PowerShell 7+ ("pwsh")
+        # use the same $env: syntax to set environment variables in the current
+        # session, so they share an output branch.
+        shell = detect_windows_shell()
+        ps_line = f'    $env:OCEAN_THIRDPARTY_PATH = "{abs_install}"'
+        cmd_line = f"    set OCEAN_THIRDPARTY_PATH={abs_install}"
+        if shell in ("pwsh", "powershell"):
+            print("\n  PowerShell:")
+            print(ps_line)
+        elif shell == "cmd":
+            print("\n  cmd.exe:")
+            print(cmd_line)
+        else:
+            print("\n  PowerShell:")
+            print(ps_line)
+            print("\n  cmd.exe:")
+            print(cmd_line)
+    else:
+        print("\n  bash / zsh:")
+        print(f'    export OCEAN_THIRDPARTY_PATH="{abs_install}"')
+
+    print(
+        "\nAlternatively, pass the path explicitly to build_ocean.py:\n"
+        f"  python build/python/build_ocean.py --third-party-dir {abs_install}"
+    )
+    print(f"{'═' * 70}")
+
+
 def main() -> int:  # noqa: C901
     """Main entry point."""
     args = parse_args()
@@ -1929,6 +1979,8 @@ def main() -> int:  # noqa: C901
             android_api_level=args.android_api_level,
         )
         print("\n✓ Build completed successfully!")
+        if not args.for_external_integration:
+            _print_post_build_instructions(install_dir)
         return 0
     except Exception as e:
         print(f"\n✗ Build failed: {e}")
