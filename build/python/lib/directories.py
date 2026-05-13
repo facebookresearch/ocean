@@ -193,7 +193,8 @@ class DirectoryManager:
         if target is None:
             raise ValueError(
                 "target is required for the standard install layout; "
-                "pass --for-external-integration if you intended the legacy layout"
+                "pass --for-external-integration if you wanted the per-library "
+                "external-integration layout"
             )
         return self.install_dir / target.to_path_component() / library
 

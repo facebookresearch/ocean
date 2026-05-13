@@ -116,7 +116,6 @@ jobs:
             --target linux_x86_64 \
             --config ${{ matrix.build_config }} \
             --link static \
-            --third-party-layout python \
             --third-party-dir ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }} \
             --build-dir ${{ env.OCEAN_BUILD_PATH }} \
             --install-dir ${{ env.OCEAN_INSTALL_PATH }}
