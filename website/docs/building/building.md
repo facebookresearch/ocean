@@ -40,8 +40,7 @@ Ocean's build process follows two steps:
 python build/python/build_ocean_3rdparty.py
 
 # Build Ocean
-python build/python/build_ocean.py --third-party-layout python
-```
+python build/python/build_ocean.py```
 
 ### Quick Start (Windows)
 
@@ -50,8 +49,7 @@ python build/python/build_ocean.py --third-party-layout python
 python build/python/build_ocean_3rdparty.py
 
 # Build Ocean
-python build/python/build_ocean.py --third-party-layout python
-```
+python build/python/build_ocean.py```
 
 The build system supports cross-compilation for multiple platforms from a single host. For example, on macOS you can build for iOS and Android in addition to macOS itself.
 
