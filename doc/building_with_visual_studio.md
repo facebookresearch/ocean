@@ -27,26 +27,28 @@ Supported Visual Studio versions: **Visual Studio 2022** and **Visual Studio 202
 
 ### Building Third-Party Libraries
 
-Before opening the solution, build the required third-party libraries:
+Before opening the solution, build the required third-party libraries. The Visual Studio solutions reference the per-library install shape (headers at `3rdparty\<lib>\h\<platform>\` and libraries at `3rdparty\<lib>\lib\<target>\`), so pass `--for-external-integration` to produce that layout:
 
 ```powershell
 cd \path\to\ocean
-python build/python/build_ocean_3rdparty.py
+python build/python/build_ocean_3rdparty.py --for-external-integration
 ```
 
 > **Tip:** For shorter paths (avoiding Windows path length issues), use a custom output directory:
 > ```powershell
-> python build/python/build_ocean_3rdparty.py --output-dir C:\ocean_3rdparty
+> python build/python/build_ocean_3rdparty.py --for-external-integration --output-dir C:\ocean_3rdparty
 > ```
 
-Once the build completes, make the installed libraries available to Ocean. The simplest approach is to create a symbolic link from `ocean/3rdparty` to the install directory:
+Once the build completes, make the installed libraries available to Ocean. The simplest approach is to create a symbolic link from `ocean\3rdparty` to the install directory:
 
 ```powershell
 cd \path\to\ocean
 mklink /D 3rdparty \path\to\ocean_3rdparty\install
 ```
 
-Alternatively, copy or move the install directory to `ocean/3rdparty`.
+Alternatively, copy or move the install directory to `ocean\3rdparty`.
+
+> **Note:** The default `build_ocean_3rdparty.py` invocation (without `--for-external-integration`) produces the standard CMake install layout (one prefix per target per library) used by Ocean's CMake build. Visual Studio's hand-maintained `.vcxproj` files do not know about that layout — they need the external-integration shape produced by the flag above. The two layouts are independent; you can have both side by side in separate install directories if you also build via CMake.
 
 ### Opening the Solution
 
@@ -69,6 +71,13 @@ Building Android applications with Visual Studio uses Ocean's Android Extension,
 
 1. **Visual Studio 2022** with the **Visual Studio extension development** workload (also called the Visual Studio SDK)
 2. **Android SDK** and **JDK 17-24** - see the [extension README](../../build/visual_studio/extensions/vc143/android/README.md) for installation details
+3. **Android third-party libraries** built in the external-integration layout. Like the Windows solution above, the Android Visual Studio projects reference the per-library `3rdparty\<lib>\h\android\` / `3rdparty\<lib>\lib\android_<target>\` shape:
+
+   ```powershell
+   python build/python/build_ocean_3rdparty.py --target android --for-external-integration
+   ```
+
+   Then symlink or copy the install dir to `ocean\3rdparty` as in the Windows section.
 
 ### Step 1: Build and Install the Ocean Android Extension
 
