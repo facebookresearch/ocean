@@ -11,8 +11,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_scenedescription_sdl_assimp")
 
-    # For Python 3P layout, manually set up assimp since no CMake config is available
-    if (OCEAN_THIRD_PARTY_LAYOUT STREQUAL "python")
+    # For the external-integration 3P layout there's no upstream CMake config
+    # available (it's stripped by reorganize_output), so wire assimp manually.
+    # The standard 3P layout preserves the config and find_package below resolves
+    # it natively.
+    if (_ocean_3p_resolved_layout STREQUAL "external")
         # Determine debug suffix
         if (CMAKE_BUILD_TYPE STREQUAL "Debug")
             set(_assimp_debug_suffix "d")

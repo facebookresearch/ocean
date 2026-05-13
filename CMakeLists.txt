@@ -121,30 +121,40 @@ if (BUILD_SHARED_LIBS)
     endif()
 endif()
 
-if (ANDROID)
-    # If specified, use the following variable to determine the location of the third-party
-    # libraries that are required. This is provided by Gradle.
-    if (OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE)
-        if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/android_${ANDROID_ABI}_static_Debug)
-        else()
-            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/android_${ANDROID_ABI}_static_Release)
-        endif()
+# ============================================================================
+# Third-party library resolution
+#
+# Two install layouts are supported, matching build_ocean_3rdparty.py:
+#
+#   - "standard" (default): each library is a complete, relocatable CMake
+#     install prefix at <root>/<target>/<library>/{include,lib,share}/.
+#     Consumed via find_package(... CONFIG) on CMAKE_PREFIX_PATH.
+#
+#   - "external": per-library shape with headers shared across architectures
+#     within an OS and libraries keyed by target — <root>/<library>/h/<platform>/
+#     and <root>/<library>/lib/<target>/. Produced by build_ocean_3rdparty.py's
+#     --for-external-integration flag. The same shape is consumed by Visual
+#     Studio, Xcode, Bazel, IDE tooling and other non-CMake build systems;
+#     the per-library wiring below makes it consumable from CMake too.
+#
+# Set OCEAN_THIRD_PARTY_LAYOUT to override auto-detection.
+# ============================================================================
 
-        message(STATUS "OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE = ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}")
-    else()
-        message(STATUS "OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE = [not defined]")
-    endif()
+# Gradle hands the third-party root in OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE.
+# Promote it to OCEAN_THIRD_PARTY_ROOT (the canonical name) when not already set.
+if (OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE AND NOT OCEAN_THIRD_PARTY_ROOT)
+    set(OCEAN_THIRD_PARTY_ROOT "${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}"
+        CACHE PATH "Root directory for third-party libraries" FORCE)
 endif()
 
-# Third-party library layout support
-# Supports both legacy "cmake" layout and new "python" layout from build_ocean_3rdparty.py
-set(OCEAN_THIRD_PARTY_LAYOUT "cmake" CACHE STRING "Third-party library layout: 'cmake' (legacy) or 'python' (new)")
-set(OCEAN_THIRD_PARTY_ROOT "" CACHE PATH "Root directory for third-party libraries (required for 'python' layout)")
+set(OCEAN_THIRD_PARTY_LAYOUT "auto" CACHE STRING
+    "Third-party install layout: 'auto' (detect), 'standard', or 'external'")
+set_property(CACHE OCEAN_THIRD_PARTY_LAYOUT PROPERTY STRINGS auto standard external)
+set(OCEAN_THIRD_PARTY_ROOT "" CACHE PATH "Root directory for third-party libraries")
 
-if (OCEAN_THIRD_PARTY_LAYOUT STREQUAL "python")
-    if (NOT OCEAN_THIRD_PARTY_ROOT OR NOT EXISTS "${OCEAN_THIRD_PARTY_ROOT}")
-        message(FATAL_ERROR "OCEAN_THIRD_PARTY_ROOT must be set to an existing directory when using OCEAN_THIRD_PARTY_LAYOUT=python")
+if (OCEAN_THIRD_PARTY_ROOT)
+    if (NOT EXISTS "${OCEAN_THIRD_PARTY_ROOT}")
+        message(FATAL_ERROR "OCEAN_THIRD_PARTY_ROOT does not exist: ${OCEAN_THIRD_PARTY_ROOT}")
     endif()
 
     # Determine platform string for headers (OS only, no arch)
@@ -159,7 +169,7 @@ if (OCEAN_THIRD_PARTY_LAYOUT STREQUAL "python")
     elseif (WIN32)
         set(_ocean_3p_platform "win")
     else()
-        message(FATAL_ERROR "Unsupported platform for OCEAN_THIRD_PARTY_LAYOUT=python")
+        message(FATAL_ERROR "Unsupported platform for OCEAN_THIRD_PARTY_ROOT")
     endif()
 
     # Determine architecture string
@@ -236,7 +246,72 @@ if (OCEAN_THIRD_PARTY_LAYOUT STREQUAL "python")
 
     # Build the target string: <platform>_<arch>[_toolset]_<link>[_debug]
     set(_ocean_3p_target "${_ocean_3p_platform}_${_ocean_3p_arch}${_ocean_3p_toolset}_${_ocean_3p_link}${_ocean_3p_config}")
+    set(_ocean_3p_standard_root "${OCEAN_THIRD_PARTY_ROOT}/${_ocean_3p_target}")
 
+    # Resolve the layout: explicit override, or auto-detect from disk shape.
+    set(_ocean_3p_resolved_layout "${OCEAN_THIRD_PARTY_LAYOUT}")
+    if (_ocean_3p_resolved_layout STREQUAL "auto")
+        if (IS_DIRECTORY "${_ocean_3p_standard_root}")
+            set(_ocean_3p_resolved_layout "standard")
+        else()
+            file(GLOB _ocean_3p_external_probes LIST_DIRECTORIES true
+                "${OCEAN_THIRD_PARTY_ROOT}/*/h/${_ocean_3p_platform}")
+            if (_ocean_3p_external_probes)
+                set(_ocean_3p_resolved_layout "external")
+            else()
+                message(FATAL_ERROR
+                    "Cannot detect third-party install layout at ${OCEAN_THIRD_PARTY_ROOT}.\n"
+                    "  Standard layout expected at: ${_ocean_3p_standard_root}/<library>/include/\n"
+                    "  External-integration layout expected at: ${OCEAN_THIRD_PARTY_ROOT}/<library>/h/${_ocean_3p_platform}/\n"
+                    "Build the third-party libraries first with build_ocean_3rdparty.py.")
+            endif()
+        endif()
+    endif()
+
+    message(STATUS "OCEAN_THIRD_PARTY_ROOT = ${OCEAN_THIRD_PARTY_ROOT}")
+    message(STATUS "  Layout: ${_ocean_3p_resolved_layout}")
+    message(STATUS "  Target: ${_ocean_3p_target}")
+    message(STATUS "  Platform (headers): ${_ocean_3p_platform}")
+endif()
+
+# ----------------------------------------------------------------------------
+# Standard layout: each library is a complete CMake install prefix at
+# <root>/<target>/<library>/. Putting each on CMAKE_PREFIX_PATH lets
+# find_package(... CONFIG) and the built-in Find modules resolve them
+# directly. No per-library wiring needed.
+# ----------------------------------------------------------------------------
+if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "standard")
+    file(GLOB _ocean_3p_libs LIST_DIRECTORIES true RELATIVE
+        "${_ocean_3p_standard_root}" "${_ocean_3p_standard_root}/*")
+    set(_ocean_3p_added_libs "")
+    foreach(_lib_name ${_ocean_3p_libs})
+        set(_lib_prefix "${_ocean_3p_standard_root}/${_lib_name}")
+        if (IS_DIRECTORY "${_lib_prefix}")
+            list(APPEND CMAKE_PREFIX_PATH "${_lib_prefix}")
+            list(APPEND _ocean_3p_added_libs "${_lib_name}")
+        endif()
+    endforeach()
+
+    # The Android NDK toolchain restricts find_* to its sysroot by default.
+    # Allow lookups outside it so our 3P prefixes are visible.
+    if (ANDROID)
+        list(APPEND CMAKE_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
+        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
+        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+    endif()
+
+    message(STATUS "  Standard-layout prefixes on CMAKE_PREFIX_PATH: ${_ocean_3p_added_libs}")
+endif()
+
+# ----------------------------------------------------------------------------
+# External-integration layout: per-library shape with shared OS-level headers
+# and target-keyed libs. This is the same shape consumed by Visual Studio,
+# Xcode, Bazel, IDE tooling, and other non-CMake build systems. The
+# per-library plumbing below wires up CMake's Find modules and creates
+# IMPORTED targets so the same install tree can be consumed from CMake too.
+# ----------------------------------------------------------------------------
+if (OCEAN_THIRD_PARTY_ROOT AND _ocean_3p_resolved_layout STREQUAL "external")
     # For multi-config generators, if the target dir doesn't exist, try with _debug suffix
     if (NOT CMAKE_BUILD_TYPE AND NOT EXISTS "${OCEAN_THIRD_PARTY_ROOT}/zlib/lib/${_ocean_3p_target}")
         # Check if debug variant exists to confirm the naming pattern
@@ -246,11 +321,6 @@ if (OCEAN_THIRD_PARTY_LAYOUT STREQUAL "python")
             # Keep the non-debug target; debug libraries will be found via explicit hints below
         endif()
     endif()
-
-    message(STATUS "OCEAN_THIRD_PARTY_LAYOUT = python")
-    message(STATUS "OCEAN_THIRD_PARTY_ROOT = ${OCEAN_THIRD_PARTY_ROOT}")
-    message(STATUS "  Platform (headers): ${_ocean_3p_platform}")
-    message(STATUS "  Target (libraries): ${_ocean_3p_target}")
 
     # Enumerate library directories and build search paths
     file(GLOB _ocean_3p_libs LIST_DIRECTORIES true "${OCEAN_THIRD_PARTY_ROOT}/*")
