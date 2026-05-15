@@ -2635,9 +2635,9 @@ void FrameConverter::convertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd1Plane2C
 
 			// let's handle the last two channels
 
-			const int16x8_t sourcePlaneAverage_0_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_s16(vrhaddq_u16(sourcePlaneAverage_0_Upper_u_16x8, sourcePlaneAverage_0_Lower_u_16x8), 1));
-			const int16x8_t sourcePlaneAverage_1_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_s16(vrhaddq_u16(sourcePlaneAverage_1_Upper_u_16x8, sourcePlaneAverage_1_Lower_u_16x8), 1));
-			const int16x8_t sourcePlaneAverage_2_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_s16(vrhaddq_u16(sourcePlaneAverage_2_Upper_u_16x8, sourcePlaneAverage_2_Lower_u_16x8), 1));
+			const int16x8_t sourcePlaneAverage_0_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_u16(vrhaddq_u16(sourcePlaneAverage_0_Upper_u_16x8, sourcePlaneAverage_0_Lower_u_16x8), 1));
+			const int16x8_t sourcePlaneAverage_1_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_u16(vrhaddq_u16(sourcePlaneAverage_1_Upper_u_16x8, sourcePlaneAverage_1_Lower_u_16x8), 1));
+			const int16x8_t sourcePlaneAverage_2_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_u16(vrhaddq_u16(sourcePlaneAverage_2_Upper_u_16x8, sourcePlaneAverage_2_Lower_u_16x8), 1));
 
 			int16x8_t intermediate_1_s_16x8 = vmlaq_n_s16(vmlaq_n_s16(vmulq_n_s16(sourcePlaneAverage_0_s_16x8, factorChannel10_128), sourcePlaneAverage_1_s_16x8, factorChannel11_128), sourcePlaneAverage_2_s_16x8, factorChannel12_128); // = channel0 * factor0 + channel1 * factor1 + channel2 * factor2
 			int16x8_t intermediate_2_s_16x8 = vmlaq_n_s16(vmlaq_n_s16(vmulq_n_s16(sourcePlaneAverage_0_s_16x8, factorChannel20_128), sourcePlaneAverage_1_s_16x8, factorChannel21_128), sourcePlaneAverage_2_s_16x8, factorChannel22_128);
@@ -2868,9 +2868,9 @@ void FrameConverter::convertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd2Planes1
 
 			// let's handle the last two channels
 
-			const int16x8_t sourcePlaneAverage_0_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_s16(vrhaddq_u16(sourcePlaneAverage_0_Upper_u_16x8, sourcePlaneAverage_0_Lower_u_16x8), 1));
-			const int16x8_t sourcePlaneAverage_1_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_s16(vrhaddq_u16(sourcePlaneAverage_1_Upper_u_16x8, sourcePlaneAverage_1_Lower_u_16x8), 1));
-			const int16x8_t sourcePlaneAverage_2_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_s16(vrhaddq_u16(sourcePlaneAverage_2_Upper_u_16x8, sourcePlaneAverage_2_Lower_u_16x8), 1));
+			const int16x8_t sourcePlaneAverage_0_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_u16(vrhaddq_u16(sourcePlaneAverage_0_Upper_u_16x8, sourcePlaneAverage_0_Lower_u_16x8), 1));
+			const int16x8_t sourcePlaneAverage_1_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_u16(vrhaddq_u16(sourcePlaneAverage_1_Upper_u_16x8, sourcePlaneAverage_1_Lower_u_16x8), 1));
+			const int16x8_t sourcePlaneAverage_2_s_16x8 = vreinterpretq_s16_u16(vrshrq_n_u16(vrhaddq_u16(sourcePlaneAverage_2_Upper_u_16x8, sourcePlaneAverage_2_Lower_u_16x8), 1));
 
 			int16x8_t intermediate_1_s_16x8 = vmlaq_n_s16(vmlaq_n_s16(vmulq_n_s16(sourcePlaneAverage_0_s_16x8, factorChannel10_128), sourcePlaneAverage_1_s_16x8, factorChannel11_128), sourcePlaneAverage_2_s_16x8, factorChannel12_128); // = channel0 * factor0 + channel1 * factor1 + channel2 * factor2
 			int16x8_t intermediate_2_s_16x8 = vmlaq_n_s16(vmlaq_n_s16(vmulq_n_s16(sourcePlaneAverage_0_s_16x8, factorChannel20_128), sourcePlaneAverage_1_s_16x8, factorChannel21_128), sourcePlaneAverage_2_s_16x8, factorChannel22_128);
