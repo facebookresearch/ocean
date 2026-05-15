@@ -14,13 +14,20 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     find_package(GIF REQUIRED)
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
-    find_package(TIFF REQUIRED)
-    #find_package(WEBP REQUIRED)  # Not yet available
 
     if (LINUX)
-        # Required by libtiff
-        find_package(LibLZMA REQUIRED)
+        # libtiff's exported TiffTargets.cmake references `liblzma::liblzma`
+        # in TIFF::tiff's link interface. Find liblzma BEFORE TIFF so that
+        # target exists when find_package(TIFF) loads TiffTargets.cmake.
+        # Use the upstream xz CONFIG (lowercase `liblzma`), which creates
+        # the `liblzma::liblzma` target name libtiff expects -- the
+        # CMake-bundled FindLibLZMA module would create LibLZMA::LibLZMA
+        # instead, which does not match.
+        find_package(liblzma CONFIG REQUIRED)
     endif()
+
+    find_package(TIFF REQUIRED)
+    #find_package(WEBP REQUIRED)  # Not yet available
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -31,9 +38,8 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_IMPL_DIR})
 
-    if (LINUX)
-        target_include_directories(${OCEAN_TARGET_NAME} PUBLIC ${LIBLZMA_INCLUDE_DIRS})
-    endif()
+    # liblzma's include directories and link are pulled in transitively
+    # via TIFF::TIFF on Linux; no explicit wiring needed.
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
@@ -70,9 +76,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             # WEBP::WEBP  # Not yet available
     )
 
-    if (LINUX)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${LIBLZMA_LIBRARIES})
-    endif()
+    # liblzma is linked transitively via TIFF::TIFF on Linux.
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
