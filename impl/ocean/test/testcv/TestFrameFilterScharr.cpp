@@ -119,68 +119,68 @@ bool TestFrameFilterScharr::test(const unsigned int width, const unsigned int he
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestFrameFilterScharr, HorizontalVerticalFilter8BitPerChannel_1920x1080_int8)
+TEST(TestFrameFilterScharr, HorizontalVerticalFilter8BitPerChannel_640x480_int8)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel<int8_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel<int8_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestFrameFilterScharr, HorizontalVerticalFilter8BitPerChannel_1920x1080_int16)
+TEST(TestFrameFilterScharr, HorizontalVerticalFilter8BitPerChannel_640x480_int16)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel<int16_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
-}
-
-
-TEST(TestFrameFilterScharr, DiagonalFilter8BitPerChannel_1920x1080_int8)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testDiagonalFilter8BitPerChannel<int8_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
-}
-
-TEST(TestFrameFilterScharr, DiagonalFilter8BitPerChannel_1920x1080_int16)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testDiagonalFilter8BitPerChannel<int16_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalFilter8BitPerChannel<int16_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
 }
 
 
-TEST(TestFrameFilterScharr, Filter8BitPerChannel_1920x1080_int8)
+TEST(TestFrameFilterScharr, DiagonalFilter8BitPerChannel_640x480_int8)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testFilter8BitPerChannel<int8_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestFrameFilterScharr::testDiagonalFilter8BitPerChannel<int8_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestFrameFilterScharr, Filter8BitPerChannel_1920x1080_int16)
+TEST(TestFrameFilterScharr, DiagonalFilter8BitPerChannel_640x480_int16)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testFilter8BitPerChannel<int16_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
-}
-
-
-TEST(TestFrameFilterScharr, HorizontalVerticalMaximumAbsoluteFilter8BitPerChannel_1920x1080_uint8)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerChannel<uint8_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
-}
-
-TEST(TestFrameFilterScharr, HorizontalVerticalMaximumAbsoluteFilter8BitPerChannel_1920x1080_uint16)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerChannel<uint16_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestFrameFilterScharr::testDiagonalFilter8BitPerChannel<int16_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
 }
 
 
-TEST(TestFrameFilterScharr, MaximumAbsoluteFilter8BitPerChannel_1920x1080_uint8)
+TEST(TestFrameFilterScharr, Filter8BitPerChannel_640x480_int8)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel<uint8_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestFrameFilterScharr::testFilter8BitPerChannel<int8_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestFrameFilterScharr, MaximumAbsoluteFilter8BitPerChannel_1920x1080_uint16)
+TEST(TestFrameFilterScharr, Filter8BitPerChannel_640x480_int16)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel<uint16_t>(1920u, 1080u, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestFrameFilterScharr::testFilter8BitPerChannel<int16_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestFrameFilterScharr, HorizontalVerticalMaximumAbsoluteFilter8BitPerChannel_640x480_uint8)
+{
+	Worker worker;
+	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerChannel<uint8_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestFrameFilterScharr, HorizontalVerticalMaximumAbsoluteFilter8BitPerChannel_640x480_uint16)
+{
+	Worker worker;
+	EXPECT_TRUE((TestFrameFilterScharr::testHorizontalVerticalMaximumAbsoluteFilter8BitPerChannel<uint16_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestFrameFilterScharr, MaximumAbsoluteFilter8BitPerChannel_640x480_uint8)
+{
+	Worker worker;
+	EXPECT_TRUE((TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel<uint8_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestFrameFilterScharr, MaximumAbsoluteFilter8BitPerChannel_640x480_uint16)
+{
+	Worker worker;
+	EXPECT_TRUE((TestFrameFilterScharr::testMaximumAbsoluteFilter8BitPerChannel<uint16_t>(640u, 480u, GTEST_TEST_DURATION, worker)));
 }
 
 #endif // OCEAN_USE_GTEST

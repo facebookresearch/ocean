@@ -53,7 +53,7 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 				/**
 				 * Creates a new sound type with invalid parameters.
 				 */
-				inline SoundType();
+				SoundType() = default;
 
 				/**
 				 * Creates a new sound type.
@@ -116,13 +116,13 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 			private:
 
 				/// Sound frequency in Hz.
-				SoundFrequency typeFrequency;
+				SoundFrequency frequency_ = 0;
 
 				/// Sound channels.
-				unsigned int typeChannels;
+				unsigned int channels_ = 0u;
 
 				/// Bits per sound sample.
-				unsigned int typeBitsPerSample;
+				unsigned int bitsPerSample_ = 0u;
 		};
 
 	protected:
@@ -158,10 +158,10 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 			protected:
 
 				/// Actual sound type.
-				SoundType actualSoundType;
+				SoundType actualSoundType_;
 
 				/// Preferable sound type.
-				SoundType preferableSoundType;
+				SoundType preferableSoundType_;
 		};
 
 	public:
@@ -271,118 +271,120 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 	protected:
 
 		/// Actual sound type.
-		SoundType mediumSoundType;
+		SoundType soundType_;
 
 		/// Preferred sound type.
-		SoundType mediumPreferredSoundType;
+		SoundType preferredSoundType_;
 
 		/// Timestamp of the recent sound frame.
-		Timestamp mediumSoundTimestamp;
+		Timestamp soundTimestamp_;
 
 		/// Timestamp of the recent sound frame type.
-		Timestamp mediumSoundTypeTimestamp;
+		Timestamp soundTypeTimestamp_;
 };
 
-inline SoundMedium::SoundType::SoundType() :
-	typeFrequency(0),
-	typeChannels(0),
-	typeBitsPerSample(0)
-{
-	// nothing to do here
-}
-
 inline SoundMedium::SoundType::SoundType(const SoundFrequency frequency, const unsigned int channels, const unsigned int bitsPerSample) :
-	typeFrequency(frequency),
-	typeChannels(channels),
-	typeBitsPerSample(bitsPerSample)
+	frequency_(frequency),
+	channels_(channels),
+	bitsPerSample_(bitsPerSample)
 {
 	// nothing to do here
 }
 
 inline SoundMedium::SoundFrequency SoundMedium::SoundType::frequency() const
 {
-	return typeFrequency;
+	return frequency_;
 }
 
 inline unsigned int SoundMedium::SoundType::channels() const
 {
-	return typeChannels;
+	return channels_;
 }
 
 inline unsigned int SoundMedium::SoundType::bitsPerSample() const
 {
-	return typeBitsPerSample;
+	return bitsPerSample_;
 }
 
 inline void SoundMedium::SoundType::setFrequency(const SoundFrequency frequency)
 {
-	typeFrequency = frequency;
+	frequency_ = frequency;
 }
 
 inline void SoundMedium::SoundType::setChannels(const unsigned int channels)
 {
-	typeChannels = channels;
+	channels_ = channels;
 }
 
 inline void SoundMedium::SoundType::setBitsPerSoundSample(const unsigned int bits)
 {
-	typeBitsPerSample = bits;
+	bitsPerSample_ = bits;
 }
 
 inline bool SoundMedium::SoundType::operator==(const SoundType& right) const
 {
-	return typeChannels == right.typeChannels && typeFrequency == right.typeFrequency
-		&& typeBitsPerSample == right.typeBitsPerSample;
+	return channels_ == right.channels_ && frequency_ == right.frequency_
+		&& bitsPerSample_ == right.bitsPerSample_;
 }
 
 inline bool SoundMedium::SoundType::operator<(const SoundType& right) const
 {
-	if (typeChannels < right.typeChannels)
+	if (channels_ < right.channels_)
+	{
 		return true;
-	if (typeChannels > right.typeChannels)
-		return false;
+	}
 
-	if (typeFrequency < right.typeFrequency)
+	if (channels_ > right.channels_)
+	{
+		return false;
+	}
+
+	if (frequency_ < right.frequency_)
+	{
 		return true;
-	if (typeFrequency > right.typeFrequency)
-		return false;
+	}
 
-	return typeBitsPerSample < right.typeBitsPerSample;
+	if (frequency_ > right.frequency_)
+	{
+		return false;
+	}
+
+	return bitsPerSample_ < right.bitsPerSample_;
 }
 
 inline bool SoundMedium::hasSound() const
 {
-	return mediumSoundTimestamp.isInvalid() == false;
+	return soundTimestamp_.isInvalid() == false;
 }
 
 inline unsigned int SoundMedium::soundChannels() const
 {
-	return mediumSoundType.channels();
+	return soundType_.channels();
 }
 
 inline SoundMedium::SoundFrequency SoundMedium::soundFrequency() const
 {
-	return mediumSoundType.frequency();
+	return soundType_.frequency();
 }
 
 inline unsigned int SoundMedium::soundBitsPerSample() const
 {
-	return mediumSoundType.bitsPerSample();
+	return soundType_.bitsPerSample();
 }
 
 inline unsigned int SoundMedium::preferredSoundChannels() const
 {
-	return mediumPreferredSoundType.channels();
+	return preferredSoundType_.channels();
 }
 
 inline SoundMedium::SoundFrequency SoundMedium::preferredSoundFrequency() const
 {
-	return mediumPreferredSoundType.frequency();
+	return preferredSoundType_.frequency();
 }
 
 inline unsigned int SoundMedium::preferredSoundBitsPerSample() const
 {
-	return mediumPreferredSoundType.bitsPerSample();
+	return preferredSoundType_.bitsPerSample();
 }
 
 }

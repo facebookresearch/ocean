@@ -33,7 +33,7 @@ void JSMediaObject::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("url", isolate), propertyGetter<NativeType, AI_URL>);
+	objectTemplate->SetNativeDataProperty(newString("url", isolate), propertyGetter<NativeType, AI_URL>);
 
 	objectTemplate->Set(newString("duration", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_DURATION>));
 	objectTemplate->Set(newString("loop", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_LOOP>));

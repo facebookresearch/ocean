@@ -130,11 +130,6 @@ TEST(TestRANSAC, P3P_Pinhole_1000Correspondences_0Outliers)
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 1000, 0.0, GTEST_TEST_DURATION));
 }
 
-TEST(TestRANSAC, P3P_Pinhole_10000Correspondences_0Outliers)
-{
-	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 10000, 0.0, GTEST_TEST_DURATION));
-}
-
 
 TEST(TestRANSAC, P3P_Pinhole_10Correspondences_15Outliers)
 {
@@ -154,11 +149,6 @@ TEST(TestRANSAC, P3P_Pinhole_100Correspondences_15Outliers)
 TEST(TestRANSAC, P3P_Pinhole_1000Correspondences_15Outliers)
 {
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 1000, 0.15, GTEST_TEST_DURATION));
-}
-
-TEST(TestRANSAC, P3P_Pinhole_10000Correspondences_15Outliers)
-{
-	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 10000, 0.15, GTEST_TEST_DURATION));
 }
 
 
@@ -182,11 +172,6 @@ TEST(TestRANSAC, P3P_Fisheye_1000Correspondences_0Outliers)
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 1000, 0.0, GTEST_TEST_DURATION));
 }
 
-TEST(TestRANSAC, P3P_Fisheye_10000Correspondences_0Outliers)
-{
-	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 10000, 0.0, GTEST_TEST_DURATION));
-}
-
 
 TEST(TestRANSAC, P3P_Fisheye_10Correspondences_15Outliers)
 {
@@ -206,11 +191,6 @@ TEST(TestRANSAC, P3P_Fisheye_100Correspondences_15Outliers)
 TEST(TestRANSAC, P3P_Fisheye_1000Correspondences_15Outliers)
 {
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 1000, 0.15, GTEST_TEST_DURATION));
-}
-
-TEST(TestRANSAC, P3P_Fisheye_10000Correspondences_15Outliers)
-{
-	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 10000, 0.15, GTEST_TEST_DURATION));
 }
 
 

@@ -13,9 +13,9 @@
 #include "ocean/base/Messenger.h"
 #include "ocean/base/Singleton.h"
 #include "ocean/base/String.h"
-#include "ocean/base/Triple.h"
 #include "ocean/base/Value.h"
 
+#include <numeric>
 #include <unordered_map>
 
 namespace Ocean
@@ -445,17 +445,17 @@ inline bool CommandArguments::parse<wchar_t>(const wchar_t* commandLine)
 		return false;
 	}
 
-	const ArgumentsT<wchar_t> wSeparatedArugments = separateArguments(commandLine);
+	const ArgumentsT<wchar_t> wSeparatedArguments = separateArguments(commandLine);
 
-	ArgumentsT<char> separatedArugments;
-	separatedArugments.reserve(wSeparatedArugments.size());
+	ArgumentsT<char> separatedArguments;
+	separatedArguments.reserve(wSeparatedArguments.size());
 
-	for (const ArgumentT<wchar_t>& argument : wSeparatedArugments)
+	for (const ArgumentT<wchar_t>& argument : wSeparatedArguments)
 	{
-		separatedArugments.emplace_back(String::toAString(argument));
+		separatedArguments.emplace_back(String::toAString(argument));
 	}
 
-	return parse(separatedArugments);
+	return parse(separatedArguments);
 }
 
 template <typename TChar>
@@ -525,12 +525,120 @@ inline bool CommandArguments::hasValue(const std::string& longName, int32_t& int
 		return false;
 	}
 
-	if (!value.isInt())
+	int64_t signedValue64 = 0;
+
+	if (value.isInt())
+	{
+		signedValue64 = value.intValue();
+	}
+	else if (value.isInt64())
+	{
+		signedValue64 = value.int64Value();
+	}
+	else
 	{
 		return false;
 	}
 
-	intValue = value.intValue();
+	if (signedValue64 < int64_t(std::numeric_limits<int32_t>::lowest()) || signedValue64 > int64_t(std::numeric_limits<int32_t>::max()))
+	{
+		return false;
+	}
+
+	intValue = int32_t(signedValue64);
+
+	return true;
+}
+
+template <>
+inline bool CommandArguments::hasValue(const std::string& longName, uint32_t& intValue, const bool allowDefaultValue, const size_t namelessValueIndex) const
+{
+	Value value;
+	if (!hasValue(longName, &value, allowDefaultValue, namelessValueIndex))
+	{
+		return false;
+	}
+
+	int64_t signedValue64 = 0;
+
+	if (value.isInt())
+	{
+		signedValue64 = value.intValue();
+	}
+	else if (value.isInt64())
+	{
+		signedValue64 = value.int64Value();
+	}
+	else
+	{
+		return false;
+	}
+
+	if (signedValue64 < 0 || signedValue64 > int64_t(std::numeric_limits<uint32_t>::max()))
+	{
+		return false;
+	}
+
+	intValue = uint32_t(signedValue64);
+
+	return true;
+}
+
+template <>
+inline bool CommandArguments::hasValue(const std::string& longName, int64_t& intValue, const bool allowDefaultValue, const size_t namelessValueIndex) const
+{
+	Value value;
+	if (!hasValue(longName, &value, allowDefaultValue, namelessValueIndex))
+	{
+		return false;
+	}
+
+	if (value.isInt())
+	{
+		intValue = value.intValue();
+	}
+	else if (value.isInt64())
+	{
+		intValue = value.int64Value();
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
+template <>
+inline bool CommandArguments::hasValue(const std::string& longName, uint64_t& intValue, const bool allowDefaultValue, const size_t namelessValueIndex) const
+{
+	Value value;
+	if (!hasValue(longName, &value, allowDefaultValue, namelessValueIndex))
+	{
+		return false;
+	}
+
+	int64_t signedValue64 = 0;
+
+	if (value.isInt())
+	{
+		signedValue64 = value.intValue();
+	}
+	else if (value.isInt64())
+	{
+		signedValue64 = value.int64Value();
+	}
+	else
+	{
+		return false;
+	}
+
+	if (signedValue64 < 0)
+	{
+		return false;
+	}
+
+	intValue = uint64_t(signedValue64);
 
 	return true;
 }
@@ -573,6 +681,14 @@ inline bool CommandArguments::hasValue(const std::string& longName, std::string&
 	return true;
 }
 
+template <typename T>
+inline bool CommandArguments::hasValue(const std::string& /*longName*/, T& /*stringValue*/, const bool /*allowDefaultValue*/, const size_t /*namelessValueIndex*/) const
+{
+	ocean_assert(false && "Invalid data type!");
+
+	return false;
+}
+
 inline const Strings& CommandArguments::namelessValues() const
 {
 	return namelessValues_;
@@ -597,7 +713,7 @@ CommandArguments::ArgumentsT<TChar> CommandArguments::separateArguments(const TC
 
 		if (posQuote == 0)
 		{
-			// pase string command
+			// parse string command
 
 			typename ArgumentT<TChar>::size_type posEndQuote = line.find(quoteCharacter<TChar>(), 1);
 

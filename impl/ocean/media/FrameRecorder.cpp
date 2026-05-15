@@ -13,11 +13,9 @@ namespace Ocean
 namespace Media
 {
 
-FrameRecorder::FrameRecorder() :
-	Recorder(),
-	recorderFrameFrequency(25)
+FrameRecorder::FrameRecorder()
 {
-	recorderType = Type(recorderType | FRAME_RECORDER);
+	recorderType_ = Type(recorderType_ | FRAME_RECORDER);
 }
 
 FrameRecorder::~FrameRecorder()
@@ -37,19 +35,19 @@ bool FrameRecorder::frameEncoderHasConfiguration()
 
 bool FrameRecorder::setPreferredFrameType(const FrameType& type)
 {
-	recorderFrameType = type;
+	frameType_ = type;
 	return true;
 }
 
 bool FrameRecorder::setFrameFrequency(const double frequency)
 {
-	recorderFrameFrequency = frequency;
+	frameFrequency_ = frequency;
 	return true;
 }
 
 bool FrameRecorder::setFrameEncoder(const std::string& encoder)
 {
-	recorderFrameEncoder = encoder;
+	frameEncoder_ = encoder;
 	return true;
 }
 

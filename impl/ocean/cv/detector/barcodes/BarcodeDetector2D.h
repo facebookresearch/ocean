@@ -336,6 +336,13 @@ bool RowSegmenter<TPixel>::prepareSegments(const size_t numberSegments)
 	// Use a gray threshold to determine the next segments.
 
 	// Use the midpoint between the previous (background) and the current (foreground) pixel as gray threshold.
+	ocean_assert(position_ > 0u);
+
+	if (position_ == 0u)
+	{
+		return false;
+	}
+
 	const TPixel grayThreshold_ = (pixelData_[position_ - 1] + pixelData_[position_]) / 2u;
 
 	while (segmentPosition_ < size_ && numberSegments > segmentData_.size())
@@ -375,7 +382,7 @@ bool RowSegmenter<TPixel>::prepareSegments(const size_t numberSegments)
 
 	// Note: after experimentation, this seems to be easily affected by pixel noise. Using a longer transition history (smoothing) to reduce noise increases the minimum number of pixels per module.
 
-	while (segmentPosition_ < pixelDataSize_ && numberSegments > segmentData_.size())
+	while (segmentPosition_ < size_ && numberSegments > segmentData_.size())
 	{
 		// Segment data alternates between foreground and background data. The first element is a foreground segment.
 		const bool atForeground = segmentData_.size() % 2 == 0;
@@ -393,7 +400,7 @@ bool RowSegmenter<TPixel>::prepareSegments(const size_t numberSegments)
 
 		size_t nextSegmentPosition = segmentPosition_ + 1u;
 
-		while (nextSegmentPosition < pixelDataSize_ && !isNextTransition(pixelData_ + nextSegmentPosition, minimumGradient_, transitionHistory_))
+		while (nextSegmentPosition < size_ && !isNextTransition(pixelData_ + nextSegmentPosition, minimumGradient_, transitionHistory_))
 		{
 			++nextSegmentPosition;
 		}

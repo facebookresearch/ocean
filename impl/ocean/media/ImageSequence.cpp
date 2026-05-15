@@ -22,13 +22,7 @@ namespace Media
 ImageSequence::ImageSequence(const std::string& url) :
 	Medium(url),
 	FiniteMedium(url),
-	FrameMedium(url),
-	mediumFrameStartIndex(0u),
-	mediumFrameIndex(0u),
-	mediumImages((unsigned int)(-1)),
-	mediumFilenameIndexLength(0u),
-	mediumSequenceMode(SM_AUTOMATIC),
-	mediumExplicitSequenceModeStarted(false)
+	FrameMedium(url)
 {
 	type_ = Type(type_ | IMAGE_SEQUENCE);
 
@@ -51,12 +45,12 @@ ImageSequence::~ImageSequence()
 
 ImageSequence::SequenceMode ImageSequence::mode() const
 {
-	return mediumSequenceMode;
+	return sequenceMode_;
 }
 
 unsigned int ImageSequence::index() const
 {
-	return mediumFrameIndex;
+	return frameIndex_;
 }
 
 bool ImageSequence::setMode(const SequenceMode mode)
@@ -67,7 +61,7 @@ bool ImageSequence::setMode(const SequenceMode mode)
 		return false;
 	}
 
-	mediumSequenceMode = mode;
+	sequenceMode_ = mode;
 	return true;
 }
 

@@ -112,7 +112,7 @@ void GITransform::buildTracing(TracingGroup& group, const HomogenousMatrix4& mod
 
 			for (LightSet::const_iterator i = groupLights.begin(); i != groupLights.end(); ++i)
 			{
-				newLightSources.push_back(LightPair(*i, newModelTransform));
+				newLightSources.emplace_back(*i, newModelTransform);
 			}
 
 			for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)

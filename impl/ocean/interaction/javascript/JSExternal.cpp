@@ -54,7 +54,7 @@ JSExternal* JSExternal::external(const v8::Local<v8::Value>& value)
 
 	const v8::Local<v8::External> wrapper(v8::Local<v8::External>::Cast(internalField));
 
-	return static_cast<JSExternal*>(wrapper->Value());
+	return static_cast<JSExternal*>(wrapper->Value(v8::kExternalPointerTypeTagDefault));
 }
 
 JSExternal* JSExternal::external(const v8::Local<v8::Object>& object)
@@ -78,7 +78,7 @@ JSExternal* JSExternal::external(const v8::Local<v8::Object>& object)
 
 	const v8::Local<v8::External> wrapper(v8::Local<v8::External>::Cast(internalField));
 
-	return static_cast<JSExternal*>(wrapper->Value());
+	return static_cast<JSExternal*>(wrapper->Value(v8::kExternalPointerTypeTagDefault));
 }
 
 JSExternal::~JSExternal()

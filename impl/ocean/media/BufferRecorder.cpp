@@ -16,7 +16,7 @@ namespace Media
 BufferRecorder::BufferRecorder() :
 	Recorder()
 {
-	recorderType = Type(recorderType | BUFFER_RECORDER);
+	recorderType_ = Type(recorderType_ | BUFFER_RECORDER);
 }
 
 BufferRecorder::~BufferRecorder()
@@ -26,12 +26,12 @@ BufferRecorder::~BufferRecorder()
 
 const std::string& BufferRecorder::bufferType() const
 {
-	return recorderBufferType;
+	return bufferType_;
 }
 
 bool BufferRecorder::setBufferType(const std::string& bufferType)
 {
-	recorderBufferType = bufferType;
+	bufferType_ = bufferType;
 	return true;
 }
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} | Ocean</title>
+  <meta name="description" content="{description}">
+  <link rel="icon" href="{base_url}img/ocean_favicon.ico">
+  <link rel="stylesheet" href="{base_url}css/prism.css">
+  <link rel="stylesheet" href="{base_url}css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('ocean-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
+  <script src="{base_url}js/main.js" defer></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="navbar__brand" href="{base_url}">
+      <img class="navbar__logo" src="{base_url}img/ocean_logo_circular.svg" alt="Ocean">
+      <span>Ocean</span>
+    </a>
+    <div class="navbar__links">
+      <a class="navbar__link navbar__link--active" href="{base_url}docs/introduction/">Documentation</a>
+      <a class="navbar__link" href="{base_url}doxygen/index.html">Reference</a>
+    </div>
+    <div class="navbar__right">
+      <a class="navbar__github-link" href="https://github.com/facebookresearch/ocean" target="_blank" rel="noopener">GitHub</a>
+      <button class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="theme-toggle__light">&#9790;</span>
+        <span class="theme-toggle__dark">&#9728;</span>
+      </button>
+      <button class="hamburger" aria-label="Toggle sidebar">&#9776;</button>
+    </div>
+  </nav>
+
+  <div class="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      {sidebar_html}
+    </aside>
+    <main class="content">
+      <div class="content__inner">
+        <h1>{title}</h1>
+        {content_html}
+        {pagination_html}
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__title">Documentation</div>
+        <ul class="footer__links">
+          <li><a href="{base_url}docs/introduction/">Introduction</a></li>
+          <li><a href="{base_url}docs/building/">Building</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__title">Legal</div>
+        <ul class="footer__links">
+          <li><a href="https://opensource.facebook.com/legal/privacy/">Privacy</a></li>
+          <li><a href="https://opensource.facebook.com/legal/terms/">Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__title">Legal (continued)</div>
+        <ul class="footer__links">
+          <li><a href="https://opensource.facebook.com/legal/data-policy/">Data Policy</a></li>
+          <li><a href="https://opensource.facebook.com/legal/cookie-policy/">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__copyright">
+      Copyright &copy; {year} Meta Platforms, Inc. Built with Python.
+    </div>
+  </footer>
+
+  <script src="{base_url}js/prism.js"></script>
+</body>
+</html>

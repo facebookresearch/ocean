@@ -30,8 +30,8 @@ void JSPlane3::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("normal", isolate), propertyGetter<NativeType, AI_NORMAL>, propertySetter<NativeType, AI_NORMAL>);
-	objectTemplate->SetAccessor(newString("distance", isolate), propertyGetter<NativeType, AI_DISTANCE>, propertySetter<NativeType, AI_DISTANCE>);
+	objectTemplate->SetNativeDataProperty(newString("normal", isolate), propertyGetter<NativeType, AI_NORMAL>, propertySetter<NativeType, AI_NORMAL>);
+	objectTemplate->SetNativeDataProperty(newString("distance", isolate), propertyGetter<NativeType, AI_DISTANCE>, propertySetter<NativeType, AI_DISTANCE>);
 
 	objectTemplate->Set(newString("intersection", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_INTERSECTION>));
 	objectTemplate->Set(newString("isEqual", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_EQUAL>));

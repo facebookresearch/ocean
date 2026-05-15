@@ -45,17 +45,17 @@ bool WICImage::isStarted() const
 
 Timestamp WICImage::startTimestamp() const
 {
-	return mediumStartTimestamp;
+	return startTimestamp_;
 }
 
 Timestamp WICImage::pauseTimestamp() const
 {
-	return mediumPauseTimestamp;
+	return pauseTimestamp_;
 }
 
 Timestamp WICImage::stopTimestamp() const
 {
-	return mediumStopTimestamp;
+	return stopTimestamp_;
 }
 
 MediumRef WICImage::clone() const
@@ -78,9 +78,9 @@ bool WICImage::start()
 
 	if (imageStarted_)
 	{
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp = Timestamp();
-		mediumStopTimestamp = Timestamp();
+		startTimestamp_.toNow();
+		pauseTimestamp_ = Timestamp();
+		stopTimestamp_ = Timestamp();
 	}
 
 	return isValid_;
@@ -96,9 +96,9 @@ bool WICImage::stop()
 	release();
 	imageStarted_ = false;
 
-	mediumStartTimestamp = Timestamp();
-	mediumPauseTimestamp = Timestamp();
-	mediumStopTimestamp.toNow();
+	startTimestamp_ = Timestamp();
+	pauseTimestamp_ = Timestamp();
+	stopTimestamp_.toNow();
 
 	return true;
 }

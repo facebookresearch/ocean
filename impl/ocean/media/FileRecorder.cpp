@@ -18,11 +18,9 @@ namespace Ocean
 namespace Media
 {
 
-FileRecorder::FileRecorder() :
-	Recorder(),
-	recorderFilenameSuffixed(true)
+FileRecorder::FileRecorder()
 {
-	recorderType = Type(recorderType | FILE_RECORDER);
+	recorderType_ = Type(recorderType_ | FILE_RECORDER);
 }
 
 FileRecorder::~FileRecorder()
@@ -32,13 +30,13 @@ FileRecorder::~FileRecorder()
 
 bool FileRecorder::setFilename(const std::string& filename)
 {
-	recorderFilename = filename;
+	filename_ = filename;
 	return true;
 }
 
 bool FileRecorder::setFilenameSuffixed(const bool suffixed)
 {
-	recorderFilenameSuffixed = suffixed;
+	filenameSuffixed_ = suffixed;
 	return true;
 }
 

@@ -611,7 +611,7 @@ bool TestAVFoundation::testVideoEncoderDecoder(const double testDuration)
 
 				// initialize the decoder with codec config data
 
-				if (!videoDecoder.initialize(mimeType, width, height, codecConfigData.data(), codecConfigData.size()))
+				if (!videoDecoder.initialize(mimeType, width, height, codecConfigData.data(), codecConfigData.size(), Media::AVFoundation::VideoDecoder::DM_ORDERED))
 				{
 					Log::error() << "Failed to initialize decoder for " << mimeType;
 					OCEAN_SET_FAILED(validation);

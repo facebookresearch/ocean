@@ -97,7 +97,7 @@ View::ViewType View::type() const
 		}
 
 		const Rendering::ParallelViewRef parallelView(renderingFramebuffer_->view());
-		if (stereoView)
+		if (parallelView)
 			return TYPE_PARALLEL_VIEW;
 
 		const Rendering::PerspectiveViewRef perspectiveView(renderingFramebuffer_->view());
@@ -357,7 +357,10 @@ bool View::recorderEncoderConfiguration()
 	const Media::FrameRecorderRef frameRecorder(recorder_);
 
 	if (frameRecorder)
+	{
 		frameRecorder->frameEncoderConfiguration(long long(m_hWnd));
+		return true;
+	}
 
 	return false;
 }

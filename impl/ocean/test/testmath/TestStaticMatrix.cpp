@@ -1597,11 +1597,10 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 {
 	Log::info() << "... with size " << tSize << "x" << tSize << ":";
 
-	// generate random values
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(0.99, randomGenerator);
 
-	Matrix matrix(10000, tSize);
+	Matrix matrix(1000, tSize);
 	Matrix vectorX(tSize, 1u);
 
 	const Scalar epsilon = Numeric::eps() * 100;
@@ -1618,8 +1617,6 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 
 		Matrix symmetricMatrix = matrix.transposedMultiply(matrix);
 
-		// generate groundtruth
-
 		for (size_t n = 0; n < vectorX.elements(); ++n)
 		{
 			vectorX.data()[n] = Random::scalar(randomGenerator, -10, 10);
@@ -1627,7 +1624,6 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 
 		Matrix vectorY = symmetricMatrix * vectorX;
 
-		// check
 		StaticMatrix<Scalar, tSize, 1> staticMatrixY(vectorY.data());
 		StaticMatrix<Scalar, tSize, 1> staticMatrixX(vectorX.data());
 		StaticMatrix<Scalar, tSize, tSize> symmetricStaticMatrix(symmetricMatrix.data());

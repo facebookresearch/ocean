@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ocean Frame Inspector Build Configuration -->
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- VS SDK -->
+    <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" />
+    <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
+
+    <!-- Testing -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageVersion Include="xunit" Version="2.6.5" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.6" />
+    <PackageVersion Include="Moq" Version="4.20.70" />
+  </ItemGroup>
+
+</Project>

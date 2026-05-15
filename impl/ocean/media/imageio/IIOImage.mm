@@ -27,7 +27,7 @@ IIOImage::IIOImage(const std::string& url) :
 	Medium(url),
 	FrameMedium(url),
 	Image(url),
-	imageStarted(false)
+	started_(false)
 {
 	libraryName_ = nameImageIOLibrary();
 
@@ -41,22 +41,22 @@ IIOImage::~IIOImage()
 
 bool IIOImage::isStarted() const
 {
-	return imageStarted;
+	return started_;
 }
 
 Timestamp IIOImage::startTimestamp() const
 {
-	return mediumStartTimestamp;
+	return startTimestamp_;
 }
 
 Timestamp IIOImage::pauseTimestamp() const
 {
-	return mediumPauseTimestamp;
+	return pauseTimestamp_;
 }
 
 Timestamp IIOImage::stopTimestamp() const
 {
-	return mediumStopTimestamp;
+	return stopTimestamp_;
 }
 
 MediumRef IIOImage::clone() const
@@ -75,13 +75,13 @@ MediumRef IIOImage::clone() const
 bool IIOImage::start()
 {
 	isValid_ = loadImage();
-	imageStarted = isValid_;
+	started_ = isValid_;
 
-	if (imageStarted)
+	if (started_)
 	{
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp = Timestamp();
-		mediumStopTimestamp = Timestamp();
+		startTimestamp_.toNow();
+		pauseTimestamp_ = Timestamp();
+		stopTimestamp_ = Timestamp();
 	}
 
 	return isValid_;
@@ -95,11 +95,11 @@ bool IIOImage::pause()
 bool IIOImage::stop()
 {
 	release();
-	imageStarted = false;
+	started_ = false;
 
-	mediumStartTimestamp = Timestamp();
-	mediumPauseTimestamp = Timestamp();
-	mediumStopTimestamp.toNow();
+	startTimestamp_ = Timestamp();
+	pauseTimestamp_ = Timestamp();
+	stopTimestamp_.toNow();
 
 	return true;
 }

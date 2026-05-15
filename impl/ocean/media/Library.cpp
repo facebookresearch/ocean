@@ -15,8 +15,8 @@ namespace Media
 {
 
 Library::Library(const std::string& name, const unsigned int priority) :
-	libraryName(name),
-	libraryPriority(priority)
+	name_(name),
+	priority_(priority)
 {
 	// nothing to do here
 }
@@ -50,7 +50,7 @@ Medium::Type Library::supportedTypes() const
 
 bool Library::notSupported(const std::string& extension) const
 {
-	return notSupportedExtensionSet.find(extension) != notSupportedExtensionSet.end();
+	return notSupportedExtensionSet_.find(extension) != notSupportedExtensionSet_.end();
 }
 
 std::string Library::convertDefinition(const Definition& definition)
@@ -109,7 +109,7 @@ Library::Definition Library::convertDefinition(const std::string& string)
 void Library::registerNotSupportedExtension(const std::string& extension)
 {
 	ocean_assert(extension.empty() == false);
-	notSupportedExtensionSet.insert(extension);
+	notSupportedExtensionSet_.insert(extension);
 }
 
 }

@@ -10,7 +10,8 @@ This script builds Ocean using CMake with support for:
 - Multiple target platforms (macOS, iOS, Linux, Android, Windows)
 - Debug and release configurations
 - Static and shared linking
-- Both legacy CMake 3P layout and new Python 3P layout
+- Both standard and external-integration 3P install layouts produced by
+  build_ocean_3rdparty.py
 
 Usage:
     # Build for host platform (debug + release, static)
@@ -29,8 +30,8 @@ Usage:
     # Build shared libraries
     ./build_ocean.py --link shared
 
-    # Use Python 3P layout (from build_ocean_3rdparty.py output)
-    ./build_ocean.py --third-party-layout python --third-party-root ./3rdparty
+    # Consume a build_ocean_3rdparty.py --for-external-integration tree
+    ./build_ocean.py --third-party-layout external --third-party-dir ./3rdparty
 
     # Show build plan without building
     ./build_ocean.py --dry-run
@@ -42,8 +43,6 @@ import argparse
 
 # Add lib to path for imports - import platform module directly to avoid yaml dependency
 import importlib.util
-import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -161,50 +160,13 @@ def get_cmake_preset_name(target: BuildTarget, quest_mode: bool = False) -> str:
     return f"{target.os.value}-{arch_str}-{target.link_type.value}-{target.build_config.value}"
 
 
-def get_third_party_paths_cmake_layout(
-    third_party_dir: Path,
-    target: BuildTarget,
-) -> List[Path]:
-    """Get CMAKE_PREFIX_PATH entries for legacy CMake 3P layout.
-
-    Layout: <root>/<platform>/<arch>_<link>_<config>/[<lib>/]
-    """
-    # Map our names to legacy directory names
-    platform = target.os.value
-    arch_map = {
-        Arch.ARM64: "arm64",
-        Arch.ARMV7: "arm32",
-        Arch.X86_64: "x64",
-        Arch.X86: "x86",
-    }
-    arch = arch_map.get(target.arch, target.arch.value)
-    link = target.link_type.value
-    config = target.build_config.value
-
-    target_dir = third_party_dir / platform / f"{arch}_{link}_{config}"
-
-    if not target_dir.exists():
-        return []
-
-    # Check for subdivided structure (per-library directories)
-    subdirs = [d for d in target_dir.iterdir() if d.is_dir()]
-    known_libs = {"zlib", "eigen", "libpng", "freetype", "curl"}
-
-    if any(d.name in known_libs for d in subdirs):
-        # Subdivided: return each library directory
-        return [d for d in subdirs if not d.name.startswith(".")]
-    else:
-        # Flat: return the target directory itself
-        return [target_dir]
-
-
-def get_third_party_paths_python_layout(
+def get_third_party_paths_external_layout(
     third_party_root: Path,
     target: BuildTarget,
 ) -> Tuple[List[Path], List[Path], List[Path]]:
-    """Get search paths for Python 3P layout.
+    """Get search paths for the external-integration 3P layout.
 
-    Layout:
+    Layout (produced by build_ocean_3rdparty.py --for-external-integration):
         <root>/<lib>/h/<platform>/     (headers)
         <root>/<lib>/lib/<target>/     (libraries)
 
@@ -311,17 +273,15 @@ def run_cmake_build(
     cmake_library_path = []
 
     if third_party_dir:
-        if third_party_layout == "python":
-            prefix, includes, libs = get_third_party_paths_python_layout(
+        if third_party_layout == "external":
+            prefix, includes, libs = get_third_party_paths_external_layout(
                 third_party_dir, target
             )
             cmake_prefix_path = prefix
             cmake_include_path = includes
             cmake_library_path = libs
-        else:
-            cmake_prefix_path = get_third_party_paths_cmake_layout(
-                third_party_dir, target
-            )
+        # Standard layout: just pass OCEAN_THIRD_PARTY_ROOT and let the top-level
+        # CMakeLists.txt auto-detect and build CMAKE_PREFIX_PATH itself.
 
     # Determine CMake generator
     if generator:
@@ -368,8 +328,11 @@ def run_cmake_build(
             f"-DCMAKE_PREFIX_PATH={';'.join(str(p) for p in cmake_prefix_path)}"
         )
 
-    if third_party_layout == "python" and third_party_dir:
-        configure_args.append("-DOCEAN_THIRD_PARTY_LAYOUT=python")
+    if third_party_dir:
+        # The top-level CMakeLists.txt auto-detects layout shape from the tree.
+        # Pass the explicit layout name when the user picked one so detection
+        # is deterministic on first run.
+        configure_args.append(f"-DOCEAN_THIRD_PARTY_LAYOUT={third_party_layout}")
         configure_args.append(f"-DOCEAN_THIRD_PARTY_ROOT={third_party_dir}")
 
     if cmake_include_path:
@@ -512,17 +475,21 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=None,
         help="Third-party libraries directory. "
-        "Default: ocean_install_thirdparty (python layout) or bin/cmake/3rdparty (cmake layout)",
+        "Default: ocean_3rdparty/install (build_ocean_3rdparty.py's default).",
     )
 
     # Third-party layout
     parser.add_argument(
         "--third-party-layout",
         type=str,
-        choices=["cmake", "python"],
-        default="cmake",
-        help="Third-party library layout: 'cmake' (legacy) or 'python' (new). "
-        "Default: cmake.",
+        choices=["standard", "external"],
+        default="standard",
+        help=(
+            "Third-party install layout produced by build_ocean_3rdparty.py: "
+            "'standard' (default; one CMake install prefix per target per "
+            "library) or 'external' (the per-library h/<platform>/ + "
+            "lib/<target>/ shape produced by --for-external-integration)."
+        ),
     )
 
     # Build options
@@ -678,15 +645,12 @@ def main() -> int:
         Path(args.install_dir) if args.install_dir else cwd / DEFAULT_INSTALL_DIR
     )
 
-    # Default third-party directory depends on layout
+    # Default third-party directory matches build_ocean_3rdparty.py's default
+    # install location.
     if args.third_party_dir:
         third_party_dir = Path(args.third_party_dir)
-    elif args.third_party_layout == "python":
-        # Python layout: default to ocean_install_thirdparty (from build_ocean_3rdparty.py)
-        third_party_dir = cwd / "ocean_install_thirdparty"
     else:
-        # CMake layout: default to bin/cmake/3rdparty
-        third_party_dir = cwd / "bin" / "cmake" / "3rdparty"
+        third_party_dir = cwd / "ocean_3rdparty" / "install"
 
     # Parse build configuration
     configs = parse_configs(args.config)
@@ -743,14 +707,10 @@ def main() -> int:
         return 0
 
     # Check third-party directory
-    if args.third_party_layout == "python":
-        if not third_party_dir.exists():
-            print(f"Error: Third-party directory not found: {third_party_dir}")
-            print("  Build third-party libraries first with build_ocean_3rdparty.py")
-            return 1
-    elif not third_party_dir.exists():
-        print(f"Warning: Third-party directory not found: {third_party_dir}")
-        print("  Build may fail if dependencies are not in system paths.")
+    if not third_party_dir.exists():
+        print(f"Error: Third-party directory not found: {third_party_dir}")
+        print("  Build third-party libraries first with build_ocean_3rdparty.py")
+        return 1
 
     # Build each target
     failed_builds = []

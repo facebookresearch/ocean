@@ -944,7 +944,6 @@ bool FrameConverter::Comfort::convertGenericFormats(const Frame& source, const F
 					return false;
 			}
 
-			break;
 		}
 
 		case FrameType::DT_UNSIGNED_INTEGER_16:
@@ -974,7 +973,6 @@ bool FrameConverter::Comfort::convertGenericFormats(const Frame& source, const F
 					return false;
 			}
 
-			break;
 		}
 
 		case FrameType::DT_UNSIGNED_INTEGER_32:
@@ -1004,7 +1002,6 @@ bool FrameConverter::Comfort::convertGenericFormats(const Frame& source, const F
 					return false;
 			}
 
-			break;
 		}
 
 		case FrameType::DT_UNSIGNED_INTEGER_64:
@@ -1034,7 +1031,6 @@ bool FrameConverter::Comfort::convertGenericFormats(const Frame& source, const F
 					return false;
 			}
 
-			break;
 		}
 
 		case FrameType::DT_UNDEFINED:

@@ -60,7 +60,7 @@ bool MFLibrary::unregisterLibrary()
 
 MediumRef MFLibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	MediumRef medium(newMovie(url, useExclusive));
 
@@ -79,7 +79,7 @@ MediumRef MFLibrary::newMedium(const std::string& url, bool useExclusive)
 
 MediumRef MFLibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	switch (type)
 	{
@@ -135,7 +135,7 @@ RecorderRef MFLibrary::newRecorder(const Recorder::Type type)
 
 Library::Definitions MFLibrary::selectableMedia() const
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	Definitions entireDefinitions;
 

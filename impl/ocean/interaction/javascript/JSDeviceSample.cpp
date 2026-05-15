@@ -34,8 +34,8 @@ void JSDeviceSample::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("timestamp", isolate), propertyGetter<NativeType, AI_TIMESTAMP>);
-	objectTemplate->SetAccessor(newString("size", isolate), propertyGetter<NativeType, AI_SIZE>);
+	objectTemplate->SetNativeDataProperty(newString("timestamp", isolate), propertyGetter<NativeType, AI_TIMESTAMP>);
+	objectTemplate->SetNativeDataProperty(newString("size", isolate), propertyGetter<NativeType, AI_SIZE>);
 
 	objectTemplate->Set(newString("isDeviceInObject", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_DEVICE_IN_OBJECT>));
 	objectTemplate->Set(newString("isObjectInDevice", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_OBJECT_IN_DEVICE>));

@@ -11,12 +11,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\win\JavaScriptMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\TestJavaScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\win\JavaScriptMain.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\test\interaction\javascript\TestJavaScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

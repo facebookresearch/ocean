@@ -1,3 +1,0 @@
-libusb
-wxwidgets
-libyuv

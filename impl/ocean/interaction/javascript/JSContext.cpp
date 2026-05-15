@@ -58,12 +58,7 @@ JSContext::~JSContext()
 
 	scripts_.clear();
 
-	v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(512 * 1024 * 1024); // forcing GC to run (at least a good hint)
-
-	while (!v8::Isolate::GetCurrent()->IdleNotificationDeadline(0.1))
-	{
-		Thread::sleep(1u);
-	}
+	v8::Isolate::GetCurrent()->MemoryPressureNotification(v8::MemoryPressureLevel::kCritical);
 
 	currentContext_.Clear();
 	currentJSContext_.reset();

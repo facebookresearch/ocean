@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+
+  <Commands package="guidFrameInspectorPackage">
+    <Groups>
+      <!-- Debug > Windows menu group -->
+      <Group guid="guidFrameInspectorCommandSet" id="FrameInspectorMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_WINDOWS" />
+      </Group>
+
+      <!-- Code editor context menu group (right-click in editor) -->
+      <Group guid="guidFrameInspectorCommandSet" id="EditorContextMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <!-- Debug > Windows > Ocean FrameInspector -->
+      <Button guid="guidFrameInspectorCommandSet" id="FrameInspectorWindowCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidFrameInspectorCommandSet" id="FrameInspectorMenuGroup" />
+        <Strings>
+          <ButtonText>Ocean FrameInspector</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- Code editor context menu: Inspect in Ocean FrameInspector -->
+      <Button guid="guidFrameInspectorCommandSet" id="InspectFrameContextCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidFrameInspectorCommandSet" id="EditorContextMenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Inspect in Ocean FrameInspector</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidFrameInspectorPackage" value="{F1A2B3C4-D5E6-7890-ABCD-EF1234567890}" />
+    <GuidSymbol name="guidFrameInspectorCommandSet" value="{F2A3B4C5-D6E7-8901-BCDE-F12345678901}">
+      <IDSymbol name="FrameInspectorMenuGroup" value="0x1020" />
+      <IDSymbol name="EditorContextMenuGroup" value="0x1021" />
+      <IDSymbol name="FrameInspectorWindowCommandId" value="0x0100" />
+      <IDSymbol name="InspectFrameContextCommandId" value="0x0101" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

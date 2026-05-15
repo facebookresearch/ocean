@@ -1,0 +1,217 @@
+<UserControl x:Class="OceanFrameInspectorExtension.ToolWindows.FrameInspectorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:vsh="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             UseLayoutRounding="True"
+             SnapsToDevicePixels="True"
+             Background="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBackgroundKey}}"
+             Foreground="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowTextKey}}">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+
+        <!-- VS-themed text style -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowTextKey}}"/>
+        </Style>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsh:VsBrushes.GrayTextKey}}"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowTextKey}}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource {x:Static vsh:VsBrushes.CommandBarGradientBeginKey}}"
+                BorderBrush="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"
+                BorderThickness="0,0,0,1" Padding="6,4">
+            <WrapPanel>
+                <TextBlock Text="Expression:" VerticalAlignment="Center" Margin="2,0,4,0" FontSize="12"/>
+                <TextBox x:Name="ExpressionTextBox"
+                         Text="{Binding Expression, UpdateSourceTrigger=PropertyChanged}"
+                         Width="280" Margin="0,0,4,0" Padding="4,3"
+                         VerticalAlignment="Center" FontSize="12"
+                         ToolTip="Enter a C++ expression evaluating to an Ocean::Frame (e.g., myFrame, *framePtr, frames[0])"/>
+                <Button Content="Inspect" Command="{Binding InspectCommand}"
+                        Margin="2,0" Padding="10,3" VerticalAlignment="Center"/>
+                <Button Content="Refresh" Command="{Binding RefreshCommand}"
+                        Margin="2,0" Padding="10,3" VerticalAlignment="Center"/>
+                <Separator Margin="10,4" />
+                <TextBlock Text="Zoom:" VerticalAlignment="Center" Margin="2,0,4,0" FontSize="12"/>
+                <Button Content="Fit" Command="{Binding FitToWindowCommand}"
+                        Margin="2,0" Padding="8,3" VerticalAlignment="Center"/>
+                <Button Content="100%" Command="{Binding ResetZoomCommand}"
+                        Margin="2,0" Padding="8,3" VerticalAlignment="Center"/>
+                <Button Content="+" Command="{Binding ZoomInCommand}"
+                        Margin="2,0" Padding="8,3" Width="28" VerticalAlignment="Center"/>
+                <Button Content="-" Command="{Binding ZoomOutCommand}"
+                        Margin="2,0" Padding="8,3" Width="28" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding ZoomPercentText}" VerticalAlignment="Center" Margin="6,0" MinWidth="40" FontSize="12"/>
+                <Separator Margin="10,4" />
+                <TextBlock Text="Color Map:" VerticalAlignment="Center" Margin="2,0,4,0" FontSize="12"/>
+                <ComboBox x:Name="ColorMapCombo"
+                          SelectedItem="{Binding SelectedColorMap}"
+                          ItemsSource="{Binding ColorMapOptions}"
+                          Width="90" Margin="0,0,4,0" Padding="4,3" VerticalAlignment="Center"/>
+                <TextBlock Text="Channel:" VerticalAlignment="Center" Margin="8,0,4,0" FontSize="12"/>
+                <ComboBox x:Name="ChannelCombo"
+                          SelectedItem="{Binding SelectedChannel}"
+                          ItemsSource="{Binding ChannelOptions}"
+                          Width="65" Padding="4,3" VerticalAlignment="Center"/>
+            </WrapPanel>
+        </Border>
+
+        <!-- Main content area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="260"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Image viewer -->
+            <Border Grid.Column="0"
+                    Background="{DynamicResource {x:Static vsh:VsBrushes.CommandBarGradientBeginKey}}">
+                <ScrollViewer x:Name="ImageScrollViewer"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto"
+                              PreviewMouseWheel="ImageScrollViewer_PreviewMouseWheel"
+                              PreviewMouseLeftButtonDown="ImageScrollViewer_PreviewMouseLeftButtonDown"
+                              PreviewMouseLeftButtonUp="ImageScrollViewer_PreviewMouseLeftButtonUp"
+                              PreviewMouseMove="ImageScrollViewer_PreviewMouseMove">
+                    <Grid>
+                        <!-- Empty state message -->
+                        <TextBlock Text="Enter an Ocean::Frame expression above and click Inspect"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Style="{StaticResource LabelStyle}" FontSize="13"
+                                   Visibility="{Binding HasNoImage, Converter={StaticResource BoolToVisibility}}"/>
+                        <!-- Image: LayoutTransform so ScrollViewer knows the scaled size -->
+                        <Image x:Name="FrameImage"
+                               Source="{Binding BitmapSource}"
+                               Stretch="None"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               MouseMove="FrameImage_MouseMove">
+                            <Image.LayoutTransform>
+                                <ScaleTransform ScaleX="{Binding ZoomLevel}" ScaleY="{Binding ZoomLevel}"/>
+                            </Image.LayoutTransform>
+                        </Image>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          Background="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"/>
+
+            <!-- Right panel: Metadata + Pixel Inspector -->
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto"
+                          Background="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBackgroundKey}}">
+                <StackPanel Margin="10,8">
+                    <!-- Metadata Panel -->
+                    <TextBlock Text="METADATA" Style="{StaticResource HeaderStyle}" Margin="0,0,0,6"/>
+                    <Border BorderBrush="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"
+                            BorderThickness="1" Padding="10,8" Margin="0,0,0,12"
+                            Background="{DynamicResource {x:Static vsh:VsBrushes.CommandBarGradientBeginKey}}"
+                            CornerRadius="2">
+                        <ItemsControl ItemsSource="{Binding MetadataItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="95"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Key}"
+                                                   Style="{StaticResource LabelStyle}"
+                                                   Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Value}"
+                                                   TextWrapping="Wrap" FontSize="11"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+
+                    <!-- Pixel Inspector -->
+                    <TextBlock Text="PIXEL INSPECTOR" Style="{StaticResource HeaderStyle}" Margin="0,0,0,6"/>
+                    <Border BorderBrush="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"
+                            BorderThickness="1" Padding="10,8" Margin="0,0,0,12"
+                            Background="{DynamicResource {x:Static vsh:VsBrushes.CommandBarGradientBeginKey}}"
+                            CornerRadius="2">
+                        <StackPanel>
+                            <TextBlock Text="{Binding PixelCoordinateText}" FontSize="11" Margin="0,0,0,3"/>
+                            <TextBlock Text="{Binding PixelValueText}" FontSize="11" Margin="0,0,0,3"/>
+                            <TextBlock Text="{Binding PixelHexText}" FontSize="11"/>
+                            <Border Height="24" Margin="0,6,0,0" HorizontalAlignment="Left" Width="60"
+                                    BorderBrush="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"
+                                    BorderThickness="1" CornerRadius="2">
+                                <Rectangle>
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding PixelColor}"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Histogram -->
+                    <Expander Header="HISTOGRAM" IsExpanded="{Binding IsHistogramExpanded}" Margin="0,0,0,8"
+                              Foreground="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowTextKey}}">
+                        <Border BorderBrush="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"
+                                BorderThickness="1" Padding="10,8" Margin="0,4,0,0"
+                                Background="{DynamicResource {x:Static vsh:VsBrushes.CommandBarGradientBeginKey}}"
+                                CornerRadius="2">
+                            <StackPanel>
+                                <Canvas x:Name="HistogramCanvas" Height="100" Margin="0,0,0,6"
+                                        ClipToBounds="True"/>
+                                <ItemsControl ItemsSource="{Binding HistogramStats}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Style="{StaticResource LabelStyle}" FontSize="10"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </Expander>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Status bar -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource {x:Static vsh:VsBrushes.CommandBarGradientBeginKey}}"
+                BorderBrush="{DynamicResource {x:Static vsh:VsBrushes.ToolWindowBorderKey}}"
+                BorderThickness="0,1,0,0" Padding="8,4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}"
+                           Style="{StaticResource LabelStyle}" FontSize="11"/>
+                <ProgressBar Grid.Column="1" Width="100" Height="14" Margin="8,0,0,0"
+                             IsIndeterminate="{Binding IsLoading}"
+                             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+</UserControl>

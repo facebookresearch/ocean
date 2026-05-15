@@ -29,31 +29,6 @@ namespace AVFoundation
 {
 
 /**
- * Definition of a scoped object holding a CMFormatDescriptionRef object.
- * The wrapped CMFormatDescriptionRef object will be released automatically once the scoped object does not exist anymore.
- */
-using ScopedCMFormatDescriptionRef = ScopedObjectCompileTimeT<CMFormatDescriptionRef, CFTypeRef, void, CFRelease>;
-
-/**
- * Release function for VTDecompressionSessionRef that invalidates and releases the session.
- * @param session The session to release
- */
-inline void releaseVTDecompressionSession(VTDecompressionSessionRef session)
-{
-	if (session != nullptr)
-	{
-		VTDecompressionSessionInvalidate(session);
-		CFRelease(session);
-	}
-}
-
-/**
- * Definition of a scoped object holding a VTDecompressionSessionRef object.
- * The wrapped VTDecompressionSessionRef object will be invalidated and released automatically once the scoped object does not exist anymore.
- */
-using ScopedVTDecompressionSessionRef = ScopedObjectCompileTimeT<VTDecompressionSessionRef, VTDecompressionSessionRef, void, releaseVTDecompressionSession>;
-
-/**
  * This class implements a simple video decoder for iOS/macOS using encoded media samples from memory as input.
  * The decoder uses Apple's VideoToolbox framework (VTDecompressionSession) for hardware-accelerated decoding.
  *
@@ -113,6 +88,21 @@ using ScopedVTDecompressionSessionRef = ScopedObjectCompileTimeT<VTDecompression
  */
 class VideoDecoder
 {
+	public:
+
+		/**
+		 * Definition of the decoding mode controlling frame delivery order and latency.
+		 */
+		enum DecodingMode
+		{
+			/// Frames are decoded and delivered with minimal latency, frame ordering is not guaranteed, decoded frames may arrive out of presentation-timestamp order but as fast as possible.
+			/// Use this when low latency is more important than frame order.
+			DM_PERFORMANCE,
+
+			/// Frames are decoded and delivered in presentation-timestamp order, but frame delivery may be delayed.
+			DM_ORDERED
+		};
+
     protected:
 
         /**
@@ -120,6 +110,24 @@ class VideoDecoder
 		 * The wrapped CMBlockBufferRef object will be released automatically once the scoped object does not exist anymore.
 		 */
 		using ScopedCMBlockBufferRef = ScopedObjectCompileTimeT<CMBlockBufferRef, CFTypeRef, void, CFRelease>;
+
+		/**
+		 * Definition of a scoped object holding a CMFormatDescriptionRef object.
+		 * The wrapped CMFormatDescriptionRef object will be released automatically once the scoped object does not exist anymore.
+		 */
+		using ScopedCMFormatDescriptionRef = ScopedObjectCompileTimeT<CMFormatDescriptionRef, CFTypeRef, void, CFRelease>;
+
+		/**
+		 * Release function for VTDecompressionSessionRef that invalidates and releases the session.
+		 * @param session The session to release
+		 */
+		static inline void releaseVTDecompressionSession(VTDecompressionSessionRef session);
+
+		/**
+		* Definition of a scoped object holding a VTDecompressionSessionRef object.
+		* The wrapped VTDecompressionSessionRef object will be invalidated and released automatically once the scoped object does not exist anymore.
+		*/
+		using ScopedVTDecompressionSessionRef = ScopedObjectCompileTimeT<VTDecompressionSessionRef, VTDecompressionSessionRef, void, releaseVTDecompressionSession>;
 
         /**
 		 * Definition of a decoded frame entry.
@@ -133,18 +141,21 @@ class VideoDecoder
 			int64_t presentationTime_ = 0;
 		};
 
+		/// Definition of a vector holding decoded frames.
+		using DecodedFrames = std::vector<DecodedFrame>;
+
+		/// Definition of a queue holding decoded frames.
+		using DecodedFrameQueue = std::deque<DecodedFrame>;
+
+		/// Definition of a queue holding presentation timestamps.
+		using TimestampQueue = std::deque<int64_t>;
+
 	public:
 
 		/**
 		 * Default constructor creating an un-initialized decoder.
 		 */
 		VideoDecoder();
-
-		/**
-		 * Move constructor.
-		 * @param videoDecoder The decoder to be moved
-		 */
-		inline VideoDecoder(VideoDecoder&& videoDecoder) noexcept;
 
 		/**
 		 * Destructs the video decoder and releases all associated resources.
@@ -158,10 +169,11 @@ class VideoDecoder
 		 * @param height The height of the video to be decoded, in pixel, with range [1, infinity)
 		 * @param codecConfigData The codec configuration data containing parameter sets (SPS/PPS for H.264), can be nullptr if not available yet
 		 * @param codecConfigSize The size of the codec configuration data in bytes, 0 if not available yet
+		 * @param decodingMode The decoding mode controlling frame delivery order, default is DM_PERFORMANCE
 		 * @return True, if succeeded
 		 * @see isInitialized().
 		 */
-		bool initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData = nullptr, const size_t codecConfigSize = 0);
+		bool initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData = nullptr, const size_t codecConfigSize = 0, const DecodingMode decodingMode = DM_PERFORMANCE);
 
 		/**
 		 * Starts the video decoder.
@@ -269,6 +281,24 @@ class VideoDecoder
 		VideoDecoder& operator=(const VideoDecoder&) = delete;
 
 		/**
+		 * Handles a newly decoded frame by either delivering it directly or deferring it for later delivery in DM_ORDERED mode.
+		 * @param decodedFrame The decoded frame to be processed
+		 */
+		void onNewDecodedFrame(DecodedFrame&& decodedFrame);
+
+		/**
+		 * Removes a presentation timestamp from the pending sample timestamps queue.
+		 * This is called when a frame fails to decode, so that the failed frame does not block delivery of subsequent frames.
+		 * @param presentationTime The presentation time to remove, in microseconds
+		 */
+		void removePendingSampleTimestamps(const int64_t presentationTime);
+
+		/**
+		 * Processes deferred frames whose presentation timestamps now match the front of the pending timestamps queue.
+		 */
+		void processDeferredFrames();
+
+		/**
 		 * Callback function for decoded frames from VideoToolbox.
 		 * @param decompressionOutputRefCon Reference to this decoder
 		 * @param sourceFrameRefCon Reference containing the presentation time
@@ -295,14 +325,23 @@ class VideoDecoder
 		/// The decompression session.
 		ScopedVTDecompressionSessionRef decompressionSession_;
 
-		/// The queue of decoded frames.
-		std::deque<DecodedFrame> decodedFrames_;
+		/// The queue timestamps of submitted but not yet processed samples.
+		TimestampQueue pendingSampleTimestamps_;
+
+		/// The queue of decoded frames ready for consumption.
+		DecodedFrameQueue decodedFrames_;
+
+		/// Decoded frames waiting to be delivered in presentation-timestamp order (DM_ORDERED mode only).
+		DecodedFrames deferredFrames_;
 
 		/// The width of the video.
 		unsigned int width_ = 0u;
 
 		/// The height of the video.
 		unsigned int height_ = 0u;
+
+		/// The decoding mode.
+		DecodingMode decodingMode_ = DM_PERFORMANCE;
 
 		/// True, if the decoder is currently started.
 		bool isStarted_ = false;
@@ -317,15 +356,10 @@ class VideoDecoder
 		/// The previous presentation timestamp submitted via pushSample(), in microseconds, NumericT<int64_t>::minValue() if no sample has been submitted yet.
 		int64_t debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
 
-		/// The previous presentation timestamp of a decoded frame in the decompression callback, in microseconds, NumericT<int64_t>::minValue() if no frame has been decoded yet.
+		/// The previous presentation timestamp of a decoded frame released to decodedFrames_, in microseconds, NumericT<int64_t>::minValue() if no frame has been released yet.
 		int64_t debugPreviousDecodedTimestamp_ = NumericT<int64_t>::minValue();
 #endif
 };
-
-inline VideoDecoder::VideoDecoder(VideoDecoder&& videoDecoder) noexcept
-{
-	*this = std::move(videoDecoder);
-}
 
 inline bool VideoDecoder::isInitialized() const
 {
@@ -343,36 +377,13 @@ inline bool VideoDecoder::isStarted() const
 	return isStarted_;
 }
 
-inline VideoDecoder& VideoDecoder::operator=(VideoDecoder&& videoDecoder) noexcept
+inline void VideoDecoder::releaseVTDecompressionSession(VTDecompressionSessionRef session)
 {
-	if (this != &videoDecoder)
+	if (session != nullptr)
 	{
-		release();
-
-		formatDescription_ = std::move(videoDecoder.formatDescription_);
-		decompressionSession_ = std::move(videoDecoder.decompressionSession_);
-
-		decodedFrames_ = std::move(videoDecoder.decodedFrames_);
-
-		width_ = videoDecoder.width_;
-		videoDecoder.width_ = 0u;
-
-		height_ = videoDecoder.height_;
-		videoDecoder.height_ = 0u;
-
-		isStarted_ = videoDecoder.isStarted_;
-		videoDecoder.isStarted_ = false;
-
-#ifdef OCEAN_DEBUG
-		debugPreviousSubmittedTimestamp_ = videoDecoder.debugPreviousSubmittedTimestamp_;
-		videoDecoder.debugPreviousSubmittedTimestamp_ = NumericT<int64_t>::minValue();
-
-		debugPreviousDecodedTimestamp_ = videoDecoder.debugPreviousDecodedTimestamp_;
-		videoDecoder.debugPreviousDecodedTimestamp_ = NumericT<int64_t>::minValue();
-#endif
+		VTDecompressionSessionInvalidate(session);
+		CFRelease(session);
 	}
-
-	return *this;
 }
 
 }

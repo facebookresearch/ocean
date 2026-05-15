@@ -125,6 +125,50 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 				inline int clampedVerticalBin(const Scalar y) const;
 
 				/**
+				 * Returns the (inclusive) begin bin in horizontal direction for a neighborhood search.
+				 * The resulting bin is clamped to the valid range [0, horizontalBins()).
+				 * @param centerBinX The center horizontal bin, with range [0, horizontalBins() - 1]
+				 * @return The (inclusive) begin horizontal bin, with range [0, horizontalBins() - 1]
+				 * @tparam tRadius The radius of the neighborhood, in bins, with range [1, infinity)
+				 * @see endBinHorizontal(), beginBinVertical(), endBinVertical().
+				 */
+				template <unsigned int tRadius>
+				inline unsigned int beginBinHorizontal(const unsigned int centerBinX) const;
+
+				/**
+				 * Returns the (exclusive) end bin in horizontal direction for a neighborhood search.
+				 * The resulting bin is clamped to the valid range [0, horizontalBins()].
+				 * @param centerBinX The center horizontal bin, with range [0, horizontalBins() - 1]
+				 * @return The (exclusive) end horizontal bin, with range [1, horizontalBins()]
+				 * @tparam tRadius The radius of the neighborhood, in bins, with range [1, infinity)
+				 * @see beginBinHorizontal(), beginBinVertical(), endBinVertical().
+				 */
+				template <unsigned int tRadius>
+				inline unsigned int endBinHorizontal(const unsigned int centerBinX) const;
+
+				/**
+				 * Returns the (inclusive) begin bin in vertical direction for a neighborhood search.
+				 * The resulting bin is clamped to the valid range [0, verticalBins()).
+				 * @param centerBinY The center vertical bin, with range [0, verticalBins() - 1]
+				 * @return The (inclusive) begin vertical bin, with range [0, verticalBins() - 1]
+				 * @tparam tRadius The radius of the neighborhood, in bins, with range [1, infinity)
+				 * @see endBinVertical(), beginBinHorizontal(), endBinHorizontal().
+				 */
+				template <unsigned int tRadius>
+				inline unsigned int beginBinVertical(const unsigned int centerBinY) const;
+
+				/**
+				 * Returns the (exclusive) end bin in vertical direction for a neighborhood search.
+				 * The resulting bin is clamped to the valid range [0, verticalBins()].
+				 * @param centerBinY The center vertical bin, with range [0, verticalBins() - 1]
+				 * @return The (exclusive) end vertical bin, with range [1, verticalBins()]
+				 * @tparam tRadius The radius of the neighborhood, in bins, with range [1, infinity)
+				 * @see beginBinVertical(), beginBinHorizontal(), endBinHorizontal().
+				 */
+				template <unsigned int tRadius>
+				inline unsigned int endBinVertical(const unsigned int centerBinY) const;
+
+				/**
 				 * Returns whether this object holds a valid distribution.
 				 * @return True, if so
 				 */
@@ -1123,6 +1167,46 @@ inline int SpatialDistribution::Array::clampedVerticalBin(const Scalar y) const
 {
 	ocean_assert(isValid());
 	return minmax<int>(0, verticalBin(y), verticalBins_ - 1);
+}
+
+template <unsigned int tRadius>
+inline unsigned int SpatialDistribution::Array::beginBinHorizontal(const unsigned int centerBinX) const
+{
+	static_assert(tRadius >= 1u, "Invalid radius");
+
+	ocean_assert(centerBinX < horizontalBins_);
+
+	return centerBinX >= tRadius ? centerBinX - tRadius : 0u;
+}
+
+template <unsigned int tRadius>
+inline unsigned int SpatialDistribution::Array::endBinHorizontal(const unsigned int centerBinX) const
+{
+	static_assert(tRadius >= 1u, "Invalid radius");
+
+	ocean_assert(centerBinX < horizontalBins_);
+
+	return std::min(centerBinX + tRadius + 1u, horizontalBins_);
+}
+
+template <unsigned int tRadius>
+inline unsigned int SpatialDistribution::Array::beginBinVertical(const unsigned int centerBinY) const
+{
+	static_assert(tRadius >= 1u, "Invalid radius");
+
+	ocean_assert(centerBinY < verticalBins_);
+
+	return centerBinY >= tRadius ? centerBinY - tRadius : 0u;
+}
+
+template <unsigned int tRadius>
+inline unsigned int SpatialDistribution::Array::endBinVertical(const unsigned int centerBinY) const
+{
+	static_assert(tRadius >= 1u, "Invalid radius");
+
+	ocean_assert(centerBinY < verticalBins_);
+
+	return std::min(centerBinY + tRadius + 1u, verticalBins_);
 }
 
 inline bool SpatialDistribution::Array::isValid() const

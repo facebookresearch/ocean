@@ -103,7 +103,7 @@ class OCEAN_MEDIA_EXPORT BufferImageRecorder :
 	protected:
 
 		/// State determining whether the buffer recorder is asked to save a new image.
-		bool recorderSaveImage;
+		bool saveImage_ = false;
 };
 
 }

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 message(CHECK_START "arcore-android-sdk")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-set(ARCORE_AAR_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/arcode-android-sdk.aar")
+set(ARCORE_AAR_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/arcore-android-sdk.aar")
 
 file(DOWNLOAD
     https://dl.google.com/android/maven2/com/google/ar/core/1.30.0/core-1.30.0.aar

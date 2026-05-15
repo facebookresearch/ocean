@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Shared Debug|x64">
@@ -62,6 +62,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Marker.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricSize.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Point.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\LegacyPointDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\PointDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\SVGImage.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Utilities.h" />
@@ -76,6 +77,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricCalibrationBoard.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Marker.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\MetricSize.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\LegacyPointDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\PointDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\SVGImage.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\calibration\Utilities.cpp" />

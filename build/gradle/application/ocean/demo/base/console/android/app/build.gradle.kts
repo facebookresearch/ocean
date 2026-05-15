@@ -47,16 +47,29 @@ tasks.register("copyTemporaryFiles") {
   val javaSourcePath = "$sourcePath/java/"
   file(javaSourcePath).mkdirs()
 
-  val javaSourceFiles =
-      listOf(
-          "$oceanDevelopmentPath/impl/application/ocean/demo/base/console/android/DemoConsoleActivity.java",
-          "$oceanDevelopmentPath/impl/ocean/base/BaseJni.java",
-          "$oceanDevelopmentPath/impl/ocean/platform/android/application/TextActivity.java",
-          "$oceanDevelopmentPath/impl/ocean/platform/android/application/MessengerView.java")
+  // Ocean's Java sources live next to their JNI counterparts in the C++ source
+  // tree (e.g. impl/ocean/base/jni/BaseJni.java), but their `package`
+  // declarations follow the Java convention (e.g. `package com.meta.ocean.base;`).
+  // The two layouts do not line up, so we cannot just point sourceSets at the
+  // Ocean tree -- we must copy each file into a directory that matches its
+  // declared package, otherwise javac cannot resolve cross-file imports.
+  val javaSourcesByPackage =
+      mapOf(
+          "com/meta/ocean/app/demo/base/console/android" to
+              listOf(
+                  "$oceanDevelopmentPath/impl/application/ocean/demo/base/console/android/DemoConsoleActivity.java"),
+          "com/meta/ocean/base" to
+              listOf("$oceanDevelopmentPath/impl/ocean/base/jni/BaseJni.java"),
+          "com/meta/ocean/platform/android/application" to
+              listOf(
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/MessengerView.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/TextActivity.java"))
 
-  copy {
-    from(javaSourceFiles)
-    into("$javaSourcePath")
+  javaSourcesByPackage.forEach { (packagePath, files) ->
+    copy {
+      from(files)
+      into("$javaSourcePath/$packagePath")
+    }
   }
 
   println("Copying resource files ...")

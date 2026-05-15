@@ -11,9 +11,19 @@ if ((MACOS OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
 
     set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps")
 
+    if (LINUX)
+        find_package(CURL QUIET)
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
+
+    # TestBasemap requires HTTPSClient which depends on Curl on Linux
+    if (LINUX AND NOT CURL_FOUND)
+        list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.h")
+        list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.cpp")
+    endif()
 
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -24,6 +34,10 @@ if ((MACOS OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
         PUBLIC
             "${OCEAN_PREPROCESSOR_FLAGS}"
     )
+
+    if (NOT LINUX OR CURL_FOUND)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "OCEAN_TEST_TESTIO_TESTMAPS_HAS_BASEMAP")
+    endif()
 
     if (BUILD_SHARED_LIBS)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_IO_MAPS_EXPORT")
@@ -67,6 +81,8 @@ if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
     set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps_gtest")
 
     find_package(GTest REQUIRED)
+    find_package(CURL QUIET)
+    find_package(ZLIB REQUIRED)
 
     enable_testing()
 
@@ -74,6 +90,12 @@ if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
     list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestIOMaps.cpp")
+
+    # TestBasemap requires HTTPSClient which depends on Curl on Linux
+    if (LINUX AND NOT CURL_FOUND)
+        list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.h")
+        list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestBasemap.cpp")
+    endif()
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -104,6 +126,17 @@ if ((LINUX OR MACOS OR WIN32) AND VTZERO_INCLUDE_DIR)
             ocean_math
             ocean_network
     )
+
+    if (CURL_FOUND)
+        # Explicitly restate curl/zlib for this static gtest executable so the
+        # final link line places libcurl before libz and resolves content-encoding
+        # symbols pulled from curl.
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PRIVATE
+                CURL::libcurl
+                ZLIB::ZLIB
+        )
+    endif()
 
     include(GoogleTest)
     gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)

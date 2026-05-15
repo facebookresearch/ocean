@@ -8,14 +8,22 @@
 #ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_CV_CALIBBRATION_DETECTOR__WIN_DETECTOR_MAIN_WINDOW_H
 #define META_OCEAN_APPLICATION_OCEAN_DEMO_CV_CALIBBRATION_DETECTOR__WIN_DETECTOR_MAIN_WINDOW_H
 
+#include "ocean/base/DebugElements.h"
 #include "ocean/base/Frame.h"
+
+#include "ocean/cv/calibration/MetricCalibrationBoard.h"
 
 #include "ocean/media/FrameMedium.h"
 
 #include "ocean/platform/win/ApplicationWindow.h"
 #include "ocean/platform/win/BitmapWindow.h"
 
+#include <atomic>
+
 using namespace Ocean;
+using namespace Ocean::CV::Calibration;
+
+// #define ENABLE_DEBUG_ELEMENTS
 
 /**
  * This class implements the main window of the demo application.
@@ -47,9 +55,12 @@ class DetectorMainWindow :
 		 * Creates a new main window.
 		 * @param instance Application instance
 		 * @param name The name of the main window
+		 * @param calibrationBoard The calibration board to detect
 		 * @param file Optional media file
+		 * @param gaussianFilterSize The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable, must be odd if non-zero
+		 * @param explicitCamera Optional explicit camera calibration to use when the frame medium does not provide a camera profile
 		 */
-		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file = std::string());
+		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file = std::string(), const unsigned int gaussianFilterSize = 0u, SharedAnyCamera explicitCamera = nullptr);
 
 		/**
 		 * Destructs the main window.
@@ -83,6 +94,14 @@ class DetectorMainWindow :
 		 */
 		void onFrame(const Frame& frame, const SharedAnyCamera& camera);
 
+		/**
+		 * Callback function invoked when a debug element has been updated.
+		 * @param elementId The identifier of the debug element that was updated
+		 * @param frame The optional debug frame associated with the element, nullptr if not available
+		 * @param hierarchy The optional hierarchy of the debug element, nullptr if not available
+		 */
+		void onDebugElement(const uint32_t elementId, const Frame* frame, const DebugElements::Hierarchy* hierarchy);
+
 	protected:
 
 		/// The current application mode.
@@ -97,8 +116,20 @@ class DetectorMainWindow :
 		/// Optional media file to be used.
 		std::string mediaFile_;
 
+		/// The calibration board to detect.
+		MetricCalibrationBoard calibrationBoard_;
+
+		/// The optional size of a Gaussian filter applied to all input frames before processing, 0 to disable.
+		unsigned int gaussianFilterSize_ = 0u;
+
+		/// Optional explicit camera calibration to use when the frame medium does not provide a camera profile.
+		SharedAnyCamera explicitCamera_;
+
 		/// True, to save an image.
-		bool saveImage_ = false;
+		std::atomic_bool saveImage_ = false;
+
+		/// True, to ignore frame timestamps.
+		std::atomic_bool ignoreFrameTimestamp_ = false;
 };
 
 #endif // META_OCEAN_APPLICATION_OCEAN_DEMO_CV_CALIBBRATION_DETECTOR__WIN_DETECTOR_MAIN_WINDOW_H

@@ -62,7 +62,7 @@ bool JSScript::compileAndRun(const std::string& code, std::string& errorMessage)
 	return !script_.IsEmpty();
 }
 
-bool JSScript::run(v8::Handle<v8::Value>& returnValue, std::string& errorMessage)
+bool JSScript::run(v8::Local<v8::Value>& returnValue, std::string& errorMessage)
 {
 	if (script_.IsEmpty())
 	{

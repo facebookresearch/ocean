@@ -702,7 +702,12 @@ bool BullseyeDetectorMono::determineAccurateBullseyeLocation(const Frame& yFrame
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);
-	ocean_assert(xBullseye < yFrame.width() && yBullseye < yFrame.height());
+	ocean_assert(xBullseye >= 1u && xBullseye < yFrame.width() && yBullseye >= 1u && yBullseye < yFrame.height());
+
+	if (xBullseye == 0u || yBullseye == 0u)
+	{
+		return false;
+	}
 
 	ocean_assert(*yFrame.constpixel<uint8_t>(xBullseye, yBullseye) <= threshold);
 

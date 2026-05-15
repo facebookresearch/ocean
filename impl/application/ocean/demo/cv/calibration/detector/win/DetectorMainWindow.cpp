@@ -12,8 +12,10 @@
 
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/FrameFilterGaussian.h"
 
 #include "ocean/cv/calibration/CalibrationBoardDetector.h"
+#include "ocean/cv/calibration/CalibrationDebugElements.h"
 #include "ocean/cv/calibration/PointDetector.h"
 #include "ocean/cv/calibration/Utilities.h"
 
@@ -26,13 +28,20 @@
 
 using namespace Ocean::CV::Calibration;
 
-DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file) :
+DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const MetricCalibrationBoard& calibrationBoard, const std::string& file, const unsigned int gaussianFilterSize, SharedAnyCamera explicitCamera) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
-	mediaFile_(file)
+	mediaFile_(file),
+	calibrationBoard_(calibrationBoard),
+	gaussianFilterSize_(gaussianFilterSize),
+	explicitCamera_(std::move(explicitCamera))
 {
-	// nothing to do here
+#ifdef ENABLE_DEBUG_ELEMENTS
+	static_assert(CV::Calibration::CalibrationDebugElements::allowDebugging_);
+	CV::Calibration::CalibrationDebugElements::get().setElementUpdateCallback(CV::Calibration::CalibrationDebugElements::ElementUpdateCallback::create(*this, &DetectorMainWindow::onDebugElement));
+	CV::Calibration::CalibrationDebugElements::get().activateAllElements();
+#endif
 }
 
 DetectorMainWindow::~DetectorMainWindow()
@@ -86,17 +95,25 @@ void DetectorMainWindow::onIdle()
 		SharedAnyCamera camera;
 		const FrameRef frame(frameMedium_->frame(&camera));
 
-		if (frame && *frame && (frame->timestamp() != frameTimestamp_))
+		if (frame && *frame)
 		{
-			ocean_assert(camera && "The camera profile needs to be known, set it manually if needed");
-
-			if (camera)
+			if (ignoreFrameTimestamp_ || frame->timestamp() != frameTimestamp_)
 			{
-				onFrame(*frame, camera);
-			}
+				if (!camera)
+				{
+					camera = explicitCamera_;
+				}
 
-			frameTimestamp_ = frame->timestamp();
-			return;
+				ocean_assert(camera && "The camera profile needs to be known, set it manually if needed");
+
+				if (camera)
+				{
+					onFrame(*frame, camera);
+				}
+
+				frameTimestamp_ = frame->timestamp();
+				return;
+			}
 		}
 	}
 
@@ -119,21 +136,37 @@ void DetectorMainWindow::onKeyDown(const int key)
 	{
 		saveImage_ = true;
 	}
+	else if (keyValue == "I")
+	{
+		ignoreFrameTimestamp_ = !ignoreFrameTimestamp_;
+	}
 }
 
 void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& camera)
 {
+	Frame frameToProcess(frame, Frame::ACM_USE_KEEP_LAYOUT);
+
+	if (gaussianFilterSize_ != 0u)
+	{
+		frameToProcess.makeOwner();
+
+		if (!CV::FrameFilterGaussian::filter(frameToProcess, gaussianFilterSize_, WorkerPool::get().scopedWorker()()))
+		{
+			Log::warning() << "Failed to apply Gaussian filter.";
+		}
+	}
+
 	if (saveImage_)
 	{
 		saveImage_= false;
 
 		static unsigned int counter = 0u;
 
-		IO::Image::writeImage(frame, "image" + String::toAString(counter++, 5u) + ".png");
+		IO::Image::writeImage(frameToProcess, "image" + String::toAString(counter++, 5u) + ".png");
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+	if (!CV::FrameConverter::Comfort::convert(frameToProcess, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
@@ -181,18 +214,35 @@ void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& came
 
 		if (camera)
 		{
-			MetricCalibrationBoard calibrationBoard;
-
-			if (MetricCalibrationBoard::createMetricCalibrationBoard(0u, 8, 13, MetricSize(260.5, MetricSize::UT_MILLIMETER), MetricSize(420.0, MetricSize::UT_MILLIMETER), calibrationBoard))
+			if (calibrationBoard_.isValid())
 			{
 				CalibrationBoardObservation observation;
 
 				constexpr Scalar maximalProjectionError = Scalar(3.5);
 
-				if (CalibrationBoardDetector::detectCalibrationBoard(*camera, yFrame, calibrationBoard, observation, maximalProjectionError, WorkerPool::get().scopedWorker()()))
+				HighPerformanceTimer timer;
+
+				size_t numberVisibleBoardPoints = 0;
+				const bool detected = CalibrationBoardDetector::detectCalibrationBoard(*camera, yFrame, calibrationBoard_, observation, maximalProjectionError, &numberVisibleBoardPoints, WorkerPool::get().scopedWorker()());
+
+				const double time = timer.mseconds();
+
+				CV::Canvas::drawText(outputFrame, "Board detection: " + String::toAString(time, 2u) + "ms", 5, 5, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
+
+				if (detected)
 				{
-					CV::Calibration::Utilities::paintCalibrationBoardObservation(outputFrame, calibrationBoard, observation, true);
+					CV::Calibration::Utilities::paintCalibrationBoardObservation(outputFrame, calibrationBoard_, observation, true);
+
+					const std::string textOverall = "Overall board points: " + String::toAString(calibrationBoard_.numberPoints()) + ", visible: " + String::toAString(numberVisibleBoardPoints);
+					const std::string textDetected = "Detected points: " + String::toAString(observation.imagePoints().size()) + " (" + String::toAString(NumericD::ratio(double(observation.imagePoints().size()), double(numberVisibleBoardPoints), 0.0) * 100.0, 1u) + "%)";
+
+					CV::Canvas::drawText(outputFrame, textOverall, 5, 25, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
+					CV::Canvas::drawText(outputFrame, textDetected, 5, 45, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
 				}
+			}
+			else
+			{
+				CV::Canvas::drawText(outputFrame, "No valid calibration board!", 5, 5, CV::Canvas::white(outputFrame.pixelFormat()), CV::Canvas::black(outputFrame.pixelFormat()));
 			}
 		}
 		else
@@ -209,4 +259,15 @@ void DetectorMainWindow::onFrame(const Frame& frame, const SharedAnyCamera& came
 	}
 
 	repaint();
+}
+
+void DetectorMainWindow::onDebugElement(const uint32_t elementId, const Frame* frame, const DebugElements::Hierarchy* hierarchy)
+{
+#ifdef ENABLE_DEBUG_ELEMENTS
+	Log::debug() << "New debug element id: " << elementId;
+#endif
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(elementId);
+	OCEAN_SUPPRESS_UNUSED_WARNING(frame);
+	OCEAN_SUPPRESS_UNUSED_WARNING(hierarchy);
 }

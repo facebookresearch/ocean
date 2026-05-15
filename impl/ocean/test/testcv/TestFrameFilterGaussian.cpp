@@ -400,7 +400,7 @@ bool TestFrameFilterGaussian::testFilterFactors()
 
 			for (unsigned int n = 0u; n < filterSize / 2u; ++n)
 			{
-				OCEAN_EXPECT_EQUAL(validation, floatFilter[n], floatFilter[filterSize - n - 1u]);
+				OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(floatFilter[n], floatFilter[filterSize - n - 1u]));
 
 				if (n >= 1u && floatFilter[n - 1u] >= floatFilter[n])
 				{

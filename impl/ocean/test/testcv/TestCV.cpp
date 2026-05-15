@@ -8,6 +8,7 @@
 #include "ocean/test/testcv/TestCV.h"
 #include "ocean/test/testcv/TestBresenham.h"
 #include "ocean/test/testcv/TestCanvas.h"
+#include "ocean/test/testcv/TestCVUtilities.h"
 #include "ocean/test/testcv/TestEigenUtilities.h"
 #include "ocean/test/testcv/TestFrameBlender.h"
 #include "ocean/test/testcv/TestFrameChannels.h"
@@ -51,6 +52,7 @@
 #include "ocean/test/testcv/TestFrameFilterLaplace.h"
 #include "ocean/test/testcv/TestFrameFilterMean.h"
 #include "ocean/test/testcv/TestFrameFilterMedian.h"
+#include "ocean/test/testcv/TestFrameFilterMorphology.h"
 #include "ocean/test/testcv/TestFrameFilterMax.h"
 #include "ocean/test/testcv/TestFrameFilterMin.h"
 #include "ocean/test/testcv/TestFrameFilterPrewitt.h"
@@ -66,6 +68,7 @@
 #include "ocean/test/testcv/TestFrameInterpolatorBilinear.h"
 #include "ocean/test/testcv/TestFrameInterpolatorBilinearAlpha.h"
 #include "ocean/test/testcv/TestFrameInterpolatorNearestPixel.h"
+#include "ocean/test/testcv/TestFrameInterpolatorTrilinear.h"
 #include "ocean/test/testcv/TestFrameInverter.h"
 #include "ocean/test/testcv/TestFrameMean.h"
 #include "ocean/test/testcv/TestFrameMinMax.h"
@@ -77,6 +80,7 @@
 #include "ocean/test/testcv/TestFrameShrinkerAlpha.h"
 #include "ocean/test/testcv/TestFrameTransposer.h"
 #include "ocean/test/testcv/TestFrameVariance.h"
+#include "ocean/test/testcv/TestFrequencyAnalysis.h"
 #include "ocean/test/testcv/TestHistogram.h"
 #include "ocean/test/testcv/TestImageQuality.h"
 #include "ocean/test/testcv/TestIntegralImage.h"
@@ -1011,6 +1015,46 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		Log::info() << " ";
 
 		testResult = TestEigenUtilities::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("cvutilities"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestCVUtilities::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("framefiltermorphology"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestFrameFilterMorphology::test(testDuration, worker, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("frameinterpolatortrilinear"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestFrameInterpolatorTrilinear::test(testDuration, worker, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("frequencyanalysis"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		testResult = TestFrequencyAnalysis::test(testDuration, worker, subSelector);
 	}
 
 	Log::info() << " ";

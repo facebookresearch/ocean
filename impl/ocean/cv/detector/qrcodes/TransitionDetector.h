@@ -217,7 +217,7 @@ inline bool TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy
 	const std::uint8_t leftPixelValue = yRow[xPointLeft];
 	const std::uint8_t rightPixelValue = yRow[xPointLeft + 1u];
 
-	if (leftPixelValue <= grayThreshold == rightPixelValue <= grayThreshold)
+	if ((leftPixelValue <= grayThreshold) == (rightPixelValue <= grayThreshold))
 	{
 		return false;
 	}

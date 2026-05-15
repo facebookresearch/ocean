@@ -15,18 +15,18 @@ namespace Media
 
 MediumRefManager::~MediumRefManager()
 {
-	ocean_assert(mediumMap.empty());
+	ocean_assert(mediumMap_.empty());
 }
 
 MediumRef MediumRefManager::registerMedium(Medium* medium)
 {
 	ocean_assert(medium != nullptr);
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	MediumRef mediumRef(medium, MediumRef::ReleaseCallback(MediumRefManager::get(), &MediumRefManager::unregisterMedium));
 
-	mediumMap.insert(std::make_pair(medium->url(), mediumRef));
+	mediumMap_.insert(std::make_pair(medium->url(), mediumRef));
 	return mediumRef;
 }
 
@@ -34,11 +34,14 @@ MediumRef MediumRefManager::medium(const std::string& url)
 {
 	ocean_assert(url.empty() == false);
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	MediumMap::const_iterator i = mediumMap.find(url);
-	if (i != mediumMap.end())
+	MediumMap::const_iterator i = mediumMap_.find(url);
+
+	if (i != mediumMap_.end())
+	{
 		return i->second;
+	}
 
 	return MediumRef();
 }
@@ -47,16 +50,22 @@ MediumRef MediumRefManager::medium(const std::string& url, const Medium::Type ty
 {
 	ocean_assert(url.empty() == false);
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	MediumMap::const_iterator i = mediumMap.lower_bound(url);
-	MediumMap::const_iterator end = mediumMap.upper_bound(url);
+	MediumMap::const_iterator i = mediumMap_.lower_bound(url);
+	MediumMap::const_iterator end = mediumMap_.upper_bound(url);
 
 	while (i != end)
+	{
 		if (i->second->isType(type))
+		{
 			return i->second;
+		}
 		else
+		{
 			++i;
+		}
+	}
 
 	return MediumRef();
 }
@@ -65,41 +74,53 @@ MediumRef MediumRefManager::medium(const std::string& url, const std::string& li
 {
 	ocean_assert(url.empty() == false && library.empty() == false);
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	MediumMap::const_iterator i = mediumMap.lower_bound(url);
-	MediumMap::const_iterator end = mediumMap.upper_bound(url);
+	MediumMap::const_iterator i = mediumMap_.lower_bound(url);
+	MediumMap::const_iterator end = mediumMap_.upper_bound(url);
 
 	while (i != end)
+	{
 		if (i->second->isType(type) && i->second->library() == library)
+		{
 			return i->second;
+		}
 		else
+		{
 			++i;
+		}
+	}
 
 	return MediumRef();
 }
 
 bool MediumRefManager::isRegistered(const Medium* medium)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	for (MediumMap::iterator i = mediumMap.begin(); i != mediumMap.end(); ++i)
+	for (MediumMap::iterator i = mediumMap_.begin(); i != mediumMap_.end(); ++i)
+	{
 		if (&*i->second == medium)
+		{
 			return true;
+		}
+	}
 
 	return false;
 }
 
 void MediumRefManager::unregisterMedium(const Medium* medium)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	for (MediumMap::iterator i = mediumMap.begin(); i != mediumMap.end(); ++i)
+	for (MediumMap::iterator i = mediumMap_.begin(); i != mediumMap_.end(); ++i)
+	{
 		if (&*i->second == medium)
 		{
-			mediumMap.erase(i);
+			mediumMap_.erase(i);
 			break;
 		}
+	}
 }
 
 }

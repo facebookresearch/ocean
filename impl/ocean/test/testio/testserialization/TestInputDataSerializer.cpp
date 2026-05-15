@@ -19,8 +19,6 @@
 #include "ocean/io/serialization/DataSample.h"
 #include "ocean/io/serialization/OutputDataSerializer.h"
 
-#include "ocean/math/Random.h"
-
 namespace Ocean
 {
 
@@ -55,7 +53,6 @@ class SimpleTestDataSampleInput : public IO::Serialization::DataSample
 			DataSample(dataTimestamp, sampleCreationTimestamp),
 			payload_(payload)
 		{
-			// nothing to do here
 		}
 
 		/**
@@ -187,7 +184,6 @@ bool TestInputDataSerializer::testFactoryFunction()
 		IO::Serialization::FileInputDataSerializer serializer;
 		OCEAN_EXPECT_TRUE(validation, serializer.setFilename(tempFilename));
 
-		// Register factory function
 		const std::string sampleType = "SimpleTestDataSampleInput";
 
 		const IO::Serialization::InputDataSerializer::FactoryFunction factoryFunction = [](const std::string&)
@@ -227,7 +223,8 @@ bool TestInputDataSerializer::testStartStop(const double testDuration)
 
 		const std::string tempFilename = (scopedDirectory + IO::File("test_input.dat"))();
 
-		// Create a temporary file with data first
+		constexpr size_t numberSamples = 1;
+
 		{
 			IO::Serialization::FileOutputDataSerializer outputSerializer;
 			OCEAN_EXPECT_TRUE(validation, outputSerializer.setFilename(tempFilename));
@@ -236,15 +233,17 @@ bool TestInputDataSerializer::testStartStop(const double testDuration)
 
 			OCEAN_EXPECT_TRUE(validation, outputSerializer.start());
 
-			const IO::Serialization::DataTimestamp dataTimestamp(0.0);
-			IO::Serialization::UniqueDataSample sample = std::make_unique<SimpleTestDataSampleInput>(dataTimestamp, "TestData");
+			for (size_t nSample = 0; nSample < numberSamples; ++nSample)
+			{
+				const IO::Serialization::DataTimestamp dataTimestamp = IO::Serialization::DataTimestamp(double(nSample));
+				IO::Serialization::UniqueDataSample sample = std::make_unique<SimpleTestDataSampleInput>(dataTimestamp, "TestData");
 
-			outputSerializer.addSample(channelId, std::move(sample));
+				outputSerializer.addSample(channelId, std::move(sample));
+			}
 
 			OCEAN_EXPECT_TRUE(validation, outputSerializer.stopAndWait(10.0));
 		}
 
-		// Now test the input serializer
 		IO::Serialization::FileInputDataSerializer serializer;
 		OCEAN_EXPECT_TRUE(validation, serializer.setFilename(tempFilename));
 
@@ -255,22 +254,44 @@ bool TestInputDataSerializer::testStartStop(const double testDuration)
 
 		OCEAN_EXPECT_TRUE(validation, serializer.registerFactoryFunction("SimpleTestDataSampleInput", factoryFunction));
 
-		// Initialize the serializer
 		OCEAN_EXPECT_TRUE(validation, serializer.initialize());
 
-		// After initialize(), serializer should not be started yet
 		OCEAN_EXPECT_FALSE(validation, serializer.isStarted());
 		OCEAN_EXPECT_FALSE(validation, serializer.hasStopped());
 
-		// Start the serializer
 		OCEAN_EXPECT_TRUE(validation, serializer.start());
-		OCEAN_EXPECT_TRUE(validation, serializer.isStarted());
-		OCEAN_EXPECT_FALSE(validation, serializer.hasStopped());
 
-		// Stop the serializer
+		const bool isStarted = serializer.isStarted();
+		const bool hasStopped = serializer.hasStopped();
+
+		if (hasStopped)
+		{
+			// the serializer may have stopped already due to a very fast serialization
+			// we ensure that we have received all samples
+
+			OCEAN_EXPECT_FALSE(validation, serializer.isStarted());
+
+			for (size_t nSample = 0; nSample < numberSamples; ++nSample)
+			{
+				IO::Serialization::DataSerializer::ChannelId channelId = IO::Serialization::DataSerializer::invalidChannelId();
+				IO::Serialization::UniqueDataSample sample = serializer.sample(channelId, 0.0);
+
+				OCEAN_EXPECT_TRUE(validation, sample != nullptr);
+
+				if (sample != nullptr)
+				{
+					OCEAN_EXPECT_EQUAL(validation, sample->dataTimestamp().asDouble(), double(nSample));
+				}
+			}
+		}
+		else
+		{
+			OCEAN_EXPECT_TRUE(validation, isStarted);
+			OCEAN_EXPECT_FALSE(validation, hasStopped);
+		}
+
 		OCEAN_EXPECT_TRUE(validation, serializer.stop());
 
-		// Wait for it to stop
 		OCEAN_EXPECT_TRUE(validation, serializer.stopAndWait(10.0));
 		OCEAN_EXPECT_FALSE(validation, serializer.isStarted());
 		OCEAN_EXPECT_TRUE(validation, serializer.hasStopped());
@@ -305,7 +326,6 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 
 		const std::string tempFilename = (scopedDirectory + IO::File("test_sample.dat"))();
 
-		// Create a temporary file with data first
 		const unsigned int numSamples = RandomI::random(randomGenerator, 3u, 10u);
 		Strings expectedPayloads;
 		expectedPayloads.reserve(numSamples);
@@ -333,7 +353,6 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, outputSerializer.stopAndWait(10.0));
 		}
 
-		// Now test reading samples with InputDataSerializer
 		IO::Serialization::FileInputDataSerializer serializer;
 		OCEAN_EXPECT_TRUE(validation, serializer.setFilename(tempFilename));
 
@@ -344,14 +363,11 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 
 		OCEAN_EXPECT_TRUE(validation, serializer.registerFactoryFunction("SimpleTestDataSampleInput", factoryFunction));
 
-		// Initialize and start the serializer
 		OCEAN_EXPECT_TRUE(validation, serializer.initialize());
 		OCEAN_EXPECT_TRUE(validation, serializer.start());
 
-		// Wait a bit for samples to be read into the queue
 		Thread::sleep(100u);
 
-		// Retrieve samples with speed = 0.0 (no timing, should return immediately)
 		Strings retrievedPayloads;
 		retrievedPayloads.reserve(numSamples);
 
@@ -365,7 +381,6 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 
 			if (retrievedSample)
 			{
-				// Downcast to our test sample type
 				SimpleTestDataSampleInput* testSample = dynamic_cast<SimpleTestDataSampleInput*>(retrievedSample.get());
 				OCEAN_EXPECT_TRUE(validation, testSample != nullptr);
 
@@ -382,16 +397,13 @@ bool TestInputDataSerializer::testSample(const double testDuration)
 		std::sort(sortedRetrieved.begin(), sortedRetrieved.end());
 		OCEAN_EXPECT_EQUAL(validation, sortedExpected, sortedRetrieved);
 
-		// After retrieving all samples, the queue should be empty
 		IO::Serialization::DataSerializer::ChannelId dummyChannelId = IO::Serialization::DataSerializer::invalidChannelId();
 		IO::Serialization::UniqueDataSample emptySample = serializer.sample(dummyChannelId, 0.0);
 		OCEAN_EXPECT_TRUE(validation, emptySample == nullptr);
 
-		// Stop the serializer (may already be stopped if thread finished reading the file)
 		const bool stopResult = serializer.stop();
 		if (!stopResult)
 		{
-			// If stop() returned false, verify that the serializer has already stopped
 			OCEAN_EXPECT_TRUE(validation, serializer.hasStopped());
 		}
 		else

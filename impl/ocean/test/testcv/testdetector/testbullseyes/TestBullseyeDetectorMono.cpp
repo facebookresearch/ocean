@@ -97,6 +97,11 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 	Log::info() << " ";
 	Log::info() << " ";
 
+	allSucceeded = testDetermineAccurateBullseyeLocation() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	allSucceeded = testDetectBullseyesWithSyntheticData(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -121,6 +126,11 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 #ifdef OCEAN_USE_GTEST
 
 } // namespace TestBullseyes
+
+TEST(TestBullseyeDetectorMono, DetermineAccurateBullseyeLocation)
+{
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorMono::testDetermineAccurateBullseyeLocation());
+}
 
 TEST(TestBullseyeDetectorMono, DetectBullseyesWithSyntheticData)
 {
@@ -409,6 +419,123 @@ bool TestBullseyeDetectorMono::testParametersDefaultParameters()
 	OCEAN_EXPECT_EQUAL(validation, anotherDefaultParams.framePyramidLayers(), defaultParams.framePyramidLayers());
 
 	OCEAN_EXPECT_EQUAL(validation, anotherDefaultParams.useAdaptiveRowSpacing(), defaultParams.useAdaptiveRowSpacing());
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestBullseyeDetectorMono::testDetermineAccurateBullseyeLocation()
+{
+	Log::info() << "Testing determineAccurateBullseyeLocation():";
+
+	Validation validation;
+
+	constexpr unsigned int width = 64u;
+	constexpr unsigned int height = 64u;
+	constexpr unsigned int threshold = 128u;
+
+	// Helper: create a frame with a dark disk at a given center
+	auto createFrameWithDarkDisk = [&](const unsigned int diskCx, const unsigned int diskCy, const unsigned int diskRadius) -> Frame
+	{
+		Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+		memset(frame.data<uint8_t>(), 200u, frame.size()); // bright background
+
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			for (unsigned int x = 0u; x < width; ++x)
+			{
+				const int dx = int(x) - int(diskCx);
+				const int dy = int(y) - int(diskCy);
+
+				if (dx * dx + dy * dy <= int(diskRadius * diskRadius))
+				{
+					*frame.pixel<uint8_t>(x, y) = 30u;
+				}
+			}
+		}
+
+		return frame;
+	};
+
+	// Test 1: Normal case — dark disk centered at (32, 32), radius 8
+	{
+		constexpr unsigned int cx = 32u;
+		constexpr unsigned int cy = 32u;
+		const Frame yFrame = createFrameWithDarkDisk(cx, cy, 8u);
+
+		Vector2 location;
+		const bool result = determineAccurateBullseyeLocation(yFrame, cx, cy, threshold, location);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+
+		if (result)
+		{
+			const Scalar distance = Vector2(Scalar(cx), Scalar(cy)).distance(location);
+			OCEAN_EXPECT_LESS_EQUAL(validation, distance, Scalar(1.5));
+		}
+	}
+
+	// Test 2: Off-center query within the dark disk — should still succeed
+	{
+		constexpr unsigned int cx = 32u;
+		constexpr unsigned int cy = 32u;
+		const Frame yFrame = createFrameWithDarkDisk(cx, cy, 8u);
+
+		Vector2 location;
+		const bool result = determineAccurateBullseyeLocation(yFrame, cx + 2u, cy + 1u, threshold, location);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+	}
+
+	// Test 3: Dark disk at a different position — (20, 40)
+	{
+		constexpr unsigned int cx = 20u;
+		constexpr unsigned int cy = 40u;
+		const Frame yFrame = createFrameWithDarkDisk(cx, cy, 6u);
+
+		Vector2 location;
+		const bool result = determineAccurateBullseyeLocation(yFrame, cx, cy, threshold, location);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+
+		if (result)
+		{
+			const Scalar distance = Vector2(Scalar(cx), Scalar(cy)).distance(location);
+			OCEAN_EXPECT_LESS_EQUAL(validation, distance, Scalar(1.5));
+		}
+	}
+
+	// Test 4: Dark disk near left edge — disk at (10, 32), radius 5
+	// The disk fits within the frame but is close to the border
+	{
+		constexpr unsigned int cx = 10u;
+		constexpr unsigned int cy = 32u;
+		const Frame yFrame = createFrameWithDarkDisk(cx, cy, 5u);
+
+		Vector2 location;
+		const bool result = determineAccurateBullseyeLocation(yFrame, cx, cy, threshold, location);
+
+		OCEAN_EXPECT_TRUE(validation, result);
+
+		if (result)
+		{
+			const Scalar distance = Vector2(Scalar(cx), Scalar(cy)).distance(location);
+			OCEAN_EXPECT_LESS_EQUAL(validation, distance, Scalar(1.5));
+		}
+	}
+
+	// Test 5: Dark pixel that extends to the frame border — should return false
+	// because the scan reaches the boundary without finding a bright pixel
+	{
+		Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+		memset(yFrame.data<uint8_t>(), 30u, yFrame.size()); // all dark
+
+		Vector2 location;
+		const bool result = determineAccurateBullseyeLocation(yFrame, 32u, 32u, threshold, location);
+
+		OCEAN_EXPECT_FALSE(validation, result);
+	}
 
 	Log::info() << "Validation: " << validation;
 

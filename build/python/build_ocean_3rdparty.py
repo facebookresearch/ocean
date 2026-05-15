@@ -541,16 +541,20 @@ def execute_build_job(
     report_phase(BuildPhase.INSTALLING)
     builder.install(ctx)
 
-    # Reorganize output to final directory
+    # Post-install: either reorganize for external integration, or preserve
+    # the standard CMake install tree under <install_root>/<target>/<library>/.
     report_phase(BuildPhase.REORGANIZING)
-    reorganize_output(
-        paths.install_dir,
-        paths.final_dir,
-        target,
-        lib.name,
-        dir_manager.install_dir,
-        include_cmake_configs,
-    )
+    if dir_manager.for_external_integration:
+        reorganize_output(
+            paths.install_dir,
+            paths.final_dir,
+            target,
+            lib.name,
+            dir_manager.install_dir,
+            include_cmake_configs,
+        )
+    else:
+        _install_standard_layout(paths.install_dir, paths.final_dir, target)
 
     # Write metadata
     source_info = {
@@ -829,6 +833,99 @@ def _copy_lib_files_recursive(
                 # Only copy if we don't already have this library
                 if not dest.exists():
                     shutil.copy2(actual_file, dest)
+
+
+def _install_standard_layout(
+    install_dir: Path,
+    final_dir: Path,
+    target: BuildTarget,
+) -> None:
+    """Copy the CMake-installed tree to its final per-target prefix.
+
+    Standard layout preserves the install tree as cmake --install produced
+    it (include/, lib/, share/, bin/, …) so the destination is a complete,
+    relocatable CMake install prefix that find_package(CONFIG) can consume
+    directly via CMAKE_PREFIX_PATH.
+
+    Wrong-link-type artifacts are filtered out (e.g., .dylib/.so/.dll when
+    the target requested static linking, .a when shared). Some upstream
+    CMake projects install both regardless of BUILD_SHARED_LIBS; the copy
+    keeps only the requested kind so consumers cannot accidentally link
+    the wrong variant.
+
+    Args:
+        install_dir: Source directory containing cmake --install output.
+        final_dir: Destination directory (<install_root>/<target>/<library>/).
+        target: Build target (used to decide which link-type artifacts to keep).
+    """
+    import shutil
+
+    if not install_dir.exists():
+        return
+
+    # Detect which library kinds the install actually contains so we only
+    # apply the link-type filter when both kinds exist (e.g., libpng installs
+    # both libpng.a and libpng.dylib regardless of BUILD_SHARED_LIBS). When
+    # only one kind is present (e.g., imported_shared libraries like ARCore
+    # that always ship a .so), keep what's there.
+    has_static_libs = any(install_dir.rglob("*.a")) or any(
+        install_dir.rglob("*.lib")
+    )
+    has_shared_libs = (
+        any(install_dir.rglob("*.so"))
+        or any(install_dir.rglob("*.dylib"))
+        or any(install_dir.rglob("*.dll"))
+    )
+
+    is_shared = target.link_type == LinkType.SHARED
+    skip_patterns: List[str] = []
+    if is_shared and has_static_libs and has_shared_libs:
+        skip_extensions = {".a"}
+    elif not is_shared and has_static_libs and has_shared_libs:
+        skip_extensions = {".dylib", ".so", ".dll"}
+        skip_patterns = [".so."]
+    else:
+        skip_extensions = set()
+
+    def should_skip(path: Path) -> bool:
+        if path.suffix in skip_extensions:
+            return True
+        for pattern in skip_patterns:
+            if pattern in path.name:
+                return True
+        # For shared builds, skip versioned library files (e.g. libz.1.dylib).
+        if is_shared and _is_versioned_lib(path.name):
+            return True
+        return False
+
+    def ignore(directory: str, names: List[str]) -> List[str]:
+        ignored: List[str] = []
+        for name in names:
+            path = Path(directory) / name
+            # Skip .framework bundles entirely. On macOS some libraries
+            # (e.g., libpng) install a Foo.framework alongside the static
+            # archive, and CMake's Find modules prefer the framework. For
+            # static builds we want only the .a, and for shared builds
+            # the bare .dylib in lib/ already covers us.
+            if path.is_dir() and name.endswith(".framework"):
+                ignored.append(name)
+                continue
+            if path.is_dir() or path.is_symlink():
+                continue
+            if should_skip(path):
+                ignored.append(name)
+        return ignored
+
+    if final_dir.exists():
+        shutil.rmtree(final_dir)
+    final_dir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(install_dir, final_dir, symlinks=True, ignore=ignore)
+
+    # After copying with symlinks, drop wrong-link-type symlinks that point
+    # at files we just filtered out (e.g., libz.dylib -> libz.1.dylib).
+    for path in final_dir.rglob("*"):
+        if path.is_symlink() and should_skip(path):
+            path.unlink()
 
 
 def reorganize_output(  # noqa: C901
@@ -1195,8 +1292,12 @@ def _cleanup_lock_files(install_dir: Path) -> None:
 
     These lock files are only needed during parallel builds to prevent
     race conditions. They have no purpose after the build completes.
+
+    Searches recursively because the metadata files can live at depth 1
+    (external-integration layout: <install_root>/<library>/) or depth 2
+    (standard layout: <install_root>/<target>/<library>/).
     """
-    for lock_file in install_dir.glob("*/.build_metadata.lock"):
+    for lock_file in install_dir.rglob(".build_metadata.lock"):
         try:
             lock_file.unlink()
         except OSError:
@@ -1431,7 +1532,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--with-cmake-configs",
         action="store_true",
-        help="Include CMake and pkg-config files in output (disabled by default)",
+        help=(
+            "When --for-external-integration is in use, also copy CMake and "
+            "pkg-config files into central locations under the install root. "
+            "Has no effect in the standard (default) layout, which preserves "
+            "configs natively in each library's prefix."
+        ),
+    )
+    parser.add_argument(
+        "--for-external-integration",
+        action="store_true",
+        help=(
+            "Reorganize output for integration into non-CMake build systems "
+            "(Visual Studio projects, Xcode, Bazel, custom Makefiles, IDE "
+            "tooling). Produces a per-library layout with headers shared "
+            "across architectures (<lib>/h/<platform>/) and libraries keyed "
+            "by target (<lib>/lib/<target>/). The default standard layout "
+            "places each library as a complete relocatable CMake install "
+            "prefix under <install_root>/<target>/<library>/, which works "
+            "directly with find_package(... CONFIG)."
+        ),
     )
     parser.add_argument(
         "--skip-preflight",
@@ -1535,6 +1655,56 @@ def parse_platforms(
     return platforms or None
 
 
+def _print_post_build_instructions(install_dir: Path) -> None:
+    """Print next-step instructions after a successful 3rd-party build.
+
+    Tells the user how to point downstream Ocean builds (CMake / Gradle apps
+    such as the PointTracker demo) at the freshly built third-party install
+    directory. Skipped for non-CMake layouts (see ``--for-external-integration``).
+    """
+    from lib.manifest import detect_windows_shell
+
+    abs_install = install_dir.resolve()
+    host_os = detect_host_os()
+
+    print(f"\n{'═' * 70}")
+    print("Next steps")
+    print(f"{'═' * 70}")
+    print(f"Third-party libraries installed at:\n  {abs_install}\n")
+    print(
+        "Set OCEAN_THIRDPARTY_PATH so the Ocean Gradle apps (e.g. the "
+        "PointTracker demo) can find them:"
+    )
+
+    if host_os == OS.WINDOWS:
+        # Both Windows PowerShell 5.x ("powershell") and PowerShell 7+ ("pwsh")
+        # use the same $env: syntax to set environment variables in the current
+        # session, so they share an output branch.
+        shell = detect_windows_shell()
+        ps_line = f'    $env:OCEAN_THIRDPARTY_PATH = "{abs_install}"'
+        cmd_line = f"    set OCEAN_THIRDPARTY_PATH={abs_install}"
+        if shell in ("pwsh", "powershell"):
+            print("\n  PowerShell:")
+            print(ps_line)
+        elif shell == "cmd":
+            print("\n  cmd.exe:")
+            print(cmd_line)
+        else:
+            print("\n  PowerShell:")
+            print(ps_line)
+            print("\n  cmd.exe:")
+            print(cmd_line)
+    else:
+        print("\n  bash / zsh:")
+        print(f'    export OCEAN_THIRDPARTY_PATH="{abs_install}"')
+
+    print(
+        "\nAlternatively, pass the path explicitly to build_ocean.py:\n"
+        f"  python build/python/build_ocean.py --third-party-dir {abs_install}"
+    )
+    print(f"{'═' * 70}")
+
+
 def main() -> int:  # noqa: C901
     """Main entry point."""
     args = parse_args()
@@ -1611,7 +1781,12 @@ def main() -> int:  # noqa: C901
     build_dir = Path(args.build_dir) if args.build_dir else base_dir / "build"
 
     # Initialize managers
-    dir_manager = DirectoryManager(install_dir, source_dir, build_dir)
+    dir_manager = DirectoryManager(
+        install_dir,
+        source_dir,
+        build_dir,
+        for_external_integration=args.for_external_integration,
+    )
     fetcher = SourceFetcher(dir_manager, manifest_dir=manifest_path.parent)
 
     # Handle --clean
@@ -1804,6 +1979,8 @@ def main() -> int:  # noqa: C901
             android_api_level=args.android_api_level,
         )
         print("\n✓ Build completed successfully!")
+        if not args.for_external_integration:
+            _print_post_build_instructions(install_dir)
         return 0
     except Exception as e:
         print(f"\n✗ Build failed: {e}")

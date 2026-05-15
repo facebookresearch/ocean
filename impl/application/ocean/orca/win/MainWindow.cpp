@@ -339,7 +339,7 @@ void MainWindow::OnDropFiles(HDROP info)
 		return;
 	}
 
-	loadFiles(filenames, (GetKeyState(VK_LCONTROL) & 0x800) || (GetKeyState(VK_RCONTROL) & 0x800));
+	loadFiles(filenames, (GetKeyState(VK_LCONTROL) & 0x8000) || (GetKeyState(VK_RCONTROL) & 0x8000));
 }
 
 BOOL MainWindow::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)

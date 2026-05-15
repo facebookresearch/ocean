@@ -63,30 +63,46 @@ class BuildPaths:
 class DirectoryManager:
     """Manages directory structure for the build system.
 
-    Directory layout:
+    Two install layouts are supported:
+
+    Standard layout (default) — each library is a complete, relocatable CMake
+    install prefix under a per-target directory. `find_package(... CONFIG)`
+    works natively against any per-library prefix.
+
+        3rdparty/
+            macos_arm64_static/
+                zlib/
+                    include/zlib.h
+                    lib/libz.a
+                    lib/pkgconfig/zlib.pc
+                eigen/
+                    include/eigen3/Eigen/...
+                    share/eigen3/cmake/Eigen3Config.cmake
+                .build_metadata.json (one per target/library — under each lib dir)
+            macos_arm64_static_debug/
+                ...
+
+    External-integration layout (--for-external-integration) — each library's
+    headers are shared across architectures within an OS, libraries are keyed
+    by target. Suitable for Visual Studio multi-config builds and integration
+    into non-CMake build systems.
+
+        3rdparty/
+            zlib/
+                h/macos/
+                lib/macos_arm64_static/
+                lib/macos_arm64_static_debug/
+                .build_metadata.json
+            ...
+
+    Cache layout (both modes):
         .ocean_3p_cache/
             sources/
-                zlib/1.3.1/           # Shared source (fetched once)
-                libpng/1.6.43/
+                zlib/1.3.1/                  # Shared source (fetched once)
             builds/
                 zlib/1.3.1/
-                    macos_arm64_static/       # Build dir for release
-                    macos_arm64_static_debug/ # Build dir for debug
-                libpng/1.6.43/
-                    macos_arm64_static/
-                    ...
-
-        3rdparty/                     # Final output
-            zlib/
-                h/
-                    macos/
-                    ios/
-                lib/
-                    macos_arm64_static/
+                    macos_arm64_static/      # Build dir for release
                     macos_arm64_static_debug/
-                .build_metadata.json
-            libpng/
-                ...
     """
 
     def __init__(
@@ -94,6 +110,7 @@ class DirectoryManager:
         install_dir: Path,
         source_dir: Optional[Path] = None,
         build_dir: Optional[Path] = None,
+        for_external_integration: bool = False,
     ):
         """Initialize directory manager.
 
@@ -101,8 +118,16 @@ class DirectoryManager:
             install_dir: Root directory for final output (3rdparty/)
             source_dir: Directory for cached sources (default: .ocean_3p_cache/sources/)
             build_dir: Directory for build artifacts (default: .ocean_3p_cache/builds/)
+            for_external_integration: If True, produce the per-library layout
+                used for integration into non-CMake build systems (Visual
+                Studio, Xcode, Bazel, etc.): h/<platform>/ headers shared
+                across architectures and lib/<target>/ per target. If False
+                (default), produce the standard CMake install layout per
+                target (one complete prefix per library per target), which
+                works directly with find_package(... CONFIG).
         """
         self.install_dir = install_dir.resolve()
+        self.for_external_integration = for_external_integration
 
         # Default cache location is next to install_dir
         default_cache = self.install_dir.parent / ".ocean_3p_cache"
@@ -141,19 +166,50 @@ class DirectoryManager:
         """Get temporary install directory for a build."""
         return self.get_build_dir(library, version, target) / "_install"
 
-    def get_final_dir(self, library: str, version: str) -> Path:
+    def get_final_dir(
+        self,
+        library: str,
+        version: str,
+        target: Optional[BuildTarget] = None,
+    ) -> Path:
         """Get final output directory for a library.
 
-        Note: version parameter is kept for API compatibility and metadata,
-        but is not included in the directory path.
+        In standard layout (default) the directory is per-target-per-library:
+            <install_root>/<target>/<library>/
+        In external-integration layout it's per-library only:
+            <install_root>/<library>/
+
+        Args:
+            library: Library name.
+            version: Library version (kept for API symmetry; not in path).
+            target: Build target. Required for standard layout, ignored for
+                external-integration layout.
+
+        Raises:
+            ValueError: If standard layout is in use and target is not given.
         """
-        return self.install_dir / library
+        if self.for_external_integration:
+            return self.install_dir / library
+        if target is None:
+            raise ValueError(
+                "target is required for the standard install layout; "
+                "pass --for-external-integration if you wanted the per-library "
+                "external-integration layout"
+            )
+        return self.install_dir / target.to_path_component() / library
 
     def get_final_lib_dir(
         self, library: str, version: str, target: BuildTarget
     ) -> Path:
-        """Get final lib directory for a specific target."""
-        return self.get_final_dir(library, version) / "lib" / target.to_path_component()
+        """Get final lib directory for a specific target.
+
+        Standard layout: <install_root>/<target>/<library>/lib/
+        External-integration layout: <install_root>/<library>/lib/<target>/
+        """
+        final_dir = self.get_final_dir(library, version, target)
+        if self.for_external_integration:
+            return final_dir / "lib" / target.to_path_component()
+        return final_dir / "lib"
 
     def get_paths(self, library: str, version: str, target: BuildTarget) -> BuildPaths:
         """Get all paths for a (library, target) build."""
@@ -161,7 +217,7 @@ class DirectoryManager:
             source_dir=self.get_source_dir(library, version),
             build_dir=self.get_build_dir(library, version, target),
             install_dir=self.get_install_dir(library, version, target),
-            final_dir=self.get_final_dir(library, version),
+            final_dir=self.get_final_dir(library, version, target),
         )
 
     def clean_build(self, library: str, version: str, target: BuildTarget) -> None:
@@ -187,10 +243,18 @@ class DirectoryManager:
         self.clean_source(library, version)
         self.clean_all_builds(library, version)
 
-        # Clean final output
-        final_dir = self.get_final_dir(library, version)
-        if final_dir.exists():
-            shutil.rmtree(final_dir)
+        # Clean final output. In standard layout the library can live under
+        # multiple per-target subdirectories, so sweep them all.
+        if self.for_external_integration:
+            final_dir = self.get_final_dir(library, version)
+            if final_dir.exists():
+                shutil.rmtree(final_dir)
+        else:
+            for target_dir in self.install_dir.iterdir():
+                if target_dir.is_dir():
+                    lib_dir = target_dir / library
+                    if lib_dir.exists():
+                        shutil.rmtree(lib_dir)
 
     def clean_all(self) -> None:
         """Remove all cache directories (sources and builds)."""
@@ -212,7 +276,7 @@ class DirectoryManager:
         Thread-safe: uses both threading lock and file locking to prevent
         race conditions during parallel builds.
         """
-        final_dir = self.get_final_dir(library, version)
+        final_dir = self.get_final_dir(library, version, target)
         final_dir.mkdir(parents=True, exist_ok=True)
         metadata_file = final_dir / ".build_metadata.json"
 
@@ -282,5 +346,5 @@ class DirectoryManager:
         result = {}
         for dep in dependencies:
             if dep in version_map:
-                result[dep] = self.get_final_dir(dep, version_map[dep])
+                result[dep] = self.get_final_dir(dep, version_map[dep], target)
         return result

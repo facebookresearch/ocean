@@ -288,7 +288,7 @@ QRCodeEncoderBase::StatusCode MicroQRCodeEncoder::encodeSegments(const Segments&
 {
 	ocean_assert(segments.empty() == false);
 	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= MicroQRCode::MAX_VERSION);
-	ocean_assert(mask == (unsigned int)(-1) || (mask >= 1u && mask <= 3u));
+	ocean_assert(mask == (unsigned int)(-1) || mask <= 3u);
 
 	// Adjust version limits to avoid invalid formats
 

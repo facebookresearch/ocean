@@ -93,7 +93,7 @@ class OCEAN_MEDIA_WIC_EXPORT WICBufferImage :
 	protected:
 
 		/// Recent frame type.
-		FrameType imageRecentFrameType;
+		FrameType recentFrameType_;
 };
 
 }

@@ -28,9 +28,9 @@ void JSEuler::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("yaw", isolate), propertyGetter<NativeType, AI_YAW>, propertySetter<NativeType, AI_YAW>);
-	objectTemplate->SetAccessor(newString("pitch", isolate), propertyGetter<NativeType, AI_PITCH>, propertySetter<NativeType, AI_PITCH>);
-	objectTemplate->SetAccessor(newString("roll", isolate), propertyGetter<NativeType, AI_ROLL>, propertySetter<NativeType, AI_ROLL>);
+	objectTemplate->SetNativeDataProperty(newString("yaw", isolate), propertyGetter<NativeType, AI_YAW>, propertySetter<NativeType, AI_YAW>);
+	objectTemplate->SetNativeDataProperty(newString("pitch", isolate), propertyGetter<NativeType, AI_PITCH>, propertySetter<NativeType, AI_PITCH>);
+	objectTemplate->SetNativeDataProperty(newString("roll", isolate), propertyGetter<NativeType, AI_ROLL>, propertySetter<NativeType, AI_ROLL>);
 
 	objectTemplate->Set(newString("isEqual", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_EQUAL>));
 	objectTemplate->Set(newString("string", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_STRING>));

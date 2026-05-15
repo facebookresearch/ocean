@@ -780,6 +780,19 @@ class LookupCorner2 : public Lookup2<T, TScalar>
 		void bilinearValues(const size_t x, const size_t y, const size_t size, TTarget* values) const;
 
 		/**
+		 * Applies a lookup for an entire row in this lookup object, with an option to use an optimized accumulation path.
+		 * When isOptimized is false, delegates to the existing bilinearValues(y, values) implementation.
+		 * When isOptimized is true, uses an additive accumulation approach that replaces per-pixel lerp with per-pixel addition.
+		 * @param y The vertical position of the row for which the lookup values will be determined, with range [0, sizeY())
+		 * @param values The resulting `sizeX()` lookup values
+		 * @param isOptimized True to use the optimized accumulation path; false to use the standard bilinear interpolation
+		 * @tparam TTarget The data type of the interpolated target values, e.g., T == VectorD2, TTarget == VectorF2
+		 * @see bilinearValues().
+		 */
+		template <typename TTarget = T>
+		void bilinearValues(const size_t y, TTarget* values, const bool isOptimized) const;
+
+		/**
 		 * Applies a lookup for a specific position in this lookup object but does not apply the bilinear interpolation, instead all necessary parameters will be returned.
 		 * The resulting value is bilinear interpolated within the 4-neighborhood of the lookup bins.<br>
 		 * @param x Precise horizontal position for the resulting lookup value, with range [0, sizeX()]
@@ -2007,6 +2020,80 @@ void LookupCorner2<T, TScalar>::bilinearValues(const size_t x, const size_t y, c
 		ocean_assert(debugError < TScalar(0.1));
 #endif
 	}
+}
+
+template <typename T, typename TScalar>
+template <typename TTarget>
+void LookupCorner2<T, TScalar>::bilinearValues(const size_t y, TTarget* values, const bool isOptimized) const
+{
+	if (!isOptimized)
+	{
+		bilinearValues(y, values);
+		return;
+	}
+
+	ocean_assert(this->binsX_ > 0 && this->binsY_ > 0);
+	ocean_assert(this->binsX_ <= this->sizeX_ && this->binsY_ <= this->sizeY_);
+	ocean_assert(y < this->sizeY_);
+	ocean_assert(values != nullptr);
+
+	const size_t yLowBin = (y * this->binsY_) / this->sizeY_;
+	ocean_assert(yLowBin < this->binsY_);
+
+	const size_t yHighBin = yLowBin + 1;
+	ocean_assert(yHighBin <= this->binsY_);
+
+	const TScalar yLowBinPosition = this->binTopLeftCornerPositionY(yLowBin);
+	const TScalar yHighBinPosition = this->binTopLeftCornerPositionY(yHighBin);
+	ocean_assert(yLowBinPosition < yHighBinPosition);
+
+	const TScalar yFactor = (TScalar(y) - yLowBinPosition) / (yHighBinPosition - yLowBinPosition);
+	ocean_assert(NumericT<TScalar>::isInsideWeakRange(TScalar(0), yFactor, TScalar(1)));
+
+	const Vector2* lowBinValues = this->values_.data() + (yLowBin * (this->binsX_ + 1));
+	const Vector2* highBinValues = this->values_.data() + (yHighBin * (this->binsX_ + 1));
+
+	// Bin-based outer loop with additive accumulation
+	size_t xStart = 0;
+
+	for (size_t bin = 0; bin < this->binsX_; ++bin)
+	{
+		const Vector2 leftBinValue = lowBinValues[bin] * (TScalar(1) - yFactor) + highBinValues[bin] * yFactor;
+		const Vector2 rightBinValue = lowBinValues[bin + 1] * (TScalar(1) - yFactor) + highBinValues[bin + 1] * yFactor;
+
+		const TScalar leftBinPositionX = TScalar(bin * this->sizeX_) * this->invBinsX_;
+		const TScalar rightBinPositionX = TScalar((bin + 1) * this->sizeX_) * this->invBinsX_;
+
+		ocean_assert(rightBinPositionX - leftBinPositionX > NumericT<TScalar>::eps());
+		const TScalar invBinWidthX = TScalar(1) / (rightBinPositionX - leftBinPositionX);
+
+		const Vector2 delta = (rightBinValue - leftBinValue) * invBinWidthX;
+
+		// Compute xEnd: the original loop transitions when TScalar(x) > rightBinPositionX,
+		// so pixels up to and including floor(rightBinPositionX) belong to this bin
+		const size_t xEnd = (bin + 1 < this->binsX_)
+			? std::min(static_cast<size_t>(rightBinPositionX) + 1, this->sizeX_)
+			: this->sizeX_;
+
+		// Derive exact starting value from lerp to avoid accumulated drift
+		const TScalar xStartFactor = (TScalar(xStart) - leftBinPositionX) * invBinWidthX;
+		const Vector2 startValue = leftBinValue + (rightBinValue - leftBinValue) * xStartFactor;
+
+		TScalar currentX = startValue.x();
+		TScalar currentY = startValue.y();
+		const TScalar deltaX = delta.x();
+		const TScalar deltaY = delta.y();
+
+		for (size_t x = xStart; x < xEnd; ++x)
+		{
+			values[x] = TTarget(currentX, currentY);
+			currentX += deltaX;
+			currentY += deltaY;
+		}
+
+		xStart = xEnd;
+	}
+
 }
 
 template <typename T, typename TScalar>

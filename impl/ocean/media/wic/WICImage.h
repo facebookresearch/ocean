@@ -117,13 +117,13 @@ class OCEAN_MEDIA_WIC_EXPORT WICImage :
 	protected:
 
 		/// Start timestamp.
-		Timestamp mediumStartTimestamp;
+		Timestamp startTimestamp_;
 
 		/// Pause timestamp.
-		Timestamp mediumPauseTimestamp;
+		Timestamp pauseTimestamp_;
 
 		/// Stop timestamp.
-		Timestamp mediumStopTimestamp;
+		Timestamp stopTimestamp_;
 
 		/// Determining whether this image is 'started' and holds valid image data.
 		bool imageStarted_ = false;

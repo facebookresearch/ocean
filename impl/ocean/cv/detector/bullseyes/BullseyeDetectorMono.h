@@ -254,8 +254,8 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorMono
 		/**
 		 * Determines the sub-pixel location of the center dot of a known bullseye.
 		 * @param yFrame The 8-bit grayscale frame in which the bullseye is located, must be valid
-		 * @param xBullseye The horizontal location of the bullseye (the center location), the pixel must be black, with range [0, yFrame.width())
-		 * @param yBullseye The vertical location of the bullseye (the center location), the pixel must be black, with range [0, yFrame.height())
+		 * @param xBullseye The horizontal location of the bullseye (the center location), the pixel must be black, with range [1, yFrame.width())
+		 * @param yBullseye The vertical location of the bullseye (the center location), the pixel must be black, with range [1, yFrame.height())
 		 * @param threshold The threshold separating a bright pixel from a dark pixel, with range [0, 255]
 		 * @param location The resulting sub-pixel location of the center of the bullseye
 		 * @return True, if the sub-pixel location could be determined

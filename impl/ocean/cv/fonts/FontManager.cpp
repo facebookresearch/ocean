@@ -116,23 +116,17 @@ std::string FontManager::systemDefaultFontFamily(std::string* styleName)
 		*styleName = "Regular";
 	}
 
-#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 	return std::string("Calibri");
-#endif
-
-#ifdef OCEAN_PLATFORM_BUILD_APPLE_MACOS
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
 	return std::string("Helvetica");
-#endif
-
-#ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 	return std::string(".SF Compact Rounded");
-#endif
-
-#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 	return std::string("Roboto");
-#endif
-
+#else
 	return std::string("Arial");
+#endif
 }
 
 }

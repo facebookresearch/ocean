@@ -45,7 +45,9 @@ Timestamp DSMedium::stopTimestamp() const
 bool DSMedium::start()
 {
 	if (buildGraph() == false)
+	{
 		return false;
+	}
 
 	bool result = startGraph();
 

@@ -28,9 +28,9 @@ namespace AVFoundation
 
 AVFMovieRecorder::AVFMovieRecorder()
 {
-	recorderFrameEncoder = "h264";
-	recorderFrameFrequency = 30.0;
-	recorderFilenameSuffixed = false;
+	frameEncoder_ = "h264";
+	frameFrequency_ = 30.0;
+	filenameSuffixed_ = false;
 }
 
 AVFMovieRecorder::~AVFMovieRecorder()
@@ -45,7 +45,7 @@ AVFMovieRecorder::~AVFMovieRecorder()
 
 bool AVFMovieRecorder::setFilename(const std::string& filename)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ != nullptr)
 	{
@@ -58,7 +58,7 @@ bool AVFMovieRecorder::setFilename(const std::string& filename)
 
 bool AVFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ != nullptr)
 	{
@@ -73,7 +73,7 @@ bool AVFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 
 bool AVFMovieRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ != nullptr || isRecording_)
 	{
@@ -105,7 +105,7 @@ bool AVFMovieRecorder::start()
 
 bool AVFMovieRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ == nullptr || isRecording_ == false)
 	{
@@ -129,7 +129,7 @@ bool AVFMovieRecorder::stop()
 
 bool AVFMovieRecorder::isRecording() const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	return isRecording_;
 }
@@ -152,7 +152,7 @@ bool AVFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 {
 	ocean_assert(respectFrameFrequency == false && "currently not supported!");
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriter_ == nullptr)
 	{
@@ -162,9 +162,9 @@ bool AVFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 	ocean_assert(assetWriterInputPixelBufferAdaptor_ != nullptr);
 	ocean_assert(assetWriterInput_ != nullptr);
 	ocean_assert(!pixelBufferAccessor_);
-	ocean_assert(recorderFrameType.isValid());
+	ocean_assert(frameType_.isValid());
 
-	const FrameType::PixelFormat pixelFormat = bestMatchingPixelFormat(recorderFrameType.pixelFormat());
+	const FrameType::PixelFormat pixelFormat = bestMatchingPixelFormat(frameType_.pixelFormat());
 
 	const OSType pixelFormatType = PixelBufferAccessor::translatePixelFormat(pixelFormat);
 
@@ -173,7 +173,7 @@ bool AVFMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 		return false;
 	}
 
-	if (CVPixelBufferCreate(nullptr, recorderFrameType.width(), recorderFrameType.height(), pixelFormatType, nullptr, &pixelBuffer_) != kCVReturnSuccess)
+	if (CVPixelBufferCreate(nullptr, frameType_.width(), frameType_.height(), pixelFormatType, nullptr, &pixelBuffer_) != kCVReturnSuccess)
 	{
 		ocean_assert(false && "This should never happen!");
 		ocean_assert(pixelBuffer_ == nullptr);
@@ -198,7 +198,7 @@ void AVFMovieRecorder::unlockBufferToFill()
 	ocean_assert(assetWriterInputPixelBufferAdaptor_ != nullptr);
 	ocean_assert(pixelBuffer_ != nullptr);
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (assetWriterInputPixelBufferAdaptor_ != nullptr && pixelBuffer_ != nullptr)
 	{
@@ -212,8 +212,8 @@ void AVFMovieRecorder::unlockBufferToFill()
 
 		previousFrameTimestamp_ = nextFrameTimestamp_;
 
-		ocean_assert(recorderFrameFrequency > 0.0);
-		nextFrameTimestamp_ += 1.0 / recorderFrameFrequency;
+		ocean_assert(frameFrequency_ > 0.0);
+		nextFrameTimestamp_ += 1.0 / frameFrequency_;
 	}
 
 	pixelBufferAccessor_.release();
@@ -305,7 +305,7 @@ AVFileType AVFMovieRecorder::fileExtensionToFileType(const std::string& fileExte
 
 bool AVFMovieRecorder::createNewAssetWriter()
 {
-	if (!recorderFrameType.isValid())
+	if (!frameType_.isValid())
 	{
 		Log::error() << "The frame type of the recorder is not configured yet.";
 		return false;
@@ -313,7 +313,7 @@ bool AVFMovieRecorder::createNewAssetWriter()
 
 	ocean_assert(assetWriter_ == nullptr);
 
-	const IO::File file(recorderFilename);
+	const IO::File file(filename_);
 
 	const AVFileType avFileType = fileExtensionToFileType(file.extension());
 
@@ -323,7 +323,7 @@ bool AVFMovieRecorder::createNewAssetWriter()
 		return false;
 	}
 
-	const std::string filename = addOptionalSuffixToFilename(recorderFilename, recorderFilenameSuffixed);
+	const std::string filename = addOptionalSuffixToFilename(filename_, filenameSuffixed_);
 
 	if (IO::File(filename).exists())
 	{
@@ -344,18 +344,18 @@ bool AVFMovieRecorder::createNewAssetWriter()
 	ocean_assert(assetWriterInput_ == nullptr);
 	ocean_assert(assetWriterInputPixelBufferAdaptor_ == nullptr);
 
-	AVVideoCodecType avVideoCodecType = frameEncoderToVideoCodecType(recorderFrameEncoder);
+	AVVideoCodecType avVideoCodecType = frameEncoderToVideoCodecType(frameEncoder_);
 
 	if (avVideoCodecType == nullptr)
 	{
-		Log::error() << "The frame encoder \"" << recorderFrameEncoder << "\" is not supported.";
+		Log::error() << "The frame encoder \"" << frameEncoder_ << "\" is not supported.";
 		return false;
 	}
 
 	NSMutableDictionary* outputSettings = [@{
 		AVVideoCodecKey:avVideoCodecType,
-		AVVideoWidthKey:@(int(recorderFrameType.width())),
-		AVVideoHeightKey:@(int(recorderFrameType.height()))
+		AVVideoWidthKey:@(int(frameType_.width())),
+		AVVideoHeightKey:@(int(frameType_.height()))
 	} mutableCopy];
 
 	if (preferredBitrate_ != 0u)

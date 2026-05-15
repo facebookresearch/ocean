@@ -4284,9 +4284,9 @@ void ShapeDetector::postAdjustShapes(const unsigned int width, const unsigned in
 					ocean_assert((unsigned int)(distributionArray.horizontalBin(tShape.position().x())) == xBin);
 					ocean_assert((unsigned int)(distributionArray.verticalBin(tShape.position().y())) == yBin);
 
-					for (unsigned int yTestBin = (unsigned int)std::max(0, int(yBin) - 1); yTestBin < std::min(yBin + 2u, distributionArray.verticalBins()); ++yTestBin)
+					for (unsigned int yTestBin = distributionArray.beginBinVertical<1u>(yBin); yTestBin < distributionArray.endBinVertical<1u>(yBin); ++yTestBin)
 					{
-						for (unsigned int xTestBin = (unsigned int)std::max(0, int(xBin) - 1); xTestBin < std::min(xBin + 2u, distributionArray.horizontalBins()); ++xTestBin)
+						for (unsigned int xTestBin = distributionArray.beginBinHorizontal<1u>(xBin); xTestBin < distributionArray.endBinHorizontal<1u>(xBin); ++xTestBin)
 						{
 							const Indices32& testIndices = distributionArray(xTestBin, yTestBin);
 
@@ -4349,9 +4349,9 @@ void ShapeDetector::postAdjustShapes(const unsigned int width, const unsigned in
 					ocean_assert((unsigned int)(distributionArray.horizontalBin(lShape.position().x())) == xBin);
 					ocean_assert((unsigned int)(distributionArray.verticalBin(lShape.position().y())) == yBin);
 
-					for (unsigned int yTestBin = (unsigned int)std::max(0, int(yBin) - 1); yTestBin < std::min(yBin + 2u, distributionArray.verticalBins()); ++yTestBin)
+					for (unsigned int yTestBin = distributionArray.beginBinVertical<1u>(yBin); yTestBin < distributionArray.endBinVertical<1u>(yBin); ++yTestBin)
 					{
-						for (unsigned int xTestBin = (unsigned int)std::max(0, int(xBin) - 1); xTestBin < std::min(xBin + 2u, distributionArray.horizontalBins()); ++xTestBin)
+						for (unsigned int xTestBin = distributionArray.beginBinHorizontal<1u>(xBin); xTestBin < distributionArray.endBinHorizontal<1u>(xBin); ++xTestBin)
 						{
 							const Indices32& testIndices = distributionArray(xTestBin, yTestBin);
 

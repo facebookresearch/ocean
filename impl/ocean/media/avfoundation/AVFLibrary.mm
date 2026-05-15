@@ -62,7 +62,7 @@ bool AVFLibrary::unregisterLibrary()
 
 MediumRef AVFLibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (String::toLower(url).find("microphone") != std::string::npos)
 	{
@@ -91,7 +91,7 @@ MediumRef AVFLibrary::newMedium(const std::string& url, bool useExclusive)
 
 MediumRef AVFLibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	switch (type)
 	{

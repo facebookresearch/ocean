@@ -123,16 +123,14 @@ This section provides an example of how to build the Ocean libraries so that the
 cd /path/to/ocean
 
 # Build Ocean for Android
-python build/python/build_ocean.py --target android_arm64 --third-party-layout python
-
+python build/python/build_ocean.py --target android_arm64
 # Build for multiple architectures
-python build/python/build_ocean.py --target android_arm64,android_x86_64 --third-party-layout python
-
+python build/python/build_ocean.py --target android_arm64,android_x86_64
 # Build for a specific configuration
-python build/python/build_ocean.py --target android_arm64 --third-party-layout python --config release
+python build/python/build_ocean.py --target android_arm64 --config release
 
 # Specify custom directories
-python build/python/build_ocean.py --target android_arm64 --third-party-layout python \
+python build/python/build_ocean.py --target android_arm64 \
     --build-dir "${HOME}/build_ocean" \
     --install-dir "${HOME}/install_ocean" \
     --third-party-dir /path/to/ocean_3rdparty/install
@@ -153,7 +151,6 @@ cd /path/to/ocean
 cmake -S . -B build_android \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
-    -DOCEAN_THIRD_PARTY_LAYOUT=python \
     -DOCEAN_THIRD_PARTY_ROOT=./ocean_3rdparty/install \
     -DANDROID_PLATFORM=android-32
 

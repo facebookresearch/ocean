@@ -29,8 +29,8 @@ void JSLine3::createFunctionTemplate()
 	v8::Local<v8::ObjectTemplate> objectTemplate(v8::Local<v8::ObjectTemplate>::New(isolate, functionTemplate->InstanceTemplate()));
 	objectTemplate->SetInternalFieldCount(1);
 
-	objectTemplate->SetAccessor(newString("point", isolate), propertyGetter<NativeType, AI_POINT>, propertySetter<NativeType, AI_POINT>);
-	objectTemplate->SetAccessor(newString("direction", isolate), propertyGetter<NativeType, AI_DIRECTION>, propertySetter<NativeType, AI_DIRECTION>);
+	objectTemplate->SetNativeDataProperty(newString("point", isolate), propertyGetter<NativeType, AI_POINT>, propertySetter<NativeType, AI_POINT>);
+	objectTemplate->SetNativeDataProperty(newString("direction", isolate), propertyGetter<NativeType, AI_DIRECTION>, propertySetter<NativeType, AI_DIRECTION>);
 
 	objectTemplate->Set(newString("isEqual", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_IS_EQUAL>));
 	objectTemplate->Set(newString("distance", isolate), v8::FunctionTemplate::New(isolate, function<NativeType, FI_DISTANCE>));

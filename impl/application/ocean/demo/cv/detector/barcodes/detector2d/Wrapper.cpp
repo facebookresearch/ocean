@@ -388,7 +388,6 @@ bool Wrapper::detectAndDecode(Frame& outputFrame, double& time, Strings& message
 	 	return false;
 	}
 
-	// TODO Draw the results
 	for (const FiniteLine2& scanline : scanlines)
 	{
 		CV::Canvas::line<1u>(resultFrame, scanline, CV::Canvas::red(resultFrame.pixelFormat()));

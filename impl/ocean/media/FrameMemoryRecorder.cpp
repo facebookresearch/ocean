@@ -15,7 +15,7 @@ namespace Media
 
 FrameMemoryRecorder::FrameMemoryRecorder()
 {
-	recorderType = Type(recorderType | FRAME_MEMORY_RECORDER);
+	recorderType_ = Type(recorderType_ | FRAME_MEMORY_RECORDER);
 }
 
 FrameMemoryRecorder::~FrameMemoryRecorder()

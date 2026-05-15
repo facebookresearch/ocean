@@ -13,12 +13,9 @@ namespace Ocean
 namespace Media
 {
 
-ImageSequenceRecorder::ImageSequenceRecorder() :
-	FrameRecorder(),
-	recorderMode(RM_IMMEDIATE),
-	recorderStartIndex(0u)
+ImageSequenceRecorder::ImageSequenceRecorder()
 {
-	recorderType = Type(recorderType | IMAGE_SEQUENCE_RECORDER);
+	recorderType_ = Type(recorderType_ | IMAGE_SEQUENCE_RECORDER);
 }
 
 ImageSequenceRecorder::~ImageSequenceRecorder()
@@ -28,24 +25,24 @@ ImageSequenceRecorder::~ImageSequenceRecorder()
 
 ImageSequenceRecorder::RecorderMode ImageSequenceRecorder::mode() const
 {
-	return recorderMode;
+	return recorderMode_;
 }
 
 unsigned int ImageSequenceRecorder::startIndex() const
 {
-	return recorderStartIndex;
+	return startIndex_;
 
 }
 
 bool ImageSequenceRecorder::setMode(const RecorderMode mode)
 {
-	recorderMode = mode;
+	recorderMode_ = mode;
 	return true;
 }
 
 bool ImageSequenceRecorder::setStartIndex(const unsigned int index)
 {
-	recorderStartIndex = index;
+	startIndex_ = index;
 	return true;
 }
 

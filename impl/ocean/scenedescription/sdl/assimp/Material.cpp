@@ -18,7 +18,7 @@
 #include "ocean/rendering/Material.h"
 #include "ocean/rendering/MediaTexture2D.h"
 
-#include <assimp/pbrmaterial.h>
+#include <assimp/GltfMaterial.h>
 
 namespace Ocean
 {

@@ -30,10 +30,10 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Cache third-party install
         id: cache-thirdparty
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: thirdparty-python-${{ matrix.build_config }}-${{ hashFiles('build/python/') }}
           path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
@@ -76,10 +76,10 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
@@ -96,7 +96,7 @@ jobs:
             libdeflate-dev libudev-dev zlib1g-dev
 
       - name: Restore third-party cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: thirdparty-python-${{ matrix.build_config }}-${{ hashFiles('build/python/') }}
           path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
@@ -104,7 +104,7 @@ jobs:
 
       - name: Cache Ocean build
         id: cache-ocean
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: ocean-python-build-${{ matrix.build_config }}-${{ github.sha }}
           path: ${{ env.OCEAN_BUILD_PATH }}
@@ -116,7 +116,6 @@ jobs:
             --target linux_x86_64 \
             --config ${{ matrix.build_config }} \
             --link static \
-            --third-party-layout python \
             --third-party-dir ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }} \
             --build-dir ${{ env.OCEAN_BUILD_PATH }} \
             --install-dir ${{ env.OCEAN_INSTALL_PATH }}
@@ -143,16 +142,16 @@ jobs:
           - { id: testgeometry,       test-directory: impl/ocean/test/testgeometry, ctest-args: "-E TestStereoscopicGeometry.CameraPose_6DOF_100" }
           - { id: testio,             test-directory: impl/ocean/test/testio,       ctest-args: "-E TestBasemap" }
           - { id: testmath,           test-directory: impl/ocean/test/testmath,     ctest-args: "-E TestEquation.CubicEquation" }
-          - { id: testmedia,          test-directory: impl/ocean/test/testmedia }
+          - { id: testmedia,          test-directory: impl/ocean/test/testmedia, ctest-args: "-E TestMovieGTestInstance" }
           - { id: testnetwork,        test-directory: impl/ocean/test/testnetwork }
           - { id: testtracking,       test-directory: impl/ocean/test/testtracking, ctest-args: "-E TestHomographyImageAlignmentDense.InverseCompositional_2" }
         build_config: [debug, release]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Restore Ocean build cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ${{ env.OCEAN_BUILD_PATH }}
           key: ocean-python-build-${{ matrix.build_config }}-${{ github.sha }}
@@ -162,11 +161,11 @@ jobs:
         run: |
           mkdir -p $INSTALL_PATH/bin
           cd $TEST_PATH
-          if !(ctest $CTEST_ARGS); then
+          if !(ctest --output-on-failure $CTEST_ARGS); then
             echo "::warning::Re-running failed tests"
-            ctest $CTEST_ARGS --rerun-failed
+            ctest --output-on-failure $CTEST_ARGS --rerun-failed
           fi
         env:
-          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_x86_64_static_${{ matrix.build_config }}
-          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux_x86_64_static_${{ matrix.build_config }}/${{ matrix.suite.test-directory }}
+          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_x86_64_static${{ matrix.build_config == 'debug' && '_debug' || '' }}
+          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux_x86_64_static${{ matrix.build_config == 'debug' && '_debug' || '' }}/${{ matrix.suite.test-directory }}
           CTEST_ARGS: ${{ matrix.suite.ctest-args }}

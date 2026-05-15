@@ -106,7 +106,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSOcean : public JSBase
 				 * @param eventId Id of the event
 				 * @param state State value
 				 */
-				static std::vector<v8::Handle<v8::Value>> parameter(const ApplicationInterface::EventId eventId, const bool state);
+				static std::vector<v8::Local<v8::Value>> parameter(const ApplicationInterface::EventId eventId, const bool state);
 
 			private:
 

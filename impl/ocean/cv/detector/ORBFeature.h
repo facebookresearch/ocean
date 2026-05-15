@@ -201,7 +201,7 @@ template <typename T>
 ORBFeatures ORBFeature::features2ORBFeatures(const std::vector<T>& features)
 {
 	ORBFeatures result;
-	result.resize(features.size());
+	result.reserve(features.size());
 
 	for (const T& feature : features)
 	{

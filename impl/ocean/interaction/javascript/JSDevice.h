@@ -122,7 +122,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSDevice
 		 * @param object Object id
 		 * @param timestamp Timestamp
 		 */
-		static std::vector<v8::Handle<v8::Value>> parameter(const Devices::Tracker::ObjectId object, const Timestamp timestamp);
+		static std::vector<v8::Local<v8::Value>> parameter(const Devices::Tracker::ObjectId object, const Timestamp timestamp);
 
 	protected:
 

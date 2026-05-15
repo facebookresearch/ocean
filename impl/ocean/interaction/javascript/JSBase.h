@@ -363,7 +363,7 @@ v8::Local<v8::Value> JSBase::createObject(typename T::NativeType&& value, const 
 	v8::Local<v8::Object> result(maybeResult.ToLocalChecked());
 
 	JSExternal* newExternal = JSExternal::create(new typename T::NativeType(std::move(value)), result, isolate);
-	result->SetInternalField(0, v8::External::New(isolate, newExternal));
+	result->SetInternalField(0, v8::External::New(isolate, newExternal, v8::kExternalPointerTypeTagDefault));
 
 	return result;
 }
@@ -384,7 +384,7 @@ v8::Local<v8::Value> JSBase::createObject(const typename T::NativeType& value, c
 	v8::Local<v8::Object> result(maybeResult.ToLocalChecked());
 
 	JSExternal* newExternal = JSExternal::create(new typename T::NativeType(value), result, isolate);
-	result->SetInternalField(0, v8::External::New(isolate, newExternal));
+	result->SetInternalField(0, v8::External::New(isolate, newExternal, v8::kExternalPointerTypeTagDefault));
 
 	return result;
 }
@@ -451,19 +451,19 @@ inline void JSBase::constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
 	v8::Local<v8::Object> ob = info.This();
 	JSExternal* newExternal = JSExternal::create(newValue, ob, isolate);
 
-	info.This()->SetInternalField(0,  v8::External::New(isolate, newExternal));
+	info.This()->SetInternalField(0,  v8::External::New(isolate, newExternal, v8::kExternalPointerTypeTagDefault));
 	info.GetReturnValue().Set(info.This());
 }
 
 template <typename T, unsigned int tFunctionId>
 inline void JSBase::propertyGetter(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-	ocean_assert(info.Holder()->InternalFieldCount() == 1);
-	v8::Local<v8::Data> internalField = info.Holder()->GetInternalField(0);
+	ocean_assert(info.HolderV2()->InternalFieldCount() == 1);
+	v8::Local<v8::Data> internalField = info.HolderV2()->GetInternalField(0);
 	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
 	const v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
-	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value());
+	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value(v8::kExternalPointerTypeTagDefault));
 	ocean_assert(thisExternal->type() == JSExternal::type<T>());
 
 	propertyGetter<T, tFunctionId>(thisExternal->value<T>(), property, info);
@@ -473,13 +473,13 @@ template <typename T, unsigned int tFunctionId>
 inline void JSBase::propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
 {
 	ocean_assert(value.IsEmpty() == false);
-	ocean_assert(info.Holder()->InternalFieldCount() == 1);
+	ocean_assert(info.HolderV2()->InternalFieldCount() == 1);
 
-	v8::Local<v8::Data> internalField = info.Holder()->GetInternalField(0);
+	v8::Local<v8::Data> internalField = info.HolderV2()->GetInternalField(0);
 	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
 	const v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
-	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value());
+	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value(v8::kExternalPointerTypeTagDefault));
 	ocean_assert(thisExternal->type() == JSExternal::type<T>());
 
 	propertySetter<T, tFunctionId>(thisExternal->value<T>(), property, value, info);
@@ -493,7 +493,7 @@ inline void JSBase::function(const v8::FunctionCallbackInfo<v8::Value>& info)
 	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
 	v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
-	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value());
+	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value(v8::kExternalPointerTypeTagDefault));
 	ocean_assert(thisExternal->type() == JSExternal::type<T>());
 
 	function<T, tFunctionId>(thisExternal->value<T>(), info);
@@ -506,11 +506,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 	{
 		if (info[index]->IsBoolean())
 		{
-#if defined(OCEAN_V8_VERSION) && OCEAN_V8_VERSION > 70000
 			value = info[index]->BooleanValue(v8::Isolate::GetCurrent());
-#else
-			value = info[index]->BooleanValue(JSContext::currentContext()).FromJust();
-#endif
 
 			return true;
 		}
@@ -609,9 +605,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 		if (info[index]->IsArray())
 		{
 			v8::Local<v8::Context> currentContext = JSContext::currentContext();
-#if defined(OCEAN_V8_VERSION) && OCEAN_V8_VERSION > 70000
 			v8::Isolate* isolate = v8::Isolate::GetCurrent();
-#endif
 
 			v8::Local<v8::Array> arrayValue = v8::Local<v8::Array>::Cast(info[index]);
 
@@ -627,11 +621,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 					return false;
 				}
 
-#if defined(OCEAN_V8_VERSION) && OCEAN_V8_VERSION > 70000
 				value.emplace_back(element.ToLocalChecked()->BooleanValue(isolate));
-#else
-				value.emplace_back(element.ToLocalChecked()->BooleanValue(currentContext).FromJust());
-#endif
 			}
 
 			return true;
@@ -917,11 +907,7 @@ inline bool JSBase::isValue(v8::Local<v8::Value> localValue, bool& value)
 	if (localValue->IsBoolean())
 	{
 
-#if defined(OCEAN_V8_VERSION) && OCEAN_V8_VERSION > 70000
 		value = localValue->BooleanValue(v8::Isolate::GetCurrent());
-#else
-		value = localValue->BooleanValue(JSContext::currentContext()).FromJust();
-#endif
 
 		return true;
 	}

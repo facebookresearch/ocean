@@ -86,15 +86,13 @@ If you want to build Ocean libraries for Quest separately (not via Gradle), you 
 
 ```bash
 cd /path/to/ocean
-python build/python/build_ocean.py --quest --third-party-layout python
-```
+python build/python/build_ocean.py --quest```
 
 On Windows:
 
 ```powershell
 cd \path\to\ocean
-python build/python/build_ocean.py --quest --third-party-layout python
-```
+python build/python/build_ocean.py --quest```
 
 This will build Ocean using the Quest-specific CMake presets which configure additional Quest extensions.
 

@@ -559,11 +559,11 @@ bool HandPoses::updateHandPose(const XrHandTrackerEXT& xrHandTrackersEXT, const 
 	XrHandTrackingCapsulesStateFB xrHandTrackingCapsulesStateFB = xrCreateObject<XrHandTrackingCapsulesStateFB>(XR_TYPE_HAND_TRACKING_CAPSULES_STATE_FB);
 	xrHandTrackingCapsulesStateFB.next = &xrHandTrackingScaleFB;
 
-	XrHandTrackingAimStateFB xrHandTrackingAimStateFB = xrCreateObject<XrHandTrackingAimStateFB>(XR_TYPE_HAND_TRACKING_AIM_STATE_FB);
-	xrHandTrackingAimStateFB.next = &xrHandTrackingCapsulesStateFB;
+	pose.xrHandTrackingAimStateFB_ = xrCreateObject<XrHandTrackingAimStateFB>(XR_TYPE_HAND_TRACKING_AIM_STATE_FB);
+	pose.xrHandTrackingAimStateFB_.next = &xrHandTrackingCapsulesStateFB;
 
 	XrHandJointVelocitiesEXT xrHandJointVelocitiesEXT = xrCreateObject<XrHandJointVelocitiesEXT>(XR_TYPE_HAND_JOINT_VELOCITIES_EXT);
-	xrHandJointVelocitiesEXT.next = &xrHandTrackingAimStateFB;
+	xrHandJointVelocitiesEXT.next = &pose.xrHandTrackingAimStateFB_;
 	xrHandJointVelocitiesEXT.jointCount = XR_HAND_JOINT_COUNT_EXT;
 	xrHandJointVelocitiesEXT.jointVelocities = pose.xrHandJointVelocitiesEXT_;
 

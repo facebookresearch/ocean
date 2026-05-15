@@ -20,8 +20,6 @@
 
 #include "ocean/geometry/SpatialDistribution.h"
 
-#include "ocean/math/Variance.h"
-
 namespace Ocean
 {
 
@@ -33,6 +31,10 @@ namespace Calibration
 
 /**
  * This class implements a point detector for marker points.
+ * The detector identifies both dark points on bright backgrounds and bright points on dark backgrounds.<br>
+ * It uses a border-based filter that compares the intensity of a center pixel with the intensities of surrounding border pixels.<br>
+ * The filter response is the sum of clamped squared differences between center and border pixels.<br>
+ * Detected candidates undergo non-maximum suppression followed by sub-pixel refinement.
  * @ingroup cvcalibration
  */
 class OCEAN_CV_CALIBRATION_EXPORT PointDetector
@@ -40,204 +42,6 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 	friend class CalibrationDebugElements;
 
 	public:
-
-		/**
-		 * This class implements a pattern for fast point detection.
-		 * The pattern is defined by a radius and an inner radius defining a ring area around the center pixel.<br>
-		 * Points can be detected by comparing the color intensity of the center pixel with the color intensities of the surrounding pixels in the ring area.
-		 */
-		class PointPattern
-		{
-			public:
-
-				/**
-				 * Creates a new point pattern with same properties as a given point pattern but with different frame stride.
-				 * @param pointPattern The point pattern to be copied, must be valid
-				 * @param frameStrideElements The stride of the frame in which the point pattern will be used, in elements, with range [frame.width(), infinity)
-				 */
-				PointPattern(const PointPattern& pointPattern, const unsigned int frameStrideElements);
-
-				/**
-				 * Creates a new point pattern.
-				 * @param radius The radius of the point pattern, with range [1, infinity)
-				 * @param innerRadius The innerRadius defining a circular area around the center pixel where pixel data is excluded from use, with range [0, radius - 1]
-				 * @param frameStrideElements The stride of the frame in which the point pattern is used, in elements, with range [frame
-				 * @param useCircle True, if the outer shape of the point pattern is a circle; False, if the outer shape is a rectangle
-				 */
-				PointPattern(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle = true);
-
-				/**
-				 * Returns the radius of the point this pattern is able to detect.
-				 * @return The point's radius, in pixel, with range [1, infinity)
-				 */
-				inline unsigned int radius() const;
-
-				/**
-				 * Returns the diameter of the point this pattern is able to detect.
-				 * @return The point's diameter, in pixel, with range [3, infinity)
-				 */
-				inline unsigned int diameter() const;
-
-				/**
-				 * Returns the inner radius of this pattern.
-				 * @return The pattern's inner radius, in pixel, with range [0, radius - 1]
-				 */
-				inline unsigned int innerRadius() const;
-
-				/**
-				 * Returns the stride of the frame which which this pattern has been created.
-				 * @return The pattern's stride, in elements, with range [frame.width(), infinity)
-				 */
-				inline unsigned int frameStrideElements() const;
-
-				/**
-				 * Returns whether the outer shape of this pattern is a circle or a rectangle.
-				 * @return True, if the outer shape is a circle; False, if the outer shape is a rectangle
-				 */
-				inline bool isCircle() const;
-
-				/**
-				 * Returns the negative offset for the most top-left pixel of the surrounding pixels.
-				 * @return The pattern's negative offset, with range [0, infinity), needs to be negated
-				 */
-				inline unsigned int negativeOffset() const;
-
-				/**
-				 * Returns the positive offsets for all surrounding pixels starting at the top-left pixel, all in relation to the previous pixel.
-				 * @return The pattern's positive offsets
-				 */
-				inline const Indices32& positiveOffsets() const;
-
-				/**
-				 * Returns the 2D offsets for all surrounding pixels.
-				 * @return The pattern's offsets for surrounding pixels
-				 */
-				inline const CV::PixelPositionsI& offsets() const;
-
-				/**
-				 * Returns the normalized strength of a determined strength for this pattern.
-				 * The strength is normalized due to the number of pixels this pattern uses.
-				 * @param strength The strength to be normalized, with range [0, infinity)
-				 * @return The normalized strength
-				 */
-				inline float normalizedStrength(const unsigned int strength) const;
-
-				/**
-				 * Determines the strength of a dark point candidate.
-				 * A dark point has a dark center pixel surrounded by brighter pixels.
-				 * @param centerPixelValue The color intensity of the center pixel, with range [0, 255]
-				 * @param firstSurroundingPixel Pointer to the first surrounding pixel (top-left of the pattern), must be valid
-				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid dark point
-				 * @tparam tMaxCenterColorFixed The maximal color intensity of the center pixel to be considered as a dark point, with range [0, 255]
-				 * @tparam tMinSurroundingColorFixed The minimal color intensity of the surrounding pixels, with range [0, tMaxCenterColorFixed)
-				 */
-				template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
-				inline uint32_t determineDarkPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
-
-				/**
-				 * Determines the strength of a dark point candidate.
-				 * A dark point has a dark center pixel surrounded by brighter pixels.
-				 * @param yPoint Pointer to the center pixel in the frame, must be valid
-				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid dark point
-				 * @tparam tMaxCenterColorFixed The maximal color intensity of the center pixel to be considered as a dark point, with range [0, 255]
-				 * @tparam tMinSurroundingColorFixed The minimal color intensity of the surrounding pixels, with range [0, tMaxCenterColorFixed)
-				 */
-				template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
-				inline uint32_t determineDarkPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
-
-				/**
-				 * Determines the strength of a bright point candidate.
-				 * A bright point has a bright center pixel surrounded by darker pixels.
-				 * @param centerPixelValue The color intensity of the center pixel, with range [0, 255]
-				 * @param firstSurroundingPixel Pointer to the first surrounding pixel (top-left of the pattern), must be valid
-				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid bright point
-				 * @tparam tMinCenterColorFixed The minimal color intensity of the center pixel to be considered as a bright point, with range [0, 255]
-				 * @tparam tMaxSurroundingColorFixed The maximal color intensity of the surrounding pixels, with range (tMinCenterColorFixed, 255]
-				 */
-				template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
-				inline uint32_t determineBrightPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
-
-				/**
-				 * Determines the strength of a bright point candidate.
-				 * A bright point has a bright center pixel surrounded by darker pixels.
-				 * @param yPoint Pointer to the center pixel in the frame, must be valid
-				 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-				 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-				 * @return The strength of the point as sum of squared differences, 0 if the point is not a valid bright point
-				 * @tparam tMinCenterColorFixed The minimal color intensity of the center pixel to be considered as a bright point, with range [0, 255]
-				 * @tparam tMaxSurroundingColorFixed The maximal color intensity of the surrounding pixels, with range (tMinCenterColorFixed, 255]
-				 */
-				template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
-				inline uint32_t determineBrightPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance = 0u) const;
-
-				/**
-				 * Determines the strength of a point at a sub-pixel position using bilinear interpolation.
-				 * The strength is signed: positive for dark points (dark center, bright surrounding), negative for bright points.
-				 * @param yFrame The frame in which the point strength will be determined, with pixel format FORMAT_Y8, must be valid
-				 * @param observation The sub-pixel position of the point in the frame
-				 * @param strength The resulting signed strength of the point (positive for dark points, negative for bright points)
-				 * @param strict True, if all surrounding pixels have the same sign relationship to the center pixel; False otherwise
-				 * @return True, if the strength could be determined successfully
-				 */
-				bool determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const;
-
-				/**
-				 * Returns whether this pattern is valid.
-				 * @return True, if so
-				 */
-				inline bool isValid() const;
-
-			protected:
-
-				/**
-				 * Determines the offsets for all surrounding pixels.
-				 * @param radius The radius of the point pattern, with range [1, infinity)
-				 * @param innerRadius The innerRadius defining a circular area around the center pixel where pixel data is excluded from use, with range [0, radius - 1]
-				 * @param frameStrideElements The stride of the frame in which the point pattern is used, in elements, with range [frame.width(), infinity)
-				 * @param useCircle True, if the outer shape of the point pattern is a circle; False, if the outer shape is a rectangle
-				 * @param negativeOffset The resulting negative offset for the most top-left pixel of the surrounding pixels, needs to be negated
-				 * @param positiveOffsets The resulting positive offsets for all surrounding pixels, starting at the top-left pixel, all in relation to the previous pixel
-				 * @param offsets Optional resulting 2D offsets for all surrounding pixels
-				 */
-				static bool determineOffsets(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle, Index32& negativeOffset, Indices32& positiveOffsets, CV::PixelPositionsI* offsets = nullptr);
-
-			protected:
-
-				/// The radius of the point this pattern is able to detect.
-				unsigned int radius_ = 0u;
-
-				/// The inner radius specifies a circular area around the center pixel where pixel data is excluded from use.
-				unsigned int innerRadius_ = 0u;
-
-				/// The stride of the frame which which this pattern has been created.
-				unsigned int frameStrideElements_ = 0u;
-
-				/// True, if the outer shape of this pattern is a circle; False, if the outer shape is a rectangle.
-				bool isCircle_ = false;
-
-				/// The negative offset for the most top-left pixel of the surrounding pixels.
-				Index32 negativeOffset_ = 0u;
-
-				/// The positive offsets for all surrounding pixels starting at the top-left pixel, all in relation to the previous pixel
-				Indices32 positiveOffsets_;
-
-				/// The normalization factor for the strength of this pattern based on the number of pixels this pattern uses, with range (0, infinity).
-				float strengthNormalization_ = 0.0f;
-
-				/// The offsets of this pattern for all surrounding pixels.
-				CV::PixelPositionsI offsets_;
-		};
-
-		/**
-		 * Definition of a vector holding point patterns.
-		 */
-		using PointPatterns = std::vector<PointPattern>;
 
 		/**
 		 * Definition of a pair combining an index with a distance.
@@ -250,6 +54,125 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		 */
 		template <unsigned int tNumber>
 		using IndexDistancePairs = StaticVector<IndexDistancePair, tNumber>;
+
+		/**
+		 * Definition of the border shape of the detection filter.
+		 */
+		enum BorderShape : uint32_t
+		{
+			/// Invalid border shape.
+			BS_INVALID = 0u,
+			/// Square-shaped border (all pixels along the perimeter of a square).
+			BS_SQUARE,
+			/// Circle-shaped border (all pixels on a Bresenham circle).
+			BS_CIRCLE
+		};
+
+	protected:
+
+		/**
+		 * This class manages the border pixel offsets used by the point detection filter.
+		 * The offsets define the relative positions of the border pixels around a center pixel.<br>
+		 * Offsets are cached and reused as long as the filter parameters and frame layout remain unchanged.
+		 */
+		class PointBorderOffsets
+		{
+			public:
+
+				/**
+				 * Updates the border offsets for a given filter configuration and frame layout.
+				 * If the parameters match the cached state, no recalculation is performed.
+				 * @param filterSize The size of the filter, in pixels, must be odd, with range [3, infinity)
+				 * @param borderShape The shape of the border, must not be BS_INVALID
+				 * @param width The width of the frame in which the filter will be applied, in pixels, with range [filterSize, infinity)
+				 * @param paddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+				 * @return True, if the offsets were successfully updated or already up to date
+				 */
+				bool update(const unsigned int filterSize, const BorderShape borderShape, const unsigned int width, const unsigned int paddingElements);
+
+				/**
+				 * Returns the 1D border offsets for the current filter configuration.
+				 * @return The border offsets, empty if not yet initialized
+				 */
+				inline const Indices32& offsets() const;
+
+				/**
+				 * Determines the 2D border offsets for a given filter size and border shape.
+				 * The resulting offsets are relative to the center pixel of the filter.
+				 * @param filterSize The size of the filter, in pixels, must be odd, with range [3, infinity)
+				 * @param borderShape The shape of the border, must not be BS_INVALID
+				 * @param borderOffsets The resulting 2D border offsets, must be empty
+				 * @return True, if succeeded
+				 */
+				static bool determineBorderOffsets(const unsigned int filterSize, const BorderShape borderShape, CV::PixelPositionsI& borderOffsets);
+
+				/**
+				 * Determines the 1D border offsets for a given filter size, border shape, and frame stride.
+				 * The first offset is the negative offset from the center pixel to the top-left starting position.<br>
+				 * All subsequent offsets are positive, each relative to the previous position.
+				 * @param strideElements The stride of the frame, in elements (width + padding), with range [filterSize, infinity)
+				 * @param filterSize The size of the filter, in pixels, must be odd, with range [3, infinity)
+				 * @param borderShape The shape of the border, must not be BS_INVALID
+				 * @param unsignedBorderOffsets The resulting 1D border offsets, must be empty
+				 * @return True, if succeeded
+				 */
+				static bool determineBorderOffsets(const unsigned int strideElements, const unsigned int filterSize, const BorderShape borderShape, Indices32& unsignedBorderOffsets);
+
+			protected:
+
+				/// The cached filter size, 0 if not yet initialized.
+				unsigned int filterSize_ = 0u;
+
+				/// The cached border shape.
+				BorderShape borderShape_ = BS_INVALID;
+
+				/// The cached frame width, in pixels.
+				unsigned int width_ = 0u;
+
+				/// The cached number of padding elements.
+				unsigned int paddingElements_ = 0u;
+
+				/// The border offsets for the current filter configuration.
+				Indices32 offsets_;
+		};
+
+		/**
+		 * This class implements a peak detector that refines the sub-pixel position of a detected point.
+		 * The refinement uses iterative gradient-based optimization on the grayscale image.
+		 */
+		class PointPeakDetector
+		{
+			public:
+
+				/**
+				 * Creates a new peak detector for a given grayscale frame.
+				 * @param yFrame The grayscale frame in which peaks will be refined, with pixel format FORMAT_Y8, must be valid and must exist as long as this object exists
+				 */
+				explicit PointPeakDetector(const Frame& yFrame);
+
+				/**
+				 * Determines the precise sub-pixel position of a detected point.
+				 * @param x The horizontal pixel position of the detected point, with range [1, width - 2]
+				 * @param y The vertical pixel position of the detected point, with range [1, height - 2]
+				 * @param strength The integer strength of the detected point (positive for dark points, negative for bright points)
+				 * @param preciseX The resulting precise horizontal position
+				 * @param preciseY The resulting precise vertical position
+				 * @param preciseStrength The resulting precise strength (currently set to the input strength)
+				 * @return True, if succeeded
+				 */
+				bool determinePrecisePosition(const unsigned int x, const unsigned int y, const int32_t strength, Scalar& preciseX, Scalar& preciseY, int32_t& preciseStrength) const;
+
+			protected:
+
+				/// The grayscale frame used for peak refinement with pixel format FORMAT_Y8.
+				const Frame& yFrame_;
+		};
+
+		/**
+		 * Definition of the non-maximum suppression type used by this detector.
+		 * Uses int32_t votes to support both positive (dark point) and negative (bright point) responses.
+		 */
+		using NonMaximumSuppressionVote = NonMaximumSuppressionT<int32_t>;
 
 	public:
 
@@ -280,9 +203,61 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		inline const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray() const;
 
 		/**
+		 * Detects points in a grayscale frame using a specified filter size and border shape.
+		 * @param yFrame The grayscale frame in which the points will be detected, with pixel format FORMAT_Y8, must be valid
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param points The resulting detected points
+		 * @param borderShape The shape of the detection filter border
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel to accept a candidate, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool detectPoints(const Frame& yFrame, const unsigned int filterSize, Points& points, const BorderShape borderShape, const int32_t minimalDifference = 25, const int32_t maximalDifference = 25 * 4, Worker* worker = nullptr);
+
+		/**
+		 * Detects points in a grayscale frame using pre-computed border offsets.
+		 * @param yFrame The grayscale frame in which the points will be detected, with pixel format FORMAT_Y8, must be valid
+		 * @param points The resulting detected points
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel to accept a candidate, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool detectPoints(const Frame& yFrame, Points& points, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference = 25, const int32_t maximalDifference = 25 * 4, Worker* worker = nullptr);
+
+		/**
+		 * Creates a filter response frame for visualization or debugging.
+		 * Each pixel in the response frame contains the signed filter response: positive for dark points, negative for bright points, zero for non-detections.
+		 * @param yFrame The grayscale input frame, with pixel format FORMAT_Y8, must be valid
+		 * @param responseFrame The resulting filter response frame with pixel format genericPixelFormat<int32_t, 1u>
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param borderShape The shape of the detection filter border
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool createFilterResponseFrame(const Frame& yFrame, Frame& responseFrame, const unsigned int filterSize, const BorderShape borderShape, const int32_t minimalDifference = 25, const int32_t maximalDifference = 25 * 4, Worker* worker = nullptr);
+
+		/**
+		 * Refines the sub-pixel position of a point by snapping it to the nearest peak in the image.
+		 * The function rounds the given sub-pixel position to the nearest pixel, then applies iterative peak refinement to determine the precise sub-pixel center of the dot.
+		 * @param yFrame The grayscale frame in which the point will be refined, with pixel format FORMAT_Y8, must be valid
+		 * @param roughPosition The rough sub-pixel position of the point to be refined, with range [1, width - 2]x[1, height - 2]
+		 * @param positiveSign True, if the point is a dark dot on a bright background (positive sign); False, if the point is a bright dot on a dark background (negative sign)
+		 * @param refinedPosition The resulting refined sub-pixel position
+		 * @return True, if the refinement succeeded
+		 */
+		static bool refinePointPosition(const Frame& yFrame, const Vector2& roughPosition, const bool positiveSign, Vector2& refinedPosition);
+
+		/**
 		 * Returns the closest point to a given point.
 		 * @param queryPoint The query point for which the closest point will be determined
-		 * @param sign The sign of the point the closest point must have
+		 * @param sign The sign of the point the closest point must have, true for dark points, false for bright points
 		 * @param pointsDistributionArray The distribution array of the points to be used
 		 * @param points The points from which the closest point will be determined
 		 * @param maxSqrDistance The maximal square distance between the given point and the closest point, with range [0, infinity)
@@ -309,9 +284,9 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		 * @param pointsDistributionArray The distribution array of the points to be used
 		 * @param points The points from which the closest points will be determined
 		 * @param closestPointIndex The resulting index of the closest point, with range [0, points.size() - 1], -1 if no point could be found
-		 * @param secondClosestPointIndex The resulting index of the second closest point, with range [0, points.size() - 1], if no second closest point could be found
-		 * @param closestSqrDistance The resulting square distance between the query given point and the closest point, with range [0, infinity)
-		 * @param secondClosestSqrDistance The resulting square distance between the query given point and the second closest point, with range [0, infinity)
+		 * @param secondClosestPointIndex The resulting index of the second closest point, with range [0, points.size() - 1], -1 if no second closest point could be found
+		 * @param closestSqrDistance The resulting square distance between the query point and the closest point, with range [0, infinity)
+		 * @param secondClosestSqrDistance The resulting square distance between the query point and the second closest point, with range [0, infinity)
 		 * @return True, if at least one closest point could be found
 		 */
 		static bool closestPoints(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, Index32& closestPointIndex, Index32& secondClosestPointIndex, Scalar& closestSqrDistance, Scalar& secondClosestSqrDistance);
@@ -319,83 +294,212 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 	protected:
 
 		/**
-		 * Optimizes the position of detected points and removes outliers.
-		 * @param yFrame The frame in which the points have been detected, with pixel format FORMAT_Y8, must be valid
-		 * @param points The points to be optimized, must be valid
-		 * @param pointPatterns The point patterns which were used to detect the points, must be valid
-		 * @param optimizedPoints The resulting optimized points
-		 * @param worker Optional worker object to distribute the computation
-		 * @return True, if succeeded
+		 * Detects point candidates in a subset of rows and adds them to a non-maximum suppression object.
+		 * This is a worker function for parallel execution.
+		 * @param yFrame The grayscale frame, with pixel format FORMAT_Y8, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping, with range [minimalDifference, infinity)
+		 * @param firstRow The first row to process, with range [filterSize / 2, height - filterSize / 2)
+		 * @param numberRows The number of rows to process, with range [1, height - filterSize / 2 - firstRow]
 		 */
-		bool optimizePoints(const Frame& yFrame, const Points& points, const PointPatterns& pointPatterns, Points& optimizedPoints, Worker* worker = nullptr) const;
+		static void detectPointCandidatesSubset(const Frame* yFrame, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
-		 * Detects points with several point patterns.
-		 * @param yFrame The frame in which the points will be detected, with pixel format FORMAT_Y8, must be valid
-		 * @param pointPatterns The point patterns to be used for point detection, at least one
-		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-		 * @param maxVariance The maximal deviation of the color intensities of the surrounding pixels, 0 to disable checking the deviation/variance
-		 * @param points The resulting points
-		 * @param suppressNonMaximum True, to apply a non-maximum suppression after the detection of points
-		 * @param detectionScaleSteps The number of steps to be used for detection the scape, with range [1, infinity
-		 * @param worker Optional worker object to distribute the computation
-		 * @return True, if succeeded
+		 * Creates filter responses for a subset of rows and writes them into the response frame.
+		 * This is a worker function for parallel execution.
+		 * @param yFrame The grayscale frame, with pixel format FORMAT_Y8, must be valid
+		 * @param responseFrame The response frame with pixel format genericPixelFormat<int32_t, 1u>, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping, with range [minimalDifference, infinity)
+		 * @param firstRow The first row to process, with range [0, height)
+		 * @param numberRows The number of rows to process, with range [1, height - firstRow]
 		 */
-		static bool detectPoints(const Frame& yFrame, const PointPatterns& pointPatterns, const unsigned int minDifference, const unsigned int maxVariance, Points& points, const bool suppressNonMaximum, const unsigned int detectionScaleSteps = 2u, Worker* worker = nullptr);
+		static void createFilterResponseFrameSubset(const Frame* yFrame, Frame* responseFrame, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
-		 * Detects point candidates in a frame and adds them to a non-maximum suppression object.
-		 * @param yFrame Pointer to the frame data, with pixel format FORMAT_Y8, must be valid
-		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
-		 * @param mask Optional pointer to a mask frame where non-zero values indicate pixels to process, nullptr to process all pixels
-		 * @param pointPattern The point pattern to be used for detection, must be valid
-		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-		 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added
-		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tDarkPoint True, to detect dark points (dark center, bright surrounding); False, to detect bright points
+		 * Determines point candidates for a single row (single-sign: dark points only).
+		 * @param y The row index, with range [filterSize / 2, height - filterSize / 2)
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping, with range [minimalDifference, infinity)
 		 */
-		template <bool tDarkPoint>
-		static void detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppression, Worker* worker = nullptr);
+		static void determinePointCandidatesRow(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
 
 		/**
-		 * Detects point candidates in a subset of rows (worker function for parallel execution).
-		 * @param yFrame Pointer to the frame data, with pixel format FORMAT_Y8, must be valid
-		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
-		 * @param mask Optional pointer to a mask frame where non-zero values indicate pixels to process, nullptr if tUseMask is false
-		 * @param pointPatterns Pointer to the point pattern to be used for detection, must be valid
-		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-		 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-		 * @param nonMaximumSuppression Pointer to the non-maximum suppression object to which detected candidates will be added, must be valid
-		 * @param firstColumn The first column to be processed, with range [0, width - 1]
-		 * @param numberColumns The number of columns to be processed, with range [1, width - firstColumn]
-		 * @param firstRow The first row to be processed, with range [0, height - 1]
-		 * @param numberRows The number of rows to be processed, with range [1, height - firstRow]
-		 * @tparam tDarkPoint True, to detect dark points (dark center, bright surrounding); False, to detect bright points
-		 * @tparam tUseMask True, if a mask is used; False, if no mask is used
+		 * Determines point candidates for a single row (dual-sign: both dark and bright points).
+		 * Dark points produce a positive response; bright points produce a negative response.
+		 * @param y The row index, with range [filterSize / 2, height - filterSize / 2)
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping, with range [minimalDifference, infinity)
 		 */
-		template <bool tDarkPoint, bool tUseMask>
-		static void detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPatterns, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
+		static void determinePointCandidatesRowDual(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
 
 		/**
-		 * Determines the best matching radius for a detected point by testing smaller point patterns.
-		 * @param yFrame Pointer to the frame data, with pixel format FORMAT_Y8, must be valid
-		 * @param width The width of the frame, in pixels, with range [1, infinity)
-		 * @param height The height of the frame, in pixels, with range [1, infinity)
-		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
-		 * @param pixelPosition The pixel position of the detected point, must be inside the frame
-		 * @param currentRadius The current radius of the detected point, with range [1, infinity)
-		 * @param pointPatterns Pointer to an array of point patterns with increasing radii, must be valid
-		 * @param numberPointPatterns The number of point patterns in the array, with range [2, infinity)
-		 * @param minDifference The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255]
-		 * @param maxVariance The maximal variance of the color intensities of the surrounding pixels, 0 to disable checking the variance
-		 * @param radius The resulting best matching radius for the point
-		 * @param strength The resulting strength of the point at the best matching radius
-		 * @return True, if a smaller radius was found; False, if the current radius is the best match
-		 * @tparam tDarkPoint True, to test for dark points (dark center, bright surrounding); False, to test for bright points
+		 * Creates a filter response row (single-sign: dark points only).
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param responseRow The resulting response row, must be valid
+		 * @param width The width of the row, in pixels, with range [filterSize, infinity)
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
 		 */
-		template <bool tDarkPoint>
-		static bool determinePointRadius(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const CV::PixelPosition& pixelPosition, const unsigned int currentRadius, const PointPattern* pointPatterns, const size_t numberPointPatterns, const uint8_t minDifference, const unsigned int maxVariance, unsigned int& radius, unsigned int& strength);
+		static void createFilterResponseRow(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Creates a filter response row (dual-sign: both dark and bright points).
+		 * Dark points produce a positive response; bright points produce a negative response.
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param responseRow The resulting response row, must be valid
+		 * @param width The width of the row, in pixels, with range [filterSize, infinity)
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void createFilterResponseRowDual(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+		/**
+		 * Creates a filter response row using SSE4.1 SIMD instructions (single-sign: dark points only).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param responseRow The resulting response row, must be valid
+		 * @param width The width of the row, in pixels, with range [filterSize / 2 + 8 + filterSize / 2, infinity)
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void createFilterResponseRowSSE(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Creates a filter response row using SSE4.1 SIMD instructions (dual-sign: both dark and bright points).
+		 * Detects both dark points on bright backgrounds (positive response) and bright points on dark backgrounds (negative response).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param responseRow The resulting response row, must be valid
+		 * @param width The width of the row, in pixels, with range [filterSize / 2 + 8 + filterSize / 2, infinity)
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void createFilterResponseRowSSEDual(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Determines point candidates for a single row using SSE4.1 SIMD instructions (single-sign: dark points only).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param y The row index, with range [filterSize / 2, height - filterSize / 2)
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void determinePointCandidatesRowSSE(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Determines point candidates for a single row using SSE4.1 SIMD instructions (dual-sign: both dark and bright points).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param y The row index, with range [filterSize / 2, height - filterSize / 2)
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void determinePointCandidatesRowSSEDual(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+		/**
+		 * Creates a filter response row using NEON SIMD instructions (single-sign: dark points only).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param responseRow The resulting response row, must be valid
+		 * @param width The width of the row, in pixels, with range [filterSize / 2 + 8 + filterSize / 2, infinity)
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void createFilterResponseRowNEON(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Creates a filter response row using NEON SIMD instructions (dual-sign: both dark and bright points).
+		 * Detects both dark points on bright backgrounds (positive response) and bright points on dark backgrounds (negative response).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param responseRow The resulting response row, must be valid
+		 * @param width The width of the row, in pixels, with range [filterSize / 2 + 8 + filterSize / 2, infinity)
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void createFilterResponseRowNEONDual(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Determines point candidates for a single row using NEON SIMD instructions (single-sign: dark points only).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param y The row index, with range [filterSize / 2, height - filterSize / 2)
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void determinePointCandidatesRowNEON(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+		/**
+		 * Determines point candidates for a single row using NEON SIMD instructions (dual-sign: both dark and bright points).
+		 * This is an optimized implementation that processes 8 pixels per iteration.
+		 * @param y The row index, with range [filterSize / 2, height - filterSize / 2)
+		 * @param yRow Pointer to the beginning of the row in the grayscale frame, must be valid
+		 * @param nonMaximumSuppression The non-maximum suppression object to which detected candidates will be added, must be valid
+		 * @param borderOffsets The pre-computed 1D border offsets, must be valid
+		 * @param numberBorderOffsets The number of border offsets, with range [1, infinity)
+		 * @param filterSize The size of the detection filter, in pixels, must be odd, with range [3, infinity)
+		 * @param minimalDifference The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity)
+		 * @param maximalDifference The maximal intensity difference used for clamping the squared differences, with range [minimalDifference, infinity)
+		 */
+		static void determinePointCandidatesRowNEONDual(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference);
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	protected:
 
 		/**
 		 * Removes duplicated points from a given set of points.
@@ -427,236 +531,33 @@ class OCEAN_CV_CALIBRATION_EXPORT PointDetector
 		 */
 		static bool closestPoints(const Vector2& queryPoint, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance, Indices32& pointIndices);
 
-		/**
-		 * Creates the point patterns with increasing radii.
-		 * @param radius The maximal radius of the point patterns, with range [1, infinity)
-		 * @param innerRadius The innerRadius defining a circular area around the center pixel where pixel data is excluded from use, with range [0, radius - 1]
-		 * @param useCircle True, if the outer shape of the point pattern is a circle; False, if the outer shape is a rectangle
-		 * @param frameStrideElements The stride of the frame in which the point patterns will be used, in elements, with range [frame.width(), infinity)
-		 * @return The resulting point patterns
-		 */
-		static PointPatterns createPointPatterns(const unsigned int radius, const unsigned int innerRadius, const bool useCircle, const unsigned int frameStrideElements);
-
-		/**
-		 * Updates the point patterns for a specified frame stride.
-		 * In case the frame stride is identical to the frame stride of the point patterns, the point patterns will not change.
-		 * @param pointPatterns The point patterns to be updated, must be valid
-		 * @param frameStrideElements The stride of the frame in which the point patterns will be used, in elements, with range [frame.width(), infinity)
-		 */
-		static void updatePointPatterns(PointPatterns& pointPatterns, const unsigned int frameStrideElements);
-
-		/**
-		 * Paints a point pattern into a frame.
-		 * @param yFrame The frame in which the point pattern will be painted, with pixel format FORMAT_Y8, must be valid
-		 * @param radius The radius of the point pattern, with range [1, infinity)
-		 * @param pointColor The color of the point pattern, with range [0, 255]
-		 */
-		static bool paintPointPattern(Frame& yFrame, const unsigned int radius, const uint8_t pointColor = 0x00u);
-
 	protected:
 
-		/// The minimal color intensity difference between the center pixel and the surrounding pixels, with range [0, 255].
-		unsigned int minDifference_ = 5u;
+		/// The size of the detection filter, in pixels, must be odd, with range [3, infinity).
+		unsigned int filterSize_ = 7u;
 
-		/// The maximal deviation of the color intensities of the surrounding pixels, 0 to disable checking the deviation/variance.
-		unsigned int maxDeviation_ = 30u;
+		/// The minimal intensity difference between the center pixel and each border pixel, with range [1, infinity).
+		int32_t minimalDifference_ = 25;
+
+		/// The maximal intensity difference used for clamping the squared differences, with range [minimalDifference_, infinity).
+		int32_t maximalDifference_ = 25 * 4;
+
+		/// The cached border offsets for the current filter configuration.
+		PointBorderOffsets pointBorderOffsets_;
 
 		/// The maximal distance between two points to be considered as duplicated, with range [0, infinity).
 		Scalar maxDistanceBetweenDuplicatePoints_ = Scalar(2);
-
-		/// The point patterns to be used for point detection.
-		PointDetector::PointPatterns pointPatterns_;
-
-		/// Rough intermediate points.
-		Points roughPoints_;
 
 		/// The precise points detected in the latest frame.
 		Points points_;
 
 		/// The spatial distribution array of the points detected in the latest frame.
 		Geometry::SpatialDistribution::DistributionArray pointsDistributionArray_;
-
-		/// The frame with all images of point pattern with individual radii.
-		Frame yPointPatternImages_;
-
-		/// The width and height of the point pattern images.
-		static constexpr unsigned int pointPatternImageSize_ = 31u;
 };
 
-inline unsigned int PointDetector::PointPattern::radius() const
-{
-	return radius_;
-}
-
-inline unsigned int PointDetector::PointPattern::diameter() const
-{
-	ocean_assert(isValid());
-	return radius_ * 2u + 1u;
-}
-
-inline unsigned int PointDetector::PointPattern::innerRadius() const
-{
-	return innerRadius_;
-}
-
-inline unsigned int PointDetector::PointPattern::frameStrideElements() const
-{
-	return frameStrideElements_;
-}
-
-inline bool PointDetector::PointPattern::isCircle() const
-{
-	return isCircle_;
-}
-
-inline unsigned int PointDetector::PointPattern::negativeOffset() const
-{
-	return negativeOffset_;
-}
-
-inline const Indices32& PointDetector::PointPattern::positiveOffsets() const
-{
-	return positiveOffsets_;
-}
-
-inline const CV::PixelPositionsI& PointDetector::PointPattern::offsets() const
+inline const Indices32& PointDetector::PointBorderOffsets::offsets() const
 {
 	return offsets_;
-}
-
-inline float PointDetector::PointPattern::normalizedStrength(const unsigned int strength) const
-{
-	ocean_assert(strengthNormalization_ != 0.0f);
-
-	return float(strength) * strengthNormalization_;
-}
-
-template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineDarkPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance) const
-{
-	ocean_assert(isValid());
-	ocean_assert(firstSurroundingPixel != nullptr);
-
-	static_assert(tMinSurroundingColorFixed < tMaxCenterColorFixed);
-
-	if (centerPixelValue > tMaxCenterColorFixed) // the center pixel should have a certain amount of darkness
-	{
-		return 0u;
-	}
-
-	ocean_assert(centerPixelValue + minDifference <= 0xFFu);
-	const uint8_t minSurroundingColor = std::max(tMinSurroundingColorFixed, uint8_t(centerPixelValue + minDifference)); // the surrounding pixels should be brighter than the center pixel and brighter than certain threshold in general
-
-	uint32_t sumSqrDifferences = 0u;
-
-	const uint8_t* surroundingPixel = firstSurroundingPixel;
-
-	VarianceT<uint32_t> variance;
-
-	for (const Index32& positiveOffset : positiveOffsets_)
-	{
-		surroundingPixel += positiveOffset;
-
-		const uint8_t surroundingPixelValue = *surroundingPixel;
-
-		if (surroundingPixelValue < minSurroundingColor)
-		{
-			return 0u;
-		}
-
-		variance.add(uint32_t(surroundingPixelValue));
-
-		ocean_assert(surroundingPixelValue > centerPixelValue);
-
-		const uint32_t difference = surroundingPixelValue - centerPixelValue;
-
-		sumSqrDifferences += difference * difference;
-	}
-
-	if (sumSqrDifferences != 0u && (maxVariance == 0u || variance.variance() <= maxVariance))
-	{
-		return sumSqrDifferences;
-	}
-
-	return 0u;
-}
-
-template <uint8_t tMaxCenterColorFixed, uint8_t tMinSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineDarkPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance) const
-{
-	ocean_assert(yPoint != nullptr);
-
-	const uint8_t centerPixelValue = *yPoint;
-
-	return determineDarkPointStrength<tMaxCenterColorFixed, tMinSurroundingColorFixed>(centerPixelValue, yPoint - negativeOffset_, minDifference, maxVariance);
-}
-
-template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineBrightPointStrength(const uint8_t centerPixelValue, const uint8_t* firstSurroundingPixel, const unsigned int minDifference, const unsigned int maxVariance) const
-{
-	ocean_assert(isValid());
-	ocean_assert(firstSurroundingPixel != nullptr);
-
-	static_assert(tMinCenterColorFixed < tMaxSurroundingColorFixed);
-
-	if (centerPixelValue < tMinCenterColorFixed) // the center pixel should have a certain amount of brightness
-	{
-		return 0u;
-	}
-
-	ocean_assert(int32_t(centerPixelValue) - int32_t(minDifference) >= 0);
-	const uint8_t maxSurroundingColor = std::min(tMaxSurroundingColorFixed, uint8_t(centerPixelValue - minDifference)); // the surrounding pixels should be darker than the center pixel and darker than certain threshold in general
-
-	uint32_t sumSqrDifferences = 0u;
-
-	const uint8_t* surroundingPixel = firstSurroundingPixel;
-
-	VarianceT<uint32_t> variance;
-
-	for (const Index32& positiveOffset : positiveOffsets_)
-	{
-		surroundingPixel += positiveOffset;
-
-		const uint8_t surroundingPixelValue = *surroundingPixel;
-
-		if (surroundingPixelValue > maxSurroundingColor)
-		{
-			return 0u;
-		}
-
-		variance.add(uint32_t(surroundingPixelValue));
-
-		ocean_assert(surroundingPixelValue < centerPixelValue);
-
-		const uint32_t difference = centerPixelValue - surroundingPixelValue;
-
-		sumSqrDifferences += difference * difference;
-	}
-
-	if (sumSqrDifferences != 0u && (maxVariance == 0u || variance.variance() <= maxVariance))
-	{
-		return sumSqrDifferences;
-	}
-
-	return 0u;
-}
-
-template <uint8_t tMinCenterColorFixed, uint8_t tMaxSurroundingColorFixed>
-inline uint32_t PointDetector::PointPattern::determineBrightPointStrength(const uint8_t* yPoint, const unsigned int minDifference, const unsigned int maxVariance) const
-{
-	ocean_assert(yPoint != nullptr);
-
-	const uint8_t centerPixelValue = *yPoint;
-
-	return determineBrightPointStrength<tMinCenterColorFixed, tMaxSurroundingColorFixed>(centerPixelValue, yPoint - negativeOffset_, minDifference, maxVariance);
-}
-
-inline bool PointDetector::PointPattern::isValid() const
-{
-	ocean_assert(radius_ == 0u || innerRadius_ < radius_);
-	ocean_assert(radius_ == 0u || frameStrideElements_ != 0u);
-
-	return radius_ >= 1u;
 }
 
 template <unsigned int tNumber, bool tMatchSign>
@@ -672,9 +573,9 @@ void PointDetector::closestPoints(const Geometry::SpatialDistribution::Distribut
 	const unsigned int xBinCenter = pointsDistributionArray.horizontalBin(point.x());
 	const unsigned int yBinCenter = pointsDistributionArray.verticalBin(point.y());
 
-	for (unsigned int xBin = (unsigned int)(std::max(0, int(xBinCenter) - 1)); xBin < std::min(xBinCenter + 2u, pointsDistributionArray.horizontalBins()); ++xBin)
+	for (unsigned int xBin = pointsDistributionArray.beginBinHorizontal<1u>(xBinCenter); xBin < pointsDistributionArray.endBinHorizontal<1u>(xBinCenter); ++xBin)
 	{
-		for (unsigned int yBin = (unsigned int)(std::max(0, int(yBinCenter) - 1)); yBin < std::min(yBinCenter + 2u, pointsDistributionArray.verticalBins()); ++yBin)
+		for (unsigned int yBin = pointsDistributionArray.beginBinVertical<1u>(yBinCenter); yBin < pointsDistributionArray.endBinVertical<1u>(yBinCenter); ++yBin)
 		{
 			const Indices32& indices = pointsDistributionArray(xBin, yBin);
 

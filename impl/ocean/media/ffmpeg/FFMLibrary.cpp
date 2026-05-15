@@ -47,7 +47,7 @@ bool FFMLibrary::unregisterLibrary()
 
 MediumRef FFMLibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	MediumRef medium(newMovie(url, useExclusive));
 
@@ -56,7 +56,7 @@ MediumRef FFMLibrary::newMedium(const std::string& url, bool useExclusive)
 
 MediumRef FFMLibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	switch (type)
 	{
@@ -79,7 +79,7 @@ MediumRef FFMLibrary::newMedium(const std::string& url, const Medium::Type type,
 	return MediumRef();
 }
 
-RecorderRef FFMLibrary::newRecorder(const Recorder::Type type)
+RecorderRef FFMLibrary::newRecorder(const Recorder::Type /*type*/)
 {
 	return RecorderRef();
 }

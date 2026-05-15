@@ -10,6 +10,7 @@
 
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/FrameConverterColorMap.h"
 #include "ocean/cv/FrameInterpolatorNearestPixel.h"
 
 namespace Ocean
@@ -21,7 +22,35 @@ namespace CV
 namespace Calibration
 {
 
-void CalibrationDebugElements::updatePointDetectorPointsOptimizationPointPatterns(const PointDetector::PointPatterns& pointPatterns, const unsigned int imageSize)
+void CalibrationDebugElements::updatePointDetectorPointsNonSuppressed(const Frame& yFrame, const CV::NonMaximumSuppressionT<int32_t>& nonMaximumSuppression)
+{
+	if (!isElementActive(EI_POINT_DETECTOR_POINTS_CANDIDATES))
+	{
+		return;
+	}
+
+	NonMaximumSuppression::StrengthPositions<unsigned int, int32_t> candidateStrengthPositions;
+	nonMaximumSuppression.candidates(0u, nonMaximumSuppression.width(), 0u, nonMaximumSuppression.height(), candidateStrengthPositions);
+
+	Frame debugFrame(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()));
+	debugFrame.setValue(0x00);
+
+	for (const NonMaximumSuppressionT<int32_t>::StrengthPosition<unsigned int, int32_t>& candidateStrengthPosition : candidateStrengthPositions)
+	{
+		const unsigned int x = candidateStrengthPosition.x();
+		const unsigned int y = candidateStrengthPosition.y();
+
+		debugFrame.pixel<int32_t>(x, y)[0] = candidateStrengthPosition.strength();
+	}
+
+	Frame colorMapFrame;
+	if (CV::FrameConverterColorMap::Comfort::convertInteger1ChannelToRGB24(debugFrame, colorMapFrame, CV::FrameConverterColorMap::CM_LINEAR))
+	{
+		CalibrationDebugElements::get().updateElement(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_CANDIDATES, std::move(colorMapFrame));
+	}
+}
+
+void CalibrationDebugElements::updatePointDetectorPointsOptimizationPointPatterns(const LegacyPointDetector::PointPatterns& pointPatterns, const unsigned int imageSize)
 {
 	if (!isElementActive(EI_POINT_DETECTOR_POINTS_OPTIMIZATION_POINT_PATTERNS))
 	{
@@ -36,10 +65,10 @@ void CalibrationDebugElements::updatePointDetectorPointsOptimizationPointPattern
 		Frame yDarkPointPatternImage = yPointPatternImages.subFrame(imageSize, imageSize * nPointPattern, imageSize, imageSize);
 		Frame yBrightPointPatternImage = yPointPatternImages.subFrame(imageSize * 2u, imageSize * nPointPattern, imageSize, imageSize);
 
-		const PointDetector::PointPattern& pointPattern = pointPatterns[nPointPattern];
+		const LegacyPointDetector::PointPattern& pointPattern = pointPatterns[nPointPattern];
 
-		PointDetector::paintPointPattern(yDarkPointPatternImage, pointPattern.radius(), 0x00u);
-		PointDetector::paintPointPattern(yBrightPointPatternImage, pointPattern.radius(), 0xFFu);
+		LegacyPointDetector::paintPointPattern(yDarkPointPatternImage, pointPattern.radius(), 0x00u);
+		LegacyPointDetector::paintPointPattern(yBrightPointPatternImage, pointPattern.radius(), 0xFFu);
 
 		CV::Canvas::drawText(yPointPatternImages, String::toAString(pointPattern.radius()), 5, 5 + int(imageSize * nPointPattern), CV::Canvas::black(), CV::Canvas::white());
 	}
@@ -95,9 +124,9 @@ void CalibrationDebugElements::updatePointDetectorPointsOptimization(const Frame
 	updateElement(EI_POINT_DETECTOR_POINTS_OPTIMIZATION, std::move(rgbFrame));
 }
 
-void CalibrationDebugElements::updateCameraCalibratorMarkerCandidates(const ElementId elementId, const Frame& yFrame, const Points& points, const MarkerCandidates& markerCandidates)
+void CalibrationDebugElements::updateCalibrationBoardDetectorMarkerCandidates(const ElementId elementId, const Frame& yFrame, const Points& points, const MarkerCandidates& markerCandidates)
 {
-	ocean_assert(elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES || elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES);
+	ocean_assert(elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES || elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES);
 
 	if (!isElementActive(elementId))
 	{
@@ -135,7 +164,7 @@ void CalibrationDebugElements::updateCameraCalibratorMarkerCandidates(const Elem
 		}
 	}
 
-	if (elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
+	if (elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS || elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
 	{
 		for (const MarkerCandidate& markerCandidate : markerCandidates)
 		{
@@ -152,7 +181,7 @@ void CalibrationDebugElements::updateCameraCalibratorMarkerCandidates(const Elem
 
 			std::string text = String::toAString(markerId);
 
-			if (elementId == EI_CAMERA_CALIBRATOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
+			if (elementId == EI_CALIBRATION_BOARD_DETECTOR_MARKER_CANDIDATES_WITH_IDS_WITH_COORDINATES)
 			{
 				if (markerCandidate.hasMarkerCoordinate())
 				{
@@ -352,21 +381,43 @@ void CalibrationDebugElements::updateCameraCalibratorCalibrationBoard(const Fram
 	CalibrationBoard::ObjectPointIds allObjectPointIds;
 	const Vectors3& allObjectPoints = calibrationBoard.objectPoints(&allObjectPointIds);
 
+	size_t numberVisiblePoints = 0;
+	size_t numberDetectedPoints = 0;
+	size_t numberUndetectedPoints = 0;
+
 	for (size_t n = 0; n < allObjectPointIds.size(); ++n)
 	{
 		const CalibrationBoard::ObjectPointId& objectPointId = allObjectPointIds[n];
 
-		if (!objectPointIdSet.contains(objectPointId))
-		{
-			const Vector3& objectPoint = allObjectPoints[n];
+		const Vector3& objectPoint = allObjectPoints[n];
 
-			Vector2 imagePoint;
-			if (cameraClipper.projectToImageIF(flippedCamera_T_board, objectPoint, &imagePoint))
+		Vector2 imagePoint;
+		if (cameraClipper.projectToImageIF(flippedCamera_T_board, objectPoint, &imagePoint))
+		{
+			++numberVisiblePoints;
+
+			if (objectPointIdSet.contains(objectPointId))
+			{
+				++numberDetectedPoints;
+			}
+			else
 			{
 				CV::Canvas::point<3u>(rgbFrame, imagePoint, CV::Canvas::red());
+
+				++numberUndetectedPoints;
 			}
 		}
 	}
+
+	ocean_assert(numberVisiblePoints == numberDetectedPoints + numberUndetectedPoints);
+
+	const double visiblePointsPercentage = NumericD::ratio(double(numberVisiblePoints), double(calibrationBoard.numberPoints()), 0.0) * 100.0;
+	const double detectedPointsPercentage = NumericD::ratio(double(numberDetectedPoints), double(numberVisiblePoints), 0.0) * 100.0;
+	const double undetectedPointsPercentage = NumericD::ratio(double(numberUndetectedPoints), double(numberVisiblePoints), 0.0) * 100.0;
+
+	CV::Canvas::drawText(rgbFrame, "Visible points: " + String::toAString(numberVisiblePoints) + ", (" + String::toAString(visiblePointsPercentage, 1u) + "%)", 5, 5, CV::Canvas::white(), CV::Canvas::black());
+	CV::Canvas::drawText(rgbFrame, "Detected points: " + String::toAString(numberDetectedPoints) + ", (" + String::toAString(detectedPointsPercentage, 1u) + "%)", 5, 25, CV::Canvas::white(), CV::Canvas::black());
+	CV::Canvas::drawText(rgbFrame, "Undetected points: " + String::toAString(numberUndetectedPoints) + ", (" + String::toAString(undetectedPointsPercentage, 1u) + "%)", 5, 45, CV::Canvas::white(), CV::Canvas::black());
 
 	updateElement(EI_CAMERA_CALIBRATOR_CALIBRATION_BOARD, std::move(rgbFrame));
 }

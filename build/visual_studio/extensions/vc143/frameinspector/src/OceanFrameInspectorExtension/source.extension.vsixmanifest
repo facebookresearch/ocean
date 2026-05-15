@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="OceanFrameInspectorExtension.D1A2B3C4-E5F6-7890-ABCD-111111111111" Version="1.0.0" Language="en-US" Publisher="Ocean" />
+    <DisplayName>Ocean FrameInspector Extension</DisplayName>
+    <Description xml:space="preserve">Visual debug visualizer for Ocean::Frame objects. Provides a tool window for inspecting frame data, pixel formats, histograms, and per-pixel values during debugging sessions. Includes natvis support for structured display in Watch/Locals/Autos windows.</Description>
+    <MoreInfo>https://github.com/facebookresearch/ocean</MoreInfo>
+    <Tags>Ocean, Frame, Debug, Visualizer, Image, C++</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.8,)" />
+  </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <!-- Natvis is deployed programmatically to the user Visualizers folder on package init.
+         VS 2022 does not reliably auto-discover natvis from VSIX assets. -->
+  </Assets>
+</PackageManifest>

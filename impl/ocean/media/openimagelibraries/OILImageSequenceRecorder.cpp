@@ -33,7 +33,7 @@ OILImageSequenceRecorder::~OILImageSequenceRecorder()
 
 OILImageSequenceRecorder::RecorderMode OILImageSequenceRecorder::mode() const
 {
-	return recorderMode;
+	return recorderMode_;
 }
 
 unsigned int OILImageSequenceRecorder::pendingImages() const
@@ -67,17 +67,19 @@ OILImageSequenceRecorder::Encoders OILImageSequenceRecorder::frameEncoders() con
 
 bool OILImageSequenceRecorder::setMode(const RecorderMode mode)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
+	{
 		return false;
+	}
 
 	return ImageSequenceRecorder::setMode(mode);
 }
 
 bool OILImageSequenceRecorder::setStartIndex(const unsigned int index)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
 	{
@@ -101,11 +103,11 @@ bool OILImageSequenceRecorder::addImage(const Frame& frame)
 
 	const FrameRef frameRef(new Frame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA));
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (recorderMode == RM_IMMEDIATE)
+	if (recorderMode_ == RM_IMMEDIATE)
 	{
-		imageRecorder_.saveImage(*frameRef, addOptionalSuffixToFilename(recorderFilename, frameCounter_ + recorderStartIndex, recorderFilenameSuffixed));
+		imageRecorder_.saveImage(*frameRef, addOptionalSuffixToFilename(filename_, frameCounter_ + startIndex_, filenameSuffixed_));
 	}
 	else
 	{
@@ -120,13 +122,17 @@ bool OILImageSequenceRecorder::addImage(const Frame& frame)
 
 bool OILImageSequenceRecorder::start()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (isRecording_)
+	{
 		return true;
+	}
 
-	if (recorderFilename.empty())
+	if (filename_.empty())
+	{
 		return false;
+	}
 
 	frameCounter_ = 0u;
 	while (!frameQueue_.empty())
@@ -136,7 +142,7 @@ bool OILImageSequenceRecorder::start()
 
 	startTimestamp_.toNow();
 
-	if (recorderMode == RM_PARALLEL && !isThreadInvokedToStart())
+	if (recorderMode_ == RM_PARALLEL && !isThreadInvokedToStart())
 	{
 		startThread();
 	}
@@ -147,10 +153,12 @@ bool OILImageSequenceRecorder::start()
 
 bool OILImageSequenceRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!isRecording_)
+	{
 		return true;
+	}
 
 	isRecording_ = false;
 	return true;
@@ -163,9 +171,9 @@ bool OILImageSequenceRecorder::isRecording() const
 
 bool OILImageSequenceRecorder::forceSaving()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (isRecording_ || recorderMode != RM_EXPLICIT)
+	if (isRecording_ || recorderMode_ != RM_EXPLICIT)
 	{
 		return false;
 	}
@@ -182,7 +190,7 @@ bool OILImageSequenceRecorder::forceSaving()
 		const unsigned int frameIndex = frameQueue_.front().second;
 		frameQueue_.pop();
 
-		result = imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(recorderFilename, frameIndex + recorderStartIndex, recorderFilenameSuffixed)) && result;
+		result = imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(filename_, frameIndex + startIndex_, filenameSuffixed_)) && result;
 	}
 
 	return result;
@@ -190,14 +198,14 @@ bool OILImageSequenceRecorder::forceSaving()
 
 bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFrameFrequency)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!isRecording_)
 	{
 		return false;
 	}
 
-	if (!recorderFrameType.isValid() || recorderFrameFrequency <= 0.0f)
+	if (!frameType_.isValid() || frameFrequency_ <= 0.0f)
 	{
 		return false;
 	}
@@ -206,7 +214,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 	{
 		ocean_assert(startTimestamp_.isValid());
 
-		const double seconds = float(frameCounter_) / recorderFrameFrequency;
+		const double seconds = float(frameCounter_) / frameFrequency_;
 
 		const Timestamp next(startTimestamp_ + seconds);
 		if (Timestamp(true) < next)
@@ -221,7 +229,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 		return false;
 	}
 
-	frame_ = Frame(recorderFrameType);
+	frame_ = Frame(frameType_);
 	ocean_assert(frame_);
 
 	recorderFrame = Frame(frame_, Frame::ACM_USE_KEEP_LAYOUT);
@@ -231,13 +239,13 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 
 void OILImageSequenceRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	ocean_assert(frame_);
 
-	if (recorderMode == RM_IMMEDIATE)
+	if (recorderMode_ == RM_IMMEDIATE)
 	{
-		imageRecorder_.saveImage(frame_, addOptionalSuffixToFilename(recorderFilename, frameCounter_ + recorderStartIndex, recorderFilenameSuffixed));
+		imageRecorder_.saveImage(frame_, addOptionalSuffixToFilename(filename_, frameCounter_ + startIndex_, filenameSuffixed_));
 	}
 	else
 	{
@@ -271,7 +279,7 @@ void OILImageSequenceRecorder::threadRun()
 		if (frame)
 		{
 			ocean_assert(frameIndex != (unsigned int)(-1));
-			imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(recorderFilename, frameIndex + recorderStartIndex, recorderFilenameSuffixed));
+			imageRecorder_.saveImage(*frame, addOptionalSuffixToFilename(filename_, frameIndex + startIndex_, filenameSuffixed_));
 		}
 		else
 		{

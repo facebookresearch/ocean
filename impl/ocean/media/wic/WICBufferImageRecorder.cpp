@@ -34,9 +34,9 @@ bool WICBufferImageRecorder::saveImage(const Frame& frame, const std::string& im
 
 bool WICBufferImageRecorder::buffer(std::vector<uint8_t>& data) const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
-	data = recorderBuffer;
+	data = buffer_;
 	return true;
 }
 
@@ -61,7 +61,7 @@ WICBufferImageRecorder::Encoders WICBufferImageRecorder::frameEncoders() const
 
 bool WICBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respectFrameFrequency*/)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	// **TODO** missing implementation, handle 'respectFrameFrequency'
 
@@ -71,18 +71,18 @@ bool WICBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /
 		return false;
 	}
 
-	if (!recorderSaveImage)
+	if (!saveImage_)
 	{
 		return false;
 	}
 
-	recorderFrame_ = Frame(recorderFrameType);
+	recorderFrame_ = Frame(frameType_);
 	if (!recorderFrame_.isValid())
 	{
 		return false;
 	}
 
-	recorderSaveImage = false;
+	saveImage_ = false;
 
 	recorderFrame = Frame(recorderFrame_, Frame::ACM_USE_KEEP_LAYOUT);
 
@@ -91,7 +91,7 @@ bool WICBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /
 
 void WICBufferImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{
@@ -99,7 +99,7 @@ void WICBufferImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, recorderBufferType, recorderBuffer);
+		saveImage(recorderFrame_, bufferType_, buffer_);
 	}
 
 	recorderFrame_.release();

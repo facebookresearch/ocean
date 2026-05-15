@@ -83,7 +83,7 @@ class OCEAN_MEDIA_IIO_EXPORT IIOBufferImageRecorder :
 		Frame recorderFrame_;
 
 		/// Internal image buffer if the image is not saved explicitly but by a buffer request.
-		std::vector<uint8_t> recorderBuffer;
+		std::vector<uint8_t> buffer_;
 };
 
 }

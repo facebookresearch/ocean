@@ -103,6 +103,11 @@ HSVAColor::HSVAColor(const RGBAColor& color)
 		{
 			values_[0] += NumericF::pi2();
 		}
+
+		if (values_[0] >= NumericF::pi2())
+		{
+			values_[0] = 0.0f;
+		}
 	}
 
 	ocean_assert(isValid());

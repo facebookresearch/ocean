@@ -121,10 +121,10 @@ class OCEAN_MEDIA_EXPORT ImageSequenceRecorder :
 	protected:
 
 		/// Mode of this image sequence recorder.
-		RecorderMode recorderMode;
+		RecorderMode recorderMode_ = RM_IMMEDIATE;
 
 		/// Start index of the first frame.
-		unsigned int recorderStartIndex;
+		unsigned int startIndex_ = 0u;
 };
 
 }

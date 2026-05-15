@@ -51,18 +51,18 @@ bool DSFileRecorder::start()
 
 	if (fileSinkInterface_.isValid())
 	{
-		std::string filename = recorderFilename;
+		std::string filename = filename_;
 
-		if (recorderFilenameSuffixed)
+		if (filenameSuffixed_)
 		{
-			std::string::size_type dot = recorderFilename.rfind('.');
+			std::string::size_type dot = filename_.rfind('.');
 
 			std::string dateTime(DateTime::localString());
 
-			if (dot != std::string::npos && dot != 0 && dot != recorderFilename.length() - 1)
+			if (dot != std::string::npos && dot != 0 && dot != filename_.length() - 1)
 			{
-				std::string front = recorderFilename.substr(0, dot);
-				std::string back = recorderFilename.substr(dot + 1);
+				std::string front = filename_.substr(0, dot);
+				std::string back = filename_.substr(dot + 1);
 
 				filename = front + std::string(" ") + dateTime + std::string(".") + back;
 			}
@@ -102,7 +102,7 @@ bool DSFileRecorder::insertFileWriterFilter(IPin* outputPin)
 
 	if (S_OK != CoCreateInstance(CLSID_AviDest, nullptr, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)(&aviMuxFilter_.resetObject())))
 	{
-		Log::error() << "Could not create an AVI MUX filter for \"" << recorderFilename << "\".";
+		Log::error() << "Could not create an AVI MUX filter for \"" << filename_ << "\".";
 
 		return false;
 	}
@@ -132,12 +132,12 @@ bool DSFileRecorder::insertFileWriterFilter(IPin* outputPin)
 
 	if (S_OK != CoCreateInstance(CLSID_FileWriter, nullptr, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)(&fileWriterFilter_.resetObject())))
 	{
-		Log::error() << "Could not create a file writer filter for \"" << recorderFilename << "\".";
+		Log::error() << "Could not create a file writer filter for \"" << filename_ << "\".";
 
 		return false;
 	}
 
-	if (S_OK != filterGraph_->AddFilter(*fileWriterFilter_, String::toWString(recorderFilename).c_str()))
+	if (S_OK != filterGraph_->AddFilter(*fileWriterFilter_, String::toWString(filename_).c_str()))
 	{
 		Log::error() << "Could not add the file writer filter to the filter graph.";
 
@@ -173,9 +173,9 @@ bool DSFileRecorder::insertFileWriterFilter(IPin* outputPin)
 		return false;
 	}
 
-	if (S_OK != fileSinkInterface_->SetFileName(String::toWString(recorderFilename).c_str(), nullptr))
+	if (S_OK != fileSinkInterface_->SetFileName(String::toWString(filename_).c_str(), nullptr))
 	{
-		Log::error() << "Could not set the filename \"" << recorderFilename << "\" of the file writer filter.";
+		Log::error() << "Could not set the filename \"" << filename_ << "\" of the file writer filter.";
 
 		return false;
 	}

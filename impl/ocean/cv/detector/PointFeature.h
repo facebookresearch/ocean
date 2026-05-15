@@ -172,7 +172,8 @@ inline PointFeature::PointFeature() :
 	Feature(),
 	featureObservation(0, 0),
 	featurePosition(0, 0, 0),
-	featureStrength(0)
+	featureStrength(0),
+	featureDistortionState(DS_INVALID)
 {
 	// nothing to do here
 }

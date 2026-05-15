@@ -382,7 +382,6 @@ std::string Messenger::popMessage(const MessageType type, bool* isNew)
 #else
 			ocean_assert(false && "This should never happen!");
 #endif // OCEAN_DEBUG
-			break;
 		}
 	}
 

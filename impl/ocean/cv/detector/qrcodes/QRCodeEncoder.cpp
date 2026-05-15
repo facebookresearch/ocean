@@ -207,7 +207,7 @@ QRCodeEncoderBase::StatusCode QRCodeEncoder::encodeSegments(const Segments& segm
 {
 	ocean_assert(segments.empty() == false);
 	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= QRCode::MAX_VERSION);
-	ocean_assert(mask == (unsigned int)(-1) || (mask >= 1u && mask <= 7u));
+	ocean_assert(mask == (unsigned int)(-1) || mask <= 7u);
 
 	// Determine the lowest version that can hold the data (in range [minVersion, maxVersion], if it exists)
 
@@ -737,11 +737,11 @@ void QRCodeEncoder::setCodewords(std::vector<uint8_t>& modules, const Codewords&
 		{
 			for (unsigned int j = 0u; j < 2u; j++)
 			{
-				unsigned int x = right - j; // Actual x coordinate
-				bool upward = ((right + 1u) & 2u) == 0u;
-				int y = upward ? size - 1u - vert : vert; // Actual y coordinate
+				const unsigned int x = right - j; // Actual x coordinate
+				const bool upward = ((right + 1u) & 2u) == 0u;
+				const unsigned int y = upward ? size - 1u - vert : vert; // Actual y coordinate
 
-				unsigned int index = y * size + x;
+				const unsigned int index = y * size + x;
 				ocean_assert(index < size * size);
 
 				if (functionPatternMask[index] == 0u && i < codewords.size() * 8u)

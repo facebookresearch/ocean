@@ -80,7 +80,7 @@ class OCEAN_MEDIA_OIL_EXPORT OILBufferImageRecorder : virtual public BufferImage
 		Frame recorderFrame_;
 
 		/// Internal image buffer if the image is not saved explicitly but by a buffer request.
-		std::vector<unsigned char> recorderBuffer;
+		std::vector<unsigned char> buffer_;
 };
 
 }

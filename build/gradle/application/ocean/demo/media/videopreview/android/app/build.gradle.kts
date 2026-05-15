@@ -47,18 +47,40 @@ tasks.register("copyTemporaryFiles") {
   val javaSourcePath = "$sourcePath/java/"
   file(javaSourcePath).mkdirs()
 
-  val javaSourceFiles =
-      listOf(
-          "$oceanDevelopmentPath/impl/application/ocean/demo/media/videopreview/android/VideoPreviewActivity.java",
-          "$oceanDevelopmentPath/impl/ocean/base/BaseJni.java",
-          "$oceanDevelopmentPath/impl/ocean/media/android/jni/MediaAndroidJni.java",
-          "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameView.java",
-          "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLView.java",
-          "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/jni/RenderingGLESceneGraphJni.java")
+  // Ocean's Java sources live next to their JNI counterparts in the C++ source
+  // tree (e.g. impl/ocean/base/jni/BaseJni.java), but their `package`
+  // declarations follow the Java convention (e.g. `package com.meta.ocean.base;`).
+  // The two layouts do not line up, so we cannot just point sourceSets at the
+  // Ocean tree -- we must copy each file into a directory that matches its
+  // declared package, otherwise javac cannot resolve cross-file imports.
+  val javaSourcesByPackage =
+      mapOf(
+          "com/meta/ocean/app/demo/media/videopreview/android" to
+              listOf(
+                  "$oceanDevelopmentPath/impl/application/ocean/demo/media/videopreview/android/VideoPreviewActivity.java"),
+          "com/meta/ocean/base" to
+              listOf("$oceanDevelopmentPath/impl/ocean/base/jni/BaseJni.java"),
+          "com/meta/ocean/media/android" to
+              listOf(
+                  "$oceanDevelopmentPath/impl/ocean/media/android/jni/MediaAndroidJni.java"),
+          "com/meta/ocean/platform/android/application" to
+              listOf(
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameView.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLFrameViewActivity.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLRendererView.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLRendererViewActivity.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLView.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/GLViewActivity.java",
+                  "$oceanDevelopmentPath/impl/ocean/platform/android/application/OceanActivity.java"),
+          "com/meta/ocean/rendering/glescenegraph" to
+              listOf(
+                  "$oceanDevelopmentPath/impl/ocean/rendering/glescenegraph/jni/RenderingGLESceneGraphJni.java"))
 
-  copy {
-    from(javaSourceFiles)
-    into("$javaSourcePath")
+  javaSourcesByPackage.forEach { (packagePath, files) ->
+    copy {
+      from(files)
+      into("$javaSourcePath/$packagePath")
+    }
   }
 
   println("Copying resource files ...")
@@ -126,6 +148,14 @@ android {
 
   buildFeatures { compose = true }
   packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+
+  lint {
+    // The bundled Ocean media JNI shim (MediaAndroidJni) calls `new AudioRecord(...)`
+    // to probe mic-capture support, which AGP lint flags as `MissingPermission`.
+    // This demo doesn't actually exercise mic capture, so we don't declare
+    // RECORD_AUDIO in its manifest; suppress just this one check.
+    disable += "MissingPermission"
+  }
 
   externalNativeBuild {
     cmake {

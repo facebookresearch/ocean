@@ -8,13 +8,9 @@
 #include "ocean/cv/calibration/PointDetector.h"
 #include "ocean/cv/calibration/CalibrationDebugElements.h"
 
-#include "ocean/cv/Canvas.h"
-#include "ocean/cv/FrameFilterGaussian.h"
-#include "ocean/cv/IntegralImage.h"
-
-#include "ocean/cv/advanced/AdvancedMotion.h"
-
-#include "ocean/cv/detector/HarrisCornerDetector.h"
+#include "ocean/cv/Bresenham.h"
+#include "ocean/cv/NEON.h"
+#include "ocean/cv/SSE.h"
 
 namespace Ocean
 {
@@ -25,190 +21,216 @@ namespace CV
 namespace Calibration
 {
 
-PointDetector::PointPattern::PointPattern(const PointPattern& pointPattern, const unsigned int frameStrideElements) :
-	PointPattern(pointPattern.radius_, pointPattern.innerRadius_, frameStrideElements, pointPattern.isCircle_)
+bool PointDetector::PointBorderOffsets::update(const unsigned int filterSize, const BorderShape borderShape, const unsigned int width, const unsigned int paddingElements)
 {
-	// nothing to do here
-}
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
+	ocean_assert(borderShape != BS_INVALID);
 
-PointDetector::PointPattern::PointPattern(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle)
-{
-	if (determineOffsets(radius, innerRadius, frameStrideElements, useCircle, negativeOffset_, positiveOffsets_, &offsets_))
+	if (filterSize == filterSize_ && borderShape == borderShape_ && width == width_ && paddingElements == paddingElements_)
 	{
-		ocean_assert(positiveOffsets_.size() == offsets_.size());
-
-		radius_ = radius;
-		innerRadius_ = innerRadius;
-		frameStrideElements_ = frameStrideElements;
-
-		isCircle_ = useCircle;
-
-		ocean_assert(!positiveOffsets_.empty());
-		strengthNormalization_ = 1.0f / float(positiveOffsets_.size());
-
-		ocean_assert(isValid());
+		return true;
 	}
-	else
-	{
-		ocean_assert(!isValid());
-	}
-}
 
-bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, const Vector2& observation, int32_t& strength, bool& strict) const
-{
-	ocean_assert(isValid());
+	const unsigned int strideElements = width + paddingElements;
 
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
+	offsets_.clear();
 
-	ocean_assert(frameStrideElements_ == yFrame.strideElements());
-	if (frameStrideElements_ != yFrame.strideElements())
+	if (!determineBorderOffsets(strideElements, filterSize, borderShape, offsets_))
 	{
 		return false;
 	}
 
-	uint8_t centerPixel;
-	CV::FrameInterpolatorBilinear::interpolatePixel<uint8_t, uint8_t, 1u, CV::PC_CENTER>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), observation, &centerPixel);
-
-	int32_t sumSqrDifference = 0;
-	strict = true;
-
-	for (const CV::PixelPositionI& offset : offsets_)
-	{
-		uint8_t surroundingPixel;
-		CV::FrameInterpolatorBilinear::interpolatePixel<uint8_t, uint8_t, 1u, CV::PC_CENTER>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), observation + Vector2(Scalar(offset.x()), Scalar(offset.y())), &surroundingPixel);
-
-		const int32_t difference = int32_t(surroundingPixel) - int32_t(centerPixel);
-
-		if (difference >= 0)
-		{
-			sumSqrDifference += difference * difference;
-		}
-		else
-		{
-			sumSqrDifference -= difference * difference;
-		}
-
-		if (strict)
-		{
-			// let's check whether the sign of the difference has changed
-
-			if (sumSqrDifference != 0 && difference != 0)
-			{
-				if ((difference > 0 && sumSqrDifference < 0) || (difference < 0 && sumSqrDifference > 0))
-				{
-					strict = false;
-				}
-			}
-		}
-	}
-
-	strength = sumSqrDifference;
+	filterSize_ = filterSize;
+	borderShape_ = borderShape;
+	width_ = width;
+	paddingElements_ = paddingElements;
 
 	return true;
 }
 
-bool PointDetector::PointPattern::determineOffsets(const unsigned int radius, const unsigned int innerRadius, const unsigned int frameStrideElements, const bool useCircle, Index32& negativeOffset, Indices32& positiveOffsets, CV::PixelPositionsI* offsets)
+bool PointDetector::PointBorderOffsets::determineBorderOffsets(const unsigned int filterSize, const BorderShape borderShape, CV::PixelPositionsI& borderOffsets)
 {
-	ocean_assert(radius >= 1u);
-	ocean_assert(innerRadius < radius);
-	ocean_assert(frameStrideElements >= radius * 2u + 1u);
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
 
-	if (radius == 0u || innerRadius >= radius || frameStrideElements < radius * 2u + 1u)
+	ocean_assert(borderOffsets.empty());
+
+	switch (borderShape)
 	{
-		return false;
-	}
-
-	const unsigned int diameter = radius * 2u + 1u;
-	ocean_assert(diameter <= frameStrideElements);
-
-	if (diameter > frameStrideElements)
-	{
-		return false;
-	}
-
-	CV::PixelPositionsI pixelOffsets;
-	pixelOffsets.reserve((radius * 2u + 1u) * (radius * 2u + 1u));
-
-	for (int32_t y = -int32_t(radius); y <= int32_t(radius); ++y)
-	{
-		for (int32_t x = -int32_t(radius); x <= int32_t(radius); ++x)
+		case BS_SQUARE:
 		{
-			if (useCircle)
+			/*
+			 * Detection pattern with filter size 7x7:
+			 * 7 * 2 + 5 * 2 = 24 border locations, 1 center location
+			 *
+			 * Border location 'B',                 Border offset indices
+			 * Center location 'C'
+			 * B  B  B  B  B  B  B                  0  1  2  3  4  5  6
+			 * B                 B                  7                 8
+			 * B                 B                  9                10
+			 * B        C        B                 11        C       12
+			 * B                 B                 13                14
+			 * B                 B                 15                16
+			 * B  B  B  B  B  B  B                 17 18 19 20 21 22 23
+			 */
+
+			const unsigned int filterSize_2 = filterSize / 2u;
+			const unsigned int numberBorderOffsets = filterSize * 2u + (filterSize - 2u) * 2u;
+
+			borderOffsets.reserve(numberBorderOffsets);
+
+			for (int x = -int(filterSize_2); x <= int(filterSize_2); ++x)
 			{
-				// we apply a real (pixilated circle) to determine the points
-
-				const unsigned int sqrDistance = x * x + y * y;
-
-				if (sqrDistance > radius * radius || sqrDistance <= innerRadius * innerRadius)
-				{
-					continue;
-				}
-			}
-			else
-			{
-				// we apply a square to determine the points, with edge length 2 * radius + 1
-
-				if (abs(y) <= int32_t(innerRadius) && abs(x) <= int32_t(innerRadius))
-				{
-					continue;
-				}
+				borderOffsets.emplace_back(x, -int(filterSize_2));
 			}
 
-			pixelOffsets.emplace_back(x, y);
+			for (int y = -int(filterSize_2) + 1; y < int(filterSize_2); ++y)
+			{
+				borderOffsets.emplace_back(-int(filterSize_2), y);
+				borderOffsets.emplace_back(int(filterSize_2), y);
+			}
+
+			for (int x = -int(filterSize_2); x <= int(filterSize_2); ++x)
+			{
+				borderOffsets.emplace_back(x, int(filterSize_2));
+			}
+
+			ocean_assert(borderOffsets.size() == numberBorderOffsets);
+
+			return true;
 		}
+
+		case BS_CIRCLE:
+		{
+			const unsigned int filterSize_2 = filterSize / 2u;
+
+			CV::Bresenham::circlePixels(0, 0, filterSize_2, borderOffsets);
+
+			std::sort(borderOffsets.begin(), borderOffsets.end());
+			ocean_assert(borderOffsets.front().y() < borderOffsets.back().y());
+
+			return true;
+		}
+
+		case BS_INVALID:
+			break;
 	}
 
-	if (pixelOffsets.empty())
+	ocean_assert(false && "Invalid border shape!");
+	return false;
+}
+
+bool PointDetector::PointBorderOffsets::determineBorderOffsets(const unsigned int strideElements, const unsigned int filterSize, const BorderShape borderShape, Indices32& unsignedBorderOffsets)
+{
+	ocean_assert(strideElements >= filterSize);
+
+	ocean_assert(unsignedBorderOffsets.empty());
+
+	CV::PixelPositionsI borderOffsets;
+	if (!determineBorderOffsets(filterSize, borderShape, borderOffsets))
 	{
 		return false;
 	}
 
-	CV::PixelPositionI previousPixelOffset = pixelOffsets.front();
-	ocean_assert(previousPixelOffset.x() <= 0 && previousPixelOffset.y() < 0);
+	unsignedBorderOffsets.reserve(borderOffsets.size());
 
-	negativeOffset = Index32(-previousPixelOffset.y() * int32_t(frameStrideElements) - previousPixelOffset.x());
-	ocean_assert(negativeOffset <= (radius + 1u) * frameStrideElements);
+	// the very first offset is a negative offset to the top-left start position of the filter
 
-	ocean_assert(positiveOffsets.empty());
-	positiveOffsets.clear();
-	positiveOffsets.reserve(pixelOffsets.size());
+	CV::PixelPositionI previousBorderOffset = borderOffsets.front();
+	ocean_assert(previousBorderOffset.y() < 0 && previousBorderOffset.x() <= 0);
 
-	for (const CV::PixelPositionI& pixelOffset : pixelOffsets)
+	unsignedBorderOffsets.push_back(-previousBorderOffset.y() * strideElements - previousBorderOffset.x());
+	ocean_assert(unsignedBorderOffsets.front() <= strideElements * filterSize);
+
+	for (size_t n = 1; n < borderOffsets.size(); ++n)
 	{
-		const CV::PixelPositionI difference = pixelOffset - previousPixelOffset;
-		ocean_assert(difference.y() >= 0);
+		const CV::PixelPositionI& borderOffset = borderOffsets[n];
+		const CV::PixelPositionI relativeBorderOffset = borderOffset - previousBorderOffset;
+		ocean_assert(relativeBorderOffset.y() >= 0);
 
-		const Index32 positiveIndex = Index32(difference.y() * int32_t(frameStrideElements) + difference.x());
+		const unsigned int relativeOffset = relativeBorderOffset.y() * strideElements + relativeBorderOffset.x();
+		ocean_assert(relativeOffset > 0u);
 
-		positiveOffsets.push_back(positiveIndex);
-
-		previousPixelOffset = pixelOffset;
+		unsignedBorderOffsets.push_back(relativeOffset);
+		previousBorderOffset = borderOffset;
 	}
 
-#ifdef OCEAN_DEBUG
+	return true;
+}
+
+PointDetector::PointPeakDetector::PointPeakDetector(const Frame& yFrame) :
+	yFrame_(yFrame)
+{
+	// nothing to do here
+}
+
+bool PointDetector::PointPeakDetector::determinePrecisePosition(const unsigned int x, const unsigned int y, const int32_t strength, Scalar& preciseX, Scalar& preciseY, int32_t& preciseStrength) const
+{
+	ocean_assert(x >= 1u && y >= 1u);
+
+	ocean_assert(yFrame_.isValid() && yFrame_.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+
+	constexpr unsigned int maxIterations = 10u;
+	constexpr float stepSize = 1.0f;
+	constexpr float convergenceThreshold = 0.01f;
+
+	float internalPreciseX = NumericF::minValue();
+	float internalPreciseY = NumericF::minValue();
+
+	CV::NonMaximumSuppression::RefinementStatus refinementStatus = CV::NonMaximumSuppression::RS_INVALID;
+
+	if (strength >= 0)
 	{
-		int32_t debugOffsetTest = -int32_t(negativeOffset);
-
-		ocean_assert(pixelOffsets.size() == positiveOffsets.size());
-		ocean_assert(positiveOffsets.front() == 0u);
-		for (size_t n = 0; n < pixelOffsets.size(); ++n)
-		{
-			const Index32 positiveOffset = positiveOffsets[n];
-			const CV::PixelPositionI& pixelOffset = pixelOffsets[n];
-
-			debugOffsetTest += int32_t(positiveOffset);
-
-			const int32_t expectedOffset = pixelOffset.y() * int32_t(frameStrideElements) + pixelOffset.x();
-
-			ocean_assert(expectedOffset == debugOffsetTest);
-		}
+		refinementStatus = NonMaximumSuppressionVote::determinePrecisePeakLocationIterativeNxN<float, 7u, false, CV::PC_TOP_LEFT>(yFrame_.constdata<uint8_t>(), yFrame_.width(), yFrame_.height(), yFrame_.paddingElements(), float(x), float(y), internalPreciseX, internalPreciseY, maxIterations, stepSize, convergenceThreshold);
 	}
-#endif
-
-	if (offsets != nullptr)
+	else
 	{
-		*offsets = std::move(pixelOffsets);
+		refinementStatus = NonMaximumSuppressionVote::determinePrecisePeakLocationIterativeNxN<float, 7u, true, CV::PC_TOP_LEFT>(yFrame_.constdata<uint8_t>(), yFrame_.width(), yFrame_.height(), yFrame_.paddingElements(), float(x), float(y), internalPreciseX, internalPreciseY, maxIterations, stepSize, convergenceThreshold);
 	}
+
+	if (refinementStatus == CV::NonMaximumSuppression::RS_CONVERGED || refinementStatus == CV::NonMaximumSuppression::RS_MAX_ITERATIONS)
+	{
+		ocean_assert(internalPreciseX != NumericF::minValue());
+		ocean_assert(internalPreciseY != NumericF::minValue());
+
+		preciseX = Scalar(internalPreciseX);
+		preciseY = Scalar(internalPreciseY);
+	}
+	else
+	{
+		preciseX = Scalar(x);
+		preciseY = Scalar(y);
+	}
+
+	preciseStrength = strength;
+	return true;
+}
+
+bool PointDetector::refinePointPosition(const Frame& yFrame, const Vector2& roughPosition, const bool positiveSign, Vector2& refinedPosition)
+{
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+
+	const unsigned int x = (unsigned int)(Numeric::round32(roughPosition.x()));
+	const unsigned int y = (unsigned int)(Numeric::round32(roughPosition.y()));
+
+	if (x < 1u || x >= yFrame.width() - 1u || y < 1u || y >= yFrame.height() - 1u)
+	{
+		return false;
+	}
+
+	const int32_t strength = positiveSign ? 1 : -1;
+
+	Scalar preciseX;
+	Scalar preciseY;
+	int32_t preciseStrength;
+
+	const PointPeakDetector pointPeakDetector(yFrame);
+
+	if (!pointPeakDetector.determinePrecisePosition(x, y, strength, preciseX, preciseY, preciseStrength))
+	{
+		return false;
+	}
+
+	refinedPosition = Vector2(preciseX, preciseY);
 
 	return true;
 }
@@ -216,85 +238,30 @@ bool PointDetector::PointPattern::determineOffsets(const unsigned int radius, co
 bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 {
 	ocean_assert(yFrame.isValid());
-	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
+	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
 	{
 		return false;
 	}
 
-	if (pointPatterns_.empty())
-	{
-		constexpr unsigned int pointPatternRadius = 5u;
-		constexpr unsigned int pointPatternInnerRadius = 4u;
-
-		pointPatterns_ = createPointPatterns(pointPatternRadius, pointPatternInnerRadius, true /*useCircle*/, yFrame.strideElements());
-	}
-	else
-	{
-		updatePointPatterns(pointPatterns_, yFrame.strideElements());
-	}
-
-	ocean_assert(!pointPatterns_.empty());
-	if (pointPatterns_.empty())
+	ocean_assert(filterSize_ >= 3u && filterSize_ % 2u == 1u);
+	if (filterSize_ < 3u || filterSize_ % 2u != 1u)
 	{
 		return false;
 	}
 
-	const unsigned int maxVariance = maxDeviation_ * maxDeviation_;
-
-	constexpr unsigned int detectionScaleSteps = 2u;
-
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		if (CalibrationDebugElements::get().isElementActive(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_NON_SUPPRESSED))
-		{
-			Points debugPoints;
-			if (detectPoints(yFrame, pointPatterns_, minDifference_, maxVariance, debugPoints, false /*suppressNonMaximum*/, detectionScaleSteps, worker))
-			{
-				CalibrationDebugElements::get().updatePointDetectorPointsNonSuppressed(yFrame, debugPoints);
-			}
-		}
-	}
-
-	roughPoints_.clear();
-	if (!detectPoints(yFrame, pointPatterns_, minDifference_, maxVariance, roughPoints_, true /*suppressNonMaximum*/, detectionScaleSteps, worker))
+	if (!pointBorderOffsets_.update(filterSize_, BS_CIRCLE, yFrame.width(), yFrame.paddingElements()))
 	{
 		return false;
 	}
 
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		CalibrationDebugElements::get().updatePointDetectorPointsSuppressed(yFrame, roughPoints_);
-	}
-
-	if (!yPointPatternImages_.isValid())
-	{
-		const unsigned int width = (unsigned int)(pointPatterns_.size()) * pointPatternImageSize_;
-		const unsigned int height = (unsigned int)(pointPatternImageSize_) * 2u;
-
-		yPointPatternImages_.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
-
-		for (size_t nPattern = 0; nPattern < pointPatterns_.size(); ++nPattern)
-		{
-			const PointPattern& pointPattern = pointPatterns_[nPattern];
-
-			const unsigned int left = (unsigned int)(nPattern * pointPatternImageSize_);
-
-			Frame yDarkPointPatternImage = yPointPatternImages_.subFrame(left, 0u, pointPatternImageSize_, pointPatternImageSize_);
-			Frame yBrightPointPatternImage = yPointPatternImages_.subFrame(left, pointPatternImageSize_, pointPatternImageSize_, pointPatternImageSize_);
-
-			const unsigned int pointRadius = pointPattern.radius();
-
-			if (!paintPointPattern(yDarkPointPatternImage, pointRadius, 0x00u) || !paintPointPattern(yBrightPointPatternImage, pointRadius, 0xFFu))
-			{
-				ocean_assert(false && "This should never happen!");
-			}
-		}
-	}
+	ocean_assert(minimalDifference_ > 0);
+	ocean_assert(minimalDifference_ <= maximalDifference_);
 
 	points_.clear();
-	if (!optimizePoints(yFrame, roughPoints_, pointPatterns_, points_, worker))
+
+	if (!detectPoints(yFrame, points_, pointBorderOffsets_.offsets().data(), pointBorderOffsets_.offsets().size(), filterSize_, minimalDifference_, maximalDifference_, worker))
 	{
 		return false;
 	}
@@ -307,6 +274,11 @@ bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 	if (points_.size() >= 2)
 	{
 		removeDuplicatedPoints(yFrame.width(), yFrame.height(), points_, maxDistanceBetweenDuplicatePoints_);
+	}
+
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updatePointDetectorPointsRedundantRemoved(yFrame, points_);
 	}
 
 	if (pointsDistributionArray_.isValid() && pointsDistributionArray_.width() == Scalar(yFrame.width()) && pointsDistributionArray_.height() == Scalar(yFrame.height()))
@@ -340,17 +312,158 @@ bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 	return true;
 }
 
+bool PointDetector::detectPoints(const Frame& yFrame, const unsigned int filterSize, Points& points, const BorderShape borderShape, const int32_t minimalDifference, const int32_t maximalDifference, Worker* worker)
+{
+	ocean_assert(yFrame.isValid());
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
+	ocean_assert(maximalDifference > 0);
+
+	Indices32 borderOffsets;
+	if (!PointBorderOffsets::determineBorderOffsets(yFrame.strideElements(), filterSize, borderShape, borderOffsets))
+	{
+		return false;
+	}
+
+	return detectPoints(yFrame, points, borderOffsets.data(), borderOffsets.size(), filterSize, minimalDifference, maximalDifference, worker);
+}
+
+bool PointDetector::detectPoints(const Frame& yFrame, Points& points, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference, Worker* worker)
+{
+	ocean_assert(yFrame.isValid());
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
+	ocean_assert(maximalDifference > 0);
+
+	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	{
+		return false;
+	}
+
+	ocean_assert(filterSize < yFrame.width() && filterSize < yFrame.height());
+	if (filterSize >= yFrame.width() || filterSize >= yFrame.height())
+	{
+		return false;
+	}
+
+	constexpr unsigned int simdBlockSize = 8u;
+
+	ocean_assert(filterSize - 1u + simdBlockSize <= yFrame.width());
+	if (filterSize - 1u + simdBlockSize > yFrame.width())
+	{
+		return false;
+	}
+
+	NonMaximumSuppressionVote nonMaximumSuppression(yFrame.width(), yFrame.height());
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+
+	const unsigned int firstRow = filterSize_2;
+	const unsigned int numberRows = nonMaximumSuppression.height() - 2u * filterSize_2;
+
+	if (worker != nullptr)
+	{
+		worker->executeFunction(Worker::Function::createStatic(&PointDetector::detectPointCandidatesSubset, &yFrame, &nonMaximumSuppression, borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference, 0u, 0u), firstRow, numberRows);
+	}
+	else
+	{
+		detectPointCandidatesSubset(&yFrame, &nonMaximumSuppression, borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference, firstRow, numberRows);
+	}
+
+	if constexpr (CalibrationDebugElements::allowDebugging_)
+	{
+		CalibrationDebugElements::get().updatePointDetectorPointsNonSuppressed(yFrame, nonMaximumSuppression);
+	}
+
+	const PointPeakDetector pointPeakDetector(yFrame);
+
+	const NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t> precisePositionCallback = std::bind(&PointPeakDetector::determinePrecisePosition, &pointPeakDetector, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
+
+	NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t> strengthPositions;
+	nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t, false, NonMaximumSuppression::SM_MAXIMUM_POSITIVE_ONLY>(0u, yFrame.width(), 0u, yFrame.height(), strengthPositions, worker, &precisePositionCallback);
+
+	points.clear();
+	points.reserve(strengthPositions.size() * 3);
+
+	constexpr Scalar pixelCenterOffset = Scalar(0.5);
+
+	for (const NonMaximumSuppressionVote::StrengthPosition<Scalar, int32_t>& strengthPosition : strengthPositions)
+	{
+		points.emplace_back(Vector2(strengthPosition.x() + pixelCenterOffset, strengthPosition.y() + pixelCenterOffset), filterSize_2, float(strengthPosition.strength()));
+	}
+
+	strengthPositions.clear();
+	nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t, false, NonMaximumSuppression::SM_MINIMUM_NEGATIVE_ONLY>(0u, yFrame.width(), 0u, yFrame.height(), strengthPositions, worker, &precisePositionCallback);
+
+	for (const NonMaximumSuppressionVote::StrengthPosition<Scalar, int32_t>& strengthPosition : strengthPositions)
+	{
+		points.emplace_back(Vector2(strengthPosition.x() + pixelCenterOffset, strengthPosition.y() + pixelCenterOffset), filterSize_2, float(strengthPosition.strength()));
+	}
+
+	return true;
+}
+
+bool PointDetector::createFilterResponseFrame(const Frame& yFrame, Frame& responseFrame, const unsigned int filterSize, const BorderShape borderShape, const int32_t minimalDifference, const int32_t maximalDifference, Worker* worker)
+{
+	ocean_assert(yFrame.isValid());
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
+	ocean_assert(maximalDifference > 0);
+
+	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	{
+		return false;
+	}
+
+	ocean_assert(filterSize < yFrame.width() && filterSize < yFrame.height());
+	if (filterSize >= yFrame.width() || filterSize >= yFrame.height())
+	{
+		return false;
+	}
+
+	constexpr unsigned int simdBlockSize = 8u;
+
+	ocean_assert(filterSize - 1u + simdBlockSize <= yFrame.width());
+	if (filterSize - 1u + simdBlockSize > yFrame.width())
+	{
+		return false;
+	}
+
+	responseFrame.set(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()), false, true);
+
+	Indices32 borderOffsets;
+	if (!PointBorderOffsets::determineBorderOffsets(yFrame.strideElements(), filterSize, borderShape, borderOffsets))
+	{
+		return false;
+	}
+
+	if (worker != nullptr)
+	{
+		const uint32_t* borderOffsetsData = borderOffsets.data();
+
+		worker->executeFunction(Worker::Function::createStatic(&PointDetector::createFilterResponseFrameSubset, &yFrame, &responseFrame, borderOffsetsData, borderOffsets.size(), filterSize, minimalDifference, maximalDifference, 0u, 0u), 0u, yFrame.height());
+	}
+	else
+	{
+		createFilterResponseFrameSubset(&yFrame, &responseFrame, borderOffsets.data(), borderOffsets.size(), filterSize, minimalDifference, maximalDifference, 0u, yFrame.height());
+	}
+
+	return true;
+}
+
 size_t PointDetector::closestPoint(const Vector2& queryPoint, const bool sign, const Geometry::SpatialDistribution::DistributionArray& pointsDistributionArray, const Points& points, const Scalar maxSqrDistance)
 {
-	size_t bestIndex = size_t(-1);
-	Scalar bestSqrDistance = Numeric::maxValue();
-
 	const unsigned int xBinCenter = pointsDistributionArray.horizontalBin(queryPoint.x());
 	const unsigned int yBinCenter = pointsDistributionArray.verticalBin(queryPoint.y());
 
-	for (unsigned int xBin = (unsigned int)(std::max(0, int(xBinCenter) - 1)); xBin < std::min(xBinCenter + 2u, pointsDistributionArray.horizontalBins()); ++xBin)
+	if (xBinCenter >= pointsDistributionArray.horizontalBins() || yBinCenter >= pointsDistributionArray.verticalBins())
 	{
-		for (unsigned int yBin = (unsigned int)(std::max(0, int(yBinCenter) - 1)); yBin < std::min(yBinCenter + 2u, pointsDistributionArray.verticalBins()); ++yBin)
+		return size_t(-1);
+	}
+
+	size_t bestIndex = size_t(-1);
+	Scalar bestSqrDistance = Numeric::maxValue();
+
+	for (unsigned int xBin = pointsDistributionArray.beginBinHorizontal<1u>(xBinCenter); xBin < pointsDistributionArray.endBinHorizontal<1u>(xBinCenter); ++xBin)
+	{
+		for (unsigned int yBin = pointsDistributionArray.beginBinVertical<1u>(yBinCenter); yBin < pointsDistributionArray.endBinVertical<1u>(yBinCenter); ++yBin)
 		{
 			const Indices32& indices = pointsDistributionArray(xBin, yBin);
 
@@ -396,9 +509,9 @@ bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::Spa
 	closestSqrDistance = Numeric::maxValue();
 	secondClosestSqrDistance = Numeric::maxValue();
 
-	for (unsigned int xBin = (unsigned int)(std::max(0, int(xBinCenter) - 1)); xBin < std::min(xBinCenter + 2u, pointsDistributionArray.horizontalBins()); ++xBin)
+	for (unsigned int xBin = pointsDistributionArray.beginBinHorizontal<1u>(xBinCenter); xBin < pointsDistributionArray.endBinHorizontal<1u>(xBinCenter); ++xBin)
 	{
-		for (unsigned int yBin = (unsigned int)(std::max(0, int(yBinCenter) - 1)); yBin < std::min(yBinCenter + 2u, pointsDistributionArray.verticalBins()); ++yBin)
+		for (unsigned int yBin = pointsDistributionArray.beginBinVertical<1u>(yBinCenter); yBin < pointsDistributionArray.endBinVertical<1u>(yBinCenter); ++yBin)
 		{
 			const Indices32& indices = pointsDistributionArray(xBin, yBin);
 
@@ -426,581 +539,6 @@ bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::Spa
 	ocean_assert(closestSqrDistance <= secondClosestSqrDistance);
 
 	return closestPointIndex != Index32(-1);
-}
-
-bool PointDetector::optimizePoints(const Frame& yFrame, const Points& points, const PointPatterns& pointPatterns, Points& optimizedPoints, Worker* worker) const
-{
-	ocean_assert(optimizedPoints.empty());
-	optimizedPoints.clear();
-
-	Vectors2 patternPoints;
-	Vectors2 framePoints;
-	Vectors2 trackedFramePoints;
-
-	patternPoints.reserve(points.size());
-	framePoints.reserve(points.size());
-	trackedFramePoints.reserve(points.size());
-
-	ocean_assert(!pointPatterns.empty());
-	ocean_assert(pointPatterns.size() == 1 || pointPatterns.front().radius() < pointPatterns.back().radius());
-
-	const Vector2 pixelOffset = Vector2(Scalar(0.5), Scalar(0.5)); // AdvancedMotion is using pixel center in the top-left corner of a pixel
-
-	ocean_assert(yPointPatternImages_.isValid());
-
-	ocean_assert(yPointPatternImages_.width() == pointPatternImageSize_ * pointPatterns.size());
-	ocean_assert(yPointPatternImages_.height() == pointPatternImageSize_ * 2u);
-
-	const Vector2 darkPatternPosition = Vector2(Scalar(pointPatternImageSize_) * Scalar(0.5), Scalar(pointPatternImageSize_) * Scalar(0.5)) - pixelOffset;
-	const Vector2 brightPatternPosition = Vector2(Scalar(pointPatternImageSize_) * Scalar(0.5), Scalar(pointPatternImageSize_) * Scalar(1.5)) - pixelOffset;
-
-	Vectors2 debugMoved;
-	Vectors2 debugMovedTo;
-	Vectors2 debugFlipped;
-	Vectors2 debugFailed;
-
-	for (size_t nPattern = 0; nPattern < pointPatterns.size(); ++nPattern)
-	{
-		const PointPattern& pointPattern = pointPatterns[nPattern];
-
-		patternPoints.clear();
-		framePoints.clear();
-
-		const unsigned int pointRadius = pointPattern.radius();
-
-		for (const Point& point : points)
-		{
-			if (point.radius() != pointRadius)
-			{
-				continue;
-			}
-
-			framePoints.push_back(point.observation() - pixelOffset);
-
-			if (point.strength() > 0.0f)
-			{
-				patternPoints.push_back(darkPatternPosition);
-			}
-			else
-			{
-				patternPoints.push_back(brightPatternPosition);
-			}
-		}
-
-		if (framePoints.empty())
-		{
-			continue;
-		}
-
-		const Frame yPointPatternImages = yPointPatternImages_.subFrame((unsigned int)(nPattern * pointPatternImageSize_), 0u, pointPatternImageSize_, pointPatternImageSize_ * 2u);
-
-		trackedFramePoints.clear();
-
-		const unsigned int searchRadius = 2u + pointRadius;
-
-		constexpr unsigned int coarsestLayerRadius = 8u;
-		ocean_assert(searchRadius <= coarsestLayerRadius);
-
-		if (pointRadius <= 3u)
-		{
-			if (yFrame.pixels() <= 640u * 480u)
-			{
-				CV::Advanced::AdvancedMotionSSD::trackPointsSubPixelMirroredBorder<5u>(yPointPatternImages, yFrame, patternPoints, framePoints, trackedFramePoints, searchRadius, searchRadius, CV::FramePyramid::DM_FILTER_11, coarsestLayerRadius, worker);
-			}
-			else
-			{
-				CV::Advanced::AdvancedMotionSSD::trackPointsSubPixelMirroredBorder<7u>(yPointPatternImages, yFrame, patternPoints, framePoints, trackedFramePoints, searchRadius, searchRadius, CV::FramePyramid::DM_FILTER_11, coarsestLayerRadius, worker);
-			}
-		}
-		else
-		{
-			ocean_assert(pointRadius <= 5u);
-			CV::Advanced::AdvancedMotionSSD::trackPointsSubPixelMirroredBorder<9u>(yPointPatternImages, yFrame, patternPoints, framePoints, trackedFramePoints, searchRadius, searchRadius, CV::FramePyramid::DM_FILTER_11, coarsestLayerRadius, worker);
-		}
-
-		const Box2 boundingBox(Scalar(pointRadius + 1u), Scalar(pointRadius + 1u), Scalar(yFrame.width() - pointRadius - 2u), Scalar(yFrame.height() - pointRadius - 2u));
-
-		for (size_t n = 0; n < framePoints.size(); ++n)
-		{
-			const Vector2 patternPoint = patternPoints[n] + pixelOffset;
-			const Vector2 framePoint = framePoints[n] + pixelOffset;
-			const Vector2 trackedFramePoint = trackedFramePoints[n] + pixelOffset;
-
-			if (!boundingBox.isInside(trackedFramePoint))
-			{
-				// some points may have been moved too close to the frame border
-				continue;
-			}
-
-			const Scalar sqrDistance = framePoint.sqrDistance(trackedFramePoint);
-
-			const Scalar maxSqrOffset = Numeric::sqr(Scalar(searchRadius - 1u));
-
-			if (sqrDistance <= maxSqrOffset)
-			{
-				int32_t strength = 0;
-				bool strict = false;
-
-				if (pointPattern.determinePointStrength(yFrame, trackedFramePoint, strength, strict))
-				{
-					const bool oldSign = patternPoint.y() < Scalar(pointPatternImageSize_);
-
-					const bool newSign = strength >= 0;
-
-					// we skip all object points with a flipped sign
-
-					if (oldSign == newSign)
-					{
-						const float normalizedStrength = float(strength) / float(pointPattern.positiveOffsets().size()); // average of square differences
-
-						optimizedPoints.emplace_back(trackedFramePoint, pointPattern.radius(), normalizedStrength);
-					}
-					else
-					{
-						if constexpr (CalibrationDebugElements::allowDebugging_)
-						{
-							debugFlipped.push_back(framePoint);
-						}
-					}
-				}
-				else
-				{
-					if constexpr (CalibrationDebugElements::allowDebugging_)
-					{
-						debugFailed.push_back(framePoint);
-					}
-				}
-			}
-			else
-			{
-				if constexpr (CalibrationDebugElements::allowDebugging_)
-				{
-					debugMoved.push_back(framePoint);
-					debugMovedTo.push_back(trackedFramePoint);
-				}
-			}
-		}
-	}
-
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		CalibrationDebugElements::get().updatePointDetectorPointsOptimizationPointPatterns(pointPatterns, pointPatternImageSize_);
-
-		CalibrationDebugElements::get().updatePointDetectorPointsOptimization(yFrame, debugMoved, debugMovedTo, debugFlipped, debugFailed);
-	}
-
-	return true;
-}
-
-bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& pointPatterns, const unsigned int minDifference, const unsigned int maxVariance, Points& points, const bool suppressNonMaximum, const unsigned int detectionScaleSteps, Worker* worker)
-{
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
-
-	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
-	{
-		return false;
-	}
-
-	ocean_assert(!pointPatterns.empty());
-	if (pointPatterns.empty())
-	{
-		return false;
-	}
-
-	ocean_assert(detectionScaleSteps >= 1u);
-	if (detectionScaleSteps < 1u)
-	{
-		return false;
-	}
-
-#ifdef OCEAN_DEBUG
-	for (size_t n = 1; n < pointPatterns.size(); ++n)
-	{
-		ocean_assert(pointPatterns[n - 1].radius() < pointPatterns[n].radius());
-	}
-#endif
-
-	Frame debugFramePointsCandidates;
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		if (CalibrationDebugElements::get().isElementActive(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_CANDIDATES))
-		{
-			CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, debugFramePointsCandidates, CV::FrameConverter::CP_ALWAYS_COPY);
-		}
-	}
-
-	constexpr Scalar distance = Scalar(50);
-
-	unsigned int horizontalBins = 0u;
-	unsigned int verticalBins = 0u;
-	Geometry::SpatialDistribution::idealBinsNeighborhood9(yFrame.width(), yFrame.height(), distance, horizontalBins, verticalBins, 2u, 2u, yFrame.width(), yFrame.height());
-
-	Geometry::SpatialDistribution::DistributionArray darkPointsDistributionArray(Scalar(0), Scalar(0), Scalar(yFrame.width()), Scalar(yFrame.height()), horizontalBins, verticalBins);
-
-	ocean_assert(points.empty());
-	points.clear();
-
-	Frame detectionMask;
-
-	size_t pointPatternDetectionIndex = pointPatterns.size() - 1;
-
-	while (true)
-	{
-		ocean_assert(pointPatternDetectionIndex < pointPatterns.size());
-		const PointPattern& detectionPointPattern = pointPatterns[pointPatternDetectionIndex];
-
-		ocean_assert(detectionPointPattern.isValid());
-		if (!detectionPointPattern.isValid())
-		{
-			return false;
-		}
-
-		ocean_assert(detectionPointPattern.diameter() <= yFrame.width() && detectionPointPattern.diameter() <= yFrame.height());
-		if (detectionPointPattern.diameter() > yFrame.width() || detectionPointPattern.diameter() > yFrame.height())
-		{
-			return false;
-		}
-
-		ocean_assert(minDifference <= 32u);
-		if (minDifference > 32u)
-		{
-			return false;
-		}
-
-		darkPointsDistributionArray.clear();
-
-		CV::NonMaximumSuppressionT<uint32_t> nonMaximumSuppression(yFrame.width(), yFrame.height());
-
-		const uint8_t* mask = nullptr;
-
-		if (detectionMask.isValid())
-		{
-			mask = detectionMask.constdata<uint8_t>();
-			ocean_assert(detectionMask.isContinuous());
-		}
-
-		const size_t iterationFirstPointIndex = points.size();
-
-		for (const bool detectDarkPoints : {true, false})
-		{
-			if (detectDarkPoints)
-			{
-				detectPointCandidates<true>(yFrame.constdata<uint8_t>(), yFrame.paddingElements(), mask, detectionPointPattern, uint8_t(minDifference), maxVariance, nonMaximumSuppression, worker);
-			}
-			else
-			{
-				nonMaximumSuppression.reset();
-				detectPointCandidates<false>(yFrame.constdata<uint8_t>(), yFrame.paddingElements(), mask, detectionPointPattern, uint8_t(minDifference), maxVariance, nonMaximumSuppression, worker);
-			}
-
-			using StrengthPositions = NonMaximumSuppression::StrengthPositions<unsigned int, uint32_t>;
-			using StrengthPosition = StrengthPositions::value_type;
-
-			StrengthPositions strengthPositions;
-
-			if (suppressNonMaximum)
-			{
-				nonMaximumSuppression.suppressNonMaximum<unsigned int, uint32_t, false>(0u, yFrame.width(), 0u, yFrame.height(), strengthPositions, worker);
-			}
-			else
-			{
-				nonMaximumSuppression.candidates(0u, yFrame.width(), 0u, yFrame.height(), strengthPositions);
-			}
-
-			if constexpr (CalibrationDebugElements::allowDebugging_)
-			{
-				if (debugFramePointsCandidates)
-				{
-					StrengthPositions debugStrengthPositions;
-					nonMaximumSuppression.candidates(0u, yFrame.width(), 0u, yFrame.height(), debugStrengthPositions);
-
-					const uint8_t* color = detectDarkPoints ? CV::Canvas::green() : CV::Canvas::blue();
-
-					for (const StrengthPosition& strengthPosition : debugStrengthPositions)
-					{
-						CV::Canvas::ellipse(debugFramePointsCandidates, CV::PixelPosition(strengthPosition.x(), strengthPosition.y()), 3u, 3u, color);
-					}
-				}
-			}
-
-			points.reserve(points.size() + strengthPositions.size());
-
-			for (const StrengthPosition& strengthPosition : strengthPositions)
-			{
-				const Vector2 observation(Scalar(strengthPosition.x()), Scalar(strengthPosition.y()));
-
-				if (detectDarkPoints)
-				{
-					const unsigned int xBin = darkPointsDistributionArray.horizontalBin(observation.x());
-					const unsigned int yBin = darkPointsDistributionArray.verticalBin(observation.y());
-
-					ocean_assert(xBin < horizontalBins);
-					ocean_assert(yBin < verticalBins);
-
-					darkPointsDistributionArray(xBin, yBin).push_back(Index32(points.size()));
-				}
-				else
-				{
-					if (hasClosePoint(observation, darkPointsDistributionArray, points, Numeric::sqr(4)))
-					{
-						// a dark point has already been detected in the direct neighborhood, so we ignore this detection
-
-						continue;
-					}
-				}
-
-				unsigned int radius = detectionPointPattern.radius();
-				unsigned int strength = strengthPosition.strength();
-
-				if (pointPatterns.size() >= 2)
-				{
-					if (detectDarkPoints)
-					{
-						determinePointRadius<true>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), CV::PixelPosition(strengthPosition.x(), strengthPosition.y()), detectionPointPattern.radius(), pointPatterns.data(), pointPatterns.size(), uint8_t(minDifference), maxVariance, radius, strength);
-					}
-					else
-					{
-						determinePointRadius<false>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), CV::PixelPosition(strengthPosition.x(), strengthPosition.y()), detectionPointPattern.radius(), pointPatterns.data(), pointPatterns.size(), uint8_t(minDifference), maxVariance, radius, strength);
-					}
-				}
-
-				const float sign = detectDarkPoints ? 1.0f : -1.0f;
-
-				const float normalizedStrength = detectionPointPattern.normalizedStrength(strength); // average of square differences
-
-				points.emplace_back(Vector2(Scalar(strengthPosition.x()), Scalar(strengthPosition.y())), radius, normalizedStrength * sign);
-			}
-		}
-
-		if (pointPatternDetectionIndex < detectionScaleSteps)
-		{
-			break;
-		}
-
-		pointPatternDetectionIndex -= detectionScaleSteps;
-
-		if (!detectionMask.isValid())
-		{
-			detectionMask.set(yFrame.frameType(), true /*forceOwner*/, true /*forceWritable*/);
-			detectionMask.setValue(0xFFu);
-		}
-
-		for (size_t nPoint = iterationFirstPointIndex; nPoint < points.size(); ++nPoint)
-		{
-			const Point& point = points[nPoint];
-
-			ocean_assert(Scalar(int(point.observation().x())) == point.observation().x());
-			ocean_assert(Scalar(int(point.observation().y())) == point.observation().y());
-
-			const unsigned int radius = point.radius() * 3u / 2u; // radius * 1.5
-
-			const int pointLeft = int(point.observation().x()) - int(radius);
-			const int pointTop = int(point.observation().y()) - int(radius);
-
-			const unsigned int pointWidth = radius * 2u + 1u;
-			const unsigned int pointHeight = radius * 2u + 1u;
-
-			constexpr uint8_t black = 0x00u;
-			CV::Canvas::rectangle8BitPerChannel<1u>(detectionMask.data<uint8_t>(), yFrame.width(), yFrame.height(), pointLeft, pointTop, pointWidth, pointHeight, &black);
-		}
-	}
-
-	if constexpr (CalibrationDebugElements::allowDebugging_)
-	{
-		if (debugFramePointsCandidates)
-		{
-			CalibrationDebugElements::get().updateElement(CalibrationDebugElements::EI_POINT_DETECTOR_POINTS_CANDIDATES, std::move(debugFramePointsCandidates));
-		}
-	}
-
-	return true;
-}
-
-
-template <bool tDarkPoint>
-void PointDetector::detectPointCandidates(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern& pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>& nonMaximumSuppression, Worker* worker)
-{
-	ocean_assert(yFrame != nullptr);
-	ocean_assert(pointPattern.isValid());
-
-	ocean_assert(pointPattern.diameter() <= nonMaximumSuppression.width());
-	ocean_assert(pointPattern.diameter() <= nonMaximumSuppression.height());
-
-	const unsigned int firstColumn = pointPattern.radius();
-	const unsigned int numberColumns = nonMaximumSuppression.width() - 2u * pointPattern.radius();
-
-	const unsigned int firstRow = pointPattern.radius();
-	const unsigned int numberRows = nonMaximumSuppression.height() - 2u * pointPattern.radius();
-
-	if (worker != nullptr)
-	{
-		if (mask != nullptr)
-		{
-			worker->executeFunction(Worker::Function::createStatic(&PointDetector::detectPointCandidatesSubset<tDarkPoint, true>, yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, 0u, 0u), firstRow, numberRows);
-		}
-		else
-		{
-			worker->executeFunction(Worker::Function::createStatic(&PointDetector::detectPointCandidatesSubset<tDarkPoint, false>, yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, 0u, 0u), firstRow, numberRows);
-		}
-	}
-	else
-	{
-		if (mask != nullptr)
-		{
-			detectPointCandidatesSubset<tDarkPoint, true>(yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, firstRow, numberRows);
-		}
-		else
-		{
-			detectPointCandidatesSubset<tDarkPoint, false>(yFrame, yFramePaddingElements, mask, &pointPattern, minDifference, maxVariance, &nonMaximumSuppression, firstColumn, numberColumns, firstRow, numberRows);
-		}
-	}
-}
-
-template <bool tDarkPoint, bool tUseMask>
-void PointDetector::detectPointCandidatesSubset(const uint8_t* yFrame, const unsigned int yFramePaddingElements, const uint8_t* mask, const PointPattern* pointPattern, const uint8_t minDifference, const unsigned int maxVariance, CV::NonMaximumSuppressionT<uint32_t>* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
-{
-	ocean_assert(yFrame != nullptr);
-	ocean_assert(pointPattern != nullptr && pointPattern->isValid());
-	ocean_assert(nonMaximumSuppression != nullptr && nonMaximumSuppression->width() != 0u && nonMaximumSuppression->height() != 0u);
-
-	if constexpr (tUseMask)
-	{
-		ocean_assert(mask != nullptr);
-	}
-	else
-	{
-		ocean_assert(mask == nullptr);
-	}
-
-	const unsigned int yFrameStrideElements = nonMaximumSuppression->width() + yFramePaddingElements;
-
-	ocean_assert(pointPattern->frameStrideElements() == yFrameStrideElements);
-
-	const Index32 negativeOffset = pointPattern->negativeOffset();
-
-	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
-	{
-		const uint8_t* centerPixel = yFrame + y * yFrameStrideElements + firstColumn;
-		const uint8_t* firstSurroundingPixel = centerPixel - negativeOffset;
-		ocean_assert(yFrame <= firstSurroundingPixel);
-
-		const uint8_t* maskPixel = tUseMask ? mask + y * nonMaximumSuppression->width() + firstColumn : nullptr;
-
-		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
-		{
-			if constexpr (tUseMask)
-			{
-				if (*maskPixel++ == 0u)
-				{
-					// the pixel is not of interest, let's skip it
-
-					++centerPixel;
-					++firstSurroundingPixel;
-
-					continue;
-				}
-			}
-
-			const uint8_t centerPixelValue = *centerPixel;
-
-			if constexpr (tDarkPoint)
-			{
-				constexpr uint8_t maxCenterColorFixed = 0xFFu * 75u / 100u; // 75% of white
-				constexpr uint8_t minSurroundingColorFixed = 0xFFu * 25u / 100u; // 25% of white
-
-				const uint32_t strength = pointPattern->determineDarkPointStrength<maxCenterColorFixed, minSurroundingColorFixed>(centerPixelValue, firstSurroundingPixel, minDifference, maxVariance);
-
-				if (strength != 0u)
-				{
-					nonMaximumSuppression->addCandidate(x, y, strength);
-				}
-			}
-			else
-			{
-				constexpr uint8_t minCenterColorFixed = 0xFFu * 25u / 100u; // 25% of white
-				constexpr uint8_t maxSurroundingColorFixed = 0xFFu * 75u / 100u; // 75% of white
-
-				const uint32_t strength = pointPattern->determineBrightPointStrength<minCenterColorFixed, maxSurroundingColorFixed>(centerPixelValue, firstSurroundingPixel, minDifference, maxVariance);
-
-				if (strength != 0u)
-				{
-					nonMaximumSuppression->addCandidate(x, y, strength);
-				}
-			}
-
-			++centerPixel;
-			++firstSurroundingPixel;
-		}
-
-		ocean_assert(centerPixel == yFrame + y * yFrameStrideElements + firstColumn + numberColumns);
-	}
-}
-
-template <bool tDarkPoint>
-bool PointDetector::determinePointRadius(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const CV::PixelPosition& pixelPosition, const unsigned int currentRadius, const PointPattern* pointPatterns, const size_t numberPointPatterns, const uint8_t minDifference, const unsigned int maxVariance, unsigned int& radius, unsigned int& strength)
-{
-	ocean_assert(yFrame != nullptr);
-	ocean_assert(pointPatterns != nullptr);
-	ocean_assert(numberPointPatterns >= 2);
-	ocean_assert(pointPatterns[0].radius() < pointPatterns[numberPointPatterns - 1].radius());
-
-	ocean_assert(pixelPosition.x() < width && pixelPosition.y() < height);
-
-	const unsigned int yFrameStrideElements = width + yFramePaddingElements;
-
-	const uint8_t* yPoint = yFrame + pixelPosition.y() * yFrameStrideElements + pixelPosition.x();
-
-	for (size_t nPointPattern = 0; nPointPattern < numberPointPatterns; ++nPointPattern)
-	{
-		const PointPattern& pointPattern = pointPatterns[nPointPattern];
-
-		ocean_assert(pointPattern.isValid());
-		ocean_assert(pointPattern.frameStrideElements() == yFrameStrideElements);
-
-		if (currentRadius <= pointPattern.radius())
-		{
-			// the radius is not smaller
-			break;
-		}
-
-		if (pixelPosition.x() < pointPattern.radius() || pixelPosition.y() < pointPattern.radius() || pixelPosition.x() + pointPattern.radius() >= width || pixelPosition.y() + pointPattern.radius() >= height)
-		{
-			break;
-		}
-
-		if constexpr (tDarkPoint)
-		{
-			constexpr uint8_t maxCenterColorFixed = 0xFFu * 75u / 100u; // 75% of white
-			constexpr uint8_t minSurroundingColorFixed = 0xFFu * 25u / 100u; // 25% of white
-
-			const uint32_t pointStrength = pointPattern.determineDarkPointStrength<maxCenterColorFixed, minSurroundingColorFixed>(yPoint, minDifference, maxVariance);
-
-			if (pointStrength != 0u)
-			{
-				radius = pointPattern.radius();
-				strength = pointStrength;
-
-				return true;
-			}
-		}
-		else
-		{
-			constexpr uint8_t minCenterColorFixed = 0xFFu * 25u / 100u; // 25% of white
-			constexpr uint8_t maxSurroundingColorFixed = 0xFFu * 75u / 100u; // 75% of white
-
-			const uint32_t pointStrength = pointPattern.determineBrightPointStrength<minCenterColorFixed, maxSurroundingColorFixed>(yPoint, minDifference, maxVariance);
-
-			if (pointStrength != 0u)
-			{
-				radius = pointPattern.radius();
-				strength = pointStrength;
-
-				return true;
-			}
-		}
-	}
-
-	return false;
 }
 
 void PointDetector::removeDuplicatedPoints(const unsigned int width, const unsigned int height, Points& points, const Scalar maxDistance)
@@ -1108,9 +646,9 @@ bool PointDetector::hasClosePoint(const Vector2& queryPoint, const Geometry::Spa
 	const unsigned int xBinCenter = pointsDistributionArray.horizontalBin(queryPoint.x());
 	const unsigned int yBinCenter = pointsDistributionArray.verticalBin(queryPoint.y());
 
-	for (unsigned int xBin = (unsigned int)(std::max(0, int(xBinCenter) - 1)); xBin < std::min(xBinCenter + 2u, pointsDistributionArray.horizontalBins()); ++xBin)
+	for (unsigned int xBin = pointsDistributionArray.beginBinHorizontal<1u>(xBinCenter); xBin < pointsDistributionArray.endBinHorizontal<1u>(xBinCenter); ++xBin)
 	{
-		for (unsigned int yBin = (unsigned int)(std::max(0, int(yBinCenter) - 1)); yBin < std::min(yBinCenter + 2u, pointsDistributionArray.verticalBins()); ++yBin)
+		for (unsigned int yBin = pointsDistributionArray.beginBinVertical<1u>(yBinCenter); yBin < pointsDistributionArray.endBinVertical<1u>(yBinCenter); ++yBin)
 		{
 			const Indices32& indices = pointsDistributionArray(xBin, yBin);
 
@@ -1141,9 +679,9 @@ bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::Spa
 		return false;
 	}
 
-	for (unsigned int xBin = (unsigned int)(std::max(0, int(xBinCenter) - 1)); xBin < std::min(xBinCenter + 2u, pointsDistributionArray.horizontalBins()); ++xBin)
+	for (unsigned int xBin = pointsDistributionArray.beginBinHorizontal<1u>(xBinCenter); xBin < pointsDistributionArray.endBinHorizontal<1u>(xBinCenter); ++xBin)
 	{
-		for (unsigned int yBin = (unsigned int)(std::max(0, int(yBinCenter) - 1)); yBin < std::min(yBinCenter + 2u, pointsDistributionArray.verticalBins()); ++yBin)
+		for (unsigned int yBin = pointsDistributionArray.beginBinVertical<1u>(yBinCenter); yBin < pointsDistributionArray.endBinVertical<1u>(yBinCenter); ++yBin)
 		{
 			const Indices32& indices = pointsDistributionArray(xBin, yBin);
 
@@ -1164,120 +702,1450 @@ bool PointDetector::closestPoints(const Vector2& queryPoint, const Geometry::Spa
 	return !pointIndices.empty();
 }
 
-PointDetector::PointPatterns PointDetector::createPointPatterns(const unsigned int radius, const unsigned int innerRadius,  const bool useCircle, const unsigned int frameStrideElements)
+void PointDetector::detectPointCandidatesSubset(const Frame* yFrame, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference, const unsigned int firstRow, const unsigned int numberRows)
 {
-	ocean_assert(radius >= 1u);
-	ocean_assert(innerRadius < radius);
+	ocean_assert(yFrame != nullptr && yFrame->isValid());
+	ocean_assert(nonMaximumSuppression != nullptr && nonMaximumSuppression->height() == yFrame->height());
 
-	PointPatterns pointPatterns;
-	pointPatterns.reserve(8);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
 
-	for (unsigned int r = 1u; r < radius; ++r)
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
+
+	ocean_assert(maximalDifference > 0);
+
+	ocean_assert(firstRow + numberRows <= yFrame->height());
+
+	/*
+	 * Example: square border detection pattern with filter size 7x7:
+	 * 7 * 2 + 5 * 2 = 24 border locations, 1 center location
+	 * The actual border shape (square or circle) is determined by the provided borderOffsets.
+	 *
+	 * Border location 'B',                 Border offset indices
+	 * Center location 'C'
+	 * B  B  B  B  B  B  B                  0  1  2  3  4  5  6
+	 * B                 B                  7                 8
+	 * B                 B                  9                10
+	 * B        C        B                 11        C       12
+	 * B                 B                 13                14
+	 * B                 B                 15                16
+	 * B  B  B  B  B  B  B                 17 18 19 20 21 22 23
+	 */
+
+	ocean_assert(filterSize < yFrame->width() && filterSize < yFrame->height());
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert_and_suppress_unused(filterSize_2 >= 1u, filterSize_2);
+
+	ocean_assert(firstRow >= filterSize_2);
+	ocean_assert(firstRow + numberRows <= yFrame->height() - filterSize_2);
+
+	constexpr unsigned int simdBlockSize = 8u;
+	ocean_assert_and_suppress_unused(yFrame->width() >= filterSize_2 + simdBlockSize + filterSize_2, simdBlockSize);
+
+	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		const unsigned int ir = std::min(r - 1u, innerRadius);
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+		determinePointCandidatesRowSSEDual(y, yFrame->constrow<uint8_t>(y), nonMaximumSuppression, borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference);
+#elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+		determinePointCandidatesRowNEONDual(y, yFrame->constrow<uint8_t>(y), nonMaximumSuppression, borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference);
+#else
+		determinePointCandidatesRowDual(y, yFrame->constrow<uint8_t>(y), nonMaximumSuppression, borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference);
+#endif
+	}
+}
 
-		PointDetector::PointPattern pointPattern(r, ir, frameStrideElements, useCircle);
+void PointDetector::createFilterResponseFrameSubset(const Frame* yFrame, Frame* responseFrame, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference, const unsigned int firstRow, const unsigned int numberRows)
+{
+	ocean_assert(yFrame != nullptr && yFrame->isValid());
+	ocean_assert(responseFrame != nullptr && responseFrame->isFrameTypeCompatible(FrameType(yFrame->frameType(), FrameType::genericPixelFormat<int32_t, 1u>()), false));
 
-		// let's ensure that we use enough pixels in the pattern
-		if (pointPattern.offsets().size() < 8)
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+
+	ocean_assert(filterSize >= 3u && filterSize % 2u == 1u);
+
+	ocean_assert(maximalDifference > 0);
+
+	ocean_assert(firstRow + numberRows <= yFrame->height());
+
+	/*
+	 * Example: square border detection pattern with filter size 7x7:
+	 * 7 * 2 + 5 * 2 = 24 border locations, 1 center location
+	 * The actual border shape (square or circle) is determined by the provided borderOffsets.
+	 *
+	 * Border location 'B',                 Border offset indices
+	 * Center location 'C'
+	 * B  B  B  B  B  B  B                  0  1  2  3  4  5  6
+	 * B                 B                  7                 8
+	 * B                 B                  9                10
+	 * B        C        B                 11        C       12
+	 * B                 B                 13                14
+	 * B                 B                 15                16
+	 * B  B  B  B  B  B  B                 17 18 19 20 21 22 23
+	 */
+
+	ocean_assert(filterSize < yFrame->width() && filterSize < yFrame->height());
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(filterSize_2 >= 1u);
+
+	constexpr unsigned int simdBlockSize = 8u;
+	ocean_assert_and_suppress_unused(yFrame->width() >= filterSize_2 + simdBlockSize + filterSize_2, simdBlockSize);
+
+	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
+	{
+		if (y < filterSize_2 || y >= yFrame->height() - filterSize_2)
 		{
+			// we are in a top or bottom row
+
+			memset(responseFrame->row<int32_t>(y), 0x00, responseFrame->width() * sizeof(int32_t));
 			continue;
 		}
 
-		pointPatterns.emplace_back(std::move(pointPattern));
-	}
-
-	pointPatterns.emplace_back(radius, innerRadius, frameStrideElements, useCircle);
-
-	return pointPatterns;
-}
-
-void PointDetector::updatePointPatterns(PointPatterns& pointPatterns, const unsigned int frameStrideElements)
-{
-	ocean_assert(!pointPatterns.empty());
-
-	for (PointPattern& pointPattern : pointPatterns)
-	{
-		if (pointPattern.frameStrideElements() != frameStrideElements)
-		{
-			pointPattern = PointPattern(pointPattern.radius(), pointPattern.innerRadius(), frameStrideElements, pointPattern.isCircle());
-		}
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+		createFilterResponseRowSSEDual(yFrame->constrow<uint8_t>(y), responseFrame->row<int32_t>(y), yFrame->width(), borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference);
+#elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+		createFilterResponseRowNEONDual(yFrame->constrow<uint8_t>(y), responseFrame->row<int32_t>(y), yFrame->width(), borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference);
+#else
+		createFilterResponseRowDual(yFrame->constrow<uint8_t>(y), responseFrame->row<int32_t>(y), yFrame->width(), borderOffsets, numberBorderOffsets, filterSize, minimalDifference, maximalDifference);
+#endif
 	}
 }
 
-bool PointDetector::paintPointPattern(Frame& yFrame, const unsigned int radius, const uint8_t pointColor)
+void PointDetector::determinePointCandidatesRow(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yRow != nullptr);
+	ocean_assert(nonMaximumSuppression != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(maximalDifference > 0);
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
+	const unsigned int filterSize_2 = filterSize / 2u;
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	yRow += filterSize_2;
+
+	for (unsigned int x = filterSize_2; x < nonMaximumSuppression->width() - filterSize_2; ++x)
 	{
-		return false;
-	}
+		const int32_t centerValue = int32_t(*yRow);
 
-	ocean_assert(yFrame.width() % 2u == 1u && yFrame.height() % 2u == 1u);
-	if (yFrame.width() % 2u == 0u || yFrame.height() % 2u == 0u)
-	{
-		return false;
-	}
+		int32_t response = 0;
 
-	const unsigned int diameter = radius * 2u + 1u;
+		const uint8_t* yBorderData = yRow - borderOffsets[0]; // first offset is interpreted as negative offset (to the top-left starting point)
 
-	ocean_assert(yFrame.width() >= diameter && yFrame.height() >= diameter);
-	if (yFrame.width() < diameter || yFrame.height() < diameter)
-	{
-		return false;
-	}
+		int32_t difference = int32_t(*yBorderData) - centerValue;
 
-	ocean_assert(pointColor == 0xFFu || pointColor == 0x00u);
-
-	const uint8_t backgroundColor = 0xFFu - pointColor;
-
-	yFrame.setValue(backgroundColor);
-
-	const unsigned int xCenter = yFrame.width() / 2u;
-	const unsigned int yCenter = yFrame.height() / 2u;
-
-	Indices32 coefficients(diameter);
-
-	for (unsigned int n = 0u; n < diameter; ++n)
-	{
-		coefficients[n] = NumericT<unsigned int>::binomialCoefficient(diameter - 1u, n);
-	}
-
-	const unsigned int maxCoefficient = coefficients[diameter / 2u];
-	const float maxCoefficientSquared = float(maxCoefficient * maxCoefficient);
-
-	constexpr float factor = 1.0f;
-
-	const float normalization = 1.0f / NumericF::pow(maxCoefficientSquared, factor);
-
-	for (unsigned int y = 0u; y < diameter; ++y)
-	{
-		uint8_t* row = yFrame.pixel<uint8_t>(xCenter - radius, yCenter - radius + y);
-
-		for (unsigned int x = 0u; x < diameter; ++x)
+		if (difference >= minimalDifference)
 		{
-			const float coefficient = float(coefficients[x] * coefficients[y]);
+			response = std::min(difference * difference, maxSqrDifference);
 
-			const float adjustedCoefficient = NumericF::pow(coefficient, factor);
-			const float colorF = adjustedCoefficient * normalization * 255.0f;
-			ocean_assert(colorF >= 0.0 && colorF <= 255.5);
-
-			const unsigned int color = (unsigned int)(colorF);
-
-			if (pointColor == 0xFFu)
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
 			{
-				row[x] = uint8_t(color);
+				yBorderData += borderOffsets[nOffset]; // all remaining offsets are positive offsets in relation to the previous position
+
+				difference = int32_t(*yBorderData) - centerValue;
+
+				if (difference < minimalDifference)
+				{
+					response = 0;
+					break;
+				}
+
+				response += std::min(difference * difference, maxSqrDifference);
+			}
+		}
+
+		if (response != 0)
+		{
+			nonMaximumSuppression->addCandidate(x, y, response);
+		}
+
+		++yRow;
+	}
+}
+
+void PointDetector::determinePointCandidatesRowDual(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(nonMaximumSuppression != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(maximalDifference > 0);
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	yRow += filterSize_2;
+
+	for (unsigned int x = filterSize_2; x < nonMaximumSuppression->width() - filterSize_2; ++x)
+	{
+		const int32_t centerValue = int32_t(*yRow);
+
+		int32_t response = 0;
+
+		const uint8_t* yBorderData = yRow - borderOffsets[0];
+
+		int32_t difference = int32_t(*yBorderData) - centerValue;
+
+		if (std::abs(difference) >= minimalDifference)
+		{
+			if (difference > 0)
+			{
+				// black pixel on white background
+
+				response = std::min(difference * difference, maxSqrDifference);
+
+				for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+				{
+					yBorderData += borderOffsets[nOffset];
+
+					difference = int32_t(*yBorderData) - centerValue;
+
+					if (difference < minimalDifference)
+					{
+						response = 0;
+						break;
+					}
+
+					response += std::min(difference * difference, maxSqrDifference);
+				}
 			}
 			else
 			{
-				row[x] = 0xFFu - uint8_t(color);
+				// white pixel on black background
+
+				response = -std::min(difference * difference, maxSqrDifference);
+
+				for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+				{
+					yBorderData += borderOffsets[nOffset];
+
+					difference = int32_t(*yBorderData) - centerValue;
+
+					if (difference > -minimalDifference)
+					{
+						response = 0;
+						break;
+					}
+
+					response -= std::min(difference * difference, maxSqrDifference);
+				}
 			}
 		}
+
+		if (response != 0)
+		{
+			nonMaximumSuppression->addCandidate(x, y, response);
+		}
+
+		++yRow;
+	}
+}
+
+void PointDetector::createFilterResponseRow(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(responseRow != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(maximalDifference > 0);
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+
+	// response pixels close to the left image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+
+	yRow += filterSize_2;
+	responseRow += filterSize_2;
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	for (unsigned int x = filterSize_2; x < width - filterSize_2; ++x)
+	{
+		const int32_t centerValue = int32_t(*yRow);
+
+		int32_t response = 0;
+
+		const uint8_t* yBorderData = yRow - borderOffsets[0]; // first offset is interpreted as negative offset (to the top-left starting point)
+
+		int32_t difference = int32_t(*yBorderData) - centerValue;
+
+		if (difference >= minimalDifference)
+		{
+			response += std::min(difference * difference, maxSqrDifference);
+
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset]; // all remaining offsets are positive offsets in relation to the previous position
+
+				difference = int32_t(*yBorderData) - centerValue;
+
+				if (difference < minimalDifference)
+				{
+					response = 0;
+					break;
+				}
+
+				response += std::min(difference * difference, maxSqrDifference);
+			}
+		}
+
+		*responseRow = response;
+
+		++yRow;
+		++responseRow;
 	}
 
-	return true;
+	// response pixels close to the right image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
 }
+
+void PointDetector::createFilterResponseRowDual(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(responseRow != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(maximalDifference > 0);
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+
+	// response pixels close to the left image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+
+	yRow += filterSize_2;
+	responseRow += filterSize_2;
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	for (unsigned int x = filterSize_2; x < width - filterSize_2; ++x)
+	{
+		const int32_t centerValue = int32_t(*yRow);
+
+		int32_t response = 0;
+
+		const uint8_t* yBorderData = yRow - borderOffsets[0];
+
+		// first difference
+
+		int32_t difference = int32_t(*yBorderData) - centerValue;
+
+		if (std::abs(difference) >= minimalDifference)
+		{
+			if (difference > 0)
+			{
+				// black pixel on white background
+
+				response += std::min(difference * difference, maxSqrDifference);
+
+				for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+				{
+					yBorderData += borderOffsets[nOffset];
+
+					difference = int32_t(*yBorderData) - centerValue;
+
+					if (difference < minimalDifference)
+					{
+						response = 0;
+						break;
+					}
+
+					response += std::min(difference * difference, maxSqrDifference);
+				}
+			}
+			else
+			{
+				// white pixel on black background
+
+				response -= std::min(difference * difference, maxSqrDifference);
+
+				for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+				{
+					yBorderData += borderOffsets[nOffset];
+
+					difference = int32_t(*yBorderData) - centerValue;
+
+					if (difference > -minimalDifference)
+					{
+						response = 0;
+						break;
+					}
+
+					response -= std::min(difference * difference, maxSqrDifference);
+				}
+			}
+		}
+
+		*responseRow = response;
+
+		++yRow;
+		++responseRow;
+	}
+
+	// response pixels close to the right image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+}
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+void PointDetector::createFilterResponseRowSSE(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(responseRow != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(width >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	// response pixels close to the left image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+	int32_t* responseRowCenter = responseRow + filterSize_2;
+
+	const unsigned int coreWidth = width - filterSize_2 * 2u;
+
+	const __m128i minDiffMinus1_s_16x8 = _mm_set1_epi16(int16_t(minimalDifference - 1));
+	const __m128i maxSqrDiff_s_32x4 = _mm_set1_epi32(maxSqrDifference);
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			responseRowCenter -= offset;
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		const __m128i center_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yRowCenter));
+
+		__m128i valid_s_16x8 = _mm_set1_epi16(-1);
+		__m128i sumSqrLow_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrHigh_s_32x4 = _mm_setzero_si128();
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0]; // first offset is interpreted as negative offset (to the top-left starting point)
+
+		// process first border pixel
+		__m128i border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+		__m128i diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+		// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+		valid_s_16x8 = _mm_and_si128(valid_s_16x8, _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8));
+
+		if (!_mm_testz_si128(valid_s_16x8, valid_s_16x8))
+		{
+			// square the differences and clamp to maxSqrDifference
+			__m128i sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+			__m128i sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+			sumSqrLow_s_32x4 = _mm_add_epi32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+			sumSqrHigh_s_32x4 = _mm_add_epi32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset]; // all remaining offsets are positive offsets in relation to the previous position
+
+				border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+				diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+				// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+				valid_s_16x8 = _mm_and_si128(valid_s_16x8, _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8));
+
+				// early exit if all 8 pixels have failed the threshold check
+				if (_mm_testz_si128(valid_s_16x8, valid_s_16x8))
+				{
+					break;
+				}
+
+				// square the differences and clamp to maxSqrDifference
+				sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+				sumSqrLow_s_32x4 = _mm_add_epi32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+				sumSqrHigh_s_32x4 = _mm_add_epi32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid mask from 16-bit to 32-bit and apply: response = valid ? sumSqr : 0
+		_mm_storeu_si128((__m128i*)(responseRowCenter + 0), _mm_and_si128(sumSqrLow_s_32x4, _mm_cvtepi16_epi32(valid_s_16x8)));
+		_mm_storeu_si128((__m128i*)(responseRowCenter + 4), _mm_and_si128(sumSqrHigh_s_32x4, _mm_cvtepi16_epi32(_mm_srli_si128(valid_s_16x8, 8))));
+
+		yRowCenter += blockSize;
+		responseRowCenter += blockSize;
+	}
+
+	// response pixels close to the right image border
+	memset(responseRowCenter, 0x00, filterSize_2 * sizeof(int32_t));
+}
+
+void PointDetector::createFilterResponseRowSSEDual(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(responseRow != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(width >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	// response pixels close to the left image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+	int32_t* responseRowCenter = responseRow + filterSize_2;
+
+	const unsigned int coreWidth = width - filterSize_2 * 2u;
+
+	const __m128i minDiffMinus1_s_16x8 = _mm_set1_epi16(int16_t(minimalDifference - 1));
+	const __m128i negMinDiff_s_16x8 = _mm_set1_epi16(int16_t(-minimalDifference));
+	const __m128i maxSqrDiff_s_32x4 = _mm_set1_epi32(maxSqrDifference);
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			responseRowCenter -= offset;
+
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		const __m128i center_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yRowCenter));
+
+		// track validity and response for black dots (positive diff) and white dots (negative diff)
+		__m128i validDark_s_16x8 = _mm_set1_epi16(-1);
+		__m128i validBright_s_16x8 = _mm_set1_epi16(-1);
+		__m128i sumSqrDarkLow_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrDarkHigh_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrBrightLow_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrBrightHigh_s_32x4 = _mm_setzero_si128();
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0];
+
+		// process first border pixel
+		__m128i border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+		__m128i diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+		// dark dots: diff >= minimalDifference (i.e., diff > minimalDifference - 1)
+		validDark_s_16x8 = _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8);
+
+		// bright dots: diff <= -minimalDifference (i.e., diff < -minimalDifference + 1)
+		validBright_s_16x8 = _mm_cmplt_epi16(diff_s_16x8, negMinDiff_s_16x8);
+
+		const bool hasDarkCandidates = !_mm_testz_si128(validDark_s_16x8, validDark_s_16x8);
+		const bool hasBrightCandidates = !_mm_testz_si128(validBright_s_16x8, validBright_s_16x8);
+
+		if (hasDarkCandidates || hasBrightCandidates)
+		{
+			// square the differences and clamp to maxSqrDifference
+			__m128i sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+			__m128i sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+			sumSqrDarkLow_s_32x4 = _mm_add_epi32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+			sumSqrDarkHigh_s_32x4 = _mm_add_epi32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+			sumSqrBrightLow_s_32x4 = _mm_add_epi32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+			sumSqrBrightHigh_s_32x4 = _mm_add_epi32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset];
+
+				border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+				diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+				// update validity masks
+				validDark_s_16x8 = _mm_and_si128(validDark_s_16x8, _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8));
+				validBright_s_16x8 = _mm_and_si128(validBright_s_16x8, _mm_cmplt_epi16(diff_s_16x8, negMinDiff_s_16x8));
+
+				// early exit if all 8 pixels have failed both threshold checks
+				const __m128i anyValid_s_16x8 = _mm_or_si128(validDark_s_16x8, validBright_s_16x8);
+				if (_mm_testz_si128(anyValid_s_16x8, anyValid_s_16x8))
+				{
+					break;
+				}
+
+				// square the differences and clamp to maxSqrDifference
+				sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+				sumSqrDarkLow_s_32x4 = _mm_add_epi32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+				sumSqrDarkHigh_s_32x4 = _mm_add_epi32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+				sumSqrBrightLow_s_32x4 = _mm_add_epi32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+				sumSqrBrightHigh_s_32x4 = _mm_add_epi32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid masks from 16-bit to 32-bit
+		const __m128i validDarkLow_s_32x4 = _mm_cvtepi16_epi32(validDark_s_16x8);
+		const __m128i validDarkHigh_s_32x4 = _mm_cvtepi16_epi32(_mm_srli_si128(validDark_s_16x8, 8));
+		const __m128i validBrightLow_s_32x4 = _mm_cvtepi16_epi32(validBright_s_16x8);
+		const __m128i validBrightHigh_s_32x4 = _mm_cvtepi16_epi32(_mm_srli_si128(validBright_s_16x8, 8));
+
+		// apply masks: darkResponse = valid ? sumSqr : 0, brightResponse = valid ? -sumSqr : 0
+		const __m128i darkResponseLow_s_32x4 = _mm_and_si128(sumSqrDarkLow_s_32x4, validDarkLow_s_32x4);
+		const __m128i darkResponseHigh_s_32x4 = _mm_and_si128(sumSqrDarkHigh_s_32x4, validDarkHigh_s_32x4);
+		const __m128i brightResponseLow_s_32x4 = _mm_and_si128(_mm_sub_epi32(_mm_setzero_si128(), sumSqrBrightLow_s_32x4), validBrightLow_s_32x4);
+		const __m128i brightResponseHigh_s_32x4 = _mm_and_si128(_mm_sub_epi32(_mm_setzero_si128(), sumSqrBrightHigh_s_32x4), validBrightHigh_s_32x4);
+
+		// combine: each pixel can only be one or the other (or neither), so we can just add
+		_mm_storeu_si128((__m128i*)(responseRowCenter + 0), _mm_add_epi32(darkResponseLow_s_32x4, brightResponseLow_s_32x4));
+		_mm_storeu_si128((__m128i*)(responseRowCenter + 4), _mm_add_epi32(darkResponseHigh_s_32x4, brightResponseHigh_s_32x4));
+
+		yRowCenter += blockSize;
+		responseRowCenter += blockSize;
+	}
+
+	// response pixels close to the right image border
+	memset(responseRowCenter, 0x00, filterSize_2 * sizeof(int32_t));
+}
+
+void PointDetector::determinePointCandidatesRowSSE(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(nonMaximumSuppression != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(nonMaximumSuppression->width() >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+
+	const unsigned int coreWidth = nonMaximumSuppression->width() - filterSize_2 * 2u;
+
+	const __m128i minDiffMinus1_s_16x8 = _mm_set1_epi16(int16_t(minimalDifference - 1));
+	const __m128i maxSqrDiff_s_32x4 = _mm_set1_epi32(maxSqrDifference);
+
+	int32_t responseBlock[blockSize];
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			x = newX;
+
+			nonMaximumSuppression->removeCandidatesRightFrom(filterSize_2 + x, y);
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		const __m128i center_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yRowCenter));
+
+		__m128i valid_s_16x8 = _mm_set1_epi16(-1);
+		__m128i sumSqrLow_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrHigh_s_32x4 = _mm_setzero_si128();
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0]; // first offset is interpreted as negative offset (to the top-left starting point)
+
+		// process first border pixel
+		__m128i border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+		__m128i diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+		// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+		valid_s_16x8 = _mm_and_si128(valid_s_16x8, _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8));
+
+		if (!_mm_testz_si128(valid_s_16x8, valid_s_16x8))
+		{
+			// square the differences and clamp to maxSqrDifference
+			__m128i sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+			__m128i sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+			sumSqrLow_s_32x4 = _mm_add_epi32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+			sumSqrHigh_s_32x4 = _mm_add_epi32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset]; // all remaining offsets are positive offsets in relation to the previous position
+
+				border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+				diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+				// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+				valid_s_16x8 = _mm_and_si128(valid_s_16x8, _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8));
+
+				// early exit if all 8 pixels have failed the threshold check
+				if (_mm_testz_si128(valid_s_16x8, valid_s_16x8))
+				{
+					break;
+				}
+
+				// square the differences and clamp to maxSqrDifference
+				sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+				sumSqrLow_s_32x4 = _mm_add_epi32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+				sumSqrHigh_s_32x4 = _mm_add_epi32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid mask from 16-bit to 32-bit and apply: response = valid ? sumSqr : 0
+		_mm_storeu_si128((__m128i*)(responseBlock + 0), _mm_and_si128(sumSqrLow_s_32x4, _mm_cvtepi16_epi32(valid_s_16x8)));
+		_mm_storeu_si128((__m128i*)(responseBlock + 4), _mm_and_si128(sumSqrHigh_s_32x4, _mm_cvtepi16_epi32(_mm_srli_si128(valid_s_16x8, 8))));
+
+		for (unsigned int n = 0u; n < blockSize; ++n)
+		{
+			if (responseBlock[n] != 0)
+			{
+				nonMaximumSuppression->addCandidate(filterSize_2 + x + n, y, responseBlock[n]);
+			}
+		}
+
+		yRowCenter += blockSize;
+	}
+}
+
+void PointDetector::determinePointCandidatesRowSSEDual(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(nonMaximumSuppression != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(nonMaximumSuppression->width() >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+
+	const unsigned int coreWidth = nonMaximumSuppression->width() - filterSize_2 * 2u;
+
+	const __m128i minDiffMinus1_s_16x8 = _mm_set1_epi16(int16_t(minimalDifference - 1));
+	const __m128i negMinDiff_s_16x8 = _mm_set1_epi16(int16_t(-minimalDifference));
+	const __m128i maxSqrDiff_s_32x4 = _mm_set1_epi32(maxSqrDifference);
+
+	int32_t responseBlock[blockSize];
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			x = newX;
+
+			nonMaximumSuppression->removeCandidatesRightFrom(filterSize_2 + x, y);
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		const __m128i center_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yRowCenter));
+
+		// track validity and response for black dots (positive diff) and white dots (negative diff)
+		__m128i validDark_s_16x8 = _mm_set1_epi16(-1);
+		__m128i validBright_s_16x8 = _mm_set1_epi16(-1);
+		__m128i sumSqrDarkLow_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrDarkHigh_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrBrightLow_s_32x4 = _mm_setzero_si128();
+		__m128i sumSqrBrightHigh_s_32x4 = _mm_setzero_si128();
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0];
+
+		// process first border pixel
+		__m128i border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+		__m128i diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+		// dark dots: diff >= minimalDifference (i.e., diff > minimalDifference - 1)
+		validDark_s_16x8 = _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8);
+
+		// bright dots: diff <= -minimalDifference (i.e., diff < -minimalDifference + 1)
+		validBright_s_16x8 = _mm_cmplt_epi16(diff_s_16x8, negMinDiff_s_16x8);
+
+		const bool hasDarkCandidates = !_mm_testz_si128(validDark_s_16x8, validDark_s_16x8);
+		const bool hasBrightCandidates = !_mm_testz_si128(validBright_s_16x8, validBright_s_16x8);
+
+		if (hasDarkCandidates || hasBrightCandidates)
+		{
+			// square the differences and clamp to maxSqrDifference
+			__m128i sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+			__m128i sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+			sumSqrDarkLow_s_32x4 = _mm_add_epi32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+			sumSqrDarkHigh_s_32x4 = _mm_add_epi32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+			sumSqrBrightLow_s_32x4 = _mm_add_epi32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+			sumSqrBrightHigh_s_32x4 = _mm_add_epi32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset];
+
+				border_s_16x8 = _mm_cvtepu8_epi16(_mm_loadl_epi64((const __m128i*)yBorderData));
+				diff_s_16x8 = _mm_sub_epi16(border_s_16x8, center_s_16x8);
+
+				// update validity masks
+				validDark_s_16x8 = _mm_and_si128(validDark_s_16x8, _mm_cmpgt_epi16(diff_s_16x8, minDiffMinus1_s_16x8));
+				validBright_s_16x8 = _mm_and_si128(validBright_s_16x8, _mm_cmplt_epi16(diff_s_16x8, negMinDiff_s_16x8));
+
+				// early exit if all 8 pixels have failed both threshold checks
+				const __m128i anyValid_s_16x8 = _mm_or_si128(validDark_s_16x8, validBright_s_16x8);
+				if (_mm_testz_si128(anyValid_s_16x8, anyValid_s_16x8))
+				{
+					break;
+				}
+
+				// square the differences and clamp to maxSqrDifference
+				sqrLow_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpacklo_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = _mm_min_epi32(_mm_madd_epi16(_mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128()), _mm_unpackhi_epi16(diff_s_16x8, _mm_setzero_si128())), maxSqrDiff_s_32x4);
+
+				sumSqrDarkLow_s_32x4 = _mm_add_epi32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+				sumSqrDarkHigh_s_32x4 = _mm_add_epi32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+				sumSqrBrightLow_s_32x4 = _mm_add_epi32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+				sumSqrBrightHigh_s_32x4 = _mm_add_epi32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid masks from 16-bit to 32-bit
+		const __m128i validDarkLow_s_32x4 = _mm_cvtepi16_epi32(validDark_s_16x8);
+		const __m128i validDarkHigh_s_32x4 = _mm_cvtepi16_epi32(_mm_srli_si128(validDark_s_16x8, 8));
+		const __m128i validBrightLow_s_32x4 = _mm_cvtepi16_epi32(validBright_s_16x8);
+		const __m128i validBrightHigh_s_32x4 = _mm_cvtepi16_epi32(_mm_srli_si128(validBright_s_16x8, 8));
+
+		// apply masks: darkResponse = valid ? sumSqr : 0, brightResponse = valid ? -sumSqr : 0
+		const __m128i darkResponseLow_s_32x4 = _mm_and_si128(sumSqrDarkLow_s_32x4, validDarkLow_s_32x4);
+		const __m128i darkResponseHigh_s_32x4 = _mm_and_si128(sumSqrDarkHigh_s_32x4, validDarkHigh_s_32x4);
+		const __m128i brightResponseLow_s_32x4 = _mm_and_si128(_mm_sub_epi32(_mm_setzero_si128(), sumSqrBrightLow_s_32x4), validBrightLow_s_32x4);
+		const __m128i brightResponseHigh_s_32x4 = _mm_and_si128(_mm_sub_epi32(_mm_setzero_si128(), sumSqrBrightHigh_s_32x4), validBrightHigh_s_32x4);
+
+		// combine: each pixel can only be one or the other (or neither), so we can just add
+		_mm_storeu_si128((__m128i*)(responseBlock + 0), _mm_add_epi32(darkResponseLow_s_32x4, brightResponseLow_s_32x4));
+		_mm_storeu_si128((__m128i*)(responseBlock + 4), _mm_add_epi32(darkResponseHigh_s_32x4, brightResponseHigh_s_32x4));
+
+		for (unsigned int n = 0u; n < blockSize; ++n)
+		{
+			if (responseBlock[n] != 0)
+			{
+				nonMaximumSuppression->addCandidate(filterSize_2 + x + n, y, responseBlock[n]);
+			}
+		}
+
+		yRowCenter += blockSize;
+	}
+}
+
+#endif // OCEAN_HARDWARE_SSE_VERSION >= 41
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+void PointDetector::createFilterResponseRowNEON(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(responseRow != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(width >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	// response pixels close to the left image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+	int32_t* responseRowCenter = responseRow + filterSize_2;
+
+	const unsigned int coreWidth = width - filterSize_2 * 2u;
+
+	const int16x8_t minDiffMinus1_s_16x8 = vdupq_n_s16(int16_t(minimalDifference - 1));
+	const int32x4_t maxSqrDiff_s_32x4 = vdupq_n_s32(maxSqrDifference);
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			responseRowCenter -= offset;
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		// load 8 center pixels and expand to 16-bit signed
+		const int16x8_t center_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yRowCenter)));
+
+		int16x8_t valid_s_16x8 = vdupq_n_s16(-1);
+		int32x4_t sumSqrLow_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrHigh_s_32x4 = vdupq_n_s32(0);
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0]; // first offset is interpreted as negative offset (to the top-left starting point)
+
+		// process first border pixel - load 8 border pixels and expand to 16-bit signed
+		int16x8_t border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+		int16x8_t diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+		// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+		valid_s_16x8 = vandq_s16(valid_s_16x8, vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8)));
+
+		// check if any pixels passed the threshold
+		int16x4_t valid_or = vorr_s16(vget_low_s16(valid_s_16x8), vget_high_s16(valid_s_16x8));
+		int32x2_t valid_or_32 = vreinterpret_s32_s16(valid_or);
+		int64x1_t valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+
+		if (vget_lane_s64(valid_or_64, 0) != 0)
+		{
+			// square the differences, clamp to maxSqrDifference, and accumulate
+			int16x4_t diff_low = vget_low_s16(diff_s_16x8);
+			int16x4_t diff_high = vget_high_s16(diff_s_16x8);
+
+			int32x4_t sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+			int32x4_t sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+			sumSqrLow_s_32x4 = vaddq_s32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+			sumSqrHigh_s_32x4 = vaddq_s32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset]; // all remaining offsets are positive offsets in relation to the previous position
+
+				// load 8 border pixels and expand to 16-bit signed
+				border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+				diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+				// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+				valid_s_16x8 = vandq_s16(valid_s_16x8, vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8)));
+
+				// early exit if all 8 pixels have failed the threshold check
+				valid_or = vorr_s16(vget_low_s16(valid_s_16x8), vget_high_s16(valid_s_16x8));
+				valid_or_32 = vreinterpret_s32_s16(valid_or);
+				valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+				if (vget_lane_s64(valid_or_64, 0) == 0)
+				{
+					break;
+				}
+
+				// square the differences, clamp to maxSqrDifference, and accumulate
+				diff_low = vget_low_s16(diff_s_16x8);
+				diff_high = vget_high_s16(diff_s_16x8);
+
+				sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+				sumSqrLow_s_32x4 = vaddq_s32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+				sumSqrHigh_s_32x4 = vaddq_s32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid mask from 16-bit to 32-bit and apply: response = valid ? sumSqr : 0
+		const int32x4_t validLow_s_32x4 = vmovl_s16(vget_low_s16(valid_s_16x8));
+		const int32x4_t validHigh_s_32x4 = vmovl_s16(vget_high_s16(valid_s_16x8));
+
+		vst1q_s32(responseRowCenter + 0, vandq_s32(sumSqrLow_s_32x4, validLow_s_32x4));
+		vst1q_s32(responseRowCenter + 4, vandq_s32(sumSqrHigh_s_32x4, validHigh_s_32x4));
+
+		yRowCenter += blockSize;
+		responseRowCenter += blockSize;
+	}
+
+	// response pixels close to the right image border
+	memset(responseRowCenter, 0x00, filterSize_2 * sizeof(int32_t));
+}
+
+void PointDetector::determinePointCandidatesRowNEON(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(nonMaximumSuppression != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(nonMaximumSuppression->width() >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+
+	const unsigned int coreWidth = nonMaximumSuppression->width() - filterSize_2 * 2u;
+
+	const int16x8_t minDiffMinus1_s_16x8 = vdupq_n_s16(int16_t(minimalDifference - 1));
+	const int32x4_t maxSqrDiff_s_32x4 = vdupq_n_s32(maxSqrDifference);
+
+	int32_t responseBlock[blockSize];
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			x = newX;
+
+			nonMaximumSuppression->removeCandidatesRightFrom(filterSize_2 + x, y);
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		// load 8 center pixels and expand to 16-bit signed
+		const int16x8_t center_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yRowCenter)));
+
+		int16x8_t valid_s_16x8 = vdupq_n_s16(-1);
+		int32x4_t sumSqrLow_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrHigh_s_32x4 = vdupq_n_s32(0);
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0]; // first offset is interpreted as negative offset (to the top-left starting point)
+
+		// process first border pixel - load 8 border pixels and expand to 16-bit signed
+		int16x8_t border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+		int16x8_t diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+		// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+		valid_s_16x8 = vandq_s16(valid_s_16x8, vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8)));
+
+		// check if any pixels passed the threshold
+		int16x4_t valid_or = vorr_s16(vget_low_s16(valid_s_16x8), vget_high_s16(valid_s_16x8));
+		int32x2_t valid_or_32 = vreinterpret_s32_s16(valid_or);
+		int64x1_t valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+
+		if (vget_lane_s64(valid_or_64, 0) != 0)
+		{
+			// square the differences, clamp to maxSqrDifference, and accumulate
+			int16x4_t diff_low = vget_low_s16(diff_s_16x8);
+			int16x4_t diff_high = vget_high_s16(diff_s_16x8);
+
+			int32x4_t sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+			int32x4_t sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+			sumSqrLow_s_32x4 = vaddq_s32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+			sumSqrHigh_s_32x4 = vaddq_s32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset]; // all remaining offsets are positive offsets in relation to the previous position
+
+				// load 8 border pixels and expand to 16-bit signed
+				border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+				diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+				// check if difference >= minimalDifference (i.e., diff > minimalDifference - 1)
+				valid_s_16x8 = vandq_s16(valid_s_16x8, vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8)));
+
+				// early exit if all 8 pixels have failed the threshold check
+				valid_or = vorr_s16(vget_low_s16(valid_s_16x8), vget_high_s16(valid_s_16x8));
+				valid_or_32 = vreinterpret_s32_s16(valid_or);
+				valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+				if (vget_lane_s64(valid_or_64, 0) == 0)
+				{
+					break;
+				}
+
+				// square the differences, clamp to maxSqrDifference, and accumulate
+				diff_low = vget_low_s16(diff_s_16x8);
+				diff_high = vget_high_s16(diff_s_16x8);
+
+				sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+				sumSqrLow_s_32x4 = vaddq_s32(sumSqrLow_s_32x4, sqrLow_s_32x4);
+				sumSqrHigh_s_32x4 = vaddq_s32(sumSqrHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid mask from 16-bit to 32-bit and apply: response = valid ? sumSqr : 0
+		const int32x4_t validLow_s_32x4 = vmovl_s16(vget_low_s16(valid_s_16x8));
+		const int32x4_t validHigh_s_32x4 = vmovl_s16(vget_high_s16(valid_s_16x8));
+
+		vst1q_s32(responseBlock + 0, vandq_s32(sumSqrLow_s_32x4, validLow_s_32x4));
+		vst1q_s32(responseBlock + 4, vandq_s32(sumSqrHigh_s_32x4, validHigh_s_32x4));
+
+		for (unsigned int n = 0u; n < blockSize; ++n)
+		{
+			if (responseBlock[n] != 0)
+			{
+				nonMaximumSuppression->addCandidate(filterSize_2 + x + n, y, responseBlock[n]);
+			}
+		}
+
+		yRowCenter += blockSize;
+	}
+}
+
+void PointDetector::determinePointCandidatesRowNEONDual(const unsigned int y, const uint8_t* yRow, NonMaximumSuppressionVote* nonMaximumSuppression, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(nonMaximumSuppression != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(nonMaximumSuppression->width() >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+
+	const unsigned int coreWidth = nonMaximumSuppression->width() - filterSize_2 * 2u;
+
+	const int16x8_t minDiffMinus1_s_16x8 = vdupq_n_s16(int16_t(minimalDifference - 1));
+	const int16x8_t negMinDiff_s_16x8 = vdupq_n_s16(int16_t(-minimalDifference));
+	const int32x4_t maxSqrDiff_s_32x4 = vdupq_n_s32(maxSqrDifference);
+
+	int32_t responseBlock[blockSize];
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			x = newX;
+
+			nonMaximumSuppression->removeCandidatesRightFrom(filterSize_2 + x, y);
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		// load 8 center pixels and expand to 16-bit signed
+		const int16x8_t center_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yRowCenter)));
+
+		// track validity and response for black dots (positive diff) and white dots (negative diff)
+		int16x8_t validDark_s_16x8 = vdupq_n_s16(-1);
+		int16x8_t validBright_s_16x8 = vdupq_n_s16(-1);
+		int32x4_t sumSqrDarkLow_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrDarkHigh_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrBrightLow_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrBrightHigh_s_32x4 = vdupq_n_s32(0);
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0];
+
+		// process first border pixel - load 8 border pixels and expand to 16-bit signed
+		int16x8_t border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+		int16x8_t diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+		// dark dots: diff >= minimalDifference (i.e., diff > minimalDifference - 1)
+		validDark_s_16x8 = vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8));
+
+		// bright dots: diff <= -minimalDifference (i.e., diff < -minimalDifference + 1)
+		validBright_s_16x8 = vreinterpretq_s16_u16(vcltq_s16(diff_s_16x8, negMinDiff_s_16x8));
+
+		// check if any pixels passed either threshold
+		int16x8_t anyValid_s_16x8 = vorrq_s16(validDark_s_16x8, validBright_s_16x8);
+		int16x4_t valid_or = vorr_s16(vget_low_s16(anyValid_s_16x8), vget_high_s16(anyValid_s_16x8));
+		int32x2_t valid_or_32 = vreinterpret_s32_s16(valid_or);
+		int64x1_t valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+
+		if (vget_lane_s64(valid_or_64, 0) != 0)
+		{
+			// square the differences, clamp to maxSqrDifference, and accumulate
+			int16x4_t diff_low = vget_low_s16(diff_s_16x8);
+			int16x4_t diff_high = vget_high_s16(diff_s_16x8);
+
+			int32x4_t sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+			int32x4_t sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+			sumSqrDarkLow_s_32x4 = vaddq_s32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+			sumSqrDarkHigh_s_32x4 = vaddq_s32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+			sumSqrBrightLow_s_32x4 = vaddq_s32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+			sumSqrBrightHigh_s_32x4 = vaddq_s32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset];
+
+				// load 8 border pixels and expand to 16-bit signed
+				border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+				diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+				// update validity masks
+				validDark_s_16x8 = vandq_s16(validDark_s_16x8, vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8)));
+				validBright_s_16x8 = vandq_s16(validBright_s_16x8, vreinterpretq_s16_u16(vcltq_s16(diff_s_16x8, negMinDiff_s_16x8)));
+
+				// early exit if all 8 pixels have failed both threshold checks
+				anyValid_s_16x8 = vorrq_s16(validDark_s_16x8, validBright_s_16x8);
+				valid_or = vorr_s16(vget_low_s16(anyValid_s_16x8), vget_high_s16(anyValid_s_16x8));
+				valid_or_32 = vreinterpret_s32_s16(valid_or);
+				valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+				if (vget_lane_s64(valid_or_64, 0) == 0)
+				{
+					break;
+				}
+
+				// square the differences, clamp to maxSqrDifference, and accumulate
+				diff_low = vget_low_s16(diff_s_16x8);
+				diff_high = vget_high_s16(diff_s_16x8);
+
+				sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+				sumSqrDarkLow_s_32x4 = vaddq_s32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+				sumSqrDarkHigh_s_32x4 = vaddq_s32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+				sumSqrBrightLow_s_32x4 = vaddq_s32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+				sumSqrBrightHigh_s_32x4 = vaddq_s32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid masks from 16-bit to 32-bit
+		const int32x4_t validDarkLow_s_32x4 = vmovl_s16(vget_low_s16(validDark_s_16x8));
+		const int32x4_t validDarkHigh_s_32x4 = vmovl_s16(vget_high_s16(validDark_s_16x8));
+		const int32x4_t validBrightLow_s_32x4 = vmovl_s16(vget_low_s16(validBright_s_16x8));
+		const int32x4_t validBrightHigh_s_32x4 = vmovl_s16(vget_high_s16(validBright_s_16x8));
+
+		// apply masks: darkResponse = valid ? sumSqr : 0, brightResponse = valid ? -sumSqr : 0
+		const int32x4_t darkResponseLow_s_32x4 = vandq_s32(sumSqrDarkLow_s_32x4, validDarkLow_s_32x4);
+		const int32x4_t darkResponseHigh_s_32x4 = vandq_s32(sumSqrDarkHigh_s_32x4, validDarkHigh_s_32x4);
+		const int32x4_t brightResponseLow_s_32x4 = vandq_s32(vnegq_s32(sumSqrBrightLow_s_32x4), validBrightLow_s_32x4);
+		const int32x4_t brightResponseHigh_s_32x4 = vandq_s32(vnegq_s32(sumSqrBrightHigh_s_32x4), validBrightHigh_s_32x4);
+
+		// combine: each pixel can only be one or the other (or neither), so we can just add
+		vst1q_s32(responseBlock + 0, vaddq_s32(darkResponseLow_s_32x4, brightResponseLow_s_32x4));
+		vst1q_s32(responseBlock + 4, vaddq_s32(darkResponseHigh_s_32x4, brightResponseHigh_s_32x4));
+
+		for (unsigned int n = 0u; n < blockSize; ++n)
+		{
+			if (responseBlock[n] != 0)
+			{
+				nonMaximumSuppression->addCandidate(filterSize_2 + x + n, y, responseBlock[n]);
+			}
+		}
+
+		yRowCenter += blockSize;
+	}
+}
+
+void PointDetector::createFilterResponseRowNEONDual(const uint8_t* yRow, int32_t* responseRow, const unsigned int width, const uint32_t* borderOffsets, const size_t numberBorderOffsets, const unsigned int filterSize, const int32_t minimalDifference, const int32_t maximalDifference)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert(responseRow != nullptr);
+	ocean_assert(borderOffsets != nullptr);
+	ocean_assert(numberBorderOffsets >= 1);
+	ocean_assert(maximalDifference >= 0);
+
+	constexpr unsigned int blockSize = 8u;
+
+	const unsigned int filterSize_2 = filterSize / 2u;
+	ocean_assert(width >= filterSize_2 + blockSize + filterSize_2);
+
+	const int32_t maxSqrDifference = maximalDifference * maximalDifference;
+
+	// response pixels close to the left image border
+	memset(responseRow, 0x00, filterSize_2 * sizeof(int32_t));
+
+	const uint8_t* yRowCenter = yRow + filterSize_2;
+	int32_t* responseRowCenter = responseRow + filterSize_2;
+
+	const unsigned int coreWidth = width - filterSize_2 * 2u;
+
+	const int16x8_t minDiffMinus1_s_16x8 = vdupq_n_s16(int16_t(minimalDifference - 1));
+	const int16x8_t negMinDiff_s_16x8 = vdupq_n_s16(int16_t(-minimalDifference));
+	const int32x4_t maxSqrDiff_s_32x4 = vdupq_n_s32(maxSqrDifference);
+
+	for (unsigned int x = 0u; x < coreWidth; x += blockSize)
+	{
+		if (x + blockSize > coreWidth)
+		{
+			ocean_assert(x >= blockSize && coreWidth > blockSize);
+			const unsigned int newX = coreWidth - blockSize;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+
+			yRowCenter -= offset;
+			responseRowCenter -= offset;
+
+			ocean_assert(!(x + blockSize < coreWidth));
+		}
+
+		// load 8 center pixels and expand to 16-bit signed
+		const int16x8_t center_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yRowCenter)));
+
+		// track validity and response for black dots (positive diff) and white dots (negative diff)
+		int16x8_t validDark_s_16x8 = vdupq_n_s16(-1);
+		int16x8_t validBright_s_16x8 = vdupq_n_s16(-1);
+		int32x4_t sumSqrDarkLow_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrDarkHigh_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrBrightLow_s_32x4 = vdupq_n_s32(0);
+		int32x4_t sumSqrBrightHigh_s_32x4 = vdupq_n_s32(0);
+
+		const uint8_t* yBorderData = yRowCenter - borderOffsets[0];
+
+		// process first border pixel - load 8 border pixels and expand to 16-bit signed
+		int16x8_t border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+		int16x8_t diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+		// dark dots: diff >= minimalDifference (i.e., diff > minimalDifference - 1)
+		validDark_s_16x8 = vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8));
+
+		// bright dots: diff <= -minimalDifference (i.e., diff < -minimalDifference + 1)
+		validBright_s_16x8 = vreinterpretq_s16_u16(vcltq_s16(diff_s_16x8, negMinDiff_s_16x8));
+
+		// check if any pixels passed either threshold
+		int16x8_t anyValid_s_16x8 = vorrq_s16(validDark_s_16x8, validBright_s_16x8);
+		int16x4_t valid_or = vorr_s16(vget_low_s16(anyValid_s_16x8), vget_high_s16(anyValid_s_16x8));
+		int32x2_t valid_or_32 = vreinterpret_s32_s16(valid_or);
+		int64x1_t valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+
+		if (vget_lane_s64(valid_or_64, 0) != 0)
+		{
+			// square the differences, clamp to maxSqrDifference, and accumulate
+			int16x4_t diff_low = vget_low_s16(diff_s_16x8);
+			int16x4_t diff_high = vget_high_s16(diff_s_16x8);
+
+			int32x4_t sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+			int32x4_t sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+			sumSqrDarkLow_s_32x4 = vaddq_s32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+			sumSqrDarkHigh_s_32x4 = vaddq_s32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+			sumSqrBrightLow_s_32x4 = vaddq_s32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+			sumSqrBrightHigh_s_32x4 = vaddq_s32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+
+			// process remaining border pixels
+			for (size_t nOffset = 1; nOffset < numberBorderOffsets; ++nOffset)
+			{
+				yBorderData += borderOffsets[nOffset];
+
+				// load 8 border pixels and expand to 16-bit signed
+				border_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(vld1_u8(yBorderData)));
+				diff_s_16x8 = vsubq_s16(border_s_16x8, center_s_16x8);
+
+				// update validity masks
+				validDark_s_16x8 = vandq_s16(validDark_s_16x8, vreinterpretq_s16_u16(vcgtq_s16(diff_s_16x8, minDiffMinus1_s_16x8)));
+				validBright_s_16x8 = vandq_s16(validBright_s_16x8, vreinterpretq_s16_u16(vcltq_s16(diff_s_16x8, negMinDiff_s_16x8)));
+
+				// early exit if all 8 pixels have failed both threshold checks
+				anyValid_s_16x8 = vorrq_s16(validDark_s_16x8, validBright_s_16x8);
+				valid_or = vorr_s16(vget_low_s16(anyValid_s_16x8), vget_high_s16(anyValid_s_16x8));
+				valid_or_32 = vreinterpret_s32_s16(valid_or);
+				valid_or_64 = vreinterpret_s64_s32(vorr_s32(valid_or_32, vrev64_s32(valid_or_32)));
+				if (vget_lane_s64(valid_or_64, 0) == 0)
+				{
+					break;
+				}
+
+				// square the differences, clamp to maxSqrDifference, and accumulate
+				diff_low = vget_low_s16(diff_s_16x8);
+				diff_high = vget_high_s16(diff_s_16x8);
+
+				sqrLow_s_32x4 = vminq_s32(vmull_s16(diff_low, diff_low), maxSqrDiff_s_32x4);
+				sqrHigh_s_32x4 = vminq_s32(vmull_s16(diff_high, diff_high), maxSqrDiff_s_32x4);
+
+				sumSqrDarkLow_s_32x4 = vaddq_s32(sumSqrDarkLow_s_32x4, sqrLow_s_32x4);
+				sumSqrDarkHigh_s_32x4 = vaddq_s32(sumSqrDarkHigh_s_32x4, sqrHigh_s_32x4);
+				sumSqrBrightLow_s_32x4 = vaddq_s32(sumSqrBrightLow_s_32x4, sqrLow_s_32x4);
+				sumSqrBrightHigh_s_32x4 = vaddq_s32(sumSqrBrightHigh_s_32x4, sqrHigh_s_32x4);
+			}
+		}
+
+		// expand valid masks from 16-bit to 32-bit
+		const int32x4_t validDarkLow_s_32x4 = vmovl_s16(vget_low_s16(validDark_s_16x8));
+		const int32x4_t validDarkHigh_s_32x4 = vmovl_s16(vget_high_s16(validDark_s_16x8));
+		const int32x4_t validBrightLow_s_32x4 = vmovl_s16(vget_low_s16(validBright_s_16x8));
+		const int32x4_t validBrightHigh_s_32x4 = vmovl_s16(vget_high_s16(validBright_s_16x8));
+
+		// apply masks: darkResponse = valid ? sumSqr : 0, brightResponse = valid ? -sumSqr : 0
+		const int32x4_t darkResponseLow_s_32x4 = vandq_s32(sumSqrDarkLow_s_32x4, validDarkLow_s_32x4);
+		const int32x4_t darkResponseHigh_s_32x4 = vandq_s32(sumSqrDarkHigh_s_32x4, validDarkHigh_s_32x4);
+		const int32x4_t brightResponseLow_s_32x4 = vandq_s32(vnegq_s32(sumSqrBrightLow_s_32x4), validBrightLow_s_32x4);
+		const int32x4_t brightResponseHigh_s_32x4 = vandq_s32(vnegq_s32(sumSqrBrightHigh_s_32x4), validBrightHigh_s_32x4);
+
+		// combine: each pixel can only be one or the other (or neither), so we can just add
+		vst1q_s32(responseRowCenter + 0, vaddq_s32(darkResponseLow_s_32x4, brightResponseLow_s_32x4));
+		vst1q_s32(responseRowCenter + 4, vaddq_s32(darkResponseHigh_s_32x4, brightResponseHigh_s_32x4));
+
+		yRowCenter += blockSize;
+		responseRowCenter += blockSize;
+	}
+
+	// response pixels close to the right image border
+	memset(responseRowCenter, 0x00, filterSize_2 * sizeof(int32_t));
+}
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 
 }
 

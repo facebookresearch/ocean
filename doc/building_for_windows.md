@@ -81,22 +81,21 @@ Ocean is built using a Python build script that invokes CMake with the correct c
 cd \path\to\ocean
 
 # Build Ocean using the Python 3P layout
-python build/python/build_ocean.py --third-party-layout python
-
+python build/python/build_ocean.py
 # Build for a specific configuration
-python build/python/build_ocean.py --third-party-layout python --config release
+python build/python/build_ocean.py --config release
 
 # Use a specific Visual Studio version
-python build/python/build_ocean.py --third-party-layout python --vs-version 2022
+python build/python/build_ocean.py --vs-version 2022
 
 # Specify custom directories
-python build/python/build_ocean.py --third-party-layout python `
+python build/python/build_ocean.py `
     --build-dir C:\build_ocean `
     --install-dir C:\install_ocean `
     --third-party-dir C:\ocean_3rdparty\install
 
 # Show build plan without building
-python build/python/build_ocean.py --third-party-layout python --dry-run
+python build/python/build_ocean.py --dry-run
 ```
 
 Once the build is complete, the compiled binaries can be found in `ocean_install/win_x86_64_static_debug` and `.../win_x86_64_static_release` (or with `arm64_` prefix on ARM64 systems).
@@ -114,7 +113,6 @@ cd \path\to\ocean
 cmake -S . -B build_win `
     -DCMAKE_BUILD_TYPE=Release `
     -DBUILD_SHARED_LIBS=OFF `
-    -DOCEAN_THIRD_PARTY_LAYOUT=python `
     -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install
 
 # Build and install
@@ -127,7 +125,6 @@ To use a specific Visual Studio version with CMake directly, add the `-G` flag:
 cmake -S . -B build_win -G "Visual Studio 16 2019" `
     -DCMAKE_BUILD_TYPE=Release `
     -DBUILD_SHARED_LIBS=OFF `
-    -DOCEAN_THIRD_PARTY_LAYOUT=python `
     -DOCEAN_THIRD_PARTY_ROOT=.\ocean_3rdparty\install
 ```
 
@@ -137,7 +134,7 @@ To open the project in Visual Studio after configuration:
 
 ```powershell
 # Configure the project
-python build/python/build_ocean.py --third-party-layout python --configure-only
+python build/python/build_ocean.py --configure-only
 
 # Open in Visual Studio
 start ocean_build\win_x86_64_static_release\ocean.sln

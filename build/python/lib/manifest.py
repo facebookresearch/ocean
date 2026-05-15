@@ -15,20 +15,171 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
+
+def _classify_shell_exe(exe: str) -> str:
+    """Return the shell name for a Windows exe filename, "" if not a shell."""
+    if "pwsh.exe" in exe:
+        return "pwsh"
+    if "powershell.exe" in exe:
+        return "powershell"
+    if "cmd.exe" in exe:
+        return "cmd"
+    return ""
+
+
+def _windows_process_map() -> Dict[int, tuple]:
+    """Build a pid -> (parent_pid, exe_lower) map of every process.
+
+    Uses the Toolhelp32 snapshot API. Returns an empty dict on any failure
+    so callers can fall back to a generic code path.
+    """
+    processes: Dict[int, tuple] = {}
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        kernel32 = ctypes.windll.kernel32
+        th32cs_snapprocess = 0x00000002
+
+        class PROCESSENTRY32(ctypes.Structure):
+            _fields_ = [
+                ("dwSize", wintypes.DWORD),
+                ("cntUsage", wintypes.DWORD),
+                ("th32ProcessID", wintypes.DWORD),
+                ("th32DefaultHeapID", ctypes.c_void_p),
+                ("th32ModuleID", wintypes.DWORD),
+                ("cntThreads", wintypes.DWORD),
+                ("th32ParentProcessID", wintypes.DWORD),
+                ("pcPriClassBase", wintypes.LONG),
+                ("dwFlags", wintypes.DWORD),
+                ("szExeFile", ctypes.c_char * 260),
+            ]
+
+        snapshot = kernel32.CreateToolhelp32Snapshot(th32cs_snapprocess, 0)
+        if not snapshot or snapshot == ctypes.c_void_p(-1).value:
+            return {}
+        try:
+            entry = PROCESSENTRY32()
+            entry.dwSize = ctypes.sizeof(PROCESSENTRY32)
+            if kernel32.Process32First(snapshot, ctypes.byref(entry)):
+                while True:
+                    exe = entry.szExeFile.decode("ascii", errors="ignore").lower()
+                    processes[entry.th32ProcessID] = (
+                        entry.th32ParentProcessID,
+                        exe,
+                    )
+                    if not kernel32.Process32Next(snapshot, ctypes.byref(entry)):
+                        break
+        finally:
+            kernel32.CloseHandle(snapshot)
+    except Exception:
+        return {}
+    return processes
+
+
+def detect_windows_shell() -> str:
+    """Best-effort detection of the parent shell on Windows.
+
+    Walks up the parent-process chain (skipping the Python interpreter /
+    launcher / Windows Terminal host) until a known shell executable is
+    found. Returns one of:
+
+        "cmd"        - cmd.exe (supports &&)
+        "pwsh"       - PowerShell 7+ (supports &&)
+        "powershell" - Windows PowerShell 5.x (does NOT support &&)
+        ""           - unknown / detection failed
+    """
+    if os.name != "nt":
+        return ""
+
+    processes = _windows_process_map()
+    if not processes:
+        return ""
+
+    pid = os.getpid()
+    # Bounded walk to avoid loops on PID reuse / corrupt parent links.
+    for _ in range(10):
+        info = processes.get(pid)
+        if info is None:
+            return ""
+        parent_pid, _ = info
+        parent_info = processes.get(parent_pid)
+        if parent_info is None:
+            return ""
+        _, parent_exe = parent_info
+        shell = _classify_shell_exe(parent_exe)
+        if shell:
+            return shell
+        # Keep walking through known intermediaries (py.exe, python.exe,
+        # conhost.exe, WindowsTerminal.exe, etc.).
+        pid = parent_pid
+
+    return ""
+
+
+# Per-shell venv setup snippets. Each value is the body shown after the
+# common intro line; ordered as: create venv → activate → pip install.
+_VENV_HINTS_NT: Dict[str, str] = {
+    "cmd": (
+        "  py -3 -m venv .venv\n  .venv\\Scripts\\activate.bat\n  pip install pyyaml\n"
+    ),
+    "pwsh": (
+        "  py -3 -m venv .venv\n  .venv\\Scripts\\Activate.ps1\n  pip install pyyaml\n"
+    ),
+    "powershell": (
+        "  py -3 -m venv .venv\n"
+        "  .venv\\Scripts\\Activate.ps1\n"
+        "  pip install pyyaml\n\n"
+        "If activation is blocked by execution policy, run this once in\n"
+        "the current session first:\n\n"
+        "  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass\n"
+    ),
+}
+
+_VENV_HINT_NT_UNKNOWN: str = (
+    "  cmd.exe:\n"
+    "      py -3 -m venv .venv\n"
+    "      .venv\\Scripts\\activate.bat\n"
+    "      pip install pyyaml\n\n"
+    "  PowerShell 7+ (pwsh):\n"
+    "      py -3 -m venv .venv\n"
+    "      .venv\\Scripts\\Activate.ps1\n"
+    "      pip install pyyaml\n\n"
+    "  Windows PowerShell 5.x (powershell):\n"
+    "      py -3 -m venv .venv\n"
+    "      .venv\\Scripts\\Activate.ps1\n"
+    "      pip install pyyaml\n"
+)
+
+_VENV_HINT_POSIX: str = (
+    "  python3 -m venv .venv\n  source .venv/bin/activate\n  pip install pyyaml\n"
+)
+
+
+def _format_pyyaml_install_help() -> str:
+    """Build a shell-appropriate hint for installing PyYAML in a venv.
+
+    The order matters: create the venv, activate it (so pip is on PATH),
+    then run pip. Listing pip first leads users to try it before pip
+    exists.
+    """
+    intro = (
+        "Error: PyYAML is required but not installed.\n\n"
+        "Create (if needed) and activate a Python virtual environment, then\n"
+        "install PyYAML inside it:\n\n"
+    )
+
+    if os.name != "nt":
+        return intro + _VENV_HINT_POSIX
+
+    shell = detect_windows_shell()
+    return intro + _VENV_HINTS_NT.get(shell, _VENV_HINT_NT_UNKNOWN)
+
+
 try:
     import yaml
 except ImportError:
-    if os.name == "nt":
-        _venv_cmd = "py -3 -m venv .venv && .venv\\Scripts\\activate"
-    else:
-        _venv_cmd = "python3 -m venv .venv && source .venv/bin/activate"
-    print(
-        "Error: PyYAML is required but not installed. Install it with:\n\n"
-        "  pip install pyyaml\n\n"
-        "If you don't have a virtual environment set up yet, create one first:\n\n"
-        f"  {_venv_cmd}\n",
-        file=sys.stderr,
-    )
+    print(_format_pyyaml_install_help(), file=sys.stderr)
     sys.exit(1)
 
 

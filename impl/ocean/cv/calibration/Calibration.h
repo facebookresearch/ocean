@@ -80,7 +80,7 @@ namespace Calibration
  * The marker point detection follows a multi-stage process:
  *
  * #### Stage 1: Point Detection
- * The **PointDetector** uses pattern matching to identify potential marker points in the image:
+ * The **LegacyPointDetector** uses pattern matching to identify potential marker points in the image:
  *
  * - **Pattern Matching**: Uses circular or rectangular patterns of varying radii to detect blob-like structures
  * - **Intensity Analysis**: Distinguishes between dark points (black dots) and bright points (white dots)

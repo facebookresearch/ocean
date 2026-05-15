@@ -22,7 +22,7 @@ DSSoundMedium::DSSortableSoundType::DSSortableSoundType(DSMediaType&& dsMediaTyp
 	SortableSoundType(soundType),
 	dsMediaType_(std::move(dsMediaType))
 {
-	DSSoundMedium::extractSoundFormat(dsMediaType_.type(), actualSoundType);
+	DSSoundMedium::extractSoundFormat(dsMediaType_.type(), actualSoundType_);
 }
 
 const AM_MEDIA_TYPE& DSSoundMedium::DSSortableSoundType::type() const
@@ -169,9 +169,9 @@ bool DSSoundMedium::createSoundInterface()
 		DSMediaType mediaType;
 		soundDeviceFilterInputPin->ConnectionMediaType(&mediaType.reset());
 
-		if (extractSoundFormat(mediaType.type(), mediumSoundType))
+		if (extractSoundFormat(mediaType.type(), soundType_))
 		{
-			mediumSoundTimestamp.toNow();
+			soundTimestamp_.toNow();
 		}
 	}
 

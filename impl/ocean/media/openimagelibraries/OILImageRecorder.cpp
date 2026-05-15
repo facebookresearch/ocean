@@ -52,7 +52,7 @@ OILImageRecorder::Encoders OILImageRecorder::frameEncoders() const
 
 bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respectFrameFrequency*/)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderFrame_)
 	{
@@ -60,18 +60,18 @@ bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respe
 		return false;
 	}
 
-	if (!recorderSaveImage)
+	if (!saveImage_)
 	{
 		return false;
 	}
 
-	recorderFrame_ = Frame(recorderFrameType);
+	recorderFrame_ = Frame(frameType_);
 	if (!recorderFrame_.isValid())
 	{
 		return false;
 	}
 
-	recorderSaveImage = false;
+	saveImage_ = false;
 
 	recorderFrame = Frame(recorderFrame_, Frame::ACM_USE_KEEP_LAYOUT);
 
@@ -80,7 +80,7 @@ bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respe
 
 void OILImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{
@@ -88,7 +88,7 @@ void OILImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, recorderFilename);
+		saveImage(recorderFrame_, filename_);
 	}
 
 	recorderFrame_.release();

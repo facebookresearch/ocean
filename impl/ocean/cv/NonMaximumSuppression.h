@@ -9,6 +9,7 @@
 #define META_OCEAN_CV_NON_MAXIMUM_SUPPRESSION_H
 
 #include "ocean/cv/CV.h"
+#include "ocean/cv/FrameInterpolatorBilinear.h"
 
 #include "ocean/base/ShiftVector.h"
 #include "ocean/base/Worker.h"
@@ -46,6 +47,23 @@ class NonMaximumSuppression
 			SM_MAXIMUM_POSITIVE_ONLY,
 			/// Finds the minimum values, only negative values are allowed (< 0).
 			SM_MINIMUM_NEGATIVE_ONLY
+		};
+
+		/**
+		 * Definition of individual refinement status values for iterative sub-pixel peak refinement.
+		 */
+		enum RefinementStatus : uint32_t
+		{
+			/// Invalid status, no refinement was applied.
+			RS_INVALID = 0u,
+			/// The fitted offset exceeded the step size, indicating divergence.
+			RS_DIVERGED,
+			/// The sample position fell outside the frame bounds.
+			RS_BORDER,
+			/// The refinement did not converge within the maximum number of iterations.
+			RS_MAX_ITERATIONS,
+			/// The refinement converged, the offset is below the convergence threshold.
+			RS_CONVERGED
 		};
 
 		/**
@@ -278,7 +296,7 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @param numberRows The number of rows for which candidates will be returned, with range [1, height() - firstRow]
 		 * @param strengthPositions The resulting strength positions
 		 */
-		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions);
+		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions) const;
 
 		/**
 		 * Applies a non-maximum-suppression search on a given 2D frame in a 3x3 neighborhood (eight neighbors).
@@ -360,6 +378,47 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		template <typename TFloat>
 		static bool determinePrecisePeakLocation2(const T* const topValues, const T* const centerValues, const T* const bottomValues, VectorT2<TFloat>& location);
 
+		/**
+		 * Determines the precise peak location in 2D space by fitting a quadratic surface via least-squares to a tSize x tSize grid of values.
+		 * Uses all tSize * tSize samples to fit F(x,y) = a + bx + cy + dx^2 + exy + fy^2 and solves for the peak of the fitted surface.<br>
+		 * For a 3x3 grid this reduces to central differences; for larger grids the least-squares fit uses all samples for a more robust estimate.<br>
+		 * The function validates that the fitted surface has the correct curvature (negative-definite Hessian for maximum, positive-definite for minimum).
+		 * @param values The grid values in row-major order, must have at least (tSize - 1) * valuesStrideElements + tSize elements
+		 * @param valuesStrideElements The number of elements between the start of two consecutive rows, with range [tSize, infinity)
+		 * @param offsetX The resulting horizontal offset of the peak from the grid center, in range (-1, 1)
+		 * @param offsetY The resulting vertical offset of the peak from the grid center, in range (-1, 1)
+		 * @return True, if the fit succeeded, the curvature is correct, and the offset is within range; False, if the surface is degenerate, has wrong curvature, or the offset is out of range
+		 * @tparam TFloat The floating point data type to be used for calculation, either 'float' or 'double'
+		 * @tparam tSize The size of the sampling grid, must be odd and >= 3
+		 * @tparam tFindMaximum True, to find the maximum of the fitted surface; False, to find the minimum
+		 */
+		template <typename TFloat, unsigned int tSize, bool tFindMaximum = true>
+		static bool determinePrecisePeakLocationNxN(const TFloat* values, const size_t valuesStrideElements, TFloat& offsetX, TFloat& offsetY);
+
+		/**
+		 * Determines the precise sub-pixel peak location by iteratively sampling image intensity values at sub-pixel positions.
+		 * The function uses bilinear interpolation to sample a tSize x tSize grid of intensity values around the current estimate, calls determinePrecisePeakLocationNxN() to find the sub-pixel offset, and iterates with decreasing step size until convergence.<br>
+		 * The valid sampling range is [0, width - 1]x[0, height - 1] for PC_TOP_LEFT or [0, width]x[0, height] for PC_CENTER.
+		 * @param frame Pointer to the first pixel of the grayscale frame (single channel, uint8_t), must be valid
+		 * @param width The width of the frame in pixels, with range [tSize, infinity)
+		 * @param height The height of the frame in pixels, with range [tSize, infinity)
+		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param x The horizontal position of the initial peak estimate, in the coordinate system defined by tPixelCenter
+		 * @param y The vertical position of the initial peak estimate, in the coordinate system defined by tPixelCenter
+		 * @param preciseX The resulting precise horizontal position, in the coordinate system defined by tPixelCenter
+		 * @param preciseY The resulting precise vertical position, in the coordinate system defined by tPixelCenter
+		 * @param maxIterations The maximum number of refinement iterations, with range [1, infinity)
+		 * @param stepSize The initial step size for the sampling grid, with range (0, 1]
+		 * @param convergenceThreshold The threshold for the pixel offset magnitude below which convergence is declared, with range (0, infinity)
+		 * @return The refinement status
+		 * @tparam TFloat The floating point data type to be used for calculation, either 'float' or 'double'
+		 * @tparam tSize The size of the sampling grid, must be odd and >= 3
+		 * @tparam tFindMaximum True, to find the intensity maximum; False, to find the intensity minimum
+		 * @tparam tPixelCenter The pixel center to be used during interpolation, either 'PC_TOP_LEFT' or 'PC_CENTER'
+		 */
+		template <typename TFloat, unsigned int tSize, bool tFindMaximum = true, PixelCenter tPixelCenter = PC_TOP_LEFT>
+		static NonMaximumSuppression::RefinementStatus determinePrecisePeakLocationIterativeNxN(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const TFloat x, const TFloat y, TFloat& preciseX, TFloat& preciseY, const unsigned int maxIterations = 5u, const TFloat stepSize = TFloat(0.75), const TFloat convergenceThreshold = TFloat(0.01));
+
 	private:
 
 		/**
@@ -405,7 +464,7 @@ class NonMaximumSuppressionT : public NonMaximumSuppression
 		 * @param numberRows Number of rows to be handled
 		 * @tparam TCoordinate The data type of a scalar coordinate
 		 * @tparam TStrength The data type of the strength parameter
-		 * @tparam tStrictMaximum True, to search for a strict minimum (smaller than all eight neighbors); False, to allow equal values in the lower right neighborhood
+		 * @tparam tStrictMaximum True, to search for a strict minimum (smaller than all eight neighbors); False, to allow equal values in the upper left neighborhood
 		 * @tparam tOnlyNegative True, to only consider negative values (< 0); False, to consider all values
 		 */
 		template <typename TCoordinate, typename TStrength, bool tStrictMaximum, bool tOnlyNegative = false>
@@ -620,7 +679,7 @@ bool NonMaximumSuppressionT<T>::candidate(const unsigned int x, const unsigned i
 }
 
 template <typename T>
-void NonMaximumSuppressionT<T>::candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, NonMaximumSuppressionT<T>::StrengthPositions<unsigned int, T>& strengthPositions)
+void NonMaximumSuppressionT<T>::candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, NonMaximumSuppressionT<T>::StrengthPositions<unsigned int, T>& strengthPositions) const
 {
 	ocean_assert(firstColumn + numberColumns <= width_);
 	ocean_assert(firstRow + numberRows <= (unsigned int)(rows_.endIndex()));
@@ -996,7 +1055,244 @@ bool NonMaximumSuppressionT<T>::determinePrecisePeakLocation2(const T* const top
 	}
 
 	location = VectorT2<TFloat>(offsetX, offsetY);
+
 	return true;
+}
+
+template <typename T>
+template <typename TFloat, unsigned int tSize, bool tFindMaximum>
+bool NonMaximumSuppressionT<T>::determinePrecisePeakLocationNxN(const TFloat* values, const size_t valuesStrideElements, TFloat& offsetX, TFloat& offsetY)
+{
+	static_assert(std::is_floating_point<TFloat>::value, "Invalid floating point data type!");
+	static_assert(tSize >= 3u && tSize % 2u == 1u, "Grid size must be odd and >= 3");
+
+	ocean_assert(valuesStrideElements >= tSize);
+
+	// Least-squares fit of F(x,y) = a + bx + cy + dx^2 + exy + fy^2 to all NxN grid samples.
+	//
+	// Grid coordinates: x_i = gx - tSize_2, y_j = gy - tSize_2, for gx,gy in [0, tSize).
+	// On a symmetric grid, cross-terms in the normal equations vanish, yielding closed-form coefficients:
+	//
+	//   gradient:  dx = Sxz / (n * S2),  dy = Syz / (n * S2)
+	//   Hessian:   dxx = 2 * (Sxxz - S2 * Sz / n) / (n * S4 - S2^2)
+	//              dyy = 2 * (Syyz - S2 * Sz / n) / (n * S4 - S2^2)
+	//              dxy = Sxyz / S2^2
+	//
+	// where S2 = sum(i^2) and S4 = sum(i^4) over i in [-tSize_2, tSize_2].
+
+	constexpr int tSize_2 = int(tSize / 2u);
+	constexpr unsigned int n = tSize;
+
+	// Precomputed grid sums for coordinates in [-tSize_2, tSize_2]:
+	// sumOfSquaredCoordinates = sum(i^2) = tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1) / 3
+	// sumOfFourthPowerCoordinates = sum(i^4) = tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1) * (3 * tSize_2^2 + 3 * tSize_2 - 1) / 15
+
+	const TFloat sumOfSquaredCoordinates = TFloat(tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1)) / TFloat(3);
+	const TFloat sumOfFourthPowerCoordinates = TFloat(tSize_2 * (tSize_2 + 1) * (2 * tSize_2 + 1) * (3 * tSize_2 * tSize_2 + 3 * tSize_2 - 1)) / TFloat(15);
+
+	const TFloat normalEquationGradientDenominator = TFloat(n) * sumOfSquaredCoordinates;
+	const TFloat squaredSumOfSquaredCoordinates = sumOfSquaredCoordinates * sumOfSquaredCoordinates;
+	const TFloat normalEquationHessianDenominator = TFloat(n) * sumOfFourthPowerCoordinates - squaredSumOfSquaredCoordinates;
+
+	if (NumericT<TFloat>::isEqualEps(normalEquationGradientDenominator) || NumericT<TFloat>::isEqualEps(normalEquationHessianDenominator))
+	{
+		offsetX = TFloat(0);
+		offsetY = TFloat(0);
+
+		return true;
+	}
+
+	// Accumulate weighted sums in a single pass
+
+	TFloat sumValues = TFloat(0);
+	TFloat sumXValues = TFloat(0);
+	TFloat sumYValues = TFloat(0);
+	TFloat sumXXValues = TFloat(0);
+	TFloat sumYYValues = TFloat(0);
+	TFloat sumXYValues = TFloat(0);
+
+	for (unsigned int yy = 0u; yy < tSize; ++yy)
+	{
+		const TFloat yj = TFloat(int(yy) - tSize_2);
+
+		for (unsigned int xx = 0u; xx < tSize; ++xx)
+		{
+			const TFloat xi = TFloat(int(xx) - tSize_2);
+			const TFloat z = values[yy * valuesStrideElements + xx];
+
+			sumValues += z;
+			sumXValues += xi * z;
+			sumYValues += yj * z;
+			sumXXValues += xi * xi * z;
+			sumYYValues += yj * yj * z;
+			sumXYValues += xi * yj * z;
+		}
+	}
+
+	// Derivatives at the grid center from the least-squares quadratic fit
+
+	const TFloat dx = sumXValues / normalEquationGradientDenominator;
+	const TFloat dy = sumYValues / normalEquationGradientDenominator;
+	const TFloat dxy = sumXYValues / squaredSumOfSquaredCoordinates;
+
+	const TFloat meanValue = sumValues / TFloat(n);
+	const TFloat dxx = TFloat(2) * (sumXXValues - sumOfSquaredCoordinates * meanValue) / normalEquationHessianDenominator;
+	const TFloat dyy = TFloat(2) * (sumYYValues - sumOfSquaredCoordinates * meanValue) / normalEquationHessianDenominator;
+
+	const TFloat hessianDeterminant = dxx * dyy - dxy * dxy;
+
+	if (NumericT<TFloat>::isEqualEps(hessianDeterminant))
+	{
+		offsetX = TFloat(0);
+		offsetY = TFloat(0);
+
+		return true;
+	}
+
+	// For a maximum, the Hessian must be negative-definite (dxx < 0 and det > 0)
+	// For a minimum, the Hessian must be positive-definite (dxx > 0 and det > 0)
+	if constexpr (tFindMaximum)
+	{
+		if (dxx >= TFloat(0) || hessianDeterminant <= TFloat(0))
+		{
+			offsetX = TFloat(0);
+			offsetY = TFloat(0);
+
+			return false;
+		}
+	}
+	else
+	{
+		if (dxx <= TFloat(0) || hessianDeterminant <= TFloat(0))
+		{
+			offsetX = TFloat(0);
+			offsetY = TFloat(0);
+
+			return false;
+		}
+	}
+
+	const TFloat inverseHessianDeterminant = TFloat(1) / hessianDeterminant;
+
+	offsetX = -(dyy * dx - dxy * dy) * inverseHessianDeterminant;
+	offsetY = -(dxx * dy - dxy * dx) * inverseHessianDeterminant;
+
+	if (offsetX < TFloat(-1) || offsetX > TFloat(1) || offsetY < TFloat(-1) || offsetY > TFloat(1))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+template <typename T>
+template <typename TFloat, unsigned int tSize, bool tFindMaximum, PixelCenter tPixelCenter>
+NonMaximumSuppression::RefinementStatus NonMaximumSuppressionT<T>::determinePrecisePeakLocationIterativeNxN(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const TFloat x, const TFloat y, TFloat& preciseX, TFloat& preciseY, const unsigned int maxIterations, const TFloat stepSize, const TFloat convergenceThreshold)
+{
+	static_assert(std::is_floating_point<TFloat>::value, "Invalid floating point data type!");
+	static_assert(tSize >= 3u && tSize % 2u == 1u, "Grid size must be odd and >= 3");
+
+	ocean_assert(frame != nullptr);
+	ocean_assert(width >= tSize && height >= tSize);
+	ocean_assert(maxIterations >= 1u);
+	ocean_assert(stepSize > TFloat(0) && stepSize <= TFloat(1));
+	ocean_assert(convergenceThreshold > TFloat(0));
+
+	constexpr unsigned int tSize_2 = tSize / 2u;
+
+	const TFloat maxSampleX = (tPixelCenter == PC_TOP_LEFT) ? TFloat(width - 1u) : TFloat(width);
+	const TFloat maxSampleY = (tPixelCenter == PC_TOP_LEFT) ? TFloat(height - 1u) : TFloat(height);
+
+	ocean_assert(x >= TFloat(0) && x <= maxSampleX);
+	ocean_assert(y >= TFloat(0) && y <= maxSampleY);
+
+	if (x < TFloat(0) || x > maxSampleX || y < TFloat(0) || y > maxSampleY)
+	{
+		return NonMaximumSuppression::RS_INVALID;
+	}
+
+	TFloat iterationX = x;
+	TFloat iterationY = y;
+	TFloat stepFactor = stepSize;
+
+	const TFloat sqrConvergenceThreshold = convergenceThreshold * convergenceThreshold;
+
+	for (unsigned int iteration = 0u; iteration < maxIterations; ++iteration)
+	{
+		if (iterationX - TFloat(tSize_2) < TFloat(0) || iterationX + TFloat(tSize_2) > maxSampleX || iterationY - TFloat(tSize_2) < TFloat(0) || iterationY + TFloat(tSize_2) > maxSampleY)
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			return NonMaximumSuppression::RS_BORDER;
+		}
+
+		TFloat interpolatedValues[tSize * tSize];
+
+		for (unsigned int yy = 0u; yy < tSize; ++yy)
+		{
+			for (unsigned int xx = 0u; xx < tSize; ++xx)
+			{
+				const TFloat sampleX = iterationX + TFloat(int(xx) - int(tSize_2));
+				const TFloat sampleY = iterationY + TFloat(int(yy) - int(tSize_2));
+
+				ocean_assert(sampleX >= TFloat(0) && sampleX <= maxSampleX);
+				ocean_assert(sampleY >= TFloat(0) && sampleY <= maxSampleY);
+
+				const VectorT2<TFloat> samplePos(sampleX, sampleY);
+
+				FrameInterpolatorBilinear::interpolatePixel<uint8_t, TFloat, 1u, tPixelCenter, TFloat>(frame, width, height, framePaddingElements, samplePos, &interpolatedValues[yy * tSize + xx]);
+			}
+		}
+
+		TFloat fitOffsetX;
+		TFloat fitOffsetY;
+
+		if (!determinePrecisePeakLocationNxN<TFloat, tSize, tFindMaximum>(interpolatedValues, tSize, fitOffsetX, fitOffsetY))
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			return NonMaximumSuppression::RS_DIVERGED;
+		}
+
+		if (fitOffsetX == TFloat(0) && fitOffsetY == TFloat(0))
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			return NonMaximumSuppression::RS_CONVERGED;
+		}
+
+		const TFloat pixelOffsetX = fitOffsetX * stepFactor;
+		const TFloat pixelOffsetY = fitOffsetY * stepFactor;
+
+		if (NumericT<TFloat>::abs(pixelOffsetX) > stepFactor || NumericT<TFloat>::abs(pixelOffsetY) > stepFactor)
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			return NonMaximumSuppression::RS_DIVERGED;
+		}
+
+		iterationX += pixelOffsetX;
+		iterationY += pixelOffsetY;
+
+		stepFactor *= stepSize;
+
+		if (pixelOffsetX * pixelOffsetX + pixelOffsetY * pixelOffsetY < sqrConvergenceThreshold)
+		{
+			preciseX = iterationX;
+			preciseY = iterationY;
+
+			return NonMaximumSuppression::RS_CONVERGED;
+		}
+	}
+
+	preciseX = iterationX;
+	preciseY = iterationY;
+
+	return NonMaximumSuppression::RS_MAX_ITERATIONS;
 }
 
 template <typename T>

@@ -70,7 +70,7 @@ void JSDevice::setFoundObjectEventFunction(v8::Local<v8::Function> function)
 
 				ownerContext_ = JSContext::currentJSContext();
 
-				const v8::Handle<v8::Value> name = function->GetName();
+				const v8::Local<v8::Value> name = function->GetName();
 				ocean_assert(name->IsString());
 
 				foundObjectEventFunctionName_ = JSBase::toAString(name->ToString(JSContext::currentContext()));
@@ -102,7 +102,7 @@ void JSDevice::setLostObjectEventFunction(v8::Local<v8::Function> function)
 
 				ownerContext_ = JSContext::currentJSContext();
 
-				const v8::Handle<v8::Value> name = function->GetName();
+				const v8::Local<v8::Value> name = function->GetName();
 				ocean_assert(name->IsString());
 
 				lostObjectEventFunctionName_ = JSBase::toAString(name->ToString(JSContext::currentContext()));
@@ -196,7 +196,7 @@ void JSDevice::onObjectEvent(const Devices::Tracker* /*tracker*/, const bool fou
 	}
 }
 
-std::vector<v8::Handle<v8::Value>> JSDevice::parameter(const Devices::Tracker::ObjectId object, const Timestamp timestamp)
+std::vector<v8::Local<v8::Value>> JSDevice::parameter(const Devices::Tracker::ObjectId object, const Timestamp timestamp)
 {
 	JSContext::Values values;
 	values.reserve(2);

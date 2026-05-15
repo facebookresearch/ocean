@@ -1,47 +1,59 @@
-# Website
+# Ocean Documentation Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built using a Python build script that converts Markdown documentation into a static HTML site. No npm, Node.js, or JavaScript build tools are required.
 
 ### Prerequisites
 
-The following software packages will be required to test the website locally:
+- Python 3.8+
 
-* [Node.js](https://nodejs.org/en/download)
-* The `yarn` package manager
-
-Mac users can either install Node.js
-
-* manually and enable `yarn` by typing `corepack enable` in terminal, or
-* using a package manager like [Homebrew](https://brew.sh/): `brew install yarn`
-
-Users of other operating systems can hopefully extrapolate the necessary steps from the information above.
-
-### Local Development
-
-When you run this for the first time, a myriad of packages needs to be installed. To do this, run following from inside the `website/` directory:
-
-```
-$ yarn
-```
-
-or
-
-```
-$ yarn install
-```
-
-After that, start a local webserver by running (again from inside `website/`):
-
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+The `markdown` Python package is vendored in `third_party/` — no pip install needed.
 
 ### Build
 
-```
-$ yarn build
+From inside the `website/` directory:
+
+```bash
+python build.py
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+This fetches remote build guides from GitHub, converts all Markdown docs to HTML, and outputs the site to the `build/` directory.
+
+### Local Development
+
+To build and preview the site locally:
+
+```bash
+python build.py --serve
+```
+
+This builds the site and starts a local HTTP server at `http://localhost:3000/ocean/`.
+
+### Options
+
+```bash
+python build.py --skip-fetch       # Skip fetching build guides from GitHub
+python build.py --with-doxygen     # Generate Doxygen API reference
+python build.py --port 8080        # Use a custom port for the local server
+```
+
+### Doxygen API Reference
+
+The C++ API reference is generated separately using Doxygen:
+
+```bash
+python build.py --with-doxygen
+```
+
+This requires `doxygen` to be installed and available in your PATH.
+
+### Project Structure
+
+```
+website/
+  build.py              # Build script
+  docs/                 # Markdown documentation source files
+  static/img/           # Images and static assets
+  templates/            # HTML page templates
+  assets/               # CSS, JavaScript, and vendor files
+  build/                # Generated output (gitignored)
+```

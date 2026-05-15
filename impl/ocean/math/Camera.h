@@ -19,7 +19,8 @@ namespace Ocean
 {
 
 // Forward declaration.
-template <typename T> class CameraT;
+template <typename T>
+class CameraT;
 
 /**
  * Definition of an Camera object with Scalar precision.
@@ -452,17 +453,17 @@ class CameraT
 template <typename T>
 T CameraT<T>::fovX2Y(const T fovX, const T aspectRatio)
 {
-	ocean_assert(aspectRatio != 0);
+	ocean_assert(NumericT<T>::isNotEqualEps(aspectRatio));
 
-	return 2 * NumericT<T>::atan(NumericT<T>::tan(T(0.5) * fovX) / aspectRatio);
+	return T(2) * NumericT<T>::atan(NumericT<T>::tan(T(0.5) * fovX) / aspectRatio);
 }
 
 template <typename T>
 T CameraT<T>::fovY2X(const T fovY, const T aspectRatio)
 {
-	ocean_assert(aspectRatio != 0);
+	ocean_assert(NumericT<T>::isNotEqualEps(aspectRatio));
 
-	return 2 * NumericT<T>::atan(NumericT<T>::tan(T(0.5) * fovY) * aspectRatio);
+	return T(2) * NumericT<T>::atan(NumericT<T>::tan(T(0.5) * fovY) * aspectRatio);
 }
 
 template <typename T>
@@ -497,7 +498,7 @@ inline VectorT2<T> CameraT<T>::objectPoint2normalizedImagePointIF(const Homogeno
 		return VectorT2<T>(0, 0);
 	}
 
-	const T factor = 1 / transformedObjectPoint.z();
+	const T factor = T(1) / transformedObjectPoint.z();
 	return VectorT2<T>(transformedObjectPoint.x() * factor, transformedObjectPoint.y() * factor);
 }
 
@@ -524,7 +525,7 @@ void CameraT<T>::objectPoints2normalizedImagePointsIF(const HomogenousMatrixT4<T
 
 		if (NumericT<T>::isNotEqualEps(transformedObjectPoint.z()))
 		{
-			const T factor = 1 / transformedObjectPoint.z();
+			const T factor = T(1) / transformedObjectPoint.z();
 			normalizedImagePoints[n].x() = transformedObjectPoint.x() * factor;
 			normalizedImagePoints[n].y() = transformedObjectPoint.y() * factor;
 		}

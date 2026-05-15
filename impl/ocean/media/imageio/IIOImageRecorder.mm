@@ -31,7 +31,7 @@ IIOImageRecorder::~IIOImageRecorder()
 
 bool IIOImageRecorder::saveImage(const Frame& frame, const std::string& filename)
 {
-	return ImageIO::Image::writeImage(frame, addOptionalSuffixToFilename(filename, recorderFilenameSuffixed), true);
+	return ImageIO::Image::writeImage(frame, addOptionalSuffixToFilename(filename, filenameSuffixed_), true);
 }
 
 IIOImageRecorder::Encoders IIOImageRecorder::frameEncoders() const
@@ -55,7 +55,7 @@ IIOImageRecorder::Encoders IIOImageRecorder::frameEncoders() const
 
 bool IIOImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFrameFrequency)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (recorderFrame_)
 	{
@@ -63,18 +63,18 @@ bool IIOImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 		return false;
 	}
 
-	if (!recorderSaveImage)
+	if (!saveImage_)
 	{
 		return false;
 	}
 
-	recorderFrame_ = Frame(recorderFrameType);
+	recorderFrame_ = Frame(frameType_);
 	if (!recorderFrame_.isValid())
 	{
 		return false;
 	}
 
-	recorderSaveImage = false;
+	saveImage_ = false;
 
 	recorderFrame = Frame(recorderFrame_, Frame::ACM_USE_KEEP_LAYOUT);
 
@@ -83,7 +83,7 @@ bool IIOImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool respect
 
 void IIOImageRecorder::unlockBufferToFill()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!recorderFrame_.isValid())
 	{
@@ -91,7 +91,7 @@ void IIOImageRecorder::unlockBufferToFill()
 	}
 	else
 	{
-		saveImage(recorderFrame_, recorderFilename);
+		saveImage(recorderFrame_, filename_);
 	}
 
 	recorderFrame_.release();

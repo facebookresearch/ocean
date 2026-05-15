@@ -282,7 +282,7 @@ inline QRCodes LegacyQRCodeDetector2D::detectQRCodes(const Frame& frame, Worker*
 	if (frame.isValid() == false || FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_Y8) == false || frame.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
 	{
 		ocean_assert(false && "Frame must be valid and an 8 bit grayscale image and the pixel origin must be the upper left corner");
-		QRCodes();
+		return QRCodes();
 	}
 
 	return detectQRCodes(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), worker, detectionMode, observations);

@@ -57,7 +57,7 @@ bool DSLibrary::unregisterLibrary()
 
 MediumRef DSLibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	MediumRef medium(newMovie(url, useExclusive));
 
@@ -76,7 +76,7 @@ MediumRef DSLibrary::newMedium(const std::string& url, bool useExclusive)
 
 MediumRef DSLibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	switch (type)
 	{
@@ -145,7 +145,7 @@ RecorderRef DSLibrary::newRecorder(const Recorder::Type type)
 
 Library::Definitions DSLibrary::selectableMedia() const
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	Definitions entireDefinitions;
 
@@ -160,7 +160,7 @@ Library::Definitions DSLibrary::selectableMedia() const
 
 Library::Definitions DSLibrary::selectableMedia(const Medium::Type type) const
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	Definitions definitions;
 
@@ -231,7 +231,9 @@ MediumRef DSLibrary::newLiveVideo(const std::string& url, bool useExclusive)
 		DSDeviceEnumerator::Names names(enumerator.names());
 
 		if (index < names.size())
+		{
 			newUrl = names[index];
+		}
 	}
 
 	if (!useExclusive)

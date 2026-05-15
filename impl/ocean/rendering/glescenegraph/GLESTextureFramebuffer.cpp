@@ -752,9 +752,9 @@ bool GLESTextureFramebuffer::copyColorTextureToFrame(Frame& frame, const CV::Pix
 
 		return textureFramebufferOneSample.copyColorTextureToFrame(frame, subRegion);
 	}
-#endif // OCEAN_RENDERING_GLES_USE_ES
-
+#else
 	return false;
+#endif // OCEAN_RENDERING_GLES_USE_ES
 }
 
 #ifdef OCEAN_RENDERING_GLES_USE_ES

@@ -31,7 +31,7 @@ VideoDecoder::~VideoDecoder()
 	release();
 }
 
-bool VideoDecoder::initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData, const size_t codecConfigSize)
+bool VideoDecoder::initialize(const std::string& mime, const unsigned int width, const unsigned int height, const void* codecConfigData, const size_t codecConfigSize, const DecodingMode decodingMode)
 {
 	ocean_assert(!mime.empty());
 	ocean_assert(width != 0u && height != 0u);
@@ -59,6 +59,7 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 
 	width_ = width;
 	height_ = height;
+	decodingMode_ = decodingMode;
 
 	const OSType pixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
 
@@ -318,18 +319,47 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 	debugPreviousSubmittedTimestamp_ = int64_t(presentationTime);
 #endif
 
+	if (decodingMode_ == DM_ORDERED)
+	{
+		const ScopedLock decodedLock(decodedFramesLock_);
+
+		pendingSampleTimestamps_.push_back(int64_t(presentationTime));
+	}
+
 	// store the presentation time for the callback
 	int64_t* presentationTimePtr = new int64_t(int64_t(presentationTime));
 
 	VTDecodeFrameFlags decodeFlags = kVTDecodeFrame_EnableAsynchronousDecompression;
-	VTDecodeInfoFlags infoFlagsOut = 0;
 
+	if (decodingMode_ == DM_ORDERED)
+	{
+		decodeFlags |= kVTDecodeFrame_EnableTemporalProcessing;
+	}
+
+	VTDecodeInfoFlags infoFlagsOut = 0;
 	status = VTDecompressionSessionDecodeFrame(*decompressionSession_, *scopedSampleBuffer, decodeFlags, presentationTimePtr, &infoFlagsOut);
 
 	if (status != noErr)
 	{
 		delete presentationTimePtr;
+
+		if (decodingMode_ == DM_ORDERED)
+		{
+			const ScopedLock decodedLock(decodedFramesLock_);
+
+			if (!pendingSampleTimestamps_.empty())
+			{
+				ocean_assert(pendingSampleTimestamps_.back() == int64_t(presentationTime));
+				pendingSampleTimestamps_.pop_back();
+			}
+			else
+			{
+				ocean_assert(false && "This should never happen");
+			}
+		}
+
 		Log::error() << "VideoDecoder: Failed to decode frame, error: " << status;
+
 		return false;
 	}
 
@@ -375,7 +405,10 @@ void VideoDecoder::release()
 
 	{
 		const ScopedLock decodedLock(decodedFramesLock_);
+
 		decodedFrames_.clear();
+		pendingSampleTimestamps_.clear();
+		deferredFrames_.clear();
 	}
 
 	width_ = 0u;
@@ -426,25 +459,37 @@ void VideoDecoder::decompressionOutputCallback(void* decompressionOutputReferenc
 				break;
 		}
 
+		if (decoder->decodingMode_ == DM_ORDERED)
+		{
+			decoder->removePendingSampleTimestamps(presentationTime);
+		}
+
 		return;
 	}
 
 	if (imageBuffer == nullptr)
 	{
 		Log::warning() << "VideoDecoder: Null image buffer in callback";
+
+		if (decoder->decodingMode_ == DM_ORDERED)
+		{
+			decoder->removePendingSampleTimestamps(presentationTime);
+		}
+
 		return;
 	}
-
-#ifdef OCEAN_DEBUG
-	ocean_assert(decoder->debugPreviousDecodedTimestamp_ <= presentationTime);
-	decoder->debugPreviousDecodedTimestamp_ = presentationTime;
-#endif
 
 	PixelBufferAccessor pixelBufferAccessor(imageBuffer, true);
 
 	if (!pixelBufferAccessor)
 	{
 		Log::error() << "VideoDecoder: Failed to access pixel buffer";
+
+		if (decoder->decodingMode_ == DM_ORDERED)
+		{
+			decoder->removePendingSampleTimestamps(presentationTime);
+		}
+
 		return;
 	}
 
@@ -453,6 +498,12 @@ void VideoDecoder::decompressionOutputCallback(void* decompressionOutputReferenc
 	if (!frame.isValid())
 	{
 		Log::error() << "VideoDecoder: Failed to extract frame from pixel buffer";
+
+		if (decoder->decodingMode_ == DM_ORDERED)
+		{
+			decoder->removePendingSampleTimestamps(presentationTime);
+		}
+
 		return;
 	}
 
@@ -460,13 +511,101 @@ void VideoDecoder::decompressionOutputCallback(void* decompressionOutputReferenc
 
 	DecodedFrame decodedFrame;
 	decodedFrame.frame_ = Frame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-    decodedFrame.frame_.setTimestamp(Timestamp(true));
+	decodedFrame.frame_.setTimestamp(Timestamp(true));
 	decodedFrame.frame_.setRelativeTimestamp(Timestamp(Timestamp::microseconds2seconds(presentationTime)));
 	decodedFrame.presentationTime_ = presentationTime;
 
-    const ScopedLock scopedLock(decoder->decodedFramesLock_);
+	decoder->onNewDecodedFrame(std::move(decodedFrame));
+}
 
-	decoder->decodedFrames_.push_back(std::move(decodedFrame));
+void VideoDecoder::removePendingSampleTimestamps(const int64_t presentationTime)
+{
+	const ScopedLock scopedLock(decodedFramesLock_);
+
+	for (TimestampQueue::iterator iTimestamp = pendingSampleTimestamps_.begin(); iTimestamp != pendingSampleTimestamps_.end(); ++iTimestamp)
+	{
+		if (*iTimestamp == presentationTime)
+		{
+			const bool isFrontTimestamp = iTimestamp == pendingSampleTimestamps_.begin();
+
+			pendingSampleTimestamps_.erase(iTimestamp);
+
+			if (isFrontTimestamp)
+			{
+				// removing the front timestamp may unblock deferred frames that are now next in line
+				processDeferredFrames();
+			}
+
+			return;
+		}
+	}
+
+	ocean_assert(false && "Presentation time not found");
+}
+
+void VideoDecoder::onNewDecodedFrame(DecodedFrame&& decodedFrame)
+{
+	const ScopedLock scopedLock(decodedFramesLock_);
+
+	if (decodingMode_ == DM_ORDERED)
+	{
+		// we need to ensure that a decoded frame is not delivered out of order
+
+		ocean_assert(!pendingSampleTimestamps_.empty());
+		if (pendingSampleTimestamps_.empty())
+		{
+			Log::error() << "VideoDecoder: Received decoded frame with no pending timestamps";
+			return;
+		}
+
+		if (pendingSampleTimestamps_.front() != decodedFrame.presentationTime_)
+		{
+			// the frame is newer than the oldest pending frame, so we need to store the frame for later
+
+			deferredFrames_.push_back(std::move(decodedFrame));
+
+			return;
+		}
+
+		pendingSampleTimestamps_.pop_front();
+
+		// push the current frame first, then drain any deferred frames that are now next in line
+		decodedFrames_.push_back(std::move(decodedFrame));
+
+		processDeferredFrames();
+
+		return;
+	}
+
+	decodedFrames_.push_back(std::move(decodedFrame));
+}
+
+void VideoDecoder::processDeferredFrames()
+{
+	// decodedFramesLock_ must be held by the caller
+
+	bool foundMatchingFrame = true;
+
+	while (foundMatchingFrame && !pendingSampleTimestamps_.empty())
+	{
+		foundMatchingFrame = false;
+
+		for (size_t nDeferred = 0; nDeferred < deferredFrames_.size(); ++nDeferred)
+		{
+			if (deferredFrames_[nDeferred].presentationTime_ == pendingSampleTimestamps_.front())
+			{
+				decodedFrames_.push_back(std::move(deferredFrames_[nDeferred]));
+				deferredFrames_[nDeferred] = std::move(deferredFrames_.back());
+				deferredFrames_.pop_back();
+
+				pendingSampleTimestamps_.pop_front();
+
+				foundMatchingFrame = true;
+
+				break;
+			}
+		}
+	}
 }
 
 CMVideoCodecType VideoDecoder::mimeToCodecType(const std::string& mime)

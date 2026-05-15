@@ -93,6 +93,28 @@ bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned in
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("determineprecisepeaklocationnxn"))
+	{
+		testResult = testDeterminePrecisePeakLocationNxN<float>();
+		Log::info() << " ";
+		testResult = testDeterminePrecisePeakLocationNxN<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("determineprecisepeaklocationiterativenxn"))
+	{
+		testResult = testDeterminePrecisePeakLocationIterativeNxN<float>();
+		Log::info() << " ";
+		testResult = testDeterminePrecisePeakLocationIterativeNxN<double>();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("candidate"))
 	{
 		testResult = testCandidate(testDuration);
@@ -160,25 +182,45 @@ TEST(TestNonMaximumSuppression, testSuppressionInStrengthPositions_double_double
 }
 
 
-TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1_Float)
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1_float)
 {
 	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation1<float>());
 }
 
-TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1_Double)
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1_double)
 {
 	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation1<double>());
 }
 
 
-TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_Float)
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_float)
 {
 	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation2<float>());
 }
 
-TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_Double)
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_double)
 {
 	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation2<double>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationNxN_float)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationNxN<float>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationNxN_double)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationNxN<double>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationIterativeNxN_float)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN<float>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocationIterativeNxN_double)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN<double>());
 }
 
 TEST(TestNonMaximumSuppression, Candidate)
@@ -313,7 +355,6 @@ bool TestNonMaximumSuppression::testSuppressionInFrameMinimum(const unsigned int
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Test non minimum suppression (" << (strictMaximum ? "strict" : "non-strict") << ") in " << width << "x" << height << " frame:";
-	Log::info() << " ";
 
 	using SignedNonMaximumSuppression = CV::NonMaximumSuppressionT<int32_t>;
 	using SignedStrengthPosition = SignedNonMaximumSuppression::StrengthPosition<int, int32_t>;
@@ -587,7 +628,7 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 template <typename T>
 bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 {
-	Log::info() << "Test 1D precise peak location, with " << TypeNamer::name<T>() << ":";
+	Log::info() << "Test determinePrecisePeakLocation1, with " << TypeNamer::name<T>() << ":";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -674,7 +715,7 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 template <typename T>
 bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 {
-	Log::info() << "Test 2D precise peak location, with " << TypeNamer::name<T>() << ":";
+	Log::info() << "Test determinePrecisePeakLocation2, with " << TypeNamer::name<T>() << ":";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -827,6 +868,293 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 				OCEAN_SET_FAILED(validation);
 			}
 		}
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationNxN()
+{
+	Log::info() << "Test determinePrecisePeakLocationNxN, with " << TypeNamer::name<T>() << ":";
+
+	Validation validation;
+
+	{
+		// flat surface — should return (0, 0)
+
+		constexpr T values3x3[9] = {T(5), T(5), T(5), T(5), T(5), T(5), T(5), T(5), T(5)};
+
+		T offsetX = NumericT<T>::minValue();
+		T offsetY = NumericT<T>::minValue();
+
+		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationNxN<T, 3u>(values3x3, 3u, offsetX, offsetY);
+		OCEAN_EXPECT_TRUE(validation, result);
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetX, T(0), T(0.001)));
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetY, T(0), T(0.001)));
+	}
+
+	{
+		// symmetric peak centered — should return (0, 0)
+
+		constexpr T values3x3[9] = {T(1), T(2), T(1), T(2), T(4), T(2), T(1), T(2), T(1)};
+
+		T offsetX = NumericT<T>::minValue();
+		T offsetY = NumericT<T>::minValue();
+
+		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationNxN<T, 3u>(values3x3, 3u, offsetX, offsetY);
+		OCEAN_EXPECT_TRUE(validation, result);
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetX, T(0), T(0.001)));
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetY, T(0), T(0.001)));
+	}
+
+	{
+		// peak shifted to the right — offset should be positive in x
+
+		constexpr T values3x3[9] = {T(1), T(2), T(1), T(2), T(4), T(3), T(1), T(2), T(1)};
+
+		T offsetX = NumericT<T>::minValue();
+		T offsetY = NumericT<T>::minValue();
+
+		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationNxN<T, 3u>(values3x3, 3u, offsetX, offsetY);
+		OCEAN_EXPECT_TRUE(validation, result);
+		OCEAN_EXPECT_GREATER(validation, offsetX, T(0));
+		OCEAN_EXPECT_LESS_EQUAL(validation, offsetX, T(1));
+	}
+
+	{
+		// peak shifted down — offset should be positive in y
+
+		constexpr T values3x3[9] = {T(1), T(2), T(1), T(2), T(4), T(2), T(1), T(3), T(1)};
+
+		T offsetX = NumericT<T>::minValue();
+		T offsetY = NumericT<T>::minValue();
+
+		const bool result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationNxN<T, 3u>(values3x3, 3u, offsetX, offsetY);
+		OCEAN_EXPECT_TRUE(validation, result);
+		OCEAN_EXPECT_GREATER(validation, offsetY, T(0));
+		OCEAN_EXPECT_LESS_EQUAL(validation, offsetY, T(1));
+	}
+
+	{
+		// 2D Gaussian on a 3x3 grid with known sub-pixel offset
+
+		const VectorsT2<T> offsets =
+		{
+			VectorT2<T>(T(0), T(0)),
+			VectorT2<T>(T(-0.3), T(0.2)),
+			VectorT2<T>(T(0.4), T(-0.1)),
+		};
+
+		for (const VectorT2<T>& offset : offsets)
+		{
+			constexpr T sigma = T(1);
+
+			T values3x3[9];
+
+			for (int y = -1; y <= 1; ++y)
+			{
+				for (int x = -1; x <= 1; ++x)
+				{
+					const T xValue = NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr(T(x) - offset.x()) / (sigma * sigma));
+					const T yValue = NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr(T(y) - offset.y()) / (sigma * sigma));
+					values3x3[(y + 1) * 3 + (x + 1)] = xValue * yValue;
+				}
+			}
+
+			T offsetX = NumericT<T>::minValue();
+			T offsetY = NumericT<T>::minValue();
+
+			if (CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationNxN<T, 3u>(values3x3, 3u, offsetX, offsetY))
+			{
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetX, offset.x(), T(0.15)));
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetY, offset.y(), T(0.15)));
+			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+	}
+
+	{
+		// 5x5 grid with Gaussian
+
+		constexpr T sigma = T(1.5);
+
+		const VectorT2<T> offset(T(0.25), T(-0.15));
+
+		T values5x5[25];
+
+		for (int y = -2; y <= 2; ++y)
+		{
+			for (int x = -2; x <= 2; ++x)
+			{
+				const T xValue = NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr(T(x) - offset.x()) / (sigma * sigma));
+				const T yValue = NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr(T(y) - offset.y()) / (sigma * sigma));
+				values5x5[(y + 2) * 5 + (x + 2)] = xValue * yValue;
+			}
+		}
+
+		T offsetX = NumericT<T>::minValue();
+		T offsetY = NumericT<T>::minValue();
+
+		if (CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationNxN<T, 5u>(values5x5, 5u, offsetX, offsetY))
+		{
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetX, offset.x(), T(0.15)));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(offsetY, offset.y(), T(0.15)));
+		}
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestNonMaximumSuppression::testDeterminePrecisePeakLocationIterativeNxN()
+{
+	Log::info() << "Test iterative precise peak location, with " << TypeNamer::name<T>() << ":";
+
+	Validation validation;
+
+	constexpr unsigned int frameWidth = 100u;
+	constexpr unsigned int frameHeight = 100u;
+
+	{
+		// bright blob (find maximum), grid size 3
+
+		T truePeakX = T(50.3);
+		T truePeakY = T(40.7);
+		const T sigma = T(3);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, false);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+
+		const CV::NonMaximumSuppression::RefinementStatus resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(41), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, resultTopLeft, CV::NonMaximumSuppression::RS_CONVERGED);
+
+		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
+
+		truePeakX += T(0.5);
+		truePeakY += T(0.5);
+
+		preciseX = NumericT<T>::minValue();
+		preciseY = NumericT<T>::minValue();
+
+		const CV::NonMaximumSuppression::RefinementStatus resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50) + T(0.5), T(41) + T(0.5), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, resultCenter, CV::NonMaximumSuppression::RS_CONVERGED);
+
+		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
+	}
+
+	{
+		// dark blob (find minimum), grid size 3
+
+		T truePeakX = T(60.4);
+		T truePeakY = T(30.2);
+		const T sigma = T(3);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, true);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+
+		const CV::NonMaximumSuppression::RefinementStatus resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60), T(30), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, resultTopLeft, CV::NonMaximumSuppression::RS_CONVERGED);
+
+		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
+
+		truePeakX += T(0.5);
+		truePeakY += T(0.5);
+
+		preciseX = NumericT<T>::minValue();
+		preciseY = NumericT<T>::minValue();
+
+		const CV::NonMaximumSuppression::RefinementStatus resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, false, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(60) + T(0.5), T(30) + T(0.5), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, resultCenter, CV::NonMaximumSuppression::RS_CONVERGED);
+
+		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
+	}
+
+	{
+		// bright blob, grid size 5
+
+		T truePeakX = T(45.6);
+		T truePeakY = T(55.8);
+		const T sigma = T(4);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, false);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+
+		const CV::NonMaximumSuppression::RefinementStatus resultTopLeft = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46), T(56), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, resultTopLeft, CV::NonMaximumSuppression::RS_CONVERGED);
+
+		const T errorTopLeft = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorTopLeft, T(0.3));
+
+		truePeakX += T(0.5);
+		truePeakY += T(0.5);
+
+		preciseX = NumericT<T>::minValue();
+		preciseY = NumericT<T>::minValue();
+
+		const CV::NonMaximumSuppression::RefinementStatus resultCenter = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 5u, true, CV::PC_CENTER>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(46) + T(0.5), T(56) + T(0.5), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, resultCenter, CV::NonMaximumSuppression::RS_CONVERGED);
+
+		const T errorCenter = NumericT<T>::sqrt(NumericT<T>::sqr(preciseX - truePeakX) + NumericT<T>::sqr(preciseY - truePeakY));
+		OCEAN_EXPECT_LESS(validation, errorCenter, T(0.3));
+	}
+
+	{
+		// peak at border -> returns false with RS_BORDER
+
+		const T truePeakX = T(0.5);
+		const T truePeakY = T(0.5);
+		const T sigma = T(3);
+
+		const Frame frame = createGaussianFrame(frameWidth, frameHeight, truePeakX, truePeakY, sigma, false);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+		const CV::NonMaximumSuppression::RefinementStatus result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(0), T(0), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, result, CV::NonMaximumSuppression::RS_BORDER);
+	}
+
+	{
+		// flat region -> quadratic fit returns (0, 0), position is valid
+
+		Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+		frame.setValue(128u);
+
+		T preciseX = NumericT<T>::minValue();
+		T preciseY = NumericT<T>::minValue();
+		const CV::NonMaximumSuppression::RefinementStatus result = CV::NonMaximumSuppressionT<int32_t>::determinePrecisePeakLocationIterativeNxN<T, 3u, true>(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), T(50), T(50), preciseX, preciseY);
+
+		OCEAN_EXPECT_EQUAL(validation, result, CV::NonMaximumSuppression::RS_CONVERGED);
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(preciseX, T(50), T(0.01)));
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(preciseY, T(50), T(0.01)));
 	}
 
 	Log::info() << "Validation: " << validation;
@@ -997,6 +1325,35 @@ void TestNonMaximumSuppression::determineFeaturePointsSubset(const Frame* yFrame
 	const OptionalScopedLock scopedLock(lock);
 
 	locations->insert(locations->end(), localLocations.begin(), localLocations.end());
+}
+
+template <typename T>
+Frame TestNonMaximumSuppression::createGaussianFrame(const unsigned int frameWidth, const unsigned int frameHeight, const T centerX, const T centerY, const T sigma, const bool darkBlob)
+{
+	Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+
+	for (unsigned int y = 0u; y < frameHeight; ++y)
+	{
+		uint8_t* row = frame.row<uint8_t>(y);
+
+		for (unsigned int x = 0u; x < frameWidth; ++x)
+		{
+			const T dx = T(x) - centerX;
+			const T dy = T(y) - centerY;
+			const T gaussValue = NumericT<T>::exp(T(-0.5) * (dx * dx + dy * dy) / (sigma * sigma));
+
+			if (darkBlob)
+			{
+				row[x] = uint8_t(T(255) * (T(1) - gaussValue));
+			}
+			else
+			{
+				row[x] = uint8_t(T(255) * gaussValue);
+			}
+		}
+	}
+
+	return frame;
 }
 
 }

@@ -50,23 +50,29 @@ bool OILLibrary::unregisterLibrary()
 
 MediumRef OILLibrary::newMedium(const std::string& url, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	return newImage(url, useExclusive);
 }
 
 MediumRef OILLibrary::newMedium(const std::string& url, const Medium::Type type, bool useExclusive)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (type == Medium::BUFFER_IMAGE)
+	{
 		return newBufferImage(url, useExclusive);
+	}
 
 	if (type == Medium::IMAGE_SEQUENCE)
+	{
 		return newImageSequence(url, useExclusive);
+	}
 
 	if (type == Medium::IMAGE || type == Medium::FRAME_MEDIUM)
+	{
 		return newImage(url, useExclusive);
+	}
 
 	return MediumRef();
 }

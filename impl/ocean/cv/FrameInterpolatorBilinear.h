@@ -34,6 +34,8 @@
 namespace Ocean
 {
 
+namespace Test { namespace TestCV { class TestFrameInterpolatorBilinearNEON; } }
+
 namespace CV
 {
 
@@ -43,6 +45,8 @@ namespace CV
  */
 class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 {
+	friend class Ocean::Test::TestCV::TestFrameInterpolatorBilinearNEON;
+
 	public:
 
 		/**
@@ -617,7 +621,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <typename T, unsigned int tChannels>
-		static inline void lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker = nullptr);
+		static inline void lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker = nullptr, const bool useOptimizedNEON = false, const bool useOptimizedBilinearValuesAndFactorCalculation = false, const bool useOptimizedNEONFactorReplication = false);
 
 		/**
 		 * Transforms a given input frame into an output frame by application of an interpolation lookup table.
@@ -1220,6 +1224,22 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		*/
 		static OCEAN_FORCE_INLINE void interpolate8Pixels1Channel8BitNEON(const uint8x8_t& topLeft_u_8x8, const uint8x8_t& topRight_u_8x8, const uint8x8_t& bottomLeft_u_8x8, const uint8x8_t& bottomRight_u_8x8, const uint8x16_t& factorsRight_factorsBottom_128_u_8x16, uint8_t* targetPositionPixels);
 
+		/**
+		 * Interpolates 4 independent 4-channel pixels using widening byte multiply.
+		 * Accepts pre-gathered pixel data in NEON registers, eliminating the
+		 * NEON->stack->scalar->stack->NEON roundtrip of the offset-based overload.
+		 * Uses vmull_u8/vmlal_u8 widening pattern (~22 NEON ops vs ~56 in the u32 decomposition path).
+		 * @param topLeftPixels_u8x16 The 4 top-left pixels packed as 16 bytes [R0G0B0A0 R1G1B1A1 R2G2B2A2 R3G3B3A3]
+		 * @param topRightPixels_u8x16 The 4 top-right pixels packed identically
+		 * @param bottomLeftPixels_u8x16 The 4 bottom-left pixels packed identically
+		 * @param bottomRightPixels_u8x16 The 4 bottom-right pixels packed identically
+		 * @param m128_factorsRight The horizontal interpolation factors, one per pixel, with range [0, 128]
+		 * @param m128_factorsBottom The vertical interpolation factors, one per pixel, with range [0, 128]
+		 * @param targetPositionPixels The buffer that will receive the interpolated color values, must be valid
+		 * @param useOptimizedNEONFactorReplication True to use the optimized TBL-based factor replication (AArch64 only); False to use the original narrow+zip factor replication
+		 */
+		static OCEAN_FORCE_INLINE void interpolate4Pixels4Channel8BitPerChannelNEON(const uint8x16_t& topLeftPixels_u8x16, const uint8x16_t& topRightPixels_u8x16, const uint8x16_t& bottomLeftPixels_u8x16, const uint8x16_t& bottomRightPixels_u8x16, const uint32x4_t& m128_factorsRight, const uint32x4_t& m128_factorsBottom, typename DataType<uint8_t, 4u>::Type* targetPositionPixels, const bool useOptimizedNEONFactorReplication = false);
+
 #endif // OCEAN_HARDWARE_SSE_VERSION
 
 		/**
@@ -1388,7 +1408,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		static void lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows);
+		static void lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON = false, const bool useOptimizedBilinearValuesAndFactorCalculation = false, const bool useOptimizedNEONFactorReplication = false);
 
 #endif // defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -1846,7 +1866,7 @@ inline void FrameInterpolatorBilinear::homographyWithCameraMask8BitPerChannel(co
 }
 
 template <typename T, unsigned int tChannels>
-inline void FrameInterpolatorBilinear::lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker)
+inline void FrameInterpolatorBilinear::lookup(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable& input_LT_output, const bool offset, const T* borderColor, T* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, Worker* worker, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, [[maybe_unused]] const bool useOptimizedNEONFactorReplication)
 {
 	if constexpr (std::is_same<T, uint8_t>::value)
 	{
@@ -1857,11 +1877,11 @@ inline void FrameInterpolatorBilinear::lookup(const T* input, const unsigned int
 
 			if (worker)
 			{
-				worker->executeFunction(Worker::Function::createStatic(&FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<tChannels>, input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, 0u), 0u, (unsigned int)(input_LT_output.sizeY()), 9u, 10u, 20u);
+				worker->executeFunction(Worker::Function::createStatic(&FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<tChannels>, input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, 0u, useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication), 0u, (unsigned int)(input_LT_output.sizeY()), 9u, 10u, 20u);
 			}
 			else
 			{
-				lookup8BitPerChannelSubsetNEON<tChannels>(input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, (unsigned int)(input_LT_output.sizeY()));
+				lookup8BitPerChannelSubsetNEON<tChannels>(input, inputWidth, inputHeight, &input_LT_output, offset, borderColor, output, inputPaddingElements, outputPaddingElements, 0u, (unsigned int)(input_LT_output.sizeY()), useOptimizedNEON, useOptimizedBilinearValuesAndFactorCalculation, useOptimizedNEONFactorReplication);
 			}
 
 			return;
@@ -4297,6 +4317,117 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	vst1q_u8((uint8_t*)targetPositionPixels, vreinterpretq_u8_u32(m128_interpolation));
 }
 
+OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels4Channel8BitPerChannelNEON(const uint8x16_t& topLeftPixels_u8x16, const uint8x16_t& topRightPixels_u8x16, const uint8x16_t& bottomLeftPixels_u8x16, const uint8x16_t& bottomRightPixels_u8x16, const uint32x4_t& m128_factorsRight, const uint32x4_t& m128_factorsBottom, typename DataType<uint8_t, 4u>::Type* targetPositionPixels, const bool useOptimizedNEONFactorReplication)
+{
+	ocean_assert(targetPositionPixels != nullptr);
+
+	// Replicate per-pixel u32 interpolation factors [f0,f1,f2,f3] to per-channel u8 factors.
+	// Both implementations produce: lo = [f0,f0,f0,f0, f1,f1,f1,f1], hi = [f2,f2,f2,f2, f3,f3,f3,f3]
+
+	uint8x8_t factorsRight_lo;
+	uint8x8_t factorsRight_hi;
+	uint8x8_t factorsLeft_lo;
+	uint8x8_t factorsLeft_hi;
+	uint8x8_t factorsBottom_lo;
+	uint8x8_t factorsBottom_hi;
+	uint8x8_t factorsTop_lo;
+	uint8x8_t factorsTop_hi;
+
+#if defined(__aarch64__)
+	// vqtbl1q_u8 is an AArch64-only intrinsic; ARMv7 always falls through to the original narrow+zip path.
+	if (!useOptimizedNEONFactorReplication)
+#else
+	(void)useOptimizedNEONFactorReplication;
+#endif
+	{
+		const uint8x8_t factorsRight_u8x8 = vmovn_u16(vcombine_u16(vmovn_u32(m128_factorsRight), vmovn_u32(m128_factorsRight)));
+		const uint8x8x2_t factorsRight_zip1 = vzip_u8(factorsRight_u8x8, factorsRight_u8x8);
+		const uint8x8x2_t factorsRight_zip2 = vzip_u8(factorsRight_zip1.val[0], factorsRight_zip1.val[0]);
+
+		factorsRight_lo = factorsRight_zip2.val[0]; // pixels 0-1
+		factorsRight_hi = factorsRight_zip2.val[1]; // pixels 2-3
+		factorsLeft_lo = vsub_u8(vdup_n_u8(128u), factorsRight_lo);
+		factorsLeft_hi = vsub_u8(vdup_n_u8(128u), factorsRight_hi);
+
+		const uint8x8_t factorsBottom_u8x8 = vmovn_u16(vcombine_u16(vmovn_u32(m128_factorsBottom), vmovn_u32(m128_factorsBottom)));
+		const uint8x8x2_t factorsBottom_zip1 = vzip_u8(factorsBottom_u8x8, factorsBottom_u8x8);
+		const uint8x8x2_t factorsBottom_zip2 = vzip_u8(factorsBottom_zip1.val[0], factorsBottom_zip1.val[0]);
+
+		factorsBottom_lo = factorsBottom_zip2.val[0];
+		factorsBottom_hi = factorsBottom_zip2.val[1];
+		factorsTop_lo = vsub_u8(vdup_n_u8(128u), factorsBottom_lo);
+		factorsTop_hi = vsub_u8(vdup_n_u8(128u), factorsBottom_hi);
+	}
+#if defined(__aarch64__)
+	else
+	{
+		// Replicate per-pixel u32 factors [f0,f1,f2,f3] to per-channel u8 via TBL on the u32 register directly.
+		// On little-endian ARM64, the low byte of each u32 lane holds the factor value (0-128).
+		// Indices pick byte 0 of each u32 lane (offsets 0, 4, 8, 12) and replicate 4x per channel.
+		static const uint8x16_t replicateU32Idx = {0, 0, 0, 0, 4, 4, 4, 4, 8, 8, 8, 8, 12, 12, 12, 12};
+
+		const uint8x16_t factorsRight_rep = vqtbl1q_u8(vreinterpretq_u8_u32(m128_factorsRight), replicateU32Idx);
+		const uint8x16_t factorsLeft_rep = vsubq_u8(vdupq_n_u8(128u), factorsRight_rep);
+
+		factorsRight_lo = vget_low_u8(factorsRight_rep);
+		factorsRight_hi = vget_high_u8(factorsRight_rep);
+		factorsLeft_lo = vget_low_u8(factorsLeft_rep);
+		factorsLeft_hi = vget_high_u8(factorsLeft_rep);
+
+		const uint8x16_t factorsBottom_rep = vqtbl1q_u8(vreinterpretq_u8_u32(m128_factorsBottom), replicateU32Idx);
+		const uint8x16_t factorsTop_rep = vsubq_u8(vdupq_n_u8(128u), factorsBottom_rep);
+
+		factorsBottom_lo = vget_low_u8(factorsBottom_rep);
+		factorsBottom_hi = vget_high_u8(factorsBottom_rep);
+		factorsTop_lo = vget_low_u8(factorsTop_rep);
+		factorsTop_hi = vget_high_u8(factorsTop_rep);
+	}
+#endif // defined(__aarch64__)
+
+	// Split pixel data into halves: pixels 0-1 (lo) and pixels 2-3 (hi)
+	const uint8x8_t topLeft_lo = vget_low_u8(topLeftPixels_u8x16);
+	const uint8x8_t topLeft_hi = vget_high_u8(topLeftPixels_u8x16);
+	const uint8x8_t topRight_lo = vget_low_u8(topRightPixels_u8x16);
+	const uint8x8_t topRight_hi = vget_high_u8(topRightPixels_u8x16);
+	const uint8x8_t bottomLeft_lo = vget_low_u8(bottomLeftPixels_u8x16);
+	const uint8x8_t bottomLeft_hi = vget_high_u8(bottomLeftPixels_u8x16);
+	const uint8x8_t bottomRight_lo = vget_low_u8(bottomRightPixels_u8x16);
+	const uint8x8_t bottomRight_hi = vget_high_u8(bottomRightPixels_u8x16);
+
+	// --- Pixels 0-1 ---
+	// Horizontal: topInterp = TL * fLeft + TR * fRight (u8 x u8 -> u16)
+	const uint16x8_t topInterp_lo = vmlal_u8(vmull_u8(topLeft_lo, factorsLeft_lo), topRight_lo, factorsRight_lo);
+	const uint16x8_t botInterp_lo = vmlal_u8(vmull_u8(bottomLeft_lo, factorsLeft_lo), bottomRight_lo, factorsRight_lo);
+
+	// Vertical: result = topInterp * fTop + botInterp * fBot (u16 x u16 -> u32)
+	const uint16x8_t factorsTop_lo_u16 = vmovl_u8(factorsTop_lo);
+	const uint16x8_t factorsBottom_lo_u16 = vmovl_u8(factorsBottom_lo);
+
+	const uint32x4_t result_lo_A = vmlal_u16(vmull_u16(vget_low_u16(topInterp_lo), vget_low_u16(factorsTop_lo_u16)), vget_low_u16(botInterp_lo), vget_low_u16(factorsBottom_lo_u16));
+	const uint32x4_t result_lo_B = vmlal_u16(vmull_u16(vget_high_u16(topInterp_lo), vget_high_u16(factorsTop_lo_u16)), vget_high_u16(botInterp_lo), vget_high_u16(factorsBottom_lo_u16));
+
+	// --- Pixels 2-3 ---
+	const uint16x8_t topInterp_hi = vmlal_u8(vmull_u8(topLeft_hi, factorsLeft_hi), topRight_hi, factorsRight_hi);
+	const uint16x8_t botInterp_hi = vmlal_u8(vmull_u8(bottomLeft_hi, factorsLeft_hi), bottomRight_hi, factorsRight_hi);
+
+	const uint16x8_t factorsTop_hi_u16 = vmovl_u8(factorsTop_hi);
+	const uint16x8_t factorsBottom_hi_u16 = vmovl_u8(factorsBottom_hi);
+
+	const uint32x4_t result_hi_A = vmlal_u16(vmull_u16(vget_low_u16(topInterp_hi), vget_low_u16(factorsTop_hi_u16)), vget_low_u16(botInterp_hi), vget_low_u16(factorsBottom_hi_u16));
+	const uint32x4_t result_hi_B = vmlal_u16(vmull_u16(vget_high_u16(topInterp_hi), vget_high_u16(factorsTop_hi_u16)), vget_high_u16(botInterp_hi), vget_high_u16(factorsBottom_hi_u16));
+
+	// Round and narrow: (result + 8192) >> 14 via vrshrn_n_u32
+	const uint16x4_t narrow_lo_A = vrshrn_n_u32(result_lo_A, 14);
+	const uint16x4_t narrow_lo_B = vrshrn_n_u32(result_lo_B, 14);
+	const uint16x4_t narrow_hi_A = vrshrn_n_u32(result_hi_A, 14);
+	const uint16x4_t narrow_hi_B = vrshrn_n_u32(result_hi_B, 14);
+
+	const uint8x8_t result_lo = vmovn_u16(vcombine_u16(narrow_lo_A, narrow_lo_B));
+	const uint8x8_t result_hi = vmovn_u16(vcombine_u16(narrow_hi_A, narrow_hi_B));
+
+	vst1q_u8((uint8_t*)targetPositionPixels, vcombine_u8(result_lo, result_hi));
+}
+
 template <unsigned int tChannels>
 OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChannelNEON(const uint8_t* source, const unsigned int offsetsTopLeftElements[4], const unsigned int offsetsTopRightElements[4], const unsigned int offsetsBottomLeftElements[4], const unsigned int offsetsBottomRightElements[4], const unsigned int validPixels[4], const typename DataType<uint8_t, tChannels>::Type& borderColor, const uint32x4_t& m128_factorsRight, const uint32x4_t& m128_factorsBottom, typename DataType<uint8_t, tChannels>::Type* targetPositionPixels)
 {
@@ -4806,7 +4937,7 @@ void FrameInterpolatorBilinear::lookupSubset(const T* input, const unsigned int 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
 template <>
-inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows)
+inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, const bool /*useOptimizedNEONFactorReplication*/)
 {
 	ocean_assert(input_LT_output != nullptr);
 	ocean_assert(input != nullptr && output != nullptr);
@@ -5005,7 +5136,7 @@ inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const 
 }
 
 template <unsigned int tChannels>
-void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows)
+void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const LookupTable* input_LT_output, const bool offset, const uint8_t* borderColor, uint8_t* output, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstRow, const unsigned int numberRows, const bool useOptimizedNEON, const bool useOptimizedBilinearValuesAndFactorCalculation, const bool useOptimizedNEONFactorReplication)
 {
 	ocean_assert(input_LT_output != nullptr);
 	ocean_assert(input != nullptr && output != nullptr);
@@ -5043,6 +5174,10 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 	const float32x4_t constantInputWidth1_f_32x4 = vdupq_n_f32(float(inputWidth - 1u));
 	const float32x4_t constantInputHeight1_f_32x4 = vdupq_n_f32(float(inputHeight - 1u));
 
+#if defined(__aarch64__)
+	const float32x4_t constant128_f_32x4 = vdupq_n_f32(128.0f);
+#endif
+
 	const uint32x4_t constantInputStrideElements_u_32x4 = vdupq_n_u32(inputStrideElements);
 	const uint32x4_t constantInputWidth1_u_32x4 = vdupq_n_u32(inputWidth - 1u);
 	const uint32x4_t constantInputHeight1_u_32x4 = vdupq_n_u32(inputHeight - 1u);
@@ -5058,7 +5193,7 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 	{
 		PixelType* outputPixelData = (PixelType*)(output + y * outputStrideElements);
 
-		input_LT_output->bilinearValues<VectorF2>(y, rowLookupData);
+		input_LT_output->bilinearValues<VectorF2>(y, rowLookupData, useOptimizedBilinearValuesAndFactorCalculation);
 
 		float32x4_t additionalInputOffsetX_f_32x4 = conststant0123_f_32x4;
 		const float32x4_t additionalInputOffsetY_f_32x4 = vdupq_n_f32(float(y));
@@ -5116,28 +5251,100 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 			const uint32x4_t inputPositionsRight_u_32x4 = vminq_u32(vaddq_u32(inputPositionsLeft_u_32x4, constantOne_u_32x4), constantInputWidth1_u_32x4);
 			const uint32x4_t inputPositionsBottom_u_32x4 = vminq_u32(vaddq_u32(inputPositionsTop_u_32x4, constantOne_u_32x4), constantInputHeight1_u_32x4);
 
-			const uint32x4_t topLeftOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsLeft_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4); // topLeftOffset = top * strideElements + left * channels
+			const uint32x4_t topLeftOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsLeft_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
 			const uint32x4_t topRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsTop_u_32x4, constantInputStrideElements_u_32x4);
 			const uint32x4_t bottomLeftOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsLeft_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
 			const uint32x4_t bottomRightOffsetsElements_u_32x4 = vmlaq_u32(vmulq_u32(inputPositionsRight_u_32x4, constantChannels_u_32x4), inputPositionsBottom_u_32x4, constantInputStrideElements_u_32x4);
 
-			vst1q_u32(topLeftOffsetsElements, topLeftOffsetsElements_u_32x4);
-			vst1q_u32(topRightOffsetsElements, topRightOffsetsElements_u_32x4);
-			vst1q_u32(bottomLeftOffsetsElements, bottomLeftOffsetsElements_u_32x4);
-			vst1q_u32(bottomRightOffsetsElements, bottomRightOffsetsElements_u_32x4);
-
 			// we determine the fractional portions of the x' and y':
-			float32x4_t tx_f_32x4 = vsubq_f32(inputPositionsX_f_32x4, vcvtq_f32_u32(inputPositionsLeft_u_32x4));
-			float32x4_t ty_f_32x4 = vsubq_f32(inputPositionsY_f_32x4, vcvtq_f32_u32(inputPositionsTop_u_32x4));
+			uint32x4_t tx_128_u_32x4;
+			uint32x4_t ty_128_u_32x4;
 
-			// we use integer interpolation [0.0, 1.0] -> [0, 128]
-			tx_f_32x4 = vmulq_f32(tx_f_32x4, vdupq_n_f32(128.0f));
-			ty_f_32x4 = vmulq_f32(ty_f_32x4, vdupq_n_f32(128.0f));
+#if defined(__aarch64__)
+			// vrndmq_f32 / vcvtaq_u32_f32 are AArch64-only intrinsics; ARMv7 falls through to the original sequence.
+			if (useOptimizedBilinearValuesAndFactorCalculation)
+			{
+				// Compute fractional part independently of left/top, allowing parallel execution with bounds
+				const float32x4_t tx_f_32x4 = vmulq_f32(vsubq_f32(inputPositionsX_f_32x4, vrndmq_f32(inputPositionsX_f_32x4)), constant128_f_32x4);
+				const float32x4_t ty_f_32x4 = vmulq_f32(vsubq_f32(inputPositionsY_f_32x4, vrndmq_f32(inputPositionsY_f_32x4)), constant128_f_32x4);
 
-			const uint32x4_t tx_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(tx_f_32x4, vdupq_n_f32(0.5)));
-			const uint32x4_t ty_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(ty_f_32x4, vdupq_n_f32(0.5)));
+				tx_128_u_32x4 = vcvtaq_u32_f32(tx_f_32x4);
+				ty_128_u_32x4 = vcvtaq_u32_f32(ty_f_32x4);
+			}
+			else
+#endif
+			{
+				// Original: subtract, scale, round
+				float32x4_t tx_f_32x4 = vsubq_f32(inputPositionsX_f_32x4, vcvtq_f32_u32(inputPositionsLeft_u_32x4));
+				float32x4_t ty_f_32x4 = vsubq_f32(inputPositionsY_f_32x4, vcvtq_f32_u32(inputPositionsTop_u_32x4));
 
-			interpolate4Pixels8BitPerChannelNEON<tChannels>(input, topLeftOffsetsElements, topRightOffsetsElements, bottomLeftOffsetsElements, bottomRightOffsetsElements, validPixels, *bColor, tx_128_u_32x4, ty_128_u_32x4, outputPixelData);
+				// we use integer interpolation [0.0, 1.0] -> [0, 128]
+				tx_f_32x4 = vmulq_f32(tx_f_32x4, vdupq_n_f32(128.0f));
+				ty_f_32x4 = vmulq_f32(ty_f_32x4, vdupq_n_f32(128.0f));
+
+				tx_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(tx_f_32x4, vdupq_n_f32(0.5)));
+				ty_128_u_32x4 = vcvtq_u32_f32(vaddq_f32(ty_f_32x4, vdupq_n_f32(0.5)));
+			}
+
+			if constexpr (tChannels == 4u)
+			{
+				if (useOptimizedNEON)
+				{
+					// Optimized 4-channel path: inline pixel gather + widening-multiply interpolation.
+					// Eliminates NEON->stack->scalar->stack->NEON roundtrip by extracting offsets
+					// directly from NEON registers via vgetq_lane_u32 (AArch64 umov).
+
+					PixelType topLeftPixels[4];
+					PixelType topRightPixels[4];
+					PixelType bottomLeftPixels[4];
+					PixelType bottomRightPixels[4];
+
+					topLeftPixels[0]     = validPixels[0] ? *((const PixelType*)(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 0))) : *bColor;
+					topLeftPixels[1]     = validPixels[1] ? *((const PixelType*)(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 1))) : *bColor;
+					topLeftPixels[2]     = validPixels[2] ? *((const PixelType*)(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 2))) : *bColor;
+					topLeftPixels[3]     = validPixels[3] ? *((const PixelType*)(input + vgetq_lane_u32(topLeftOffsetsElements_u_32x4, 3))) : *bColor;
+
+					topRightPixels[0]    = validPixels[0] ? *((const PixelType*)(input + vgetq_lane_u32(topRightOffsetsElements_u_32x4, 0))) : *bColor;
+					topRightPixels[1]    = validPixels[1] ? *((const PixelType*)(input + vgetq_lane_u32(topRightOffsetsElements_u_32x4, 1))) : *bColor;
+					topRightPixels[2]    = validPixels[2] ? *((const PixelType*)(input + vgetq_lane_u32(topRightOffsetsElements_u_32x4, 2))) : *bColor;
+					topRightPixels[3]    = validPixels[3] ? *((const PixelType*)(input + vgetq_lane_u32(topRightOffsetsElements_u_32x4, 3))) : *bColor;
+
+					bottomLeftPixels[0]  = validPixels[0] ? *((const PixelType*)(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 0))) : *bColor;
+					bottomLeftPixels[1]  = validPixels[1] ? *((const PixelType*)(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 1))) : *bColor;
+					bottomLeftPixels[2]  = validPixels[2] ? *((const PixelType*)(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 2))) : *bColor;
+					bottomLeftPixels[3]  = validPixels[3] ? *((const PixelType*)(input + vgetq_lane_u32(bottomLeftOffsetsElements_u_32x4, 3))) : *bColor;
+
+					bottomRightPixels[0] = validPixels[0] ? *((const PixelType*)(input + vgetq_lane_u32(bottomRightOffsetsElements_u_32x4, 0))) : *bColor;
+					bottomRightPixels[1] = validPixels[1] ? *((const PixelType*)(input + vgetq_lane_u32(bottomRightOffsetsElements_u_32x4, 1))) : *bColor;
+					bottomRightPixels[2] = validPixels[2] ? *((const PixelType*)(input + vgetq_lane_u32(bottomRightOffsetsElements_u_32x4, 2))) : *bColor;
+					bottomRightPixels[3] = validPixels[3] ? *((const PixelType*)(input + vgetq_lane_u32(bottomRightOffsetsElements_u_32x4, 3))) : *bColor;
+
+					const uint8x16_t topLeftPixels_u8x16 = vld1q_u8((const uint8_t*)topLeftPixels);
+					const uint8x16_t topRightPixels_u8x16 = vld1q_u8((const uint8_t*)topRightPixels);
+					const uint8x16_t bottomLeftPixels_u8x16 = vld1q_u8((const uint8_t*)bottomLeftPixels);
+					const uint8x16_t bottomRightPixels_u8x16 = vld1q_u8((const uint8_t*)bottomRightPixels);
+
+					interpolate4Pixels4Channel8BitPerChannelNEON(topLeftPixels_u8x16, topRightPixels_u8x16, bottomLeftPixels_u8x16, bottomRightPixels_u8x16, tx_128_u_32x4, ty_128_u_32x4, outputPixelData, useOptimizedNEONFactorReplication);
+				}
+				else
+				{
+					vst1q_u32(topLeftOffsetsElements, topLeftOffsetsElements_u_32x4);
+					vst1q_u32(topRightOffsetsElements, topRightOffsetsElements_u_32x4);
+					vst1q_u32(bottomLeftOffsetsElements, bottomLeftOffsetsElements_u_32x4);
+					vst1q_u32(bottomRightOffsetsElements, bottomRightOffsetsElements_u_32x4);
+
+					interpolate4Pixels8BitPerChannelNEON<tChannels>(input, topLeftOffsetsElements, topRightOffsetsElements, bottomLeftOffsetsElements, bottomRightOffsetsElements, validPixels, *bColor, tx_128_u_32x4, ty_128_u_32x4, outputPixelData);
+				}
+			}
+			else
+			{
+				vst1q_u32(topLeftOffsetsElements, topLeftOffsetsElements_u_32x4);
+				vst1q_u32(topRightOffsetsElements, topRightOffsetsElements_u_32x4);
+				vst1q_u32(bottomLeftOffsetsElements, bottomLeftOffsetsElements_u_32x4);
+				vst1q_u32(bottomRightOffsetsElements, bottomRightOffsetsElements_u_32x4);
+
+				interpolate4Pixels8BitPerChannelNEON<tChannels>(input, topLeftOffsetsElements, topRightOffsetsElements, bottomLeftOffsetsElements, bottomRightOffsetsElements, validPixels, *bColor, tx_128_u_32x4, ty_128_u_32x4, outputPixelData);
+			}
 
 			outputPixelData += 4;
 		}

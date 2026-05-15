@@ -58,7 +58,7 @@ This flexibility allows for a hands-on approach to understanding and optimizing 
 <Tabs groupId="target-os" queryString>
 
   <TabItem value="android" label="Android" default>
-    Ensure the [third-party libraries have been built for Android](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_android.md#2-building-the-third-party-libraries) for all of the required Android ABIs. Let's assume the base location for third-party libraries is `${HOME}/install_ocean_thirdparty`, i.e., the Android versions will be located in `${HOME}/install_ocean_thirdparty/android_${ANDROID_ABI}...`.
+    Ensure the [third-party libraries have been built for Android](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_android.md#2-building-the-third-party-libraries) for all of the required Android ABIs. Set `OCEAN_THIRDPARTY_PATH` to the third-party install root (e.g., `${HOME}/install_ocean_thirdparty`); Gradle and CMake auto-detect the install layout from there.
 
     ```bash
     # Define this so that Gradle (and CMake) can find the third-party libraries.
@@ -99,7 +99,7 @@ This flexibility allows for a hands-on approach to understanding and optimizing 
     python build/python/build_ocean_3rdparty.py --config release
 
     # Build and install Ocean
-    python build/python/build_ocean.py --third-party-layout python --config release
+    python build/python/build_ocean.py --config release
 
     # Execute the demo app (a bundle)
     open ocean_install/macos_arm64_static_release/bin/application_ocean_demo_cv_detector_linedetector_macos.app

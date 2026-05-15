@@ -29,9 +29,9 @@ namespace Android
 
 AMovieRecorder::AMovieRecorder()
 {
-	recorderFrameEncoder = "h264";
-	recorderFrameFrequency = 30.0;
-	recorderFilenameSuffixed = false;
+	frameEncoder_ = "h264";
+	frameFrequency_ = 30.0;
+	filenameSuffixed_ = false;
 }
 
 AMovieRecorder::~AMovieRecorder()
@@ -46,7 +46,7 @@ AMovieRecorder::~AMovieRecorder()
 
 bool AMovieRecorder::setFilename(const std::string& filename)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ != nullptr)
 	{
@@ -65,18 +65,18 @@ bool AMovieRecorder::setPreferredFrameType(const FrameType& type)
 	}
 
 	PixelFormats::AndroidMediaFormatColorRange colorRange = PixelFormats::COLOR_RANGE_UNKNOWN;
-	const PixelFormats::AndroidMediaCodecColorFormat colorFormat = PixelFormats::pixelFormatToAndroidMediaCodecColorFormat(recorderFrameType.pixelFormat(), colorRange);
+	const PixelFormats::AndroidMediaCodecColorFormat colorFormat = PixelFormats::pixelFormatToAndroidMediaCodecColorFormat(frameType_.pixelFormat(), colorRange);
 
 	if (colorFormat == PixelFormats::COLOR_FORMAT_UNKNOWN)
 	{
-		Log::info() << "The preferred pixel format '" << FrameType::translatePixelFormat(recorderFrameType.pixelFormat()) << "' is not supported, using 'FORMAT_Y_UV12_LIMITED_RANGE' instead";
+		Log::info() << "The preferred pixel format '" << FrameType::translatePixelFormat(frameType_.pixelFormat()) << "' is not supported, using 'FORMAT_Y_UV12_LIMITED_RANGE' instead";
 
 		// FORMAT_Y_UV12_LIMITED_RANGE corresponds to COLOR_FORMAT_YUV420SemiPlanar which is deprecated
 		// better would be to use FORMAT_Y_U_V12_LIMITED_RANGE which corresponds to COLOR_FORMAT_YUV420Flexible
 		// unfortuately, COLOR_FORMAT_YUV420Flexible does not seem to be well supported in native code (it's not possible to determine which underlying format is actually used)
 		// therefore, using the deprecated format instead
 
-		recorderFrameType.setPixelFormat(FrameType::FORMAT_Y_UV12_LIMITED_RANGE);
+		frameType_.setPixelFormat(FrameType::FORMAT_Y_UV12_LIMITED_RANGE);
 	}
 
 	return true;
@@ -84,7 +84,7 @@ bool AMovieRecorder::setPreferredFrameType(const FrameType& type)
 
 bool AMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ != nullptr || isRecording_)
 	{
@@ -111,7 +111,7 @@ bool AMovieRecorder::start()
 		return false;
 	}
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ != nullptr || isRecording_)
 	{
@@ -133,7 +133,7 @@ bool AMovieRecorder::start()
 
 bool AMovieRecorder::stop()
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ == nullptr || isRecording_ == false)
 	{
@@ -147,7 +147,7 @@ bool AMovieRecorder::stop()
 
 bool AMovieRecorder::isRecording() const
 {
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	return isRecording_;
 }
@@ -167,7 +167,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 {
 	ocean_assert_and_suppress_unused(respectFrameFrequency == false && "currently not supported!", respectFrameFrequency);
 
-	const ScopedLock scopedLock(recorderLock);
+	const ScopedLock scopedLock(lock_);
 
 	if (mediaCodec_ == nullptr)
 	{
@@ -196,7 +196,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 
 	uint8_t* const buffer = nativeMediaLibrary.AMediaCodec_getInputBuffer(mediaCodec_, size_t(bufferIndex_), &bufferSize_);
 
-	if (bufferSize_ < recorderFrameType.frameTypeSize())
+	if (bufferSize_ < frameType_.frameTypeSize())
 	{
 		ocean_assert(false && "Invalid buffer!");
 		return false;
@@ -218,7 +218,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 	int32_t stride = 0;
 	nativeMediaLibrary.AMediaFormat_getInt32(inputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_STRIDE, &stride);
 
-	if (stride < int32_t(recorderFrameType.width()))
+	if (stride < int32_t(frameType_.width()))
 	{
 		ocean_assert(false && "Invalid stride");
 		return false;
@@ -229,24 +229,24 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 
 	if (sliceHeight == 0)
 	{
-		sliceHeight = int32_t(recorderFrameType.height());
+		sliceHeight = int32_t(frameType_.height());
 	}
 
 	Frame::PlaneInitializers<uint8_t> planeInitializer;
-	planeInitializer.reserve(recorderFrameType.numberPlanes());
+	planeInitializer.reserve(frameType_.numberPlanes());
 
-	const unsigned int bytesPerElement = recorderFrameType.bytesPerDataType();
+	const unsigned int bytesPerElement = frameType_.bytesPerDataType();
 
 	unsigned int bufferOffset = 0u;
 
-	for (unsigned int planeIndex = 0u; planeIndex < recorderFrameType.numberPlanes(); ++planeIndex)
+	for (unsigned int planeIndex = 0u; planeIndex < frameType_.numberPlanes(); ++planeIndex)
 	{
 		unsigned int planePaddingElements = 0u;
 
 		// in case we have a 3-plane image, we use a hard-coded 0 as padding elements, this is the best guess we can make for this pixel format
-		if (planeIndex == 0u || recorderFrameType.numberPlanes() <= 2u)
+		if (planeIndex == 0u || frameType_.numberPlanes() <= 2u)
 		{
-			if (!Frame::strideBytes2paddingElements(recorderFrameType.pixelFormat(), recorderFrameType.width(), stride, planePaddingElements, planeIndex))
+			if (!Frame::strideBytes2paddingElements(frameType_.pixelFormat(), frameType_.width(), stride, planePaddingElements, planeIndex))
 			{
 				Log::debug() << "AMovieRecorder: Invalid padding elements!";
 
@@ -258,7 +258,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 		unsigned int planeWidth = 0u;
 		unsigned int planeHeight = 0u;
 		unsigned int planeChannels = 0u;
-		if (!FrameType::planeLayout(recorderFrameType, planeIndex, planeWidth, planeHeight, planeChannels))
+		if (!FrameType::planeLayout(frameType_, planeIndex, planeWidth, planeHeight, planeChannels))
 		{
 			return false;
 		}
@@ -282,7 +282,7 @@ bool AMovieRecorder::lockBufferToFill(Frame& recorderFrame, const bool respectFr
 		bufferOffset += planeSize;
 	}
 
-	recorderFrame = Frame(recorderFrameType, planeInitializer);
+	recorderFrame = Frame(frameType_, planeInitializer);
 	ocean_assert(recorderFrame.isValid());
 
 	return recorderFrame.isValid();
@@ -300,8 +300,8 @@ void AMovieRecorder::unlockBufferToFill()
 	const bool writeWasSuccessful = readCodecOutputBufferAndWriteToMuxer();
 	ocean_assert_and_suppress_unused(writeWasSuccessful, writeWasSuccessful);
 
-	ocean_assert(recorderFrameFrequency > 0.0);
-	nextFrameTimestamp_ += 1.0 / recorderFrameFrequency;
+	ocean_assert(frameFrequency_ > 0.0);
+	nextFrameTimestamp_ += 1.0 / frameFrequency_;
 
 	bufferIndex_ = -1;
 	bufferSize_ = 0;
@@ -309,7 +309,7 @@ void AMovieRecorder::unlockBufferToFill()
 
 bool AMovieRecorder::createNewMediaCodec()
 {
-	if (!recorderFrameType.isValid())
+	if (!frameType_.isValid())
 	{
 		Log::error() << "The frame type of the recorder is not configured yet.";
 		return false;
@@ -317,7 +317,7 @@ bool AMovieRecorder::createNewMediaCodec()
 
 	ocean_assert(mediaCodec_ == nullptr);
 
-	const std::string filename = addOptionalSuffixToFilename(recorderFilename, recorderFilenameSuffixed);
+	const std::string filename = addOptionalSuffixToFilename(filename_, filenameSuffixed_);
 
 	if (IO::File(filename).exists())
 	{
@@ -337,13 +337,13 @@ bool AMovieRecorder::createNewMediaCodec()
 	mediaFormat_ = NativeMediaLibrary::get().AMediaFormat_new();
 	ocean_assert(mediaFormat_);
 
-	if (recorderFrameEncoder.empty())
+	if (frameEncoder_.empty())
 	{
-		recorderFrameEncoder = frameEncoders().front();
+		frameEncoder_ = frameEncoders().front();
 	}
 
 	std::string mimeType;
-	const std::string frameEncoder = String::toLower(recorderFrameEncoder);
+	const std::string frameEncoder = String::toLower(frameEncoder_);
 
 	if (frameEncoder == "h264")
 	{
@@ -362,26 +362,26 @@ bool AMovieRecorder::createNewMediaCodec()
 
 	if (!mediaCodec_)
 	{
-		Log::error() << "Could not create a valid media codec with type \"" << recorderFrameEncoder << "\"";
+		Log::error() << "Could not create a valid media codec with type \"" << frameEncoder_ << "\"";
 		release();
 		return false;
 	}
 
 	PixelFormats::AndroidMediaFormatColorRange colorRange = PixelFormats::COLOR_RANGE_UNKNOWN;
-	const PixelFormats::AndroidMediaCodecColorFormat colorFormat = PixelFormats::pixelFormatToAndroidMediaCodecColorFormat(recorderFrameType.pixelFormat(), colorRange);
+	const PixelFormats::AndroidMediaCodecColorFormat colorFormat = PixelFormats::pixelFormatToAndroidMediaCodecColorFormat(frameType_.pixelFormat(), colorRange);
 
 	if (colorFormat == PixelFormats::COLOR_FORMAT_UNKNOWN)
 	{
-		Log::error() << "Color format '" << FrameType::translatePixelFormat(recorderFrameType.pixelFormat()) << "' not supported for video output!";
+		Log::error() << "Color format '" << FrameType::translatePixelFormat(frameType_.pixelFormat()) << "' not supported for video output!";
 		release();
 		return false;
 	}
 
-	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_WIDTH, recorderFrameType.width());
-	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_HEIGHT, recorderFrameType.height());
-	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, recorderFrameType.height());
-	NativeMediaLibrary::get().AMediaFormat_setFloat(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_CAPTURE_RATE, recorderFrameFrequency);
-	NativeMediaLibrary::get().AMediaFormat_setFloat(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_FRAME_RATE, recorderFrameFrequency);
+	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_WIDTH, frameType_.width());
+	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_HEIGHT, frameType_.height());
+	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, frameType_.height());
+	NativeMediaLibrary::get().AMediaFormat_setFloat(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_CAPTURE_RATE, frameFrequency_);
+	NativeMediaLibrary::get().AMediaFormat_setFloat(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_FRAME_RATE, frameFrequency_);
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_I_FRAME_INTERVAL, DEFAULT_IFRAME_INTERVAL_SECONDS);
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_FORMAT, int32_t(colorFormat));
 
@@ -468,7 +468,7 @@ void AMovieRecorder::release()
 		// Signal an end-of-stream to the codec and gather the remaining frames, if any.
 		if (wasRecording)
 		{
-			const ScopedLock scopedLock(recorderLock);
+			const ScopedLock scopedLock(lock_);
 
 			ssize_t bufferIndex = ssize_t(-1);
 
