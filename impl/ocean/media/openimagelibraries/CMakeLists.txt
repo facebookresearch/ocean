@@ -19,11 +19,19 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         # libtiff's exported TiffTargets.cmake references `liblzma::liblzma`
         # in TIFF::tiff's link interface. Find liblzma BEFORE TIFF so that
         # target exists when find_package(TIFF) loads TiffTargets.cmake.
-        # Use the upstream xz CONFIG (lowercase `liblzma`), which creates
-        # the `liblzma::liblzma` target name libtiff expects -- the
-        # CMake-bundled FindLibLZMA module would create LibLZMA::LibLZMA
-        # instead, which does not match.
-        find_package(liblzma CONFIG REQUIRED)
+        #
+        # Try the upstream xz CONFIG first (provides `liblzma::liblzma`
+        # directly). System packages like Ubuntu's `liblzma-dev` do not
+        # ship a CMake config file, so fall back to the CMake-bundled
+        # FindLibLZMA module and alias `LibLZMA::LibLZMA` to the
+        # lowercase `liblzma::liblzma` target name libtiff expects.
+        find_package(liblzma CONFIG QUIET)
+        if (NOT liblzma_FOUND)
+            find_package(LibLZMA REQUIRED)
+            if (NOT TARGET liblzma::liblzma)
+                add_library(liblzma::liblzma ALIAS LibLZMA::LibLZMA)
+            endif()
+        endif()
     endif()
 
     find_package(TIFF REQUIRED)
