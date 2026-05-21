@@ -6,8 +6,12 @@
 cmake_minimum_required(VERSION 3.26)
 
 find_path(VTZERO_INCLUDE_DIR NAMES vtzero/feature.hpp)
+# vtzero is header-only and depends on protozero (also header-only). Both
+# include directories must be on the consumer's include path because the
+# vtzero headers transitively `#include <protozero/...>`.
+find_path(PROTOZERO_INCLUDE_DIR NAMES protozero/pbf_reader.hpp)
 
-if ((MACOS OR ANDROID OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
+if ((MACOS OR ANDROID OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR AND PROTOZERO_INCLUDE_DIR)
 
     add_subdirectory(rendering)
 
@@ -20,7 +24,12 @@ if ((MACOS OR ANDROID OR IOS OR LINUX OR WIN32) AND VTZERO_INCLUDE_DIR)
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
-    target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
+    target_include_directories(${OCEAN_TARGET_NAME}
+        PUBLIC
+            "${OCEAN_IMPL_DIR}"
+            "${VTZERO_INCLUDE_DIR}"
+            "${PROTOZERO_INCLUDE_DIR}"
+    )
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
     if (BUILD_SHARED_LIBS)
