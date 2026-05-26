@@ -96,7 +96,7 @@ class AVFLiveVideo :
 		bool setPreferredStreamConfiguration(const StreamConfiguration& streamConfiguration) override;
 
 		/**
-		 * Sets the exposure duriation of this device.
+		 * Sets the exposure duration of this device.
 		 * @see setExposureDuration().
 		 */
 		bool setExposureDuration(const double duration, const bool allowShorterExposure = false) override;
@@ -162,7 +162,7 @@ class AVFLiveVideo :
 		bool createCaptureDevice();
 
 		/**
-		 * Creates the capture session neccessary for the live video.
+		 * Creates the capture session necessary for the live video.
 		 * This function needs a valid capture device object.
 		 * @return True, if succeeded
 		 */
