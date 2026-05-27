@@ -47,7 +47,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 	public:
 
 		/**
-		 * Definition of indivdual response types.
+		 * Definition of individual response types.
 		 */
 		enum ResponseType : uint32_t
 		{
@@ -78,7 +78,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 			public:
 
 				/**
-				 * Definition of individual stategies to determine edge response.
+				 * Definition of individual strategies to determine edge response.
 				 */
 				enum EdgeResponseStrategy : uint32_t
 				{
@@ -89,7 +89,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 				};
 
 				/**
-				 * Definition of individual stategies to handle a minimal edge response.
+				 * Definition of individual strategies to handle a minimal edge response.
 				 */
 				enum MinimalResponseStrategy : uint32_t
 				{
@@ -118,7 +118,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 				 * Detects shapes in a given image.
 				 * @param yFrame The frame in which the shapes will be detected, must be valid
 				 * @param threshold The minimal threshold for a detected shape, with range (0, infinity)
-				 * @param responseMultiplicationFactor An explicit post-processing multiplicatio factor for detector responses, with range (0, infinity)
+				 * @param responseMultiplicationFactor An explicit post-processing multiplication factor for detector responses, with range (0, infinity)
 				 * @param lShapes The resulting detected L-shapes
 				 * @param tShapes The resulting detected T-shapes
 				 * @param xShapes The resulting detected X-shapes
@@ -144,7 +144,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 				 * Determines the gradient-based T-shape detector response.
 				 * @param yFrame The frame in which the detector will be applied, must have pixel format FORMAT_Y8
 				 * @param x The horizontal position of the T-shape within the frame, with range [0, yFrame.width())
-				 * @param y The vertical position of the T-shape wihtin the frame, with range [0, yFrame.height())
+				 * @param y The vertical position of the T-shape within the frame, with range [0, yFrame.height())
 				 * @param sign The sign of the shape to be detected, -1 for shapes with dark edges and bright environment, 1 for shapes with bright edges and dark environment
 				 * @param shapeWidth The width of the shapes, in pixel, with range [shapeBottomBand * 2 + shapeStepSize, infinity), must be odd
 				 * @param shapeHeight The height of the shapes, in pixel, with range [shapeBottomBand + shapeStepSize, infinity)
@@ -157,7 +157,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 				 * @param edgeResponseStrategy The response strategy for edges which will be applied
 				 * @param minimalResponseStrategy The strategy for minimal responses to be applied
 				 * @param penaltyUsage The penalty mode to be applied
-				 * @return The reponse of the T-shape detector
+				 * @return The response of the T-shape detector
 				 */
 				static double tShapeDetectorResponse(const Frame& yFrame, const unsigned int x, const unsigned int y, const int sign, const unsigned int shapeWidth, const unsigned int shapeHeight, const unsigned int shapeStepSize, const unsigned int shapeTopBand, const unsigned int shapeBottomBand, const ResponseType responseType, const double penaltyFactor, const unsigned int minimalEdgeResponse, const EdgeResponseStrategy edgeResponseStrategy, const MinimalResponseStrategy minimalResponseStrategy, const PenaltyUsage penaltyUsage);
 		};
@@ -170,7 +170,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 			public:
 
 				/**
-				 * Definition of individual stategies to determine the gradient response.
+				 * Definition of individual strategies to determine the gradient response.
 				 */
 				enum GradientResponseStrategy : uint32_t
 				{
@@ -214,7 +214,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 				 * Detects shapes in a given image.
 				 * @param yFrame The frame in which the shapes will be detected, must be valid
 				 * @param threshold The minimal threshold for a detected shape, with range (0, infinity)
-				 * @param responseMultiplicationFactor An explicit post-processing multiplicatio factor for detector responses, with range (0, infinity)
+				 * @param responseMultiplicationFactor An explicit post-processing multiplication factor for detector responses, with range (0, infinity)
 				 * @param lShapes The resulting detected L-shapes
 				 * @param tShapes The resulting detected T-shapes
 				 * @param xShapes The resulting detected X-shapes
@@ -323,9 +323,9 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestShapeDetector : protected CV::Detector::
 					OS_SYMMETRIC_RESPONSES_FOUR_HORIZONTAL_SAME_VERTICAL,
 					/// Applying symmetric responses to allow response recycling, top and bottom band need to be identical, four horizontal response (two top and bottom blocks), vertical blocks have different height.
 					OS_SYMMETRIC_RESPONSES_FOUR_HORIZONTAL_DIFFERENT_VERTICAL,
-					/// Applying symmetric responses to allow response recycling, top and bottom band need to be identical, two horizontal repsonse (one top and one bottom block), vertical blocks have same height.
+					/// Applying symmetric responses to allow response recycling, top and bottom band need to be identical, two horizontal response (one top and one bottom block), vertical blocks have same height.
 					OS_SYMMETRIC_RESPONSES_TWO_HORIZONTAL_SAME_VERTICAL,
-					/// Applying symmetric responses to allow response recycling, top and bottom band need to be identical, two horizontal repsonse (one top and one bottom block), vertical blocks have different height.
+					/// Applying symmetric responses to allow response recycling, top and bottom band need to be identical, two horizontal response (one top and one bottom block), vertical blocks have different height.
 					OS_SYMMETRIC_RESPONSES_TWO_HORIZONTAL_DIFFERENT_VERTICAL,
 					/// Last (exclusive) optimization strategy value.
 					OS_END
@@ -490,7 +490,7 @@ inline bool TestShapeDetector::compareTshapes(const TShape& left, const TShape& 
 
 } // namespace TestCV
 
-} // namespce Test
+} // namespace Test
 
 } // namespace Ocean
 
