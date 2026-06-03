@@ -352,7 +352,7 @@ bool FTFont::textExtent(const std::string& text, PixelBoundingBoxesI& rowBoundin
 			if (xStart == xEnd)
 			{
 				// we have an empty row, so we set an invalid bounding box
-				internalRowBoundingBoxes.emplace_back(CV::PixelBoundingBoxI());
+				internalRowBoundingBoxes.emplace_back();
 			}
 			else
 			{
@@ -386,7 +386,7 @@ bool FTFont::textExtent(const std::string& text, PixelBoundingBoxesI& rowBoundin
 		ocean_assert(xStart == 0);
 
 		// we have an empty row, so we set an invalid bounding box
-		internalRowBoundingBoxes.emplace_back(CV::PixelBoundingBoxI());
+		internalRowBoundingBoxes.emplace_back();
 	}
 	else
 	{
