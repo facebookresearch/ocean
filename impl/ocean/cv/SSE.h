@@ -23,7 +23,6 @@
 
 // SSE3 include files
 #include <pmmintrin.h>
-#include <mmintrin.h>
 
 // SSE4 include files
 #include <smmintrin.h>
