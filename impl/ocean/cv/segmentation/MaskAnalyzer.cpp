@@ -221,28 +221,28 @@ void MaskAnalyzer::analyzeNonMaskSeparation8Bit(const uint8_t* mask, const unsig
 				if (y + 1u < height && *(state + width) == 0x00)
 				{
 					*(state + width) = 0x80;
-					candidates.push_back(PixelPosition(x, y + 1u));
+					candidates.emplace_back(x, y + 1u);
 				}
 
 				// right
 				if (x + 1u < width && *(state + 1) == 0x00)
 				{
 					*(state + 1) = 0x80;
-					candidates.push_back(PixelPosition(x + 1u, y));
+					candidates.emplace_back(x + 1u, y);
 				}
 
 				// left
 				if (x > 0u && *(state - 1) == 0x00)
 				{
 					*(state - 1) = 0x80;
-					candidates.push_back(PixelPosition(x - 1u, y));
+					candidates.emplace_back(x - 1u, y);
 				}
 
 				// top
 				if (y > 0u && *(state - width) == 0x00)
 				{
 					*(state - width) = 0x80;
-					candidates.push_back(PixelPosition(x, y - 1u));
+					candidates.emplace_back(x, y - 1u);
 				}
 
 				while (!candidates.empty())
@@ -264,28 +264,28 @@ void MaskAnalyzer::analyzeNonMaskSeparation8Bit(const uint8_t* mask, const unsig
 						if (candidate.y() + 1u < height && stateBegin[stateIndex + width] == 0x00)
 						{
 							stateBegin[stateIndex + width] = 0x80;
-							candidates.push_back(PixelPosition(candidate.x(), candidate.y() + 1u));
+							candidates.emplace_back(candidate.x(), candidate.y() + 1u);
 						}
 
 						// right
 						if (candidate.x() + 1u < width && stateBegin[stateIndex + 1u] == 0x00)
 						{
 							stateBegin[stateIndex + 1u] = 0x80;
-							candidates.push_back(PixelPosition(candidate.x() + 1u, candidate.y()));
+							candidates.emplace_back(candidate.x() + 1u, candidate.y());
 						}
 
 						// left
 						if (candidate.x() > 0u && stateBegin[stateIndex - 1u] == 0x00)
 						{
 							stateBegin[stateIndex - 1u] = 0x80;
-							candidates.push_back(PixelPosition(candidate.x() - 1u, candidate.y()));
+							candidates.emplace_back(candidate.x() - 1u, candidate.y());
 						}
 
 						// top
 						if (candidate.y() > 0u && stateBegin[stateIndex - width] == 0x00)
 						{
 							stateBegin[stateIndex - width] = 0x80;
-							candidates.push_back(PixelPosition(candidate.x(), candidate.y() - 1u));
+							candidates.emplace_back(candidate.x(), candidate.y() - 1u);
 						}
 					}
 				}
