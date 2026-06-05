@@ -120,7 +120,7 @@ PixelContour ContourAnalyzer::createDenseContour(const PixelPositions& initialPi
 
 			while (x != xEnd || y != yEnd)
 			{
-				fullUniquePixels.push_back(PixelPosition(x, y));
+				fullUniquePixels.emplace_back(x, y);
 				bresenham.findNext(x, y);
 			}
 		}
@@ -376,7 +376,7 @@ Vectors2 ContourAnalyzer::equalizeContourDensity(const Vectors2& contour)
 		const Scalar denseMinus = contour[n].sqrDistance(contour[nMinus]);
 		const Scalar densePlus = contour[n].sqrDistance(contour[nPlus]);
 
-		denses.push_back(DenseObject(max(denseMinus, densePlus), n));
+		denses.emplace_back(max(denseMinus, densePlus), n);
 	}
 
 	std::sort(denses.rbegin(), denses.rend());
