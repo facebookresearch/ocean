@@ -50,7 +50,7 @@ void OrientationInterpolator::onInitialize(const Rendering::SceneRef& scene, con
 
 	for (MultiRotation::Values::const_iterator i = keyValue_.values().begin(); i != keyValue_.values().end(); ++i)
 	{
-		quaternionRotations_.push_back(Quaternion(*i));
+		quaternionRotations_.emplace_back(*i);
 	}
 }
 
@@ -63,7 +63,7 @@ void OrientationInterpolator::onFieldChanged(const std::string& fieldName)
 
 		for (MultiRotation::Values::const_iterator i = keyValue_.values().begin(); i != keyValue_.values().end(); ++i)
 		{
-			quaternionRotations_.push_back(Quaternion(*i));
+			quaternionRotations_.emplace_back(*i);
 		}
 
 		return;
