@@ -14,7 +14,6 @@
 #include "ocean/base/Worker.h"
 
 #include "ocean/test/TestResult.h"
-#include "ocean/test/TestSelector.h"
 
 namespace Ocean
 {
