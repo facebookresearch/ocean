@@ -146,7 +146,7 @@ JSONConfig::JSONValue& JSONConfig::JSONValue::add(const std::string& name)
 	{
 		valueType_ = TYPE_GROUP;
 
-		subValues_[name].push_back(JSONValue());
+		subValues_[name].emplace_back();
 		return subValues_[name].back();
 	}
 
@@ -405,7 +405,7 @@ JSONConfig::JSONValue& JSONConfig::JSONValue::operator[](const std::string& name
 	JSONValues::iterator i = subValues_.find(name);
 	if (i == subValues_.end())
 	{
-		subValues_[name].push_back(JSONValue());
+		subValues_[name].emplace_back();
 		return subValues_[name].back();
 	}
 
