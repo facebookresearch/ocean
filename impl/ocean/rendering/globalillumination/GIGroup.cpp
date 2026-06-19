@@ -97,7 +97,7 @@ void GIGroup::buildTracing(TracingGroup& group, const HomogenousMatrix4& modelTr
 
 			for (LightSet::const_iterator i = groupLights.begin(); i != groupLights.end(); ++i)
 			{
-				newLightSources.push_back(LightPair(*i, modelTransform));
+				newLightSources.emplace_back(*i, modelTransform);
 			}
 
 			for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
