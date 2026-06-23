@@ -17,8 +17,6 @@
 
 #include <vector>
 
-#include <vector>
-
 namespace Ocean
 {
 
