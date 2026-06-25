@@ -190,7 +190,7 @@ void GLESWindowFramebuffer::render()
 
 			if (glesScene->useHeadlight() && glesStereoView->useHeadlight() && glesStereoView->headlight())
 			{
-				lights.push_back(LightPair(glesStereoView->headlight(), HomogenousMatrix4(true)));
+				lights.emplace_back(glesStereoView->headlight(), HomogenousMatrix4(true));
 			}
 
 			glesScene->addToTraverser(*this, projectionMatrix, camera_T_world, lights, traverser_);
