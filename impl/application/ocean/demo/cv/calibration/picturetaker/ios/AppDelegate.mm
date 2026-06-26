@@ -333,7 +333,7 @@ using namespace Ocean;
 		return;
 	}
 
-	const std::string cameraNameStr = [cameraName UTF8String];
+	const std::string cameraNameStr = [cameraName UTF8String] ?: "";
 	liveVideo_ = Media::Manager::get().newMedium(cameraNameStr);
 
 	if (!liveVideo_)
@@ -420,7 +420,7 @@ using namespace Ocean;
 		return;
 	}
 
-	const std::string resolutionStr = [resolution UTF8String];
+	const std::string resolutionStr = [resolution UTF8String] ?: "";
 
 	unsigned int preferredWidth = 0u;
 	unsigned int preferredHeight = 0u;
@@ -461,7 +461,7 @@ using namespace Ocean;
 	NSString* directoryName = [NSString stringWithFormat:@"%s_%s", dateStr.c_str(), timeStr.c_str()];
 	NSString* fullPath = [documentsDirectory stringByAppendingPathComponent:directoryName];
 
-	directory_ = IO::Directory([fullPath UTF8String]);
+	directory_ = IO::Directory([fullPath UTF8String] ?: "");
 
 	if (!directory_.exists() && !directory_.create())
 	{

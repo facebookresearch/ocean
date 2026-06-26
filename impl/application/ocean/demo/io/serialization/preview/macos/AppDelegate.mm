@@ -116,7 +116,7 @@
 		NSURL* fileURL = [NSURL URLFromPasteboard:pasteboard];
 		if (fileURL != nil && _appDelegate != nil)
 		{
-			const std::string filename = std::string([[fileURL path] UTF8String]);
+			const std::string filename = std::string([[fileURL path] UTF8String] ?: "");
 			const IO::File file(filename);
 
 			if (file.extension() != "osn")
@@ -177,7 +177,7 @@
 		NSURL* fileURL = [[openPanel URLs] firstObject];
 		if (fileURL != nil)
 		{
-			const std::string filename = std::string([[fileURL path] UTF8String]);
+			const std::string filename = std::string([[fileURL path] UTF8String] ?: "");
 			[self loadFile:filename];
 		}
 	}
