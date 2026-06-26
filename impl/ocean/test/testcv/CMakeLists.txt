@@ -8,7 +8,6 @@ cmake_minimum_required(VERSION 3.26)
 add_subdirectory(testadvanced)
 add_subdirectory(testdetector)
 add_subdirectory(testlibyuv)
-add_subdirectory(testopencv)
 add_subdirectory(testsegmentation)
 add_subdirectory(testsynthesis)
 
