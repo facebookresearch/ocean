@@ -311,7 +311,6 @@ bool Utilities::paintCorrespondencesHomography(const Frame& frame0, const Frame&
 	ocean_assert(frame0 && frame1);
 	ocean_assert(frame0.pixelFormat() == frame1.pixelFormat());
 	ocean_assert(frame0.pixelOrigin() == frame1.pixelOrigin());
-	ocean_assert(!points1_H_points0.isSingular());
 
 	// framePoint1 = H * framePoint0
 	// framePoint0 = H^-1 * framePoint1
@@ -1204,7 +1203,6 @@ bool Utilities::alignFramesHomographyFullCoverage(const Frame& fixedFrame, const
 {
 	ocean_assert(fixedFrame && dynamicFrame);
 	ocean_assert(fixedFrame.pixelFormat() == dynamicFrame.pixelFormat() && fixedFrame.pixelOrigin() == dynamicFrame.pixelOrigin());
-	ocean_assert(!dynamic_H_fixed.isSingular());
 
 	SquareMatrix3 invHomography;
 	if (!dynamic_H_fixed.invert(invHomography))
