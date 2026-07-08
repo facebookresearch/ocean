@@ -2972,7 +2972,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
 			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-			world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), allVisibleObjectPoints, newViewDirection, false));
+			world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), allVisibleObjectPoints, newViewDirection, true));
 		}
 
 #ifdef OCEAN_DEBUG
