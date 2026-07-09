@@ -332,7 +332,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * Both frames can have individual frame dimensions.
 		 * @param frame0 The first frame, must be valid
 		 * @param frame1 The second frame, with pixel origin as the first frame, must be valid
-		 * @param points1_H_points0 The homography transforming points defined in the first frame to points defined in the second frame, must be valid
+		 * @param points1_H_points0 The homography transforming points defined in the first frame to points defined in the second frame, must be valid and non-singular
 		 * @param points0 The positions of the feature correspondences in the first frame, with range [0, frame0.width())x[0, frame0.height())
 		 * @param points1 The positions of the feature correspondences in the second frame, each point as a corresponding point in the first frame, with range [0, frame1.width())x[0, frame1.height())
 		 * @param numberPoints The number of given feature correspondences, with range [0, infinity)
@@ -627,7 +627,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * Aligns two frames connected by a given homography into one frame while the resulting frame covers the area of one given frame only (the fixed frame).
 		 * @param fixedFrame The fixed frame which will be untouched while the dynamic frame will be transformed by application of the homography and aligned to this frame, must be valid
 		 * @param dynamicFrame The dynamic frame which will be transformed and then aligned to the fixed frame, with same pixel format and pixel orientation as the fixed frame
-		 * @param dynamic_H_fixed The homography transforming points defined in the fixed frame to points defined in the dynamic frame, must be valid
+		 * @param dynamic_H_fixed The homography transforming points defined in the fixed frame to points defined in the dynamic frame, must be valid and non-singular
 		 * @param result The resulting frame with aligned frames, the frame type will be adjusted/set internally
 		 * @param blend True, to blend both frames; False, to overwrite each pixel for which a corresponding pixel in the dynamic frame exist
 		 * @param worker Optional worker object to distribute the computation
@@ -639,7 +639,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * Aligns two frames connected by a given homography into one frame entirely covering the frame content of both images.
 		 * @param fixedFrame The fixed frame which will be untouched while the dynamic frame will be transformed by application of the homography and aligned to this frame, must be valid
 		 * @param dynamicFrame The dynamic frame which will be transformed and then aligned to the fixed frame, with same pixel format and pixel orientation as the fixed frame
-		 * @param dynamic_H_fixed The homography transforming points defined in the fixed frame to points defined in the dynamic frame, must be valid
+		 * @param dynamic_H_fixed The homography transforming points defined in the fixed frame to points defined in the dynamic frame, must be valid and non-singular
 		 * @param result The resulting frame with aligned frames converting the image content of both frames, the frame type will be adjusted/set internally
 		 * @param blend True, to blend both frames; False, to overwrite each pixel for which a corresponding pixel in the dynamic frame exist
 		 * @param worker Optional worker object to distribute the computation
