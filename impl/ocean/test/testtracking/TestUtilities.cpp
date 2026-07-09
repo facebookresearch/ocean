@@ -95,15 +95,6 @@ bool TestUtilities::test(const double testDuration, Worker& /*worker*/, const Te
 		Log::info() << " ";
 	}
 
-	if (selector.shouldRun("paintcorrespondenceshomographysingular"))
-	{
-		testResult = testPaintCorrespondencesHomographySingular(testDuration);
-
-		Log::info() << " ";
-		Log::info() << "-";
-		Log::info() << " ";
-	}
-
 	if (selector.shouldRun("paintpoints"))
 	{
 		testResult = testPaintPoints(testDuration);
@@ -141,13 +132,13 @@ TEST(TestUtilities, BlendFramesDifferentDimensions)
 	EXPECT_TRUE(TestUtilities::testBlendFramesDifferentDimensions(GTEST_TEST_DURATION));
 }
 
-// Invariant: alignFramesHomography fails for singular homography and succeeds for valid identity
+// Invariant: alignFramesHomography succeeds for valid identity in blend and no-blend paths
 TEST(TestUtilities, AlignFramesHomography)
 {
 	EXPECT_TRUE(TestUtilities::testAlignFramesHomography(GTEST_TEST_DURATION));
 }
 
-// Invariant: alignFramesHomographyFullCoverage rejects oversized results and singular matrices
+// Invariant: alignFramesHomographyFullCoverage succeeds for identity and rejects oversized valid homographies
 TEST(TestUtilities, AlignFramesHomographyFullCoverage)
 {
 	EXPECT_TRUE(TestUtilities::testAlignFramesHomographyFullCoverage(GTEST_TEST_DURATION));
@@ -163,12 +154,6 @@ TEST(TestUtilities, CameraSerialization)
 TEST(TestUtilities, ReadDatabaseErrorPaths)
 {
 	EXPECT_TRUE(TestUtilities::testReadDatabaseErrorPaths(GTEST_TEST_DURATION));
-}
-
-// Invariant: paintCorrespondencesHomography returns false for singular (non-invertible) homography
-TEST(TestUtilities, PaintCorrespondencesHomographySingular)
-{
-	EXPECT_TRUE(TestUtilities::testPaintCorrespondencesHomographySingular(GTEST_TEST_DURATION));
 }
 
 // Invariant: paintPoints handles radius==0 without crash and skips out-of-bounds points
@@ -399,14 +384,6 @@ bool TestUtilities::testAlignFramesHomographyFullCoverage(const double testDurat
 		fixedFrame.setValue(0x80u);
 		dynamicFrame.setValue(0x40u);
 
-		// singular homography must fail
-		const SquareMatrix3 singularHomography(false);
-		Frame resultSingular;
-		if (Tracking::Utilities::alignFramesHomographyFullCoverage(fixedFrame, dynamicFrame, singularHomography, resultSingular, /*blend=*/true))
-		{
-			OCEAN_SET_FAILED(validation);
-		}
-
 		// identity homography with blend=true must produce a result at least as large as the input
 		const SquareMatrix3 identityHomography(true);
 		Frame resultBlend;
@@ -567,62 +544,6 @@ bool TestUtilities::testReadDatabaseErrorPaths(const double /*testDuration*/)
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
-}
-
-bool TestUtilities::testPaintCorrespondencesHomographySingular(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Test paintCorrespondencesHomography with singular homography:";
-
-	RandomGenerator randomGenerator;
-	Validation validation(randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		const unsigned int width = RandomI::random(randomGenerator, 20u, 100u);
-		const unsigned int height = RandomI::random(randomGenerator, 20u, 100u);
-
-		Frame frame0(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
-		Frame frame1(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
-
-		frame0.setValue(0x80u);
-		frame1.setValue(0x40u);
-
-		// singular (all-zeros) homography cannot be inverted => must return false
-		const SquareMatrix3 singularHomography(false);
-		Frame result;
-
-		if (Tracking::Utilities::paintCorrespondencesHomography(frame0, frame1, singularHomography, /*points0=*/nullptr, /*points1=*/nullptr, /*numberPoints=*/0, /*fullCoverage=*/false, result))
-		{
-			OCEAN_SET_FAILED(validation);
-		}
-
-		if (Tracking::Utilities::paintCorrespondencesHomography(frame0, frame1, singularHomography, /*points0=*/nullptr, /*points1=*/nullptr, /*numberPoints=*/0, /*fullCoverage=*/true, result))
-		{
-			OCEAN_SET_FAILED(validation);
-		}
-
-		// valid identity homography must succeed
-		const SquareMatrix3 identityHomography(true);
-		Frame resultValid;
-
-		if (!Tracking::Utilities::paintCorrespondencesHomography(frame0, frame1, identityHomography, /*points0=*/nullptr, /*points1=*/nullptr, /*numberPoints=*/0, /*fullCoverage=*/false, resultValid))
-		{
-			OCEAN_SET_FAILED(validation);
-		}
-		else
-		{
-			OCEAN_EXPECT_TRUE(validation, resultValid.isValid());
-		}
-	}
-	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

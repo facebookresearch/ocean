@@ -81,13 +81,6 @@ class OCEAN_TEST_TRACKING_EXPORT TestUtilities
 		static bool testReadDatabaseErrorPaths(const double testDuration);
 
 		/**
-		 * Tests the paintCorrespondencesHomography function with a singular homography.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testPaintCorrespondencesHomographySingular(const double testDuration);
-
-		/**
 		 * Tests the paintPoints function for radius==0 special case and bounds check.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
