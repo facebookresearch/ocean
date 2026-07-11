@@ -66,7 +66,8 @@ std::string Build::architectureType()
 		return std::string("arm");
 	#elif defined(__aarch64__)
 		return std::string("arm64");
-	#elif defined(__ARM_ARCH) && __ARM_ARCH == 7
+	// 32-bit ARM can report __ARM_ARCH >= 8 under an armv8-a overlay (e.g. colada's armv7 slice); __aarch64__ above already handled the 64-bit case.
+	#elif defined(__ARM_ARCH) && __ARM_ARCH >= 7
 		return std::string("arm");
 	#elif defined(__x86_64__)
 		return std::string("x64");
@@ -99,7 +100,8 @@ std::string Build::architectureType()
 		return std::string("arm");
 	#elif defined(__aarch64__)
 		return std::string("arm64");
-	#elif defined(__ARM_ARCH) && __ARM_ARCH == 7
+	// 32-bit ARM can report __ARM_ARCH >= 8 under an armv8-a overlay (e.g. colada's armv7 slice); __aarch64__ above already handled the 64-bit case.
+	#elif defined(__ARM_ARCH) && __ARM_ARCH >= 7
 		return std::string("arm");
 	#else
 		#error Missing implementation
