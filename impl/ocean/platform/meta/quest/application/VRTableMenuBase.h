@@ -59,8 +59,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 				 * @param name The name of the entry (the text of the entry), must be valid
 				 * @param url The url of the entry which is necessary to identify the individual entries
 				 * @param color Optional color of the entry
+				 * @param foregroundColor Optional text color of the entry; invalid uses the default
 				 */
-				inline Entry(std::string name, std::string url, const RGBAColor& color = RGBAColor(false));
+				inline Entry(std::string name, std::string url, const RGBAColor& color = RGBAColor(false), const RGBAColor& foregroundColor = RGBAColor(false));
 
 			protected:
 
@@ -72,6 +73,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 
 				/// The optional color.
 				RGBAColor color_;
+
+				/// The optional text (foreground) color; invalid uses the default black/white.
+				RGBAColor foregroundColor_;
 		};
 
 		/**
@@ -106,8 +110,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 				 * @param url The optional URL connected with the menu entry
 				 * @param isEntry True, if the entry is a menu entry; False, if the entry is a name of a group section
 				 * @param color The color of an entry
+				 * @param foregroundColor Optional text color of the entry; invalid uses the default
 				 */
-				MenuEntry(Rendering::Engine& engine, const Scalar textLineHeight, const std::string& name, const std::string& url, bool isEntry, const RGBAColor& color = RGBAColor(0.0f, 0.0f, 0.0f, 0.0f));
+				MenuEntry(Rendering::Engine& engine, const Scalar textLineHeight, const std::string& name, const std::string& url, bool isEntry, const RGBAColor& color = RGBAColor(0.0f, 0.0f, 0.0f, 0.0f), const RGBAColor& foregroundColor = RGBAColor(false));
 
 				/**
 				 * Returns the extent of the actual text.
@@ -321,10 +326,11 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 		static constexpr Scalar entryOffsetZ_ = Scalar(0.001);
 };
 
-inline VRTableMenuBase::Entry::Entry(std::string name, std::string url, const RGBAColor& color) :
+inline VRTableMenuBase::Entry::Entry(std::string name, std::string url, const RGBAColor& color, const RGBAColor& foregroundColor) :
 	name_(std::move(name)),
 	url_(std::move(url)),
-	color_(color)
+	color_(color),
+	foregroundColor_(foregroundColor)
 {
 	// nothing to do here
 }

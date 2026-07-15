@@ -27,12 +27,12 @@ namespace Quest
 namespace Application
 {
 
-VRTableMenuBase::MenuEntry::MenuEntry(Rendering::Engine& engine, const Scalar textLineHeight, const std::string& name, const std::string& url, bool isEntry, const RGBAColor& backgroundColor) :
+VRTableMenuBase::MenuEntry::MenuEntry(Rendering::Engine& engine, const Scalar textLineHeight, const std::string& name, const std::string& url, bool isEntry, const RGBAColor& backgroundColor, const RGBAColor& foregroundColor) :
 	name_(name),
 	url_(url),
 	isEntry_(isEntry)
 {
-	const RGBAColor foregroundColor = isEntry_ ? RGBAColor(0.0f, 0.0f, 0.0f) : RGBAColor(1.0f, 1.0f, 1.0f);
+	const RGBAColor resolvedForegroundColor = foregroundColor.isValid() ? foregroundColor : (isEntry_ ? RGBAColor(0.0f, 0.0f, 0.0f) : RGBAColor(1.0f, 1.0f, 1.0f));
 
 	constexpr bool shaded = true;
 	constexpr Scalar fixedWidth = 0;
@@ -42,7 +42,7 @@ VRTableMenuBase::MenuEntry::MenuEntry(Rendering::Engine& engine, const Scalar te
 	constexpr Rendering::Text::HorizontalAnchor horizontalAnchor = Rendering::Text::HA_LEFT;
 	constexpr Rendering::Text::VerticalAnchor verticalAnchor = Rendering::Text::VA_TOP;
 
-	transform_ = Rendering::Utilities::createText(engine, name_, foregroundColor, backgroundColor, shaded, fixedWidth, fixedHeight, textLineHeight, alignmentMode, horizontalAnchor, verticalAnchor, std::string(), std::string(), &text_);
+	transform_ = Rendering::Utilities::createText(engine, name_, resolvedForegroundColor, backgroundColor, shaded, fixedWidth, fixedHeight, textLineHeight, alignmentMode, horizontalAnchor, verticalAnchor, std::string(), std::string(), &text_);
 	ocean_assert(transform_ && text_);
 }
 
@@ -181,7 +181,7 @@ bool VRTableMenuBase::setMenuEntries(const Groups& groups, const RGBAColor& menu
 			for (const Entry& entry : group.second)
 			{
 				const RGBAColor color = entry.color_.isValid() ? entry.color_ : entryBackgroundColor;
-				menuEntries_.emplace_back(*engine_, entryHeight_, entry.name_, entry.url_, true, color);
+				menuEntries_.emplace_back(*engine_, entryHeight_, entry.name_, entry.url_, true, color, entry.foregroundColor_);
 			}
 		}
 	}
