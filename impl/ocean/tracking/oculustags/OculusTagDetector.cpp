@@ -778,10 +778,10 @@ bool OculusTagDetector::optimizePose(const AnyCamera& anyCameraA, const AnyCamer
 	static_assert(std::is_same<Vectors2, Vectors2>::value, "ImagePoints != Vectors2");
 	static_assert(std::is_same<Vectors3, Vectors3>::value, "ObjectPoints != Vectors3");
 
-	const Geometry::ObjectPointGroups objectPointGroupsA(1, std::move(objectPointsA));
-	const Geometry::ObjectPointGroups objectPointGroupsB(1, std::move(objectPointsB));
-	const Geometry::ImagePointGroups imagePointGroupsA(1, std::move(imagePointsA));
-	const Geometry::ImagePointGroups imagePointGroupsB(1, std::move(imagePointsB));
+	const Geometry::ObjectPointGroups objectPointGroupsA(1, objectPointsA);
+	const Geometry::ObjectPointGroups objectPointGroupsB(1, objectPointsB);
+	const Geometry::ImagePointGroups imagePointGroupsA(1, imagePointsA);
+	const Geometry::ImagePointGroups imagePointGroupsB(1, imagePointsB);
 
 	HomogenousMatrix4 optimized_world_T_tag;
 	if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformationStereo(anyCameraA, anyCameraB, world_T_camerasA, world_T_camerasB, world_T_tag, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, optimized_world_T_tag, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
