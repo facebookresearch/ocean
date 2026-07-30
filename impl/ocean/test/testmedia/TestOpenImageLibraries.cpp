@@ -482,6 +482,25 @@ TEST_F(TestOpenImageLibrariesGTestInstance, TifImageRGBA32Recorder)
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_GIF
 
+TEST_F(TestOpenImageLibrariesGTestInstance, DecodeImages_OversizedLogicalScreen_ReturnsEmpty)
+{
+	std::vector<uint8_t> gif = {
+		0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0xFF, 0xFF, 0xFF, 0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00, 0x00, 0x00,
+		0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B};
+
+	EXPECT_EQ(Media::OpenImageLibraries::ImageGif::decodeImages(gif.data(), gif.size()).size(), 1u);
+
+	constexpr uint16_t oversizedWidth = 24930u;
+	constexpr uint16_t oversizedHeight = 38911u;
+	gif[6] = uint8_t(oversizedWidth);
+	gif[7] = uint8_t(oversizedWidth >> 8u);
+	gif[8] = uint8_t(oversizedHeight);
+	gif[9] = uint8_t(oversizedHeight >> 8u);
+
+	EXPECT_TRUE(Media::OpenImageLibraries::ImageGif::decodeImages(gif.data(), gif.size()).empty());
+}
+
 #ifndef OCEAN_DEBUG
 	TEST_F(TestOpenImageLibrariesGTestInstance, GifDecodeStressTest)
 	{

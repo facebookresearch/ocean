@@ -175,6 +175,23 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 
 	const ScopedFunctionVoid scopedCloseFileFunction(std::bind(&DGifCloseFile, gifFile, &error));
 
+	const int maxWidth = gifFile->SWidth;
+	const int maxHeight = gifFile->SHeight;
+
+	// Each output image is retained as a full-canvas RGBA32 frame. Bound the
+	// aggregate resident frame storage before allocating or copying it.
+	constexpr uint64_t maximalDecodedBytes = 1024ull * 1024ull * 1024ull;
+	constexpr uint64_t bytesPerPixel = 4ull;
+	constexpr uint64_t maximalDecodedPixels = maximalDecodedBytes / bytesPerPixel;
+
+	const bool hasValidDimensions = maxWidth >= 1 && maxHeight >= 1;
+	const uint64_t framePixels = hasValidDimensions ? uint64_t(maxWidth) * uint64_t(maxHeight) : 0ull;
+
+	if (framePixels > maximalDecodedPixels)
+	{
+		return Frames();
+	}
+
 	if (DGifSlurp(gifFile) != GIF_OK)
 	{
 		return Frames();
@@ -192,18 +209,15 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 		numberImages = std::min(numberImages, maximalImages);
 	}
 
+	if (framePixels > maximalDecodedPixels / uint64_t(numberImages))
+	{
+		return Frames();
+	}
+
 	Frames frames;
 
-	const int maxWidth = gifFile->SWidth;
-	const int maxHeight = gifFile->SHeight;
-
-	if (maxWidth >= 1 && maxHeight >= 1)
+	if (hasValidDimensions)
 	{
-		if (uint64_t(maxWidth) * uint64_t(maxHeight) >= uint64_t(1073741823ull)) // width * height * 4 < 2^32
-		{
-			return Frames();
-		}
-
 		const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_RGBA32;
 
 		const FrameType frameType = FrameType((unsigned int)(maxWidth), (unsigned int)(maxHeight), pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
