@@ -15,26 +15,26 @@ android {
   val androidPackageName =
       project.findProperty("androidPackageName") as String?
           ?: error(
-              "androidPackageName property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "androidPackageName property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
 
   // SDK versions are passed from MSBuild via -P properties
   val androidMinSdk: Int =
       (project.findProperty("androidMinSdk") as String?)?.toIntOrNull()
           ?: error(
-              "androidMinSdk property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "androidMinSdk property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
   val androidTargetSdk: Int =
       (project.findProperty("androidTargetSdk") as String?)?.toIntOrNull()
           ?: error(
-              "androidTargetSdk property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "androidTargetSdk property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
 
   // Java version for source/target compatibility
   val javaVersionStr: String =
       project.findProperty("javaVersion") as String?
           ?: error(
-              "javaVersion property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "javaVersion property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
   val javaVersion: JavaVersion =
       when (javaVersionStr) {
@@ -82,7 +82,7 @@ android {
   val javaStagingDir =
       project.findProperty("javaStagingDir") as String?
           ?: error(
-              "javaStagingDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "javaStagingDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
 
   // Redirect Gradle build output to intermediate directory (keeps source tree clean)
@@ -96,21 +96,21 @@ android {
   val jniLibsDir =
       project.findProperty("jniLibsDir") as String?
           ?: error(
-              "jniLibsDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "jniLibsDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
 
   // Android manifest file path - passed via -PandroidManifest property from MSBuild
   val androidManifest =
       project.findProperty("androidManifest") as String?
           ?: error(
-              "androidManifest property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "androidManifest property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
 
   // Android resources directory - passed via -PandroidResDir property from MSBuild
   val androidResDir =
       project.findProperty("androidResDir") as String?
           ?: error(
-              "androidResDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+              "androidResDir property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
           )
 
   sourceSets {
@@ -160,7 +160,7 @@ dependencies {
           implementation(files(aarFile))
         } else {
           logger.warn(
-              "WARNING: Local AAR dependency not found: $aarFile — build the dependency project first."
+              "WARNING: Local AAR dependency not found: $aarFile — build the dependency project first.",
           )
         }
       }

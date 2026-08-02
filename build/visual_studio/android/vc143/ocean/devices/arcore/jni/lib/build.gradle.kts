@@ -21,7 +21,7 @@ if (gradleBuildDir != null) {
 val androidNamespace: String =
     project.findProperty("androidNamespace") as String?
         ?: error(
-            "androidNamespace property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle."
+            "androidNamespace property not set. Build must be invoked from Visual Studio/MSBuild, not standalone Gradle.",
         )
 val androidMinSdk: Int = (project.findProperty("androidMinSdk") as String?)?.toIntOrNull() ?: 24
 val androidCompileSdk: Int =
@@ -105,7 +105,7 @@ dependencies {
           compileOnly(files(aarFile))
         } else {
           logger.warn(
-              "WARNING: Local AAR dependency not found: $aarFile — build the dependency project first."
+              "WARNING: Local AAR dependency not found: $aarFile — build the dependency project first.",
           )
         }
       }
