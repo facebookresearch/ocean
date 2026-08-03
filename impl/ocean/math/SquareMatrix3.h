@@ -2047,7 +2047,7 @@ SquareMatrixT3<T>& SquareMatrixT3<T>::operator*=(const T value)
 template <typename T>
 void SquareMatrixT3<T>::multiply(const SquareMatrixT3<T>& matrix, const VectorT2<T>* vectors, VectorT2<T>* results, const size_t number)
 {
-	ocean_assert((vectors && results) || number == 0);
+	ocean_assert((vectors != nullptr && results != nullptr) || number == 0);
 
 	for (size_t n = 0; n < number; ++n)
 	{
@@ -2058,7 +2058,7 @@ void SquareMatrixT3<T>::multiply(const SquareMatrixT3<T>& matrix, const VectorT2
 template <typename T>
 void SquareMatrixT3<T>::multiply(const SquareMatrixT3<T>& matrix, const VectorT3<T>* vectors, VectorT3<T>* results, const size_t number)
 {
-	ocean_assert((vectors && results) || number == 0);
+	ocean_assert((vectors != nullptr && results != nullptr) || number == 0);
 
 	for (size_t n = 0; n < number; ++n)
 	{
@@ -2084,6 +2084,13 @@ inline void SquareMatrixT3<float>::multiply(const SquareMatrixT3<float>& matrix,
 	// _mm_castps_si128
 	// _mm_srli_si128
 	// _mm_castsi128_ps
+
+	ocean_assert((vectors != nullptr && results != nullptr) || number == 0);
+
+	if (number == 0)
+	{
+		return;
+	}
 
 	// now we load the three columns (and ignore the last entry)
 	const __m128 c0 = _mm_loadu_ps(matrix.values_ + 0);
