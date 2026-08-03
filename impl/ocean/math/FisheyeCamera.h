@@ -1397,6 +1397,18 @@ OCEAN_FORCE_INLINE void FisheyeCameraT<T>::jacobianDistortNormalized2x2(const T 
 	const T xy2 = x2 + y2;
 
 	const T r = NumericT<T>::sqrt(xy2);
+
+	if (NumericT<T>::isEqualEps(r))
+	{
+		jx[0] = T(1);
+		jx[1] = T(0);
+
+		jy[0] = T(0);
+		jy[1] = T(1);
+
+		return;
+	}
+
 	const T r3 = r * r * r;
 
 	const T t = NumericT<T>::atan(r);
@@ -1421,7 +1433,11 @@ OCEAN_FORCE_INLINE void FisheyeCameraT<T>::jacobianDistortNormalized2x2(const T 
 	const T invTerm3 = T(1) / term3;
 
 	const T xDistortion_dx = (xy2 * term2 - x2 * term2 + x2 * r * term1) * invTerm3;
-	const T xDistortion_dy = (x * term1 * y) / (xy2 * (xy2 + 1)) - (x * y * term0) / r3;
+
+	const T denominator = xy2 * (xy2 + 1);
+
+	const T xDistortion_dy = (x * term1 * y) / denominator - (x * y * term0) / r3;
+	ocean_assert(!NumericT<T>::isNan(xDistortion_dy));
 
 	//const T yDistortion_dx = (y * term1 * x) / (xy2 * (xy2 + 1)) - (y * x * term0) / r3; == xDistortion_dy
 	const T& yDistortion_dx = xDistortion_dy;
