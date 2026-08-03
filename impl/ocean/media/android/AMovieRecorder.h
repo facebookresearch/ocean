@@ -172,7 +172,7 @@ class OCEAN_MEDIA_A_EXPORT AMovieRecorder : virtual public MovieRecorder
 		bool isRecording_ = false;
 
 		/// True, if this recorder is stopped.
-		bool isStopped_ = false;
+		bool isStopped_ = true;
 
 		/// The preferred bitrate of the recorder, in bits per second.
 		unsigned int preferredBitrate_ = defaultBitrate_;
