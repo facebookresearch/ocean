@@ -655,7 +655,7 @@ inline std::vector<T> Subset::InternalSubset<TIndex>::invertedSubset(const T* ob
 #ifdef OCEAN_DEBUG
 		for (const TIndex& index : indices)
 		{
-			ocean_assert(indices < numberObjects);
+			ocean_assert(index < numberObjects);
 		}
 #endif
 
