@@ -3307,7 +3307,11 @@ bool FrameConverter::subFrame(const T* source, T* target, const unsigned int sou
 {
 	ocean_assert(source != nullptr && target != nullptr);
 
-	if (sourceLeft + width > sourceWidth || sourceTop + height > sourceHeight || targetLeft + width > targetWidth || targetTop + height > targetHeight)
+	// Widen the bounds checks to 64-bit: left/top and width/height are all
+	// unsigned int, so `left + width` wraps to a small value for near-2^32
+	// inputs and would pass the guard, driving an out-of-bounds subframe
+	// pointer below (T278434571). Evaluated in uint64_t, the sum cannot wrap.
+	if (uint64_t(sourceLeft) + width > sourceWidth || uint64_t(sourceTop) + height > sourceHeight || uint64_t(targetLeft) + width > targetWidth || uint64_t(targetTop) + height > targetHeight)
 	{
 		return false;
 	}
@@ -3315,8 +3319,10 @@ bool FrameConverter::subFrame(const T* source, T* target, const unsigned int sou
 	const unsigned int sourceStrideElements = sourceWidth * channels + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * channels + targetPaddingElements;
 
-	const T* subSource = source + sourceStrideElements * sourceTop + sourceLeft * channels;
-	T* subTarget = target + targetStrideElements * targetTop + targetLeft * channels;
+	// Promote the offset arithmetic to size_t so the stride/left products do
+	// not overflow 32-bit before the pointer is formed.
+	const T* subSource = source + size_t(sourceStrideElements) * sourceTop + size_t(sourceLeft) * channels;
+	T* subTarget = target + size_t(targetStrideElements) * targetTop + size_t(targetLeft) * channels;
 
 	if (sourcePaddingElements == 0u && targetPaddingElements == 0u && width == sourceWidth && sourceWidth == targetWidth)
 	{
