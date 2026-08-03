@@ -10,6 +10,7 @@
 #include "ocean/base/String.h"
 
 #include <deque>
+#include <limits>
 
 #if defined(_WINDOWS)
 	#include <winsock2.h>
@@ -135,7 +136,9 @@ HighPerformanceTimer::Ticks HighPerformanceTimer::ticksPerSecond()
 
 	if (info.numer != 0 && info.denom != 0)
 	{
-		value = Ticks(1000000000) / (info.numer / info.denom);
+		ocean_assert((std::numeric_limits<Ticks>::max() / Ticks(info.denom)) >= Ticks(1000000000));
+
+		value = (Ticks(1000000000) * Ticks(info.denom)) / Ticks(info.numer);
 	}
 
 #else
