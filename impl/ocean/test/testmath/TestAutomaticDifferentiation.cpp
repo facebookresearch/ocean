@@ -47,6 +47,17 @@ bool TestAutomaticDifferentiation::test(const double testDuration, const TestSel
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("compoundassignment"))
+	{
+		testResult = testCompoundAssignment<float>(testDuration);
+		Log::info() << " ";
+		testResult = testCompoundAssignment<double>(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("functions"))
 	{
 		testResult = testFunctions<float>(testDuration);
@@ -592,6 +603,153 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 				{
 					scopedIteration.setInaccurate();
 				}
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestAutomaticDifferentiation::testCompoundAssignment(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing compound assignment operators with " << TypeNamer::name<T>() << ":";
+
+	using AutoDiff = AutomaticDifferentiationT<T>;
+
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = std::is_same<float, T>::value ? 0.97 : 0.99;
+
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < 1000u; ++n)
+		{
+			const T x = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			const T y = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+
+			T c = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+
+			while (NumericT<T>::isEqualEps(c))
+			{
+				c = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
+
+			T d = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+
+			while (NumericT<T>::isEqualEps(d))
+			{
+				d = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
+
+			// 'a op= b' must produce exactly the same object as 'a = a op b', for every operator and both
+			// right-hand side types - the non-mutating operators are covered by testSimple()
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff += c;
+
+				const AutoDiff expected = AutoDiff(x, true) + c;
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff -= c;
+
+				const AutoDiff expected = AutoDiff(x, true) - c;
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff *= c;
+
+				const AutoDiff expected = AutoDiff(x, true) * c;
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff /= c;
+
+				const AutoDiff expected = AutoDiff(x, true) / c;
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff += AutoDiff(y, false);
+
+				const AutoDiff expected = AutoDiff(x, true) + AutoDiff(y, false);
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff -= AutoDiff(y, false);
+
+				const AutoDiff expected = AutoDiff(x, true) - AutoDiff(y, false);
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff *= AutoDiff(y, false);
+
+				const AutoDiff expected = AutoDiff(x, true) * AutoDiff(y, false);
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				AutoDiff autoDiff(x, true);
+				autoDiff /= AutoDiff(d, false);
+
+				const AutoDiff expected = AutoDiff(x, true) / AutoDiff(d, false);
+
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.value(), expected.value());
+				OCEAN_EXPECT_EQUAL(validation, autoDiff.derivative(), expected.derivative());
 			}
 		}
 	}

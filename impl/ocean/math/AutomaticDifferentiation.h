@@ -515,7 +515,12 @@ inline AutomaticDifferentiationT<T, TNumeric> AutomaticDifferentiationT<T, TNume
 template <typename T, typename TNumeric>
 inline AutomaticDifferentiationT<T, TNumeric>& AutomaticDifferentiationT<T, TNumeric>::operator*=(const T& right)
 {
+	// f(x) = x * c
+	// f'(x) = x' * c
+
 	value_ *= right;
+	derivative_ *= right;
+
 	return *this;
 }
 
