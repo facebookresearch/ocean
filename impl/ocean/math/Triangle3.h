@@ -160,7 +160,7 @@ class TriangleT3 : public TriangleT<T>
 		 * @param ray Ray to determine whether an intersection occurs
 		 * @param reflection Resulting reflection ray, if an intersection occurs
 		 * @param distance Resulting intersection distance
-		 * @param normal Resulting normal
+		 * @param normal Resulting normal, with unit length
 		 * @return True, if so
 		 */
 		bool intersection(const LineT3<T>& ray, LineT3<T>& reflection, T& distance, VectorT3<T>& normal) const;
@@ -169,7 +169,7 @@ class TriangleT3 : public TriangleT<T>
 		 * Returns whether a given ray has a front intersection with this triangle and determines the reflective ray starting at the intersection point.
 		 * An explicit reflection normal is used.<br>
 		 * @param ray Ray to determine whether an intersection occurs
-		 * @param normal Reflection normal
+		 * @param normal Reflection normal, must have unit length
 		 * @param reflection Resulting reflection ray, if an intersection occurs
 		 * @param distance Resulting intersection distance
 		 * @return True, if so
@@ -396,10 +396,10 @@ bool TriangleT3<T>::intersection(const LineT3<T>& ray, LineT3<T>& reflection, T&
 
 	distance = result.z();
 
-	const VectorT3<T> normal((trianglePoints[1] - trianglePoints[0]).cross(trianglePoints[2] - trianglePoints[0]));
-	ocean_assert(NumericT<T>::isNotEqualEps(normal.length()));
+	const VectorT3<T> normal((trianglePoints[1] - trianglePoints[0]).cross(trianglePoints[2] - trianglePoints[0]).normalizedOrZero());
+	ocean_assert(normal.isUnit());
 
-	ocean_assert(NumericT<T>::isEqual(ray.direction().length(), 1));
+	ocean_assert(ray.direction().isUnit());
 
 	reflection = LineT3<T>(ray.point() + ray.direction() * result.z(), (-ray.direction()).reflect(normal));
 	ocean_assert(reflection.isValid());
@@ -428,10 +428,10 @@ bool TriangleT3<T>::intersection(const LineT3<T>& ray, LineT3<T>& reflection, T&
 
 	distance = result.z();
 
-	normal = VectorT3<T>((trianglePoints[1] - trianglePoints[0]).cross(trianglePoints[2] - trianglePoints[0]));
-	ocean_assert(NumericT<T>::isNotEqualEps(normal.length()));
+	normal = VectorT3<T>((trianglePoints[1] - trianglePoints[0]).cross(trianglePoints[2] - trianglePoints[0]).normalizedOrZero());
+	ocean_assert(normal.isUnit());
 
-	ocean_assert(NumericT<T>::isEqual(ray.direction().length(), 1));
+	ocean_assert(ray.direction().isUnit());
 
 	reflection = LineT3<T>(ray.point() + ray.direction() * result.z(), (-ray.direction()).reflect(normal));
 	ocean_assert(reflection.isValid());
@@ -448,7 +448,7 @@ inline bool TriangleT3<T>::frontIntersection(const LineT3<T>& ray, const VectorT
 	}
 
 	ocean_assert(ray.isValid());
-	ocean_assert(NumericT<T>::isNotEqualEps(normal.length()));
+	ocean_assert(normal.isUnit());
 
 	SquareMatrixT3<T> matrix(trianglePoints[1] - trianglePoints[0], trianglePoints[2] - trianglePoints[0], -ray.direction());
 
@@ -466,7 +466,7 @@ inline bool TriangleT3<T>::frontIntersection(const LineT3<T>& ray, const VectorT
 
 	distance = result.z();
 
-	ocean_assert(NumericT<T>::isEqual(ray.direction().length(), 1));
+	ocean_assert(ray.direction().isUnit());
 
 	reflection = LineT3<T>(ray.point() + ray.direction() * result.z(), (-ray.direction()).reflect(normal));
 	ocean_assert(reflection.isValid());
@@ -499,10 +499,10 @@ inline bool TriangleT3<T>::frontIntersection(const LineT3<T>& ray, const VectorT
 
 	distance = result.z();
 
-	const VectorT3<T> normal(normal0 * (1 - result.x() - result.y()) + normal1 * result.x() + normal2 * result.y());
-	ocean_assert(NumericT<T>::isNotEqualEps(normal.length()));
+	const VectorT3<T> normal = (normal0 * (1 - result.x() - result.y()) + normal1 * result.x() + normal2 * result.y()).normalizedOrZero();
+	ocean_assert(normal.isUnit());
 
-	ocean_assert(NumericT<T>::isEqual(ray.direction().length(), 1));
+	ocean_assert(ray.direction().isUnit());
 
 	if (normal * ray.direction() > 0)
 	{
@@ -540,11 +540,10 @@ inline bool TriangleT3<T>::frontIntersection(const LineT3<T>& ray, const VectorT
 
 	distance = result.z();
 
-	normal = VectorT3<T>(normal0 * (1 - result.x() - result.y()) + normal1 * result.x() + normal2 * result.y());
-	ocean_assert(NumericT<T>::isNotEqualEps(normal.length()));
-	normal.normalize();
+	normal = (normal0 * (1 - result.x() - result.y()) + normal1 * result.x() + normal2 * result.y()).normalizedOrZero();
+	ocean_assert(normal.isUnit());
 
-	ocean_assert(NumericT<T>::isEqual(ray.direction().length(), 1));
+	ocean_assert(ray.direction().isUnit());
 
 	if (normal * ray.direction() > 0)
 	{
