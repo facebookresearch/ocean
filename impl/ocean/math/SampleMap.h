@@ -384,7 +384,8 @@ bool SampleMap<T>::sample(const double& timestamp, const InterpolationStrategy i
 
 		if (sampleTimestamp)
 		{
-			*sampleTimestamp = iLower->first * interpolationFactor + iUpper->first * (1.0 - interpolationFactor);
+			*sampleTimestamp = iLower->first * (1.0 - interpolationFactor) + iUpper->first * interpolationFactor;
+			ocean_assert(NumericD::isWeakEqual(*sampleTimestamp, timestamp));
 		}
 
 		return true;

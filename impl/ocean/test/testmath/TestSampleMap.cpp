@@ -250,7 +250,21 @@ bool TestSampleMap::testSampleInterpolation(const double testDuration)
 				float interpolatedValue = NumericF::minValue();
 
 				double timestampDistance = NumericD::maxValue();
-				OCEAN_EXPECT_TRUE(validation, sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance));
+				double sampleTimestamp = NumericD::maxValue();
+				OCEAN_EXPECT_TRUE(validation, sampleMap.sample(timestamp, interpolationStrategy, interpolatedValue, &timestampDistance, &sampleTimestamp));
+
+				if (interpolationStrategy == SampleMap<float>::IS_TIMESTAMP_INTERPOLATE)
+				{
+					// the interpolated sample is defined at the requested timestamp
+
+					OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(sampleTimestamp, timestamp));
+				}
+				else
+				{
+					// the nearest sample is one of the two existing samples
+
+					OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(sampleTimestamp, lowerTimestamp) || NumericD::isEqual(sampleTimestamp, higherTimestamp));
+				}
 
 				if (interpolationStrategy == SampleMap<float>::IS_TIMESTAMP_NEAREST)
 				{
