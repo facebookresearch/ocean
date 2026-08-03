@@ -340,7 +340,7 @@ const T* KdTree<T>::nearestNeighbor(const T* value, typename SquareValueTyper<T>
 {
 	ocean_assert(value);
 
-	distance = std::numeric_limits<T>::max();
+	distance = std::numeric_limits<typename SquareValueTyper<T>::Type>::max();
 
 	if (!root_)
 	{
