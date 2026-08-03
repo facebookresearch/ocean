@@ -31,7 +31,7 @@ class Triple
 		/**
 		 * Creates a new triple object with default values.
 		 */
-		inline Triple();
+		inline Triple() = default;
 
 		/**
 		 * Creates a new triple object with three elements.
@@ -39,7 +39,7 @@ class Triple
 		 * @param second Second element
 		 * @param third Third element
 		 */
-		inline explicit Triple(const T1& first, const T2& second = T1(), const T3& third = T3());
+		inline explicit Triple(const T1& first, const T2& second = T2(), const T3& third = T3());
 
 		/**
 		 * Returns the first element of this triple object.
@@ -101,29 +101,20 @@ class Triple
 	private:
 
 		/// First element of this triple.
-		T1 tripleFirst;
+		T1 first_ = T1();
 
 		/// Second element of this triple.
-		T2 tripleSecond;
+		T2 second_ = T2();
 
 		/// Third element of this triple.
-		T3 tripleThird;
+		T3 third_ = T3();
 };
 
 template <typename T1, typename T2, typename T3>
-inline Triple<T1, T2, T3>::Triple() :
-	tripleFirst(T1()),
-	tripleSecond(T2()),
-	tripleThird(T3())
-{
-	// nothing to do here
-}
-
-template <typename T1, typename T2, typename T3>
 inline Triple<T1, T2, T3>::Triple(const T1& first, const T2& second, const T3& third) :
-	tripleFirst(first),
-	tripleSecond(second),
-	tripleThird(third)
+	first_(first),
+	second_(second),
+	third_(third)
 {
 	// nothing to do here
 }
@@ -131,43 +122,43 @@ inline Triple<T1, T2, T3>::Triple(const T1& first, const T2& second, const T3& t
 template <typename T1, typename T2, typename T3>
 inline const T1& Triple<T1, T2, T3>::first() const
 {
-	return tripleFirst;
+	return first_;
 }
 
 template <typename T1, typename T2, typename T3>
 inline T1& Triple<T1, T2, T3>::first()
 {
-	return tripleFirst;
+	return first_;
 }
 
 template <typename T1, typename T2, typename T3>
 inline const T2& Triple<T1, T2, T3>::second() const
 {
-	return tripleSecond;
+	return second_;
 }
 
 template <typename T1, typename T2, typename T3>
 inline T2& Triple<T1, T2, T3>::second()
 {
-	return tripleSecond;
+	return second_;
 }
 
 template <typename T1, typename T2, typename T3>
 inline const T3& Triple<T1, T2, T3>::third() const
 {
-	return tripleThird;
+	return third_;
 }
 
 template <typename T1, typename T2, typename T3>
 inline T3& Triple<T1, T2, T3>::third()
 {
-	return tripleThird;
+	return third_;
 }
 
 template <typename T1, typename T2, typename T3>
 inline bool Triple<T1, T2, T3>::operator==(const Triple<T1, T2, T3>& triple) const
 {
-	return tripleFirst == triple.tripleFirst && tripleSecond == triple.tripleSecond && tripleThird == triple.tripleThird;
+	return first_ == triple.first_ && second_ == triple.second_ && third_ == triple.third_;
 }
 
 template <typename T1, typename T2, typename T3>
@@ -179,9 +170,9 @@ inline bool Triple<T1, T2, T3>::operator!=(const Triple<T1, T2, T3>& triple) con
 template <typename T1, typename T2, typename T3>
 inline bool Triple<T1, T2, T3>::operator<(const Triple<T1, T2, T3>& triple) const
 {
-	return (tripleFirst < triple.tripleFirst)
-				|| (tripleFirst == triple.tripleFirst && tripleSecond < triple.tripleSecond)
-				|| (tripleFirst == triple.tripleFirst && tripleSecond == triple.tripleSecond && tripleThird < triple.tripleThird);
+	return (first_ < triple.first_)
+				|| (first_ == triple.first_ && second_ < triple.second_)
+				|| (first_ == triple.first_ && second_ == triple.second_ && third_ < triple.third_);
 }
 
 }
