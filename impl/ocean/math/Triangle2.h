@@ -163,7 +163,8 @@ class TriangleT2 : public TriangleT<T>
 
 		/**
 		 * Returns the square area of this triangle.
-		 * @return Triangle area
+		 * The result is clamped to zero, as the expanded Heron form can cancel to a small negative value for near-collinear triangles.
+		 * @return Triangle area, with range [0, infinity)
 		 * @see area().
 		 */
 		inline T area2() const;
@@ -466,16 +467,6 @@ inline T TriangleT2<T>::bottom() const
 template <typename T>
 inline T TriangleT2<T>::area() const
 {
-	const T squaredArea = area2();
-
-	if (std::is_same<T, float>::value)
-	{
-		if (squaredArea <= T(0))
-		{
-			return T(0);
-		}
-	}
-
 	return NumericT<T>::sqrt(area2());
 }
 
@@ -486,7 +477,8 @@ inline T TriangleT2<T>::area2() const
 	const T b2 = points_[0].sqrDistance(points_[2]);
 	const T c2 = points_[1].sqrDistance(points_[2]);
 
-	return (T(4) * a2 * c2 - NumericT<T>::sqr(a2 + c2 - b2)) * T(0.0625);
+	// the argument order keeps a NaN (from NaN coordinates) propagating into the sqrt() assert in area(), instead of silently clamping it to zero
+	return std::max((T(4) * a2 * c2 - NumericT<T>::sqr(a2 + c2 - b2)) * T(0.0625), T(0));
 }
 
 template <typename T>
