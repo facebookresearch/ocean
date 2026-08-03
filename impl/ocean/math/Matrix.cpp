@@ -255,7 +255,7 @@ MatrixT<T>::MatrixT(const MatrixT<T>& matrix) :
 template <typename T>
 MatrixT<T>::~MatrixT()
 {
-	free(values_);
+	release();
 }
 
 template <typename T>
@@ -1073,11 +1073,20 @@ MatrixT<T> MatrixT<T>::subMatrix(const size_t row, const size_t column, const si
 template <typename T>
 MatrixT<T>& MatrixT<T>::operator=(const MatrixT<T>& matrix)
 {
-	resize(matrix.rows_, matrix.columns_);
-
-	if (matrix.elements() > 0)
+	if (this != &matrix)
 	{
-		memcpy(values_, matrix.values_, sizeof(T) * elements());
+		if (matrix.isValid())
+		{
+			resize(matrix.rows_, matrix.columns_);
+
+			ocean_assert(matrix.elements() > 0);
+
+			memcpy(values_, matrix.values_, sizeof(T) * elements());
+		}
+		else
+		{
+			release();
+		}
 	}
 
 	return *this;
@@ -1329,17 +1338,21 @@ void MatrixT<T>::multiplyColumn(const size_t column, const T scalar)
 template <typename T>
 void MatrixT<T>::resize(const size_t rows, const size_t columns)
 {
-	ocean_assert(rows >= 1u && columns >= 1u);
+	ocean_assert(rows >= 1 && columns >= 1);
 
 	if (rows == rows_ && columns == columns_)
 	{
 		return;
 	}
 
-	if (rows == 0 && columns == 0)
+	if (rows == 0 || columns == 0)
 	{
 		free(values_);
 		values_ = nullptr;
+
+		rows_ = 0;
+		columns_ = 0;
+
 		return;
 	}
 

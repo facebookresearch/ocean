@@ -464,8 +464,8 @@ class MatrixT
 
 		/**
 		 * Resizes this matrix.
-		 * @param rows Number of rows of the resized matrix
-		 * @param columns Number of columns of the resized matrix
+		 * @param rows Number of rows of the resized matrix, with range [1, infinity)
+		 * @param columns Number of columns of the resized matrix, with range [1, infinity)
 		 */
 		void resize(const size_t rows, const size_t columns);
 
@@ -484,6 +484,17 @@ class MatrixT
 		 * @return True, if so
 		 */
 		bool isSymmetric(const T eps = NumericT<T>::eps()) const;
+
+		/**
+		 * Releases the matrix and removes all elements.
+		 */
+		inline void release();
+
+		/**
+		 * Returns whether this matrix holds at least one element.
+		 * @return True, if so
+		 */
+		inline bool isValid() const;
 
 		/**
 		 * Returns a pointer to the internal values.
@@ -796,6 +807,24 @@ inline T MatrixT<T>::sum() const
 }
 
 template <typename T>
+inline void MatrixT<T>::release()
+{
+	rows_ = 0;
+	columns_ = 0;
+
+	free(values_);
+	values_ = nullptr;
+}
+
+template <typename T>
+inline bool MatrixT<T>::isValid() const
+{
+	ocean_assert((values_ == nullptr && rows_ == 0 && columns_ == 0) || (values_ != nullptr && rows_ != 0 && columns_ != 0));
+
+	return values_ != nullptr;
+}
+
+template <typename T>
 inline const T* MatrixT<T>::data() const
 {
 	return values_;
@@ -873,7 +902,7 @@ inline T& MatrixT<T>::operator()(const size_t index)
 template <typename T>
 inline MatrixT<T>::operator bool() const
 {
-	return values_ != nullptr;
+	return isValid();
 }
 
 }
