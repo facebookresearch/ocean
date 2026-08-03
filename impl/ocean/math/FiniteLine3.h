@@ -322,7 +322,7 @@ VectorT3<T> FiniteLineT3<T>::nearestPoint(const VectorT3<T>& point) const
 	const VectorT3<T> lineOffset(point1_ - point0_);
 	const VectorT3<T> pointOffset(point - point0_);
 
-	const Scalar dotProduct = lineOffset * pointOffset;
+	const T dotProduct = lineOffset * pointOffset;
 
 	// the projected point does not lie on the finite line (before the first end point)
 	if (dotProduct <= 0)

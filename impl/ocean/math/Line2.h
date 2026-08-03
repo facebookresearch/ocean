@@ -626,7 +626,7 @@ bool LineT2<T>::fitLineLeastSquare(const VectorT2<T>* points, const size_t size,
 		return false;
 	}
 
-	const Scalar angleDirection(T(0.5) * NumericT<T>::atan2(nominator, denominator));
+	const T angleDirection(T(0.5) * NumericT<T>::atan2(nominator, denominator));
 	const VectorT2<T> direction(NumericT<T>::cos(angleDirection), NumericT<T>::sin(angleDirection));
 
 	const VectorT2<T> linePoint(x, y);
