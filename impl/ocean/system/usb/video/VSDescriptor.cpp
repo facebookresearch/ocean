@@ -871,7 +871,7 @@ VSMJPEGVideoFrameDescriptor::VSMJPEGVideoFrameDescriptor(const void* buffer, con
 	value(13, dwMaxBitRate_, buffer);
 	value(17, dwMaxVideoFrameBufferSize_, buffer);
 	value(21, dwDefaultFrameInterval_, buffer);
-	value(22, bFrameIntervalType_, buffer);
+	value(25, bFrameIntervalType_, buffer);
 
 	if (bFrameIntervalType_ == 0u)
 	{
