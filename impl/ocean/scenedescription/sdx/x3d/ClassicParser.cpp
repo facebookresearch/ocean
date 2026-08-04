@@ -519,7 +519,7 @@ void ClassicParser::parseField(Field& field)
 				break;
 
 			case Field::TYPE_VECTOR4:
-				parseField(static_cast<MultiVector3&>(field));
+				parseField(static_cast<MultiVector4&>(field));
 				break;
 
 			default:
