@@ -220,7 +220,7 @@ bool ImageFileSequence::setPosition(const double position)
 		frameIndex = NumericD::round32(position);
 	}
 
-	if (frameIndex < 0 && frameIndex >= int(images()))
+	if (frameIndex < 0 || frameIndex >= int(images()))
 	{
 		return false;
 	}
