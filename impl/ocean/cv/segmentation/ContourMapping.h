@@ -342,7 +342,7 @@ void ContourMapping::mappingInterpolation8BitPerChannel(uint8_t* frame, uint8_t*
 			{
 				const unsigned int t1 = pixels - t;
 
-				uint32_t* holeLocation = hole + 4u * (y * boundingBoxWidth + x);
+				uint32_t* holeLocation = hole + (tChannels + 1u) * (y * boundingBoxWidth + x);
 
 				*holeLocation += weight;
 
@@ -362,7 +362,7 @@ void ContourMapping::mappingInterpolation8BitPerChannel(uint8_t* frame, uint8_t*
 
 	for (unsigned int y = 0u; y < boundingBox.height(); ++y)
 	{
-		const uint32_t * holeLine = hole + 4u * (y * boundingBoxWidth);
+		const uint32_t * holeLine = hole + (tChannels + 1u) * (y * boundingBoxWidth);
 
 		uint8_t* frameLine = frame + (y + boundingBox.top()) * frameStrideElements + boundingBox.left() * tChannels;
 		uint8_t* maskLine = mask + (y + boundingBox.top()) * maskStrideElements + boundingBox.left();
@@ -379,7 +379,7 @@ void ContourMapping::mappingInterpolation8BitPerChannel(uint8_t* frame, uint8_t*
 				maskLine[0] = 0xFF;
 			}
 
-			holeLine += 4;
+			holeLine += tChannels + 1u;
 			frameLine += tChannels;
 			++maskLine;
 		}
