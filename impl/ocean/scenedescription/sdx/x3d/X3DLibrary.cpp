@@ -66,7 +66,7 @@ SceneRef X3DLibrary::loadPermanent(const std::string& filename, const std::strin
 	{
 #ifdef OCEAN_HAS_TINYXML2
 		XMLParser xmlParser(filename, progress, cancel);
-		return xmlParser.parse(*this, engine, Timestamp());
+		return xmlParser.parse(*this, engine, timestamp);
 #else
 		ocean_assert(false && "Disabled because tinyxml2 is not available");
 		return SceneRef();
