@@ -1308,7 +1308,7 @@ Scalar Error::ambiguousAveragedRobustErrorInPointCloud(const Vector2* imagePoint
 		const Vector2& imagePoint(imagePoints[i]);
 
 		Scalar minValue = Numeric::maxValue();
-		unsigned int minIndex = 0xFFFFFFFF;
+		unsigned int minIndex = 0xFFFFFFFFu;
 
 		for (unsigned int c = 0; c < numberCandidatePoints; ++c)
 		{
@@ -1321,7 +1321,7 @@ Scalar Error::ambiguousAveragedRobustErrorInPointCloud(const Vector2* imagePoint
 			}
 		}
 
-		ocean_assert(minIndex != 0xFFFFFFFF);
+		ocean_assert(minIndex != 0xFFFFFFFFu);
 
 		errorElements.emplace_back(i, minIndex, minValue);
 	}
@@ -1337,7 +1337,7 @@ Scalar Error::ambiguousAveragedRobustErrorInPointCloud(const Vector2* imagePoint
 
 	const size_t numberUsedErrors = min(validImagePoints, errorElements.size());
 
-	if constexpr (!Estimator::isStandardEstimator<tEstimator>())
+	if constexpr (Estimator::isStandardEstimator<tEstimator>())
 	{
 		Scalar sqrErrors = 0;
 
