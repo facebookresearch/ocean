@@ -561,32 +561,32 @@ std::string VCProcessingUnitDescriptor::toString(libusb_device_handle* usbDevice
 	{
 		result += " (";
 
-		if (bmControls_[0] & (1u << 0u))
+		if (bmVideoStandards_ & (1u << 0u))
 		{
 			result += "None, ";
 		}
 
-		if (bmControls_[0] & (1u << 1u))
+		if (bmVideoStandards_ & (1u << 1u))
 		{
 			result += "NTSC – 525/60, ";
 		}
 
-		if (bmControls_[0] & (1u << 2u))
+		if (bmVideoStandards_ & (1u << 2u))
 		{
 			result += "PAL – 625/50, ";
 		}
 
-		if (bmControls_[0] & (1u << 3u))
+		if (bmVideoStandards_ & (1u << 3u))
 		{
 			result += "SECAM – 625/50, ";
 		}
 
-		if (bmControls_[0] & (1u << 4u))
+		if (bmVideoStandards_ & (1u << 4u))
 		{
 			result += "NTSC – 625/50, ";
 		}
 
-		if (bmControls_[0] & (1u << 5u))
+		if (bmVideoStandards_ & (1u << 5u))
 		{
 			result += "PAL – 525/60, ";
 		}
