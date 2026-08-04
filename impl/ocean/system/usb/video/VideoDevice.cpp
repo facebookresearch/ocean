@@ -1065,7 +1065,7 @@ VideoDevice::PayloadHeader::PayloadHeader(const uint8_t* buffer, const size_t si
 	if (size < 2)
 	{
 		// setting the error bit
-		bmHeaderInfo_ = 0b00100000u;
+		bmHeaderInfo_ = 0b01000000u;
 		return;
 	}
 
