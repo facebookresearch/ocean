@@ -292,7 +292,7 @@ inline bool ContourFinder::Fingerprint<tChannels>::isSimilar(const uint8_t* cons
 	ocean_assert(position.x() < frameStrideElements); // we avoid to test: position.y() < height
 
 	const uint8_t* const fingerprint = (uint8_t*)(&data_);
-	const uint8_t* const frameData = frame + position.y() + frameStrideElements + position.x() * tChannels;
+	const uint8_t* const frameData = frame + position.y() * frameStrideElements + position.x() * tChannels;
 
 	// we simply determine the square distance between each fingerprint and frame channel and measure whether the value is below the specified thresholds
 
