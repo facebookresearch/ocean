@@ -62,31 +62,50 @@ Microphone::ScopedSubscription Microphone::start(SampleCallback sampleCallback)
 
 void Microphone::stop(const unsigned int& subscriptionId)
 {
-	const ScopedLock scopedLock(lock_);
+	ovrMicrophoneHandle microphoneHandle = nullptr;
 
-	ocean_assert(microphoneHandle_ != nullptr);
-
-	ocean_assert(!sampleCallbackMap_.empty());
-	ocean_assert(sampleCallbackMap_.find(subscriptionId) != sampleCallbackMap_.cend());
-
-	sampleCallbackMap_.erase(subscriptionId);
-
-	if (sampleCallbackMap_.empty())
 	{
+		const ScopedLock scopedLock(lock_);
+
+		ocean_assert(microphoneHandle_ != nullptr);
+
+		ocean_assert(!sampleCallbackMap_.empty());
+		ocean_assert(sampleCallbackMap_.find(subscriptionId) != sampleCallbackMap_.cend());
+
+		sampleCallbackMap_.erase(subscriptionId);
+
+		if (!sampleCallbackMap_.empty())
+		{
+			return;
+		}
+
 		stopThread();
 
-		ovr_Microphone_Stop(microphoneHandle_);
-		ovr_Microphone_Destroy(microphoneHandle_);
-
+		microphoneHandle = microphoneHandle_;
 		microphoneHandle_ = nullptr;
 	}
+
+	// threadRun() acquires 'lock_' to dispatch the callbacks, so the lock must be released before waiting for the thread to finish
+	stopThreadExplicitly();
+
+	// the thread has finished, so it no longer uses the handle
+	ovr_Microphone_Stop(microphoneHandle);
+	ovr_Microphone_Destroy(microphoneHandle);
 }
 
 void Microphone::threadRun()
 {
-	ocean_assert(microphoneHandle_ != nullptr);
+	ovrMicrophoneHandle microphoneHandle = nullptr;
 
-	const size_t maxBufferSize = ovr_Microphone_GetOutputBufferMaxSize(microphoneHandle_);
+	{
+		const ScopedLock scopedLock(lock_);
+
+		microphoneHandle = microphoneHandle_;
+	}
+
+	ocean_assert(microphoneHandle != nullptr);
+
+	const size_t maxBufferSize = ovr_Microphone_GetOutputBufferMaxSize(microphoneHandle);
 	if (maxBufferSize == 0)
 	{
 		ocean_assert(false && "This should never happen!");
@@ -103,7 +122,7 @@ void Microphone::threadRun()
 
 	while (!shouldThreadStop())
 	{
-		const size_t elements = ovr_Microphone_GetPCM(microphoneHandle_, buffer.data() + positionInChunk, buffer.size() - positionInChunk);
+		const size_t elements = ovr_Microphone_GetPCM(microphoneHandle, buffer.data() + positionInChunk, buffer.size() - positionInChunk);
 
 		positionInChunk += elements;
 		ocean_assert(positionInChunk <= buffer.size());
