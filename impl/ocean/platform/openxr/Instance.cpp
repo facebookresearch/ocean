@@ -217,7 +217,7 @@ bool Instance::determineApiLayers(Strings* apiLayers)
 
 	if (numberLayers != 0u)
 	{
-		std::vector<XrApiLayerProperties> xrApiLayerPropertyGroups;
+		std::vector<XrApiLayerProperties> xrApiLayerPropertyGroups(numberLayers, xrCreateObject<XrApiLayerProperties>(XR_TYPE_API_LAYER_PROPERTIES));
 
 		xrResult = xrEnumerateApiLayerProperties(uint32_t(xrApiLayerPropertyGroups.size()), &numberLayers, xrApiLayerPropertyGroups.data());
 
