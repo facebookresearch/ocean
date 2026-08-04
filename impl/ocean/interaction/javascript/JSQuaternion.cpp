@@ -65,7 +65,7 @@ void JSBase::constructor<Quaternion>(Quaternion& thisValue, const v8::FunctionCa
 
 		if (hasValue(info, 0u, vector3) && hasValue(info, 1u, scalar))
 		{
-			if (vector3.isUnit())
+			if (!vector3.isUnit())
 			{
 				Log::warning() << "The rotation axis must be a unit vector";
 			}

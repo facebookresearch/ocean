@@ -66,7 +66,7 @@ void JSBase::constructor<Rotation>(Rotation& thisValue, const v8::FunctionCallba
 
 		if (hasValue(info, 0u, vector3) && hasValue(info, 1u, scalar))
 		{
-			if (vector3.isUnit())
+			if (!vector3.isUnit())
 			{
 				Log::warning() << "The rotation axis must be a unit vector";
 			}
