@@ -57,15 +57,15 @@ Cone::Cone() :
 
 Cone::Cone(const Scalar angle, const HomogenousMatrix4 &transformation)
 {
-	ocean_assert(angle > 0.0 || angle < Numeric::pi());
+	ocean_assert(angle > Scalar(0) && angle < Numeric::pi());
 
-	Scalar t = Numeric::tan(angle);
-	t *= t;
+	const Scalar t = Numeric::tan(angle);
+
 	const Scalar quadricValues[16] =
 	{
 		1, 0, 0, 0,
 		0, 1, 0, 0,
-		0, 0, -t, 0,
+		0, 0, -t * t, 0,
 		0, 0, 0, 0
 	};
 
@@ -80,14 +80,14 @@ Sphere::Sphere() :
 
 Sphere::Sphere(const Scalar radius, const HomogenousMatrix4 &transformation)
 {
-	ocean_assert(radius > 0.0);
+	ocean_assert(radius > Scalar(0));
 
 	const Scalar quadricValues[16] =
 	{
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
-		0, 0, 0, radius * radius
+		0, 0, 0, -radius * radius
 	};
 
 	createCombinedQuadric(SquareMatrix4(quadricValues), transformation);
