@@ -41,7 +41,7 @@ Scalar GLESSphere::radius() const
 
 bool GLESSphere::setRadius(const Scalar radius)
 {
-	if (radius_ <= 0)
+	if (radius <= Scalar(0))
 	{
 		return false;
 	}
