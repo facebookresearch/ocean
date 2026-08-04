@@ -204,36 +204,35 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 		return false;
 	}
 
-	const HINTERNET session = WinHttpOpen(L"HTTPS Client/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+	using ScopedHINTERNET = ScopedObjectCompileTimeT<HINTERNET, HINTERNET, BOOL, WinHttpCloseHandle, TRUE>;
 
-	if (session == nullptr)
+	const ScopedHINTERNET session(WinHttpOpen(L"HTTPS Client/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0));
+
+	if (!session.isValid())
 	{
 		return false;
 	}
 
-	const BOOL timeoutResult = WinHttpSetTimeouts(session, int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0));
+	const BOOL timeoutResult = WinHttpSetTimeouts(*session, int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0));
 	ocean_assert_and_suppress_unused(timeoutResult == TRUE, timeoutResult);
 
-	const HINTERNET connection = WinHttpConnect(session, String::toWString(host).c_str(), port.readable(), 0);
+	const ScopedHINTERNET connection(WinHttpConnect(*session, String::toWString(host).c_str(), port.readable(), 0));
 
-	if (connection == nullptr)
+	if (!connection.isValid())
 	{
-		WinHttpCloseHandle(session);
 		return false;
 	}
 
-	const HINTERNET request = WinHttpOpenRequest(connection, L"GET", String::toWString(uri).c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+	const ScopedHINTERNET request(WinHttpOpenRequest(*connection, L"GET", String::toWString(uri).c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE));
 
-	if (request == nullptr)
+	if (!request.isValid())
 	{
-		WinHttpCloseHandle(connection);
-		WinHttpCloseHandle(session);
 		return false;
 	}
 
 	bool requestSucceeded = false;
 
-	if (WinHttpSendRequest(request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0) && WinHttpReceiveResponse(request, 0))
+	if (WinHttpSendRequest(*request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0) && WinHttpReceiveResponse(*request, 0))
 	{
 		requestSucceeded = true;
 
@@ -241,7 +240,7 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 
 		wchar_t contentLengthBuffer[1024 + 2];
 		DWORD contentLengthBufferLength = 1024u;
-		if (WinHttpQueryHeaders(request, WINHTTP_QUERY_CONTENT_LENGTH, WINHTTP_HEADER_NAME_BY_INDEX, contentLengthBuffer, &contentLengthBufferLength, WINHTTP_NO_HEADER_INDEX))
+		if (WinHttpQueryHeaders(*request, WINHTTP_QUERY_CONTENT_LENGTH, WINHTTP_HEADER_NAME_BY_INDEX, contentLengthBuffer, &contentLengthBufferLength, WINHTTP_NO_HEADER_INDEX))
 		{
 			int value = 0;
 			if (String::isInteger32(String::toAString(std::wstring(contentLengthBuffer, contentLengthBufferLength / 2)), &value) && value > 0)
@@ -253,7 +252,7 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 		DWORD bytesAvailable = 0;
 		size_t position = 0;
 
-		while (WinHttpQueryDataAvailable(request, &bytesAvailable) && bytesAvailable != 0)
+		while (WinHttpQueryDataAvailable(*request, &bytesAvailable) && bytesAvailable != 0)
 		{
 			if (abort && *abort)
 			{
@@ -266,7 +265,7 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 			}
 
 			DWORD read = 0;
-			WinHttpReadData(request, data.data() + position, bytesAvailable, &read);
+			WinHttpReadData(*request, data.data() + position, bytesAvailable, &read);
 
 			position += read;
 			ocean_assert(contentLength == 0 || position <= contentLength);
@@ -277,10 +276,6 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 			}
 		}
 	}
-
-	WinHttpCloseHandle(request);
-	WinHttpCloseHandle(connection);
-	WinHttpCloseHandle(session);
 
 	return requestSucceeded;
 
@@ -387,30 +382,29 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 		return false;
 	}
 
-	const HINTERNET session = WinHttpOpen(L"HTTPS Client/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+	using ScopedHINTERNET = ScopedObjectCompileTimeT<HINTERNET, HINTERNET, BOOL, WinHttpCloseHandle, TRUE>;
 
-	if (session == nullptr)
+	const ScopedHINTERNET session(WinHttpOpen(L"HTTPS Client/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0));
+
+	if (!session.isValid())
 	{
 		return false;
 	}
 
-	const BOOL timeoutResult = WinHttpSetTimeouts(session, int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0));
+	const BOOL timeoutResult = WinHttpSetTimeouts(*session, int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0), int(timeout * 1000.0));
 	ocean_assert_and_suppress_unused(timeoutResult == TRUE, timeoutResult);
 
-	const HINTERNET connection = WinHttpConnect(session, String::toWString(host).c_str(), port.readable(), 0);
+	const ScopedHINTERNET connection(WinHttpConnect(*session, String::toWString(host).c_str(), port.readable(), 0));
 
-	if (connection == nullptr)
+	if (!connection.isValid())
 	{
-		WinHttpCloseHandle(session);
 		return false;
 	}
 
-	const HINTERNET request = WinHttpOpenRequest(connection, L"POST", String::toWString(uri).c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+	const ScopedHINTERNET request(WinHttpOpenRequest(*connection, L"POST", String::toWString(uri).c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE));
 
-	if (request == nullptr)
+	if (!request.isValid())
 	{
-		WinHttpCloseHandle(connection);
-		WinHttpCloseHandle(session);
 		return false;
 	}
 
@@ -427,20 +421,18 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 
 	if (!additionalHeadersString.empty())
 	{
-		if (WinHttpAddRequestHeaders(request, additionalHeadersString.c_str(), DWORD(additionalHeadersString.size()), WINHTTP_ADDREQ_FLAG_ADD) != TRUE)
+		if (WinHttpAddRequestHeaders(*request, additionalHeadersString.c_str(), DWORD(additionalHeadersString.size()), WINHTTP_ADDREQ_FLAG_ADD) != TRUE)
 		{
-			WinHttpCloseHandle(connection);
-			WinHttpCloseHandle(session);
 			return false;
 		}
 	}
 
-	if (WinHttpSendRequest(request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (void*)(requestData), DWORD(requestDataSize), DWORD(requestDataSize), 0) && WinHttpReceiveResponse(request, 0))
+	if (WinHttpSendRequest(*request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (void*)(requestData), DWORD(requestDataSize), DWORD(requestDataSize), 0) && WinHttpReceiveResponse(*request, 0))
 	{
 		DWORD bytesAvailable = 0;
 		size_t position = 0;
 
-		while (WinHttpQueryDataAvailable(request, &bytesAvailable) && bytesAvailable != 0)
+		while (WinHttpQueryDataAvailable(*request, &bytesAvailable) && bytesAvailable != 0)
 		{
 			if (position + bytesAvailable > data.size())
 			{
@@ -448,15 +440,11 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 			}
 
 			DWORD read = 0;
-			WinHttpReadData(request, data.data() + position, bytesAvailable, &read);
+			WinHttpReadData(*request, data.data() + position, bytesAvailable, &read);
 
 			position += read;
 		}
 	}
-
-	WinHttpCloseHandle(request);
-	WinHttpCloseHandle(connection);
-	WinHttpCloseHandle(session);
 
 	return true;
 
