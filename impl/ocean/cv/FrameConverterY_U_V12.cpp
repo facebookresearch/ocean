@@ -36,11 +36,11 @@ void FrameConverterY_U_V12::convertOneRowY_U_V12ToRGBA32Precision6Bit(const void
 	const unsigned int sourcePlane2PaddingElements = (unsigned int)intOptions[2];
 	const unsigned int targetZippedPaddingElements = (unsigned int)intOptions[3];
 
-	const unsigned char* sourcePlane0 = (const unsigned char*)(sources[0]);
-	const unsigned char* sourcePlane1 = (const unsigned char*)(sources[1]);
-	const unsigned char* sourcePlane2 = (const unsigned char*)(sources[2]);
+	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
+	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
+	const uint8_t* sourcePlane2 = (const uint8_t*)(sources[2]);
 
-	unsigned char* targetZipped = (unsigned char*)(targets[0]);
+	uint8_t* targetZipped = (uint8_t*)(targets[0]);
 
 	const unsigned int width_2 = width / 2u;
 
@@ -57,27 +57,27 @@ void FrameConverterY_U_V12::convertOneRowY_U_V12ToRGBA32Precision6Bit(const void
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 
-	const unsigned char* sPlane0 = sourcePlane0 + multipleRowIndex * sourcePlane0StrideElements;
-	const unsigned char* sPlane1 = sourcePlane1 + (multipleRowIndex / 2u) * sourcePlane1StrideElements;
-	const unsigned char* sPlane2 = sourcePlane2 + (multipleRowIndex / 2u) * sourcePlane2StrideElements;
+	const uint8_t* sPlane0 = sourcePlane0 + multipleRowIndex * sourcePlane0StrideElements;
+	const uint8_t* sPlane1 = sourcePlane1 + (multipleRowIndex / 2u) * sourcePlane1StrideElements;
+	const uint8_t* sPlane2 = sourcePlane2 + (multipleRowIndex / 2u) * sourcePlane2StrideElements;
 
-	unsigned char* targetFinal = flipTarget ? (targetZipped + (height - multipleRowIndex - 1u) * targetZippedStrideElements) : targetZipped + multipleRowIndex * targetZippedStrideElements;
-	unsigned char* target = nullptr;
+	uint8_t* targetFinal = flipTarget ? (targetZipped + (height - multipleRowIndex - 1u) * targetZippedStrideElements) : targetZipped + multipleRowIndex * targetZippedStrideElements;
+	uint8_t* target = nullptr;
 
 	if (mirrorTarget)
 	{
 		// we create two temporary rows for mirroring
 
-		mirroredTargetMemory = Memory::create<unsigned char>(width * 4u);
+		mirroredTargetMemory = Memory::create<uint8_t>(width * 4u);
 
-		target = mirroredTargetMemory.data<unsigned char>();
+		target = mirroredTargetMemory.data<uint8_t>();
 	}
 	else
 	{
 		target = targetFinal;
 	}
 
-	const unsigned char* const sPlane0End = sPlane0 + width;
+	const uint8_t* const sPlane0End = sPlane0 + width;
 
 	// Approximation with 6 bit precision:
 	//      | R |     | 75    0     102 |   | Y -  16 |
@@ -102,7 +102,7 @@ void FrameConverterY_U_V12::convertOneRowY_U_V12ToRGBA32Precision6Bit(const void
 		const uint8x8_t bias0_u_8x8 = vdup_n_u8(16u);
 		const uint8x8_t bias1_u_8x8 = vdup_n_u8(128u);
 
-		const uint8x16_t valueChannel3_u_8x16 = vdupq_n_u8((unsigned char)(valueChannel3));
+		const uint8x16_t valueChannel3_u_8x16 = vdupq_n_u8((uint8_t)(valueChannel3));
 
 		for (unsigned int n = 0u; n < blocks; ++n)
 		{
@@ -170,27 +170,27 @@ void FrameConverterY_U_V12::convertOneRowY_U_V12ToRGBA32Precision6Bit(const void
 	{
 		ocean_assert(sPlane0 < sPlane0End);
 
-		const short source1 = short(sPlane1[0]) - short(128);
-		const short source2 = short(sPlane2[0]) - short(128);
+		const int16_t source1 = int16_t(sPlane1[0]) - int16_t(128);
+		const int16_t source2 = int16_t(sPlane2[0]) - int16_t(128);
 
-		const int intermediate0 = source1 * short(0) + source2 * short(102);
-		const int intermediate1 = source1 * short(-25) + source2 * short(-52);
-		const int intermediate2 = source1 * short(128) + source2 * short(0);
+		const int intermediate0 = source1 * int16_t(0) + source2 * int16_t(102);
+		const int intermediate1 = source1 * int16_t(-25) + source2 * int16_t(-52);
+		const int intermediate2 = source1 * int16_t(128) + source2 * int16_t(0);
 
 		// first and second upper pixel
 
-		const short source0Left = (short(sPlane0[0]) - short(16)) * short(75);
-		const short source0Right = (short(sPlane0[1]) - short(16)) * short(75);
+		const int16_t source0Left = (int16_t(sPlane0[0]) - int16_t(16)) * int16_t(75);
+		const int16_t source0Right = (int16_t(sPlane0[1]) - int16_t(16)) * int16_t(75);
 
-		target[0] = (unsigned char)(minmax<int>(0, (source0Left + intermediate0) / 64, 255));
-		target[1] = (unsigned char)(minmax<int>(0, (source0Left + intermediate1) / 64, 255));
-		target[2] = (unsigned char)(minmax<int>(0, (source0Left + intermediate2) / 64, 255));
-		target[3] = (unsigned char)valueChannel3;
+		target[0] = (uint8_t)(minmax<int>(0, (source0Left + intermediate0) / 64, 255));
+		target[1] = (uint8_t)(minmax<int>(0, (source0Left + intermediate1) / 64, 255));
+		target[2] = (uint8_t)(minmax<int>(0, (source0Left + intermediate2) / 64, 255));
+		target[3] = (uint8_t)valueChannel3;
 
-		target[4] = (unsigned char)(minmax<int>(0, (source0Right + intermediate0) / 64, 255));
-		target[5] = (unsigned char)(minmax<int>(0, (source0Right + intermediate1) / 64, 255));
-		target[6] = (unsigned char)(minmax<int>(0, (source0Right + intermediate2) / 64, 255));
-		target[7] = (unsigned char)valueChannel3;
+		target[4] = (uint8_t)(minmax<int>(0, (source0Right + intermediate0) / 64, 255));
+		target[5] = (uint8_t)(minmax<int>(0, (source0Right + intermediate1) / 64, 255));
+		target[6] = (uint8_t)(minmax<int>(0, (source0Right + intermediate2) / 64, 255));
+		target[7] = (uint8_t)valueChannel3;
 
 		sPlane0 += 2;
 		sPlane1++;
@@ -203,7 +203,7 @@ void FrameConverterY_U_V12::convertOneRowY_U_V12ToRGBA32Precision6Bit(const void
 	{
 		// we mirror the upper and lower rows from the temporary buffer to the actual buffer
 
-		CV::FrameChannels::reverseRowPixelOrder<unsigned char, 4u>(target - width * 4u, targetFinal, width);
+		CV::FrameChannels::reverseRowPixelOrder<uint8_t, 4u>(target - width * 4u, targetFinal, width);
 	}
 }
 
