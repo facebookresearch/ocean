@@ -605,16 +605,24 @@ Directory Directory::createTemporaryDirectory()
 		return Directory();
 	}
 
-	const std::string tempDirectoryPath = temporaryDirectory + String::toAString(RandomI::random64());
-	Directory result = Directory(tempDirectoryPath);
+	const Directory parentDirectory(temporaryDirectory);
 
-	if (!result.create())
+	for (unsigned int iterations = 0u; iterations < 1000u; ++iterations)
 	{
-		Log::error() << "Failed to create the temporary directory: " << result();
-		result = Directory();
+		const Directory directory(parentDirectory + Directory(String::toAStringHex(RandomI::random64())));
+
+		if (!directory.exists())
+		{
+			if (directory.create())
+			{
+				return directory;
+			}
+		}
 	}
 
-	return result;
+	Log::error() << "Failed to create a temporary directory in: " << temporaryDirectory;
+
+	return Directory();
 
 #elif defined(__linux__)
 
