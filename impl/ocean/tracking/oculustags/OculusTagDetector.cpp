@@ -638,7 +638,7 @@ bool OculusTagDetector::optimizePose(const AnyCamera& anyCamera, const Frame& yF
 	{
 		const Vectors3 tagAllCornerObjectPoints = OculusTagTracker::getTagObjectPoints(OculusTagTracker::TPG_CORNERS_ALL_AVAILABLE, tagSize, dataMatrix);
 
-		for (size_t i = 4; i < objectPoints.size(); ++i)
+		for (size_t i = 4; i < tagAllCornerObjectPoints.size(); ++i)
 		{
 			Vector2 imagePoint = anyCamera.projectToImageIF(flippedCamera_T_tag * tagAllCornerObjectPoints[i]);
 			ocean_assert(anyCamera.isInside(imagePoint));
