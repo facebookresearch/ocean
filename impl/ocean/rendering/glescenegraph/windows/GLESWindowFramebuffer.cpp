@@ -63,7 +63,7 @@ bool GLESWindowFramebuffer::isAntialiasing() const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	return antialiasingBuffers_ != 0u;
+	return antialiasingBuffers_ > 1u;
 }
 
 void GLESWindowFramebuffer::setPreferredPixelFormat(const FrameType::PixelFormat pixelFormat)
