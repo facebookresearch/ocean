@@ -303,7 +303,7 @@ UnidirectionalCorrespondences::CorrespondencePairs UnidirectionalCorrespondences
 		const Vector2& projectedObjectPoint = projectedObjectPoints[n];
 
 		const int binX = projectedObjectPointsDistributionArray.horizontalBin(projectedObjectPoint.x());
-		const int binY = projectedObjectPointsDistributionArray.horizontalBin(projectedObjectPoint.y());
+		const int binY = projectedObjectPointsDistributionArray.verticalBin(projectedObjectPoint.y());
 
 		if ((unsigned int)(binX) < horizontalBins && (unsigned int)(binY) < verticalBins)
 		{
@@ -323,7 +323,7 @@ UnidirectionalCorrespondences::CorrespondencePairs UnidirectionalCorrespondences
 		const TDescriptor& imagePointDescriptor = imagePointDescriptors[indexImagePoint];
 
 		const int binX = projectedObjectPointsDistributionArray.horizontalBin(imagePoint.x());
-		const int binY = projectedObjectPointsDistributionArray.horizontalBin(imagePoint.y());
+		const int binY = projectedObjectPointsDistributionArray.verticalBin(imagePoint.y());
 		ocean_assert((unsigned int)(binX) < horizontalBins && (unsigned int)(binY) < verticalBins);
 
 		TDistance bestDistance = NumericT<TDistance>::maxValue();
