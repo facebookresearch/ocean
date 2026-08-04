@@ -1456,9 +1456,9 @@ void Canvas::rotatedEllipse8BitPerChannel(uint8_t* frame, const unsigned int wid
 
 	const uint8_t radius = uint8_t(max(horizontalHalf, verticalHalf));
 
-	for (unsigned int y = max(0, int(position.y() - radius)); y <= min(position.y() + radius, height); ++y)
+	for (unsigned int y = max(0, int(position.y() - radius)); y < min(position.y() + radius + 1u, height); ++y)
 	{
-		for (unsigned int x = max(0, int(position.x() - radius)); x <= min(position.x() + radius, width); ++x)
+		for (unsigned int x = max(0, int(position.x() - radius)); x < min(position.x() + radius + 1u, width); ++x)
 		{
 			const Vector3 position3(Scalar(position.x()) - Scalar(x), Scalar(position.y()) - Scalar(y), 0);
 			Vector3 invertedPosition(invertedRotation * position3);
