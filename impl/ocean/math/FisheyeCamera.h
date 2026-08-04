@@ -187,7 +187,7 @@ class FisheyeCameraT : public CameraT<T>
 		 * Creates a new camera object with known field of view.
 		 * @param width The width of the camera image (in pixel), with range [1, infinity)
 		 * @param height The height of the camera image (in pixel), with range [1, infinity)
-		 * @param fovX Field of view in x-direction (in radian), with range (0, PI]
+		 * @param fovX Field of view in x-direction (in radian), with range (0, PI)
 		 */
 		inline FisheyeCameraT(const unsigned int width, const unsigned int height, const T fovX);
 
@@ -592,7 +592,7 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 	hasDistortionParameters_(false)
 {
 	ocean_assert(width_ != 0u && height_ != 0u);
-	ocean_assert(fovX > NumericT<T>::eps() && fovX <= NumericT<T>::pi());
+	ocean_assert(fovX > NumericT<T>::eps() && fovX < NumericT<T>::pi());
 
 	const T principalX = T(width_) * T(0.5);
 	const T principalY = T(height_) * T(0.5);
