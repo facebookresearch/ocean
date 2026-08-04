@@ -22,13 +22,13 @@ void FrameConverterRGB24::changeRGB24ToBGR24Subset(uint8_t* frame, const unsigne
 	const unsigned int targetBlockSize = width3 * numberRows;
 
 	frame += firstRow * width3;
-	const unsigned char* const frameEnd = frame + targetBlockSize;
+	const uint8_t* const frameEnd = frame + targetBlockSize;
 
 	--frame;
 	while (++frame != frameEnd)
 	{
-		const unsigned char red = *frame;
-		const unsigned char blue = frame[2];
+		const uint8_t red = *frame;
+		const uint8_t blue = frame[2];
 
 		*frame = blue;
 		*(frame += 2) = red;
@@ -46,7 +46,7 @@ void FrameConverterRGB24::changeRGB24ToYUV24Subset(uint8_t* frame, const unsigne
 	frame += firstRow * width3;
 
 	--frame;
-	const unsigned char* const frameEnd = frame + targetBlockSize;
+	const uint8_t* const frameEnd = frame + targetBlockSize;
 	while (frame != frameEnd)
 	{
 		// Y = min(abs(R * 2104 + G * 4130 + B * 802 + 4096 + 131072) >> 13, 235)
@@ -57,9 +57,9 @@ void FrameConverterRGB24::changeRGB24ToYUV24Subset(uint8_t* frame, const unsigne
 		const int green = frame[2];
 		const int blue = frame[3];
 
-		*++frame = (unsigned char)(((red * 66 + green * 129 + blue * 25 + 128) >> 8) + 16);
-		*++frame = (unsigned char)(((red * -38 - green * 74 + blue * 112 + 128) >> 8) + 128);
-		*++frame = (unsigned char)(((red * 112 - green * 94 - blue * 18 + 128) >> 8) + 128);
+		*++frame = (uint8_t)(((red * 66 + green * 129 + blue * 25 + 128) >> 8) + 16);
+		*++frame = (uint8_t)(((red * -38 - green * 74 + blue * 112 + 128) >> 8) + 128);
+		*++frame = (uint8_t)(((red * 112 - green * 94 - blue * 18 + 128) >> 8) + 128);
 	}
 }
 
@@ -101,15 +101,15 @@ void FrameConverterRGB24::convertRGB24ToYUV24RowPrecision7BitNEON(const uint8_t*
 	}
 	else
 	{
-		const unsigned char* const targetEnd = target + size * size_t(3);
+		const uint8_t* const targetEnd = target + size * size_t(3);
 
 		while (target != targetEnd)
 		{
 			ocean_assert(target < targetEnd);
 
-			target[0] = (unsigned char)(minmax<short>(0, (short(source[0]) * short(33) + short(source[1]) * short(64) + short(source[2]) * short(13)) / 128 + short(16), 255));
-			target[1] = (unsigned char)(minmax<short>(0, (short(source[0]) * short(-19) + short(source[1]) * short(-37) + short(source[2]) * short(56)) / 128 + short(128), 255));
-			target[2] = (unsigned char)(minmax<short>(0, (short(source[0]) * short(56) + short(source[1]) * short(-47) + short(source[2]) * short(-9)) / 128 + short(128), 255));
+			target[0] = (uint8_t)(minmax<int16_t>(0, (int16_t(source[0]) * int16_t(33) + int16_t(source[1]) * int16_t(64) + int16_t(source[2]) * int16_t(13)) / 128 + int16_t(16), 255));
+			target[1] = (uint8_t)(minmax<int16_t>(0, (int16_t(source[0]) * int16_t(-19) + int16_t(source[1]) * int16_t(-37) + int16_t(source[2]) * int16_t(56)) / 128 + int16_t(128), 255));
+			target[2] = (uint8_t)(minmax<int16_t>(0, (int16_t(source[0]) * int16_t(56) + int16_t(source[1]) * int16_t(-47) + int16_t(source[2]) * int16_t(-9)) / 128 + int16_t(128), 255));
 
 			source += 3;
 			target += 3;
