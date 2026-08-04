@@ -366,7 +366,7 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 				{
 					target[n] = uint8_t((sourceFirst[n] + sourceFirst[tChannels + n] * 2u + sourceFirst[tChannels * 2u + n]
 									+ sourceSecond[n] * 2u + sourceSecond[tChannels + n] * 4u + sourceSecond[tChannels * 2u + n] * 2u
-									+ sourceThird[n] + sourceThird[tChannels + n] * 2u + sourceThird[tChannels * 2u + n] + 4u) / 8u);
+									+ sourceThird[n] + sourceThird[tChannels + n] * 2u + sourceThird[tChannels * 2u + n] + 8u) / 16u);
 				}
 			}
 		}
