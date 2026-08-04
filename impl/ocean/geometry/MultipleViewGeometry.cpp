@@ -2063,7 +2063,7 @@ bool AutoCalibration::findCommonIntrinsicsFromProjectionMatricesIF(const ConstIn
 
 		for (unsigned int n = 0u; n < 10u; n++)
 		{
-			*linearSystemData++ = wj(0, n) - wj(0, n);
+			*linearSystemData++ = wj(0, n) - wi(0, n);
 		}
 	}
 
