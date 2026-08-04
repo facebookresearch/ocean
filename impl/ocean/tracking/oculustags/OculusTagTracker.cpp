@@ -484,7 +484,7 @@ bool OculusTagTracker::extractRectifiedTagImage(const AnyCamera& anyCameraA, con
 	ocean_assert(yFrameA.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 	ocean_assert(yFrameB.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 	ocean_assert(world_T_device.isValid() && device_T_cameraA.isValid() && device_T_cameraB.isValid());
-	ocean_assert_and_suppress_unused(rectifiedFrameSize != 0u, rectifiedFrameSize);
+	ocean_assert(rectifiedFrameSize != 0u);
 
 	if (tag.isValid() == false)
 	{
@@ -524,7 +524,7 @@ bool OculusTagTracker::extractRectifiedTagImage(const AnyCamera& anyCameraA, con
 	const Frame& yFrame = useFrameA ? yFrameA : yFrameB;
 	const HomogenousMatrix4& device_T_camera = useFrameA ? device_T_cameraA : device_T_cameraB;
 
-	const bool rectificationSuccessful = Utilities::createRectifiedFrameFromFisheyeFrame<1u>(anyCamera, yFrame, world_T_device * device_T_camera, tag.world_T_tag(), tag.tagSize(), getTagObjectPoints(TPG_CORNERS_0_TO_3, tag.tagSize()), 128u, 128u, rectifiedFrame, /* extraBorder */ 0u);
+	const bool rectificationSuccessful = Utilities::createRectifiedFrameFromFisheyeFrame<1u>(anyCamera, yFrame, world_T_device * device_T_camera, tag.world_T_tag(), tag.tagSize(), getTagObjectPoints(TPG_CORNERS_0_TO_3, tag.tagSize()), rectifiedFrameSize, rectifiedFrameSize, rectifiedFrame, /* extraBorder */ 0u);
 	ocean_assert(rectificationSuccessful);
 
 	return rectificationSuccessful;
