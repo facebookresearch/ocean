@@ -7,10 +7,14 @@
 
 #include "ocean/test/testcv/TestFrameConverterY_U_V12.h"
 
+#include "ocean/base/RandomI.h"
+#include "ocean/base/Timestamp.h"
+
 #include "ocean/cv/FrameConverterY_U_V12.h"
 
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -232,6 +236,18 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 			Log::info() << " ";
 			testResult = testY_U_V12FullRangeToY8LimitedRange(width, height, flag, testDuration, worker);
 		}
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("y_u_v12toy_uv12"))
+	{
+		Log::info() << "Testing Y_U_V12 to Y_UV12 conversion with resolution " << width << "x" << height << ":";
+		Log::info() << " ";
+
+		testResult = testY_U_V12ToY_UV12(width, height, testDuration, worker);
 
 		Log::info() << " ";
 	}
@@ -590,6 +606,12 @@ TEST(TestFrameConverterY_U_V12, Y_U_V12FullRangeToY8LimitedRangeFlippedMirrored)
 	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
+TEST(TestFrameConverterY_U_V12, Y_U_V12ToY_UV12)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12ToY_UV12(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, GTEST_TEST_DURATION, worker));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestFrameConverterY_U_V12::testY_U_V12ToY_U_V12(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -799,6 +821,139 @@ bool TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8LimitedRange(const unsig
 	transformationMatrix(0, 3) = 16.0;
 
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V12_FULL_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V12::convertY_U_V12FullRangeToY8LimitedRange), conversionFlag, pixelFunctionY_U_V12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterY_U_V12::testY_U_V12ToY_UV12(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+{
+	ocean_assert(width >= 2u && height >= 2u);
+	ocean_assert(width % 2u == 0u && height % 2u == 0u);
+	ocean_assert(testDuration > 0.0);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const bool useWorker : {false, true})
+		{
+			const unsigned int testWidth = RandomI::random(randomGenerator, 1u, width / 2u) * 2u;
+			const unsigned int testHeight = RandomI::random(randomGenerator, 1u, height / 2u) * 2u;
+
+			const unsigned int testWidth_2 = testWidth / 2u;
+			const unsigned int testHeight_2 = testHeight / 2u;
+
+			// a pixel stride larger than 1 describes an interleaved source plane, as delivered by e.g. a semi-planar camera buffer
+			const unsigned int ySourcePixelStride = RandomI::random(randomGenerator, 1u, 4u);
+			const unsigned int uSourcePixelStride = RandomI::random(randomGenerator, 1u, 4u);
+			const unsigned int vSourcePixelStride = RandomI::random(randomGenerator, 1u, 4u);
+
+			// the converter determines the source row stride as 'width + padding', so the elements skipped between two
+			// pixels of an interleaved plane are part of that plane's padding
+			const unsigned int ySourcePaddingElements = testWidth * (ySourcePixelStride - 1u) + RandomI::random(randomGenerator, 0u, 8u);
+			const unsigned int uSourcePaddingElements = testWidth_2 * (uSourcePixelStride - 1u) + RandomI::random(randomGenerator, 0u, 8u);
+			const unsigned int vSourcePaddingElements = testWidth_2 * (vSourcePixelStride - 1u) + RandomI::random(randomGenerator, 0u, 8u);
+
+			const unsigned int yTargetPaddingElements = RandomI::random(randomGenerator, 0u, 8u);
+			const unsigned int uvTargetPaddingElements = RandomI::random(randomGenerator, 0u, 8u);
+
+			std::vector<uint8_t> ySource((testWidth + ySourcePaddingElements) * testHeight);
+			std::vector<uint8_t> uSource((testWidth_2 + uSourcePaddingElements) * testHeight_2);
+			std::vector<uint8_t> vSource((testWidth_2 + vSourcePaddingElements) * testHeight_2);
+
+			std::vector<uint8_t> yTarget((testWidth + yTargetPaddingElements) * testHeight);
+			std::vector<uint8_t> uvTarget((testWidth + uvTargetPaddingElements) * testHeight_2);
+
+			for (std::vector<uint8_t>* buffer : {&ySource, &uSource, &vSource, &yTarget, &uvTarget})
+			{
+				for (uint8_t& element : *buffer)
+				{
+					element = uint8_t(RandomI::random(randomGenerator, 255u));
+				}
+			}
+
+			const std::vector<uint8_t> copyYTarget(yTarget);
+			const std::vector<uint8_t> copyUVTarget(uvTarget);
+
+			CV::FrameConverterY_U_V12::convertY_U_V12ToY_UV12(ySource.data(), uSource.data(), vSource.data(), yTarget.data(), uvTarget.data(), testWidth, testHeight, ySourcePaddingElements, uSourcePaddingElements, vSourcePaddingElements, yTargetPaddingElements, uvTargetPaddingElements, ySourcePixelStride, uSourcePixelStride, vSourcePixelStride, useWorker ? &worker : nullptr);
+
+			OCEAN_EXPECT_TRUE(validation, validateY_U_V12ToY_UV12(ySource.data(), uSource.data(), vSource.data(), yTarget.data(), uvTarget.data(), testWidth, testHeight, ySourcePaddingElements, uSourcePaddingElements, vSourcePaddingElements, yTargetPaddingElements, uvTargetPaddingElements, ySourcePixelStride, uSourcePixelStride, vSourcePixelStride));
+
+			// the converter must not touch the padding of the target planes
+
+			for (unsigned int y = 0u; y < testHeight; ++y)
+			{
+				const unsigned int rowOffset = y * (testWidth + yTargetPaddingElements) + testWidth;
+
+				OCEAN_EXPECT_TRUE(validation, memcmp(yTarget.data() + rowOffset, copyYTarget.data() + rowOffset, yTargetPaddingElements) == 0);
+			}
+
+			for (unsigned int y = 0u; y < testHeight_2; ++y)
+			{
+				const unsigned int rowOffset = y * (testWidth + uvTargetPaddingElements) + testWidth;
+
+				OCEAN_EXPECT_TRUE(validation, memcmp(uvTarget.data() + rowOffset, copyUVTarget.data() + rowOffset, uvTargetPaddingElements) == 0);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFrameConverterY_U_V12::validateY_U_V12ToY_UV12(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, const uint8_t* yTarget, const uint8_t* uvTarget, const unsigned int width, const unsigned int height, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uvTargetPaddingElements, const unsigned int ySourcePixelStride, const unsigned int uSourcePixelStride, const unsigned int vSourcePixelStride)
+{
+	ocean_assert(ySource != nullptr && uSource != nullptr && vSource != nullptr);
+	ocean_assert(yTarget != nullptr && uvTarget != nullptr);
+
+	ocean_assert(width >= 2u && height >= 2u);
+	ocean_assert(width % 2u == 0u && height % 2u == 0u);
+
+	ocean_assert(ySourcePixelStride >= 1u && uSourcePixelStride >= 1u && vSourcePixelStride >= 1u);
+
+	const unsigned int width_2 = width / 2u;
+	const unsigned int height_2 = height / 2u;
+
+	const unsigned int ySourceStrideElements = width + ySourcePaddingElements;
+	const unsigned int uSourceStrideElements = width_2 + uSourcePaddingElements;
+	const unsigned int vSourceStrideElements = width_2 + vSourcePaddingElements;
+
+	const unsigned int yTargetStrideElements = width + yTargetPaddingElements;
+	const unsigned int uvTargetStrideElements = width + uvTargetPaddingElements;
+
+	// the y plane is copied 1:1, the u and v planes are zipped into one uv plane holding one row per two y rows
+
+	for (unsigned int y = 0u; y < height; ++y)
+	{
+		for (unsigned int x = 0u; x < width; ++x)
+		{
+			if (yTarget[y * yTargetStrideElements + x] != ySource[y * ySourceStrideElements + x * ySourcePixelStride])
+			{
+				return false;
+			}
+		}
+	}
+
+	for (unsigned int y = 0u; y < height_2; ++y)
+	{
+		for (unsigned int x = 0u; x < width_2; ++x)
+		{
+			if (uvTarget[y * uvTargetStrideElements + x * 2u + 0u] != uSource[y * uSourceStrideElements + x * uSourcePixelStride])
+			{
+				return false;
+			}
+
+			if (uvTarget[y * uvTargetStrideElements + x * 2u + 1u] != vSource[y * vSourceStrideElements + x * vSourcePixelStride])
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 MatrixD TestFrameConverterY_U_V12::pixelFunctionY_U_V12ForYUV24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

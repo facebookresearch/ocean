@@ -199,7 +199,39 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		 */
 		static bool testY_U_V12FullRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
+		/**
+		 * Tests the Y_U_V12 to Y_UV12 conversion.
+		 * This conversion is not part of the conversion function map and accepts source planes with a pixel stride larger than 1, so the test is applied manually instead of via FrameConverterTestUtilities.
+		 * @param width The width of the original frame in pixel, with range [2, infinity), must be even
+		 * @param height The height of the original frame in pixel, with range [2, infinity), must be even
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool testY_U_V12ToY_UV12(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
 	protected:
+
+		/**
+		 * Validates the Y_U_V12 to Y_UV12 conversion.
+		 * @param ySource The y source plane, with (width + ySourcePaddingElements) * height elements, must be valid
+		 * @param uSource The u source plane, with (width/2 + uSourcePaddingElements) * height/2 elements, must be valid
+		 * @param vSource The v source plane, with (width/2 + vSourcePaddingElements) * height/2 elements, must be valid
+		 * @param yTarget The y target plane, with (width + yTargetPaddingElements) * height elements, must be valid
+		 * @param uvTarget The uv target plane, with (width + uvTargetPaddingElements) * height/2 elements, must be valid
+		 * @param width The width of the frame in pixel, with range [2, infinity), must be even
+		 * @param height The height of the frame in pixel, with range [2, infinity), must be even
+		 * @param ySourcePaddingElements The number of padding elements at the end of each y-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param uSourcePaddingElements The number of padding elements at the end of each u-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param vSourcePaddingElements The number of padding elements at the end of each v-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param yTargetPaddingElements The number of padding elements at the end of each y-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param uvTargetPaddingElements The number of padding elements at the end of each uv-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param ySourcePixelStride The stride between consecutive pixels in the y source plane, in elements, with range [1, infinity)
+		 * @param uSourcePixelStride The stride between consecutive pixels in the u source plane, in elements, with range [1, infinity)
+		 * @param vSourcePixelStride The stride between consecutive pixels in the v source plane, in elements, with range [1, infinity)
+		 * @return True, if the target planes hold the expected values
+		 */
+		static bool validateY_U_V12ToY_UV12(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, const uint8_t* yTarget, const uint8_t* uvTarget, const unsigned int width, const unsigned int height, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uvTargetPaddingElements, const unsigned int ySourcePixelStride, const unsigned int uSourcePixelStride, const unsigned int vSourcePixelStride);
 
 		/**
 		 * Extracts one pixel from a Y_U_V12 source frame.

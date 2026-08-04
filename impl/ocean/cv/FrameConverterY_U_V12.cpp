@@ -276,7 +276,7 @@ void FrameConverterY_U_V12::mapY_U_V12ToY_UV12(const void** sources, void** targ
 	{
 		ocean_assert(ySourcePixelStride >= 2u);
 
-		for (unsigned int y = yRowStart; y < yRowStart + 1u; ++y)
+		for (unsigned int y = yRowStart; y < yRowStart + 2u; ++y)
 		{
 			const uint8_t* ySourceRow = ySource + y * ySourceStrideElements;
 			uint8_t* yTargetRow = yTarget + y * yTargetStrideElements;
