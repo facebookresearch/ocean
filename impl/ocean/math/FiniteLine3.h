@@ -234,9 +234,9 @@ template <typename T>
 template <typename U>
 inline FiniteLineT3<T>::FiniteLineT3(const FiniteLineT3<U>& line)
 {
-	point0_ = VectorT3<T>(line.point0_);
-	point1_ = VectorT3<T>(line.point1_);
-	direction_ = VectorT3<T>(line.direction_);
+	point0_ = VectorT3<T>(line.point0());
+	point1_ = VectorT3<T>(line.point1());
+	direction_ = VectorT3<T>(line.direction());
 }
 
 template <typename T>
