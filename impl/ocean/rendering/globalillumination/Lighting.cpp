@@ -46,8 +46,11 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 		{
 			ocean_assert(i->first);
 
-			Scalar attenuationFactor = 0, lightObjectDistance = 0;
-			Vector3 lightPosition, lightObjectDirection;
+			Scalar attenuationFactor = 0;
+			Scalar lightObjectDistance = 0;
+
+			Vector3 lightPosition;
+			Vector3 lightObjectDirection;
 
 			switch (i->first->type())
 			{
@@ -67,7 +70,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 
 					lightObjectDirection /= lightObjectDistance;
 
-					attenuationFactor = pointLightAttenuationFactorSqr(pointLight->attenuationInline(), lightObjectDistance, pointLight->intensityInline());
+					attenuationFactor = pointLightAttenuationFactor(pointLight->attenuationInline(), lightObjectDistance, pointLight->intensityInline());
 					break;
 				}
 
