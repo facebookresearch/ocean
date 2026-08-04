@@ -94,6 +94,7 @@ void OceanException::setMessage(const char* message)
 void OceanException::release()
 {
 	free(message_);
+	message_ = nullptr;
 }
 
 NotImplementedException::NotImplementedException() :
