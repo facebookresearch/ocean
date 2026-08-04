@@ -178,7 +178,7 @@ inline Scalar Lighting::pointLightAttenuationFactor(const Vector3& lightAttenuat
 	}
 
 	const Scalar factor = lightAttenuation[0] + lightAttenuation[1] * lightObjectDistance + lightAttenuation[2] * Numeric::sqr(lightObjectDistance);
-	ocean_assert(factor < Numeric::eps());
+	ocean_assert(factor >= Numeric::eps());
 
 	if (factor < Numeric::eps())
 	{
@@ -213,7 +213,7 @@ inline Scalar Lighting::pointLightAttenuationFactorSqr(const Vector3& lightAtten
 	}
 
 	const Scalar factor = lightAttenuation[0] + lightAttenuation[1] * Numeric::sqrt(lightObjectDistanceSqr) + lightAttenuation[2] * lightObjectDistanceSqr;
-	ocean_assert(factor < Numeric::eps());
+	ocean_assert(factor >= Numeric::eps());
 
 	if (factor < Numeric::eps())
 	{
