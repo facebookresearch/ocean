@@ -364,8 +364,12 @@ bool HomographyTracker::determineHomography(const AnyCamera& camera, const Frame
 
 						for (size_t nLayer = 0; nLayer < keyFrame.pointsPyramid_.size(); ++nLayer)
 						{
-							copyKeyFramePointsPyramid[nLayer].reserve(keyFrame.pointsPyramid_[nLayer].size());
-							copyKeyFrameInitialPointsPyramid[nLayer].reserve(keyFrame.pointsPyramid_[nLayer].size());
+							Vectors2& copyKeyFramePointsPyramidLayer = copyKeyFramePointsPyramid[nLayer];
+							Vectors2& copyKeyFrameInitialPointsPyramidLayer = copyKeyFrameInitialPointsPyramid[nLayer];
+							const Vectors2& keyFrameInitialPointsPyramidLayer = keyFrame.initialPointsPyramid_[nLayer];
+
+							copyKeyFramePointsPyramidLayer.reserve(keyFrame.pointsPyramid_[nLayer].size());
+							copyKeyFrameInitialPointsPyramidLayer.reserve(keyFrame.pointsPyramid_[nLayer].size());
 
 							const SquareMatrix3 predictedKeyFrameLayerHomography = Geometry::Homography::toCoarseHomography(predictedKeyFrameHomography, (unsigned int)nLayer);
 
@@ -377,13 +381,13 @@ bool HomographyTracker::determineHomography(const AnyCamera& camera, const Frame
 								{
 									if (currentPoint.x() >= Scalar(0) && currentPoint.y() >= Scalar(0) && currentPoint.x() < Scalar(keyFrame.pyramid_[(unsigned int)(nLayer)].width()) && currentPoint.y() < Scalar(keyFrame.pyramid_[(unsigned int)(nLayer)].height()))
 									{
-										copyKeyFramePointsPyramid[nLayer].push_back(currentPoint);
-										copyKeyFrameInitialPointsPyramid[nLayer].push_back(keyFrame.initialPointsPyramid_[nLayer][nPoint]);
+										copyKeyFramePointsPyramidLayer.push_back(currentPoint);
+										copyKeyFrameInitialPointsPyramidLayer.push_back(keyFrameInitialPointsPyramidLayer[nPoint]);
 									}
 								}
 							}
 
-							if (copyKeyFrameInitialPointsPyramid[nLayer].size() > 0 && (copyKeyFrameInitialPointsPyramid[nLayer].size() < 20 || keyFrame.initialPointsPyramid_.size() * 50 / 100 > copyKeyFrameInitialPointsPyramid.size()))
+							if (copyKeyFrameInitialPointsPyramidLayer.size() > 0 && (copyKeyFrameInitialPointsPyramidLayer.size() < 20 || keyFrameInitialPointsPyramidLayer.size() * 50 / 100 > copyKeyFrameInitialPointsPyramidLayer.size()))
 							{
 								// we do not have enough visible points which we can track from the (transformed) key frame to the current frame
 								enoughPointsVisible = false;
