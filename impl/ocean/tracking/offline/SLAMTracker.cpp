@@ -1862,7 +1862,7 @@ bool SLAMTracker::addUnknownObjectPointsInPlanarRegionOfInterest(const PinholeCa
 
 bool SLAMTracker::determineValidCorrespondencesInPlanarRegionOfInterest(const PinholeCamera& pinholeCamera, const Database& database, const unsigned int lowerFrame, const unsigned int regionOfInterestFrame, const unsigned int upperFrame, const CV::SubRegion& regionOfInterest, const Plane3& plane, Indices32* validCorrespondences, Scalar* meanCorrespondences, unsigned int* medianCorrespondences, bool* /*abort*/)
 {
-	ocean_assert(pinholeCamera.isValid() && regionOfInterest.isEmpty());
+	ocean_assert(pinholeCamera.isValid() && !regionOfInterest.isEmpty());
 	ocean_assert(lowerFrame <= regionOfInterestFrame && regionOfInterestFrame <= upperFrame);
 
 	HomogenousMatrix4 regionOfInterestPose;
