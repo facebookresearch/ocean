@@ -553,7 +553,7 @@ unsigned int MicroQRCodeEncoder::computeMaskPatternScore(const std::vector<uint8
 	unsigned int minSum = std::min(sum1, sum2);
 	unsigned int maxSum = minSum ^ sum1 ^ sum2;
 
-	return (minSum << 4) | maxSum;
+	return minSum * 16u + maxSum;
 }
 
 std::vector<uint8_t> MicroQRCodeEncoder::setFunctionPatterns(std::vector<uint8_t>& modules, const unsigned int version, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity)
