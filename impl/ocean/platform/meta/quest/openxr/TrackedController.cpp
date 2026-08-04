@@ -177,7 +177,7 @@ bool TrackedController::update(const XrSpace& baseSpace, const XrTime& xrPredict
 				}
 				else
 				{
-					buttonsReleased = ButtonType(buttonsPressed | buttonType);
+					buttonsReleased = ButtonType(buttonsReleased | buttonType);
 				}
 			}
 		}
