@@ -27,14 +27,14 @@ void InitializerConvertMappingF1::initializeSubset(const unsigned int firstColum
 	Vector2* const targetMapping = layerF_.mapping()();
 	const PixelPosition* const sourceMapping = sourceMapping_();
 
-	const unsigned int layerWidth = layerF_.height();
+	const unsigned int layerWidth = layerF_.width();
 
-	for (unsigned int y = firstRow; y <= firstRow + numberRows; ++y)
+	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
 		Vector2* target = targetMapping + y * layerWidth;
 		const PixelPosition* source = sourceMapping + y * layerWidth;
 
-		for (unsigned int x = firstColumn; x <= firstColumn + numberColumns; ++x)
+		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{
 			target[x].x() = Scalar(source[x].x());
 			target[x].y() = Scalar(source[x].y());
