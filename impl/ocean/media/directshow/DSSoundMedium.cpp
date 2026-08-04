@@ -402,7 +402,7 @@ bool DSSoundMedium::removeSoundBranch()
 
 	soundBasicAudioInterface_.release();
 
-	if (soundOutputPin.isValid())
+	if (!soundOutputPin.isValid())
 	{
 		Log::error() << "Failed to determine sound output pin";
 
