@@ -262,30 +262,30 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 
 				// ARKit sometimes provides invalid per-vertex normals, we remove these triangles
 
-				size_t nIndex = 0;
+				size_t nVertexIndex = 0;
 
 				for (size_t nFace = 0; nFace < triangleIndices.size() / 3; /*noop*/)
 				{
-					if (Numeric::isNan(perVertexNormals[triangleIndices[nIndex + 0]].x())
-							|| Numeric::isNan(perVertexNormals[triangleIndices[nIndex + 1]].x())
-							|| Numeric::isNan(perVertexNormals[triangleIndices[nIndex + 2]].x()))
+					if (Numeric::isNan(perVertexNormals[triangleIndices[nVertexIndex + 0]].x())
+							|| Numeric::isNan(perVertexNormals[triangleIndices[nVertexIndex + 1]].x())
+							|| Numeric::isNan(perVertexNormals[triangleIndices[nVertexIndex + 2]].x()))
 					{
-						triangleIndices[nIndex + 0] = triangleIndices[triangleIndices.size() - 3];
-						triangleIndices[nIndex + 1] = triangleIndices[triangleIndices.size() - 2];
-						triangleIndices[nIndex + 2] = triangleIndices[triangleIndices.size() - 1];
+						triangleIndices[nVertexIndex + 0] = triangleIndices[triangleIndices.size() - 3];
+						triangleIndices[nVertexIndex + 1] = triangleIndices[triangleIndices.size() - 2];
+						triangleIndices[nVertexIndex + 2] = triangleIndices[triangleIndices.size() - 1];
 
 						triangleIndices.resize(triangleIndices.size() - 3);
 
 						if (!faceTypes.empty())
 						{
-							faceTypes[nIndex] = faceTypes.back();
+							faceTypes[nFace] = faceTypes.back();
 							faceTypes.pop_back();
 						}
 					}
 					else
 					{
 						++nFace;
-						nIndex += 3;
+						nVertexIndex += 3;
 					}
 				}
 
