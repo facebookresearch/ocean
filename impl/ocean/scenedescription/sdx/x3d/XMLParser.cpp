@@ -598,7 +598,7 @@ bool XMLParser::parseValueField(Field& field, const std::string& value)
 				return parseValueField(static_cast<MultiVector3&>(field), value);
 
 			case Field::TYPE_VECTOR4:
-				return parseValueField(static_cast<MultiVector3&>(field), value);
+				return parseValueField(static_cast<MultiVector4&>(field), value);
 
 			default:
 				ocean_assert(false && "Missing implementation");
