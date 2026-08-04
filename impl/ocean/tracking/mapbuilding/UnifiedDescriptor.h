@@ -526,7 +526,7 @@ constexpr bool UnifiedDescriptor::isMultiView(const DescriptorType descriptorTyp
 
 constexpr uint16_t UnifiedDescriptor::numberBits(const DescriptorType descriptorType)
 {
-	return isFloat(descriptorType) ? uint16_t(descriptorType >> desriptorTypeNumberItemsBeginBit_) : 0u;
+	return isBinary(descriptorType) ? uint16_t(descriptorType >> desriptorTypeNumberItemsBeginBit_) : 0u;
 }
 
 constexpr uint16_t UnifiedDescriptor::numberElements(const DescriptorType descriptorType)
