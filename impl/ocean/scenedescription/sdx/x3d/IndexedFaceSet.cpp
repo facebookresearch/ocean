@@ -204,7 +204,7 @@ void IndexedFaceSet::apply()
 		}
 
 		Rendering::VertexIndex first;
-		unsigned int numberPolygons = 0;
+		unsigned int numberPolygons = 0u;
 
 		for (unsigned int n = 0u; n < coordinateIndices.size(); n++)
 		{
@@ -213,7 +213,7 @@ void IndexedFaceSet::apply()
 				continue;
 			}
 
-			numberPolygonVertices = 0;
+			numberPolygonVertices = 0u;
 
 			if (ccw_.value())
 			{
@@ -222,8 +222,8 @@ void IndexedFaceSet::apply()
 				renderingVertices.emplace_back(points[coordinateIndices[first + 1]]);
 				renderingVertices.emplace_back(points[coordinateIndices[first + 2]]);
 
-				numberPolygonVertices += 3;
-				n += 3;
+				numberPolygonVertices += 3u;
+				n += 3u;
 
 				while (coordinateIndices.size() > n && coordinateIndices[n] != -1)
 				{
@@ -241,8 +241,8 @@ void IndexedFaceSet::apply()
 				renderingVertices.emplace_back(points[coordinateIndices[first + 2]]);
 				renderingVertices.emplace_back(points[coordinateIndices[first + 1]]);
 
-				numberPolygonVertices += 3;
-				n += 3;
+				numberPolygonVertices += 3u;
+				n += 3u;
 
 				while (coordinateIndices.size() > n && coordinateIndices[n] != -1)
 				{
@@ -280,7 +280,7 @@ void IndexedFaceSet::apply()
 					// There shall be at least as many normals in the X3DNormalNode node as there are faces.
 					if (normalIndices.empty())
 					{
-						if (normals->size() < numberPolygons)
+						if (normals->size() <= numberPolygons)
 						{
 							throw OceanException("Not enough defined normal values.");
 						}
@@ -289,7 +289,7 @@ void IndexedFaceSet::apply()
 					}
 					else
 					{
-						if (normalIndices.size() < numberPolygons)
+						if (normalIndices.size() <= numberPolygons)
 						{
 							throw OceanException("Not enough defined normal indices.");
 						}
@@ -364,7 +364,7 @@ void IndexedFaceSet::apply()
 				{
 					if (colorIndices.empty())
 					{
-						if (colors->size() < numberPolygons)
+						if (colors->size() <= numberPolygons)
 						{
 							throw OceanException("Not enough defined color values.");
 						}
@@ -373,7 +373,7 @@ void IndexedFaceSet::apply()
 					}
 					else
 					{
-						if (colorIndices.size() < numberPolygons)
+						if (colorIndices.size() <= numberPolygons)
 						{
 							throw OceanException("Not enough defined color indices.");
 						}
