@@ -685,7 +685,7 @@ class ConstTemplateArrayAccessor
 		 * @param accessor Accessor to be moved
 		 * @return Reference to this accessor
 		 */
-		inline ConstTemplateArrayAccessor<T>& operator=(ConstArrayAccessor<T>&& accessor) noexcept;
+		inline ConstTemplateArrayAccessor<T>& operator=(ConstTemplateArrayAccessor<T>&& accessor) noexcept;
 
 	protected:
 
@@ -1929,7 +1929,7 @@ inline const T& ConstTemplateArrayAccessor<T>::operator[](const size_t& index) c
 }
 
 template <typename T>
-inline ConstTemplateArrayAccessor<T>& ConstTemplateArrayAccessor<T>::operator=(ConstArrayAccessor<T>&& accessor) noexcept
+inline ConstTemplateArrayAccessor<T>& ConstTemplateArrayAccessor<T>::operator=(ConstTemplateArrayAccessor<T>&& accessor) noexcept
 {
 	if (this != &accessor)
 	{
