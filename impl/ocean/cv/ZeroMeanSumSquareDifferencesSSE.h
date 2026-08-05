@@ -161,13 +161,16 @@ inline void ZeroMeanSumSquareDifferencesSSE::SpecializedForChannels<1u>::mean8Bi
 	constexpr unsigned int blocks16 = bufferElements / 16u;
 	constexpr unsigned int remainingAfterBlocks16 = bufferElements % 16u;
 
-	constexpr bool partialBlock16 = remainingAfterBlocks16 > 8u;
+	// the partial 16 block loads backwards beyond the buffer's start unless a full block precedes it
+	constexpr bool partialBlock16 = blocks16 >= 1u && remainingAfterBlocks16 > 8u;
 
-	constexpr bool fullBlock8 = !partialBlock16 && remainingAfterBlocks16 == 8u;
+	constexpr bool fullBlock8 = !partialBlock16 && remainingAfterBlocks16 >= 8u;
 
-	constexpr bool partialBlock8 = !partialBlock16 && !fullBlock8 && remainingAfterBlocks16 >= 3u;
+	constexpr unsigned int remainingAfterBlocks8 = fullBlock8 ? remainingAfterBlocks16 - 8u : remainingAfterBlocks16;
 
-	constexpr unsigned int blocks1 = (!partialBlock16 && !fullBlock8 && !partialBlock8) ? remainingAfterBlocks16 : 0u;
+	constexpr bool partialBlock8 = !partialBlock16 && remainingAfterBlocks8 >= 3u;
+
+	constexpr unsigned int blocks1 = (!partialBlock16 && !partialBlock8) ? remainingAfterBlocks8 : 0u;
 
 	static_assert(blocks1 <= 2u, "Invalid block size!");
 
@@ -208,7 +211,7 @@ inline void ZeroMeanSumSquareDifferencesSSE::SpecializedForChannels<1u>::mean8Bi
 
 	if constexpr (partialBlock8)
 	{
-		constexpr unsigned int overlapElements = partialBlock8 ? 8u - remainingAfterBlocks16 : 0u;
+		constexpr unsigned int overlapElements = partialBlock8 ? 8u - remainingAfterBlocks8 : 0u;
 
 		static_assert(overlapElements < 8u, "Invalid value!");
 
@@ -216,7 +219,7 @@ inline void ZeroMeanSumSquareDifferencesSSE::SpecializedForChannels<1u>::mean8Bi
 
 		sum_128i = _mm_add_epi32(sum_128i, _mm_sad_epu8(buffer_128i, _mm_setzero_si128()));
 
-		buffer += remainingAfterBlocks16;
+		buffer += remainingAfterBlocks8;
 	}
 
 	if constexpr (blocks1 != 0u)
