@@ -380,7 +380,33 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const double tes
 
 	// the buffer sizes above are all odd squares, and an odd square is always 1 or 9 modulo 16,
 	// so they only ever reach the 16-element and 1-element tails of the SIMD implementations;
-	// 20 and 24 elements are needed to cover the 8-element tails as well
+	// the sizes below cover the 8-element tails, and 9 to 15 elements additionally cover the
+	// case of a tail without any preceding 16-element block
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 10u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 11u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 12u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 13u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 14u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
 
 	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 20u>(width, height, testDuration));
 
