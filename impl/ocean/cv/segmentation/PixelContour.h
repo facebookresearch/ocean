@@ -90,7 +90,7 @@ class PixelContourT
 		/**
 		 * Creates a new pixel contour object.
 		 */
-		inline PixelContourT();
+		PixelContourT() = default;
 
 		/**
 		 * Copy constructor.
@@ -327,164 +327,164 @@ class PixelContourT
 	protected:
 
 		/// Pixel positions of the contour.
-		PixelPositions contourPixels;
+		PixelPositions pixels_;
 
 		/// Index of the most left pixel.
-		mutable size_t contourMostLeftIndex;
+		mutable size_t mostLeftIndex_ = size_t(-1);
 
 		/// State whether this contour is counter clockwise: -1 undefined, 0 false, 1 true.
-		mutable unsigned int contourCounterClockwise;
+		mutable unsigned int counterClockwise_ = (unsigned int)(-1);
 
 		/// Bounding box of the contour.
-		mutable PixelBoundingBox contourBoundingBox;
+		mutable PixelBoundingBox boundingBox_;
 };
 
 template <typename T>
-inline PixelContourT<T>::PixelContourT() :
-	contourMostLeftIndex(size_t(-1)),
-	contourCounterClockwise((unsigned int)(-1))
-{
-	// nothing to do here
-}
-
-template <typename T>
 inline PixelContourT<T>::PixelContourT(const PixelContourT<T>& contour) :
-	contourPixels(contour.contourPixels),
-	contourMostLeftIndex(contour.contourMostLeftIndex),
-	contourCounterClockwise(contour.contourCounterClockwise),
-	contourBoundingBox(contour.contourBoundingBox)
+	pixels_(contour.pixels_),
+	mostLeftIndex_(contour.mostLeftIndex_),
+	counterClockwise_(contour.counterClockwise_),
+	boundingBox_(contour.boundingBox_)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline PixelContourT<T>::PixelContourT(PixelContourT<T>&& contour) noexcept :
-	contourPixels(std::move(contour.contourPixels)),
-	contourMostLeftIndex(contour.contourMostLeftIndex),
-	contourCounterClockwise(contour.contourCounterClockwise),
-	contourBoundingBox(contour.contourBoundingBox)
+	pixels_(std::move(contour.pixels_)),
+	mostLeftIndex_(contour.mostLeftIndex_),
+	counterClockwise_(contour.counterClockwise_),
+	boundingBox_(contour.boundingBox_)
 {
-	contour.contourMostLeftIndex = (size_t)(-1);
-	contour.contourCounterClockwise = (unsigned int)(-1);
-	contour.contourBoundingBox = PixelBoundingBox();
+	contour.mostLeftIndex_ = (size_t)(-1);
+	contour.counterClockwise_ = (unsigned int)(-1);
+	contour.boundingBox_ = PixelBoundingBox();
 }
 
 template <typename T>
 inline PixelContourT<T>::PixelContourT(const PixelPositions& pixelPositions, const PixelBoundingBox& pixelBoundingBox) :
-	contourPixels(pixelPositions),
-	contourMostLeftIndex((size_t)(-1)),
-	contourCounterClockwise((unsigned int)(-1)),
-	contourBoundingBox(pixelBoundingBox)
+	pixels_(pixelPositions),
+	mostLeftIndex_((size_t)(-1)),
+	counterClockwise_((unsigned int)(-1)),
+	boundingBox_(pixelBoundingBox)
 {
-	ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBoxT<T>(contourPixels));
+	ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBoxT<T>(pixels_));
 }
 
 template <typename T>
 inline PixelContourT<T>::PixelContourT(PixelPositions&& pixelPositions, const PixelBoundingBox& pixelBoundingBox) :
-	contourPixels(std::move(pixelPositions)),
-	contourMostLeftIndex((size_t)(-1)),
-	contourCounterClockwise((unsigned int)(-1)),
-	contourBoundingBox(pixelBoundingBox)
+	pixels_(std::move(pixelPositions)),
+	mostLeftIndex_((size_t)(-1)),
+	counterClockwise_((unsigned int)(-1)),
+	boundingBox_(pixelBoundingBox)
 {
-	ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBoxT<T>(contourPixels));
+	ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBoxT<T>(pixels_));
 }
 
 template <typename T>
 inline PixelContourT<T>::PixelContourT(const PixelPositions& pixelPositions, const size_t indexMostLeftPosition, const bool isCounterClockwise, const PixelBoundingBox& pixelBoundingBox) :
-	contourPixels(pixelPositions),
-	contourMostLeftIndex(indexMostLeftPosition),
-	contourCounterClockwise(isCounterClockwise),
-	contourBoundingBox(pixelBoundingBox)
+	pixels_(pixelPositions),
+	mostLeftIndex_(indexMostLeftPosition),
+	counterClockwise_(isCounterClockwise),
+	boundingBox_(pixelBoundingBox)
 {
-	ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBoxT<T>(contourPixels));
+	ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBoxT<T>(pixels_));
 }
 
 template <typename T>
 inline PixelContourT<T>::PixelContourT(PixelPositions&& pixelPositions, const size_t indexMostLeftPosition, const bool isCounterClockwise, const PixelBoundingBox& pixelBoundingBox) :
-	contourPixels(std::move(pixelPositions)),
-	contourMostLeftIndex(indexMostLeftPosition),
-	contourCounterClockwise(isCounterClockwise),
-	contourBoundingBox(pixelBoundingBox)
+	pixels_(std::move(pixelPositions)),
+	mostLeftIndex_(indexMostLeftPosition),
+	counterClockwise_(isCounterClockwise),
+	boundingBox_(pixelBoundingBox)
 {
-	ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBoxT<T>(contourPixels));
+	ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBoxT<T>(pixels_));
 }
 
 template <typename T>
 inline PixelContourT<T>::PixelContourT(const bool createDistinct, const bool createSimplified, const PixelPositions& pixelPositions, const PixelBoundingBox& pixelBoundingBox) :
-	contourPixels(pixelPositions),
-	contourMostLeftIndex((size_t)(-1)),
-	contourCounterClockwise((unsigned int)(-1)),
-	contourBoundingBox(pixelBoundingBox)
+	pixels_(pixelPositions),
+	mostLeftIndex_((size_t)(-1)),
+	counterClockwise_((unsigned int)(-1)),
+	boundingBox_(pixelBoundingBox)
 {
 	if (createSimplified)
+	{
 		simplify();
+	}
 	else if (createDistinct)
+	{
 		makeDistinct();
+	}
 
-	ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBoxT<T>(contourPixels));
+	ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBoxT<T>(pixels_));
 }
 
 template <typename T>
 PixelContourT<T>::PixelContourT(const PixelPositions& pixelPositions, const unsigned int minimalSqrDistance, const size_t startIndex) :
-	contourMostLeftIndex((size_t)(-1)),
-	contourCounterClockwise((unsigned int)(-1))
+	mostLeftIndex_((size_t)(-1)),
+	counterClockwise_((unsigned int)(-1))
 {
 	ocean_assert(pixelPositions.size() >= 1);
 	ocean_assert(minimalSqrDistance >= 1u);
 	ocean_assert(startIndex < pixelPositions.size());
 
-	ocean_assert(contourPixels.empty());
-	contourPixels.reserve(pixelPositions.size());
+	ocean_assert(pixels_.empty());
+	pixels_.reserve(pixelPositions.size());
 
 	// our first sparse
-	contourPixels.push_back(pixelPositions[startIndex]);
+	pixels_.push_back(pixelPositions[startIndex]);
 
 	for (size_t n = startIndex + 1; n <= startIndex + pixelPositions.size(); ++n)
 	{
 		const size_t nModulo = (size_t)modulo((int)n, (int)pixelPositions.size());
 
-		if (contourPixels.back().sqrDistance(pixelPositions[nModulo]) >= minimalSqrDistance)
-			contourPixels.push_back(pixelPositions[nModulo]);
+		if (pixels_.back().sqrDistance(pixelPositions[nModulo]) >= minimalSqrDistance)
+		{
+			pixels_.push_back(pixelPositions[nModulo]);
+		}
 	}
 
-	if (contourPixels.size() > 1 && contourPixels.front().sqrDistance(contourPixels.back()) < minimalSqrDistance)
-		contourPixels.pop_back();
+	if (pixels_.size() > 1 && pixels_.front().sqrDistance(pixels_.back()) < minimalSqrDistance)
+	{
+		pixels_.pop_back();
+	}
 
-	ocean_assert(contourPixels.size() == 1 || PixelContourT<T>(contourPixels).smallestSqrDistanceBetweenPixels() >= minimalSqrDistance);
+	ocean_assert(pixels_.size() == 1 || PixelContourT<T>(pixels_).smallestSqrDistanceBetweenPixels() >= minimalSqrDistance);
 }
 
 template <typename T>
 inline const typename PixelContourT<T>::PixelPositions& PixelContourT<T>::pixels() const
 {
-	return contourPixels;
+	return pixels_;
 }
 
 template <typename T>
 inline size_t PixelContourT<T>::size() const
 {
-	return contourPixels.size();
+	return pixels_.size();
 }
 
 template <typename T>
 inline bool PixelContourT<T>::isEmpty() const
 {
-	return contourPixels.empty();
+	return pixels_.empty();
 }
 
 template <typename T>
 inline const typename PixelContourT<T>::PixelPosition& PixelContourT<T>::operator[](const size_t index) const
 {
-	ocean_assert(index < contourPixels.size());
-	return contourPixels[index];
+	ocean_assert(index < pixels_.size());
+	return pixels_[index];
 }
 
 template <typename T>
 inline PixelContourT<T>& PixelContourT<T>::operator=(const PixelContourT<T>& contour)
 {
-	contourPixels = contour.contourPixels;
-	contourMostLeftIndex = contour.contourMostLeftIndex;
-	contourCounterClockwise = contour.contourCounterClockwise;
-	contourBoundingBox = contour.contourBoundingBox;
+	pixels_ = contour.pixels_;
+	mostLeftIndex_ = contour.mostLeftIndex_;
+	counterClockwise_ = contour.counterClockwise_;
+	boundingBox_ = contour.boundingBox_;
 
 	return *this;
 }
@@ -494,14 +494,14 @@ inline PixelContourT<T>& PixelContourT<T>::operator=(PixelContourT<T>&& contour)
 {
 	if (this != &contour)
 	{
-		contourPixels = std::move(contour.contourPixels);
-		contourMostLeftIndex = contour.contourMostLeftIndex;
-		contourCounterClockwise = contour.contourCounterClockwise;
-		contourBoundingBox = contour.contourBoundingBox;
+		pixels_ = std::move(contour.pixels_);
+		mostLeftIndex_ = contour.mostLeftIndex_;
+		counterClockwise_ = contour.counterClockwise_;
+		boundingBox_ = contour.boundingBox_;
 
-		contour.contourMostLeftIndex = (size_t)(-1);
-		contour.contourCounterClockwise = (unsigned int)(-1);
-		contour.contourBoundingBox = PixelBoundingBox();
+		contour.mostLeftIndex_ = (size_t)(-1);
+		contour.counterClockwise_ = (unsigned int)(-1);
+		contour.boundingBox_ = PixelBoundingBox();
 	}
 
 	return *this;
@@ -510,10 +510,12 @@ inline PixelContourT<T>& PixelContourT<T>::operator=(PixelContourT<T>&& contour)
 template <typename T>
 const typename PixelContourT<T>::PixelBoundingBox& PixelContourT<T>::boundingBox() const
 {
-	if (!contourBoundingBox)
-		contourBoundingBox = PixelBoundingBox(contourPixels);
+	if (!boundingBox_)
+	{
+		boundingBox_ = PixelBoundingBox(pixels_);
+	}
 
-	return contourBoundingBox;
+	return boundingBox_;
 }
 
 template <typename T>
@@ -525,16 +527,16 @@ inline unsigned int PixelContourT<T>::area() const
 template <typename T>
 int PixelContourT<T>::areaSigned() const
 {
-	if (contourPixels.size() < 3)
+	if (pixels_.size() < 3)
 	{
 		return 0;
 	}
 
 	int area = 0;
 
-	for (size_t i = 0; i < (contourPixels.size() - 1); ++i)
+	for (size_t i = 0; i < (pixels_.size() - 1); ++i)
 	{
-		const int partialArea = contourPixels[i].x() * contourPixels[i + 1].y() - contourPixels[i].y() * contourPixels[i + 1].x();
+		const int partialArea = pixels_[i].x() * pixels_[i + 1].y() - pixels_[i].y() * pixels_[i + 1].x();
 		ocean_assert(partialArea <= 0 || area <= NumericT<int>::maxValue() - partialArea && "Integer overflow");
 		ocean_assert(partialArea >= 0 || area >= NumericT<int>::minValue() - partialArea && "Integer underflow");
 		area += partialArea;
@@ -546,14 +548,20 @@ int PixelContourT<T>::areaSigned() const
 template <typename T>
 size_t PixelContourT<T>::indexLeftPosition() const
 {
-	if (contourMostLeftIndex != (size_t)(-1))
-		return contourMostLeftIndex;
+	if (mostLeftIndex_ != (size_t)(-1))
+	{
+		return mostLeftIndex_;
+	}
 
-	if (contourPixels.empty())
+	if (pixels_.empty())
+	{
 		return (size_t)(-1);
+	}
 
-	if (contourPixels.size() == 1)
+	if (pixels_.size() == 1)
+	{
 		return 0;
+	}
 
 	// finding the most left pixel with following pixel right to this position
 
@@ -562,36 +570,38 @@ size_t PixelContourT<T>::indexLeftPosition() const
 
 	size_t index = size_t(-1);
 
-	for (size_t n = 0u; n < contourPixels.size(); ++n)
+	for (size_t n = 0u; n < pixels_.size(); ++n)
 	{
-		if (contourPixels[n].x() < left || (contourPixels[n].x() == left && contourPixels[n].y() > bottom))
+		if (pixels_[n].x() < left || (pixels_[n].x() == left && pixels_[n].y() > bottom))
 		{
-			left = contourPixels[n].x();
-			bottom = contourPixels[n].y();
+			left = pixels_[n].x();
+			bottom = pixels_[n].y();
 			index = n;
 		}
 	}
 
 	ocean_assert(index != size_t(-1));
-	ocean_assert(!contourBoundingBox || left == contourBoundingBox.left());
+	ocean_assert(!boundingBox_ || left == boundingBox_.left());
 
-	contourMostLeftIndex = index;
+	mostLeftIndex_ = index;
 	return index;
 }
 
 template <typename T>
 bool PixelContourT<T>::isCounterClockwise() const
 {
-	if (contourCounterClockwise != (unsigned int)(-1))
-		return contourCounterClockwise == 1u;
+	if (counterClockwise_ != (unsigned int)(-1))
+	{
+		return counterClockwise_ == 1u;
+	}
 
 	const size_t index0 = size_t(indexLeftPosition());
 	ocean_assert(index0 != size_t(-1));
 
-	const size_t index2 = modulo(int(index0) - 1, int(contourPixels.size()));
+	const size_t index2 = modulo(int(index0) - 1, int(pixels_.size()));
 
-	const PixelPosition& position0 = contourPixels[index0];
-	const PixelPosition& position2 = contourPixels[index2];
+	const PixelPosition& position0 = pixels_[index0];
+	const PixelPosition& position2 = pixels_[index2];
 
 	const int dx02 = int(position2.x()) - int(position0.x());
 	const int dy02 = int(position2.y()) - int(position0.y());
@@ -601,13 +611,15 @@ bool PixelContourT<T>::isCounterClockwise() const
 
 	while (true)
 	{
-		index1 = modulo(int(index0 + offset), int(contourPixels.size()));
+		index1 = modulo(int(index0 + offset), int(pixels_.size()));
 
 		// the contour is degenerated and thus the result is arbitrary
 		if (index1 == index2 || index1 == index0)
+		{
 			return true;
+		}
 
-		const PixelPosition& position1 = contourPixels[index1];
+		const PixelPosition& position1 = pixels_[index1];
 
 		const int dx01 = int(position1.x()) - int(position0.x());
 		const int dy01 = int(position1.y()) - int(position0.y());
@@ -617,83 +629,109 @@ bool PixelContourT<T>::isCounterClockwise() const
 
 		if (crossProduct != 0)
 		{
-			contourCounterClockwise = crossProduct < 0;
-			return contourCounterClockwise == 1u;
+			counterClockwise_ = crossProduct < 0;
+			return counterClockwise_ == 1u;
 		}
 
 		offset++;
 	}
 
 	ocean_assert(false && "This should never happen!");
-	contourCounterClockwise = 1u;
+	counterClockwise_ = 1u;
 	return true;
 }
 
 template <typename T>
 bool PixelContourT<T>::isDistinct() const
 {
-	if (contourPixels.size() <= 1)
+	if (pixels_.size() <= 1)
+	{
 		return true;
+	}
 
-	for (size_t n = 0; n < contourPixels.size() - 1; ++n)
-		if (contourPixels[n] == contourPixels[n + 1u])
+	for (size_t n = 0; n < pixels_.size() - 1; ++n)
+	{
+		if (pixels_[n] == pixels_[n + 1u])
+		{
 			return false;
+		}
+	}
 
-	return contourPixels.front() != contourPixels.back();
+	return pixels_.front() != pixels_.back();
 }
 
 template <typename T>
 bool PixelContourT<T>::isDense() const
 {
-	if (contourPixels.size() <= 1)
+	if (pixels_.size() <= 1)
+	{
 		return true;
+	}
 
-	for (size_t n = 1; n < contourPixels.size(); ++n)
-		if (!contourPixels[n - 1].isNeighbor8(contourPixels[n]))
+	for (size_t n = 1; n < pixels_.size(); ++n)
+	{
+		if (!pixels_[n - 1].isNeighbor8(pixels_[n]))
+		{
 			return false;
+		}
+	}
 
-	return contourPixels.back().isNeighbor8(contourPixels.front());
+	return pixels_.back().isNeighbor8(pixels_.front());
 }
 
 template <typename T>
 bool PixelContourT<T>::isDense4() const
 {
-	if (contourPixels.size() <= 1)
+	if (pixels_.size() <= 1)
+	{
 		return true;
+	}
 
-	for (size_t n = 1; n < contourPixels.size(); ++n)
-		if (!contourPixels[n - 1].isNeighbor4(contourPixels[n]))
+	for (size_t n = 1; n < pixels_.size(); ++n)
+	{
+		if (!pixels_[n - 1].isNeighbor4(pixels_[n]))
+		{
 			return false;
+		}
+	}
 
-	return contourPixels.back().isNeighbor4(contourPixels.front());
+	return pixels_.back().isNeighbor4(pixels_.front());
 }
 
 template <typename T>
 bool PixelContourT<T>::isSimplified() const
 {
-	if (contourPixels.size() <= 2)
-		return true;
-
-	PixelPosition previousOffset(contourPixels[1] - contourPixels[0]);
-
-	for (size_t n = 2; n < contourPixels.size(); ++n)
+	if (pixels_.size() <= 2)
 	{
-		const PixelPosition currentOffset(contourPixels[n] - contourPixels[n - 1]);
+		return true;
+	}
+
+	PixelPosition previousOffset(pixels_[1] - pixels_[0]);
+
+	for (size_t n = 2; n < pixels_.size(); ++n)
+	{
+		const PixelPosition currentOffset(pixels_[n] - pixels_[n - 1]);
 
 		if (currentOffset == previousOffset)
+		{
 			return false;
+		}
 
 		previousOffset = currentOffset;
 	}
 
 	// now the remaining two pixels
-	PixelPosition currentOffset(contourPixels[0] - contourPixels[contourPixels.size() - 1]);
+	PixelPosition currentOffset(pixels_[0] - pixels_[pixels_.size() - 1]);
 	if (previousOffset == currentOffset)
+	{
 		return false;
+	}
 
 	// we avoid: previousOffset = currentOffset;
-	if (PixelPosition(contourPixels[1] - contourPixels[0]) == currentOffset)
+	if (PixelPosition(pixels_[1] - pixels_[0]) == currentOffset)
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -701,44 +739,50 @@ bool PixelContourT<T>::isSimplified() const
 template <typename T>
 void PixelContourT<T>::makeDistinct()
 {
-	if (contourPixels.size() > 1)
+	if (pixels_.size() > 1)
 	{
 		PixelPositions distinctPixels;
-		distinctPixels.reserve(contourPixels.size());
+		distinctPixels.reserve(pixels_.size());
 
-		distinctPixels.push_back(contourPixels.front());
+		distinctPixels.push_back(pixels_.front());
 
-		for (size_t n = 1; n < contourPixels.size(); ++n)
-			if (contourPixels[n - 1] != contourPixels[n])
-				distinctPixels.push_back(contourPixels[n]);
+		for (size_t n = 1; n < pixels_.size(); ++n)
+		{
+			if (pixels_[n - 1] != pixels_[n])
+			{
+				distinctPixels.push_back(pixels_[n]);
+			}
+		}
 
 		if (distinctPixels.size() > 1 && distinctPixels.front() == distinctPixels.back())
+		{
 			distinctPixels.pop_back();
+		}
 
 		ocean_assert(distinctPixels.size() <= 1 || distinctPixels.front() != distinctPixels.back());
 
 		// the bounding box should not have changed
-		ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBox(distinctPixels));
+		ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBox(distinctPixels));
 
-		contourMostLeftIndex = size_t(-1);
-		contourCounterClockwise = (unsigned int)(-1);
+		mostLeftIndex_ = size_t(-1);
+		counterClockwise_ = (unsigned int)(-1);
 
-		contourPixels = std::move(distinctPixels);
+		pixels_ = std::move(distinctPixels);
 	}
 }
 
 template <typename T>
 void PixelContourT<T>::makeDense()
 {
-	if (contourPixels.size() > 1)
+	if (pixels_.size() > 1)
 	{
 		PixelPositions newPositions;
-		newPositions.reserve(contourPixels.size() * 20);
+		newPositions.reserve(pixels_.size() * 20);
 
-		for (size_t n = 0; n < contourPixels.size(); ++n)
+		for (size_t n = 0; n < pixels_.size(); ++n)
 		{
-			const PixelPosition& start = contourPixels[n];
-			const PixelPosition& end = contourPixels[modulo(int(n + 1), int(contourPixels.size()))];
+			const PixelPosition& start = pixels_[n];
+			const PixelPosition& end = pixels_[modulo(int(n + 1), int(pixels_.size()))];
 
 			int x = int(start.x());
 			int y = int(start.y());
@@ -754,43 +798,47 @@ void PixelContourT<T>::makeDense()
 			}
 		}
 
-		contourPixels = std::move(newPositions);
-		ocean_assert(!contourBoundingBox || contourBoundingBox == PixelBoundingBox(contourPixels));
+		pixels_ = std::move(newPositions);
+		ocean_assert(!boundingBox_ || boundingBox_ == PixelBoundingBox(pixels_));
 
-		contourMostLeftIndex = size_t(-1);
-		contourCounterClockwise = (unsigned int)(-1);
+		mostLeftIndex_ = size_t(-1);
+		counterClockwise_ = (unsigned int)(-1);
 	}
 }
 
 template <typename T>
 PixelContourT<T> PixelContourT<T>::simplified() const
 {
-	if (contourPixels.size() <= 1)
+	if (pixels_.size() <= 1)
+	{
 		return PixelContourT<T>(*this);
+	}
 
 	PixelPositions newPixelPositions;
-	newPixelPositions.reserve(contourPixels.size());
+	newPixelPositions.reserve(pixels_.size());
 
-	VectorI2 currentDirection = VectorI2(int(contourPixels.front().x() - contourPixels.back().x()), int(contourPixels.front().y() - contourPixels.back().y()));
+	VectorI2 currentDirection = VectorI2(int(pixels_.front().x() - pixels_.back().x()), int(pixels_.front().y() - pixels_.back().y()));
 
-	for (size_t n = 1; n < contourPixels.size(); ++n)
+	for (size_t n = 1; n < pixels_.size(); ++n)
 	{
-		const VectorI2 newDirection = VectorI2(int(contourPixels[n].x() - contourPixels[n - 1].x()), int(contourPixels[n].y() - contourPixels[n - 1].y()));
+		const VectorI2 newDirection = VectorI2(int(pixels_[n].x() - pixels_[n - 1].x()), int(pixels_[n].y() - pixels_[n - 1].y()));
 
 		if (!newDirection.isNull())
 		{
 			if (!similar(currentDirection, newDirection))
 			{
 				currentDirection = newDirection;
-				newPixelPositions.push_back(contourPixels[n - 1]);
+				newPixelPositions.push_back(pixels_[n - 1]);
 			}
 		}
 	}
 
-	const VectorI2 newDirection = VectorI2(int(contourPixels.front().x() - contourPixels.back().x()), int(contourPixels.front().y() - contourPixels.back().y()));
+	const VectorI2 newDirection = VectorI2(int(pixels_.front().x() - pixels_.back().x()), int(pixels_.front().y() - pixels_.back().y()));
 
 	if (currentDirection != newDirection)
-		newPixelPositions.push_back(contourPixels.back());
+	{
+		newPixelPositions.push_back(pixels_.back());
+	}
 
 #ifdef OCEAN_DEBUG
 	{
@@ -805,7 +853,7 @@ PixelContourT<T> PixelContourT<T>::simplified() const
 	}
 #endif
 
-	return PixelContourT<T>(std::move(newPixelPositions), contourBoundingBox);
+	return PixelContourT<T>(std::move(newPixelPositions), boundingBox_);
 }
 
 template <typename T>
@@ -817,30 +865,34 @@ void PixelContourT<T>::simplify()
 template <typename T>
 PixelContourT<T> PixelContourT<T>::sparseContour(const unsigned int minimalSqrDistance, const size_t startIndex) const
 {
-	ocean_assert(contourPixels.size() >= 1);
+	ocean_assert(pixels_.size() >= 1);
 
-	if (contourPixels.empty())
+	if (pixels_.empty())
+	{
 		return PixelContourT<T>();
+	}
 
 	ocean_assert(minimalSqrDistance >= 1u);
-	ocean_assert(startIndex < contourPixels.size());
+	ocean_assert(startIndex < pixels_.size());
 
-	return PixelContourT<T>(contourPixels, minimalSqrDistance, startIndex);
+	return PixelContourT<T>(pixels_, minimalSqrDistance, startIndex);
 }
 
 template <typename T>
 unsigned int PixelContourT<T>::smallestSqrDistanceBetweenPixels() const
 {
-	ocean_assert(!contourPixels.empty());
+	ocean_assert(!pixels_.empty());
 
-	unsigned int sqrDistance = contourPixels.front().sqrDistance(contourPixels.back());
+	unsigned int sqrDistance = pixels_.front().sqrDistance(pixels_.back());
 
-	for (size_t n = 1; n < contourPixels.size(); ++n)
+	for (size_t n = 1; n < pixels_.size(); ++n)
 	{
-		const unsigned int localSqrDistance = contourPixels[n - 1].sqrDistance(contourPixels[n]);
+		const unsigned int localSqrDistance = pixels_[n - 1].sqrDistance(pixels_[n]);
 
 		if (localSqrDistance < sqrDistance)
+		{
 			sqrDistance = localSqrDistance;
+		}
 	}
 
 	return sqrDistance;
@@ -849,16 +901,18 @@ unsigned int PixelContourT<T>::smallestSqrDistanceBetweenPixels() const
 template <typename T>
 unsigned int PixelContourT<T>::largestSqrDistanceBetweenPixels() const
 {
-	ocean_assert(!contourPixels.empty());
+	ocean_assert(!pixels_.empty());
 
-	unsigned int sqrDistance = contourPixels.front().sqrDistance(contourPixels.back());
+	unsigned int sqrDistance = pixels_.front().sqrDistance(pixels_.back());
 
-	for (size_t n = 1; n < contourPixels.size(); ++n)
+	for (size_t n = 1; n < pixels_.size(); ++n)
 	{
-		const unsigned int localSqrDistance = contourPixels[n - 1].sqrDistance(contourPixels[n]);
+		const unsigned int localSqrDistance = pixels_[n - 1].sqrDistance(pixels_[n]);
 
 		if (localSqrDistance > sqrDistance)
+		{
 			sqrDistance = localSqrDistance;
+		}
 	}
 
 	return sqrDistance;
@@ -867,7 +921,7 @@ unsigned int PixelContourT<T>::largestSqrDistanceBetweenPixels() const
 template <typename T>
 inline PixelContourT<T>::operator bool() const
 {
-	return !contourPixels.empty();
+	return !pixels_.empty();
 }
 
 template <typename T>
@@ -878,17 +932,19 @@ inline bool PixelContourT<T>::similar(const VectorI2& first, const VectorI2& sec
 
 #ifdef OCEAN_DEBUG
 
-	bool fastResult = first.x() * second.y() == second.x() * first.y()
-		&& (0x80000000 & first.x()) == (0x80000000 & second.x())
-		&& (0x80000000 & first.y()) == (0x80000000 & second.y());
+	{
+		const bool fastResult = first.x() * second.y() == second.x() * first.y()
+			&& (0x80000000 & first.x()) == (0x80000000 & second.x())
+			&& (0x80000000 & first.y()) == (0x80000000 & second.y());
 
-	Vector2 vf(Scalar(first.x()), Scalar(first.y()));
-	Vector2 vs(Scalar(second.x()), Scalar(second.y()));
+		Vector2 vf(Scalar(first.x()), Scalar(first.y()));
+		Vector2 vs(Scalar(second.x()), Scalar(second.y()));
 
-	vf.normalize();
-	vs.normalize();
+		vf.normalize();
+		vs.normalize();
 
-	ocean_assert(fastResult == (vf == vs));
+		ocean_assert(fastResult == (vf == vs));
+	}
 
 #endif
 
