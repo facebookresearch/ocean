@@ -160,7 +160,7 @@ std::string Utilities::translatePath(const XrInstance& xrInstance, const XrPath&
 	std::vector<char> buffer(bufferCountOutput);
 
 	bufferCountOutput = 0u;
-	if (xrPathToString(xrInstance, xrPath, uint32_t(buffer.size()), &bufferCountOutput, nullptr) != XR_SUCCESS)
+	if (xrPathToString(xrInstance, xrPath, uint32_t(buffer.size()), &bufferCountOutput, buffer.data()) != XR_SUCCESS)
 	{
 		ocean_assert(false && "Failed to convert path");
 		return std::string();
