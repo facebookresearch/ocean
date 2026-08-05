@@ -360,7 +360,7 @@ unsigned int SeedSegmentation::iterativeSeedSegmentation(const T* frame, uint8_t
 
 	// first iteration with local threshold and global threshold
 
-	unsigned int maskPixelCounter = seedSegmentation<T, tChannels>(frame, mask, width, height, framePaddingElements, maskPaddingElements, seed, localThreshold, maximalGlobalThreshold, boundingBox);
+	unsigned int maskPixelCounter = seedSegmentation<T, tChannels>(frame, mask, width, height, framePaddingElements, maskPaddingElements, seed, localThreshold, minimalGlobalThreshold, boundingBox);
 
 	// in the following iterations we increase the global threshold and stop if the number of mask pixels increase too much between two iterations
 
@@ -380,10 +380,11 @@ unsigned int SeedSegmentation::iterativeSeedSegmentation(const T* frame, uint8_t
 	unsigned int maximalIterationMaskPixelCounter = (unsigned int)(-1);
 
 	using TLoop = typename NextLargerTyper<T>::Type;
+	using TSquare = typename SquareValueTyper<T>::Type;
 
 	for (TLoop t = TLoop(minimalGlobalThreshold) + TLoop(1); t <= TLoop(maximalGlobalThreshold); ++t)
 	{
-		const typename SquareValueTyper<T>::Type sqrIterationGlobalThreshold = t * t;
+		const TSquare sqrIterationGlobalThreshold = TSquare(t * t);
 
 		secondMaskFrame.copy(0, 0, maskFrame);
 
