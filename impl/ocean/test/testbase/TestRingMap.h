@@ -72,6 +72,13 @@ class OCEAN_TEST_BASE_EXPORT TestRingMap
 		 * @return True, if succeeded
 		 */
 		static bool testRefresh(const double testDuration);
+
+		/**
+		 * Tests copying a map.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCopy(const double testDuration);
 };
 
 }

@@ -680,6 +680,7 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 	if (this != &ringMap)
 	{
 		const DualScopedLock dualScopedLok(lock_, ringMap.lock_);
+
 		keyMap_ = std::move(ringMap.keyMap_);
 		keyList_ = std::move(ringMap.keyList_);
 		storageCapacity_ = ringMap.storageCapacity_;
@@ -716,6 +717,16 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 		keyMap_ = ringMap.keyMap_;
 		keyList_ = ringMap.keyList_;
 		storageCapacity_ = ringMap.storageCapacity_;
+
+		// the copied value pairs still cache iterators into the source's list, so they need to be re-pointed at this object's list
+
+		for (typename KeyList::iterator i = keyList_.begin(); i != keyList_.end(); ++i)
+		{
+			const typename KeyMap::iterator iMap = keyMap_.find(*i);
+			ocean_assert(iMap != keyMap_.cend());
+
+			iMap->second.second = i;
+		}
 	}
 
 	return *this;
@@ -732,6 +743,16 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 		keyMap_ = ringMap.keyMap_;
 		keyList_ = ringMap.keyList_;
 		storageCapacity_ = ringMap.storageCapacity_;
+
+		// the copied value pairs still cache iterators into the source's list, so they need to be re-pointed at this object's list
+
+		for (typename KeyList::iterator i = keyList_.begin(); i != keyList_.end(); ++i)
+		{
+			const typename KeyMap::iterator iMap = keyMap_.find(*i);
+			ocean_assert(iMap != keyMap_.cend());
+
+			iMap->second.second = i;
+		}
 	}
 
 	return *this;

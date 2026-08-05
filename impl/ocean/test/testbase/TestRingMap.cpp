@@ -67,6 +67,15 @@ bool TestRingMap::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("copy"))
+	{
+		testResult = testCopy(testDuration);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -92,6 +101,11 @@ TEST(TestRingMap, Checkout)
 TEST(TestRingMap, Refresh)
 {
 	EXPECT_TRUE(TestRingMap::testRefresh(GTEST_TEST_DURATION));
+}
+
+TEST(TestRingMap, Copy)
+{
+	EXPECT_TRUE(TestRingMap::testCopy(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -446,6 +460,90 @@ bool TestRingMap::testRefresh(const double testDuration)
 
 				OCEAN_EXPECT_FALSE(validation, stringMap.hasElement(refreshOrder[n - capacity]));
 			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestRingMap::testCopy(const double testDuration)
+{
+	Log::info() << "Copy test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int capacity = RandomI::random(randomGenerator, 20u, 200u);
+
+		StringMap sourceMap(capacity);
+
+		for (unsigned int n = 0u; n < capacity; ++n)
+		{
+			OCEAN_EXPECT_TRUE(validation, sourceMap.insertElement(n, String::toAString(n), false));
+		}
+
+		StringMap copiedMap;
+
+		if (RandomI::boolean(randomGenerator))
+		{
+			copiedMap = StringMap(sourceMap); // copy constructor
+		}
+		else
+		{
+			copiedMap = sourceMap; // copy assignment
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, copiedMap.size(), size_t(capacity));
+
+		for (unsigned int n = 0u; n < capacity; ++n)
+		{
+			std::string element;
+			OCEAN_EXPECT_TRUE(validation, copiedMap.element(n, element) && element == String::toAString(n));
+		}
+
+		// refreshing the oldest element of the copy makes it the youngest, so that it outlives every other element
+
+		OCEAN_EXPECT_TRUE(validation, copiedMap.refreshElement(0u));
+
+		for (unsigned int n = capacity; n < capacity * 2u - 1u; ++n)
+		{
+			OCEAN_EXPECT_TRUE(validation, copiedMap.insertElement(n, String::toAString(n), false));
+		}
+
+		OCEAN_EXPECT_TRUE(validation, copiedMap.hasElement(0u));
+
+		for (unsigned int n = 1u; n < capacity; ++n)
+		{
+			OCEAN_EXPECT_FALSE(validation, copiedMap.hasElement(n));
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, copiedMap.size(), size_t(capacity));
+
+		// none of the operations on the copy must have changed the source
+
+		OCEAN_EXPECT_EQUAL(validation, sourceMap.size(), size_t(capacity));
+
+		for (unsigned int n = 0u; n < capacity; ++n)
+		{
+			std::string element;
+			OCEAN_EXPECT_TRUE(validation, sourceMap.element(n, element) && element == String::toAString(n));
+		}
+
+		// the source must be able to evict its own elements in insertion order
+
+		for (unsigned int n = capacity; n < capacity * 2u; ++n)
+		{
+			OCEAN_EXPECT_TRUE(validation, sourceMap.insertElement(n, String::toAString(n), false));
+
+			OCEAN_EXPECT_FALSE(validation, sourceMap.hasElement(n - capacity));
+			OCEAN_EXPECT_TRUE(validation, sourceMap.hasElement(n));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
