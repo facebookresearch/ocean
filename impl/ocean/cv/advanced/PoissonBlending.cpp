@@ -195,7 +195,7 @@ void PoissonBlending::createSummedBorderLaplacianVector(const Frame& indexLookup
 
 	ocean_assert(vectorB.rows() > 0u && vectorB.columns() == 1u);
 
-	const unsigned int sourceStrideElements = source.width() * source.channels();
+	const unsigned int sourceStrideElements = source.strideElements();
 	const unsigned int targetStrideElements = target.strideElements();
 	const unsigned int indexLookupStrideElements = indexLookup.strideElements();
 
