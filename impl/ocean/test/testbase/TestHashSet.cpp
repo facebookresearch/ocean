@@ -54,6 +54,15 @@ bool TestHashSet::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("collidingelements"))
+	{
+		testResult = testCollidingElements();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -71,7 +80,101 @@ TEST(TestHashSet, MultipleIntegers)
 	EXPECT_TRUE(TestHashSet::testMultipleIntegers(GTEST_TEST_DURATION));
 }
 
+TEST(TestHashSet, CollidingElements)
+{
+	EXPECT_TRUE(TestHashSet::testCollidingElements());
+}
+
 #endif // OCEAN_USE_GTEST
+
+size_t TestHashSet::constantHashFunction(const unsigned int& element)
+{
+	OCEAN_SUPPRESS_UNUSED_WARNING(element);
+
+	return 0;
+}
+
+bool TestHashSet::testCollidingElements()
+{
+	Log::info() << "Test colliding elements:";
+
+	Validation validation;
+
+	using Set = HashSet<unsigned int>;
+
+	constexpr unsigned int numberElements = 8u;
+
+	// with one shared hash value the element with index n ends up in the slot n places behind the first one
+	Set set(32, &TestHashSet::constantHashFunction);
+
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, set.insert(n, true /*oneOnly*/, false /*extendCapacity*/));
+	}
+
+	OCEAN_EXPECT_EQUAL(validation, set.size(), size_t(numberElements));
+
+	// a rejected duplicate must leave the set exactly as it was
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_FALSE(validation, set.insert(n, true /*oneOnly*/, false /*extendCapacity*/));
+	}
+
+	OCEAN_EXPECT_EQUAL(validation, set.size(), size_t(numberElements));
+
+	// removing from the back removes an element which is alone in its slot, the case with the shortest removal path
+	for (unsigned int n = numberElements; n > 0u; --n)
+	{
+		OCEAN_EXPECT_TRUE(validation, set.remove(n - 1u));
+
+		for (unsigned int i = 0u; i < n - 1u; ++i)
+		{
+			OCEAN_EXPECT_TRUE(validation, set.find(i));
+		}
+	}
+
+	OCEAN_EXPECT_TRUE(validation, set.isEmpty());
+
+	// removing from the front removes elements which still have successors behind them
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, set.insert(n, true /*oneOnly*/, false /*extendCapacity*/));
+	}
+
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, set.remove(n));
+
+		for (unsigned int i = n + 1u; i < numberElements; ++i)
+		{
+			OCEAN_EXPECT_TRUE(validation, set.find(i));
+		}
+	}
+
+	OCEAN_EXPECT_TRUE(validation, set.isEmpty());
+
+	// the internal slot counters must not drift across repeated cycles
+	for (unsigned int cycle = 0u; cycle < 32u; ++cycle)
+	{
+		for (unsigned int n = 0u; n < numberElements; ++n)
+		{
+			OCEAN_EXPECT_TRUE(validation, set.insert(n, true /*oneOnly*/, false /*extendCapacity*/));
+		}
+
+		OCEAN_EXPECT_FALSE(validation, set.insert(0u, true /*oneOnly*/, false /*extendCapacity*/));
+
+		for (unsigned int n = numberElements; n > 0u; --n)
+		{
+			OCEAN_EXPECT_TRUE(validation, set.remove(n - 1u));
+		}
+	}
+
+	OCEAN_EXPECT_TRUE(validation, set.isEmpty());
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
 
 bool TestHashSet::testSingleIntegers(const double testDuration)
 {

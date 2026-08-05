@@ -253,6 +253,14 @@ bool HashSet<T>::insert(const T& element, const bool oneOnly, const bool extendC
 			}
 			else if (elements_[value].second == element)
 			{
+				// undo the counts added while probing towards the already existing element
+				const size_t startIndex = function_(element);
+
+				for (size_t i = 0; i < n; ++i)
+				{
+					elements_[(startIndex + i) % elements_.size()].first.first--;
+				}
+
 				return false;
 			}
 			else
@@ -326,6 +334,14 @@ bool HashSet<T>::insert(T&& element, const bool oneOnly, const bool extendCapaci
 			}
 			else if (elements_[value].second == element)
 			{
+				// undo the counts added while probing towards the already existing element
+				const size_t startIndex = function_(element);
+
+				for (size_t i = 0; i < n; ++i)
+				{
+					elements_[(startIndex + i) % elements_.size()].first.first--;
+				}
+
 				return false;
 			}
 			else
@@ -384,6 +400,14 @@ bool HashSet<T>::remove(const T& element)
 		{
 			if (elements_[value].second == element)
 			{
+				// the slots this element was probed past no longer carry it
+				const size_t startIndex = function_(element);
+
+				for (size_t i = 0; i < n; ++i)
+				{
+					elements_[(startIndex + i) % elements_.size()].first.first--;
+				}
+
 				elements_[value].first.first = 0;
 				elements_[value].second = T();
 				--size_;
@@ -582,15 +606,22 @@ bool HashSet<T>::isConsistent() const
 {
 	size_t count = 0;
 
+	// every element contributes one count to each slot of its probe sequence, so both sums must match
+	size_t slotCounters = 0;
+	size_t probeSequenceLengths = 0;
+
 	for (const Element& element : elements_)
 	{
+		slotCounters += element.first.first;
+
 		if (element.first.first != 0)
 		{
 			++count;
+			probeSequenceLengths += element.first.second + 1;
 		}
 	}
 
-	return count == size_;
+	return count == size_ && slotCounters == probeSequenceLengths;
 }
 
 }

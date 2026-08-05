@@ -280,6 +280,14 @@ bool HashMap<TKey, T>::insert(const TKey& key, const T& element, const bool oneO
 			}
 			else if (elements_[value].second.first == key)
 			{
+				// undo the counts added while probing towards the already existing key
+				const size_t startIndex = function_(key);
+
+				for (size_t i = 0; i < n; ++i)
+				{
+					elements_[(startIndex + i) % elements_.size()].first.first--;
+				}
+
 				return false;
 			}
 			else
@@ -355,6 +363,14 @@ bool HashMap<TKey, T>::insert(TKey&& key, T&& element, const bool oneOnly, const
 			}
 			else if (elements_[value].second.first == key)
 			{
+				// undo the counts added while probing towards the already existing key
+				const size_t startIndex = function_(key);
+
+				for (size_t i = 0; i < n; ++i)
+				{
+					elements_[(startIndex + i) % elements_.size()].first.first--;
+				}
+
 				return false;
 			}
 			else
@@ -414,6 +430,14 @@ bool HashMap<TKey, T>::remove(const TKey& key)
 		{
 			if (elements_[value].second.first == key)
 			{
+				// the slots this element was probed past no longer carry it
+				const size_t startIndex = function_(key);
+
+				for (size_t i = 0; i < n; ++i)
+				{
+					elements_[(startIndex + i) % elements_.size()].first.first--;
+				}
+
 				elements_[value].first.first = 0;
 				elements_[value].second.first = TKey();
 				elements_[value].second.second = T();
@@ -718,15 +742,22 @@ bool HashMap<TKey, T>::isConsistent() const
 {
 	size_t count = 0;
 
+	// every element contributes one count to each slot of its probe sequence, so both sums must match
+	size_t slotCounters = 0;
+	size_t probeSequenceLengths = 0;
+
 	for (const Element& element : elements_)
 	{
+		slotCounters += element.first.first;
+
 		if (element.first.first != 0)
 		{
 			++count;
+			probeSequenceLengths += element.first.second + 1;
 		}
 	}
 
-	return count == size_;
+	return count == size_ && slotCounters == probeSequenceLengths;
 }
 
 }

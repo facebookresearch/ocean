@@ -52,6 +52,15 @@ bool TestHashMap::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("collidingkeys"))
+	{
+		testResult = testCollidingKeys();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -69,7 +78,103 @@ TEST(TestHashMap, MultipleIntegers)
 	EXPECT_TRUE(TestHashMap::testMultipleIntegers(GTEST_TEST_DURATION));
 }
 
+TEST(TestHashMap, CollidingKeys)
+{
+	EXPECT_TRUE(TestHashMap::testCollidingKeys());
+}
+
 #endif // OCEAN_USE_GTEST
+
+size_t TestHashMap::constantHashFunction(const unsigned int& key)
+{
+	OCEAN_SUPPRESS_UNUSED_WARNING(key);
+
+	return 0;
+}
+
+bool TestHashMap::testCollidingKeys()
+{
+	Log::info() << "Test colliding keys:";
+
+	Validation validation;
+
+	using Table = HashMap<unsigned int, unsigned int>;
+
+	constexpr unsigned int numberElements = 8u;
+
+	// with one shared hash value the element with index n ends up in the slot n places behind the first one
+	Table table(32, &TestHashMap::constantHashFunction);
+
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, table.insert(n, n * 10u, true /*oneOnly*/, false /*extendCapacity*/));
+	}
+
+	OCEAN_EXPECT_EQUAL(validation, table.size(), size_t(numberElements));
+
+	// a rejected duplicate must leave the map exactly as it was
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_FALSE(validation, table.insert(n, 0u, true /*oneOnly*/, false /*extendCapacity*/));
+	}
+
+	OCEAN_EXPECT_EQUAL(validation, table.size(), size_t(numberElements));
+
+	// removing from the back removes an element which is alone in its slot, the case with the shortest removal path
+	for (unsigned int n = numberElements; n > 0u; --n)
+	{
+		OCEAN_EXPECT_TRUE(validation, table.remove(n - 1u));
+
+		for (unsigned int i = 0u; i < n - 1u; ++i)
+		{
+			const unsigned int* value = nullptr;
+			OCEAN_EXPECT_TRUE(validation, table.find(i, value) && value != nullptr && *value == i * 10u);
+		}
+	}
+
+	OCEAN_EXPECT_TRUE(validation, table.isEmpty());
+
+	// removing from the front removes elements which still have successors behind them
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, table.insert(n, n * 10u, true /*oneOnly*/, false /*extendCapacity*/));
+	}
+
+	for (unsigned int n = 0u; n < numberElements; ++n)
+	{
+		OCEAN_EXPECT_TRUE(validation, table.remove(n));
+
+		for (unsigned int i = n + 1u; i < numberElements; ++i)
+		{
+			const unsigned int* value = nullptr;
+			OCEAN_EXPECT_TRUE(validation, table.find(i, value) && value != nullptr && *value == i * 10u);
+		}
+	}
+
+	OCEAN_EXPECT_TRUE(validation, table.isEmpty());
+
+	// the internal slot counters must not drift across repeated cycles
+	for (unsigned int cycle = 0u; cycle < 32u; ++cycle)
+	{
+		for (unsigned int n = 0u; n < numberElements; ++n)
+		{
+			OCEAN_EXPECT_TRUE(validation, table.insert(n, n * 10u, true /*oneOnly*/, false /*extendCapacity*/));
+		}
+
+		OCEAN_EXPECT_FALSE(validation, table.insert(0u, 0u, true /*oneOnly*/, false /*extendCapacity*/));
+
+		for (unsigned int n = numberElements; n > 0u; --n)
+		{
+			OCEAN_EXPECT_TRUE(validation, table.remove(n - 1u));
+		}
+	}
+
+	OCEAN_EXPECT_TRUE(validation, table.isEmpty());
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
 
 bool TestHashMap::testSingleIntegers(const double testDuration)
 {

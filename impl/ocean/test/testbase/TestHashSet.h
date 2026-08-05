@@ -50,6 +50,12 @@ class OCEAN_TEST_BASE_EXPORT TestHashSet
 		 */
 		static bool testMultipleIntegers(const double testDuration);
 
+		/**
+		 * Tests a hash set in which all elements share the same hash value.
+		 * @return True, if succeeded
+		 */
+		static bool testCollidingElements();
+
 	protected:
 
 		/**
@@ -96,6 +102,13 @@ class OCEAN_TEST_BASE_EXPORT TestHashSet
 		 * @return True, if succeeded
 		 */
 		static bool validationMultipleIntegers(const unsigned int number, const unsigned int occupancy, const double testDuration);
+
+		/**
+		 * Hash function mapping every element onto the same value, so that each element has to be probed past its predecessors.
+		 * @param element The element to return the hash value for
+		 * @return The constant hash value
+		 */
+		static size_t constantHashFunction(const unsigned int& element);
 };
 
 }
