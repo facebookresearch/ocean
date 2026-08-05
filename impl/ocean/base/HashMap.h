@@ -10,8 +10,6 @@
 
 #include "ocean/base/Base.h"
 
-#include <vector>
-
 namespace Ocean
 {
 
@@ -29,7 +27,7 @@ class HashMap
 		/**
 		 * Definition of a pair combining a counter states and an object.
 		 */
-		using Element = typename std::pair< std::pair<size_t, size_t>, std::pair<TKey, T> >;
+		using Element = typename std::pair<std::pair<size_t, size_t>, std::pair<TKey, T>>;
 
 		/**
 		 * Definition of a vector holding the map objects.
@@ -164,7 +162,7 @@ class HashMap
 		 * @param capacity The capacity of the new has map, with range [hashMap.size(), infinity)
 		 * @param hashMap The hash map which defines the initial values of this hash map, will be moved
 		 */
-		HashMap(size_t capacity, HashMap<TKey, T>&& hashMap);
+		HashMap(const size_t capacity, HashMap<TKey, T>&& hashMap);
 
 		/**
 		 * Default hash function for elements supporting an cast size_t cast.
@@ -182,58 +180,60 @@ class HashMap
 	protected:
 
 		/// Hash map elements.
-		Elements mapElements;
+		Elements elements_;
 
 		/// Number of elements this has map holds.
-		size_t mapSize;
+		size_t size_ = 0;
 
 		/// Value function.
-		ValueFunction mapFunction;
+		ValueFunction function_ = nullptr;
 };
 
 template <typename TKey, typename T>
 inline HashMap<TKey, T>::HashMap(const HashMap<TKey, T>& hashMap) :
-	mapElements(hashMap.mapElements),
-	mapSize(hashMap.mapSize),
-	mapFunction(hashMap.mapFunction)
+	elements_(hashMap.elements_),
+	size_(hashMap.size_),
+	function_(hashMap.function_)
 {
 	// nothing to do here
 }
 
 template <typename TKey, typename T>
 inline HashMap<TKey, T>::HashMap(HashMap<TKey, T>&& hashMap) noexcept :
-	mapElements(std::move(hashMap.mapElements)),
-	mapSize(hashMap.mapSize),
-	mapFunction(hashMap.mapFunction)
+	elements_(std::move(hashMap.elements_)),
+	size_(hashMap.size_),
+	function_(hashMap.function_)
 {
-	hashMap.mapSize = 0;
+	hashMap.size_ = 0;
 }
 
 template <typename TKey, typename T>
 HashMap<TKey, T>::HashMap(const size_t capacity, const ValueFunction& function) :
-	mapElements(capacity),
-	mapSize(0),
-	mapFunction(function)
+	elements_(capacity),
+	size_(0),
+	function_(function)
 {
 	ocean_assert(isConsistent());
 }
 
 template <typename TKey, typename T>
-HashMap<TKey, T>::HashMap(size_t capacity, HashMap<TKey, T>&& hashMap) :
-	mapElements(capacity),
-	mapSize(0),
-	mapFunction(hashMap.mapFunction)
+HashMap<TKey, T>::HashMap(const size_t capacity, HashMap<TKey, T>&& hashMap) :
+	elements_(capacity),
+	size_(0),
+	function_(hashMap.function_)
 {
 	ocean_assert(capacity >= hashMap.size());
 
-	for (typename Elements::iterator i = hashMap.mapElements.begin(); i != hashMap.mapElements.end(); ++i)
-		if (i->first.first != 0)
+	for (Element& hashMapElement : hashMap.elements_)
+	{
+		if (hashMapElement.first.first != 0)
 		{
-			TKey& key = i->second.first;
-			T& element = i->second.second;
+			TKey& key = hashMapElement.second.first;
+			T& element = hashMapElement.second.second;
 
 			insert(std::move(key), std::move(element));
 		}
+	}
 
 	ocean_assert(size() == hashMap.size());
 	ocean_assert(isConsistent());
@@ -244,63 +244,71 @@ HashMap<TKey, T>::HashMap(size_t capacity, HashMap<TKey, T>&& hashMap) :
 template <typename TKey, typename T>
 bool HashMap<TKey, T>::insert(const TKey& key, const T& element, const bool oneOnly, const bool extendCapacity)
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// check whether we have to extend the capacity of this hash map (we extend the map if more than 80% is occupied)
-	if (extendCapacity && mapSize >= mapElements.size() * 80 / 100)
+	if (extendCapacity && size_ >= elements_.size() * 80 / 100)
 	{
-		*this = HashMap<TKey, T>(max(size_t(32), mapElements.size() * 2), std::move(*this));
-		ocean_assert(mapSize < mapElements.size() * 80 / 100);
+		*this = HashMap<TKey, T>(max(size_t(32), elements_.size() * 2), std::move(*this));
+		ocean_assert(size_ < elements_.size() * 80 / 100);
 	}
 
-	if (mapSize == mapElements.size())
+	if (size_ == elements_.size())
+	{
 		return false;
+	}
 
 	if (oneOnly)
 	{
 		// linear search
-		for (size_t n = 0; n < mapElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (mapFunction(key) + n) % mapElements.size();
+			const size_t value = (function_(key) + n) % elements_.size();
 
 			// check whether the place is free
-			if (mapElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				mapElements[value].first.first = 1;
-				mapElements[value].first.second = n;
-				mapElements[value].second.first = key;
-				mapElements[value].second.second = element;
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second.first = key;
+				elements_[value].second.second = element;
 
-				++mapSize;
+				++size_;
 				return true;
 			}
-			else if (mapElements[value].second.first == key)
+			else if (elements_[value].second.first == key)
+			{
 				return false;
+			}
 			else
-				mapElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 	else
 	{
 		// linear search
-		for (size_t n = 0; n < mapElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (mapFunction(key) + n) % mapElements.size();
+			const size_t value = (function_(key) + n) % elements_.size();
 
 			// check whether the place is free
-			if (mapElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				mapElements[value].first.first = 1;
-				mapElements[value].first.second = n;
-				mapElements[value].second.first = key;
-				mapElements[value].second.second = element;
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second.first = key;
+				elements_[value].second.second = element;
 
-				++mapSize;
+				++size_;
 				return true;
 			}
 			else
-				mapElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 
@@ -311,63 +319,71 @@ bool HashMap<TKey, T>::insert(const TKey& key, const T& element, const bool oneO
 template <typename TKey, typename T>
 bool HashMap<TKey, T>::insert(TKey&& key, T&& element, const bool oneOnly, const bool extendCapacity)
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// check whether we have to extend the capacity of this hash map (we extend the map if more than 80% is occupied)
-	if (extendCapacity && mapSize >= mapElements.size() * 80 / 100)
+	if (extendCapacity && size_ >= elements_.size() * 80 / 100)
 	{
-		*this = HashMap<TKey, T>(max(size_t(32), mapElements.size() * 2), std::move(*this));
-		ocean_assert(mapSize < mapElements.size() * 80 / 100);
+		*this = HashMap<TKey, T>(max(size_t(32), elements_.size() * 2), std::move(*this));
+		ocean_assert(size_ < elements_.size() * 80 / 100);
 	}
 
-	if (mapSize == mapElements.size())
+	if (size_ == elements_.size())
+	{
 		return false;
+	}
 
 	if (oneOnly)
 	{
 		// linear search
-		for (size_t n = 0; n < mapElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (mapFunction(key) + n) % mapElements.size();
+			const size_t value = (function_(key) + n) % elements_.size();
 
 			// check whether the place is free
-			if (mapElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				mapElements[value].first.first = 1;
-				mapElements[value].first.second = n;
-				mapElements[value].second.first = std::move(key);
-				mapElements[value].second.second = std::move(element);
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second.first = std::move(key);
+				elements_[value].second.second = std::move(element);
 
-				++mapSize;
+				++size_;
 				return true;
 			}
-			else if (mapElements[value].second.first == key)
+			else if (elements_[value].second.first == key)
+			{
 				return false;
+			}
 			else
-				mapElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 	else
 	{
 		// linear search
-		for (size_t n = 0; n < mapElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (mapFunction(key) + n) % mapElements.size();
+			const size_t value = (function_(key) + n) % elements_.size();
 
 			// check whether the place is free
-			if (mapElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				mapElements[value].first.first = 1;
-				mapElements[value].first.second = n;
-				mapElements[value].second.first = std::move(key);
-				mapElements[value].second.second = std::move(element);
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second.first = std::move(key);
+				elements_[value].second.second = std::move(element);
 
-				++mapSize;
+				++size_;
 				return true;
 			}
 			else
-				mapElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 
@@ -378,27 +394,29 @@ bool HashMap<TKey, T>::insert(TKey&& key, T&& element, const bool oneOnly, const
 template <typename TKey, typename T>
 bool HashMap<TKey, T>::remove(const TKey& key)
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < mapElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (mapFunction(key) + n) % mapElements.size();
+		const size_t value = (function_(key) + n) % elements_.size();
 
 		// check whether this place is free
-		if (mapElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			return false;
+		}
 
 		// check whether this place has no shift problem
-		if (mapElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
 		{
-			if (mapElements[value].second.first == key)
+			if (elements_[value].second.first == key)
 			{
-				mapElements[value].first.first = 0;
-				mapElements[value].second.first = TKey();
-				mapElements[value].second.second = T();
-				--mapSize;
+				elements_[value].first.first = 0;
+				elements_[value].second.first = TKey();
+				elements_[value].second.second = T();
+				--size_;
 
 				ocean_assert(isConsistent());
 
@@ -409,16 +427,16 @@ bool HashMap<TKey, T>::remove(const TKey& key)
 			return false;
 		}
 
-		ocean_assert(mapElements[value].first.first > 1);
+		ocean_assert(elements_[value].first.first > 1);
 
 		size_t elementOffset = 0u;
 
-		if (mapElements[value].second.first == key)
+		if (elements_[value].second.first == key)
 		{
 			// the element exists however, the following elements needs a special handling
 
 			size_t localValue = value;
-			size_t endLocation = mapElements.size();
+			size_t endLocation = elements_.size();
 
 			while (true)
 			{
@@ -427,50 +445,60 @@ bool HashMap<TKey, T>::remove(const TKey& key)
 				// find last element to swap
 				for (size_t i = 1; i < endLocation; ++i)
 				{
-					const size_t testValue = (localValue + i) % mapElements.size();
+					const size_t testValue = (localValue + i) % elements_.size();
 
-					if (mapElements[testValue].first.first >= 1)
+					if (elements_[testValue].first.first >= 1)
 					{
-						if (mapElements[testValue].first.second >= i)
+						if (elements_[testValue].first.second >= i)
+						{
 							lastOffset = i;
+						}
 					}
 
-					if (mapElements[testValue].first.first <= 1)
+					if (elements_[testValue].first.first <= 1)
+					{
 						break;
+					}
 				}
 
 				if (lastOffset == 0)
+				{
 					break;
+				}
 
 				ocean_assert(endLocation >= lastOffset);
 				endLocation -= lastOffset;
 
 				elementOffset += lastOffset;
 
-				const size_t lastValue = (localValue + lastOffset) % mapElements.size();
+				const size_t lastValue = (localValue + lastOffset) % elements_.size();
 
 				// move the found element
 
-				// mapElements[localValue].first.first stays constant
-				mapElements[localValue].first.second = mapElements[lastValue].first.second - lastOffset;
-				mapElements[localValue].second = mapElements[lastValue].second;
+				// elements_[localValue].first.first stays constant
+				elements_[localValue].first.second = elements_[lastValue].first.second - lastOffset;
+				elements_[localValue].second = elements_[lastValue].second;
 
 				localValue = lastValue;
 
-				if (mapElements[lastValue].first.first == 1)
+				if (elements_[lastValue].first.first == 1)
+				{
 					break;
+				}
 			}
 
 			// decrease the used counter
-			const size_t startIndex = mapFunction(key);
+			const size_t startIndex = function_(key);
 
 			for (size_t i = 0u; i < elementOffset + n; ++i)
-				mapElements[(startIndex + i) % mapElements.size()].first.first--;
+			{
+				elements_[(startIndex + i) % elements_.size()].first.first--;
+			}
 
-			mapElements[(value + elementOffset) % mapElements.size()].first.first = 0;
-			mapElements[(value + elementOffset) % mapElements.size()].second.first = TKey();
-			mapElements[(value + elementOffset) % mapElements.size()].second.second = T();
-			--mapSize;
+			elements_[(value + elementOffset) % elements_.size()].first.first = 0;
+			elements_[(value + elementOffset) % elements_.size()].second.first = TKey();
+			elements_[(value + elementOffset) % elements_.size()].second.second = T();
+			--size_;
 
 			ocean_assert(isConsistent());
 
@@ -485,25 +513,31 @@ bool HashMap<TKey, T>::remove(const TKey& key)
 template <typename TKey, typename T>
 bool HashMap<TKey, T>::find(const TKey& key) const
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < mapElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (mapFunction(key) + n) % mapElements.size();
+		const size_t value = (function_(key) + n) % elements_.size();
 
 		// check whether this place is free
-		if (mapElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			return false;
+		}
 
 		// check whether this element is equal to the given one
-		if (mapElements[value].second.first == key)
+		if (elements_[value].second.first == key)
+		{
 			return true;
+		}
 
 		// check whether this place is not free but unique
-		if (mapElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
+		{
 			return false;
+		}
 	}
 
 	return false;
@@ -512,28 +546,32 @@ bool HashMap<TKey, T>::find(const TKey& key) const
 template <typename TKey, typename T>
 bool HashMap<TKey, T>::find(const TKey& key, const T*& element) const
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < mapElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (mapFunction(key) + n) % mapElements.size();
+		const size_t value = (function_(key) + n) % elements_.size();
 
 		// check whether this place is free
-		if (mapElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			return false;
+		}
 
 		// check whether this element is equal to the given one
-		if (mapElements[value].second.first == key)
+		if (elements_[value].second.first == key)
 		{
-			element = &mapElements[value].second.second;
+			element = &elements_[value].second.second;
 			return true;
 		}
 
 		// check whether this place is not free but unique
-		if (mapElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
+		{
 			return false;
+		}
 	}
 
 	return false;
@@ -542,28 +580,32 @@ bool HashMap<TKey, T>::find(const TKey& key, const T*& element) const
 template <typename TKey, typename T>
 bool HashMap<TKey, T>::find(const TKey& key, T*& element)
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < mapElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (mapFunction(key) + n) % mapElements.size();
+		const size_t value = (function_(key) + n) % elements_.size();
 
 		// check whether this place is free
-		if (mapElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			return false;
+		}
 
 		// check whether this element is equal to the given one
-		if (mapElements[value].second.first == key)
+		if (elements_[value].second.first == key)
 		{
-			element = &mapElements[value].second.second;
+			element = &elements_[value].second.second;
 			return true;
 		}
 
 		// check whether this place is not free but unique
-		if (mapElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
+		{
 			return false;
+		}
 	}
 
 	return false;
@@ -572,29 +614,35 @@ bool HashMap<TKey, T>::find(const TKey& key, T*& element)
 template <typename TKey, typename T>
 const T& HashMap<TKey, T>::element(const TKey& key) const
 {
-	ocean_assert(mapSize <= mapElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < mapElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (mapFunction(key) + n) % mapElements.size();
+		const size_t value = (function_(key) + n) % elements_.size();
 
 		// check whether this place is free
-		if (mapElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			break;
+		}
 
 		// check whether this element is equal to the given one
-		if (mapElements[value].second.first == key)
-			return mapElements[value].second.second;
+		if (elements_[value].second.first == key)
+		{
+			return elements_[value].second.second;
+		}
 
 		// check whether this place is not free but unique
-		if (mapElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
+		{
 			break;
+		}
 	}
 
 	ocean_assert(false && "Invalid key!");
-	return mapElements.cbegin()->second.second;
+	return elements_.cbegin()->second.second;
 }
 
 template <typename TKey, typename T>
@@ -602,10 +650,12 @@ void HashMap<TKey, T>::clear()
 {
 	ocean_assert(isConsistent());
 
-	for (typename Elements::iterator i = mapElements.begin(); i != mapElements.end(); ++i)
-		i->first.first = 0;
+	for (Element& element : elements_)
+	{
+		element.first.first = 0;
+	}
 
-	mapSize = 0;
+	size_ = 0;
 
 	ocean_assert(isConsistent());
 }
@@ -613,19 +663,19 @@ void HashMap<TKey, T>::clear()
 template <typename TKey, typename T>
 inline size_t HashMap<TKey, T>::size() const
 {
-	return mapSize;
+	return size_;
 }
 
 template <typename TKey, typename T>
 inline size_t HashMap<TKey, T>::capacity() const
 {
-	return mapElements.size();
+	return elements_.size();
 }
 
 template <typename TKey, typename T>
 inline bool HashMap<TKey, T>::isEmpty() const
 {
-	return mapSize == 0;
+	return size_ == 0;
 }
 
 template <typename TKey, typename T>
@@ -633,9 +683,9 @@ inline HashMap<TKey, T>& HashMap<TKey, T>::operator=(const HashMap<TKey, T>& has
 {
 	if (this != &hashMap)
 	{
-		mapElements = hashMap.mapElements;
-		mapSize = hashMap.mapSize;
-		mapFunction = hashMap.mapFunction;
+		elements_ = hashMap.elements_;
+		size_ = hashMap.size_;
+		function_ = hashMap.function_;
 	}
 
 	return *this;
@@ -646,11 +696,11 @@ inline HashMap<TKey, T>& HashMap<TKey, T>::operator=(HashMap<TKey, T>&& hashMap)
 {
 	if (this != &hashMap)
 	{
-		mapElements = std::move(hashMap.mapElements);
-		mapSize = hashMap.mapSize;
-		mapFunction = hashMap.mapFunction;
+		elements_ = std::move(hashMap.elements_);
+		size_ = hashMap.size_;
+		function_ = hashMap.function_;
 
-		hashMap.mapSize = 0;
+		hashMap.size_ = 0;
 	}
 
 	return *this;
@@ -667,11 +717,15 @@ bool HashMap<TKey, T>::isConsistent() const
 {
 	size_t count = 0;
 
-	for (typename Elements::const_iterator i = mapElements.begin(); i != mapElements.end(); ++i)
-		if (i->first.first != 0)
+	for (const Element& element : elements_)
+	{
+		if (element.first.first != 0)
+		{
 			++count;
+		}
+	}
 
-	return count == mapSize;
+	return count == size_;
 }
 
 }
