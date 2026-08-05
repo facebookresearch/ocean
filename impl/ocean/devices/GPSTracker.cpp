@@ -130,7 +130,7 @@ bool GPSTracker::decodePolyline(const std::string& polyline, const unsigned int 
 
 		double latitude = double(integerValue) / normalization;
 
-		if (position >= polyline.length() || !NumericD::isInsideRange(-90.0, latitude, 90.0))
+		if (position >= polyline.length())
 		{
 			return false;
 		}
@@ -142,17 +142,17 @@ bool GPSTracker::decodePolyline(const std::string& polyline, const unsigned int 
 
 		double longitude = double(integerValue) / normalization;
 
-		if (!NumericD::isInsideRange(-180.0, longitude, 180.0))
-		{
-			return false;
-		}
-
 		if (!locations.empty())
 		{
 			// every coordinate is an offset vector (not the very first location)
 
 			latitude += locations.back().latitude();
 			longitude += locations.back().longitude();
+		}
+
+		if (!NumericD::isInsideRange(-90.0, latitude, 90.0) || !NumericD::isInsideRange(-180.0, longitude, 180.0))
+		{
+			return false;
 		}
 
 		locations.emplace_back(latitude, longitude);
