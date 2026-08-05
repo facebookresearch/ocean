@@ -248,10 +248,10 @@ bool BullseyeDetectorStereo::extractBullseyes(const AnyCamera& cameraA, const An
 
 			const IndexPair32 indexPair(indexA, indexB);
 
-			ocean_assert(candidateMap.contains(indexPair));
+			// the solver returns a complete matching, so it can also return pairs which could not be triangulated
 			if (!candidateMap.contains(indexPair))
 			{
-				return false;
+				continue;
 			}
 
 			const Candidate& candidate = candidateMap.at(indexPair);
