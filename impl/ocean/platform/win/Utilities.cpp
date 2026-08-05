@@ -31,9 +31,7 @@ void Utilities::textOutput(HDC deviceContext, const std::wstring& text, const st
 		return;
 	}
 
-	HFONT textFont = CreateFontW(int(fontSize), 0, 0, 0, bold ? FW_BOLD : FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_SWISS, font.c_str());
-
-	HFONT oldFont = HFONT(SelectObject(deviceContext, textFont));
+	const ScopedFont scopedFont(deviceContext, CreateFontW(int(fontSize), 0, 0, 0, bold ? FW_BOLD : FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_SWISS, font.c_str()));
 
 	SIZE textSize;
 	GetTextExtentPoint32W(deviceContext, text.c_str(), int(text.length()), &textSize);
@@ -87,12 +85,6 @@ void Utilities::textOutput(HDC deviceContext, const std::wstring& text, const st
 	}
 
 	SetBkMode(deviceContext, oldBkMode);
-	SelectObject(deviceContext, oldFont);
-
-	if (textFont)
-	{
-		DeleteObject(textFont);
-	}
 }
 
 void Utilities::desktopTextOutput(const int x, const int y, const std::string& text)
