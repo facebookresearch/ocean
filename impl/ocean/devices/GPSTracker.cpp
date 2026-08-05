@@ -197,6 +197,12 @@ bool GPSTracker::decodePolylineValue(const std::string& polyline, size_t& positi
 
 		const int32_t chunk = ((int32_t(character) - asciiOffset) & bitMaskChunkSize);
 
+		if (chunkShift >= 32)
+		{
+			// the value is malformed, a well-formed value needs at most six chunks
+			return false;
+		}
+
 		result = result | (chunk << chunkShift);
 		chunkShift += chunkSize;
 
