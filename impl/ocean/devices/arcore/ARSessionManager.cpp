@@ -447,8 +447,7 @@ void ARSessionManager::Session::update(unsigned int textureId)
 
 	ArSession_setCameraTextureName(arSession_, textureId);
 
-	ArFrame* arFrame = nullptr;
-	ArFrame_create(arSession_, &arFrame);
+	const ScopedARFrame arFrame(arSession_, ArFrame_create);
 
 	ArStatus error = ArSession_update(arSession_, arFrame);
 
