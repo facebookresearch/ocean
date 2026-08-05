@@ -223,7 +223,7 @@ bool SharedMemory::requestSharedMemory(const std::wstring& name, size_t& size, v
 
 	void* data_ = shmat(memoryId, nullptr, 0);
 
-	if (data_ == nullptr)
+	if (data_ == (void*)(-1) || data_ == nullptr)
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
