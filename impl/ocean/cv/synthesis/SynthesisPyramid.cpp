@@ -45,7 +45,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	}
 
 	ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
-	ocean_assert((!filter.isValid() || CV::MaskAnalyzer::hasValue(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFF, 0u)) && "The filter does not contain any valid pixel, so we will not have any source pixel!");
+	ocean_assert((!filter.isValid() || CV::MaskAnalyzer::hasValue(filter.constdata<uint8_t>(), filter.width(), filter.height(), 0xFF, filter.paddingElements())) && "The filter does not contain any valid pixel, so we will not have any source pixel!");
 
 	if (filter && filter.frameType() != mask.frameType())
 	{
@@ -55,6 +55,15 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	// we reserve memory for a (full) frame pyramid
 	synthesisFramePyramid_.replace(frame.frameType(), true /*forceOwner*/, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE);
 	synthesisMaskPyramid_.replace(mask.frameType(), true /*forceOwner*/, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE);
+
+	if (filter)
+	{
+		synthesisFilterPyramid_.replace(filter.frameType(), true /*forceOwner*/, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE);
+	}
+	else
+	{
+		synthesisFilterPyramid_.clear();
+	}
 
 	// we copy the finest pyramid layer information
 	synthesisFramePyramid_[0].copy(0, 0, frame);
