@@ -36,10 +36,15 @@ std::string TextWindow::text() const
 
 	const int textLength = GetWindowTextLengthA(handle_);
 
-	std::vector<char> buffer(textLength);
-	GetWindowTextA(handle_, buffer.data(), int(buffer.size()));
+	if (textLength == 0)
+	{
+		return std::string();
+	}
 
-	return std::string(buffer.data(), size_t(buffer.size()));
+	std::vector<char> buffer(textLength + 1);
+	const int copiedCharacters = GetWindowTextA(handle_, buffer.data(), int(buffer.size()));
+
+	return std::string(buffer.data(), size_t(copiedCharacters));
 }
 
 bool TextWindow::setText(const std::string& text)
