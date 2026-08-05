@@ -67,9 +67,9 @@ void ThreadPool::PoolThread::threadRun()
 
 ThreadPool::~ThreadPool()
 {
-	const ScopedLock scopedLock(lock_);
-
-	pendingFunctions_ = FunctionQueue();
+	TemporaryScopedLock scopedLock(lock_);
+		pendingFunctions_ = FunctionQueue();
+	scopedLock.release();
 
 	stopThread();
 
