@@ -14,6 +14,7 @@
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Singleton.h"
+#include "ocean/base/Timestamp.h"
 
 #include "ocean/devices/SceneTracker6DOF.h"
 
@@ -151,6 +152,9 @@ class OCEAN_DEVICES_ARCORE_EXPORT ARSessionManager : public Singleton<ARSessionM
 
 				/// The timestamp of the last ARFrame.
 				int64_t lastTimestampNs_ = NumericT<int64_t>::minValue();
+
+				/// The timestamp converter to convert the timestamps of the ARCore frames to unix timestamps.
+				TimestampConverter timestampConverter_ = TimestampConverter(TimestampConverter::TD_BOOTTIME, false /*useSlidingWindow*/);
 
 				/// The map mapping planes to ids.
 				PlaneIdMap planeIdMap_;

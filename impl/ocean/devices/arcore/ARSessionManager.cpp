@@ -464,7 +464,8 @@ void ARSessionManager::Session::update(unsigned int textureId)
 		return;
 	}
 
-	const Timestamp frameUnixTimestamp(true); // **TODO**
+	// the time base of the ARCore frame timestamp is not defined, but documented to be likely similar to CLOCK_BOOTTIME
+	const Timestamp frameUnixTimestamp = timestampConverter_.toUnix(currentTimestampNs);
 
 	SharedAnyCamera anyCamera;
 
