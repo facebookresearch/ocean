@@ -400,7 +400,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param rightImagePoints Image points in the right camera, one for each point in the left frame, must be valid
 		 * @param correspondences Number of points correspondences, with range [4, infinity)
 		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param homography Resulting homography for the given image points
+		 * @param right_H_left Resulting homography for the given image points
 		 * @param testCandidates Number of candidates used in each RANSAC iterations, with range [4, correspondences]
 		 * @param refine True, to apply a non-linear least square optimization to increase the transformation accuracy after the RANSAC step
 		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
@@ -411,7 +411,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @return True, if succeeded
 		 * @see homographyMatrix<tRefine, tUseSVD>(), Geometry::Homography::homographyMatrix(), homographyMatrixForNonBijectiveCorrespondences().
 		 */
-		static inline bool homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& homography, const unsigned int testCandidates = 8u, const bool refine = true, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), Indices32* usedIndices = nullptr, Worker* worker = nullptr, const bool useSVD = true);
+		static inline bool homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_H_left, const unsigned int testCandidates = 8u, const bool refine = true, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), Indices32* usedIndices = nullptr, Worker* worker = nullptr, const bool useSVD = true);
 
 		/**
 		 * Calculates the homography between two images transforming the given image points between two images.
@@ -447,7 +447,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param rightImagePoints Image points in the right camera, one for each point in the left frame
 		 * @param correspondences Number of points correspondences, with range [4, infinity)
 		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param homography Resulting homography for the given image points
+		 * @param right_H_left Resulting homography for the given image points
 		 * @param testCandidates Number of candidates used in each RANSAC iterations, with range [4, correspondences]
 		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
 		 * @param squarePixelErrorThreshold Maximal square pixel error between a right point and a transformed left point so that a point correspondence counts as valid, with range (0, infinity)
@@ -459,7 +459,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @see homographyMatrix(), Geometry::Homography::homographyMatrix().
 		 */
 		template <bool tRefine, bool tUseSVD>
-		static bool homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& homography, const unsigned int testCandidates = 8u, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), Indices32* usedIndices = nullptr, Worker* worker = nullptr);
+		static bool homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_H_left, const unsigned int testCandidates = 8u, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), Indices32* usedIndices = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Calculates the homography between two images transforming the given image points between two images.
@@ -777,7 +777,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static void subsetIndices(Indices32& indices, const size_t subset, RandomGenerator& randomGenerator);
 };
 
-inline bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& homography, const unsigned int testCandidates, const bool refine, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker, const bool useSVD)
+inline bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_H_left, const unsigned int testCandidates, const bool refine, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker, const bool useSVD)
 {
 	ocean_assert(leftImagePoints != nullptr && rightImagePoints != nullptr);
 	ocean_assert(correspondences >= 4);
@@ -788,22 +788,22 @@ inline bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vecto
 	{
 		if (useSVD)
 		{
-			return homographyMatrix<true, true>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, homography, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
+			return homographyMatrix<true, true>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_H_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 		}
 		else
 		{
-			return homographyMatrix<true, false>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, homography, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
+			return homographyMatrix<true, false>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_H_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 		}
 	}
 	else
 	{
 		if (useSVD)
 		{
-			return homographyMatrix<false, true>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, homography, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
+			return homographyMatrix<false, true>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_H_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 		}
 		else
 		{
-			return homographyMatrix<false, false>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, homography, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
+			return homographyMatrix<false, false>(leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_H_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 		}
 	}
 }
@@ -842,7 +842,7 @@ inline bool RANSAC::homographyMatrixForNonBijectiveCorrespondences(const Vector2
 }
 
 template <bool tRefine, bool tUseSVD>
-bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& homography, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_H_left, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	ocean_assert(leftImagePoints != nullptr && rightImagePoints != nullptr);
 	ocean_assert(correspondences >= 4);
@@ -866,31 +866,31 @@ bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rig
 
 		if constexpr (tUseSVD)
 		{
-			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)(&lock), 0u, 0u), 0u, iterations, 12u, 13u, 5u);
+			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &right_H_left, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)(&lock), 0u, 0u), 0u, iterations, 12u, 13u, 5u);
 		}
 		else
 		{
-			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)(&lock), 0u, 0u), 0u, iterations, 12u, 13u, 5u);
+			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &right_H_left, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)(&lock), 0u, 0u), 0u, iterations, 12u, 13u, 5u);
 		}
 	}
 	else
 	{
 		if constexpr (tUseSVD)
 		{
-			geometricTransformSubset(Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, nullptr, 0u, iterations);
+			geometricTransformSubset(Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &right_H_left, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, nullptr, 0u, iterations);
 		}
 		else
 		{
-			geometricTransformSubset(Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, nullptr, 0u, iterations);
+			geometricTransformSubset(Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &right_H_left, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, nullptr, 0u, iterations);
 		}
 	}
 
-	if (maxValidCorrespondences < testCandidates || homography.isSingular())
+	if (maxValidCorrespondences < testCandidates || right_H_left.isSingular())
 	{
 		return false;
 	}
 
-	Homography::normalizeHomography(homography);
+	Homography::normalizeHomography(right_H_left);
 
 	if constexpr (tRefine)
 	{
@@ -899,10 +899,10 @@ bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rig
 		const Vectors2 validLeftImagePoints(Subset::subset(leftImagePoints, correspondences, *indices));
 		const Vectors2 validRightImagePoints(Subset::subset(rightImagePoints, correspondences, *indices));
 
-		SquareMatrix3 optimizedHomography;
-		if (Geometry::NonLinearOptimizationHomography::optimizeHomography<Geometry::Estimator::ET_SQUARE>(homography, validLeftImagePoints.data(), validRightImagePoints.data(), validLeftImagePoints.size(), 9u, optimizedHomography, 20u))
+		SquareMatrix3 optimizedRight_H_optimizedLeft;
+		if (Geometry::NonLinearOptimizationHomography::optimizeHomography<Geometry::Estimator::ET_SQUARE>(right_H_left, validLeftImagePoints.data(), validRightImagePoints.data(), validLeftImagePoints.size(), 9u, optimizedRight_H_optimizedLeft, 20u))
 		{
-			homography = optimizedHomography;
+			right_H_left = optimizedRight_H_optimizedLeft;
 
 			if (usedIndices)
 			{
@@ -910,7 +910,7 @@ bool RANSAC::homographyMatrix(const Vector2* leftImagePoints, const Vector2* rig
 
 				for (size_t n = 0; n < correspondences; ++n)
 				{
-					if (rightImagePoints[n].sqrDistance(homography * leftImagePoints[n]) <= squarePixelErrorThreshold)
+					if (rightImagePoints[n].sqrDistance(right_H_left * leftImagePoints[n]) <= squarePixelErrorThreshold)
 					{
 						indices->emplace_back(Index32(n));
 					}
