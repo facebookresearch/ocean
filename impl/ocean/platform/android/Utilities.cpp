@@ -1304,7 +1304,7 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	// }
 	jmethodID jIsConnectedMethodId = env->GetMethodID(jNetworkInfoClass, "isConnected", "()Z");
 
-	if (jGetSystemServiceMethodId == nullptr)
+	if (jIsConnectedMethodId == nullptr)
 	{
 		return false;
 	}
@@ -1348,14 +1348,14 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	jmethodID jGetConnectionInfoMethodId = env->GetMethodID(jWifiManagerClass, "getConnectionInfo", "()Landroid/net/wifi/WifiInfo;");
 	jmethodID jGetSsidMethodId = env->GetMethodID(jWifiInfoClass, "getSSID", "()Ljava/lang/String;");
 
-	if (jGetSystemServiceMethodId == nullptr || jGetSsidMethodId == nullptr)
+	if (jGetConnectionInfoMethodId == nullptr || jGetSsidMethodId == nullptr)
 	{
 		return false;
 	}
 
-	const ScopedJObject jWifiInfoObject(*env, env->CallObjectMethod(jWifiManagerObject, jGetConnectionInfoMethodId, *jWifiServiceString));
+	const ScopedJObject jWifiInfoObject(*env, env->CallObjectMethod(jWifiManagerObject, jGetConnectionInfoMethodId));
 
-	if (!jWifiManagerObject)
+	if (!jWifiInfoObject)
 	{
 		return false;
 	}
