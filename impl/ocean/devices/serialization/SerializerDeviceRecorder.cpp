@@ -281,6 +281,9 @@ void SerializerDeviceRecorder::onDeviceChanged(Device* device, const bool added)
 		{
 			ocean_assert(sampleEventSubscriptionMap_.find(device) == sampleEventSubscriptionMap_.cend());
 
+			// a new measurement can be allocated at the address of a destroyed one
+			invalidMeasurements_.erase(measurement);
+
 			Measurement::SampleEventSubscription sampleEventSubscription(measurement->subscribeSampleEvent(Measurement::SampleCallback::create(*this, &SerializerDeviceRecorder::onMeasurementSample)));
 			sampleEventSubscription.makeWeak();
 
@@ -306,12 +309,10 @@ void SerializerDeviceRecorder::onDeviceChanged(Device* device, const bool added)
 
 		if (measurement != nullptr)
 		{
-			const MeasurementChannelMap::const_iterator iMeasurement = measurementChannelMap_.find(measurement);
+			// samples of this measurement may still be queued, holding a raw pointer to it, and the device is destroyed as soon as this callback returns
 
-			if (iMeasurement != measurementChannelMap_.cend())
-			{
-				invalidMeasurements_.emplace(iMeasurement->first);
-			}
+			invalidMeasurements_.emplace(measurement);
+			measurementChannelMap_.erase(measurement);
 		}
 	}
 }
