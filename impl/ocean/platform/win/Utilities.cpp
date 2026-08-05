@@ -202,11 +202,9 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 	return CV::PixelBoundingBox(CV::PixelPosition(0u, 0u), (unsigned int)boxSize.cx, (unsigned int)boxSize.cy);
 }
 
-ScopedFont::ScopedFont(HDC dc, const LOGFONTW& logFont)
+ScopedFont::ScopedFont(HDC dc, HFONT font)
 {
 	ocean_assert(dc != nullptr);
-
-	const HFONT font = CreateFontIndirectW(&logFont);
 
 	if (font == nullptr)
 	{
@@ -216,6 +214,12 @@ ScopedFont::ScopedFont(HDC dc, const LOGFONTW& logFont)
 	dc_ = dc;
 	font_ = font;
 	previousFont_ = HFONT(SelectObject(dc_, font_));
+}
+
+ScopedFont::ScopedFont(HDC dc, const LOGFONTW& logFont) :
+	ScopedFont(dc, CreateFontIndirectW(&logFont))
+{
+	// nothing to do here
 }
 
 void ScopedFont::release()

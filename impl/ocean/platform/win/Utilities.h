@@ -260,6 +260,14 @@ class OCEAN_PLATFORM_WIN_EXPORT ScopedFont
 		inline ScopedFont(ScopedFont&& scopedFont) noexcept;
 
 		/**
+		 * Selects an existing font into a given device context and takes ownership of the font.
+		 * In case the given font is invalid, the resulting object will be invalid.
+		 * @param dc The device context into which the font will be selected, must be valid
+		 * @param font The font to be selected, will be owned by this object
+		 */
+		ScopedFont(HDC dc, HFONT font);
+
+		/**
 		 * Creates a new font and selects it into a given device context.
 		 * In case the font cannot be created, the resulting object will be invalid.
 		 * @param dc The device context into which the new font will be selected, must be valid
