@@ -143,7 +143,7 @@ int Screen::dpi(const HDC dc)
 	// if either no device context was provided or if the dpi value could not be determined from the window (which can happen at least on Windows 7)
 	if (logicalPixelSize == 0)
 	{
-		const ScopedScreenDC localDC(GetDC(nullptr));
+		const ScopedDC localDC(nullptr);
 
 		logicalPixelSize = GetDeviceCaps(*localDC, LOGPIXELSX);
 		ocean_assert(logicalPixelSize == GetDeviceCaps(*localDC, LOGPIXELSY));

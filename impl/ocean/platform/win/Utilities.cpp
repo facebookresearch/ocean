@@ -89,7 +89,7 @@ void Utilities::textOutput(HDC deviceContext, const std::wstring& text, const st
 
 void Utilities::desktopTextOutput(const int x, const int y, const std::string& text)
 {
-	const ScopedScreenDC dc(GetDC(nullptr));
+	const ScopedDC dc(nullptr);
 	textOutput(*dc, x, y, text);
 }
 
@@ -108,13 +108,13 @@ void Utilities::frameOutput(HDC dc, const int x, const int y, const unsigned int
 
 void Utilities::desktopFrameOutput(const int x, const int y, const Frame& frame)
 {
-	const ScopedScreenDC dc(GetDC(nullptr));
+	const ScopedDC dc(nullptr);
 	frameOutput(*dc, x, y, frame);
 }
 
 void Utilities::desktopFrameOutput(const int x, const int y, const unsigned int width, const unsigned int height, const Frame& frame)
 {
-	const ScopedScreenDC dc(GetDC(nullptr));
+	const ScopedDC dc(nullptr);
 	frameOutput(*dc, x, y, width, height, frame);
 }
 
@@ -131,13 +131,13 @@ void Utilities::bitmapOutput(HDC dc, const int x, const int y, const unsigned in
 
 void Utilities::desktopBitmapOutput(const int x, const int y, const Bitmap& bitmap)
 {
-	const ScopedScreenDC dc(GetDC(nullptr));
+	const ScopedDC dc(nullptr);
 	bitmapOutput(*dc, x, y, bitmap);
 }
 
 void Utilities::desktopBitmapOutput(const int x, const int y, const unsigned int width, const unsigned int height, const Bitmap& bitmap)
 {
-	const ScopedScreenDC dc(GetDC(nullptr));
+	const ScopedDC dc(nullptr);
 	bitmapOutput(*dc, x, y, width, height, bitmap);
 }
 
@@ -153,7 +153,7 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 		return CV::PixelBoundingBox();
 	}
 
-	const ScopedScreenDC dc(GetDC(nullptr));
+	const ScopedDC dc(nullptr);
 
 	if (!dc.isValid())
 	{

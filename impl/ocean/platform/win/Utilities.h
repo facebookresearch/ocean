@@ -12,7 +12,6 @@
 #include "ocean/platform/win/Bitmap.h"
 
 #include "ocean/base/Frame.h"
-#include "ocean/base/ScopedObject.h"
 
 #include "ocean/cv/PixelBoundingBox.h"
 
@@ -224,19 +223,88 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 		 */
 		static CV::PixelBoundingBox textBoundingBox(const std::wstring& value, const std::wstring& font = std::wstring(), const unsigned int size = 0u);
 
-		/**
-		 * Releases a device context which has been acquired for the entire screen.
-		 * @param dc The device context to release, must be valid
-		 */
-		static inline void releaseScreenDC(HDC dc);
 };
 
 /**
- * Definition of a scoped object holding a device context of the entire screen.
- * The wrapped device context will be released automatically once the scoped object does not exist anymore.
+ * This class implements a scoped device context.
+ * The device context is acquired for a given window, or for the entire screen if no window is given, and is released again once the object is disposed.<br>
+ * The window handle is kept alongside the device context, as it is needed to release it again.
  * @ingroup platformwin
  */
-using ScopedScreenDC = ScopedObjectCompileTimeVoidT<HDC, Utilities::releaseScreenDC>;
+class OCEAN_PLATFORM_WIN_EXPORT ScopedDC
+{
+	public:
+
+		/**
+		 * Creates an object not holding a device context.
+		 */
+		ScopedDC() = default;
+
+		/**
+		 * Move constructor.
+		 * @param scopedDC The object to be moved
+		 */
+		inline ScopedDC(ScopedDC&& scopedDC) noexcept;
+
+		/**
+		 * Acquires the device context of a given window.
+		 * In case the device context cannot be acquired, the resulting object will be invalid.
+		 * @param window The window for which the device context will be acquired, nullptr to acquire the device context of the entire screen
+		 */
+		explicit inline ScopedDC(const HWND window);
+
+		/**
+		 * Destructs this object and releases the device context.
+		 */
+		inline ~ScopedDC();
+
+		/**
+		 * Returns whether this object holds a device context.
+		 * @return True, if so
+		 */
+		inline bool isValid() const;
+
+		/**
+		 * Returns the wrapped device context.
+		 * Ensure that this object holds a device context before calling this operator.
+		 * @return The wrapped device context
+		 * @see isValid().
+		 */
+		inline HDC operator*() const;
+
+		/**
+		 * Explicitly releases the device context.
+		 */
+		inline void release();
+
+		/**
+		 * Move operator.
+		 * @param scopedDC The object to be moved
+		 * @return Reference to this object
+		 */
+		inline ScopedDC& operator=(ScopedDC&& scopedDC) noexcept;
+
+	protected:
+
+		/**
+		 * Disabled copy constructor.
+		 */
+		ScopedDC(const ScopedDC&) = delete;
+
+		/**
+		 * Disabled assign operator.
+		 * @return Reference to this object
+		 */
+		ScopedDC& operator=(const ScopedDC&) = delete;
+
+	protected:
+
+		/// The window for which the device context has been acquired, nullptr for the entire screen or if this object is invalid.
+		HWND window_ = nullptr;
+
+		/// The wrapped device context, nullptr if this object does not hold one.
+		HDC dc_ = nullptr;
+};
 
 /**
  * This class implements a scoped font which is selected into a device context.
@@ -493,11 +561,60 @@ inline void Utilities::desktopBitmapOutput(const int x, const int y, const unsig
 	desktopBitmapOutput(x, y, bitmap.width() * scale, bitmap.height() * scale, bitmap);
 }
 
-inline void Utilities::releaseScreenDC(HDC dc)
+inline ScopedDC::ScopedDC(ScopedDC&& scopedDC) noexcept
 {
-	ocean_assert(dc != nullptr);
+	*this = std::move(scopedDC);
+}
 
-	ReleaseDC(nullptr, dc);
+inline ScopedDC::ScopedDC(const HWND window) :
+	window_(window),
+	dc_(GetDC(window))
+{
+	// nothing to do here
+}
+
+inline ScopedDC::~ScopedDC()
+{
+	release();
+}
+
+inline bool ScopedDC::isValid() const
+{
+	return dc_ != nullptr;
+}
+
+inline HDC ScopedDC::operator*() const
+{
+	ocean_assert(isValid());
+
+	return dc_;
+}
+
+inline void ScopedDC::release()
+{
+	if (dc_ != nullptr)
+	{
+		ReleaseDC(window_, dc_);
+
+		window_ = nullptr;
+		dc_ = nullptr;
+	}
+}
+
+inline ScopedDC& ScopedDC::operator=(ScopedDC&& scopedDC) noexcept
+{
+	if (this != &scopedDC)
+	{
+		release();
+
+		window_ = scopedDC.window_;
+		dc_ = scopedDC.dc_;
+
+		scopedDC.window_ = nullptr;
+		scopedDC.dc_ = nullptr;
+	}
+
+	return *this;
 }
 
 inline ScopedFont::ScopedFont(ScopedFont&& scopedFont) noexcept

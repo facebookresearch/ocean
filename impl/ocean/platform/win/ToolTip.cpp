@@ -69,7 +69,7 @@ bool ToolTip::addToolTip(const HWND handle, const std::wstring& text)
 			}
 		}
 
-		const ScopedScreenDC hdc(GetDC(nullptr));
+		const ScopedDC hdc(nullptr);
 
 		if (!hdc.isValid())
 		{
