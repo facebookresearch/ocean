@@ -128,8 +128,10 @@ StaticPatternTracker6DOF::ObjectId StaticPatternTracker6DOF::registerObject(cons
 
 	const Scalar maximalDimension = max(max(dimension.x(), dimension.y()), dimension.z());
 
-	ocean_assert(patternTrackerTransformationsMap_.find(internalObjectId) == patternTrackerTransformationsMap_.cend());
-	patternTrackerTransformationsMap_.emplace(internalObjectId, PatternTransformations(maximalDimension * Scalar(2)));
+	TemporaryScopedLock scopedLock(sampleMapLock_);
+		ocean_assert(patternTrackerTransformationsMap_.find(internalObjectId) == patternTrackerTransformationsMap_.cend());
+		patternTrackerTransformationsMap_.emplace(internalObjectId, PatternTransformations(maximalDimension * Scalar(2)));
+	scopedLock.release();
 
 	// we convert the internal object id of the PatternTracker to a new external of the StaticPatternTracker
 	return objectIdMapper_.newInternalObjectId(internalObjectId, "StaticPattern " + description);
@@ -216,7 +218,12 @@ void StaticPatternTracker6DOF::onPatternTrackerSample(const Measurement* /*measu
 		const HomogenousMatrix4 pattern_T_camera(tracker6DOFSample->positions()[n], tracker6DOFSample->orientations()[n]);
 
 		PatternTransformationsMap::iterator iPattern = patternTrackerTransformationsMap_.find(objectId);
-		ocean_assert(iPattern != patternTrackerTransformationsMap_.cend());
+
+		if (iPattern == patternTrackerTransformationsMap_.cend())
+		{
+			// the pattern is already known to the internal tracker but has not yet been added here, registerObject() is still running
+			continue;
+		}
 
 		iPattern->second.addTransformation(pattern_T_camera, timestamp, maximalNumberForAlignment_, maximalIntervalForAlignment_);
 	}
