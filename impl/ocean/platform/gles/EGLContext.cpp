@@ -147,6 +147,8 @@ bool EGLContext::initialize(const ConfigAttributePairs& configAttributePairs, EG
 	if (config_ == nullptr)
 	{
 		ocean_assert(false && "EGLContext::initialize() - could not find a valid config!");
+
+		release();
 		return false;
 	}
 
@@ -233,6 +235,11 @@ void EGLContext::release()
 
 		display_ = nullptr;
 	}
+
+	config_ = nullptr;
+
+	majorVersion_ = 0;
+	minorVersion_ = 0;
 }
 
 bool EGLContext::isValid() const
