@@ -11,7 +11,6 @@
 #include "ocean/cv/segmentation/MaskCreator.h"
 
 #include "ocean/base/RandomI.h"
-#include "ocean/base/Subset.h"
 
 #include "ocean/cv/FrameFilterMean.h"
 
@@ -19,7 +18,6 @@
 
 #include "ocean/cv/detector/FeatureDetector.h"
 
-#include "ocean/geometry/Homography.h"
 #include "ocean/geometry/RANSAC.h"
 
 #include <algorithm>
@@ -113,14 +111,14 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 
 	Indices32 usedIndices;
 	Vectors2 currentContourStrongest;
-	SquareMatrix3 currentHomography;
+	SquareMatrix3 currentContour_H_previousContour(false);
 
 	if (!usePlanarTracking_)
 	{
 		// try to track strong feature points from the previous iterations with small image patches
 		if (!previousContourStrongest_.empty() && Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<9u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))
 		{
-			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest_.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, currentHomography, 12u, true, 50u, Scalar(2.5 * 2.5), &usedIndices, worker);
+			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest_.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, currentContour_H_previousContour, 12u, true, 50u, Scalar(2.5 * 2.5), &usedIndices, worker);
 
 			ocean_assert_and_suppress_unused((homographyResult && !usedIndices.empty()) || (!homographyResult && usedIndices.empty()), homographyResult);
 		}
@@ -143,7 +141,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 			if (Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<31u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))
 			{
 				ocean_assert(previousContourStrongest_.size() == currentContourStrongest.size());
-				const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest_.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, currentHomography, 12u, true, 100u, Scalar(3 * 3), &usedIndices, worker);
+				const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest_.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, currentContour_H_previousContour, 12u, true, 100u, Scalar(3 * 3), &usedIndices, worker);
 
 				ocean_assert_and_suppress_unused((homographyResult && !usedIndices.empty()) || (!homographyResult && usedIndices.empty()), homographyResult);
 			}
@@ -166,7 +164,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 		Vectors2 previousReferencePoints, currentReferencePoints;
 		if (Advanced::AdvancedMotionT<>::trackReliableReferencePoints<9u>(previousFramePyramid_, currentFramePyramid_, previousReferencePoints, currentReferencePoints, 20u, 20u, boundingBox, Frame(), worker) && !previousReferencePoints.empty())
 		{
-			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousReferencePoints.data(), currentReferencePoints.data(), previousReferencePoints.size(), randomGenerator, currentHomography, 12u, true, 200u, Scalar(2.0 * 2.0), &usedIndices, worker);
+			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousReferencePoints.data(), currentReferencePoints.data(), previousReferencePoints.size(), randomGenerator, currentContour_H_previousContour, 12u, true, 200u, Scalar(2.0 * 2.0), &usedIndices, worker);
 
 			// check whether enough consensus points have been found to determine the homography
 			if (usedIndices.size() < 20u)
@@ -179,12 +177,18 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 		}
 	}
 
+	if (currentContour_H_previousContour.isNull())
+	{
+		clear();
+		return false;
+	}
+
 	Vectors2 currentContour;
 	currentContour.reserve(previousDenseContourSubPixel_.size());
 
-	for (Vectors2::const_iterator i = previousDenseContourSubPixel_.begin(); i != previousDenseContourSubPixel_.end(); ++i)
+	for (const Vector2& previousDenseContourSubPixel : previousDenseContourSubPixel_)
 	{
-		currentContour.push_back(currentHomography * *i);
+		currentContour.push_back(currentContour_H_previousContour * previousDenseContourSubPixel);
 	}
 
 	const PixelContour denseContour(ContourAnalyzer::createDenseContour(currentContour));
@@ -227,7 +231,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 
 	std::swap(previousFramePyramid_, currentFramePyramid_);
 
-	previousHomography_ = currentHomography;
+	previousHomography_ = currentContour_H_previousContour;
 
 	previousDenseContour_ = ContourAnalyzer::createDenseContour(previousDenseContourSubPixel_);
 
