@@ -89,9 +89,8 @@ void Utilities::textOutput(HDC deviceContext, const std::wstring& text, const st
 
 void Utilities::desktopTextOutput(const int x, const int y, const std::string& text)
 {
-	HDC dc = GetDC(0);
-	textOutput(dc, x, y, text);
-	ReleaseDC(0, dc);
+	const ScopedScreenDC dc(GetDC(nullptr));
+	textOutput(*dc, x, y, text);
 }
 
 void Utilities::frameOutput(HDC dc, const int x, const int y, const Frame& frame)
