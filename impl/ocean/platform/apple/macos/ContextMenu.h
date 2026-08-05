@@ -101,8 +101,7 @@ class ContextMenu
 		int selectedIndex_ = -1;
 };
 
-ContextMenu::ContextMenu(ContextMenu&& contextMenu) noexcept :
-	ContextMenu()
+ContextMenu::ContextMenu(ContextMenu&& contextMenu) noexcept
 {
 	*this = std::move(contextMenu);
 }

@@ -16,6 +16,12 @@ using namespace Ocean::Platform::Apple::MacOS;
 	ContextMenu* menuOwner;
 }
 
+/**
+ * Sets or changes the owner of this context menu object.
+ * @param owner The owner to set, must be valid
+ */
+-(void)setOwner:(ContextMenu*)owner;
+
 @end
 
 @implementation OceanPlatformAppleMacOSContextMenu
@@ -32,6 +38,13 @@ using namespace Ocean::Platform::Apple::MacOS;
 	}
 
 	return self;
+}
+
+-(void)setOwner:(ContextMenu*)owner
+{
+	ocean_assert(owner != nullptr);
+
+	menuOwner = owner;
 }
 
 -(void)menuItemSelected:(id)sender
@@ -120,6 +133,12 @@ ContextMenu& ContextMenu::operator=(ContextMenu&& contextMenu) noexcept
 	{
 		nsMenu_ = contextMenu.nsMenu_;
 		contextMenu.nsMenu_ = nullptr;
+
+		if (nsMenu_ != nullptr)
+		{
+			// the menu calls back into its owner, so the callback has to follow the menu
+			[(OceanPlatformAppleMacOSContextMenu*)(nsMenu_) setOwner:this];
+		}
 
 		itemTexts_ = std::move(contextMenu.itemTexts_);
 
