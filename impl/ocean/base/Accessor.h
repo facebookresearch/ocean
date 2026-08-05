@@ -1821,7 +1821,7 @@ inline SharedPointerConstArrayAccessor<T>::SharedPointerConstArrayAccessor(const
 {
 	for (size_t n = 0; n < size; ++n)
 	{
-		elements_[n] = elements[n]->get();
+		elements_[n] = elements[n].get();
 	}
 }
 
