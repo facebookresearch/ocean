@@ -501,7 +501,8 @@ Frame Utilities::castToSupportedPixelFormat(const Frame& frame)
 			return Frame();
 		}
 
-		return Frame(FrameType(frame, bestPixelFormat), frame.constdata<void>(), Frame::CM_USE_KEEP_LAYOUT);
+		ocean_assert(frame.numberPlanes() == 1u);
+		return Frame(FrameType(frame, bestPixelFormat), frame.constdata<void>(), Frame::CM_USE_KEEP_LAYOUT, frame.paddingElements());
 	}
 
 	return Frame(frame, Frame::ACM_USE_KEEP_LAYOUT);
