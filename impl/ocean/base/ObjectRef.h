@@ -423,15 +423,18 @@ inline T* ObjectRef<T>::pointer() const
 template <typename T>
 inline ObjectRef<T>& ObjectRef<T>::operator=(const ObjectRef<T>& objectRef)
 {
-	if (objectHolder_)
+	if (this != &objectRef)
 	{
-		objectHolder_->unref();
-		objectHolder_ = nullptr;
-	}
+		if (objectHolder_)
+		{
+			objectHolder_->unref();
+			objectHolder_ = nullptr;
+		}
 
-	if (objectRef.objectHolder_)
-	{
-		objectHolder_ = objectRef.objectHolder_->ref();
+		if (objectRef.objectHolder_)
+		{
+			objectHolder_ = objectRef.objectHolder_->ref();
+		}
 	}
 
 	return *this;

@@ -331,22 +331,26 @@ inline SmartObjectRef<T, TBase>& SmartObjectRef<T, TBase>::operator=(SmartObject
 template <typename T, typename TBase>
 inline SmartObjectRef<T, TBase>& SmartObjectRef<T, TBase>::operator=(const ObjectRef<TBase>& objectRef)
 {
-	if (ObjectRef<TBase>::objectHolder_ != nullptr)
+	// the parameter can be this object's own base, so the identity check needs to happen on the base pointers
+	if (static_cast<const ObjectRef<TBase>*>(this) != &objectRef)
 	{
-		ocean_assert(objectPointer_ != nullptr);
-
-		ObjectRef<TBase>::objectHolder_->unref();
-		ObjectRef<TBase>::objectHolder_ = nullptr;
-		objectPointer_ = nullptr;
-	}
-
-	if (objectRef)
-	{
-		objectPointer_ = dynamic_cast<T*>(&*objectRef);
-
-		if (objectPointer_ != nullptr)
+		if (ObjectRef<TBase>::objectHolder_ != nullptr)
 		{
-			ObjectRef<TBase>::objectHolder_ = objectRef.objectHolder_->ref();
+			ocean_assert(objectPointer_ != nullptr);
+
+			ObjectRef<TBase>::objectHolder_->unref();
+			ObjectRef<TBase>::objectHolder_ = nullptr;
+			objectPointer_ = nullptr;
+		}
+
+		if (objectRef)
+		{
+			objectPointer_ = dynamic_cast<T*>(&*objectRef);
+
+			if (objectPointer_ != nullptr)
+			{
+				ObjectRef<TBase>::objectHolder_ = objectRef.objectHolder_->ref();
+			}
 		}
 	}
 
