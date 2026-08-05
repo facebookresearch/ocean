@@ -28,6 +28,8 @@ void MaskAnalyzer::analyzeMaskSeparation8Bit(const uint8_t* mask, const unsigned
 
 	ocean_assert(blocks.empty());
 
+	const unsigned int separationStrideElements = width + separationPaddingElements;
+
 	if (separationPaddingElements == 0u)
 	{
 		memset(separation, 0x00, sizeof(uint32_t) * width * height);
@@ -39,12 +41,11 @@ void MaskAnalyzer::analyzeMaskSeparation8Bit(const uint8_t* mask, const unsigned
 		for (unsigned int y = 0u; y < height; ++y)
 		{
 			memset(separationRow, 0x00, sizeof(uint32_t) * width);
-			separationRow += separationPaddingElements;
+			separationRow += separationStrideElements;
 		}
 	}
 
 	const unsigned int maskStrideElements = width + maskPaddingElements;
-	const unsigned int separationStrideElements = width + separationPaddingElements;
 
 	Frame stateFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	stateFrame.setValue(0x00);
@@ -168,6 +169,8 @@ void MaskAnalyzer::analyzeNonMaskSeparation8Bit(const uint8_t* mask, const unsig
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(blocks.empty());
 
+	const unsigned int separationStrideElements = width + separationPaddingElements;
+
 	if (separationPaddingElements == 0u)
 	{
 		memset(separation, 0x00, sizeof(uint32_t) * width * height);
@@ -179,12 +182,11 @@ void MaskAnalyzer::analyzeNonMaskSeparation8Bit(const uint8_t* mask, const unsig
 		for (unsigned int y = 0u; y < height; ++y)
 		{
 			memset(separationRow, 0x00, sizeof(uint32_t) * width);
-			separationRow += separationPaddingElements;
+			separationRow += separationStrideElements;
 		}
 	}
 
 	const unsigned int maskStrideElements = width + maskPaddingElements;
-	const unsigned int separationStrideElements = width + separationPaddingElements;
 
 	Frame stateFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	stateFrame.setValue(0x00);
