@@ -378,6 +378,9 @@ TimestampConverter& TimestampConverter::operator=(TimestampConverter&& converter
 
 		offsetCalculator_ = std::move(converter.offsetCalculator_);
 
+		domainFrequency_ = converter.domainFrequency_;
+		converter.domainFrequency_ = 0ull;
+
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 		domainPosixClockId_ = converter.domainPosixClockId_;
 		converter.domainPosixClockId_ = -1;
