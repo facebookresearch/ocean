@@ -297,6 +297,11 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 		HandPoses(HandPoses&& handPoses);
 
 		/**
+		 * Releases all hand poses resources and disposes the object.
+		 */
+		~HandPoses();
+
+		/**
 		 * Initializes the hand tracking object.
 		 * @param session The OpenxR session to be used, must be valid
 		 * @return True, if succeeded

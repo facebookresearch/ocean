@@ -315,6 +315,11 @@ HandPoses::HandPoses(HandPoses&& handPoses) :
 	*this = std::move(handPoses);
 }
 
+HandPoses::~HandPoses()
+{
+	release();
+}
+
 bool HandPoses::initialize(const XrInstance& xrInstance, const XrSession& xrSession, const XrSystemId& xrSystemId)
 {
 	ocean_assert(xrInstance != XR_NULL_HANDLE);
