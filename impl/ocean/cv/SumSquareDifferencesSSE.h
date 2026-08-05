@@ -588,7 +588,11 @@ OCEAN_FORCE_INLINE __m128i SumSquareDifferencesSSE::loadMirrored_u_8x8(const uin
 
 	constexpr unsigned int tOverlappingElements = 8u - tSize;
 
-	if (elementIndex >= 0 && elementIndex <= int(elements) - int(tSize))
+	// the fast path issues a full 8 element load, so it needs room for all 8 elements and not just for `tSize`
+	constexpr int firstLoadedElement = tFront ? 0 : int(tOverlappingElements);
+	constexpr int lastLoadedElement = tFront ? 8 : int(tSize);
+
+	if (elementIndex >= firstLoadedElement && elementIndex <= int(elements) - lastLoadedElement)
 	{
 		if constexpr (tSize == 8u)
 		{
@@ -598,30 +602,15 @@ OCEAN_FORCE_INLINE __m128i SumSquareDifferencesSSE::loadMirrored_u_8x8(const uin
 		{
 			if constexpr (tFront)
 			{
-				// For tFront=true, keep data at the front (low bytes), zero the high bytes
-				// We load tSize bytes, they stay in the low bytes naturally
-				for (unsigned int n = 0u; n < tSize; ++n)
-				{
-					intermediateBuffer[n] = row[elementIndex + n];
-				}
-				for (unsigned int n = tSize; n < 8u; ++n)
-				{
-					intermediateBuffer[n] = 0u;
-				}
-				return _mm_loadl_epi64((const __m128i*)intermediateBuffer);
+				constexpr unsigned long long mask = tOverlappingElements < 8u ? ((unsigned long long)(-1) >> tOverlappingElements * 8u) : 0ull;
+
+				return _mm_and_si128(_mm_loadl_epi64((const __m128i*)(row + elementIndex)), SSE::set128i(0ull, mask));
 			}
 			else
 			{
-				// For tFront=false, put zeros at the front (low bytes), data at the back (high bytes)
-				for (unsigned int n = 0u; n < tOverlappingElements; ++n)
-				{
-					intermediateBuffer[n] = 0u;
-				}
-				for (unsigned int n = 0u; n < tSize; ++n)
-				{
-					intermediateBuffer[tOverlappingElements + n] = row[elementIndex + n];
-				}
-				return _mm_loadl_epi64((const __m128i*)intermediateBuffer);
+				constexpr unsigned long long mask = tOverlappingElements < 8u ? ((unsigned long long)(-1) << tOverlappingElements * 8u) : 0ull;
+
+				return _mm_and_si128(_mm_loadl_epi64((const __m128i*)(row + elementIndex - int(tOverlappingElements))), SSE::set128i(0ull, mask));
 			}
 		}
 	}
@@ -671,7 +660,11 @@ OCEAN_FORCE_INLINE __m128i SumSquareDifferencesSSE::loadMirrored_u_8x16(const ui
 
 	constexpr unsigned int tOverlappingElements = 16u - tSize;
 
-	if (elementIndex >= 0 && elementIndex <= int(elements) - int(tSize))
+	// the fast path issues a full 16 element load, so it needs room for all 16 elements and not just for `tSize`
+	constexpr int firstLoadedElement = tFront ? 0 : int(tOverlappingElements);
+	constexpr int lastLoadedElement = tFront ? 16 : int(tSize);
+
+	if (elementIndex >= firstLoadedElement && elementIndex <= int(elements) - lastLoadedElement)
 	{
 		if constexpr (tSize == 16u)
 		{
@@ -681,29 +674,15 @@ OCEAN_FORCE_INLINE __m128i SumSquareDifferencesSSE::loadMirrored_u_8x16(const ui
 		{
 			if constexpr (tFront)
 			{
-				// For tFront=true, keep data at the front (low bytes), zero the high bytes
-				for (unsigned int n = 0u; n < tSize; ++n)
-				{
-					intermediateBuffer[n] = row[elementIndex + n];
-				}
-				for (unsigned int n = tSize; n < 16u; ++n)
-				{
-					intermediateBuffer[n] = 0u;
-				}
-				return _mm_lddqu_si128((const __m128i*)intermediateBuffer);
+				constexpr unsigned long long maskHigh = tOverlappingElements < 8u ? ((unsigned long long)(-1) >> tOverlappingElements * 8u) : 0ull;
+
+				return _mm_and_si128(_mm_lddqu_si128((const __m128i*)(row + elementIndex)), SSE::set128i(maskHigh, (unsigned long long)(-1)));
 			}
 			else
 			{
-				// For tFront=false, put zeros at the front (low bytes), data at the back (high bytes)
-				for (unsigned int n = 0u; n < tOverlappingElements; ++n)
-				{
-					intermediateBuffer[n] = 0u;
-				}
-				for (unsigned int n = 0u; n < tSize; ++n)
-				{
-					intermediateBuffer[tOverlappingElements + n] = row[elementIndex + n];
-				}
-				return _mm_lddqu_si128((const __m128i*)intermediateBuffer);
+				constexpr unsigned long long maskLow = tOverlappingElements < 8u ? ((unsigned long long)(-1) << tOverlappingElements * 8u) : 0ull;
+
+				return _mm_and_si128(_mm_lddqu_si128((const __m128i*)(row + elementIndex - int(tOverlappingElements))), SSE::set128i((unsigned long long)(-1), maskLow));
 			}
 		}
 	}
