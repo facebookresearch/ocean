@@ -166,7 +166,12 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 		return CV::PixelBoundingBox();
 	}
 
-	HDC dc = GetDC(nullptr);
+	const ScopedScreenDC dc(GetDC(nullptr));
+
+	if (!dc.isValid())
+	{
+		return CV::PixelBoundingBox();
+	}
 
 	HFONT previousFont = nullptr;
 	HFONT newFont = nullptr;
@@ -174,7 +179,7 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 	if (!font.empty())
 	{
 		LOGFONTW logFont;
-		memset(&logFont, 0, sizeof(LOGFONT));
+		memset(&logFont, 0, sizeof(logFont));
 
 		logFont.lfHeight = LONG(size);
 		logFont.lfWeight = FW_NORMAL;
@@ -186,26 +191,27 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 		}
 
 		newFont = CreateFontIndirectW(&logFont);
-		SelectObject(dc, newFont);
+		previousFont = HFONT(SelectObject(*dc, newFont));
 	}
 
 	SIZE boxSize;
-	if (GetTextExtentPoint32W(dc, value.c_str(), int(value.length()), &boxSize) == FALSE)
+	const BOOL extentResult = GetTextExtentPoint32W(*dc, value.c_str(), int(value.length()), &boxSize);
+
+	// a font cannot be deleted while it is still selected into a device context
+	if (previousFont != nullptr)
 	{
-		return CV::PixelBoundingBox();
+		SelectObject(*dc, previousFont);
 	}
 
-	if (previousFont)
-	{
-		SelectObject(dc, previousFont);
-	}
-
-	if (newFont)
+	if (newFont != nullptr)
 	{
 		DeleteObject(newFont);
 	}
 
-	ReleaseDC(nullptr, dc);
+	if (extentResult == FALSE)
+	{
+		return CV::PixelBoundingBox();
+	}
 
 	ocean_assert(boxSize.cx >= 0 && boxSize.cy >= 0);
 	return CV::PixelBoundingBox(CV::PixelPosition(0u, 0u), (unsigned int)boxSize.cx, (unsigned int)boxSize.cy);

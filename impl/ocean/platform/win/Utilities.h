@@ -12,6 +12,7 @@
 #include "ocean/platform/win/Bitmap.h"
 
 #include "ocean/base/Frame.h"
+#include "ocean/base/ScopedObject.h"
 
 #include "ocean/cv/PixelBoundingBox.h"
 
@@ -222,7 +223,20 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 		 * @return The bounding box of the given string
 		 */
 		static CV::PixelBoundingBox textBoundingBox(const std::wstring& value, const std::wstring& font = std::wstring(), const unsigned int size = 0u);
+
+		/**
+		 * Releases a device context which has been acquired for the entire screen.
+		 * @param dc The device context to release, must be valid
+		 */
+		static inline void releaseScreenDC(HDC dc);
 };
+
+/**
+ * Definition of a scoped object holding a device context of the entire screen.
+ * The wrapped device context will be released automatically once the scoped object does not exist anymore.
+ * @ingroup platformwin
+ */
+using ScopedScreenDC = ScopedObjectCompileTimeVoidT<HDC, Utilities::releaseScreenDC>;
 
 /**
  * This class implements a nested scoped object which disables a window object until the scope of all nested elements ends (or until all nested object are released explicitly).
@@ -384,6 +398,13 @@ inline void Utilities::desktopFrameOutput(const int x, const int y, const unsign
 inline void Utilities::desktopBitmapOutput(const int x, const int y, const unsigned int scale, const Bitmap& bitmap)
 {
 	desktopBitmapOutput(x, y, bitmap.width() * scale, bitmap.height() * scale, bitmap);
+}
+
+inline void Utilities::releaseScreenDC(HDC dc)
+{
+	ocean_assert(dc != nullptr);
+
+	ReleaseDC(nullptr, dc);
 }
 
 inline ScopedDisableWindow::DisableWindowCounter::DisableWindowCounter()
