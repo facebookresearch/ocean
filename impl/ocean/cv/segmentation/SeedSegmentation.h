@@ -502,7 +502,7 @@ unsigned int SeedSegmentation::seedSegmentationArea8BitPerChannel(const uint32_t
 
 	const unsigned int maskStrideElements = width + maskPaddingElements;
 
-	const unsigned int areaHalf = areaSize;
+	const unsigned int areaSize_2 = areaSize / 2u;
 	const unsigned int integralWidth = width + integralBorder * 2u + 1u;
 
 	// setting all mask values to unvisited
@@ -523,7 +523,7 @@ unsigned int SeedSegmentation::seedSegmentationArea8BitPerChannel(const uint32_t
 
 	*boundingBox = PixelBoundingBox(seed);
 
-	const unsigned int integralIndex = ((seed.y() + integralBorder - areaHalf) * integralWidth + seed.x() + integralBorder - areaHalf) * tChannels;
+	const unsigned int integralIndex = ((seed.y() + integralBorder - areaSize_2) * integralWidth + seed.x() + integralBorder - areaSize_2) * tChannels;
 
 	stack.emplace_back(seed.x(), seed.y(), integralIndex);
 
@@ -536,7 +536,7 @@ unsigned int SeedSegmentation::seedSegmentationArea8BitPerChannel(const uint32_t
 		stack.pop_back();
 
 		const unsigned int maskTestOffset = pixel.y() * maskStrideElements + pixel.x();
-		const unsigned int testIntegralIndex = ((pixel.y() + integralBorder - areaHalf) * integralWidth + pixel.x() + integralBorder - areaHalf) * tChannels;
+		const unsigned int testIntegralIndex = ((pixel.y() + integralBorder - areaSize_2) * integralWidth + pixel.x() + integralBorder - areaSize_2) * tChannels;
 
 		// test whether the new pixel can be accepted
 		if (mask[maskTestOffset] == unvisitedMaskValue_ // checking unvisited state again (as we may have visited this state already from a different path
