@@ -24,12 +24,13 @@ using namespace Ocean;
 	const ScopedLock scopedLock(lock_);
 
 	adjustFovXToBackground_ = false;
-	intermediateBackgroundAdjustFov_ = false;
 
 	if (intermediateBackgroundFrameMedium_)
 	{
 		[self setFrameMedium:intermediateBackgroundFrameMedium_ andAdjustFov:intermediateBackgroundAdjustFov_];
+
 		intermediateBackgroundFrameMedium_.release();
+		intermediateBackgroundAdjustFov_ = false;
 	}
 
 	Log::info() << "Succeeded to initialize the frame medium view";
