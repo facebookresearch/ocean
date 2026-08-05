@@ -303,7 +303,7 @@ OctreeT<T>::OctreeT(const VectorT3<T>* treePoints, const size_t numberTreePoints
 		}
 	}
 
-	*this = Octree(parameters, treePoints, reusablePointIndicesInput.data(), reusablePointIndicesOutput.data(), numberTreePoints, boundingBox);
+	*this = OctreeT<T>(parameters, treePoints, reusablePointIndicesInput.data(), reusablePointIndicesOutput.data(), numberTreePoints, boundingBox);
 }
 
 template <typename T>
