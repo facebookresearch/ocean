@@ -163,8 +163,15 @@ bool PluginManager::Plugin::unload() const
 		}
 	}
 
-	result = handle_ != nullptr || FreeLibrary((HMODULE)handle_) == TRUE;
-	handle_ = nullptr;
+	if (handle_ != nullptr)
+	{
+		result = FreeLibrary((HMODULE)handle_) == TRUE;
+		handle_ = nullptr;
+	}
+	else
+	{
+		result = true;
+	}
 
 #elif defined(__APPLE__)
 

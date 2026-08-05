@@ -99,8 +99,15 @@ bool PluginManager::Plugin::unloadApple() const
 		}
 	}
 
-	result = handle_ != nullptr || dlclose(handle_) == 0;
-	handle_ = nullptr;
+	if (handle_ != nullptr)
+	{
+		result = dlclose(handle_) == 0;
+		handle_ = nullptr;
+	}
+	else
+	{
+		result = true;
+	}
 
 	if (result)
 	{
