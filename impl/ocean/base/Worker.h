@@ -183,7 +183,7 @@ class OCEAN_BASE_EXPORT Worker
 				unsigned int abortIndex_ = (unsigned int)(-1);
 
 				/// Worker thread result.
-				WorkerState workerState_;
+				WorkerState workerState_ = WS_UNKNOWN_RESULT;
 		};
 
 		/**

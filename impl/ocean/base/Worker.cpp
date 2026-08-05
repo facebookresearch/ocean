@@ -10,7 +10,6 @@
 #include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
-#include "ocean/base/Timestamp.h"
 
 #include <ctime>
 
@@ -119,11 +118,15 @@ void Worker::WorkerThread::threadRun()
 			{
 				ocean_assert(false && "Unhandled exception in worker!");
 				Log::error() << "Unhandled exception in worker, reason: " << exception.what();
+
+				workerState_ = WS_NEGATIVE_RESULT;
 			}
 			catch (...)
 			{
 				ocean_assert(false && "Unhandled exception in worker!");
 				Log::error() << "Unhandled exception in worker!";
+
+				workerState_ = WS_NEGATIVE_RESULT;
 			}
 
 #endif // OCEAN_SUPPORT_EXCEPTIONS
