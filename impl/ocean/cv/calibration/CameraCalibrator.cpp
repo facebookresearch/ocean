@@ -465,8 +465,11 @@ bool CameraCalibrator::determineInitialPoseWithValidMarkerCandidates(const AnyCa
 		reusableMarkerCoordinateUsageFrame_.pixel<uint8_t>(markerCoordinate.x(), markerCoordinate.y())[0] = 0x00u;
 	}
 
-	Indices32 bestUsedMarkerCandidatesAccessorIndices;
-	bestUsedMarkerCandidatesAccessorIndices.reserve(32);
+	Indices32 bestUsedMarkerCandidateIndices;
+	bestUsedMarkerCandidateIndices.reserve(32);
+
+	Indices32 iterationUsedMarkerCandidateIndices;
+	iterationUsedMarkerCandidateIndices.reserve(32);
 
 	Indices32 iterationUsedMarkerCandidatesAccessorIndices;
 	iterationUsedMarkerCandidatesAccessorIndices.reserve(32);
@@ -490,6 +493,16 @@ bool CameraCalibrator::determineInitialPoseWithValidMarkerCandidates(const AnyCa
 		}
 
 		ocean_assert(iterationUsedMarkerCandidatesAccessorIndices.size() >= 1);
+
+		// the accessor indices are relative to `markerCandidateIndices`, which is rebuilt below, so we resolve them now
+
+		iterationUsedMarkerCandidateIndices.clear();
+
+		for (const Index32& usedMarkerCandidateAccessorIndex : iterationUsedMarkerCandidatesAccessorIndices)
+		{
+			ocean_assert(usedMarkerCandidateAccessorIndex < markerCandidateIndices.size());
+			iterationUsedMarkerCandidateIndices.push_back(markerCandidateIndices[usedMarkerCandidateAccessorIndex]);
+		}
 
 		// let's see whether we can add a new marker candidate (which is a direct neighbor of the already used marker candidates)
 
@@ -531,9 +544,9 @@ bool CameraCalibrator::determineInitialPoseWithValidMarkerCandidates(const AnyCa
 			}
 		}
 
-		if (bestUsedMarkerCandidatesAccessorIndices.size() < iterationUsedMarkerCandidatesAccessorIndices.size())
+		if (bestUsedMarkerCandidateIndices.size() < iterationUsedMarkerCandidateIndices.size())
 		{
-			std::swap(bestUsedMarkerCandidatesAccessorIndices, iterationUsedMarkerCandidatesAccessorIndices);
+			std::swap(bestUsedMarkerCandidateIndices, iterationUsedMarkerCandidateIndices);
 
 			noImprovementIteration = 0;
 		}
@@ -547,13 +560,7 @@ bool CameraCalibrator::determineInitialPoseWithValidMarkerCandidates(const AnyCa
 			// we could not improve the marker candidate selection within the last two iterations, so we use the best selection
 
 			ocean_assert(usedMarkerCandidateIndices.empty());
-			usedMarkerCandidateIndices.clear();
-
-			for (const Index32& usedMarkerCandidateAccessorIndex : bestUsedMarkerCandidatesAccessorIndices)
-			{
-				ocean_assert(usedMarkerCandidateAccessorIndex < markerCandidateIndices.size());
-				usedMarkerCandidateIndices.push_back(markerCandidateIndices[usedMarkerCandidateAccessorIndex]);
-			}
+			usedMarkerCandidateIndices = std::move(bestUsedMarkerCandidateIndices);
 
 			ocean_assert(board_T_camera.isValid());
 
