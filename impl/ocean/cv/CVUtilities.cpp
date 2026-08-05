@@ -128,7 +128,7 @@ void CVUtilities::randomizeFrame(Frame& frame, const bool skipPaddingArea, Rando
 		const Frame::Plane& plane = frame.planes()[planeIndex];
 
 		const unsigned int widthElements = skipPaddingArea ? plane.widthElements() : plane.strideElements();
-		const unsigned int paddingElements = skipPaddingArea ? frame.paddingElements() : 0u;
+		const unsigned int paddingElements = skipPaddingArea ? plane.paddingElements() : 0u;
 
 		switch (frame.dataType())
 		{
