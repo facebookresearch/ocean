@@ -268,14 +268,9 @@ bool FTFontManager::registerFont(const FT_Face& ftFace, const std::string& filen
 
 		if (faceMap.find(internalStyleName) == faceMap.cend())
 		{
-			if (familyName)
+			if (familyName != nullptr)
 			{
 				*familyName = std::string(ftFace->family_name);
-			}
-
-			if (styleName)
-			{
-				*styleName = std::move(internalStyleName);
 			}
 
 			if (filename.empty())
@@ -290,6 +285,12 @@ bool FTFontManager::registerFont(const FT_Face& ftFace, const std::string& filen
 
 				faceMap.insert(std::make_pair(internalStyleName, Face(*this, nullptr, filename)));
 			}
+
+			if (styleName != nullptr)
+			{
+				*styleName = std::move(internalStyleName);
+			}
+
 			return true;
 		}
 	}
