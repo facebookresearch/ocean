@@ -3597,7 +3597,7 @@ void LineDetectorULF::separateStraightLines(const unsigned int* pixelPositionsMa
 			const float interception = (sumX * sumXY - sumXX * sumY) * invDeterminant;
 
 			const float refinedStartPointMajor = float(startPointMajor) + interception;
-			const float refinedEndPointMajor = float(startPointMajor) + slope * float(lastPositionIndex - firstPositionIndex);
+			const float refinedEndPointMajor = float(startPointMajor) + interception + slope * float(lastPositionIndex - firstPositionIndex);
 
 			if (majorIsY)
 			{
