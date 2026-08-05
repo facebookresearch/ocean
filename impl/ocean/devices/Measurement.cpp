@@ -40,7 +40,7 @@ Measurement::Sample::~Sample()
 Measurement::SampleEventSubscription::SampleEventSubscription(const Measurement& measurement, const SubscriptionId subscriptionId) :
 	subscriptionId_(subscriptionId)
 {
-	measurement_ = DeviceRefManager::get().device(measurement.name());
+	measurement_ = DeviceRefManager::get().device(&measurement);
 	ocean_assert(measurement_);
 
 	weakMeasurement_ = &*measurement_;

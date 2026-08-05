@@ -48,6 +48,25 @@ DeviceRef DeviceRefManager::device(const std::string& name) const
 	return DeviceRef();
 }
 
+DeviceRef DeviceRefManager::device(const Device* device) const
+{
+	ocean_assert(device != nullptr);
+
+	const ScopedLock scopedLock(lock_);
+
+	for (const DeviceMap::value_type& devicePair : deviceMap_)
+	{
+		ocean_assert(devicePair.second.first);
+
+		if (&*devicePair.second.first == device)
+		{
+			return devicePair.second.first;
+		}
+	}
+
+	return DeviceRef();
+}
+
 DeviceRef DeviceRefManager::device(const Device::DeviceType type, const bool exactMatch) const
 {
 	const ScopedLock scopedLock(lock_);

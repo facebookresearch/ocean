@@ -30,7 +30,7 @@ Tracker::TrackerSample::TrackerSample(const Timestamp& timestamp, const Referenc
 Tracker::TrackerObjectEventSubscription::TrackerObjectEventSubscription(const Tracker& tracker, const SubscriptionId subscriptionId) :
 	subscriptionId_(subscriptionId)
 {
-	tracker_ = DeviceRefManager::get().device(tracker.name());
+	tracker_ = DeviceRefManager::get().device(&tracker);
 	ocean_assert(tracker_);
 
 	weakTracker_ = &*tracker_;
