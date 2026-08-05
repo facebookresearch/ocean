@@ -9,6 +9,8 @@
 
 #include "ocean/base/String.h"
 
+#include <iterator>
+
 namespace Ocean
 {
 
@@ -479,44 +481,34 @@ bool RegistryConfig::exist(const std::string& name) const
 
 RegistryConfig::RegistryValue& RegistryConfig::value(const unsigned int index, std::string& name)
 {
-	Values::iterator i = values_.begin();
-
-	unsigned int n = 0u;
-	while (n != index)
+	if (size_t(index) >= values_.size())
 	{
-		if (i == values_.end())
-		{
-			return nullValue();
-		}
-
-		++i;
-		++n;
+		return nullValue();
 	}
 
-	name = i->first;
-	return i->second;
+	Values::iterator iValue = values_.begin();
+	std::advance(iValue, index);
+
+	name = iValue->first;
+
+	return iValue->second;
 }
 
 bool RegistryConfig::value(const unsigned int index, std::string& name, Value** value)
 {
-	ocean_assert(value);
+	ocean_assert(value != nullptr);
 
-	Values::iterator i = values_.begin();
-
-	unsigned int n = 0u;
-	while (n != index)
+	if (size_t(index) >= values_.size())
 	{
-		if (i == values_.end())
-		{
-			return false;
-		}
-
-		++i;
-		++n;
+		return false;
 	}
 
-	name = i->first;
-	*value = &i->second;
+	Values::iterator iValue = values_.begin();
+	std::advance(iValue, index);
+
+	name = iValue->first;
+	*value = &iValue->second;
+
 	return true;
 }
 
