@@ -28,7 +28,7 @@ Window::Window(HINSTANCE applicationInstance, const std::wstring& name, const HW
 	isChild_(isChild)
 {
 	ocean_assert(applicationInstance_);
-	ocean_assert(name_.empty() == false);
+	ocean_assert(!name_.empty());
 }
 
 Window::~Window()
@@ -71,7 +71,7 @@ bool Window::initialize(const HICON icon, const std::string& windowClass)
 		ClassMap::iterator iClass = windowClassMap.find(className_);
 		if (iClass == windowClassMap.end())
 		{
-			if (registerWindowClass(icon) == false)
+			if (!registerWindowClass(icon))
 			{
 				return false;
 			}
@@ -82,7 +82,7 @@ bool Window::initialize(const HICON icon, const std::string& windowClass)
 		++iClass->second;
 	}
 
-	if (createWindow() == false)
+	if (!createWindow())
 	{
 		return false;
 	}
@@ -437,11 +437,17 @@ LRESULT CALLBACK Window::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 			MouseButton mouseButtons = BUTTON_NONE;
 
 			if (wParam & MK_LBUTTON)
+			{
 				mouseButtons = MouseButton(mouseButtons | BUTTON_LEFT);
+			}
 			if (wParam & MK_MBUTTON)
+			{
 				mouseButtons = MouseButton(mouseButtons | BUTTON_MIDDLE);
+			}
 			if (wParam & MK_RBUTTON)
+			{
 				mouseButtons = MouseButton(mouseButtons | BUTTON_RIGHT);
+			}
 
 			window->onMouseMove(mouseButtons, LOWORD(lParam), HIWORD(lParam));
 			break;
@@ -453,11 +459,17 @@ LRESULT CALLBACK Window::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 			unsigned int buttonState = LOWORD(wParam);
 			if (buttonState & MK_LBUTTON)
+			{
 				mouseButtons = MouseButton(mouseButtons | BUTTON_LEFT);
+			}
 			if (buttonState & MK_MBUTTON)
+			{
 				mouseButtons = MouseButton(mouseButtons | BUTTON_MIDDLE);
+			}
 			if (buttonState & MK_RBUTTON)
+			{
 				mouseButtons = MouseButton(mouseButtons | BUTTON_RIGHT);
+			}
 
 			window->onMouseWheel(mouseButtons, short(HIWORD(wParam)), LOWORD(lParam), HIWORD(lParam));
 			break;

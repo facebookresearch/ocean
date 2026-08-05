@@ -53,7 +53,7 @@ int ApplicationWindow::start()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else if (applicationAboutToClosed_ == false)
+		else if (!applicationAboutToClosed_)
 		{
 			onIdle();
 		}

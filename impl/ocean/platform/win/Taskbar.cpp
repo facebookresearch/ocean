@@ -23,7 +23,9 @@ bool Taskbar::show()
 {
 	HWND handle = FindWindowA("Shell_TrayWnd", "");
 	if (handle == nullptr)
+	{
 		return false;
+	}
 
 	return ShowWindow(handle, SW_SHOW) == TRUE;
 }
@@ -32,7 +34,9 @@ bool Taskbar::hide()
 {
 	HWND handle = FindWindowA("Shell_TrayWnd", "");
 	if (handle == nullptr)
+	{
 		return false;
+	}
 
 	return ShowWindow(handle, SW_HIDE) == TRUE;
 }

@@ -58,26 +58,34 @@ CV::PixelPositionI Screen::suitableWindowPosition(const unsigned int windowWidth
 	{
 		RECT rect;
 		if (GetWindowRect(parent, &rect) == TRUE)
+		{
 			resultBoundingBox = CV::PixelBoundingBoxI(CV::PixelPositionI(rect.left + (rect.right - rect.left) / 2 - int(windowWidth / 2u), rect.top + (rect.bottom - rect.top) / 2 - int(windowHeight / 2u)), windowWidth, windowHeight);
+		}
 	}
 
 	ocean_assert(screenBoundingBox.isValid() && resultBoundingBox.isValid());
 
 	// ensure that at least 50% of the window is visible inside the bounding box of the virtual screen
 	if ((screenBoundingBox && resultBoundingBox).size() >= resultBoundingBox.size() / 2u)
+	{
 		return resultBoundingBox.topLeft();
+	}
 
 	// we try again to adjust the position due to the parent window
 	if (parent && IsWindow(parent))
 	{
 		RECT rect;
 		if (GetWindowRect(parent, &rect) == TRUE)
+		{
 			resultBoundingBox = CV::PixelBoundingBoxI(CV::PixelPositionI(rect.left + (rect.right - rect.left) / 2 - int(windowWidth / 2u), rect.top + (rect.bottom - rect.top) / 2 - int(windowHeight / 2u)), windowWidth, windowHeight);
+		}
 	}
 
 	// ensure that at least 50% of the window is visible inside the bounding box of the virtual screen
 	if ((screenBoundingBox && resultBoundingBox).size() >= resultBoundingBox.size() / 2u)
+	{
 		return resultBoundingBox.topLeft();
+	}
 
 	return CV::PixelPositionI(screenBoundingBox.left() + int(screenBoundingBox.width() / 2u) - int(windowWidth / 2u), screenBoundingBox.top() + int(screenBoundingBox.height() / 2u) - int(windowHeight / 2u));
 }
@@ -94,7 +102,9 @@ bool Screen::screen(const unsigned int positionX, const unsigned int positionY, 
 	POINT point = {LONG(positionX), LONG(positionY)};
 
 	if (GetMonitorInfo(MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST), &info) == FALSE)
+	{
 		return false;
+	}
 
 	left = info.rcMonitor.left;
 	top = info.rcMonitor.top;
@@ -109,7 +119,9 @@ bool Screen::screen(const HWND window, unsigned int& left, unsigned int& top, un
 	info.cbSize = sizeof(MONITORINFO);
 
 	if (GetMonitorInfo(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &info) == FALSE)
+	{
 		return false;
+	}
 
 	left = info.rcMonitor.left;
 	top = info.rcMonitor.top;

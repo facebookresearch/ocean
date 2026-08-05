@@ -23,13 +23,17 @@ bool ToolTip::addToolTip(const HWND handle, const std::wstring& text)
 {
 	ocean_assert(handle);
 	if (handle == nullptr)
+	{
 		return false;
+	}
 
 	HWND hwndTip = CreateWindowEx(0, TOOLTIPS_CLASS, nullptr, WS_POPUP | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, GetParent(handle), nullptr, GetModuleHandle(nullptr), nullptr);
 
 	ocean_assert(hwndTip);
 	if (hwndTip == nullptr)
+	{
 		return false;
+	}
 
 	TOOLINFO toolInfo = {0};
 	toolInfo.cbSize = TTTOOLINFOA_V1_SIZE;
@@ -91,19 +95,27 @@ bool ToolTip::addToolTip(const HWND handle, const std::wstring& text)
 
 			SIZE sz;
 			if (!GetTextExtentPoint32(*hdc, line.c_str(), int(line.length()), &sz))
+			{
 				ocean_assert(false && "This should never happen!");
+			}
 
 			if (sz.cx > max)
+			{
 				max = sz.cx;
+			}
 
 			if (end == std::string::npos)
+			{
 				break;
+			}
 
 			start = end + 1;
 		}
 
 		if (max > SendMessage(hwndTip, TTM_GETMAXTIPWIDTH, 0, 0))
+		{
 			SendMessage(hwndTip, TTM_SETMAXTIPWIDTH, 0, max);
+		}
 	}
 
 	return true;

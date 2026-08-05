@@ -204,9 +204,9 @@ bool Registry::setValue(const HKEY key, const std::string& name, const Names& va
 
 	unsigned int size = 0;
 
-	for (Names::const_iterator i = value.begin(); i != value.end(); ++i)
+	for (const std::wstring& name : value)
 	{
-		size += (unsigned int)(i->length() + 1);
+		size += (unsigned int)(name.length() + 1);
 	}
 	++size;
 
@@ -222,13 +222,13 @@ bool Registry::setValue(const HKEY key, const std::string& name, const Names& va
 	}
 
 	wchar_t* pointer = buffer;
-	for (Names::const_iterator i = value.begin(); i != value.end(); ++i)
+	for (const std::wstring& name : value)
 	{
-		ocean_assert(i->size() > i->length());
-		ocean_assert((*i)[i->length()] == L'\0');
-		memcpy(pointer, &((*i)[0]), (i->length() + 1) << 1);
+		ocean_assert(name.size() > name.length());
+		ocean_assert(name[name.length()] == L'\0');
+		memcpy(pointer, &name[0], (name.length() + 1) << 1);
 
-		pointer += i->length() + 1;
+		pointer += name.length() + 1;
 	}
 
 	pointer[0] = L'\0';

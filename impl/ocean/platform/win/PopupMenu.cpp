@@ -32,7 +32,9 @@ PopupMenu::~PopupMenu()
 	}
 
 	if (handle_)
+	{
 		DestroyMenu(handle_);
+	}
 }
 
 size_t PopupMenu::size() const
@@ -43,7 +45,9 @@ size_t PopupMenu::size() const
 
 	ocean_assert(number >= 0);
 	if (number < 0)
+	{
 		return 0;
+	}
 
 	return size_t(number);
 }
@@ -53,9 +57,13 @@ bool PopupMenu::addEntry(const std::wstring& text, const unsigned int id, const 
 	ocean_assert(handle_);
 
 	if (checked)
+	{
 		return AppendMenuW(handle_, MF_STRING | MF_CHECKED, id, text.c_str()) == TRUE;
+	}
 	else
+	{
 		return AppendMenuW(handle_, MF_STRING, id, text.c_str()) == TRUE;
+	}
 }
 
 bool PopupMenu::addSeparator()

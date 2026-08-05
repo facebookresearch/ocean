@@ -33,7 +33,9 @@ bool FileDialog::openFile(std::wstring& filePath)
 	openFileNameData.lpstrFilter = L"All Files\0*.*\0\0";
 
 	if (GetOpenFileNameW(&openFileNameData) != TRUE)
+	{
 		return false;
+	}
 
 	filePath = std::wstring(localFilePath);
 
@@ -55,7 +57,9 @@ bool FileDialog::saveFile(std::wstring& filePath)
 	openFileNameData.lpstrFilter = L"All Files\0*.*\0\0";
 
 	if (GetSaveFileNameW(&openFileNameData) != TRUE)
+	{
 		return false;
+	}
 
 	filePath = std::wstring(localFilePath);
 

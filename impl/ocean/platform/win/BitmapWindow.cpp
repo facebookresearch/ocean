@@ -166,7 +166,7 @@ void BitmapWindow::onPaint()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (bitmap_.isValid() == false || clientHeight() == 0u || bitmap_.height() == 0u)
+	if (!bitmap_.isValid() || clientHeight() == 0u || bitmap_.height() == 0u)
 	{
 		return;
 	}

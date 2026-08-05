@@ -30,11 +30,11 @@ RegistryConfig::RegistryValue::RegistryValue(const HKEY key)
 
 	Registry::Names names = Registry::keys(key);
 
-	for (Registry::Names::const_iterator i = names.begin(); i != names.end(); ++i)
+	for (const std::wstring& name : names)
 	{
-		ocean_assert(subValues_.find(*i) == subValues_.end());
+		ocean_assert(subValues_.find(name) == subValues_.end());
 
-		HKEY subKey = Registry::openKey(key, *i);
+		HKEY subKey = Registry::openKey(key, name);
 		ocean_assert(subKey != nullptr);
 
 		subValues_[*i] = RegistryValue(subKey);
@@ -44,11 +44,11 @@ RegistryConfig::RegistryValue::RegistryValue(const HKEY key)
 
 	names = Registry::values(key);
 
-	for (Registry::Names::const_iterator i = names.begin(); i != names.end(); ++i)
+	for (const std::wstring& name : names)
 	{
-		ocean_assert(subValues_.find(*i) == subValues_.end());
+		ocean_assert(subValues_.find(name) == subValues_.end());
 
-		subValues_[*i] = RegistryValue(key, *i);
+		subValues_[name] = RegistryValue(key, name);
 	}
 }
 
@@ -354,10 +354,10 @@ bool RegistryConfig::RegistryValue::writeToRegistry(const HKEY key, const std::s
 
 			bool oneSucceeded = false;
 
-			for (Values::const_iterator i = subValues_.begin(); i != subValues_.end(); ++i)
+			for (const Values::value_type& valuePair : subValues_)
 			{
-				const RegistryValue& value = dynamic_cast<const RegistryValue&>(i->second);
-				if (value.writeToRegistry(subKey, i->first))
+				const RegistryValue& value = dynamic_cast<const RegistryValue&>(valuePair.second);
+				if (value.writeToRegistry(subKey, valuePair.first))
 				{
 					oneSucceeded = true;
 				}
@@ -407,11 +407,11 @@ bool RegistryConfig::read()
 
 	Registry::Names names = Registry::keys(key);
 
-	for (Registry::Names::const_iterator i = names.begin(); i != names.end(); ++i)
+	for (const std::wstring& name : names)
 	{
-		ocean_assert(values_.find(*i) == values_.end());
+		ocean_assert(values_.find(name) == values_.end());
 
-		HKEY subKey = Registry::openKey(key, *i);
+		HKEY subKey = Registry::openKey(key, name);
 		ocean_assert(subKey != nullptr);
 
 		values_[*i] = RegistryValue(subKey);
@@ -421,11 +421,11 @@ bool RegistryConfig::read()
 
 	names = Registry::values(key);
 
-	for (Registry::Names::const_iterator i = names.begin(); i != names.end(); ++i)
+	for (const std::wstring& name : names)
 	{
-		ocean_assert(values_.find(*i) == values_.end());
+		ocean_assert(values_.find(name) == values_.end());
 
-		values_[*i] = RegistryValue(key, *i);
+		values_[name] = RegistryValue(key, name);
 	}
 
 	Registry::closeKey(key);
@@ -443,10 +443,10 @@ bool RegistryConfig::write()
 
 	bool oneSucceeded = false;
 
-	for (Values::const_iterator i = values_.begin(); i != values_.end(); ++i)
+	for (const Values::value_type& valuePair : values_)
 	{
-		const RegistryValue& value = dynamic_cast<const RegistryValue&>(i->second);
-		if (value.writeToRegistry(key, i->first))
+		const RegistryValue& value = dynamic_cast<const RegistryValue&>(valuePair.second);
+		if (value.writeToRegistry(key, valuePair.first))
 		{
 			oneSucceeded = true;
 		}

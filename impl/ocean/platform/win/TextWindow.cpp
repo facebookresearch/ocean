@@ -30,7 +30,9 @@ TextWindow::~TextWindow()
 std::string TextWindow::text() const
 {
 	if (handle_ == nullptr)
+	{
 		return std::string();
+	}
 
 	const int textLength = GetWindowTextLengthA(handle_);
 
@@ -43,7 +45,9 @@ std::string TextWindow::text() const
 bool TextWindow::setText(const std::string& text)
 {
 	if (handle_ == nullptr)
+	{
 		return false;
+	}
 
 	return SetWindowTextA(handle_, text.c_str()) == TRUE;
 }
@@ -51,10 +55,14 @@ bool TextWindow::setText(const std::string& text)
 bool TextWindow::appendText(const std::string& text)
 {
 	if (text.empty())
+	{
 		return true;
+	}
 
 	if (handle_ == nullptr)
+	{
 		return false;
+	}
 
 	const int textLength = GetWindowTextLengthA(handle_);
 
@@ -67,7 +75,9 @@ bool TextWindow::appendText(const std::string& text)
 bool TextWindow::clearText()
 {
 	if (handle_ == nullptr)
+	{
 		return false;
+	}
 
 	SendMessageA(handle_, WM_CLEAR, 0, 0);
 	return true;
@@ -77,14 +87,20 @@ bool TextWindow::createWindow()
 {
 	ocean_assert(handle_ == nullptr);
 	if (handle_ != nullptr)
+	{
 		return true;
+	}
 
 	DWORD windowStyle = ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_VSCROLL;
 
 	if (isChild_)
+	{
 		windowStyle |= WS_CHILD;
+	}
 	else
+	{
 		windowStyle |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+	}
 
 	int windowX = CW_USEDEFAULT;
 	int windowY = CW_USEDEFAULT;
@@ -99,7 +115,9 @@ bool TextWindow::createWindow()
 	SetWindowLongPtr(handle_, GWLP_USERDATA, (LONG_PTR)this);
 
 	if (handle_ == nullptr)
+	{
 		return false;
+	}
 
 	// sets the largest possible text limit
 	SendMessageA(handle_, EM_LIMITTEXT, 0, 0);
