@@ -10,6 +10,7 @@
 
 #include "ocean/platform/win/Win.h"
 
+#include <memory>
 #include <vector>
 
 namespace Ocean
@@ -32,7 +33,7 @@ class OCEAN_PLATFORM_WIN_EXPORT PopupMenu
 		/**
 		 * Definition of a vector holding popup menus.
 		 */
-		using PopupMenus = std::vector<PopupMenu*>;
+		using PopupMenus = std::vector<std::unique_ptr<PopupMenu>>;
 
 	public:
 

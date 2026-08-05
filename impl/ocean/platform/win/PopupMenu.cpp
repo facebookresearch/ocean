@@ -25,11 +25,8 @@ PopupMenu::PopupMenu()
 
 PopupMenu::~PopupMenu()
 {
-	for (PopupMenus::iterator i = subMenus_.begin(); i != subMenus_.end(); ++i)
-	{
-		ocean_assert(*i != nullptr);
-		delete *i;
-	}
+	// the sub menus have to go before this menu's handle is destroyed, as they are attached to it
+	subMenus_.clear();
 
 	if (handle_)
 	{
@@ -77,14 +74,14 @@ PopupMenu& PopupMenu::addMenu(const std::wstring& text)
 {
 	ocean_assert(handle_);
 
-	PopupMenu* menu = new PopupMenu();
-	ocean_assert(menu != nullptr);
+	std::unique_ptr<PopupMenu> menu = std::make_unique<PopupMenu>();
 
 	const bool result = AppendMenuW(handle_, MF_POPUP, UINT_PTR(menu->handle_), text.c_str()) == TRUE;
 	ocean_assert_and_suppress_unused(result, result);
 
-	subMenus_.push_back(menu);
-	return *menu;
+	subMenus_.emplace_back(std::move(menu));
+
+	return *subMenus_.back();
 }
 
 unsigned int PopupMenu::show(const int x, const int y, const HWND parent)
