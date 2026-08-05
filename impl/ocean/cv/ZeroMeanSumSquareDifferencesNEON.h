@@ -2192,7 +2192,11 @@ OCEAN_FORCE_INLINE uint8x8_t ZeroMeanSumSquareDifferencesNEON::loadMirrored_u_8x
 
 	constexpr unsigned int tOverlappingElements = 8u - tPixels;
 
-	if (x >= 0 && x <= int(width) - int(tPixels))
+	// the fast path issues a full 8 element load, so it needs room for all 8 elements and not just for `tPixels`
+	constexpr int firstLoadedElement = tFront ? 0 : int(tOverlappingElements);
+	constexpr int lastLoadedElement = tFront ? 8 : int(tPixels);
+
+	if (x >= firstLoadedElement && x <= int(width) - lastLoadedElement)
 	{
 		if constexpr (tPixels == 8u)
 		{
@@ -2280,7 +2284,11 @@ OCEAN_FORCE_INLINE uint8x16_t ZeroMeanSumSquareDifferencesNEON::loadMirrored_u_8
 
 	constexpr unsigned int tOverlappingElements = 16u - tPixels;
 
-	if (x >= 0 && x <= int(width) - int(tPixels))
+	// the fast path issues a full 16 element load, so it needs room for all 16 elements and not just for `tPixels`
+	constexpr int firstLoadedElement = tFront ? 0 : int(tOverlappingElements);
+	constexpr int lastLoadedElement = tFront ? 16 : int(tPixels);
+
+	if (x >= firstLoadedElement && x <= int(width) - lastLoadedElement)
 	{
 		if constexpr (tPixels == 16u)
 		{
