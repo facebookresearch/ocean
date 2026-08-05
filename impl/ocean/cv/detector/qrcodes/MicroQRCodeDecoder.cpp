@@ -1299,8 +1299,8 @@ static bool decodeModules(const std::vector<uint8_t>& modules, unsigned int& ver
 	else
 	{
 		// Try reversing the format bits. If that works, then all of the modules need to be mirrored.
-		uint16_t reversedFormatBits = formatBits & (1 << 7u);
-		for (unsigned int i = 0; i < 7; ++i)
+		uint16_t reversedFormatBits = 0;
+		for (unsigned int i = 0u; i < 15u; ++i)
 		{
 			reversedFormatBits |= (((formatBits >> i) & 1u) << (14u - i));
 		}
