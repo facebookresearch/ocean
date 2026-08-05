@@ -42,15 +42,13 @@ ImageList::ImageList(const Frame& frame, const double scaleFactor)
 		return;
 	}
 
-	listImages.reserve(imageSize);
-
-	Frame intermediateFrame(FrameType(frame, imageSize, imageSize));
+	listImages.reserve(images);
 
 	for (unsigned int n = 0u; n < images; ++n)
 	{
-		intermediateFrame.copy(n * imageSize, 0u, frame);
+		const Frame subFrame = frame.subFrame(n * imageSize, 0u, imageSize, imageSize);
 
-		Image image(intermediateFrame, scaleFactor);
+		Image image(subFrame, scaleFactor);
 
 		if (!image.isValid())
 		{
