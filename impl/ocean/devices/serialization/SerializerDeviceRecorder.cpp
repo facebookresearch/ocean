@@ -243,7 +243,14 @@ void SerializerDeviceRecorder::release()
 	TemporaryScopedLock scopedLock(recorderLock_);
 		sampleEventSubscriptionMap_.clear();
 		trackerObjectEventSubscriptionMap_.clear();
+
+		const bool threadIsRunning = recorderState_ != RS_IDLE;
 	scopedLock.release();
+
+	if (!threadIsRunning)
+	{
+		return;
+	}
 
 	ocean_assert(recorderState_ >= RS_STOPPING);
 
