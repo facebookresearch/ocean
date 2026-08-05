@@ -131,16 +131,14 @@ void Utilities::bitmapOutput(HDC dc, const int x, const int y, const unsigned in
 
 void Utilities::desktopBitmapOutput(const int x, const int y, const Bitmap& bitmap)
 {
-	HDC dc = GetDC(0);
-	bitmapOutput(dc, x, y, bitmap);
-	ReleaseDC(0, dc);
+	const ScopedScreenDC dc(GetDC(nullptr));
+	bitmapOutput(*dc, x, y, bitmap);
 }
 
 void Utilities::desktopBitmapOutput(const int x, const int y, const unsigned int width, const unsigned int height, const Bitmap& bitmap)
 {
-	HDC dc = GetDC(0);
-	bitmapOutput(dc, x, y, width, height, bitmap);
-	ReleaseDC(0, dc);
+	const ScopedScreenDC dc(GetDC(nullptr));
+	bitmapOutput(*dc, x, y, width, height, bitmap);
 }
 
 CV::PixelBoundingBox Utilities::textBoundingBox(const std::string& value, const std::string& font, const unsigned int size)
