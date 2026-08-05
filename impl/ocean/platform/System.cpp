@@ -17,9 +17,23 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 {
 #ifdef _WINDOWS
 
-	static_assert(MAX_PATH > 0, "Value of macro MAX_PATH is zero");
-	std::string value(MAX_PATH, ' ');
-	value.resize(GetEnvironmentVariableA(variable.c_str(), &value[0], MAX_PATH));
+	const DWORD size = GetEnvironmentVariableA(variable.c_str(), nullptr, 0);
+
+	if (size == 0)
+	{
+		return std::string();
+	}
+
+	std::string value(size_t(size), ' ');
+
+	const DWORD writtenSize = GetEnvironmentVariableA(variable.c_str(), &value[0], DWORD(value.size()));
+
+	if (writtenSize == 0 || writtenSize >= size)
+	{
+		return std::string();
+	}
+
+	value.resize(size_t(writtenSize));
 
 #else
 
