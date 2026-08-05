@@ -415,17 +415,7 @@ bool PluginManager::loadPlugins(const Names& names)
 		}
 	}
 
-	bool loaded = false;
-	for (const Plugin& plugin : pluginsToLoad)
-	{
-		if (plugin.load())
-		{
-			loadedPlugins_.push_back(plugin);
-			loaded = true;
-		}
-	}
-
-	return loaded;
+	return loadPluginSet(pluginsToLoad);
 }
 
 bool PluginManager::loadPlugins(const PluginType type)
@@ -441,17 +431,7 @@ bool PluginManager::loadPlugins(const PluginType type)
 		}
 	}
 
-	bool loaded = false;
-	for (const Plugin& plugin : pluginsToLoad)
-	{
-		if (plugin.load())
-		{
-			loadedPlugins_.push_back(plugin);
-			loaded = true;
-		}
-	}
-
-	return loaded;
+	return loadPluginSet(pluginsToLoad);
 }
 
 bool PluginManager::loadAllPlugins()
@@ -461,13 +441,21 @@ bool PluginManager::loadAllPlugins()
 
 	pluginsToLoad.insert(collectedPlugins_.cbegin(), collectedPlugins_.cend());
 
-	bool loaded = false;
+	return loadPluginSet(pluginsToLoad);
+}
+
+bool PluginManager::loadPluginSet(const PluginSet& pluginsToLoad)
+{
+	const ScopedLock scopedLock(lock_);
+
+	PluginSet loadedNow;
+
 	for (const Plugin& plugin : pluginsToLoad)
 	{
 		if (plugin.load())
 		{
 			loadedPlugins_.push_back(plugin);
-			loaded = true;
+			loadedNow.insert(plugin);
 		}
 		else
 		{
@@ -475,7 +463,20 @@ bool PluginManager::loadAllPlugins()
 		}
 	}
 
-	return loaded;
+	// the two vectors are disjoint: a loaded plugin belongs to loadedPlugins_ only, unloadAllPlugins() moves it back once it has been unloaded
+	for (size_t n = 0; n < collectedPlugins_.size(); /* noop */)
+	{
+		if (loadedNow.find(collectedPlugins_[n]) != loadedNow.cend())
+		{
+			collectedPlugins_.erase(collectedPlugins_.begin() + n);
+		}
+		else
+		{
+			++n;
+		}
+	}
+
+	return !loadedNow.empty();
 }
 
 bool PluginManager::unloadAllPlugins()

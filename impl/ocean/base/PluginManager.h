@@ -355,6 +355,13 @@ class OCEAN_BASE_EXPORT PluginManager : public Singleton<PluginManager>
 		~PluginManager();
 
 		/**
+		 * Loads all plugins of a given set and moves the successfully loaded plugins from the collected plugins to the loaded plugins.
+		 * @param pluginsToLoad The plugins to load, each of them must be part of the collected plugins
+		 * @return True, if at least one plugin has been loaded
+		 */
+		bool loadPluginSet(const PluginSet& pluginsToLoad);
+
+		/**
 		 * Determines whether a given file is a plugin.
 		 * @param filename Filename of the potential plugin
 		 * @param plugin Resulting plugin object, if succeeded
