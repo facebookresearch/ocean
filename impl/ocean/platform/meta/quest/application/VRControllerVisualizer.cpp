@@ -40,6 +40,7 @@ VRControllerVisualizer::ScopedState::ScopedState(VRControllerVisualizer& vrContr
 		vrControllerVisualizer_ = &vrControllerVisualizer;
 
 		wasShown_ = vrControllerVisualizer.isShown();
+		controllerRayLength_ = vrControllerVisualizer.controllerRayLength();
 	}
 }
 
@@ -69,6 +70,7 @@ void VRControllerVisualizer::ScopedState::release()
 		vrControllerVisualizer_->setControllerRayLength(controllerRayLength_);
 
 		vrControllerVisualizer_ = nullptr;
+		controllerRayLength_ = Scalar(0);
 	}
 
 	wasShown_ = false;
