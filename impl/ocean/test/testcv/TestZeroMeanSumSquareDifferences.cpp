@@ -375,6 +375,44 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const double tes
 
 	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 63u * 63u>(width, height, testDuration));
 
+	Log::info() << " ";
+	Log::info() << " ";
+
+	// the buffer sizes above are all odd squares, and an odd square is always 1 or 9 modulo 16,
+	// so they only ever reach the 16-element and 1-element tails of the SIMD implementations;
+	// 20 and 24 elements are needed to cover the 8-element tails as well
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 20u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 20u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 20u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 20u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 24u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<2u, 24u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 24u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<4u, 24u>(width, height, testDuration));
+
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();

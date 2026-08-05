@@ -795,10 +795,8 @@ inline uint32_t ZeroMeanSumSquareDifferencesSSE::SpecializedForChannels<1u>::buf
 		const __m128i buffer1_128i = _mm_loadl_epi64((const __m128i*)buffer1); // load for unaligned 64 bit memory
 
 		const __m128i absDifferencesLow_128i = _mm_sub_epi16(_mm_maddubs_epi16(_mm_unpacklo_epi8(mean0_128i, buffer0_128i), constant_signs_m128i), _mm_maddubs_epi16(_mm_unpacklo_epi8(mean1_128i, buffer1_128i), constant_signs_m128i)); // (buffer0 - mean0) - (buffer1 - mean1)
-		const __m128i absDifferencesHigh_128i = _mm_sub_epi16(_mm_maddubs_epi16(_mm_unpackhi_epi8(mean0_128i, buffer0_128i), constant_signs_m128i), _mm_maddubs_epi16(_mm_unpackhi_epi8(mean1_128i, buffer1_128i), constant_signs_m128i));
 
 		sum0_128i = _mm_add_epi32(sum0_128i, _mm_madd_epi16(absDifferencesLow_128i, absDifferencesLow_128i));
-		sum1_128i = _mm_add_epi32(sum1_128i, _mm_madd_epi16(absDifferencesHigh_128i, absDifferencesHigh_128i));
 
 		buffer0 += 8;
 		buffer1 += 8;
@@ -810,14 +808,12 @@ inline uint32_t ZeroMeanSumSquareDifferencesSSE::SpecializedForChannels<1u>::buf
 
 		static_assert(overlapElements < 8u, "Invalid value!");
 
-		const __m128i buffer0_128i = _mm_srli_si128(_mm_loadl_epi64((const __m128i*)(buffer0 - overlapElements)), overlapElements); // loading 8 elements, but shifting `overlapElements` zeros to the right
-		const __m128i buffer1_128i = _mm_srli_si128(_mm_loadl_epi64((const __m128i*)(buffer1 - overlapElements)), overlapElements);
+		const __m128i buffer0_128i = _mm_loadl_epi64((const __m128i*)(buffer0 - overlapElements)); // loading 8 elements
+		const __m128i buffer1_128i = _mm_loadl_epi64((const __m128i*)(buffer1 - overlapElements));
 
-		const __m128i absDifferencesLow_128i = _mm_sub_epi16(_mm_maddubs_epi16(_mm_unpacklo_epi8(mean0_128i, buffer0_128i), constant_signs_m128i), _mm_maddubs_epi16(_mm_unpacklo_epi8(mean1_128i, buffer1_128i), constant_signs_m128i)); // (buffer0 - mean0) - (buffer1 - mean1)
-		const __m128i absDifferencesHigh_128i = _mm_slli_si128(_mm_sub_epi16(_mm_maddubs_epi16(_mm_unpackhi_epi8(mean0_128i, buffer0_128i), constant_signs_m128i), _mm_maddubs_epi16(_mm_unpackhi_epi8(mean1_128i, buffer1_128i), constant_signs_m128i)), overlapElements * 2);
+		const __m128i absDifferencesLow_128i = _mm_srli_si128(_mm_sub_epi16(_mm_maddubs_epi16(_mm_unpacklo_epi8(mean0_128i, buffer0_128i), constant_signs_m128i), _mm_maddubs_epi16(_mm_unpacklo_epi8(mean1_128i, buffer1_128i), constant_signs_m128i)), overlapElements * 2); // (buffer0 - mean0) - (buffer1 - mean1)
 
 		sum0_128i = _mm_add_epi32(sum0_128i, _mm_madd_epi16(absDifferencesLow_128i, absDifferencesLow_128i));
-		sum1_128i = _mm_add_epi32(sum1_128i, _mm_madd_epi16(absDifferencesHigh_128i, absDifferencesHigh_128i));
 
 		buffer0 += remainingAfterBlocks16;
 		buffer1 += remainingAfterBlocks16;
