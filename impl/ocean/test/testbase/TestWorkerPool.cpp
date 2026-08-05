@@ -52,6 +52,15 @@ bool TestWorkerPool::test(const double testDuration, const TestSelector& selecto
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("setcapacity"))
+	{
+		testResult = testSetCapacity();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -69,10 +78,7 @@ TEST(TestWorkerPool, ScopedWorker)
 
 TEST(TestWorkerPool, SetCapacity)
 {
-	// actually we do not want to increase the capacity for this test (as we cannot reduce the capacity anymore),
-	// so that we just check whether the function does not break
-
-	EXPECT_TRUE(WorkerPool::get().setCapacity(WorkerPool::get().capacity()));
+	EXPECT_TRUE(TestWorkerPool::testSetCapacity());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -160,6 +166,30 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 	Log::info() << "Performance acquire and surrender three objects: " << performanceCreateDestroyThree.averageMseconds() * 1000.0 / double(constIterations) << "mys";
 
 	OCEAN_EXPECT_EQUAL(validation, WorkerPool::get().capacity(), size_t(2));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestWorkerPool::testSetCapacity()
+{
+	Log::info() << "Test set capacity:";
+
+	Validation validation;
+
+	// the pool is a singleton and its capacity can only be increased, so this test must leave the capacity untouched
+
+	const size_t capacity = WorkerPool::get().capacity();
+
+	OCEAN_EXPECT_TRUE(validation, WorkerPool::get().setCapacity(capacity));
+
+	// the workers are held in a fixed-size buffer, a larger capacity would overrun it once enough workers are acquired
+
+	OCEAN_EXPECT_FALSE(validation, WorkerPool::get().setCapacity(WorkerPool::maximalCapacity() + 1));
+	OCEAN_EXPECT_FALSE(validation, WorkerPool::get().setCapacity(1024));
+
+	OCEAN_EXPECT_EQUAL(validation, WorkerPool::get().capacity(), capacity);
 
 	Log::info() << "Validation: " << validation;
 

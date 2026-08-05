@@ -129,8 +129,14 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 	public:
 
 		/**
+		 * Returns the highest capacity this pool can be configured with.
+		 * @return The pool's storage capacity
+		 */
+		static constexpr size_t maximalCapacity();
+
+		/**
 		 * Returns the maximal number of worker objects allowed inside this pool.
-		 * @return Maximal worker capacity, with range [1, 10], 2 by default
+		 * @return Maximal worker capacity, with range [1, maximalCapacity()], 2 by default
 		 */
 		inline size_t capacity();
 
@@ -142,7 +148,7 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 
 		/**
 		 * Defines the maximal number of worker objects existing concurrently.
-		 * @param workers Maximal number of worker objects to be allowed inside this pool, with range [capacity(), 10]
+		 * @param workers Maximal number of worker objects to be allowed inside this pool, with range [capacity(), maximalCapacity()]
 		 * @return True, if succeeded
 		 */
 		bool setCapacity(const size_t workers);
@@ -261,6 +267,11 @@ inline Worker* WorkerPool::ScopedWorker::operator()() const
 inline WorkerPool::ScopedWorker::operator bool() const
 {
 	return worker_ != nullptr;
+}
+
+constexpr size_t WorkerPool::maximalCapacity()
+{
+	return Workers::capacity();
 }
 
 inline size_t WorkerPool::capacity()

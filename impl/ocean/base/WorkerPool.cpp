@@ -21,7 +21,7 @@ bool WorkerPool::setCapacity(const size_t workers)
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (workers >= capacity_)
+	if (workers >= capacity_ && workers <= maximalCapacity())
 	{
 		capacity_ = workers;
 

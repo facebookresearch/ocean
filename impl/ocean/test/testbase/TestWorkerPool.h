@@ -42,6 +42,12 @@ class OCEAN_TEST_BASE_EXPORT TestWorkerPool
 		 * @return True, if succeeded
 		 */
 		static bool testScopedWorker(const double testDuration);
+
+		/**
+		 * Tests the capacity configuration of the worker pool.
+		 * @return True, if succeeded
+		 */
+		static bool testSetCapacity();
 };
 
 }
