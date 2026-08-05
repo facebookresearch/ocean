@@ -157,13 +157,22 @@ double Screen::scaleFactor(const wxWindow* window)
 	double factor = 1.0;
 	int logicalPixelSize = 0;
 
-	if (window && window->GetHWND())
+	if (window != nullptr && window->GetHWND() != nullptr)
 	{
-		logicalPixelSize = GetDeviceCaps((HDC)window->GetHWND(), LOGPIXELSX);
-		ocean_assert(logicalPixelSize == GetDeviceCaps((HDC)window->GetHWND(), LOGPIXELSY));
+		const HWND windowHandle = (HWND)(window->GetHWND());
+
+		const HDC windowDC = GetDC(windowHandle);
+
+		if (windowDC != nullptr)
+		{
+			logicalPixelSize = GetDeviceCaps(windowDC, LOGPIXELSX);
+			ocean_assert(logicalPixelSize == GetDeviceCaps(windowDC, LOGPIXELSY));
+
+			ReleaseDC(windowHandle, windowDC);
+		}
 	}
 
-	// if either no window was provided or if the dpi value could not be determined from the window (which can happen at least on Windows 7)
+	// if either no window was provided or if the dpi value could not be determined from the window
 	if (logicalPixelSize == 0)
 	{
 		HDC dc = GetDC(nullptr);
