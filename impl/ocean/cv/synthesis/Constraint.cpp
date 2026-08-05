@@ -56,7 +56,7 @@ Constraints::Constraints(const Constraints& constraints)
 {
 	constraints_.reserve(constraints.constraints_.size());
 
-	for (const std::unique_ptr<Constraint>& constraint : constraints_)
+	for (const std::unique_ptr<Constraint>& constraint : constraints.constraints_)
 	{
 		ocean_assert(constraint);
 
@@ -70,7 +70,7 @@ Constraints::Constraints(const Constraints& constraints, const Scalar scale)
 
 	constraints_.reserve(constraints.constraints_.size());
 
-	for (const std::unique_ptr<Constraint>& constraint : constraints_)
+	for (const std::unique_ptr<Constraint>& constraint : constraints.constraints_)
 	{
 		ocean_assert(constraint);
 
