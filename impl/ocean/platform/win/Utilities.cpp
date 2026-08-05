@@ -173,8 +173,7 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 		return CV::PixelBoundingBox();
 	}
 
-	HFONT previousFont = nullptr;
-	HFONT newFont = nullptr;
+	ScopedFont scopedFont;
 
 	if (!font.empty())
 	{
@@ -190,31 +189,51 @@ CV::PixelBoundingBox Utilities::textBoundingBox(const std::wstring& value, const
 			memcpy(logFont.lfFaceName, font.data(), font.size() * sizeof(font[0]));
 		}
 
-		newFont = CreateFontIndirectW(&logFont);
-		previousFont = HFONT(SelectObject(*dc, newFont));
+		scopedFont = ScopedFont(*dc, logFont);
 	}
 
 	SIZE boxSize;
-	const BOOL extentResult = GetTextExtentPoint32W(*dc, value.c_str(), int(value.length()), &boxSize);
-
-	// a font cannot be deleted while it is still selected into a device context
-	if (previousFont != nullptr)
-	{
-		SelectObject(*dc, previousFont);
-	}
-
-	if (newFont != nullptr)
-	{
-		DeleteObject(newFont);
-	}
-
-	if (extentResult == FALSE)
+	if (GetTextExtentPoint32W(*dc, value.c_str(), int(value.length()), &boxSize) == FALSE)
 	{
 		return CV::PixelBoundingBox();
 	}
 
 	ocean_assert(boxSize.cx >= 0 && boxSize.cy >= 0);
 	return CV::PixelBoundingBox(CV::PixelPosition(0u, 0u), (unsigned int)boxSize.cx, (unsigned int)boxSize.cy);
+}
+
+ScopedFont::ScopedFont(HDC dc, const LOGFONTW& logFont)
+{
+	ocean_assert(dc != nullptr);
+
+	const HFONT font = CreateFontIndirectW(&logFont);
+
+	if (font == nullptr)
+	{
+		return;
+	}
+
+	dc_ = dc;
+	font_ = font;
+	previousFont_ = HFONT(SelectObject(dc_, font_));
+}
+
+void ScopedFont::release()
+{
+	if (font_ != nullptr)
+	{
+		// a font cannot be deleted while it is still selected into a device context
+		if (previousFont_ != nullptr)
+		{
+			SelectObject(dc_, previousFont_);
+		}
+
+		DeleteObject(font_);
+
+		dc_ = nullptr;
+		font_ = nullptr;
+		previousFont_ = nullptr;
+	}
 }
 
 ScopedDisableWindow::ScopedDisableWindow(const HWND windowHandle) :

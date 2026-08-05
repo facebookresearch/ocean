@@ -239,6 +239,91 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 using ScopedScreenDC = ScopedObjectCompileTimeVoidT<HDC, Utilities::releaseScreenDC>;
 
 /**
+ * This class implements a scoped font which is selected into a device context.
+ * The font is created and selected when the object is created, and is deselected and deleted once the object is disposed.<br>
+ * A font cannot be deleted while it is still selected into a device context, so both steps belong together.
+ * @ingroup platformwin
+ */
+class OCEAN_PLATFORM_WIN_EXPORT ScopedFont
+{
+	public:
+
+		/**
+		 * Creates an object not holding a font.
+		 */
+		ScopedFont() = default;
+
+		/**
+		 * Move constructor.
+		 * @param scopedFont The object to be moved
+		 */
+		inline ScopedFont(ScopedFont&& scopedFont) noexcept;
+
+		/**
+		 * Creates a new font and selects it into a given device context.
+		 * In case the font cannot be created, the resulting object will be invalid.
+		 * @param dc The device context into which the new font will be selected, must be valid
+		 * @param logFont The description of the font to be created
+		 */
+		ScopedFont(HDC dc, const LOGFONTW& logFont);
+
+		/**
+		 * Destructs this object, deselects the font and deletes it.
+		 */
+		inline ~ScopedFont();
+
+		/**
+		 * Returns whether this object holds a font.
+		 * @return True, if so
+		 */
+		inline bool isValid() const;
+
+		/**
+		 * Returns the wrapped font.
+		 * Ensure that this object holds a font before calling this operator.
+		 * @return The wrapped font
+		 * @see isValid().
+		 */
+		inline HFONT operator*() const;
+
+		/**
+		 * Explicitly deselects and deletes the font.
+		 */
+		void release();
+
+		/**
+		 * Move operator.
+		 * @param scopedFont The object to be moved
+		 * @return Reference to this object
+		 */
+		inline ScopedFont& operator=(ScopedFont&& scopedFont) noexcept;
+
+	protected:
+
+		/**
+		 * Disabled copy constructor.
+		 */
+		ScopedFont(const ScopedFont&) = delete;
+
+		/**
+		 * Disabled assign operator.
+		 * @return Reference to this object
+		 */
+		ScopedFont& operator=(const ScopedFont&) = delete;
+
+	protected:
+
+		/// The device context into which the font is selected, nullptr if this object does not hold a font.
+		HDC dc_ = nullptr;
+
+		/// The font which is selected into the device context, nullptr if this object does not hold a font.
+		HFONT font_ = nullptr;
+
+		/// The font which was selected into the device context before, nullptr if none was selected.
+		HFONT previousFont_ = nullptr;
+};
+
+/**
  * This class implements a nested scoped object which disables a window object until the scope of all nested elements ends (or until all nested object are released explicitly).
  * The creation of the first nested object disables the window.<br>
  * Following nested objects only increase the internal counter while do not have any further consequence.<br>
@@ -405,6 +490,46 @@ inline void Utilities::releaseScreenDC(HDC dc)
 	ocean_assert(dc != nullptr);
 
 	ReleaseDC(nullptr, dc);
+}
+
+inline ScopedFont::ScopedFont(ScopedFont&& scopedFont) noexcept
+{
+	*this = std::move(scopedFont);
+}
+
+inline ScopedFont::~ScopedFont()
+{
+	release();
+}
+
+inline bool ScopedFont::isValid() const
+{
+	return font_ != nullptr;
+}
+
+inline HFONT ScopedFont::operator*() const
+{
+	ocean_assert(isValid());
+
+	return font_;
+}
+
+inline ScopedFont& ScopedFont::operator=(ScopedFont&& scopedFont) noexcept
+{
+	if (this != &scopedFont)
+	{
+		release();
+
+		dc_ = scopedFont.dc_;
+		font_ = scopedFont.font_;
+		previousFont_ = scopedFont.previousFont_;
+
+		scopedFont.dc_ = nullptr;
+		scopedFont.font_ = nullptr;
+		scopedFont.previousFont_ = nullptr;
+	}
+
+	return *this;
 }
 
 inline ScopedDisableWindow::DisableWindowCounter::DisableWindowCounter()
