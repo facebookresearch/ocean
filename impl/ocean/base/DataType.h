@@ -1574,9 +1574,11 @@ inline bool Float16::operator!=(const Float16& second) const
 
 inline Float16 Float16::infinity()
 {
+	constexpr uint16_t sign = 0u;
+	constexpr uint16_t fraction = 0u;
 	constexpr uint16_t maxExponent = 31u;
 
-	return Float16(0u, maxExponent, 0u);
+	return Float16(sign, fraction, maxExponent);
 }
 
 }

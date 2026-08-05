@@ -568,6 +568,15 @@ bool TestDataType::testFloat16(const double testDuration)
 		OCEAN_EXPECT_EQUAL(validation, value_1_0_16, -2.0f);
 	}
 
+	{
+		const Float16 infinity = Float16::infinity();
+
+		OCEAN_EXPECT_EQUAL(validation, infinity.binary(), uint16_t(0x7C00u));
+
+		OCEAN_EXPECT_EQUAL(validation, float(infinity), std::numeric_limits<float>::infinity());
+		OCEAN_EXPECT_EQUAL(validation, float(-infinity), -std::numeric_limits<float>::infinity());
+	}
+
 	do
 	{
 		{
