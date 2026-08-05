@@ -491,13 +491,46 @@ bool TestFrameEnlarger::testFrameMultiplyByTwo(const unsigned int width, const u
 				const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 256u) * sourcePaddingElementsMultiplier;
 
 				Frame source(FrameType(useWidth, useHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-				Frame target;
 
 				CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
 
+				const unsigned int targetWidth = source.width() * 2u + RandomI::random(randomGenerator, 1u);
+				const unsigned int targetHeight = source.height() * 2u + RandomI::random(randomGenerator, 1u);
+
+				const unsigned int targetPaddingElementsMultiplier = RandomI::random(randomGenerator, 1u);
+				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 256u) * targetPaddingElementsMultiplier;
+
+				Frame target(FrameType(source, targetWidth, targetHeight), targetPaddingElements);
+				const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
 				performance.startIf(performanceIteration);
-				CV::FrameEnlarger::Comfort::multiplyByTwo(source, target, useWorker);
+
+					switch (channels)
+					{
+						case 1u:
+							CV::FrameEnlarger::multiplyByTwo<uint8_t, 1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), useWorker);
+							break;
+
+						case 2u:
+							CV::FrameEnlarger::multiplyByTwo<uint8_t, 2u>(source.constdata<uint8_t>(), target.data<uint8_t>(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), useWorker);
+							break;
+
+						case 3u:
+							CV::FrameEnlarger::multiplyByTwo<uint8_t, 3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), useWorker);
+							break;
+
+						case 4u:
+							CV::FrameEnlarger::multiplyByTwo<uint8_t, 4u>(source.constdata<uint8_t>(), target.data<uint8_t>(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), useWorker);
+							break;
+
+						default:
+							ocean_assert(false && "This should never happen!");
+							OCEAN_SET_FAILED(validation);
+					}
+
 				performance.stopIf(performanceIteration);
+
+				OCEAN_EXPECT_TRUE(validation, CV::CVUtilities::isPaddingMemoryIdentical(target, copyTarget));
 
 				OCEAN_EXPECT_TRUE(validation, validationMultiplyByTwo(source, target));
 			}

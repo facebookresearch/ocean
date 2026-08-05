@@ -961,7 +961,7 @@ void FrameEnlarger::multiplyByTwoSubset(const T* source, T* target, const unsign
 
 		for (unsigned int targetRowIndex = firstTargetRow; targetRowIndex < (firstTargetRow + numberTargetRows); ++targetRowIndex)
 		{
-			const PixelType* sourcePixel = (const PixelType*)(source + min(targetRowIndex / 2u, sourceHeight - 1u) * sourcePaddingElements);
+			const PixelType* sourcePixel = (const PixelType*)(source + min(targetRowIndex / 2u, sourceHeight - 1u) * sourceStrideElements);
 			--sourcePixel;
 
 			PixelType* targetPixel = (PixelType*)(target + targetRowIndex * targetStrideElements);
