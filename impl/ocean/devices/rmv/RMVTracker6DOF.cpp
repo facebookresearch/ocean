@@ -125,6 +125,8 @@ RMVTracker6DOF::ObjectId RMVTracker6DOF::registerObject(const std::string& descr
 	featureMap.setFeatures(pattern, dimension, camera, numberMapPoints, featureTracker_.detectorType(), worker());
 	featureMap.setInitializationFeatures(pattern, dimension, camera, numberInitializationPoints, initializationDetectorType, worker());
 
+	featureTracker_.setFeatureMap(featureMap, randomGenerator_);
+
 	ocean_assert(uniqueObjectId_ == invalidObjectId());
 	uniqueObjectId_ = addUniqueObjectId("RMV");
 
