@@ -379,7 +379,9 @@ unsigned int SeedSegmentation::iterativeSeedSegmentation(const T* frame, uint8_t
 	PixelPositions borderPixels8;
 	unsigned int maximalIterationMaskPixelCounter = (unsigned int)(-1);
 
-	for (T t = minimalGlobalThreshold + 1u; t <= maximalGlobalThreshold; ++t)
+	using TLoop = typename NextLargerTyper<T>::Type;
+
+	for (TLoop t = TLoop(minimalGlobalThreshold) + TLoop(1); t <= TLoop(maximalGlobalThreshold); ++t)
 	{
 		const typename SquareValueTyper<T>::Type sqrIterationGlobalThreshold = t * t;
 
