@@ -390,7 +390,6 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE), FrameConverterY_VU12::convertY_VU12LimitedRangeToY8LimitedRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterY_VU12::convertY_VU12LimitedRangeToY8FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_BGR24), FrameConverterY_VU12::convertY_VU12LimitedRangeToBGR24FullRange);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_BGRA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY_VU12::convertY_VU12FullRangeToBGRA32FullRangeAndroid);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_VU12::convertY_VU12LimitedRangeToRGB24FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_YUV24), FrameConverterY_VU12::convertY_VU12ToYUV24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_YVU24), FrameConverterY_VU12::convertY_VU12ToYVU24);
@@ -403,6 +402,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_FULL_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_VU12::convertY_VU12FullRangeToRGB24FullRangePrecision6Bit);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_FULL_RANGE, FrameType::FORMAT_Y_UV12_FULL_RANGE), FrameConverterY_VU12::convertY_VU12ToY_UV12);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_FULL_RANGE, FrameType::FORMAT_Y_U_V12_FULL_RANGE), FrameConverterY_VU12::convertY_VU12ToY_U_V12);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_FULL_RANGE, FrameType::FORMAT_BGRA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY_VU12::convertY_VU12FullRangeToBGRA32FullRangeAndroid);
 
 	// FORMAT_R_G_B24
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_R_G_B24, FrameType::FORMAT_RGB24), FrameConverterR_G_B24::convertR_G_B24ToRGB24);
