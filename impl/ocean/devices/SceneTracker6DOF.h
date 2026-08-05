@@ -1057,7 +1057,7 @@ inline SceneTracker6DOF::SceneElementPlanes::Plane::Plane(const Index32 planeId,
 	planeId_(planeId),
 	planeType_(planeType),
 	world_T_plane_(world_T_plane),
-	boundingBox_(std::move(boundingBox)),
+	boundingBox_(boundingBox),
 	boundaryVertices_(std::move(boundaryVertices))
 {
 	ocean_assert(world_T_plane_.isValid());
@@ -1068,7 +1068,7 @@ inline SceneTracker6DOF::SceneElementPlanes::Plane::Plane(const Index32 planeId,
 	planeId_(planeId),
 	planeType_(planeType),
 	world_T_plane_(world_T_plane),
-	boundingBox_(std::move(boundingBox)),
+	boundingBox_(boundingBox),
 	vertices_(std::move(vertices)),
 	textureCoordinates_(std::move(textureCoordinates)),
 	triangleIndices_(std::move(triangleIndices)),
@@ -1076,8 +1076,8 @@ inline SceneTracker6DOF::SceneElementPlanes::Plane::Plane(const Index32 planeId,
 {
 	ocean_assert(world_T_plane_.isValid());
 	ocean_assert(boundingBox_.isValid());
-	ocean_assert(textureCoordinates.empty() || textureCoordinates.size() == vertices_.size());
-	ocean_assert(triangleIndices.empty() || triangleIndices.size() % 3 == 0);
+	ocean_assert(textureCoordinates_.empty() || textureCoordinates_.size() == vertices_.size());
+	ocean_assert(triangleIndices_.empty() || triangleIndices_.size() % 3 == 0);
 }
 
 inline Index32 SceneTracker6DOF::SceneElementPlanes::Plane::planeId() const
