@@ -537,10 +537,19 @@ int PixelContourT<T>::areaSigned() const
 	for (size_t i = 0; i < (pixels_.size() - 1); ++i)
 	{
 		const int partialArea = pixels_[i].x() * pixels_[i + 1].y() - pixels_[i].y() * pixels_[i + 1].x();
+
 		ocean_assert(partialArea <= 0 || area <= NumericT<int>::maxValue() - partialArea && "Integer overflow");
 		ocean_assert(partialArea >= 0 || area >= NumericT<int>::minValue() - partialArea && "Integer underflow");
+
 		area += partialArea;
 	}
+
+	const int partialArea = pixels_.back().x() * pixels_.front().y() - pixels_.back().y() * pixels_.front().x();
+
+	ocean_assert(partialArea <= 0 || area <= NumericT<int>::maxValue() - partialArea && "Integer overflow");
+	ocean_assert(partialArea >= 0 || area >= NumericT<int>::minValue() - partialArea && "Integer underflow");
+
+	area += partialArea;
 
 	return (area + NumericT<int>::copySign(1, area)) / 2;
 }
