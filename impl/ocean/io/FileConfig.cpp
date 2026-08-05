@@ -123,7 +123,7 @@ FileConfig::FileValue& FileConfig::FileValue::value(const std::string& name, con
 		++n;
 	}
 
-	if (i == subValues_.end())
+	if (i == range.second)
 	{
 		return nullValue();
 	}
@@ -150,7 +150,7 @@ bool FileConfig::FileValue::value(const std::string& name, const unsigned int in
 		++n;
 	}
 
-	if (i == subValues_.end())
+	if (i == range.second)
 	{
 		return false;
 	}
