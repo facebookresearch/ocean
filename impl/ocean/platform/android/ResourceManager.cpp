@@ -114,22 +114,19 @@ bool ResourceManager::readAsset(const std::string& assetFilename, std::vector<ui
 		return false;
 	}
 
-	bool succeeded = false;
-
 	const off64_t fileSize = AAsset_getLength64(asset);
 
-	if (fileSize == 0)
+	if (fileSize <= 0)
 	{
 		data.clear();
-		return true;
+		AAsset_close(asset);
+
+		return fileSize == 0;
 	}
 
-	if (fileSize != 0)
-	{
-		data.resize(fileSize);
+	data.resize(fileSize);
 
-		succeeded = AAsset_read(asset, data.data(), data.size()) == fileSize;
-	}
+	const bool succeeded = AAsset_read(asset, data.data(), data.size()) == fileSize;
 
 	AAsset_close(asset);
 
