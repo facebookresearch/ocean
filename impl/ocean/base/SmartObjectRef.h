@@ -208,7 +208,7 @@ inline SmartObjectRef<T, TBase>::SmartObjectRef(T* object) :
 
 template <typename T, typename TBase>
 inline SmartObjectRef<T, TBase>::SmartObjectRef(T* object, const ReleaseCallback& releaseCallback) :
-	ObjectRef<TBase>(dynamic_cast<TBase*>(object, releaseCallback))
+	ObjectRef<TBase>(dynamic_cast<TBase*>(object), releaseCallback)
 {
 	if (ObjectRef<TBase>::objectHolder_ != nullptr)
 	{
