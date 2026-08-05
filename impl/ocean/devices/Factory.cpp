@@ -79,7 +79,7 @@ DeviceRef Factory::device(const std::string& name, const bool useExclusive) cons
 
 	if (!useExclusive)
 	{
-		const DeviceRef deviceRef(DeviceRefManager::get().device(name));
+		const DeviceRef deviceRef(DeviceRefManager::get().device(name, false /*allowExclusive*/));
 
 		if (deviceRef)
 		{

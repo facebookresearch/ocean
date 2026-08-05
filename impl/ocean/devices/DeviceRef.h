@@ -124,12 +124,12 @@ class OCEAN_DEVICES_EXPORT DeviceRefManager : public Singleton<DeviceRefManager>
 		 * Returns a device by a given device name.
 		 * If the device does not exist an empty reference is returned.
 		 * Several devices can be registered with the same name, in that case it is not defined which of them is returned.
-		 * In contrast to the type-based lookup, the returned device may be a device which has been created for exclusive usage.
 		 * @param name The name of the device
+		 * @param allowExclusive True, to also return a device which has been created for exclusive usage; False, to return a shareable device only
 		 * @return Device reference of the requested device
 		 * @see device(const Device*).
 		 */
-		DeviceRef device(const std::string& name) const;
+		DeviceRef device(const std::string& name, const bool allowExclusive = true) const;
 
 		/**
 		 * Returns a specified device by it's device type.

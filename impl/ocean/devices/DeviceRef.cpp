@@ -33,16 +33,20 @@ DeviceRef DeviceRefManager::registerDevice(Device* device, const bool exclusive)
 	return deviceRef;
 }
 
-DeviceRef DeviceRefManager::device(const std::string& name) const
+DeviceRef DeviceRefManager::device(const std::string& name, const bool allowExclusive) const
 {
 	ocean_assert(name.empty() == false);
 
 	const ScopedLock scopedLock(lock_);
 
-	const DeviceMap::const_iterator i = deviceMap_.find(name);
-	if (i != deviceMap_.end())
+	const std::pair<DeviceMap::const_iterator, DeviceMap::const_iterator> range = deviceMap_.equal_range(name);
+
+	for (DeviceMap::const_iterator i = range.first; i != range.second; ++i)
 	{
-		return i->second.first;
+		if (allowExclusive || i->second.second == false)
+		{
+			return i->second.first;
+		}
 	}
 
 	return DeviceRef();
