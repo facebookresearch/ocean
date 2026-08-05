@@ -169,7 +169,7 @@ class OCEAN_CV_EXPORT FrameEnlarger
 		 * @tparam tTransparentIs0xFF True, if 0xFF is interpreted as fully transparent
 		 */
 		template <unsigned int tChannelsWithAlpha, bool tAlphaAtFront, bool tSourceHasAlpha, bool tTransparentIs0xFF>
-		static void addTransparentBorder8BitPerChannel(const unsigned char* source, unsigned char* target, const unsigned int width, const unsigned int height, const unsigned int leftBorder, const unsigned int topBorder, const unsigned int rightBorder, const unsigned int bottomBorder, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements);
+		static void addTransparentBorder8BitPerChannel(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int leftBorder, const unsigned int topBorder, const unsigned int rightBorder, const unsigned int bottomBorder, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements);
 
 		/**
 		 * Adds a border to a given frame while all new pixels will receive a specified border color/value.
@@ -773,11 +773,14 @@ bool FrameEnlarger::Comfort::addTransparentBorder(Frame& frame, const unsigned i
 }
 
 template <unsigned int tChannelsWithAlpha, bool tAlphaAtFront, bool tSourceHasAlpha, bool tTransparentIs0xFF>
-void FrameEnlarger::addTransparentBorder8BitPerChannel(const unsigned char* source, unsigned char* target, const unsigned int width, const unsigned int height, const unsigned int leftBorder, const unsigned int topBorder, const unsigned int rightBorder, const unsigned int bottomBorder, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements)
+void FrameEnlarger::addTransparentBorder8BitPerChannel(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int leftBorder, const unsigned int topBorder, const unsigned int rightBorder, const unsigned int bottomBorder, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements)
 {
 	ocean_assert(source && target);
 
 	using TypeWithoutAlpha = typename DataType<uint8_t, tChannelsWithAlpha - 1u>::Type;
+
+	const unsigned int targetWidthElements = (width + leftBorder + rightBorder) * tChannelsWithAlpha;
+	const unsigned int targetStrideElements = targetWidthElements + targetPaddingElements;
 
 	if (topBorder != 0u)
 	{
@@ -811,11 +814,11 @@ void FrameEnlarger::addTransparentBorder8BitPerChannel(const unsigned char* sour
 		// the remaining rows of the top border are copies of the first row
 		for (unsigned int y = 1u; y < topBorder; ++y)
 		{
-			memcpy(target + y * (width + leftBorder + rightBorder) * tChannelsWithAlpha + targetPaddingElements, target, (width + leftBorder + rightBorder) * tChannelsWithAlpha);
+			memcpy(target + y * targetStrideElements, target, targetWidthElements);
 		}
 
 		// next row
-		target += topBorder * (tChannelsWithAlpha * (width + leftBorder + rightBorder) + targetPaddingElements);
+		target += topBorder * targetStrideElements;
 	}
 
 
@@ -857,7 +860,7 @@ void FrameEnlarger::addTransparentBorder8BitPerChannel(const unsigned char* sour
 
 		// next row
 		source += FrameBlender::FrameChannels<tSourceHasAlpha>::template channels<tChannelsWithAlpha>() * width + sourcePaddingElements;
-		target += tChannelsWithAlpha * (width + leftBorder + rightBorder) + targetPaddingElements;
+		target += targetStrideElements;
 	}
 
 	if (bottomBorder != 0u)
@@ -895,7 +898,7 @@ void FrameEnlarger::addTransparentBorder8BitPerChannel(const unsigned char* sour
 		// the remaining rows of the bottom border are copies of the first row
 		for (unsigned int y = 1u; y < bottomBorder; ++y)
 		{
-			memcpy(target + y * (width + leftBorder + rightBorder) * tChannelsWithAlpha + targetPaddingElements, target, (width + leftBorder + rightBorder) * tChannelsWithAlpha);
+			memcpy(target + y * targetStrideElements, target, targetWidthElements);
 		}
 	}
 }
