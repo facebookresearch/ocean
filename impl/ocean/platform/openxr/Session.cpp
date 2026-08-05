@@ -193,10 +193,27 @@ Session& Session::operator=(Session&& session)
 {
 	if (this != &session)
 	{
+		const DualScopedLockT<ScopedLock> dualScopedLock(lock_, session.lock_);
+
 		release();
+
+		xrInstance_ = session.xrInstance_;
+		session.xrInstance_ = XR_NULL_HANDLE;
 
 		xrSession_ = session.xrSession_;
 		session.xrSession_ = XR_NULL_HANDLE;
+
+		xrSystemId_ = session.xrSystemId_;
+		session.xrSystemId_ = XR_NULL_SYSTEM_ID;
+
+		isRunning_ = session.isRunning_;
+		session.isRunning_ = false;
+
+		width_ = session.width_;
+		session.width_ = 0u;
+
+		height_ = session.height_;
+		session.height_ = 0u;
 	}
 
 	return *this;
