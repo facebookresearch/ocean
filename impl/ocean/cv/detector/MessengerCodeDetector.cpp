@@ -681,7 +681,7 @@ bool MessengerCodeDetector::correctRotation(const uint8_t* yFrame, const unsigne
 			bestSumDifference = sampleSumDifference[n];
 			bestDifferenceIndex = n;
 		}
-		else if (sampleSumDifference[n] < secondBestSumDifference)
+		else if (sampleSumDifference[n] > secondBestSumDifference)
 		{
 			secondBestSumDifference = sampleSumDifference[n];
 		}
