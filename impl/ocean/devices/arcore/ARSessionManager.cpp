@@ -610,13 +610,12 @@ bool ARSessionManager::Session::extractPlanes(ArSession* arSession, ArFrame* arF
 			ArPlane* arSubsumedPlane = nullptr;
 			ArPlane_acquireSubsumedBy(arSession, arPlane, &arSubsumedPlane);
 
-			if (arSubsumedPlane == nullptr)
-			{
-				arSubsumedPlane = arPlane;
-			}
+			const ScopedARTrackable scopedSubsumedPlane(ArAsTrackable(arSubsumedPlane));
+
+			ArPlane* const arPlaneToUse = arSubsumedPlane != nullptr ? arSubsumedPlane : arPlane;
 
 			ArPlaneType arPlaneType = ArPlaneType(0);
-			ArPlane_getType(arSession, arSubsumedPlane, &arPlaneType);
+			ArPlane_getType(arSession, arPlaneToUse, &arPlaneType);
 
 			SceneTracker6DOF::SceneElementPlanes::Plane::PlaneType planeType = SceneTracker6DOF::SceneElementPlanes::Plane::PT_UNKNOWN;
 
