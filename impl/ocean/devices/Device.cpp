@@ -58,7 +58,7 @@ bool Device::isStarted() const
 
 bool Device::isExclusive() const
 {
-	return !DeviceRefManager::get().isExclusive(this);
+	return DeviceRefManager::get().isExclusive(this);
 }
 
 bool Device::start()
