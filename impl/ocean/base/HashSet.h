@@ -137,7 +137,7 @@ class HashSet
 		 * @param capacity The capacity of the new has set, with range [hashSet.size(), infinity)
 		 * @param hashSet The hash set which defines the initial values of this hash set, will be moved
 		 */
-		HashSet(size_t capacity, HashSet<T>&& hashSet);
+		HashSet(const size_t capacity, HashSet<T>&& hashSet);
 
 		/**
 		 * Default hash function for elements supporting an cast size_t cast.
@@ -155,58 +155,60 @@ class HashSet
 	protected:
 
 		/// Hash set elements.
-		Elements setElements;
+		Elements elements_;
 
 		/// Number of elements this has set holds.
-		size_t setSize;
+		size_t size_ = 0;
 
 		/// Value function.
-		ValueFunction setFunction;
+		ValueFunction function_ = nullptr;
 };
 
 template <typename T>
 inline HashSet<T>::HashSet(const HashSet<T>& hashSet) :
-	setElements(hashSet.setElements),
-	setSize(hashSet.setSize),
-	setFunction(hashSet.setFunction)
+	elements_(hashSet.elements_),
+	size_(hashSet.size_),
+	function_(hashSet.function_)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline HashSet<T>::HashSet(HashSet<T>&& hashSet) noexcept :
-	setElements(std::move(hashSet.setElements)),
-	setSize(hashSet.setSize),
-	setFunction(hashSet.setFunction)
+	elements_(std::move(hashSet.elements_)),
+	size_(hashSet.size_),
+	function_(hashSet.function_)
 {
-	hashSet.setSize = 0;
+	hashSet.size_ = 0;
 }
 
 template <typename T>
 HashSet<T>::HashSet(const size_t capacity, const ValueFunction& function) :
-	setElements(capacity),
-	setSize(0),
-	setFunction(function)
+	elements_(capacity),
+	size_(0),
+	function_(function)
 {
 	ocean_assert(isConsistent());
 }
 
 template <typename T>
-HashSet<T>::HashSet(size_t capacity, HashSet<T>&& hashSet) :
-	setElements(capacity),
-	setSize(0),
-	setFunction(hashSet.setFunction)
+HashSet<T>::HashSet(const size_t capacity, HashSet<T>&& hashSet) :
+	elements_(capacity),
+	size_(0),
+	function_(hashSet.function_)
 {
 	ocean_assert(capacity >= hashSet.size());
 
-	for (typename Elements::iterator i = hashSet.setElements.begin(); i != hashSet.setElements.end(); ++i)
-		if (i->first.first != 0)
+	for (Element& hashSetElement : hashSet.elements_)
+	{
+		if (hashSetElement.first.first != 0)
 		{
-			T& element = i->second;
+			T& element = hashSetElement.second;
 
 			// duplicate elements are preserved, and this set is already large enough for all elements
 			insert(std::move(element), false /*oneOnly*/, false /*extendCapacity*/);
 		}
+	}
 
 	ocean_assert(size() == hashSet.size());
 	ocean_assert(isConsistent());
@@ -217,61 +219,69 @@ HashSet<T>::HashSet(size_t capacity, HashSet<T>&& hashSet) :
 template <typename T>
 bool HashSet<T>::insert(const T& element, const bool oneOnly, const bool extendCapacity)
 {
-	ocean_assert(setSize <= setElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// check whether we have to extend the capacity of this hash set (we extend the set if more than 80% is occupied)
-	if (extendCapacity && setSize >= setElements.size() * 80 / 100)
+	if (extendCapacity && size_ >= elements_.size() * 80 / 100)
 	{
-		*this = HashSet<T>(max(size_t(32), setElements.size() * 2), std::move(*this));
-		ocean_assert(setSize < setElements.size() * 80 / 100);
+		*this = HashSet<T>(max(size_t(32), elements_.size() * 2), std::move(*this));
+		ocean_assert(size_ < elements_.size() * 80 / 100);
 	}
 
-	if (setSize == setElements.size())
+	if (size_ == elements_.size())
+	{
 		return false;
+	}
 
 	if (oneOnly)
 	{
 		// linear search
-		for (size_t n = 0; n < setElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (setFunction(element) + n) % setElements.size();
+			const size_t value = (function_(element) + n) % elements_.size();
 
 			// check whether the place is free
-			if (setElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				setElements[value].first.first = 1;
-				setElements[value].first.second = n;
-				setElements[value].second = element;
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second = element;
 
-				++setSize;
+				++size_;
 				return true;
 			}
-			else if (setElements[value].second == element)
+			else if (elements_[value].second == element)
+			{
 				return false;
+			}
 			else
-				setElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 	else
 	{
 		// linear search
-		for (size_t n = 0; n < setElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (setFunction(element) + n) % setElements.size();
+			const size_t value = (function_(element) + n) % elements_.size();
 
 			// check whether the place is free
-			if (setElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				setElements[value].first.first = 1;
-				setElements[value].first.second = n;
-				setElements[value].second = element;
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second = element;
 
-				++setSize;
+				++size_;
 				return true;
 			}
 			else
-				setElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 
@@ -282,61 +292,69 @@ bool HashSet<T>::insert(const T& element, const bool oneOnly, const bool extendC
 template <typename T>
 bool HashSet<T>::insert(T&& element, const bool oneOnly, const bool extendCapacity)
 {
-	ocean_assert(setSize <= setElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// check whether we have to extend the capacity of this hash set (we extend the set if more than 80% is occupied)
-	if (extendCapacity && setSize >= setElements.size() * 80 / 100)
+	if (extendCapacity && size_ >= elements_.size() * 80 / 100)
 	{
-		*this = HashSet<T>(max(size_t(32), setElements.size() * 2), std::move(*this));
-		ocean_assert(setSize < setElements.size() * 80 / 100);
+		*this = HashSet<T>(max(size_t(32), elements_.size() * 2), std::move(*this));
+		ocean_assert(size_ < elements_.size() * 80 / 100);
 	}
 
-	if (setSize == setElements.size())
+	if (size_ == elements_.size())
+	{
 		return false;
+	}
 
 	if (oneOnly)
 	{
 		// linear search
-		for (size_t n = 0; n < setElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (setFunction(element) + n) % setElements.size();
+			const size_t value = (function_(element) + n) % elements_.size();
 
 			// check whether the place is free
-			if (setElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				setElements[value].first.first = 1;
-				setElements[value].first.second = n;
-				setElements[value].second = std::move(element);
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second = std::move(element);
 
-				++setSize;
+				++size_;
 				return true;
 			}
-			else if (setElements[value].second == element)
+			else if (elements_[value].second == element)
+			{
 				return false;
+			}
 			else
-				setElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 	else
 	{
 		// linear search
-		for (size_t n = 0; n < setElements.size(); ++n)
+		for (size_t n = 0; n < elements_.size(); ++n)
 		{
-			const size_t value = (setFunction(element) + n) % setElements.size();
+			const size_t value = (function_(element) + n) % elements_.size();
 
 			// check whether the place is free
-			if (setElements[value].first.first == 0)
+			if (elements_[value].first.first == 0)
 			{
-				setElements[value].first.first = 1;
-				setElements[value].first.second = n;
-				setElements[value].second = std::move(element);
+				elements_[value].first.first = 1;
+				elements_[value].first.second = n;
+				elements_[value].second = std::move(element);
 
-				++setSize;
+				++size_;
 				return true;
 			}
 			else
-				setElements[value].first.first++;
+			{
+				elements_[value].first.first++;
+			}
 		}
 	}
 
@@ -347,26 +365,28 @@ bool HashSet<T>::insert(T&& element, const bool oneOnly, const bool extendCapaci
 template <typename T>
 bool HashSet<T>::remove(const T& element)
 {
-	ocean_assert(setSize <= setElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < setElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (setFunction(element) + n) % setElements.size();
+		const size_t value = (function_(element) + n) % elements_.size();
 
 		// check whether this place is free
-		if (setElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			return false;
+		}
 
 		// check whether this place has no shift problem
-		if (setElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
 		{
-			if (setElements[value].second == element)
+			if (elements_[value].second == element)
 			{
-				setElements[value].first.first = 0;
-				setElements[value].second = T();
-				--setSize;
+				elements_[value].first.first = 0;
+				elements_[value].second = T();
+				--size_;
 
 				ocean_assert(isConsistent());
 
@@ -377,16 +397,16 @@ bool HashSet<T>::remove(const T& element)
 			return false;
 		}
 
-		ocean_assert(setElements[value].first.first > 1);
+		ocean_assert(elements_[value].first.first > 1);
 
 		size_t elementOffset = 0u;
 
-		if (setElements[value].second == element)
+		if (elements_[value].second == element)
 		{
 			// the element exists however, the following elements needs a special handling
 
 			size_t localValue = value;
-			size_t endLocation = setElements.size();
+			size_t endLocation = elements_.size();
 
 			while (true)
 			{
@@ -395,49 +415,57 @@ bool HashSet<T>::remove(const T& element)
 				// find last element to swap
 				for (size_t i = 1; i < endLocation; ++i)
 				{
-					const size_t testValue = (localValue + i) % setElements.size();
+					const size_t testValue = (localValue + i) % elements_.size();
 
-					if (setElements[testValue].first.first >= 1)
+					if (elements_[testValue].first.first >= 1)
 					{
-						if (setElements[testValue].first.second >= i)
+						if (elements_[testValue].first.second >= i)
+						{
 							lastOffset = i;
+						}
 					}
 
-					if (setElements[testValue].first.first <= 1)
+					if (elements_[testValue].first.first <= 1)
+					{
 						break;
+					}
 				}
 
 				if (lastOffset == 0)
+				{
 					break;
+				}
 
 				ocean_assert(endLocation >= lastOffset);
 				endLocation -= lastOffset;
 
 				elementOffset += lastOffset;
 
-				const size_t lastValue = (localValue + lastOffset) % setElements.size();
+				const size_t lastValue = (localValue + lastOffset) % elements_.size();
 
 				// move the found element
 
-				// setElements[localValue].first.first stays constant
-				setElements[localValue].first.second = setElements[lastValue].first.second - lastOffset;
-				setElements[localValue].second = setElements[lastValue].second;
+				// elements_[localValue].first.first stays constant
+				elements_[localValue].first.second = elements_[lastValue].first.second - lastOffset;
+				elements_[localValue].second = elements_[lastValue].second;
 
 				localValue = lastValue;
 
-				if (setElements[lastValue].first.first == 1)
+				if (elements_[lastValue].first.first == 1)
+				{
 					break;
+				}
 			}
 
 			// decrease the used counter
-			const size_t startIndex = setFunction(element);
+			const size_t startIndex = function_(element);
 
 			for (size_t i = 0u; i < elementOffset + n; ++i)
-				setElements[(startIndex + i) % setElements.size()].first.first--;
+				elements_[(startIndex + i) % elements_.size()].first.first--;
 
-			setElements[(value + elementOffset) % setElements.size()].first.first = 0;
-			setElements[(value + elementOffset) % setElements.size()].second = T();
-			--setSize;
+			elements_[(value + elementOffset) % elements_.size()].first.first = 0;
+			elements_[(value + elementOffset) % elements_.size()].second = T();
+			--size_;
 
 			ocean_assert(isConsistent());
 
@@ -452,25 +480,31 @@ bool HashSet<T>::remove(const T& element)
 template <typename T>
 bool HashSet<T>::find(const T& element) const
 {
-	ocean_assert(setSize <= setElements.size());
+	ocean_assert(size_ <= elements_.size());
 	ocean_assert(isConsistent());
 
 	// linear search
-	for (size_t n = 0; n < setElements.size(); ++n)
+	for (size_t n = 0; n < elements_.size(); ++n)
 	{
-		const size_t value = (setFunction(element) + n) % setElements.size();
+		const size_t value = (function_(element) + n) % elements_.size();
 
 		// check whether this place is free
-		if (setElements[value].first.first == 0)
+		if (elements_[value].first.first == 0)
+		{
 			return false;
+		}
 
 		// check whether this element is equal to the given one
-		if (setElements[value].second == element)
+		if (elements_[value].second == element)
+		{
 			return true;
+		}
 
 		// check whether this place is not free but unique
-		if (setElements[value].first.first == 1)
+		if (elements_[value].first.first == 1)
+		{
 			return false;
+		}
 	}
 
 	return false;
@@ -481,10 +515,12 @@ void HashSet<T>::clear()
 {
 	ocean_assert(isConsistent());
 
-	for (typename Elements::iterator i = setElements.begin(); i != setElements.end(); ++i)
-		i->first.first = 0;
+	for (Element& element : elements_)
+	{
+		element.first.first = 0;
+	}
 
-	setSize = 0;
+	size_ = 0;
 
 	ocean_assert(isConsistent());
 }
@@ -492,19 +528,19 @@ void HashSet<T>::clear()
 template <typename T>
 inline size_t HashSet<T>::size() const
 {
-	return setSize;
+	return size_;
 }
 
 template <typename T>
 inline size_t HashSet<T>::capacity() const
 {
-	return setElements.size();
+	return elements_.size();
 }
 
 template <typename T>
 inline bool HashSet<T>::isEmpty() const
 {
-	return setSize == 0;
+	return size_ == 0;
 }
 
 template <typename T>
@@ -512,9 +548,9 @@ inline HashSet<T>& HashSet<T>::operator=(const HashSet<T>& hashSet)
 {
 	if (this != &hashSet)
 	{
-		setElements = hashSet.setElements;
-		setSize = hashSet.setSize;
-		setFunction = hashSet.setFunction;
+		elements_ = hashSet.elements_;
+		size_ = hashSet.size_;
+		function_ = hashSet.function_;
 	}
 
 	return *this;
@@ -525,11 +561,11 @@ inline HashSet<T>& HashSet<T>::operator=(HashSet<T>&& hashSet) noexcept
 {
 	if (this != &hashSet)
 	{
-		setElements = std::move(hashSet.setElements);
-		setSize = hashSet.setSize;
-		setFunction = hashSet.setFunction;
+		elements_ = std::move(hashSet.elements_);
+		size_ = hashSet.size_;
+		function_ = hashSet.function_;
 
-		hashSet.setSize = 0;
+		hashSet.size_ = 0;
 	}
 
 	return *this;
@@ -546,11 +582,15 @@ bool HashSet<T>::isConsistent() const
 {
 	size_t count = 0;
 
-	for (typename Elements::const_iterator i = setElements.begin(); i != setElements.end(); ++i)
-		if (i->first.first != 0)
+	for (const Element& element : elements_)
+	{
+		if (element.first.first != 0)
+		{
 			++count;
+		}
+	}
 
-	return count == setSize;
+	return count == size_;
 }
 
 }
