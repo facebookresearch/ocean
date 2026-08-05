@@ -214,6 +214,9 @@ class RowSegmenter
 		/// The minimum value of the pixel gradient that must be exceed for it count as a intensity transition.
 		TGradient minimumGradient_ = TGradient(0);
 
+		/// True, if the foreground is darker than the background; false, if the reflectance is inverted
+		bool isNormalReflectance_ = true;
+
 		/// The current position of the segmenter in the raw pixel data.
 		size_t position_ = 0;
 
@@ -265,7 +268,8 @@ template <typename TPixel>
 RowSegmenter<TPixel>::RowSegmenter(const TPixel* pixelData, const size_t pixelDataSize, const TGradient minimumGradient, const bool isNormalReflectance) :
 	pixelData_(pixelData),
 	size_(pixelDataSize),
-	minimumGradient_(minimumGradient)
+	minimumGradient_(minimumGradient),
+	isNormalReflectance_(isNormalReflectance)
 {
 	if (isNormalReflectance)
 	{
@@ -351,7 +355,10 @@ bool RowSegmenter<TPixel>::prepareSegments(const size_t numberSegments)
 
 		size_t nextSegmentPosition = segmentPosition_ + 1;
 
-		if (atForeground)
+		// a foreground pixel is darker than the threshold for normal reflectance, and brighter for inverted reflectance
+		const bool scanForDarkPixels = atForeground == isNormalReflectance_;
+
+		if (scanForDarkPixels)
 		{
 			while (nextSegmentPosition < size_ && pixelData_[nextSegmentPosition] < grayThreshold_)
 			{
@@ -360,7 +367,7 @@ bool RowSegmenter<TPixel>::prepareSegments(const size_t numberSegments)
 		}
 		else
 		{
-			while (nextSegmentPosition < size_  && pixelData_[nextSegmentPosition] >= grayThreshold_)
+			while (nextSegmentPosition < size_ && pixelData_[nextSegmentPosition] >= grayThreshold_)
 			{
 				nextSegmentPosition++;
 			}
