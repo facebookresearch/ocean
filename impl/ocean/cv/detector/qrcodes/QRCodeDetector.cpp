@@ -100,8 +100,8 @@ bool QRCodeDetector::computeProvisionalVersionRange(const AnyCamera& anyCamera, 
 	unsigned int versionYLow = 0u;
 	unsigned int versionYHigh = 0u;
 
-	if (!computeProvisionalVersion(planePoints[0], planePoints[1], moduleSizeInPlane[0], moduleSizeInPlane[1], maxAllowedVersionDifference, versionYLow, versionYHigh) ||
-		!computeProvisionalVersion(planePoints[0], planePoints[1], moduleSizeInPlane[0], moduleSizeInPlane[2], maxAllowedVersionDifference, versionXLow, versionXHigh))
+	if (!computeProvisionalVersion(planePoints[0], planePoints[1], moduleSizeInPlane[0], moduleSizeInPlane[1], maxAllowedVersionDifference, versionYLow, versionYHigh)
+			|| !computeProvisionalVersion(planePoints[0], planePoints[2], moduleSizeInPlane[0], moduleSizeInPlane[2], maxAllowedVersionDifference, versionXLow, versionXHigh))
 	{
 		return false;
 	}
