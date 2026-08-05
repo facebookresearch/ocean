@@ -104,12 +104,12 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 				return false;
 			}
 
-			synthesisFramePyramid_.reduceLayers(n - 1u);
-			synthesisMaskPyramid_.reduceLayers(n - 1u);
+			synthesisFramePyramid_.reduceLayers(n + 1u);
+			synthesisMaskPyramid_.reduceLayers(n + 1u);
 
 			if (filter)
 			{
-				synthesisFilterPyramid_.reduceLayers(n - 1u);
+				synthesisFilterPyramid_.reduceLayers(n + 1u);
 			}
 
 			break;
