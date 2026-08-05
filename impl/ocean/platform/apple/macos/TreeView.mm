@@ -350,7 +350,9 @@ using namespace Ocean::Platform::Apple::MacOS;
 	[super setFrame:frame];
 
 	if (viewOwner)
+	{
 		viewOwner->onResize(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+	}
 }
 
 -(void)dealloc
@@ -576,9 +578,9 @@ bool TreeView::TreeItem::hasChild(const TreeItemId childId) const
 		return false;
 	}
 
-	for (TreeItemIds::const_iterator i = childItemIds_.begin(); i != childItemIds_.end(); ++i)
+	for (const TreeItemId& itemId : childItemIds_)
 	{
-		if (*i == childId)
+		if (itemId == childId)
 		{
 			return true;
 		}
@@ -680,9 +682,9 @@ bool TreeView::TreeItem::setParent(const TreeItemId parentId, const TreeItemId f
 		ocean_assert(newParent);
 		if (newParent)
 		{
-			for (TreeItemIds::iterator i = newParent->childItemIds_.begin(); i != newParent->childItemIds_.end(); ++i)
+			for (const TreeItemId& itemId : newParent->childItemIds_)
 			{
-				ocean_assert(*i != id_);
+				ocean_assert_and_suppress_unused(itemId != id_, itemId);
 			}
 
 			bool hasBeenInserted = false;
@@ -943,21 +945,21 @@ bool TreeView::selectItems(const TreeItemIds& itemIds, const bool extendSelectio
 		[outlineView_ deselectAll:outlineView_];
 	}
 
-        for (TreeItemIds::const_iterator i = itemIds.cbegin(); i != itemIds.cend(); ++i)
+	for (const TreeItemId& sortedItemId : itemIds)
 	{
-		TreeItemId unsortedItemId = sortedItemId2unsortedItemId(*i);
+		const TreeItemId unsortedItemId = sortedItemId2unsortedItemId(sortedItemId);
 
-                NSInteger row = [outlineView_ rowForItem:[[NSNumber alloc] initWithInteger:unsortedItemId]];
+		const NSInteger row = [outlineView_ rowForItem:[[NSNumber alloc] initWithInteger:unsortedItemId]];
 
-                if (row == -1)
+		if (row == -1)
 		{
 			return false;
 		}
 
-                [outlineView_ selectRowIndexes: [NSIndexSet indexSetWithIndex:row] byExtendingSelection:YES];
+		[outlineView_ selectRowIndexes: [NSIndexSet indexSetWithIndex:row] byExtendingSelection:YES];
 	}
 
-        return true;
+	return true;
 }
 
 void TreeView::unselectItems()
@@ -1207,8 +1209,10 @@ void TreeView::setItemSortMap(TreeItemResortingMap&& unsorted2SortedItemMap)
 
 	sorted2UnsortedItemMap_.clear();
 
-	for (TreeItemResortingMap::const_iterator i = unsorted2SortedItemMap_.cbegin(); i != unsorted2SortedItemMap_.cend(); ++i)
-		sorted2UnsortedItemMap_.insert(std::make_pair(i->second, i->first));
+	for (const TreeItemResortingMap::value_type& itemPair : unsorted2SortedItemMap_)
+	{
+		sorted2UnsortedItemMap_.insert(std::make_pair(itemPair.second, itemPair.first));
+	}
 
 	ocean_assert(unsorted2SortedItemMap_.size() == sorted2UnsortedItemMap_.size());
 }

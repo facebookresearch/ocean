@@ -35,13 +35,6 @@ namespace MacOS
  */
 class ContextMenu
 {
-	protected:
-
-		/**
-		 * Definition of a vector holding a string.
-		 */
-		using Strings = Strings;
-
 	public:
 
 		/**
@@ -99,13 +92,13 @@ class ContextMenu
 	protected:
 
 		/// The actual MacOS context menu wrapped by this class.
-		NSMenu* contextMenuNSMenu;
+		NSMenu* nsMenu_ = nullptr;
 
 		/// The items of the context menus.
-		Strings contextMenuItemTexts;
+		Strings itemTexts_;
 
 		/// The index of the item that has been selected by the user, -1 if no item has been selected.
-		int contextSelectedIndex;
+		int selectedIndex_ = -1;
 };
 
 ContextMenu::ContextMenu(ContextMenu&& contextMenu) noexcept :

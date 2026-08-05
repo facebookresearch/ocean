@@ -110,7 +110,7 @@ class ImageList
 	protected:
 
 		/// The images of this list.
-		Images listImages;
+		Images images_;
 };
 
 inline ImageList::ImageList()
@@ -119,31 +119,31 @@ inline ImageList::ImageList()
 }
 
 inline ImageList::ImageList(ImageList&& imageList) noexcept :
-	listImages(std::move(imageList.listImages))
+	images_(std::move(imageList.images_))
 {
 	// nothing to do here
 }
 
 inline size_t ImageList::size() const
 {
-	return listImages.size();
+	return images_.size();
 }
 
 inline void ImageList::clear()
 {
-	listImages.clear();
+	images_.clear();
 }
 
 inline bool ImageList::isEmpty() const
 {
-	return listImages.empty();
+	return images_.empty();
 }
 
 inline ImageList& ImageList::operator=(ImageList&& imageList) noexcept
 {
 	if (this != &imageList)
 	{
-		listImages = std::move(imageList.listImages);
+		images_ = std::move(imageList.images_);
 	}
 
 	return *this;
@@ -151,8 +151,8 @@ inline ImageList& ImageList::operator=(ImageList&& imageList) noexcept
 
 inline Image& ImageList::operator[](const size_t index)
 {
-	ocean_assert(index < listImages.size());
-	return listImages[index];
+	ocean_assert(index < images_.size());
+	return images_[index];
 }
 
 }

@@ -24,7 +24,9 @@ double Screen::scaleFactor(NSScreen* screen)
 	double factor = 1.0;
 
 	if (screen)
+	{
 		factor = [screen backingScaleFactor];
+	}
 	else
 	{
 		NSScreen* mainScreen = [NSScreen mainScreen];
@@ -42,7 +44,9 @@ double Screen::scaleFactor(NSWindow* window)
 	double factor = 1.0;
 
 	if (window)
+	{
 		factor = [window backingScaleFactor];
+	}
 	else
 	{
 		NSScreen* mainScreen = [NSScreen mainScreen];

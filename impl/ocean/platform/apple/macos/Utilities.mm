@@ -81,9 +81,9 @@ class Ocean::Platform::Apple::MacOS::Utilities::FrameWindowManager : public Ocea
 
 			unsigned int counter = 0u;
 
-			for (WindowMap::const_iterator i = windowMap_.begin(); i != windowMap_.end(); ++i)
+			for (const WindowMap::value_type& windowPair : windowMap_)
 			{
-				if ([i->first isVisible])
+				if ([windowPair.first isVisible])
 				{
 					counter++;
 				}
@@ -104,11 +104,11 @@ class Ocean::Platform::Apple::MacOS::Utilities::FrameWindowManager : public Ocea
 
 			const ScopedLock scopedLock(lock_);
 
-			for (WindowMap::iterator i = windowMap_.begin(); i != windowMap_.end(); ++i)
+			for (const WindowMap::value_type& windowPair : windowMap_)
 			{
-				if ([[i->first title] isEqualToString:nsTitle])
+				if ([[windowPair.first title] isEqualToString:nsTitle])
 				{
-					i->second->setFrame(frame);
+					windowPair.second->setFrame(frame);
 					return true;
 				}
 			}
@@ -163,7 +163,9 @@ Utilities::Commands Utilities::commandArguments()
 
 		// special handling for Xcode as we do not want any Xcode-default command arguments
 		if (argument == L"-NSDocumentRevisionsDebugMode")
+		{
 			break;
+		}
 
 		result.push_back(std::move(argument));
 	}

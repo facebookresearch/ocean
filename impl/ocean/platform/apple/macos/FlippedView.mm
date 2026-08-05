@@ -173,7 +173,9 @@ void FlippedView::setEnabled(const bool enable)
 	}
 
 	if (enabled_ == enable)
+	{
 		return;
+	}
 
 	if (enable)
 	{
@@ -187,7 +189,7 @@ void FlippedView::setEnabled(const bool enable)
 			NSControl* control = [childControls_ objectAtIndex:n];
 			ocean_assert(control);
 
-			ocean_assert([control isEnabled] == false);
+			ocean_assert(![control isEnabled]);
 			[control setEnabled:recoverChildControls_[n]];
 		}
 

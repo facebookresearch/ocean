@@ -39,7 +39,9 @@ using namespace Ocean::Platform::Apple::MacOS;
 	ocean_assert(menuOwner != nullptr);
 
 	if (menuOwner)
+	{
 		menuOwner->onItemSelected((NSMenuItem*)sender);
+	}
 }
 
 @end
@@ -56,73 +58,73 @@ namespace Apple
 namespace MacOS
 {
 
-ContextMenu::ContextMenu() :
-	contextMenuNSMenu(nullptr),
-	contextSelectedIndex(-1)
+ContextMenu::ContextMenu()
 {
-	contextMenuNSMenu = [[OceanPlatformAppleMacOSContextMenu alloc] initWithTitle:@"" andOwner:this];
+	nsMenu_ = [[OceanPlatformAppleMacOSContextMenu alloc] initWithTitle:@"" andOwner:this];
 }
 
 int ContextMenu::addItem(const std::string& text, const bool enabled)
 {
-	ocean_assert(contextMenuNSMenu != nullptr);
+	ocean_assert(nsMenu_ != nullptr);
 
-	const int index = int(contextMenuItemTexts.size());
+	const int index = int(itemTexts_.size());
 
 	if (text == "-")
 	{
-		[contextMenuNSMenu insertItem:[NSMenuItem separatorItem] atIndex:index];
+		[nsMenu_ insertItem:[NSMenuItem separatorItem] atIndex:index];
 	}
 	else
 	{
-		NSMenuItem* item = [(OceanPlatformAppleMacOSContextMenu*)contextMenuNSMenu insertItemWithTitle:StringApple::toNSString(text) action:@selector(menuItemSelected:) keyEquivalent:@"" atIndex:index];
+		NSMenuItem* item = [(OceanPlatformAppleMacOSContextMenu*)nsMenu_ insertItemWithTitle:StringApple::toNSString(text) action:@selector(menuItemSelected:) keyEquivalent:@"" atIndex:index];
 
 		if (enabled)
 		{
-			[item setTarget:(OceanPlatformAppleMacOSContextMenu*)contextMenuNSMenu];
+			[item setTarget:(OceanPlatformAppleMacOSContextMenu*)nsMenu_];
 		}
 	}
 
-	contextMenuItemTexts.push_back(text);
+	itemTexts_.push_back(text);
 
 	return index;
 }
 
 int ContextMenu::popup()
 {
-	contextSelectedIndex = -1;
+	selectedIndex_ = -1;
 
-	[(OceanPlatformAppleMacOSContextMenu*)contextMenuNSMenu popUpMenuPositioningItem:nil atLocation:[NSEvent mouseLocation] inView:nil];
+	[(OceanPlatformAppleMacOSContextMenu*)nsMenu_ popUpMenuPositioningItem:nil atLocation:[NSEvent mouseLocation] inView:nil];
 
-	return contextSelectedIndex;
+	return selectedIndex_;
 }
 
 void ContextMenu::onItemSelected(NSMenuItem* item)
 {
-	ocean_assert(contextSelectedIndex == -1);
+	ocean_assert(selectedIndex_ == -1);
 	ocean_assert(item != nullptr);
 
 	const std::string itemTitle = StringApple::toUTF8([item title]);
 
-	for (size_t n = 0; n < contextMenuItemTexts.size(); ++n)
-		if (contextMenuItemTexts[n] == itemTitle)
+	for (size_t n = 0; n < itemTexts_.size(); ++n)
+	{
+		if (itemTexts_[n] == itemTitle)
 		{
-			contextSelectedIndex = int(n);
+			selectedIndex_ = int(n);
 			break;
 		}
+	}
 }
 
 ContextMenu& ContextMenu::operator=(ContextMenu&& contextMenu) noexcept
 {
 	if (this != &contextMenu)
 	{
-		contextMenuNSMenu = contextMenu.contextMenuNSMenu;
-		contextMenu.contextMenuNSMenu = nullptr;
+		nsMenu_ = contextMenu.nsMenu_;
+		contextMenu.nsMenu_ = nullptr;
 
-		contextMenuItemTexts = std::move(contextMenu.contextMenuItemTexts);
+		itemTexts_ = std::move(contextMenu.itemTexts_);
 
-		contextSelectedIndex = contextMenu.contextSelectedIndex;
-		contextMenu.contextSelectedIndex = -1;
+		selectedIndex_ = contextMenu.selectedIndex_;
+		contextMenu.selectedIndex_ = -1;
 	}
 
 	return *this;

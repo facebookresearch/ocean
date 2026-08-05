@@ -42,7 +42,7 @@ ImageList::ImageList(const Frame& frame, const double scaleFactor)
 		return;
 	}
 
-	listImages.reserve(images);
+	images_.reserve(images);
 
 	for (unsigned int n = 0u; n < images; ++n)
 	{
@@ -56,7 +56,7 @@ ImageList::ImageList(const Frame& frame, const double scaleFactor)
 			return;
 		}
 
-		listImages.push_back(std::move(image));
+		images_.push_back(std::move(image));
 	}
 }
 
