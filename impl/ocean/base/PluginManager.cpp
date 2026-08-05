@@ -258,7 +258,7 @@ bool PluginManager::setPluginFileExtension(const std::string& extension)
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (!collectedPlugins_.empty() || loadedPlugins_.empty())
+	if (!collectedPlugins_.empty() || !loadedPlugins_.empty())
 	{
 		return false;
 	}
