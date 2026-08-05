@@ -211,6 +211,13 @@ IO::Serialization::DataSerializer::ChannelId SerializerDeviceRecorder::addExtraC
 
 	const ScopedLock scopedLock(recorderLock_);
 
+	ocean_assert(outputSerializer_);
+
+	if (!outputSerializer_)
+	{
+		return IO::Serialization::DataSerializer::invalidChannelId();
+	}
+
 	return outputSerializer_->addChannel(sampleType, channelName, contentType);
 }
 
@@ -858,8 +865,11 @@ void SerializerDeviceRecorder::threadRun()
 		}
 	}
 
+	TemporaryScopedLock scopedLock(recorderLock_);
+		outputSerializer_ = nullptr;
+	scopedLock.release();
+
 	recorderState_ = RS_STOPPED;
-	outputSerializer_ = nullptr;
 
 	Log::debug() << "SerializerDeviceRecorder: Recording thread stopped.";
 }
