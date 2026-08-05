@@ -7,7 +7,6 @@
 
 #include "ocean/platform/win/Registry.h"
 
-#include "ocean/base/Exception.h"
 #include "ocean/base/String.h"
 
 namespace Ocean
@@ -215,13 +214,9 @@ bool Registry::setValue(const HKEY key, const std::string& name, const Names& va
 		++size;
 	}
 
-	wchar_t* buffer = new wchar_t[size];
-	if (buffer == nullptr)
-	{
-		throw OutOfMemoryException();
-	}
+	std::vector<wchar_t> buffer(size);
 
-	wchar_t* pointer = buffer;
+	wchar_t* pointer = buffer.data();
 	for (const std::wstring& name : value)
 	{
 		ocean_assert(name.size() > name.length());
@@ -237,9 +232,8 @@ bool Registry::setValue(const HKEY key, const std::string& name, const Names& va
 		pointer[1] = L'\0';
 	}
 
-	const bool result = RegSetValueEx(key, String::toWString(name).c_str(), 0, REG_MULTI_SZ, (BYTE*)buffer, DWORD(sizeof(wchar_t) * size)) == ERROR_SUCCESS;
+	const bool result = RegSetValueEx(key, String::toWString(name).c_str(), 0, REG_MULTI_SZ, (BYTE*)(buffer.data()), DWORD(sizeof(wchar_t) * size)) == ERROR_SUCCESS;
 
-	delete [] buffer;
 	return result;
 }
 
@@ -389,21 +383,17 @@ Registry::Names Registry::value(const HKEY key, const std::string& name, const N
 	DWORD type = 0;
 	DWORD size = 0;
 
-	Names resultValue;
-
 	const bool result = RegQueryValueEx(key, String::toWString(name).c_str(), 0, &type, nullptr, &size) == ERROR_SUCCESS;
 
 	if (result && type == REG_MULTI_SZ && size > 0)
 	{
-		wchar_t* buffer = new wchar_t[size];
-		if (buffer == nullptr)
-		{
-			throw OutOfMemoryException();
-		}
+		std::vector<wchar_t> buffer(size);
 
-		if (RegQueryValueEx(key, String::toWString(name).c_str(), 0, nullptr, (BYTE*)buffer, &size) == ERROR_SUCCESS)
+		if (RegQueryValueEx(key, String::toWString(name).c_str(), 0, nullptr, (BYTE*)(buffer.data()), &size) == ERROR_SUCCESS)
 		{
-			wchar_t* pointer = buffer;
+			Names resultValue;
+
+			wchar_t* pointer = buffer.data();
 
 			while (true)
 			{
@@ -420,10 +410,11 @@ Registry::Names Registry::value(const HKEY key, const std::string& name, const N
 				pointer += newValue.length() + 1;
 			}
 
+			return resultValue;
 		}
 	}
 
-	return resultValue;
+	return defaultValue;
 }
 
 Registry::Names Registry::values(const RootType root, const std::string& path)
