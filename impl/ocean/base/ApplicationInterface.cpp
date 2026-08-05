@@ -28,9 +28,9 @@ ApplicationInterface::EventIds ApplicationInterface::addContent(const StringVect
 
 	scopedLock.release();
 
-	if (contentAddCallback)
+	if (callback)
 	{
-		return contentAddCallback(content);
+		return callback(content);
 	}
 
 	Log::warning() << "The application does not support content adding!";
