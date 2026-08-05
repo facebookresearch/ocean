@@ -288,7 +288,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 
 	RandomGenerator generator(randomGenerator_);
 
-	ocean_assert_and_suppress_unused(firstColumn + numberColumns <= layerWidth, numberColumns);
+	ocean_assert(firstColumn + numberColumns <= layerWidth);
 	ocean_assert(firstRow + numberRows <= layerHeight);
 
 	const unsigned int maskStrideElements = layerF_.mask().strideElements();
@@ -298,7 +298,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		for (unsigned int x = firstColumn; x < firstColumn + numberRows; ++x)
+		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{
 			if (maskData[y * maskStrideElements + x] != 0xFF)
 			{
