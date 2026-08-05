@@ -6,6 +6,7 @@
  */
 
 #include "ocean/platform/win/ToolTip.h"
+#include "ocean/platform/win/Utilities.h"
 
 #include <CommCtrl.h>
 
@@ -64,17 +65,17 @@ bool ToolTip::addToolTip(const HWND handle, const std::wstring& text)
 			}
 		}
 
-		HDC hdc = GetDC(nullptr);
+		const ScopedScreenDC hdc(GetDC(nullptr));
 
-		if (hdc == nullptr)
+		if (!hdc.isValid())
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
 		}
 
-		if (!SelectObject(hdc, fontHandle))
+		// the font belongs to the tool tip window or is a stock object, so it must not be deleted here
+		if (!SelectObject(*hdc, fontHandle))
 		{
-			ReleaseDC(nullptr, hdc);
 			return false;
 		}
 
@@ -89,7 +90,7 @@ bool ToolTip::addToolTip(const HWND handle, const std::wstring& text)
 			std::wstring line = text.substr(start, end == std::string::npos ? end : end - start);
 
 			SIZE sz;
-			if (!GetTextExtentPoint32(hdc, line.c_str(), int(line.length()), &sz))
+			if (!GetTextExtentPoint32(*hdc, line.c_str(), int(line.length()), &sz))
 				ocean_assert(false && "This should never happen!");
 
 			if (sz.cx > max)
