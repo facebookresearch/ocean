@@ -121,6 +121,15 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestHarrisDetector
 		 */
 		static bool testHarrisVoteFrame(const double testDuration, Worker& worker, const Frame& yFrameTest = Frame());
 
+		/**
+		 * Tests the Harris response for an entire frame based on an already existing Sobel response.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @param yFrameTest Optional explicit frame to be used for testing, otherwise a random image will be used
+		 * @return True, if succeeded
+		 */
+		static bool testHarrisVoteFrameSobelResponse(const double testDuration, Worker& worker, const Frame& yFrameTest = Frame());
+
 	private:
 
 		/**

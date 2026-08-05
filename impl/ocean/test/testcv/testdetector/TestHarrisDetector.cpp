@@ -124,6 +124,15 @@ bool TestHarrisDetector::test(const Frame& frame, const double testDuration, Wor
 	if (selector.shouldRun("harrisvoteframe"))
 	{
 		testResult = testHarrisVoteFrame(testDuration, worker, yFrame);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("harrisvoteframesobelresponse"))
+	{
+		testResult = testHarrisVoteFrameSobelResponse(testDuration, worker, yFrame);
 	}
 
 	Log::info() << " ";
@@ -185,6 +194,12 @@ TEST(TestHarrisDetector, HarrisVoteFrame)
 {
 	Worker worker;
 	EXPECT_TRUE(TestHarrisDetector::testHarrisVoteFrame(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestHarrisDetector, HarrisVoteFrameSobelResponse)
+{
+	Worker worker;
+	EXPECT_TRUE(TestHarrisDetector::testHarrisVoteFrameSobelResponse(GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -944,6 +959,115 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 				const bool setBorderPixels = RandomI::boolean(randomGenerator);
 
 				CV::Detector::HarrisCornerDetector::harrisVotesFrame(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), votesFrame.data<int32_t>(), votesFrame.paddingElements(), useWorker, setBorderPixels);
+
+				if (!CV::CVUtilities::isPaddingMemoryIdentical(votesFrame, copyVotesFrame))
+				{
+					ocean_assert(false && "Invalid padding memory!");
+					return false;
+				}
+
+				for (unsigned int y = 2u; y < yFrame.height() - 2u; ++y)
+				{
+					for (unsigned int x = 2u; x < yFrame.width() - 2u; ++x)
+					{
+						const int32_t vote = votesFrame.constpixel<int32_t>(x, y)[0];
+
+						const int32_t testVote = harrisVote3x3<false>(yFrame, x, y);
+						const int32_t testVoteRounded = harrisVote3x3<true>(yFrame, x, y);
+
+						OCEAN_EXPECT_TRUE(validation, vote == testVote || vote == testVoteRounded);
+
+						const int32_t pixelVote = CV::Detector::HarrisCornerDetector::harrisVotePixel(yFrame.constdata<uint8_t>(), yFrame.width(), x, y, yFrame.paddingElements());
+
+						OCEAN_EXPECT_EQUAL(validation, pixelVote, vote);
+					}
+				}
+
+				if (setBorderPixels)
+				{
+					for (unsigned int x = 0u; x < votesFrame.width(); ++x)
+					{
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, 0u)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, 1u)[0], 0);
+
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, votesFrame.height() - 2u)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(x, votesFrame.height() - 1u)[0], 0);
+					}
+
+					for (unsigned int y = 0u; y < votesFrame.height(); ++y)
+					{
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(0u, y)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(1u, y)[0], 0);
+
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(votesFrame.width() - 2u, y)[0], 0);
+						OCEAN_EXPECT_EQUAL(validation, votesFrame.constpixel<int32_t>(votesFrame.width() - 1u, y)[0], 0);
+					}
+				}
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestHarrisDetector::testHarrisVoteFrameSobelResponse(const double testDuration, Worker& worker, const Frame& yFrameTest)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Harris vote frame Sobel response test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const bool performanceIteration : {true, false})
+		{
+			Frame yFrame;
+
+			if (performanceIteration)
+			{
+				if (yFrameTest.isValid())
+				{
+					yFrame = Frame(yFrameTest, Frame::ACM_USE_KEEP_LAYOUT);
+				}
+				else
+				{
+					yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
+					ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
+				}
+			}
+			else
+			{
+				const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u);
+				const unsigned int height = RandomI::random(randomGenerator, 7u, 1080u);
+
+				yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
+				ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
+			}
+
+			for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
+			{
+				Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
+
+				Frame sobelResponseFrame = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int8_t, 2u>()), &randomGenerator);
+
+				CV::FrameFilterSobel::filterHorizontalVertical8BitPerChannel<int8_t, 1u>(yFrame.constdata<uint8_t>(), sobelResponseFrame.data<int8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), sobelResponseFrame.paddingElements(), useWorker);
+
+				Frame votesFrame = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()), &randomGenerator);
+
+				const Frame copyVotesFrame(votesFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+				const bool setBorderPixels = RandomI::boolean(randomGenerator);
+
+				CV::Detector::HarrisCornerDetector::harrisVotesFrameSobelResponse(sobelResponseFrame.constdata<int8_t>(), yFrame.width(), yFrame.height(), sobelResponseFrame.paddingElements(), votesFrame.data<int32_t>(), votesFrame.paddingElements(), useWorker, setBorderPixels);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(votesFrame, copyVotesFrame))
 				{

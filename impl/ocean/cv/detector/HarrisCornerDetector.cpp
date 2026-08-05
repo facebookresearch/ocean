@@ -315,7 +315,7 @@ void HarrisCornerDetector::harrisVotes(const uint8_t* yFrame, const unsigned int
 
 void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, const unsigned int width, const unsigned int height, const unsigned int responsePaddingElements, int32_t* votes, const unsigned int votesPaddingElements, const unsigned int firstRow, const unsigned int numberRows)
 {
-	ocean_assert(response && votes);
+	ocean_assert(response != nullptr && votes != nullptr);
 	ocean_assert(firstRow + numberRows <= height);
 
 	const unsigned int responseStrideElements = width * 2u + responsePaddingElements;
@@ -337,7 +337,7 @@ void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, c
 		ocean_assert(response0 < response0End);
 		ocean_assert((response0 - response) % responseStrideElements == 2u * 2u);
 
-		const int8_t* const response0EndRow = response0 + responseStrideElements - 8u;
+		const int8_t* const response0EndRow = response0 + width * 2u - 8u;
 
 		while (response0 != response0EndRow)
 		{
