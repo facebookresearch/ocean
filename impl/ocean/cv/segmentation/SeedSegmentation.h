@@ -548,25 +548,25 @@ unsigned int SeedSegmentation::seedSegmentationArea8BitPerChannel(const uint32_t
 			mask[maskTestOffset] = visitedMaskValue_;
 
 			// top
-			if (pixel.y() > 0u && mask[maskTestOffset - width] != unvisitedMaskValue_)
+			if (pixel.y() > 0u && mask[maskTestOffset - maskStrideElements] != visitedMaskValue_)
 			{
 				stack.emplace_back(pixel.x(), pixel.y() - 1u, testIntegralIndex);
 			}
 
 			// bottom
-			if (pixel.y() + 1u < height && mask[maskTestOffset + width] != unvisitedMaskValue_)
+			if (pixel.y() + 1u < height && mask[maskTestOffset + maskStrideElements] != visitedMaskValue_)
 			{
 				stack.emplace_back(pixel.x(), pixel.y() + 1u, testIntegralIndex);
 			}
 
 			// left
-			if (pixel.x() > 0u && mask[maskTestOffset - 1u] != unvisitedMaskValue_)
+			if (pixel.x() > 0u && mask[maskTestOffset - 1u] != visitedMaskValue_)
 			{
 				stack.emplace_back(pixel.x() - 1u, pixel.y(), testIntegralIndex);
 			}
 
 			// right
-			if (pixel.x() + 1u < width && mask[maskTestOffset + 1u] != unvisitedMaskValue_)
+			if (pixel.x() + 1u < width && mask[maskTestOffset + 1u] != visitedMaskValue_)
 			{
 				stack.emplace_back(pixel.x() + 1u, pixel.y(), testIntegralIndex);
 			}
