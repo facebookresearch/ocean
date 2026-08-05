@@ -6,6 +6,7 @@
  */
 
 #include "ocean/platform/win/Screen.h"
+#include "ocean/platform/win/Utilities.h"
 
 #include <winsock2.h>
 #include <windows.h>
@@ -130,12 +131,10 @@ int Screen::dpi(const HDC dc)
 	// if either no device context was provided or if the dpi value could not be determined from the window (which can happen at least on Windows 7)
 	if (logicalPixelSize == 0)
 	{
-		const HDC localDC = GetDC(nullptr);
+		const ScopedScreenDC localDC(GetDC(nullptr));
 
-		logicalPixelSize = GetDeviceCaps(localDC, LOGPIXELSX);
-		ocean_assert(logicalPixelSize == GetDeviceCaps(localDC, LOGPIXELSY));
-
-		ReleaseDC(nullptr, localDC);
+		logicalPixelSize = GetDeviceCaps(*localDC, LOGPIXELSX);
+		ocean_assert(logicalPixelSize == GetDeviceCaps(*localDC, LOGPIXELSY));
 	}
 
 	ocean_assert(logicalPixelSize > 0);
