@@ -26,8 +26,8 @@ PluginManager::Plugin::Plugin(const std::string& filename, const std::string& na
 	thirdpartyDependences_(thirdpartyDependences),
 	thirdpartyDescription_(thirdpartyDescription)
 {
-	ocean_assert(filename_.empty() == false);
-	ocean_assert(name_.empty() == false);
+	ocean_assert(!filename_.empty());
+	ocean_assert(!name_.empty());
 }
 
 bool PluginManager::Plugin::load() const
@@ -78,11 +78,11 @@ bool PluginManager::Plugin::load() const
 			{
 				Log::error() << "This error mostly occurs if 3rd party dlls can not be accessed.";
 
-				if (thirdpartyDependences_.empty() == false)
+				if (!thirdpartyDependences_.empty())
 				{
 					Log::error() << "This plugin needs the following 3rd party dlls: \"" << thirdpartyDependences_ << "\".";
 				}
-				if (thirdpartyDescription_.empty() == false)
+				if (!thirdpartyDescription_.empty())
 				{
 					Log::error() << thirdpartyDescription_;
 				}
@@ -156,7 +156,7 @@ bool PluginManager::Plugin::unload() const
 
 	if (unloadFunction_)
 	{
-		if (unloadFunction_() == false)
+		if (!unloadFunction_())
 		{
 			Log::error() << "Could not unload plugin \"" << name_ << "\", check whether some resources are sill used.";
 			return false;
@@ -174,7 +174,7 @@ bool PluginManager::Plugin::unload() const
 
 	if (unloadFunction_)
 	{
-		if (unloadFunction_() == false)
+		if (!unloadFunction_())
 		{
 			Log::error() << "Could not unload plugin \"" << name_ << "\", check whether some resources are sill used.";
 			return false;
@@ -311,7 +311,7 @@ unsigned int PluginManager::collectPlugins(const std::string& directory, const b
 		{
 			break;
 		}
-	};
+	}
 
 	if (foundPlugins > 0u)
 	{
@@ -397,25 +397,23 @@ bool PluginManager::loadPlugins(const Names& names)
 	const ScopedLock scopedLock(lock_);
 	PluginSet pluginsToLoad;
 
-	for (Names::const_iterator iN = names.begin(); iN != names.end(); ++iN)
+	for (const std::string& name : names)
 	{
-		for (Plugins::iterator iP = collectedPlugins_.begin(); iP != collectedPlugins_.end(); ++iP)
+		for (const Plugin& plugin : collectedPlugins_)
 		{
-			if (iP->name() == *iN)
+			if (plugin.name() == name)
 			{
-				pluginsToLoad.insert(*iP);
+				pluginsToLoad.insert(plugin);
 			}
 		}
 	}
 
 	bool loaded = false;
-	for (PluginSet::const_iterator i = pluginsToLoad.begin(); i != pluginsToLoad.end(); ++i)
+	for (const Plugin& plugin : pluginsToLoad)
 	{
-		const Plugin& plugin = *i;
-
 		if (plugin.load())
 		{
-			loadedPlugins_.push_back(*i);
+			loadedPlugins_.push_back(plugin);
 			loaded = true;
 		}
 	}
@@ -428,22 +426,20 @@ bool PluginManager::loadPlugins(const PluginType type)
 	const ScopedLock scopedLock(lock_);
 	PluginSet pluginsToLoad;
 
-	for (Plugins::iterator iP = collectedPlugins_.begin(); iP != collectedPlugins_.end(); ++iP)
+	for (const Plugin& plugin : collectedPlugins_)
 	{
-		if (iP->type() & type)
+		if (plugin.type() & type)
 		{
-			pluginsToLoad.insert(*iP);
+			pluginsToLoad.insert(plugin);
 		}
 	}
 
 	bool loaded = false;
-	for (PluginSet::const_iterator i = pluginsToLoad.begin(); i != pluginsToLoad.end(); ++i)
+	for (const Plugin& plugin : pluginsToLoad)
 	{
-		const Plugin& plugin = *i;
-
 		if (plugin.load())
 		{
-			loadedPlugins_.push_back(*i);
+			loadedPlugins_.push_back(plugin);
 			loaded = true;
 		}
 	}
@@ -456,24 +452,19 @@ bool PluginManager::loadAllPlugins()
 	const ScopedLock scopedLock(lock_);
 	PluginSet pluginsToLoad;
 
-	for (Plugins::iterator iP = collectedPlugins_.begin(); iP != collectedPlugins_.end(); ++iP)
-	{
-		pluginsToLoad.insert(*iP);
-	}
+	pluginsToLoad.insert(collectedPlugins_.cbegin(), collectedPlugins_.cend());
 
 	bool loaded = false;
-	for (PluginSet::const_iterator i = pluginsToLoad.begin(); i != pluginsToLoad.end(); ++i)
+	for (const Plugin& plugin : pluginsToLoad)
 	{
-		const Plugin& plugin = *i;
-
 		if (plugin.load())
 		{
-			loadedPlugins_.push_back(*i);
+			loadedPlugins_.push_back(plugin);
 			loaded = true;
 		}
 		else
 		{
-			Log::error() << "Could not loaded the \"" << i->name() << "\" plugin.";
+			Log::error() << "Could not load the \"" << plugin.name() << "\" plugin.";
 		}
 	}
 
@@ -513,14 +504,14 @@ PluginManager::Names PluginManager::plugins() const
 
 	Names result;
 
-	for (Plugins::const_iterator i = collectedPlugins_.begin(); i != collectedPlugins_.end(); ++i)
+	for (const Plugin& plugin : collectedPlugins_)
 	{
-		result.push_back(i->name());
+		result.push_back(plugin.name());
 	}
 
-	for (Plugins::const_iterator i = loadedPlugins_.begin(); i != loadedPlugins_.end(); i++)
+	for (const Plugin& plugin : loadedPlugins_)
 	{
-		result.push_back(i->name());
+		result.push_back(plugin.name());
 	}
 
 	return result;
@@ -532,9 +523,9 @@ PluginManager::Names PluginManager::loadedPlugins() const
 
 	Names result;
 
-	for (Plugins::const_iterator i = loadedPlugins_.begin(); i != loadedPlugins_.end(); i++)
+	for (const Plugin& plugin : loadedPlugins_)
 	{
-		result.push_back(i->name());
+		result.push_back(plugin.name());
 	}
 
 	return result;
@@ -546,9 +537,9 @@ PluginManager::Names PluginManager::unloadedPlugins() const
 
 	Names result;
 
-	for (Plugins::const_iterator i = collectedPlugins_.begin(); i != collectedPlugins_.end(); ++i)
+	for (const Plugin& plugin : collectedPlugins_)
 	{
-		result.push_back(i->name());
+		result.push_back(plugin.name());
 	}
 
 	return result;
@@ -657,7 +648,7 @@ bool PluginManager::determinePlugin(const std::string& filename, Plugin& plugin)
 					}
 				}
 
-				if (name.empty() == false && type != TYPE_UNKNOWN)
+				if (!name.empty() && type != TYPE_UNKNOWN)
 				{
 					plugin = Plugin(filename, String::toAString(name), String::toAString(description), type, priority, dependences,
 							String::toAString(thirdpartyDependences), String::toAString(thirdpartyDescription));
