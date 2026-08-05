@@ -108,16 +108,14 @@ void Utilities::frameOutput(HDC dc, const int x, const int y, const unsigned int
 
 void Utilities::desktopFrameOutput(const int x, const int y, const Frame& frame)
 {
-	HDC dc = GetDC(0);
-	frameOutput(dc, x, y, frame);
-	ReleaseDC(0, dc);
+	const ScopedScreenDC dc(GetDC(nullptr));
+	frameOutput(*dc, x, y, frame);
 }
 
 void Utilities::desktopFrameOutput(const int x, const int y, const unsigned int width, const unsigned int height, const Frame& frame)
 {
-	HDC dc = GetDC(0);
-	frameOutput(dc, x, y, width, height, frame);
-	ReleaseDC(0, dc);
+	const ScopedScreenDC dc(GetDC(nullptr));
+	frameOutput(*dc, x, y, width, height, frame);
 }
 
 void Utilities::bitmapOutput(HDC dc, const int x, const int y, const Bitmap& bitmap)
