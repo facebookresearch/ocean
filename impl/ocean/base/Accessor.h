@@ -1604,11 +1604,15 @@ std::unordered_map<typename TAccessor::KeyType, typename TAccessor::Type> Access
 
 	if (accessor.firstElement(element, key))
 	{
-		do
+		result[key] = element;
+
+		typename TAccessor::KeyType nextKey;
+
+		while (accessor.nextElement(key, element, nextKey))
 		{
+			key = nextKey;
 			result[key] = element;
 		}
-		while (accessor.nexteElement(key, element, key));
 	}
 
 	return result;
@@ -2276,7 +2280,7 @@ bool ConstMapAccessor<T, TKey>::nextElement(const TKey& previousKey, T& element,
 		return false;
 	}
 
-	const typename std::unordered_map<TKey, T>::const_iterator i = elementMap_->find(previousKey);
+	typename std::unordered_map<TKey, T>::const_iterator i = elementMap_->find(previousKey);
 	if (i == elementMap_->cend() || (++i) == elementMap_->cend())
 	{
 		return false;
@@ -2349,7 +2353,7 @@ bool NonconstMapAccessor<T, TKey>::nextElement(const TKey& previousKey, T& eleme
 		return false;
 	}
 
-	const typename std::unordered_map<TKey, T>::const_iterator i = elementMap_->find(previousKey);
+	typename std::unordered_map<TKey, T>::const_iterator i = elementMap_->find(previousKey);
 	if (i == elementMap_->cend() || (++i) == elementMap_->cend())
 	{
 		return false;
