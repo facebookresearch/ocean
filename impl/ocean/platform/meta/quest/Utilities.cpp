@@ -40,7 +40,7 @@ bool Utilities::restrictThreadExecutionToSilverCoresQuest()
 
 		// therefore, we simply iterate over all possible combinations of Silver cores (0-3), so mask values between 1 and 15
 
-		for (uint32_t mask = 8u; mask != 0u; --mask)
+		for (uint32_t mask = 15u; mask != 0u; --mask)
 		{
 			if (Platform::Android::Processor::setCurrentThreadAffinity(mask))
 			{
