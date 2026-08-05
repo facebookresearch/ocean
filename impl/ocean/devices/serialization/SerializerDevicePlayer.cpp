@@ -104,6 +104,10 @@ bool SerializerDevicePlayer::initialize(const std::string& filename)
 	IO::Serialization::DataSerializer::Channels channels;
 	if (!inputSerializer_->initialize(&channels))
 	{
+		inputSerializer_ = nullptr;
+		filename_.clear();
+		UsageManager::get().unregisterUsage();
+
 		return false;
 	}
 
