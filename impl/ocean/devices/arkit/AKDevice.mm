@@ -400,6 +400,12 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 {
 	AKDevice::DeviceMap::iterator iDevice = deviceMap_.find(tracker);
 	ocean_assert(iDevice != deviceMap_.cend());
+
+	if (iDevice == deviceMap_.cend())
+	{
+		return false;
+	}
+
 	ocean_assert(iDevice->second >= 1u);
 
 	iDevice->second--;
