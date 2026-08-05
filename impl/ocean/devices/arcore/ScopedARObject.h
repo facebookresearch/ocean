@@ -61,6 +61,13 @@ using ScopedARFrame = ScopedARObject<ArFrame, ArFrame_destroy>;
 using ScopedARImage = ScopedARObject<ArImage, ArImage_release>;
 
 /**
+ * Definition of a scoped object for ArCamera.
+ * @see ScopedARObject
+ * @ingroup devicesarcore
+ */
+using ScopedARCamera = ScopedARObject<ArCamera, ArCamera_release>;
+
+/**
  * Definition of a scoped object for ArCameraConfig.
  * @see ScopedARObject
  * @ingroup devicesarcore

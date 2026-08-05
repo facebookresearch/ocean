@@ -1172,9 +1172,9 @@ bool ARSessionManager::extractPose(ArSession* arSession, ArFrame* arFrame, Homog
 	ocean_assert(arSession != nullptr);
 	ocean_assert(arFrame != nullptr);
 
-	ArCamera* arCamera = nullptr;
-	ArFrame_acquireCamera(arSession, arFrame, &arCamera);
-	ocean_assert(arCamera != nullptr);
+	ScopedARCamera arCamera;
+	ArFrame_acquireCamera(arSession, arFrame, arCamera.ingest());
+	ocean_assert(arCamera);
 
 	ArTrackingState arTrackingState;
 	ArCamera_getTrackingState(arSession, arCamera, &arTrackingState);
