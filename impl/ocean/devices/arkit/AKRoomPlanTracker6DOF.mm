@@ -54,13 +54,13 @@ bool AKRoomPlanTracker6DOF::start()
 		if (akRoomPlanTracker_ == nullptr)
 		{
 			akRoomPlanTracker_ = [AKRoomPlanTracker6DOF_Objc new];
-
-			AKRoomPlanTracker6DOFOwnerContainer* ownerContainer = [AKRoomPlanTracker6DOFOwnerContainer new];
-			ownerContainer.owner_ = this;
-			ownerContainer.inputLiveVideo_ = frameMediums_.front();
-
-			isStarted_ = [akRoomPlanTracker_ start:ownerContainer];
 		}
+
+		AKRoomPlanTracker6DOFOwnerContainer* ownerContainer = [AKRoomPlanTracker6DOFOwnerContainer new];
+		ownerContainer.owner_ = this;
+		ownerContainer.inputLiveVideo_ = frameMediums_.front();
+
+		isStarted_ = [akRoomPlanTracker_ start:ownerContainer];
 	}
 	else
 	{
@@ -91,6 +91,8 @@ bool AKRoomPlanTracker6DOF::stop()
 		return false;
 	}
 
+	isStarted_ = false;
+
 	if (!worldIsTracked_)
 	{
 		return true;
@@ -98,8 +100,6 @@ bool AKRoomPlanTracker6DOF::stop()
 
 	ObjectIdSet lostObjects = {worldObjectId_};
 	worldIsTracked_ = false;
-
-	isStarted_ = false;
 
 	scopedLock.release();
 
