@@ -545,12 +545,22 @@ bool Utilities::readCalibrationBoardFromFile(const std::string& filename, Calibr
 
 		const size_t markerId = size_t(markerIdSigned);
 
+		if (markerId >= Marker::numberMarkerIds())
+		{
+			return false;
+		}
+
 		const CV::PixelDirection orientation = CV::PixelDirection(orientationSigned);
 
 		const unsigned int x = (unsigned int)(xSigned);
 		const unsigned int y = (unsigned int)(ySigned);
 
 		const CalibrationBoard::MarkerCoordinate coordinate(x, y);
+
+		if (size_t(x) != i % xMarkers || size_t(y) != i / xMarkers)
+		{
+			return false;
+		}
 
 		boardMarkers.emplace_back(markerId, sign, orientation, coordinate);
 	}
