@@ -145,12 +145,17 @@ class OCEAN_BASE_EXPORT DateTime
 		static void timestamp2date(const double timestamp, unsigned int& year, unsigned int& month, unsigned int& day, unsigned int& hour, unsigned int& minute, unsigned int& second, unsigned int* millisecond = nullptr);
 
 		/**
-		 * Converts value of seconds to a time string showing the hours, minutes and seconds.
-		 * The resulting string has the following format: HH:MM:SS, or HH:MM:SS:mmmm if the milliseconds are added; or H hours, M minutes, S seconds or H hours, M minutes, S seconds, m milliseconds if the description is added.
-		 * @param totalSeconds The number of seconds to convert, with range [0, infinity)
-		 * @param addDescription True, to add the description text to the string
-		 * @param addMilliseconds True, to add the milliseconds to the string
-		 * @return Time string of local time
+		 * Converts a number of seconds to a time string.
+		 * <pre>
+		 * HH:MM:SS                                        e.g. "01:02:03", or "111:06:40" beyond 99 hours
+		 * HH:MM:SS:mmmm                                   e.g. "01:02:03:0500"                                    (addMilliseconds)
+		 * H hours, M minutes, S seconds                   e.g. "1 hours, 2 minutes, 3 seconds"                    (addDescription)
+		 * H hours, M minutes, S seconds, m milliseconds   e.g. "1 hours, 2 minutes, 3 seconds, 500 milliseconds"  (both)
+		 * </pre>
+		 * @param totalSeconds The number of seconds to convert, with range [0, 15461882265600)
+		 * @param addDescription True, to write the units out instead of using the HH:MM:SS format
+		 * @param addMilliseconds True, to append the milliseconds
+		 * @return The resulting time string
 		 */
 		static std::string seconds2string(const double totalSeconds, const bool addDescription, const bool addMilliseconds = false);
 

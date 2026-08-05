@@ -42,6 +42,12 @@ class OCEAN_TEST_BASE_EXPORT TestDateTime
 		 * @return True, if succeeded
 		 */
 		static bool testConversion(const double testDuration);
+
+		/**
+		 * Tests the conversion of a number of seconds to a time string.
+		 * @return True, if succeeded
+		 */
+		static bool testSeconds2String();
 };
 
 }

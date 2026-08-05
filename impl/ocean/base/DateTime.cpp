@@ -468,23 +468,25 @@ std::string DateTime::seconds2string(const double totalSeconds, const bool addDe
 	ocean_assert(seconds < 60u);
 	ocean_assert(milliseconds < 1000u);
 
+	std::string result;
+
 	if (addDescription)
 	{
-		std::string result(String::toAString(hours) + std::string(" hours, ") + String::toAString(minutes) + std::string(" minutes, ") + String::toAString(seconds) + std::string(" seconds"));
+		result = String::toAString(hours) + std::string(" hours, ") + String::toAString(minutes) + std::string(" minutes, ") + String::toAString(seconds) + std::string(" seconds");
 
 		if (addMilliseconds)
 		{
 			result += std::string(", ") + String::toAString(milliseconds) + std::string(" milliseconds");
 		}
-
-		return result;
 	}
-
-	std::string result((hours > 100u) ? String::toAString(hours) : String::toAString((unsigned int)hours, 2u) + std::string(":") + String::toAString(minutes, 2u) + std::string(":") + String::toAString(seconds, 2u));
-
-	if (addMilliseconds)
+	else
 	{
-		result += std::string(", ") + String::toAString(milliseconds, 4u);
+		result = String::toAString((unsigned int)(hours), 2u) + std::string(":") + String::toAString(minutes, 2u) + std::string(":") + String::toAString(seconds, 2u);
+
+		if (addMilliseconds)
+		{
+			result += std::string(":") + String::toAString(milliseconds, 4u);
+		}
 	}
 
 	return result;

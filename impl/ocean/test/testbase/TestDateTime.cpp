@@ -43,6 +43,15 @@ bool TestDateTime::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("seconds2string"))
+	{
+		testResult = testSeconds2String();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << " ";
 
 	Log::info() << testResult;
@@ -57,7 +66,41 @@ TEST(TestDateTime, Conversion)
 	EXPECT_TRUE(TestDateTime::testConversion(GTEST_TEST_DURATION));
 }
 
+TEST(TestDateTime, Seconds2String)
+{
+	EXPECT_TRUE(TestDateTime::testSeconds2String());
+}
+
 #endif // OCEAN_USE_GTEST
+
+bool TestDateTime::testSeconds2String()
+{
+	Log::info() << "Test seconds to string:";
+
+	Validation validation;
+
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(0.0, false /*addDescription*/), std::string("00:00:00"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(1.0, false /*addDescription*/), std::string("00:00:01"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(59.0, false /*addDescription*/), std::string("00:00:59"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(60.0, false /*addDescription*/), std::string("00:01:00"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(3599.0, false /*addDescription*/), std::string("00:59:59"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(3600.0, false /*addDescription*/), std::string("01:00:00"));
+
+	// hour counts needing more than two digits must not lose the minutes and seconds
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(360000.0, false /*addDescription*/), std::string("100:00:00"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(363600.0, false /*addDescription*/), std::string("101:00:00"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(400000.0, false /*addDescription*/), std::string("111:06:40"));
+
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(3723.5, false /*addDescription*/, true /*addMilliseconds*/), std::string("01:02:03:0500"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(400000.25, false /*addDescription*/, true /*addMilliseconds*/), std::string("111:06:40:0250"));
+
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(3723.0, true /*addDescription*/), std::string("1 hours, 2 minutes, 3 seconds"));
+	OCEAN_EXPECT_EQUAL(validation, DateTime::seconds2string(3723.5, true /*addDescription*/, true /*addMilliseconds*/), std::string("1 hours, 2 minutes, 3 seconds, 500 milliseconds"));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
 
 bool TestDateTime::testConversion(const double testDuration)
 {
