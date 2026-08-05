@@ -97,6 +97,8 @@ bool AKFaceTracker6DOF::stop()
 		return false;
 	}
 
+	isStarted_ = false;
+
 	if (!faceIsTracked_)
 	{
 		return true;
@@ -104,8 +106,6 @@ bool AKFaceTracker6DOF::stop()
 
 	ObjectIdSet lostObjects = {faceObjectId_};
 	faceIsTracked_ = false;
-
-	isStarted_ = false;
 
 	scopedLock.release();
 

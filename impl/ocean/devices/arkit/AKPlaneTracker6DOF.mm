@@ -100,6 +100,8 @@ bool AKPlaneTracker6DOF::stop()
 		return false;
 	}
 
+	isStarted_ = false;
+
 	if (!worldIsTracked_)
 	{
 		return true;
@@ -107,8 +109,6 @@ bool AKPlaneTracker6DOF::stop()
 
 	ObjectIdSet lostObjects = {worldObjectId_};
 	worldIsTracked_ = false;
-
-	isStarted_ = false;
 
 	scopedLock.release();
 
