@@ -231,7 +231,8 @@ HashMap<TKey, T>::HashMap(const size_t capacity, HashMap<TKey, T>&& hashMap) :
 			TKey& key = hashMapElement.second.first;
 			T& element = hashMapElement.second.second;
 
-			insert(std::move(key), std::move(element));
+			// duplicate keys are preserved, and this map is already large enough for all elements
+			insert(std::move(key), std::move(element), false /*oneOnly*/, false /*extendCapacity*/);
 		}
 	}
 

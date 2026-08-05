@@ -203,7 +203,9 @@ HashSet<T>::HashSet(size_t capacity, HashSet<T>&& hashSet) :
 		if (i->first.first != 0)
 		{
 			T& element = i->second;
-			insert(std::move(element));
+
+			// duplicate elements are preserved, and this set is already large enough for all elements
+			insert(std::move(element), false /*oneOnly*/, false /*extendCapacity*/);
 		}
 
 	ocean_assert(size() == hashSet.size());
