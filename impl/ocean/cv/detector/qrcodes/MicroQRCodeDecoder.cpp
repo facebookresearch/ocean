@@ -25,8 +25,6 @@
 
 #include "ocean/cv/detector/qrcodes/MicroQRCodeEncoder.h"
 
-#include "ocean/math/Numeric.h"
-
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -957,7 +955,8 @@ static void getCodewords(const std::vector<uint8_t>& modules, const unsigned int
 
 static bool applyErrorCorrection(const unsigned int symbolNumber, std::vector<uint8_t>& codewords)
 {
-	static const struct quirc_rs_params ecc_params[8] = {
+	static const struct quirc_rs_params ecc_params[8] =
+	{
 		{.bs = 5, .dw = 3, .ns = 1},
 		{.bs = 10, .dw = 5, .ns = 1},
 		{.bs = 10, .dw = 4, .ns = 1},
@@ -965,7 +964,8 @@ static bool applyErrorCorrection(const unsigned int symbolNumber, std::vector<ui
 		{.bs = 17, .dw = 9, .ns = 1},
 		{.bs = 24, .dw = 16, .ns = 1},
 		{.bs = 24, .dw = 14, .ns = 1},
-		{.bs = 24, .dw = 10, .ns = 1}};
+		{.bs = 24, .dw = 10, .ns = 1}
+	};
 
 	const struct quirc_rs_params *ecc = &ecc_params[symbolNumber];
 
@@ -1304,14 +1304,20 @@ static bool decodeModules(const std::vector<uint8_t>& modules, unsigned int& ver
 		{
 			reversedFormatBits |= (((formatBits >> i) & 1u) << (14u - i));
 		}
+
 		if (decodeFormatBits(reversedFormatBits, version, errorCorrectionCapacity, maskingPattern, symbolNumber) && version == provisionalVersion)
 		{
+			finalModules.resize(modules.size());
+
 			for (unsigned int x = 0u; x < modulesPerSide; x++)
 			{
 				for (unsigned int y = 0u; y < modulesPerSide; y++)
 				{
 					const unsigned int i = x + modulesPerSide * y;
 					const unsigned int j = y + modulesPerSide * x;
+
+					ocean_assert(i < finalModules.size() && j < finalModules.size());
+
 					finalModules[i] = modules[j];
 					finalModules[j] = modules[i];
 				}
@@ -1330,7 +1336,7 @@ static bool decodeModules(const std::vector<uint8_t>& modules, unsigned int& ver
 		return false;
 	}
 
-	static const std::array<unsigned int, 8> dataCapacityBits = {20, 40, 32, 84, 68, 128, 112, 80};
+	static constexpr std::array<unsigned int, 8> dataCapacityBits = {20, 40, 32, 84, 68, 128, 112, 80};
 
 	MicroQRCodeDecoder::BitStream bitStream(std::move(codewords), dataCapacityBits[symbolNumber]);
 	return decodeBitStream(version, bitStream, encodingMode, data);
