@@ -126,16 +126,25 @@ bool Thread::joinThread(const unsigned int timeout)
 		{
 
 #if defined(__APPLE__) || (defined(__linux__) && !defined(_ANDROID))
-			const Timestamp currentTimestamp(true);
+			const Timestamp deadlineTimestamp = Timestamp(true) + double(timeout) * 0.001;
 
-			const double currentTimestampSeconds = double(int64_t(double(currentTimestamp)));
-			const double currenTimestampNanoseconds = double((currentTimestamp - currentTimestampSeconds).nanoseconds());
+			const double deadlineTimestampSeconds = double(int64_t(double(deadlineTimestamp)));
+			const double deadlineTimestampNanoseconds = double((deadlineTimestamp - deadlineTimestampSeconds).nanoseconds());
 
 			struct timespec absTime;
-			absTime.tv_sec = long(currentTimestampSeconds);
-			absTime.tv_nsec = long(currenTimestampNanoseconds);
+			absTime.tv_sec = long(deadlineTimestampSeconds);
+			absTime.tv_nsec = long(deadlineTimestampNanoseconds);
 
-			return pthread_timedjoin_np(threadObject_, nullptr, &absTime) == 0;
+			if (pthread_timedjoin_np(threadObject_, nullptr, &absTime) != 0)
+			{
+				return false;
+			}
+
+			// the thread has terminated, so we must not use the corresponding id anymore
+			// e.g., calling pthread_detach(threadObject_) could result in a crash
+
+			threadObject_ = 0;
+			return true;
 #else
 
 			OCEAN_WARNING_MISSING_IMPLEMENTATION;
@@ -369,7 +378,7 @@ int Thread::pthread_timedjoin_np(pthread_t thread, void** retval, const struct t
 	int result = 0;
 
 	// check whether the thread has ended gracefully
-	if (joinPair.second)
+	if (!joinPair.second)
 	{
 		pthread_cancel(helperThreadId);
 		result = ETIMEDOUT;
