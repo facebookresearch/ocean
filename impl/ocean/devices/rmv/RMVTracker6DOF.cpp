@@ -93,7 +93,7 @@ RMVTracker6DOF::ObjectId RMVTracker6DOF::registerObject(const std::string& descr
 
 	if (frameMediums_.size() != 1 || frameMediums_.front().isNull())
 	{
-		return false;
+		return invalidObjectId();
 	}
 
 	const Media::FrameMedium& frameMedium = *frameMediums_.front();
