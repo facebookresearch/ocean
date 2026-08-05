@@ -650,7 +650,7 @@ bool TreeView::TreeItem::setParent(const TreeItemId parentId, const TreeItemId f
 		return true;
 	}
 
-	const TreeItemId previousParentId = parentId;
+	const TreeItemId previousParentId = parentId_;
 
 	if (parentId_ != invalidTreeItemId)
 	{
@@ -667,6 +667,8 @@ bool TreeView::TreeItem::setParent(const TreeItemId parentId, const TreeItemId f
 				{
 					previousParent->childItemIds_.erase(i);
 					found = true;
+
+					break;
 				}
 			}
 
