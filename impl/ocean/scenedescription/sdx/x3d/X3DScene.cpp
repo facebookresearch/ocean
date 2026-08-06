@@ -66,6 +66,11 @@ void X3DScene::onInitialize(const Timestamp timestamp)
 			{
 				const SDXNodeRef childNode(*i);
 
+				if (!childNode)
+				{
+					continue;
+				}
+
 				registerThisNodeAsParent(childNode);
 				childNode->initialize(renderingSceneObject_, timestamp);
 

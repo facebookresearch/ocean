@@ -1130,7 +1130,12 @@ void ClassicParser::parseField(MultiNode& field)
 			}
 			else
 			{
-				values.emplace_back(parseNode());
+				NodeRef node = parseNode();
+
+				if (node)
+				{
+					values.emplace_back(std::move(node));
+				}
 			}
 		}
 	}

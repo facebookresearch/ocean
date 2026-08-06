@@ -65,6 +65,11 @@ void X3DGroupingNode::onInitialize(const Rendering::SceneRef& scene, const Times
 			{
 				const SDXNodeRef childNode(*i);
 
+				if (!childNode)
+				{
+					continue;
+				}
+
 				registerThisNodeAsParent(childNode);
 				childNode->initialize(scene, timestamp);
 
