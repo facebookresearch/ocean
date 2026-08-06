@@ -549,13 +549,8 @@ bool Canvas::Font::drawText(Frame& frame, const std::string& text, const int lef
 
 	for (size_t n = 0; n < text.length(); ++n)
 	{
-		const unsigned int characterValue = text[n];
-
-		if (characterValue >= 256u)
-		{
-			ocean_assert(false && "Invalid text!");
-			return false;
-		}
+		const unsigned int characterValue = (unsigned int)(uint8_t(text[n]));
+		ocean_assert(characterValue < 256u);
 
 		const Character& character = characters_[characterValue];
 
@@ -594,13 +589,8 @@ bool Canvas::Font::textExtent(const std::string& text, unsigned int& width, unsi
 
 	for (size_t n = 0; n < text.length(); ++n)
 	{
-		const unsigned int characterValue = text[n];
-
-		if (characterValue >= 256u)
-		{
-			ocean_assert(false && "Invalid text!");
-			return false;
-		}
+		const unsigned int characterValue = (unsigned int)(uint8_t(text[n]));
+		ocean_assert(characterValue < 256u);
 
 		const Character& character = characters_[characterValue];
 
