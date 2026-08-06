@@ -168,10 +168,10 @@ class OCEAN_CV_EXPORT SubRegion
 
 		/**
 		 * Transforms a sub-region by application of a homography that transforms points in the initial frame to points in the new frame.
-		 * @param homography The homography transforming points defined in the coordinate system of the initial frame into points defined in the coordinate system of the new frame.
+		 * @param new_H_initial The homography transforming points defined in the coordinate system of the initial frame into points defined in the coordinate system of the new frame, must be valid
 		 * @return Resulting transformed subregion
 		 */
-		SubRegion operator*(const SquareMatrix3& homography) const;
+		SubRegion operator*(const SquareMatrix3& new_H_initial) const;
 
 		/**
 		 * Returns whether this sub-region is not empty.

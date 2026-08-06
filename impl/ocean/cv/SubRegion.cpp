@@ -300,31 +300,46 @@ SubRegion SubRegion::operator*(const Scalar factor) const
 	return SubRegion();
 }
 
-SubRegion SubRegion::operator*(const SquareMatrix3& homography) const
+SubRegion SubRegion::operator*(const SquareMatrix3& new_H_initial) const
 {
+	ocean_assert(new_H_initial.isHomography());
+
 	if (!triangles_.empty())
 	{
-		Triangles2 transformedTriangles;
-		transformedTriangles.reserve(triangles_.size());
+		Triangles2 newTriangles;
+		newTriangles.reserve(triangles_.size());
 
-		for (Triangles2::const_iterator i = triangles_.begin(); i != triangles_.end(); ++i)
+		for (const Triangle2& triangle : triangles_)
 		{
-			transformedTriangles.push_back(Triangle2(homography * i->point0(), homography * i->point1(), homography * i->point2()));
+			ocean_assert(triangle.isValid());
+
+			const Vector2 newPoint0 = new_H_initial * triangle.point0();
+			const Vector2 newPoint1 = new_H_initial * triangle.point1();
+			const Vector2 newPoint2 = new_H_initial * triangle.point2();
+
+			newTriangles.emplace_back(newPoint0, newPoint1, newPoint2);
+
+			if (!newTriangles.back().isValid())
+			{
+				newTriangles.pop_back();
+			}
 		}
 
-		return SubRegion(transformedTriangles);
+		return SubRegion(newTriangles);
 	}
 	else if (mask_)
 	{
-		Frame transformedMask(mask_.frameType());
-		ocean_assert(transformedMask.pixelFormat() == FrameType::FORMAT_Y8);
+		Frame newMask(mask_.frameType());
+		ocean_assert(newMask.pixelFormat() == FrameType::FORMAT_Y8);
+
+		const SquareMatrix3 initial_H_new(new_H_initial.inverted());
 
 		const uint8_t nonMask = 0xFFu - maskValue_;
-		CV::FrameInterpolatorNearestPixel::homography<uint8_t, 1u>(mask_.constdata<uint8_t>(), mask_.width(), mask_.height(), homography.inverted(), &nonMask, transformedMask.data<uint8_t>(), CV::PixelPositionI(0, 0), transformedMask.width(), transformedMask.height(), mask_.paddingElements(), transformedMask.paddingElements(), WorkerPool::get().conditionalScopedWorker(transformedMask.pixels() >= 400u * 400u)());
+		CV::FrameInterpolatorNearestPixel::homography<uint8_t, 1u>(mask_.constdata<uint8_t>(), mask_.width(), mask_.height(), initial_H_new, &nonMask, newMask.data<uint8_t>(), CV::PixelPositionI(0, 0), newMask.width(), newMask.height(), mask_.paddingElements(), newMask.paddingElements(), WorkerPool::get().conditionalScopedWorker(newMask.pixels() >= 400u * 400u)());
 
-		const PixelBoundingBox pixelBoundingBox = MaskAnalyzer::detectBoundingBox(transformedMask.constdata<uint8_t>(), transformedMask.width(), transformedMask.height(), nonMask, transformedMask.paddingElements());
+		const PixelBoundingBox pixelBoundingBox = MaskAnalyzer::detectBoundingBox(newMask.constdata<uint8_t>(), newMask.width(), newMask.height(), nonMask, newMask.paddingElements());
 
-		return SubRegion(std::move(transformedMask), pixelBoundingBox);
+		return SubRegion(std::move(newMask), pixelBoundingBox, maskValue_);
 	}
 
 	return SubRegion();
