@@ -526,7 +526,7 @@ bool QRCodeDetector3D::computePoseAndExtractQRCodeStereo(const Frame& yFrameA, c
 
 	bool goDown = true;
 
-	while (versionDown >= versionLow || versionUp <= versionHigh) // TODO Replace with alternating for-loop
+	while (versionDown >= versionLow || versionUp <= versionHigh)
 	{
 		ocean_assert(versionLow != 0u || versionHigh < 40u);
 
@@ -597,6 +597,8 @@ bool QRCodeDetector3D::computePoseAndExtractQRCodeStereo(const Frame& yFrameA, c
 		{
 			versionUp += 1u;
 		}
+
+		goDown = !goDown;
 	}
 
 	return false;
