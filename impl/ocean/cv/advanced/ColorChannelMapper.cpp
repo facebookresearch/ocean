@@ -114,7 +114,7 @@ void ColorChannelMapper::createLookupScaleOffset(const FrameType::PixelFormat& p
 
 	for (unsigned int c = 0; c < 3u; c++)
 	{
-		const int index = mirrorRGB ? 2u - c : c + colorIndex;
+		const int index = colorIndex + (mirrorRGB ? int(2u - c) : int(c));
 		mapScale[index] = scale.data()[c];
 		mapOffset[index] = offset.data()[c];
 		mapGamma[index] = gamma.data()[c];
