@@ -2183,7 +2183,7 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 
 		uint8_t* targetRow = nullptr;
 
-		if (sourceHeight == targetHeight || (memoryIntermediateExtendedRow && factorBottom == 0u)) // factorBottom == 0u: we can simply use the top row
+		if (memoryIntermediateExtendedRow && factorBottom == 0u) // we can simply use the top row
 		{
 			ocean_assert(sourceWidth != targetWidth);
 			ocean_assert(memoryIntermediateExtendedRow);

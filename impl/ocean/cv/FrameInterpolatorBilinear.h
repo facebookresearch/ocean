@@ -7018,10 +7018,9 @@ inline void FrameInterpolatorBilinear::scaleSubset<float, float, 1u>(const float
 
 		float* targetRow = nullptr;
 
-		if (sourceHeight == targetHeight)
+		if (memoryIntermediateExtendedRow && factorBottom == 0.0f) // we can simply use the top row
 		{
 			ocean_assert(sourceWidth != targetWidth);
-			ocean_assert(memoryIntermediateExtendedRow);
 
 			// we do not need to interpolate two lines, thus we simply need to copy the row (as we need an additional pixel at the end)
 			memcpy(memoryIntermediateExtendedRow.data<float>(), sourceTopRow, sourceWidth * sizeof(float));
