@@ -60,21 +60,21 @@ void JSDevice::setFoundObjectEventFunction(v8::Local<v8::Function> function)
 	}
 	else
 	{
-		if (!trackerObjectEventSubscription_)
-		{
-			const Devices::TrackerRef tracker(device_);
+		const Devices::TrackerRef tracker(device_);
 
-			if (tracker)
+		if (tracker)
+		{
+			if (!trackerObjectEventSubscription_)
 			{
 				trackerObjectEventSubscription_ = tracker->subscribeTrackerObjectEvent(Devices::Tracker::TrackerObjectCallback(*this, &JSDevice::onObjectEvent));
-
-				ownerContext_ = JSContext::currentJSContext();
-
-				const v8::Local<v8::Value> name = function->GetName();
-				ocean_assert(name->IsString());
-
-				foundObjectEventFunctionName_ = JSBase::toAString(name->ToString(JSContext::currentContext()));
 			}
+
+			ownerContext_ = JSContext::currentJSContext();
+
+			const v8::Local<v8::Value> name = function->GetName();
+			ocean_assert(name->IsString());
+
+			foundObjectEventFunctionName_ = JSBase::toAString(name->ToString(JSContext::currentContext()));
 		}
 	}
 }
@@ -92,21 +92,21 @@ void JSDevice::setLostObjectEventFunction(v8::Local<v8::Function> function)
 	}
 	else
 	{
-		if (!trackerObjectEventSubscription_)
-		{
-			const Devices::TrackerRef tracker(device_);
+		const Devices::TrackerRef tracker(device_);
 
-			if (tracker)
+		if (tracker)
+		{
+			if (!trackerObjectEventSubscription_)
 			{
 				trackerObjectEventSubscription_ = tracker->subscribeTrackerObjectEvent(Devices::Tracker::TrackerObjectCallback(*this, &JSDevice::onObjectEvent));
-
-				ownerContext_ = JSContext::currentJSContext();
-
-				const v8::Local<v8::Value> name = function->GetName();
-				ocean_assert(name->IsString());
-
-				lostObjectEventFunctionName_ = JSBase::toAString(name->ToString(JSContext::currentContext()));
 			}
+
+			ownerContext_ = JSContext::currentJSContext();
+
+			const v8::Local<v8::Value> name = function->GetName();
+			ocean_assert(name->IsString());
+
+			lostObjectEventFunctionName_ = JSBase::toAString(name->ToString(JSContext::currentContext()));
 		}
 	}
 }
