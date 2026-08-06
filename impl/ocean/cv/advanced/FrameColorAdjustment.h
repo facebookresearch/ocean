@@ -922,6 +922,14 @@ inline void FrameColorAdjustment::colorMatchingTransfer8BitPerChannelSubset(cons
 
 	const uint8_t* const fEnd = pixFrame + (width * numberRows * tChannels);
 
+	Scalar scales[tChannels];
+
+	for (unsigned int n = 0u; n < tChannels; ++n)
+	{
+		// a constant channel has a standard deviation of zero, the limit of the transfer is then the reference mean
+		scales[n] = Numeric::ratio(refStd[n], frameStd[n], Scalar(0));
+	}
+
 	while (pixFrame != fEnd)
 	{
 		ocean_assert(pixFrame < fEnd);
@@ -931,7 +939,7 @@ inline void FrameColorAdjustment::colorMatchingTransfer8BitPerChannelSubset(cons
 			{
 				Scalar colorTransValue = pixFrame[n];
 				colorTransValue -= frameMean[n];
-				colorTransValue *= (refStd[n] / frameStd[n]);
+				colorTransValue *= scales[n];
 				colorTransValue += refMean[n];
 				target[n] = (uint8_t)(minmax<int>(0, Numeric::round32(colorTransValue), 255));
 			}
