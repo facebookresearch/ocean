@@ -74,17 +74,26 @@ void MultiTexture::onInitialize(const Rendering::SceneRef& scene, const Timestam
 		environmentMode = translateEnvironmentMode(mode_.values().front());
 	}
 
-	unsigned int n = 0u;
-	for (MultiNode::Values::const_iterator i = texture_.values().begin(); i != texture_.values().end(); ++i)
+	// index based, so that skipping a child keeps the `mode` values aligned with the `texture` values
+	for (size_t n = 0; n < texture_.values().size(); ++n)
 	{
-		const SDXNodeRef child(*i);
-		ocean_assert(child);
+		const SDXNodeRef child(texture_.values()[n]);
+
+		if (!child)
+		{
+			continue;
+		}
 
 		registerThisNodeAsParent(child);
 		child->initialize(scene, timestamp);
 
 		const Rendering::TextureRef renderingTexture(child->renderingObject());
-		ocean_assert(renderingTexture);
+
+		if (renderingTexture.isNull())
+		{
+			Log::warning() << "MultiTexture: The child node \"" << child->type() << "\" does not provide a texture.";
+			continue;
+		}
 
 		if (mode_.values().size() > n)
 		{
@@ -97,8 +106,6 @@ void MultiTexture::onInitialize(const Rendering::SceneRef& scene, const Timestam
 		{
 			renderingTextures->addTexture(renderingTexture);
 		}
-
-		++n;
 	}
 }
 

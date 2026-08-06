@@ -73,7 +73,7 @@ void ComposedShader::onInitialize(const Rendering::SceneRef& scene, const Timest
 			{
 				const SDXNodeRef childNode(part);
 
-				if (childNode->type() == "ShaderPart")
+				if (childNode && childNode->type() == "ShaderPart")
 				{
 					Rendering::ShaderProgram::FilenamePair filenamePair = childNode.force<ShaderPart>().filenamePair();
 
