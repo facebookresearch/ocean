@@ -11,6 +11,7 @@
 #include "ocean/scenedescription/SceneDescription.h"
 #include "ocean/scenedescription/Node.h"
 
+#include <memory>
 #include <vector>
 
 namespace Ocean
@@ -40,7 +41,7 @@ class OCEAN_SCENEDESCRIPTION_EXPORT DynamicNode : virtual public Node
 		/**
 		 * Definition of a vector holding fields.
 		 */
-		using DynamicFields = std::vector<Field*>;
+		using DynamicFields = std::vector<std::unique_ptr<Field>>;
 
 		/**
 		 * Definition of a map mapping field names to field indices.

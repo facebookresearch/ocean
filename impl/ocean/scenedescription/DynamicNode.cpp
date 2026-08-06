@@ -21,10 +21,7 @@ DynamicNode::DynamicNode() :
 
 DynamicNode::~DynamicNode()
 {
-	for (DynamicFields::iterator i = dynamicFields_.begin(); i != dynamicFields_.end(); ++i)
-	{
-		delete *i;
-	}
+	// nothing to do here
 }
 
 bool DynamicNode::isDynamic() const
@@ -41,10 +38,8 @@ bool DynamicNode::addField(const std::string& name, const Field& field)
 		return false;
 	}
 
-	Field* newField = field.copy();
-
 	dynamicFieldIndices_[name] = (unsigned int)(dynamicFields_.size());
-	dynamicFields_.push_back(newField);
+	dynamicFields_.emplace_back(field.copy());
 
 	return true;
 }
@@ -140,7 +135,6 @@ bool DynamicNode::removeField(const std::string& name)
 	const unsigned int index = i->second;
 	ocean_assert(index < dynamicFields_.size());
 
-	delete dynamicFields_[index];
 	dynamicFields_.erase(dynamicFields_.begin() + index);
 
 	dynamicFieldIndices_.erase(i);
