@@ -203,6 +203,14 @@ void IndexedFaceSet::apply()
 			}
 		}
 
+		if (hasNormals && normalPerVertex_.value() && normalIndices.empty() == false)
+		{
+			if (normalIndices.size() < coordinateIndices.size())
+			{
+				throw OceanException("Not enough defined normal indices, there have to be at least as many indices as coordinate indices.");
+			}
+		}
+
 		Rendering::VertexIndex first;
 		unsigned int numberPolygons = 0u;
 
@@ -504,7 +512,7 @@ void IndexedFaceSet::addNormalsPerVertex(Rendering::Normals& renderingNormals, c
 	// has been checked before
 	ocean_assert(endIndex <= indices.size());
 
-	if (indices[endIndex] != -1)
+	if (indices.size() > endIndex && indices[endIndex] != -1)
 	{
 		throw OceanException("Vertex indices does not match with normal indices.");
 	}
@@ -605,7 +613,7 @@ bool IndexedFaceSet::addColorsPerVertex(RGBAColors& renderingColors, const Multi
 		// has been checked before
 		ocean_assert(endIndex <= indices.size());
 
-		if (indices[endIndex] != -1)
+		if (indices.size() > endIndex && indices[endIndex] != -1)
 		{
 			throw OceanException("Vertex indices does not match with color indices.");
 		}
