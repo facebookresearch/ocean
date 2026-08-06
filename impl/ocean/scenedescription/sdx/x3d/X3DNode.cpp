@@ -50,6 +50,12 @@ bool X3DNode::setField(const std::string& fieldName, const Field& newField)
 			}
 			else
 			{
+				// X3D event model: a field receives at most one event per timestamp, which is what terminates a cyclic ROUTE
+				if (newField.timestamp().isValid() && newField.timestamp() == localField.timestamp())
+				{
+					return false;
+				}
+
 				if (!localField.assign(newField))
 				{
 					return false;
