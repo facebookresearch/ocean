@@ -134,7 +134,7 @@ class VectorT2
 		 * Copies a vector.
 		 * @param vector 2D vector that is copied
 		 */
-		inline VectorT2(const VectorT2<T>& vector) noexcept;
+		VectorT2(const VectorT2<T>& vector) noexcept = default;
 
 		/**
 		 * Copies a vector with different element data type than T.
@@ -309,7 +309,7 @@ class VectorT2
 		 * Copy assigns a vector
 		 * @param vector 2D vector that is copied
 		 */
-		inline VectorT2<T>& operator=(const VectorT2<T>& vector);
+		VectorT2<T>& operator=(const VectorT2<T>& vector) = default;
 
 		/**
 		 * Returns whether two vectors are identical up to a small epsilon.
@@ -538,13 +538,6 @@ inline VectorT2<T>::VectorT2(const T* valueArray) noexcept
 }
 
 template <typename T>
-inline VectorT2<T>::VectorT2(const VectorT2<T>& vector) noexcept
-{
-	values_[0] = vector.values_[0];
-	values_[1] = vector.values_[1];
-}
-
-template <typename T>
 template <typename U>
 inline VectorT2<T>::VectorT2(const VectorT2<U>& vector) noexcept
 {
@@ -759,20 +752,6 @@ inline bool VectorT2<T>::isEqual(const VectorT2<T>& vector, const T eps) const
 {
 	return NumericT<T>::isEqual(values_[0], vector.values_[0], eps)
 			&& NumericT<T>::isEqual(values_[1], vector.values_[1], eps);
-}
-
-template <typename T>
-inline VectorT2<T>& VectorT2<T>::operator=(const VectorT2<T>& vector)
-{
-	if (this == &vector)
-	{
-		return *this;
-	}
-
-	values_[0] = vector.values_[0];
-	values_[1] = vector.values_[1];
-
-	return *this;
 }
 
 template <typename T>

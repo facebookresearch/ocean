@@ -143,7 +143,7 @@ class VectorT3
 		 * Copies a vector.
 		 * @param vector 3D vector that is copied
 		 */
-		inline VectorT3(const VectorT3<T>& vector) noexcept;
+		VectorT3(const VectorT3<T>& vector) noexcept = default;
 
 		/**
 		 * Copies a vector with different element data type than T.
@@ -350,7 +350,7 @@ class VectorT3
 		 * Copy assigns a vector
 		 * @param vector 3D vector that is copied
 		 */
-		inline VectorT3& operator=(const VectorT3<T>& vector);
+		VectorT3<T>& operator=(const VectorT3<T>& vector) = default;
 
 		/**
 		 * Returns whether two vectors are identical up to a small epsilon.
@@ -586,14 +586,6 @@ inline VectorT3<T>::VectorT3(const VectorT2<T>& vector, const T& z) noexcept
 	values_[0] = vector[0];
 	values_[1] = vector[1];
 	values_[2] = z;
-}
-
-template <typename T>
-inline VectorT3<T>::VectorT3(const VectorT3<T>& vector) noexcept
-{
-	values_[0] = vector.values_[0];
-	values_[1] = vector.values_[1];
-	values_[2] = vector.values_[2];
 }
 
 template <typename T>
@@ -881,21 +873,6 @@ inline bool VectorT3<T>::isEqual(const VectorT3<T>& vector, const T eps) const
 	return NumericT<T>::isEqual(values_[0], vector.values_[0], eps)
 			&& NumericT<T>::isEqual(values_[1], vector.values_[1], eps)
 			&& NumericT<T>::isEqual(values_[2], vector.values_[2], eps);
-}
-
-template <typename T>
-inline VectorT3<T>& VectorT3<T>::operator=(const VectorT3<T>& vector)
-{
-	if (this == &vector)
-	{
-		return *this;
-	}
-
-	values_[0] = vector.values_[0];
-	values_[1] = vector.values_[1];
-	values_[2] = vector.values_[2];
-
-	return *this;
 }
 
 template <typename T>
