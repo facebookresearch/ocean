@@ -536,8 +536,8 @@ bool CalibrationBoard::createUniqueBoardMarkers(const unsigned int id, const siz
 				const Index32 markerId = option >> 2u;
 				ocean_assert(markerId < markerIds);
 
-				uint64_t uniqueNeighborValueLeft = 0ull;
-				uint64_t uniqueNeighborValueTop = 0ull;
+				uint64_t uniqueNeighborValueLeft = uint64_t(-1);
+				uint64_t uniqueNeighborValueTop = uint64_t(-1);
 
 				if (xMarker > 0u)
 				{
@@ -545,6 +545,7 @@ bool CalibrationBoard::createUniqueBoardMarkers(const unsigned int id, const siz
 					ocean_assert(leftNeighbor.coordinate().x() == (unsigned int)(xMarker - 1u) && leftNeighbor.coordinate().y() == (unsigned int)(yMarker));
 
 					uniqueNeighborValueLeft = uniqueValue(markerId, uint32_t(leftNeighbor.markerId()));
+					ocean_assert(uniqueNeighborValueLeft != uint64_t(-1));
 
 					if (neighborSet.find(uniqueNeighborValueLeft) != neighborSet.cend())
 					{
@@ -558,6 +559,7 @@ bool CalibrationBoard::createUniqueBoardMarkers(const unsigned int id, const siz
 					ocean_assert(topNeighbor.coordinate().x() == (unsigned int)(xMarker) && topNeighbor.coordinate().y() == (unsigned int)(yMarker - 1u));
 
 					uniqueNeighborValueTop = uniqueValue(markerId, uint32_t(topNeighbor.markerId()));
+					ocean_assert(uniqueNeighborValueTop != uint64_t(-1));
 
 					if (neighborSet.find(uniqueNeighborValueTop) != neighborSet.cend())
 					{
@@ -565,12 +567,12 @@ bool CalibrationBoard::createUniqueBoardMarkers(const unsigned int id, const siz
 					}
 				}
 
-				if (uniqueNeighborValueLeft != 0ull)
+				if (uniqueNeighborValueLeft != uint64_t(-1))
 				{
 					neighborSet.insert(uniqueNeighborValueLeft);
 				}
 
-				if (uniqueNeighborValueTop != 0ull)
+				if (uniqueNeighborValueTop != uint64_t(-1))
 				{
 					neighborSet.insert(uniqueNeighborValueTop);
 				}
