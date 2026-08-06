@@ -255,13 +255,20 @@ void FrameChangeDetector::computeTileHistogramsSubset(const uint8_t* yFrame, con
 		{
 			const uint8_t* framePtr = yFrame + r * yFrameStride + startColumn;
 
+			unsigned int c = startColumn;
+
 			// Encourage vectorized computation by processing 4 pixels at a time.
-			for (unsigned int c = startColumn; c + 4u <= endColumn; c += 4u, framePtr += 4u)
+			for (; c + 4u <= endColumn; c += 4u, framePtr += 4u)
 			{
 				++tileHistogram[uint32_t(framePtr[0]) / kIntensityBinWidth];
 				++tileHistogram[uint32_t(framePtr[1]) / kIntensityBinWidth];
 				++tileHistogram[uint32_t(framePtr[2]) / kIntensityBinWidth];
 				++tileHistogram[uint32_t(framePtr[3]) / kIntensityBinWidth];
+			}
+
+			for (; c < endColumn; ++c, ++framePtr)
+			{
+				++tileHistogram[uint32_t(framePtr[0]) / kIntensityBinWidth];
 			}
 		}
 
