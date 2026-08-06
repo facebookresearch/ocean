@@ -46,11 +46,13 @@ void NormalInterpolator::onInitialize(const Rendering::SceneRef& scene, const Ti
 {
 	X3DInterpolatorNode::onInitialize(scene, timestamp);
 
-	interpolationValues_ = (unsigned int)(keyValue_.values().size() / key_.values().size());
-
-	if ((keyValue_.values().size() % key_.values().size()) != 0)
+	if (key_.values().empty() || (keyValue_.values().size() % key_.values().size()) != 0)
 	{
 		interpolationValues_ = 0u;
+	}
+	else
+	{
+		interpolationValues_ = (unsigned int)(keyValue_.values().size() / key_.values().size());
 	}
 }
 
@@ -58,11 +60,13 @@ void NormalInterpolator::onFieldChanged(const std::string& fieldName)
 {
 	if (fieldName == "key" || fieldName == "keyValue")
 	{
-		interpolationValues_ = (unsigned int)(keyValue_.values().size() / key_.values().size());
-
-		if ((keyValue_.values().size() % key_.values().size()) != 0)
+		if (key_.values().empty() || (keyValue_.values().size() % key_.values().size()) != 0)
 		{
 			interpolationValues_ = 0u;
+		}
+		else
+		{
+			interpolationValues_ = (unsigned int)(keyValue_.values().size() / key_.values().size());
 		}
 
 		return;
