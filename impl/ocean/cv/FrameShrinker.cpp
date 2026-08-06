@@ -1405,11 +1405,15 @@ inline void FrameShrinker::downsampleByTwoRowHorizontal8BitPerChannel14641NEON<2
 		}
 
 		// loading the source information
-		const uint16x8_t source_a_16x8 = vreinterpretq_u16_u32(vld2q_u32((const uint32_t*)sourceRow + 0).val[0]); // * 1
-		const uint16x8_t source_b_16x8 = vreinterpretq_u16_u32(vld2q_u32((const uint32_t*)sourceRow + 1).val[0]); // * 4
-		const uint16x8_t source_c_16x8 = vreinterpretq_u16_u32(vld2q_u32((const uint32_t*)sourceRow + 2).val[0]); // * 6
-		const uint16x8_t source_d_16x8 = vreinterpretq_u16_u32(vld2q_u32((const uint32_t*)sourceRow + 3).val[0]); // * 4
-		const uint16x8_t source_e_16x8 = vreinterpretq_u16_u32(vld2q_u32((const uint32_t*)sourceRow + 4).val[0]); // * 1
+		const uint32x4x2_t source_ab_32x4x2 = vld2q_u32((const uint32_t*)sourceRow + 0);
+		const uint32x4x2_t source_cd_32x4x2 = vld2q_u32((const uint32_t*)sourceRow + 2);
+		const uint32x4x2_t source_de_32x4x2 = vld2q_u32((const uint32_t*)sourceRow + 3);
+
+		const uint16x8_t source_a_16x8 = vreinterpretq_u16_u32(source_ab_32x4x2.val[0]); // * 1
+		const uint16x8_t source_b_16x8 = vreinterpretq_u16_u32(source_ab_32x4x2.val[1]); // * 4
+		const uint16x8_t source_c_16x8 = vreinterpretq_u16_u32(source_cd_32x4x2.val[0]); // * 6
+		const uint16x8_t source_d_16x8 = vreinterpretq_u16_u32(source_cd_32x4x2.val[1]); // * 4
+		const uint16x8_t source_e_16x8 = vreinterpretq_u16_u32(source_de_32x4x2.val[1]); // * 1
 
 		// source_a + source_e
 		const uint16x8_t source_ae_16x8 = vaddq_u16(source_a_16x8, source_e_16x8);
