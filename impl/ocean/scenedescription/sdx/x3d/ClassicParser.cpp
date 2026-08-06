@@ -36,7 +36,7 @@ ClassicParser::ClassicParser(const std::string& filename, float* progress, bool*
 
 SDXSceneRef ClassicParser::parse(const Library& library, const Rendering::EngineRef& engine, const Timestamp timestamp)
 {
-	if (engine.isNull() || scanner_.isValid() == false)
+	if (engine.isNull() ||! scanner_.isValid())
 	{
 		return SDXSceneRef();
 	}
@@ -54,10 +54,6 @@ SDXSceneRef ClassicParser::parse(const Library& library, const Rendering::Engine
 	const std::string lowerFileExtension = String::toLower(file.extension());
 
 	scenePtr_ = new X3DScene(file(), library, engine);
-	if (scenePtr_ == nullptr)
-	{
-		throw OutOfMemoryException();
-	}
 
 	SceneRef scene(library.nodeManager().registerNode(scenePtr_));
 
@@ -92,7 +88,7 @@ SDXSceneRef ClassicParser::parse(const Library& library, const Rendering::Engine
 
 		scanner_.pop();
 
-		while (scanner_.token().isEndOfFile() == false)
+		while (!scanner_.token().isEndOfFile())
 		{
 			if (scanner_.token().isKeyword(ClassicScanner::KEYWORD_ROUTE))
 			{
@@ -145,26 +141,26 @@ NodeRef ClassicParser::parseNode()
 			return NodeRef();
 		}
 
-		if (token.isKeyword(ClassicScanner::KEYWORD_DEF) == false)
+		if (!token.isKeyword(ClassicScanner::KEYWORD_DEF))
 		{
-			throw OceanException(std::string("Unexpected keyword \"") + token.raw() + std::string("\"."));
+			throw OceanException(std::string("Unexpected keyword \"") + token.raw() + "\".");
 		}
 
 		scanner_.pop();
 		token = scanner_.tokenPop();
 
-		if (token.isIdentifier() == false)
+		if (!token.isIdentifier())
 		{
-			throw OceanException(std::string("Expected a node name after 'DEF', got \"") + token.raw() + std::string("\" instead."));
+			throw OceanException(std::string("Expected a node name after 'DEF', got \"") + token.raw() + "\" instead.");
 		}
 
 		name_ = token.identifier();
 		token = scanner_.tokenPop();
 	}
 
-	if (token.isIdentifier() == false)
+	if (!token.isIdentifier())
 	{
-		throw OceanException(std::string("Expected a node type, got \"") + token.raw() + std::string("\" instead."));
+		throw OceanException(std::string("Expected a node type, got \"") + token.raw() + "\" instead.");
 	}
 
 	std::string nodeType = token.identifier();
@@ -180,18 +176,18 @@ NodeRef ClassicParser::parseNode()
 			return NodeRef(node);
 		}
 
-		throw OceanException(std::string("Could not skip the unknown x3d node type \"") + nodeType + std::string("\"."));
+		throw OceanException(std::string("Could not skip the unknown x3d node type \"") + nodeType + "\".");
 	}
 
-	if (name_.empty() == false)
+	if (!name_.empty())
 	{
 		node->setName(name_);
 	}
 
 	token = scanner_.tokenPop();
-	if (token.isSymbol(ClassicScanner::SYMBOL_NODE_BEGIN) == false)
+	if (!token.isSymbol(ClassicScanner::SYMBOL_NODE_BEGIN))
 	{
-		throw OceanException(std::string("Expected a node begin symbol '{', got \"") + token.raw() + std::string("\" instead."));
+		throw OceanException(std::string("Expected a node begin symbol '{', got \"") + token.raw() + "\" instead.");
 	}
 
 	try
@@ -211,7 +207,7 @@ NodeRef ClassicParser::parseNode()
 				break;
 			}
 
-			if (token.isIdentifier() == false)
+			if (!token.isIdentifier())
 			{
 				if (token.isKeyword())
 				{
@@ -227,7 +223,7 @@ NodeRef ClassicParser::parseNode()
 				}
 				else
 				{
-					throw OceanException(std::string("Expected a field name, got \"") + token.raw() + std::string("\" instead."));
+					throw OceanException(std::string("Expected a field name, got \"") + token.raw() + "\" instead.");
 				}
 
 				token = scanner_.tokenPop();
@@ -257,7 +253,7 @@ NodeRef ClassicParser::parseNode()
 				}
 			}
 
-			throw OceanException(std::string("The node \"") + nodeType + std::string("\" does not have a field \"") + token.raw() + std::string("\"."));
+			throw OceanException(std::string("The node \"") + nodeType + "\" does not have a field \"" + token.raw() + "\".");
 		}
 	}
 	catch (const Exception& exception)
@@ -270,7 +266,7 @@ NodeRef ClassicParser::parseNode()
 			return NodeRef(node);
 		}
 
-		throw OceanException(std::string("Could not skip the unknown x3d node type \"") + nodeType + std::string("\"."));
+		throw OceanException(std::string("Could not skip the unknown x3d node type \"") + nodeType + "\".");
 	}
 
 	return NodeRef(node);
@@ -285,9 +281,9 @@ void ClassicParser::addDynamicField(const Token& token, const NodeRef& node)
 
 	const Token nameToken(scanner_.token());
 
-	if (nameToken.isIdentifier() == false)
+	if (!nameToken.isIdentifier())
 	{
-		throw OceanException(std::string("Tried to parse a dynamic field node \"") + token.raw() + std::string("\" and got an invalid field name \"") + nameToken.raw() + std::string("\"."));
+		throw OceanException(std::string("Tried to parse a dynamic field node \"") + token.raw() + "\" and got an invalid field name \"" + nameToken.raw() + "\".");
 	}
 
 	switch (token.keyword())
@@ -397,7 +393,7 @@ void ClassicParser::addDynamicField(const Token& token, const NodeRef& node)
 			break;
 
 		default:
-			throw OceanException(std::string("Tried to parse dynamic field \"") + nameToken.identifier() + std::string("\" and got an unknown field type \"") + token.raw() + std::string("\""));
+			throw OceanException(std::string("Tried to parse dynamic field \"") + nameToken.identifier() + "\" and got an unknown field type \"" + token.raw() + "\"");
 	}
 }
 
@@ -582,7 +578,7 @@ void ClassicParser::parseField(SingleInt& field)
 	}
 	else
 	{
-		throw OceanException(std::string("Could not parse a SFInt32 field, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Could not parse a SFInt32 field, got \"") + token.raw() + "\" instead");
 	}
 }
 
@@ -602,7 +598,7 @@ void ClassicParser::parseField(SingleMatrix3& field)
 	}
 	catch (const Exception& exception)
 	{
-		throw OceanException(std::string("Could not parse a SFMatrix3f field: ") + std::string(exception.what()));
+		throw OceanException(std::string("Could not parse a SFMatrix3f field: ") + exception.what());
 	}
 }
 
@@ -622,7 +618,7 @@ void ClassicParser::parseField(SingleMatrix4& field)
 	}
 	catch (const Exception& exception)
 	{
-		throw OceanException(std::string("Could not parse a SFMatrix4f field: ") + std::string(exception.what()));
+		throw OceanException(std::string("Could not parse a SFMatrix4f field: ") + exception.what());
 	}
 }
 
@@ -633,17 +629,17 @@ void ClassicParser::parseField(SingleNode& field)
 		scanner_.pop();
 		const Token token(scanner_.tokenPop());
 
-		if (token.isIdentifier() == false)
+		if (!token.isIdentifier())
 		{
-			throw OceanException(std::string("Expected a node name after 'USE', got \"") + token.raw() + std::string("\" instead."));
+			throw OceanException(std::string("Expected a node name after 'USE', got \"") + token.raw() + "\" instead.");
 		}
 
 		bool found = false;
 		NodeRefs nodes(scenePtr_->environment()->library()->nodes(token.identifier()));
 
-		for (NodeRefs::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
+		for (const NodeRef& nodeRef : nodes)
 		{
-			SDXNodeRef node(*i);
+			SDXNodeRef node(nodeRef);
 			ocean_assert(node);
 
 			if (node->sceneId() == scenePtr_->sceneId())
@@ -902,9 +898,9 @@ void ClassicParser::parseField(MultiInt& field)
 					break;
 				}
 
-				if (token.isInteger() == false)
+				if (!token.isInteger())
 				{
-					throw OceanException(std::string("The token is not a integer, got \"") + token.raw() + std::string("\" instead"));
+					throw OceanException(std::string("The token is not a integer, got \"") + token.raw() + "\" instead");
 				}
 
 				values.emplace_back(token.integer());
@@ -913,9 +909,9 @@ void ClassicParser::parseField(MultiInt& field)
 		}
 		else
 		{
-			if (token.isInteger() == false)
+			if (!token.isInteger())
 			{
-				throw OceanException(std::string("The token is not a integer, got \"") + token.raw() + std::string("\" instead"));
+				throw OceanException(std::string("The token is not a integer, got \"") + token.raw() + "\" instead");
 			}
 
 			values.emplace_back(token.integer());
@@ -975,7 +971,7 @@ void ClassicParser::parseField(MultiMatrix3& field)
 	}
 	catch (const Exception& exception)
 	{
-		throw OceanException(std::string("Could not parse a MFMatrix3f field: ") + std::string(exception.what()));
+		throw OceanException(std::string("Could not parse a MFMatrix3f field: ") + exception.what());
 	}
 
 	field.setValues(values, sceneTimestamp_);
@@ -1026,7 +1022,7 @@ void ClassicParser::parseField(MultiMatrix4& field)
 	}
 	catch (const Exception& exception)
 	{
-		throw OceanException(std::string("Could not parse a MFMatrix4f field: ") + std::string(exception.what()));
+		throw OceanException(std::string("Could not parse a MFMatrix4f field: ") + exception.what());
 	}
 
 	field.setValues(values, sceneTimestamp_);
@@ -1058,16 +1054,16 @@ void ClassicParser::parseField(MultiNode& field)
 					scanner_.pop();
 					const Token token(scanner_.tokenPop());
 
-					if (token.isIdentifier() == false)
+					if (!token.isIdentifier())
 					{
-						throw OceanException(std::string("Expected a node name after 'USE', got \"") + token.raw() + std::string("\" instead."));
+						throw OceanException(std::string("Expected a node name after 'USE', got \"") + token.raw() + "\" instead.");
 					}
 
 					NodeRef node;
 					NodeRefs nodes(scenePtr_->environment()->library()->nodes(token.identifier()));
-					for (NodeRefs::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
+					for (const NodeRef& nodeRef : nodes)
 					{
-						SDXNodeRef found(*i);
+						SDXNodeRef found(nodeRef);
 						ocean_assert(found);
 
 						if (found->sceneId() == scenePtr_->sceneId())
@@ -1104,16 +1100,16 @@ void ClassicParser::parseField(MultiNode& field)
 				scanner_.pop();
 				const Token token(scanner_.tokenPop());
 
-				if (token.isIdentifier() == false)
+				if (!token.isIdentifier())
 				{
-					throw OceanException(std::string("Expected a node name after 'USE', got \"") + token.raw() + std::string("\" instead."));
+					throw OceanException(std::string("Expected a node name after 'USE', got \"") + token.raw() + "\" instead.");
 				}
 
 				NodeRef node;
 				NodeRefs nodes(scenePtr_->environment()->library()->nodes(token.identifier()));
-				for (NodeRefs::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
+				for (const NodeRef& nodeRef : nodes)
 				{
-					SDXNodeRef found(*i);
+					SDXNodeRef found(nodeRef);
 					ocean_assert(found);
 
 					if (found->sceneId() == scenePtr_->sceneId())
@@ -1141,7 +1137,7 @@ void ClassicParser::parseField(MultiNode& field)
 	catch (const Exception& exception)
 	{
 		std::string message(exception.what());
-		throw OceanException(std::string("Could not parse a MFNode field (") + String::toAString(fieldBeginLine) + std::string(", ") + String::toAString(fieldBeginColumn) + std::string("): ") + message);
+		throw OceanException(std::string("Could not parse a MFNode field (") + String::toAString(fieldBeginLine) + ", " + String::toAString(fieldBeginColumn) + "): " + message);
 	}
 
 	field.setValues(values, sceneTimestamp_);
@@ -1411,7 +1407,7 @@ void ClassicParser::parseRoute()
 	Token token(scanner_.tokenPop());
 	if (!token.isIdentifier())
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a start node, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a start node, got \"") + token.raw() + "\" instead");
 	}
 
 	const std::string startNodeName = token.identifier();
@@ -1420,14 +1416,14 @@ void ClassicParser::parseRoute()
 	token = scanner_.tokenPop();
 	if (!token.isSymbol(ClassicScanner::SYMBOL_DOT))
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a \".\" between start node and start field, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a \".\" between start node and start field, got \"") + token.raw() + "\" instead");
 	}
 
 	// start field
 	token = scanner_.tokenPop();
 	if (!token.isIdentifier())
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a start field, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a start field, got \"") + token.raw() + "\" instead");
 	}
 
 	std::string startFieldName = token.identifier();
@@ -1436,14 +1432,14 @@ void ClassicParser::parseRoute()
 	token = scanner_.tokenPop();
 	if (!token.isKeyword(ClassicScanner::KEYWORD_TO))
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a \"TO\" keyword, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a \"TO\" keyword, got \"") + token.raw() + "\" instead");
 	}
 
 	// target node
 	token = scanner_.tokenPop();
 	if (!token.isIdentifier())
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a target node, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a target node, got \"") + token.raw() + "\" instead");
 	}
 
 	const std::string targetNodeName = token.identifier();
@@ -1452,14 +1448,14 @@ void ClassicParser::parseRoute()
 	token = scanner_.tokenPop();
 	if (!token.isSymbol(ClassicScanner::SYMBOL_DOT))
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a \".\" between target node and target field, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a \".\" between target node and target field, got \"") + token.raw() + "\" instead");
 	}
 
 	// target field
 	token = scanner_.tokenPop();
 	if (!token.isIdentifier())
 	{
-		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a target field, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a ROUTE statement, expected a target field, got \"") + token.raw() + "\" instead");
 	}
 
 	std::string targetFieldName = token.identifier();
@@ -1469,27 +1465,27 @@ void ClassicParser::parseRoute()
 		const X3DNodeRef startNode = scenePtr_->environment()->library()->nodeManager().node(startNodeName, scenePtr_->sceneId());
 		if (startNode.isNull())
 		{
-			throw OceanException(std::string("The start node \"") + startNodeName + std::string("\" of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" does not exist."));
+			throw OceanException(std::string("The start node \"") + startNodeName + "\" of ROUTE " + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " does not exist.");
 		}
 
 		startFieldName = startNode->originalFieldName(startFieldName);
 
-		if (startNode->hasField(startFieldName) == false)
+		if (!startNode->hasField(startFieldName))
 		{
-			throw OceanException(std::string("The start field \"") + startFieldName + std::string("\" of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" does not exist."));
+			throw OceanException(std::string("The start field \"") + startFieldName + "\" of ROUTE " + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " does not exist.");
 		}
 
 		const NodeRef targetNode = scenePtr_->environment()->library()->nodeManager().node(targetNodeName, scenePtr_->sceneId());
 		if (targetNode.isNull())
 		{
-			throw OceanException(std::string("The target node \"") + targetNodeName + std::string("\" of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" does not exist."));
+			throw OceanException(std::string("The target node \"") + targetNodeName + "\" of ROUTE " + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " does not exist.");
 		}
 
 		targetFieldName = targetNode->originalFieldName(targetFieldName);
 
-		if (targetNode->hasField(targetFieldName) == false)
+		if (!targetNode->hasField(targetFieldName))
 		{
-			throw OceanException(std::string("The target field \"") + targetFieldName + std::string("\" of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" does not exist."));
+			throw OceanException(std::string("The target field \"") + targetFieldName + "\" of ROUTE " + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " does not exist.");
 		}
 
 		const Field& startField = startNode->field(startFieldName);
@@ -1497,17 +1493,17 @@ void ClassicParser::parseRoute()
 
 		if (startField.type() != targetField.type() || startField.dimension() != targetField.dimension())
 		{
-			throw OceanException(std::string("The fields of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" have different types."));
+			throw OceanException(std::string("The fields of ROUTE ") + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " have different types.");
 		}
 
 		if ((startNode->fieldAccessType(startFieldName) & Node::ACCESS_GET) == 0)
 		{
-			throw OceanException(std::string("The start field \"") + startFieldName + std::string("\" of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" must be an output field."));
+			throw OceanException(std::string("The start field \"") + startFieldName + "\" of ROUTE " + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " must be an output field.");
 		}
 
 		 if ((targetNode->fieldAccessType(targetFieldName) & Node::ACCESS_SET) == 0)
 		 {
-			 throw OceanException(std::string("The target field \"") + targetFieldName + std::string("\" of ROUTE ") + startNodeName + std::string(".") + startFieldName + std::string(" TO ") + targetNodeName + std::string(".") + targetFieldName + std::string(" must be an input field."));
+			 throw OceanException(std::string("The target field \"") + targetFieldName + "\" of ROUTE " + startNodeName + "." + startFieldName + " TO " + targetNodeName + "." + targetFieldName + " must be an input field.");
 		 }
 
 		startNode->addConnection(startFieldName, targetNode->id(), targetFieldName);
@@ -1523,13 +1519,13 @@ void ClassicParser::parseMeta()
 	Token token(scanner_.tokenPop());
 	if (!token.isString())
 	{
-		throw OceanException(std::string("Failed to parse a META statement, expected a quoted string as key, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a META statement, expected a quoted string as key, got \"") + token.raw() + "\" instead");
 	}
 
 	token = scanner_.tokenPop();
 	if (!token.isString())
 	{
-		throw OceanException(std::string("Failed to parse a META statement, expected a quoted string as value, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a META statement, expected a quoted string as value, got \"") + token.raw() + "\" instead");
 	}
 }
 
@@ -1538,7 +1534,7 @@ void ClassicParser::parseProfile()
 	Token token(scanner_.tokenPop());
 	if (!token.isIdentifier())
 	{
-		throw OceanException(std::string("Failed to parse a PROFILE statement, expected a profile name, got \"") + token.raw() + std::string("\" instead"));
+		throw OceanException(std::string("Failed to parse a PROFILE statement, expected a profile name, got \"") + token.raw() + "\" instead");
 	}
 }
 
@@ -1556,7 +1552,7 @@ bool ClassicParser::parseBool()
 		return false;
 	}
 
-	throw OceanException(std::string("Could not parse a boolean, got \"") + token.raw() + std::string("\" instead"));
+	throw OceanException(std::string("Could not parse a boolean, got \"") + token.raw() + "\" instead");
 }
 
 Scalar ClassicParser::parseFloat()
@@ -1573,7 +1569,7 @@ Scalar ClassicParser::parseFloat()
 		return Scalar(token.integer());
 	}
 
-	throw OceanException(std::string("The token is not a float, got \"") + token.raw() + std::string("\" instead"));
+	throw OceanException(std::string("The token is not a float, got \"") + token.raw() + "\" instead");
 }
 
 std::string ClassicParser::parseString()
@@ -1592,7 +1588,7 @@ std::string ClassicParser::parseString()
 		return token.identifier();
 	}
 
-	throw OceanException(std::string("The token is not a string, got \"") + token.raw() + std::string("\" instead"));
+	throw OceanException(std::string("The token is not a string, got \"") + token.raw() + "\" instead");
 }
 
 Rotation ClassicParser::parseRotation()
