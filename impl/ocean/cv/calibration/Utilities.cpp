@@ -233,7 +233,7 @@ Frame Utilities::visualizeDistortionGrid(const AnyCamera& camera, const unsigned
 Frame Utilities::visualizeDistortionVectors(const AnyCamera& camera, const unsigned int horizontalBins, const unsigned int verticalBins)
 {
 	ocean_assert(camera.isValid());
-	ocean_assert(horizontalBins != 0u || verticalBins != 0u);
+	ocean_assert(horizontalBins != 0u && verticalBins != 0u);
 	ocean_assert(horizontalBins <= camera.width() / 2u && verticalBins <= camera.height() / 2u);
 
 	Frame yFrame(FrameType(camera.width(), camera.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
