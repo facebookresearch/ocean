@@ -84,7 +84,7 @@ bool ExperiencesLibrary::registerNewExperience(std::string experienceName, Creat
 	{
 		const ScopedLock libraryLock(library->lock_);
 
-		if (experienceName.rfind(".experience") != 0)
+		if (!experienceName.ends_with(".experience"))
 		{
 			// ensuring that the name has `.experience` as extension
 			experienceName += ".experience";
