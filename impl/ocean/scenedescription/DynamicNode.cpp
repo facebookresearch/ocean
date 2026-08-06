@@ -31,14 +31,14 @@ bool DynamicNode::isDynamic() const
 
 bool DynamicNode::addField(const std::string& name, const Field& field)
 {
-	ocean_assert(name.empty() == false);
+	ocean_assert(!name.empty());
 
-	if (dynamicFieldIndices_.find(name) != dynamicFieldIndices_.end())
+	if (dynamicFieldIndices_.contains(name))
 	{
 		return false;
 	}
 
-	dynamicFieldIndices_[name] = (unsigned int)(dynamicFields_.size());
+	dynamicFieldIndices_.emplace(name, (unsigned int)(dynamicFields_.size()));
 	dynamicFields_.emplace_back(field.copy());
 
 	return true;
@@ -47,12 +47,12 @@ bool DynamicNode::addField(const std::string& name, const Field& field)
 bool DynamicNode::hasAnyField(const std::string& fieldName) const
 {
 	ocean_assert(specification_ != nullptr);
-	return specification_->hasField(fieldName) || dynamicFieldIndices_.find(fieldName) != dynamicFieldIndices_.end();
+	return specification_->hasField(fieldName) || dynamicFieldIndices_.contains(fieldName);
 }
 
 bool DynamicNode::hasDynamicField(const std::string& name) const
 {
-	return dynamicFieldIndices_.find(name) != dynamicFieldIndices_.end();
+	return dynamicFieldIndices_.contains(name);
 }
 
 const std::string& DynamicNode::dynamicFieldName(const unsigned int index) const
@@ -62,11 +62,11 @@ const std::string& DynamicNode::dynamicFieldName(const unsigned int index) const
 		throw OceanException("Invalid dynamic field index.");
 	}
 
-	for (DynamicFieldIndices::const_iterator i = dynamicFieldIndices_.begin(); i != dynamicFieldIndices_.end(); ++i)
+	for (const DynamicFieldIndices::value_type& fieldIndexPair : dynamicFieldIndices_)
 	{
-		if (i->second == index)
+		if (fieldIndexPair.second == index)
 		{
-			return i->first;
+			return fieldIndexPair.first;
 		}
 	}
 
@@ -100,44 +100,44 @@ Field& DynamicNode::anyField(const std::string& fieldName)
 
 const Field& DynamicNode::dynamicField(const std::string& fieldName) const
 {
-	const DynamicFieldIndices::const_iterator i = dynamicFieldIndices_.find(fieldName);
-	if (i == dynamicFieldIndices_.end())
+	const DynamicFieldIndices::const_iterator iField = dynamicFieldIndices_.find(fieldName);
+	if (iField == dynamicFieldIndices_.cend())
 	{
 		throw OceanException("Invalid dynamic field name.");
 	}
 
-	ocean_assert(i->second < dynamicFields_.size());
-	return *dynamicFields_[i->second];
+	ocean_assert(iField->second < dynamicFields_.size());
+	return *dynamicFields_[iField->second];
 }
 
 Field& DynamicNode::dynamicField(const std::string& fieldName)
 {
-	const DynamicFieldIndices::const_iterator i = dynamicFieldIndices_.find(fieldName);
-	if (i == dynamicFieldIndices_.end())
+	const DynamicFieldIndices::const_iterator iField = dynamicFieldIndices_.find(fieldName);
+	if (iField == dynamicFieldIndices_.cend())
 	{
 		throw OceanException("Invalid dynamic field name.");
 	}
 
-	ocean_assert(i->second < dynamicFields_.size());
-	return *dynamicFields_[i->second];
+	ocean_assert(iField->second < dynamicFields_.size());
+	return *dynamicFields_[iField->second];
 }
 
 bool DynamicNode::removeField(const std::string& name)
 {
-	ocean_assert(name.empty() == false);
+	ocean_assert(!name.empty());
 
-	const DynamicFieldIndices::const_iterator i = dynamicFieldIndices_.find(name);
-	if (i == dynamicFieldIndices_.end())
+	const DynamicFieldIndices::const_iterator iField = dynamicFieldIndices_.find(name);
+	if (iField == dynamicFieldIndices_.cend())
 	{
 		return false;
 	}
 
-	const unsigned int index = i->second;
+	const unsigned int index = iField->second;
 	ocean_assert(index < dynamicFields_.size());
 
 	dynamicFields_.erase(dynamicFields_.begin() + index);
 
-	dynamicFieldIndices_.erase(i);
+	dynamicFieldIndices_.erase(iField);
 
 	for (DynamicFieldIndices::value_type& fieldIndexPair : dynamicFieldIndices_)
 	{
