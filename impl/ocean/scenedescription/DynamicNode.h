@@ -32,6 +32,8 @@ using DynamicNodeRef = SmartObjectRef<DynamicNode, Node>;
 
 /**
  * This class is the base class for all nodes able to handle fields loaded during runtime.
+ * A dynamic field is identified by its name. The index of a dynamic field is not an identity but an enumeration handle
+ * with range [0, dynamicFields()), valid only until the next addField() or removeField() call.
  * @ingroup scenedescription
  */
 class OCEAN_SCENEDESCRIPTION_EXPORT DynamicNode : virtual public Node
@@ -52,14 +54,16 @@ class OCEAN_SCENEDESCRIPTION_EXPORT DynamicNode : virtual public Node
 
 		/**
 		 * Adds a new field during runtime.
-		 * @param name The name of the node
-		 * @param field Field to add
+		 * The field is appended, so it receives the highest index and the indices of all existing fields stay valid.
+		 * @param name The name of the field, must be valid
+		 * @param field Field to add, a copy is stored
 		 * @return True, if no field has be added with the same name before
 		 */
 		bool addField(const std::string& name, const Field& field);
 
 		/**
 		 * Returns the number of dynamic fields.
+		 * Together with dynamicFieldName() this allows to enumerate all dynamic fields of this node.
 		 * @return Number of dynamic fields
 		 */
 		inline unsigned int dynamicFields() const;
@@ -79,7 +83,10 @@ class OCEAN_SCENEDESCRIPTION_EXPORT DynamicNode : virtual public Node
 
 		/**
 		 * Returns the name of a dynamic field by a given index.
-		 * @param index Index of the dynamic field to return
+		 * The index reflects the order in which the fields have been added, it is not stable across a removeField() call.
+		 * @param index Index of the dynamic field to return, with range [0, dynamicFields())
+		 * @return The name of the dynamic field
+		 * @exception OceanException Is thrown if the index does not exist
 		 */
 		const std::string& dynamicFieldName(const unsigned int index) const;
 
@@ -125,7 +132,8 @@ class OCEAN_SCENEDESCRIPTION_EXPORT DynamicNode : virtual public Node
 
 		/**
 		 * Removes a field added during runtime.
-		 * @param name The name of the field to remove
+		 * The remaining fields keep their relative order but are re-indexed, so every index above the removed one is invalidated.
+		 * @param name The name of the field to remove, must be valid
 		 * @return True, if the field could be remove
 		 */
 		bool removeField(const std::string& name);
