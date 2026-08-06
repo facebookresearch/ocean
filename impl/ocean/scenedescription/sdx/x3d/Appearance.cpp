@@ -156,7 +156,11 @@ void Appearance::onInitialize(const Rendering::SceneRef& scene, const Timestamp 
 				for (MultiNode::Values::const_iterator i = shaders_.values().begin(); i != shaders_.values().end(); ++i)
 				{
 					const SDXNodeRef shader(*i);
-					ocean_assert(shader);
+
+					if (!shader)
+					{
+						continue;
+					}
 
 					shader->initialize(scene, timestamp);
 					Rendering::ShaderProgramRef renderingShaderProgram(shader->renderingObject());
@@ -169,10 +173,7 @@ void Appearance::onInitialize(const Rendering::SceneRef& scene, const Timestamp 
 						}
 					}
 
-					if (shader)
-					{
-						renderingAttributeSet->addAttribute(shader->renderingObject());
-					}
+					renderingAttributeSet->addAttribute(shader->renderingObject());
 				}
 			}
 

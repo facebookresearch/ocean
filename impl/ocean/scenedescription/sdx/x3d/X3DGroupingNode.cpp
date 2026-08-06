@@ -99,7 +99,11 @@ bool X3DGroupingNode::onFieldChanging(const std::string& fieldName, const Field&
 			for (MultiNode::Values::const_iterator i = children_.values().begin(); i != children_.values().end(); ++i)
 			{
 				const SDXNodeRef childNode(*i);
-				ocean_assert(childNode);
+
+				if (!childNode)
+				{
+					continue;
+				}
 
 				renderingGroup->removeChild(childNode->renderingObject());
 				unregisterThisNodeAsParent(childNode);
@@ -126,7 +130,11 @@ bool X3DGroupingNode::onFieldChanging(const std::string& fieldName, const Field&
 			for (MultiNode::Values::const_iterator i = multiNode.values().begin(); i != multiNode.values().end(); ++i)
 			{
 				const SDXNodeRef childNode(*i);
-				ocean_assert(childNode);
+
+				if (!childNode)
+				{
+					continue;
+				}
 
 				renderingGroup->addChild(childNode->renderingObject());
 				registerThisNodeAsParent(childNode);
@@ -161,7 +169,11 @@ bool X3DGroupingNode::onFieldChanging(const std::string& fieldName, const Field&
 					registerThisNodeAsParent(*i);
 
 					const SDXNodeRef childNode(*i);
-					renderingGroup->addChild(childNode->renderingObject());
+
+					if (childNode)
+					{
+						renderingGroup->addChild(childNode->renderingObject());
+					}
 				}
 				else
 				{
@@ -180,7 +192,11 @@ bool X3DGroupingNode::onFieldChanging(const std::string& fieldName, const Field&
 						unregisterThisNodeAsParent(*i);
 
 						const SDXNodeRef childNode(*i);
-						renderingGroup->removeChild(childNode->renderingObject());
+
+						if (childNode)
+						{
+							renderingGroup->removeChild(childNode->renderingObject());
+						}
 
 						iC = children_.values().erase(iC);
 						continue;
