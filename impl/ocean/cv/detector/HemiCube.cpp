@@ -281,9 +281,9 @@ IndexSet32 HemiCube::find(const FiniteLine2& line, const Scalar radius) const
 
 	const unsigned int radiusCeil = (unsigned int)Numeric::ceil(radius);
 	const unsigned int yStart = (mapIndex.y() >= radiusCeil ? mapIndex.y() - radiusCeil : 0u);
-	const unsigned int yEnd = std::min(mapIndex.y() + radiusCeil, numberBins_);
+	const unsigned int yEnd = std::min(mapIndex.y() + radiusCeil + 1u, numberBins_);
 	const unsigned int xStart = (mapIndex.x() >= radiusCeil ? mapIndex.x() - radiusCeil : 0u);
-	const unsigned int xEnd = std::min(mapIndex.x() + radiusCeil, numberBins_);
+	const unsigned int xEnd = std::min(mapIndex.x() + radiusCeil + 1u, numberBins_);
 
 	for (unsigned int y = yStart; y < yEnd; ++y)
 	{

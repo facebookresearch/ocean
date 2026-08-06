@@ -46,6 +46,13 @@ bool TestHemiCube::test(const double testDuration, Worker& /*worker*/, const Tes
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("find"))
+	{
+		testResult = testFind(testDuration);
+
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("linefusion"))
 	{
 		testResult = testLineFusion(testDuration);
@@ -75,6 +82,11 @@ bool TestHemiCube::test(const double testDuration, Worker& /*worker*/, const Tes
 TEST(TestHemiCube, Add)
 {
 	EXPECT_TRUE(TestHemiCube::testAdd(GTEST_TEST_DURATION));
+}
+
+TEST(TestHemiCube, Find)
+{
+	EXPECT_TRUE(TestHemiCube::testFind(GTEST_TEST_DURATION));
 }
 
 TEST(TestHemiCube, LineFusion)
@@ -215,6 +227,77 @@ bool TestHemiCube::testAdd(const double testDuration)
 
 			ocean_assert(hemiCubeBins >= 2u && "This test case requires more than one bin in the Hemi cube");
 			OCEAN_EXPECT_EQUAL(validation, hemiCube.nonEmptyBins(), size_t(2));
+		}
+	}
+	while (startTime + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestHemiCube::testFind(const double testDuration)
+{
+	Log::info() << "Hemi cube find test:";
+
+	const unsigned int imageWidth = 1920u;
+	const unsigned int imageHeight = 1080u;
+	const Scalar focalLength = Scalar(1);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTime(true);
+
+	do
+	{
+		const unsigned int hemiCubeBins = RandomI::random(randomGenerator, 2u, 64u);
+
+		HemiCube hemiCube(hemiCubeBins, imageWidth, imageHeight, focalLength);
+
+		const unsigned int linesCount = RandomI::random(randomGenerator, 1u, 500u);
+
+		for (unsigned int n = 0u; n < linesCount; ++n)
+		{
+			hemiCube.insert(generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight));
+		}
+
+		std::vector<HemiCube::MapIndex> lineMapIndices(hemiCube.size());
+
+		for (const HemiCube::Map::value_type& pair : hemiCube.map())
+		{
+			for (const Index32& lineIndex : pair.second)
+			{
+				ocean_assert(size_t(lineIndex) < lineMapIndices.size());
+				lineMapIndices[lineIndex] = pair.first;
+			}
+		}
+
+		// integer radii place bins at a distance of exactly `radius` right on the acceptance boundary
+		const Scalar radius = RandomI::boolean(randomGenerator) ? Scalar(RandomI::random(randomGenerator, 1u, 4u)) : Random::scalar(randomGenerator, Scalar(1), Scalar(4));
+
+		for (unsigned int lineIndex = 0u; lineIndex < (unsigned int)(hemiCube.size()); ++lineIndex)
+		{
+			const HemiCube::MapIndex& mapIndex = lineMapIndices[lineIndex];
+
+			IndexSet32 expectedIndices;
+
+			for (const HemiCube::Map::value_type& pair : hemiCube.map())
+			{
+				if (pair.first[2] != mapIndex[2])
+				{
+					continue;
+				}
+
+				const Scalar distance = (Vector2(Scalar(pair.first[0]), Scalar(pair.first[1])) - Vector2(Scalar(mapIndex[0]), Scalar(mapIndex[1]))).length();
+
+				if (distance <= radius)
+				{
+					expectedIndices.insert(pair.second.cbegin(), pair.second.cend());
+				}
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, hemiCube.find(hemiCube[lineIndex], radius), expectedIndices);
 		}
 	}
 	while (startTime + testDuration > Timestamp(true));

@@ -52,6 +52,13 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestHemiCube
 		static bool testAdd(const double testDuration);
 
 		/**
+		 * Tests the search for similar lines in the Hemi cube.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testFind(const double testDuration);
+
+		/**
 		 * Test merging of two line segments into a new line segment
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
