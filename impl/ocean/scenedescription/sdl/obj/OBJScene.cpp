@@ -136,15 +136,15 @@ Rendering::NodeRef OBJScene::createTriangles(const Rendering::EngineRef& engine)
 #ifdef OCEAN_DEBUG
 				for (size_t n = 0; n < vertexIndices.size(); n++)
 				{
-					ocean_assert(vertexIndices[n] <= vertices_.size());
+					ocean_assert(vertexIndices[n] < vertices_.size());
 				}
 				for (size_t n = 0; n < normalIndices.size(); n++)
 				{
-					ocean_assert(normalIndices[n] <= normals_.size());
+					ocean_assert(normalIndices[n] < normals_.size());
 				}
 				for (size_t n = 0; n < textureIndices.size(); n++)
 				{
-					ocean_assert(textureIndices[n] <= textureCoordinates_.size());
+					ocean_assert(textureIndices[n] < textureCoordinates_.size());
 				}
 #endif // OCEAN_DEBUG
 

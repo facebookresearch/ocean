@@ -207,9 +207,9 @@ void OBJParser::parseFace(OBJScene& scene)
 			index = int(scene.vertices().size()) + index + 1;
 		}
 
-		if (index == 0)
+		if (index <= 0)
 		{
-			throw OceanException("\'0\' is an invalid vertex index.");
+			throw OceanException(std::string("\"") + String::toAString(index) + "\" is an invalid vertex index.");
 		}
 
 		if (index > int(scene.vertices().size()))
@@ -234,9 +234,9 @@ void OBJParser::parseFace(OBJScene& scene)
 					index = int(scene.textureCoordinates().size()) + index + 1;
 				}
 
-				if (index == 0)
+				if (index <= 0)
 				{
-					throw OceanException("\'0\' is an invalid vertex index.");
+					throw OceanException(std::string("\"") + String::toAString(index) + "\" is an invalid texture coordinate index.");
 				}
 
 				if (index > int(scene.textureCoordinates().size()))
@@ -271,9 +271,9 @@ void OBJParser::parseFace(OBJScene& scene)
 				index = int(scene.normals().size()) + index + 1;
 			}
 
-			if (index == 0)
+			if (index <= 0)
 			{
-				throw OceanException("\'0\' is an invalid vertex index.");
+				throw OceanException(std::string("\"") + String::toAString(index) + "\" is an invalid normal index.");
 			}
 
 			if (index > int(scene.normals().size()))
