@@ -328,7 +328,11 @@ void XMLParser::parseNodeField(NodeRef& parent, const tinyxml2::XMLElement* xmlN
 
 	ocean_assert(parent->hasField(fieldName));
 	Field& field = parent->field(fieldName);
-	ocean_assert(field.type() == Field::TYPE_NODE);
+
+	if (field.type() != Field::TYPE_NODE)
+	{
+		throw OceanException(std::string("Failed to add the node type \"") + nodeType + std::string("\" to the parent node type \"") + parent->type() + std::string("\", the field \"") + fieldName + std::string("\" does not hold nodes"));
+	}
 
 	if (field.is0D())
 	{
