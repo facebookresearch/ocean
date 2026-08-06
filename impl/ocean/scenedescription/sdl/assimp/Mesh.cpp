@@ -120,7 +120,11 @@ Rendering::GeometryRef Mesh::parseMesh(const Rendering::Engine& engine, const st
 	{
 		const aiFace& assimpFace = assimpMesh.mFaces[n];
 
-		ocean_assert(assimpFace.mNumIndices == 3u);
+		if (assimpFace.mNumIndices != 3u)
+		{
+			// aiProcess_Triangulate does not remove line and point primitives, so one mesh can mix them with triangles
+			continue;
+		}
 
 		triangleFaces.emplace_back(assimpFace.mIndices);
 	}
