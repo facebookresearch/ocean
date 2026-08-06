@@ -131,17 +131,28 @@ bool DynamicNode::removeField(const std::string& name)
 {
 	ocean_assert(name.empty() == false);
 
-	DynamicFieldIndices::iterator i = dynamicFieldIndices_.find(name);
+	const DynamicFieldIndices::const_iterator i = dynamicFieldIndices_.find(name);
 	if (i == dynamicFieldIndices_.end())
 	{
 		return false;
 	}
 
-	DynamicFields::iterator iD = dynamicFields_.begin();
-	iD += i->second;
+	const unsigned int index = i->second;
+	ocean_assert(index < dynamicFields_.size());
 
-	delete *iD;
-	dynamicFields_.erase(iD);
+	delete dynamicFields_[index];
+	dynamicFields_.erase(dynamicFields_.begin() + index);
+
+	dynamicFieldIndices_.erase(i);
+
+	for (DynamicFieldIndices::value_type& fieldIndexPair : dynamicFieldIndices_)
+	{
+		if (fieldIndexPair.second > index)
+		{
+			--fieldIndexPair.second;
+		}
+	}
+
 	return true;
 }
 
