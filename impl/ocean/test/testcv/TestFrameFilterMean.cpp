@@ -201,7 +201,7 @@ bool TestFrameFilterMean::validationFilter8BitPerChannel(const uint8_t* source, 
 
 				const unsigned int error = (unsigned int)(abs(int(meanValue) - int(targetPixel[channelIndex])));
 
-				if (error <= 2u)
+				if (error == 0u)
 				{
 					++validElements;
 				}

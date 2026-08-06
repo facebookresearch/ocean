@@ -196,7 +196,7 @@ void FrameFilterMean::filterWithIntegral8BitPerChannelSubset(const uint32_t* bor
 	const unsigned int integralSkipElements = window * tChannels + borderedIntegralPaddingElements;
 
 	const unsigned int area = window * window;
-	const unsigned int area_2 = (area + 1u) / 2u;
+	const unsigned int area_2 = area / 2u;
 
 	const uint32_t* integralTopLeft = borderedIntegral + firstRow * borderedIntegralStrideElements;
 	const uint32_t* integralBottomLeft = borderedIntegral + (firstRow + window) * borderedIntegralStrideElements;
