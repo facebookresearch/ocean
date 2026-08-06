@@ -267,7 +267,7 @@ inline MappingI1& MappingI1::operator=(MappingI1&& pixelMapping) noexcept
 {
 	if (this != &pixelMapping)
 	{
-		MappingI::operator=(pixelMapping);
+		MappingI::operator=(std::move(pixelMapping));
 	}
 
 	return *this;
