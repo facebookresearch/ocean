@@ -247,7 +247,7 @@ void JSBase::function<Vector3, JSVector3::FI_NORMALIZE>(Vector3& thisValue, cons
 template <>
 void JSBase::function<Vector3, JSVector3::FI_NORMALIZED>(Vector3& thisValue, const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-	info.GetReturnValue().Set(createObject<JSVector3>(thisValue.normalized(), JSContext::currentContext()));
+	info.GetReturnValue().Set(createObject<JSVector3>(thisValue.normalizedOrZero(), JSContext::currentContext()));
 }
 
 template <>
