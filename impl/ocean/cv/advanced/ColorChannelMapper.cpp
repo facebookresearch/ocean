@@ -110,7 +110,9 @@ void ColorChannelMapper::createLookupScaleOffset(const FrameType::PixelFormat& p
 
 	const bool mirrorRGB = pixelFormat == FrameType::FORMAT_ABGR32 || pixelFormat == FrameType::FORMAT_BGR24 || pixelFormat == FrameType::FORMAT_BGR32 || pixelFormat == FrameType::FORMAT_BGRA32;
 
-	float mapScale[4], mapOffset[4], mapGamma[4];
+	float mapScale[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+	float mapOffset[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+	float mapGamma[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	for (unsigned int c = 0; c < 3u; c++)
 	{
