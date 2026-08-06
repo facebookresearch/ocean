@@ -154,6 +154,15 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT Utilities
 		 * @return True, if succeeded
 		 */
 		static bool writeTransformNodeStart(std::ostream& stream, const HomogenousMatrix4& world_T_transform, const std::string& indentation = std::string(), const std::string& name = std::string());
+
+		/**
+		 * Writes an index field of an IndexedFaceSet to an output stream.
+		 * @param stream The output stream to which the field will be written, must be valid
+		 * @param fieldName The name of the index field, e.g. "coordIndex", must be valid
+		 * @param triangleFaces The triangle faces to write, at least one
+		 * @param indentation Optional indentation
+		 */
+		static void writeFaceIndices(std::ostream& stream, const std::string& fieldName, const Rendering::TriangleFaces& triangleFaces, const std::string& indentation = std::string());
 };
 
 }

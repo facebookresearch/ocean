@@ -125,7 +125,6 @@ bool Utilities::writeIndexedFaceSet(std::ostream& stream, const Vectors3& vertic
 	stream << indentation << "{\n" << indentation << "\tgeometry IndexedFaceSet\n" << indentation << "\t{\n";
 	stream << indentation << "\t\tcoord Coordinate\n" << indentation << "\t\t{\n" << indentation << "\t\t\tpoint\n" << indentation << "\t\t\t[\n";
 
-	const std::string valueIndentationSmall = indentation + "\t\t\t";
 	const std::string valueIndentation = indentation + "\t\t\t\t";
 
 	for (const Vector3& vertex : vertices)
@@ -135,14 +134,7 @@ bool Utilities::writeIndexedFaceSet(std::ostream& stream, const Vectors3& vertic
 
 	stream << indentation << "\t\t\t]\n" << indentation << "\t\t}\n";
 
-	stream << "\n" << indentation << "\t\tcoordIndex\n" << indentation << "\t\t[\n";
-
-	for (const Rendering::TriangleFace& triangleFace : triangleFaces)
-	{
-		stream << valueIndentationSmall << triangleFace[0] << " " << triangleFace[1] << " " << triangleFace[2] << " -1,\n";
-	}
-
-	stream << indentation << "\t\t]\n";
+	writeFaceIndices(stream, "coordIndex", triangleFaces, indentation);
 
 	if (!perVertexNormals.empty())
 	{
@@ -155,14 +147,7 @@ bool Utilities::writeIndexedFaceSet(std::ostream& stream, const Vectors3& vertic
 
 		stream << indentation << "\t\t\t]\n" << indentation << "\t\t}\n";
 
-		stream << "\n" << indentation << "\t\tnormalIndex\n" << indentation << "\t\t[\n";
-
-		for (const Rendering::TriangleFace& triangleFace : triangleFaces)
-		{
-			stream << valueIndentationSmall << triangleFace[0] << " " << triangleFace[1] << " " << triangleFace[2] << " -1,\n";
-		}
-
-		stream << indentation << "\t\t]\n";
+		writeFaceIndices(stream, "normalIndex", triangleFaces, indentation);
 	}
 
 	if (!perVertexTextureCoordinates.empty())
@@ -188,14 +173,7 @@ bool Utilities::writeIndexedFaceSet(std::ostream& stream, const Vectors3& vertic
 
 		stream << indentation << "\t\t\t]\n" << indentation << "\t\t}\n";
 
-		stream << "\n" << indentation << "\t\tcolorIndex\n" << indentation << "\t\t[\n";
-
-		for (const Rendering::TriangleFace& triangleFace : triangleFaces)
-		{
-			stream << valueIndentationSmall << triangleFace[0] << " " << triangleFace[1] << " " << triangleFace[2] << " -1,\n";
-		}
-
-		stream << indentation << "\t\t]\n";
+		writeFaceIndices(stream, "colorIndex", triangleFaces, indentation);
 	}
 
 	stream << indentation << "\t}\n";
@@ -507,6 +485,21 @@ bool Utilities::writeTransformNodeStart(std::ostream& stream, const HomogenousMa
 	}
 
 	return true;
+}
+
+void Utilities::writeFaceIndices(std::ostream& stream, const std::string& fieldName, const Rendering::TriangleFaces& triangleFaces, const std::string& indentation)
+{
+	ocean_assert(!fieldName.empty());
+	ocean_assert(!triangleFaces.empty());
+
+	stream << "\n" << indentation << "\t\t" << fieldName << "\n" << indentation << "\t\t[\n";
+
+	for (const Rendering::TriangleFace& triangleFace : triangleFaces)
+	{
+		stream << indentation << "\t\t\t" << triangleFace[0] << " " << triangleFace[1] << " " << triangleFace[2] << " -1,\n";
+	}
+
+	stream << indentation << "\t\t]\n";
 }
 
 }
