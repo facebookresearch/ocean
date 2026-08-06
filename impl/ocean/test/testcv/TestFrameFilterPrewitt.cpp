@@ -203,8 +203,8 @@ bool TestFrameFilterPrewitt::validateHorizontalVerticalFilter8BitPerChannel(cons
 
 				if (responseIsInt8)
 				{
-					const int8_t normalizedResponse0 = int8_t(response0 / 8);
-					const int8_t normalizedResponse90 = int8_t(response90 / 8);
+					const int8_t normalizedResponse0 = int8_t(response0 / 6);
+					const int8_t normalizedResponse90 = int8_t(response90 / 6);
 
 					const int8_t* const responsePixel = response.constpixel<int8_t>(x, y) + 2u * channelIndex;
 

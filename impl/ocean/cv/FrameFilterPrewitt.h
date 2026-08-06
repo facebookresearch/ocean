@@ -135,14 +135,14 @@ void FrameFilterPrewitt::filterHorizontalVerticalRow(const TSource* sourceRow, T
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
 				// | -1 0 1 |
+				// | -1 0 1 | / 6
 				// | -1 0 1 |
-				// | -1 0 1 |
-				*targetRow++ = TTarget((*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) + *(source2 + tSourceChannels * 2u) - *(source2)) / 8);
+				*targetRow++ = TTarget((*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) + *(source2 + tSourceChannels * 2u) - *(source2)) / 6);
 
 				// | -1 -1 -1 |
-				// |  0  0  0 |
+				// |  0  0  0 | / 6
 				// |  1  1  1 |
-				*targetRow++ = TTarget((*(source2) + (*(source2 + tSourceChannels) - *(source0 + tSourceChannels)) + *(source2 + tSourceChannels * 2u) - *(source0) - *(source0 + tSourceChannels * 2u)) / 8);
+				*targetRow++ = TTarget((*(source2) + (*(source2 + tSourceChannels) - *(source0 + tSourceChannels)) + *(source2 + tSourceChannels * 2u) - *(source0) - *(source0 + tSourceChannels * 2u)) / 6);
 
 				++source0;
 				++source1;
