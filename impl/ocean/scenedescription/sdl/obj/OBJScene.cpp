@@ -8,16 +8,15 @@
 #include "ocean/scenedescription/sdl/obj/OBJScene.h"
 
 #include "ocean/rendering/AttributeSet.h"
-#include "ocean/rendering/DirectionalLight.h"
 #include "ocean/rendering/Geometry.h"
-#include "ocean/rendering/PrimitiveAttribute.h"
-#include "ocean/rendering/Quads.h"
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Transform.h"
 #include "ocean/rendering/Triangles.h"
 #include "ocean/rendering/VertexSet.h"
 
 #include "ocean/system/Performance.h"
+
+#include <iterator>
 
 namespace Ocean
 {
@@ -43,19 +42,28 @@ OBJScene::~OBJScene()
 	// nothing to do here
 }
 
-void OBJScene::setMaterials(Materials&& materials)
+void OBJScene::addMaterials(Materials&& materials)
 {
-	ocean_assert(materials_.empty());
-	ocean_assert(materialIndexMap_.empty());
+	const size_t firstNewMaterial = materials_.size();
 
-	materials_ = std::move(materials);
-
-	for (size_t n = 0; n < materials_.size(); ++n)
+	if (materials_.empty())
 	{
-		materialIndexMap_.emplace(materials_[n].name(), (unsigned int)(n));
+		materials_ = std::move(materials);
+	}
+	else
+	{
+		materials_.insert(materials_.cend(), std::make_move_iterator(materials.begin()), std::make_move_iterator(materials.end()));
 	}
 
-	ocean_assert(materials_.size() == materialIndexMap_.size());
+	for (size_t n = firstNewMaterial; n < materials_.size(); ++n)
+	{
+		const std::string& name = materials_[n].name();
+
+		if (!materialIndexMap_.emplace(name, (unsigned int)(n)).second)
+		{
+			Log::warning() << "The material \"" << name << "\" is defined more than once, the first definition is used.";
+		}
+	}
 }
 
 Rendering::SceneRef OBJScene::internalApply(const Rendering::EngineRef& engine)
@@ -238,7 +246,7 @@ Rendering::NodeRef OBJScene::createTriangles(const Rendering::EngineRef& engine)
 
 			Rendering::AttributeSetRef attributeSet;
 
-			if (facePair.second == invalidMaterialIndex_)
+			if (facePair.second == invalidMaterialIndex_ || size_t(facePair.second) >= materials_.size())
 			{
 				attributeSet = engine->factory().createAttributeSet();
 

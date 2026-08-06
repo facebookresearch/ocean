@@ -347,7 +347,7 @@ void OBJParser::parseMtlLib(OBJScene& scene)
 
 			if (materials.empty() == false)
 			{
-				scene.setMaterials(std::move(materials));
+				scene.addMaterials(std::move(materials));
 				break;
 			}
 		}

@@ -176,10 +176,11 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJScene : public SDLScene
 		inline const FacesMap& facesMap() const;
 
 		/**
-		 * Sets the materials of the obj scene.
-		 * @param materials The materials for the scene
+		 * Adds materials to the obj scene.
+		 * An obj file may contain several `mtllib` statements, the materials of all of them accumulate.
+		 * @param materials The materials to add to the scene
 		 */
-		void setMaterials(Materials&& materials);
+		void addMaterials(Materials&& materials);
 
 		/**
 		 * Adds a new vertex to the scene.
