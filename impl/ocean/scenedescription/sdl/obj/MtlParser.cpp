@@ -7,8 +7,6 @@
 
 #include "ocean/scenedescription/sdl/obj/MtlParser.h"
 
-#include "ocean/base/String.h"
-
 namespace Ocean
 {
 
@@ -62,7 +60,7 @@ void MtlParser::parseMaterial(Materials& materials)
 
 	const Token token(scanner_.lineToken());
 
-	std::string materialName = token.line();
+	const std::string& materialName = token.line();
 
 	material.setName(materialName);
 
@@ -318,7 +316,8 @@ void MtlParser::parseTransparency(Material& material)
 
 	const float transparency = max(0.0f, min(1.0f, float(parseFloat())));
 
-	material.setTransparency(1 - transparency);
+	// `d` is opacity and `Tr` is its complement, so unlike parseDissolve() the value is stored unchanged
+	material.setTransparency(transparency);
 }
 
 void MtlParser::parseUnsupportedKeyword()
