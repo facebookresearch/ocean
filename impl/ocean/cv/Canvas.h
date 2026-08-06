@@ -1454,7 +1454,7 @@ void Canvas::rotatedEllipse8BitPerChannel(uint8_t* frame, const unsigned int wid
 
 	const SquareMatrix3 invertedRotation(Rotation(0, 0, 1, angle));
 
-	const uint8_t radius = uint8_t(max(horizontalHalf, verticalHalf));
+	const unsigned int radius = std::max(horizontalHalf, verticalHalf);
 
 	for (unsigned int y = max(0, int(position.y() - radius)); y < min(position.y() + radius + 1u, height); ++y)
 	{
