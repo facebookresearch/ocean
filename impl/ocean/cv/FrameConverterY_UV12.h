@@ -548,7 +548,7 @@ inline void FrameConverterY_UV12::convertY_UV12ToYVU24(const uint8_t* ySource, c
 
 inline void FrameConverterY_UV12::convertY_UV12ToY_U_V12(const uint8_t* ySource, const uint8_t* uvSource, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uvSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker)
 {
-	ocean_assert(ySource != nullptr && uvSource != nullptr && yTarget != nullptr && yTarget != nullptr && vTarget != nullptr);
+	ocean_assert(ySource != nullptr && uvSource != nullptr && yTarget != nullptr && uTarget != nullptr && vTarget != nullptr);
 
 	ocean_assert(width >= 2u && width % 2u == 0u);
 	ocean_assert(height >= 2u && height % 2u == 0u);
