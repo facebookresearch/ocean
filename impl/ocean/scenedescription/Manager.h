@@ -383,8 +383,7 @@ inline bool Manager::handlesMouseEvents() const
 template <typename T>
 bool Manager::registerLibrary(const std::string& name)
 {
-	const ScopedLock mLock(managerLock_);
-	const ScopedLock lLock(libraryLock_);
+	const DualScopedLockT<ScopedLock> dualScopedLock(managerLock_, libraryLock_);
 
 	// first we check whether the library has been registered already
 

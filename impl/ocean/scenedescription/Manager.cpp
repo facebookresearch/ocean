@@ -48,7 +48,9 @@ SceneRef Manager::load(const std::string& filename, const Rendering::EngineRef& 
 		files.push_back(file);
 	}
 
-	const ScopedLock lock(libraryLock_);
+	// both locks are taken up front and in a deterministic order: `library->load()` below registers
+	// event and update nodes, each of which acquires `managerLock_` while `libraryLock_` is held
+	const DualScopedLockT<ScopedLock> dualScopedLock(managerLock_, libraryLock_);
 
 	bool invalidFilename = true;
 
@@ -68,8 +70,6 @@ SceneRef Manager::load(const std::string& filename, const Rendering::EngineRef& 
 
 						if (scene)
 						{
-							const ScopedLock scopedLock(managerLock_);
-
 							permanentSceneMap_[scene->sceneId()] = scene;
 							return scene;
 						}
@@ -319,8 +319,7 @@ NodeRefs Manager::nodes(const std::string& library, const std::string& name) con
 
 void Manager::release()
 {
-	const ScopedLock scopedLock(managerLock_);
-	const ScopedLock lock(libraryLock_);
+	const DualScopedLockT<ScopedLock> dualScopedLock(managerLock_, libraryLock_);
 
 	Log::debug() << "Unregistering all " << libraries_.size() << " scene description libraries via Manager::release()";
 
@@ -338,8 +337,7 @@ bool Manager::unregisterLibrary(const std::string& name)
 {
 	Log::debug() << "Unregistering scene description library '" << name << "'";
 
-	const ScopedLock mLock(managerLock_);
-	const ScopedLock lLock(libraryLock_);
+	const DualScopedLockT<ScopedLock> dualScopedLock(managerLock_, libraryLock_);
 
 	for (Libraries::iterator iLibrary = libraries_.begin(); iLibrary != libraries_.end(); ++iLibrary)
 	{
