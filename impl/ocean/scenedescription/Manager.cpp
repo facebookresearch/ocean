@@ -52,9 +52,9 @@ SceneRef Manager::load(const std::string& filename, const Rendering::EngineRef& 
 
 	bool invalidFilename = true;
 
-	for (IO::Files::const_iterator iF = files.begin(); iF != files.end(); ++iF)
+	for (const IO::File& currentFile : files)
 	{
-		if (iF->exists())
+		if (currentFile.exists())
 		{
 			invalidFilename = false;
 
@@ -64,7 +64,7 @@ SceneRef Manager::load(const std::string& filename, const Rendering::EngineRef& 
 				{
 					if (libraryCounterPair.first->descriptionType() & TYPE_PERMANENT)
 					{
-						const SDXSceneRef scene(libraryCounterPair.first->load((*iF)(), file.extension(), engine, timestamp, TYPE_PERMANENT, progress, cancel));
+						const SDXSceneRef scene(libraryCounterPair.first->load(currentFile(), file.extension(), engine, timestamp, TYPE_PERMANENT, progress, cancel));
 
 						if (scene)
 						{
@@ -82,7 +82,7 @@ SceneRef Manager::load(const std::string& filename, const Rendering::EngineRef& 
 			{
 				if (libraryCounterPair.first->descriptionType() & TYPE_TRANSIENT)
 				{
-					const SceneRef scene(libraryCounterPair.first->load((*iF)(), file.extension(), engine, timestamp, TYPE_TRANSIENT, progress, cancel));
+					const SceneRef scene(libraryCounterPair.first->load(currentFile(), file.extension(), engine, timestamp, TYPE_TRANSIENT, progress, cancel));
 
 					if (scene)
 					{
@@ -105,14 +105,14 @@ bool Manager::unload(const SceneId sceneId)
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	const PermanentSceneMap::iterator i = permanentSceneMap_.find(sceneId);
+	const PermanentSceneMap::iterator iScene = permanentSceneMap_.find(sceneId);
 
-	if (i == permanentSceneMap_.end())
+	if (iScene == permanentSceneMap_.end())
 	{
 		return false;
 	}
 
-	permanentSceneMap_.erase(i);
+	permanentSceneMap_.erase(iScene);
 	return true;
 }
 
@@ -135,9 +135,9 @@ Manager::LibraryNames Manager::libraries()
 	LibraryNames names;
 	names.reserve(libraries_.size());
 
-	for (Libraries::const_iterator i = libraries_.begin(); i != libraries_.end(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		names.emplace_back(i->first->name());
+		names.emplace_back(libraryCounterPair.first->name());
 	}
 
 	return names;
@@ -149,13 +149,13 @@ Manager::FileExtensions Manager::supportedExtensions()
 
 	FileExtensions extensions;
 
-	for (Libraries::const_iterator i = libraries_.begin(); i != libraries_.end(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		const Library::FileExtensions libraryExtensions(i->first->registeredFileExtensions());
+		const Library::FileExtensions libraryExtensions(libraryCounterPair.first->registeredFileExtensions());
 
-		for (Library::FileExtensions::const_iterator iL = libraryExtensions.begin(); iL != libraryExtensions.end(); ++iL)
+		for (const Library::FileExtensions::value_type& libraryExtension : libraryExtensions)
 		{
-			extensions.emplace(iL->first, iL->second);
+			extensions.emplace(libraryExtension.first, libraryExtension.second);
 		}
 	}
 
@@ -166,11 +166,11 @@ void Manager::mouseEvent(const ButtonType button, const ButtonEvent buttonEvent,
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (EventNodes::const_iterator i = eventNodes_.begin(); i != eventNodes_.end(); ++i)
+	for (const EventNodes::value_type& eventNodePair : eventNodes_)
 	{
-		ocean_assert(i->second);
+		ocean_assert(eventNodePair.second);
 
-		i->second->onMouse(button, buttonEvent, screenPosition, objectPosition, objectId, timestamp);
+		eventNodePair.second->onMouse(button, buttonEvent, screenPosition, objectPosition, objectId, timestamp);
 	}
 }
 
@@ -178,11 +178,11 @@ void Manager::keyEvent(const int key, const ButtonEvent buttonEvent, const Rende
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (EventNodes::const_iterator i = eventNodes_.begin(); i != eventNodes_.end(); ++i)
+	for (const EventNodes::value_type& eventNodePair : eventNodes_)
 	{
-		ocean_assert(i->second);
+		ocean_assert(eventNodePair.second);
 
-		i->second->onKey(key, buttonEvent, objectId, timestamp);
+		eventNodePair.second->onKey(key, buttonEvent, objectId, timestamp);
 	}
 }
 
@@ -192,10 +192,10 @@ Timestamp Manager::preUpdate(const Rendering::ViewRef& view, const Timestamp tim
 
 	Timestamp realTimestamp(timestamp);
 
-	for (UpdateNodes::const_iterator i = updateNodes_.begin(); i != updateNodes_.end(); ++i)
+	for (const UpdateNodes::value_type& updateNodePair : updateNodes_)
 	{
-		ocean_assert(i->second);
-		realTimestamp = i->second->onPreUpdate(view, realTimestamp);
+		ocean_assert(updateNodePair.second);
+		realTimestamp = updateNodePair.second->onPreUpdate(view, realTimestamp);
 	}
 
 	ocean_assert(realTimestamp.isValid());
@@ -208,13 +208,13 @@ Timestamp Manager::preUpdate(const std::string& library, const Rendering::ViewRe
 
 	Timestamp realTimestamp(timestamp);
 
-	for (UpdateNodes::const_iterator i = updateNodes_.begin(); i != updateNodes_.end(); ++i)
+	for (const UpdateNodes::value_type& updateNodePair : updateNodes_)
 	{
-		ocean_assert(i->second);
+		ocean_assert(updateNodePair.second);
 
-		if (i->second->library() == library)
+		if (updateNodePair.second->library() == library)
 		{
-			realTimestamp = i->second->onPreUpdate(view, realTimestamp);
+			realTimestamp = updateNodePair.second->onPreUpdate(view, realTimestamp);
 		}
 	}
 
@@ -226,10 +226,10 @@ void Manager::update(const Rendering::ViewRef& view, const Timestamp timestamp)
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (UpdateNodes::const_iterator i = updateNodes_.begin(); i != updateNodes_.end(); ++i)
+	for (const UpdateNodes::value_type& updateNodePair : updateNodes_)
 	{
-		ocean_assert(i->second);
-		i->second->onUpdate(view, timestamp);
+		ocean_assert(updateNodePair.second);
+		updateNodePair.second->onUpdate(view, timestamp);
 	}
 }
 
@@ -237,13 +237,13 @@ void Manager::update(const std::string& library, const Rendering::ViewRef& view,
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (UpdateNodes::const_iterator i = updateNodes_.begin(); i != updateNodes_.end(); ++i)
+	for (const UpdateNodes::value_type& updateNodePair : updateNodes_)
 	{
-		ocean_assert(i->second);
+		ocean_assert(updateNodePair.second);
 
-		if (i->second->library() == library)
+		if (updateNodePair.second->library() == library)
 		{
-			i->second->onUpdate(view, timestamp);
+			updateNodePair.second->onUpdate(view, timestamp);
 		}
 	}
 }
@@ -252,9 +252,9 @@ NodeRef Manager::node(const std::string& name) const
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		const NodeRef node(i->first->node(name));
+		const NodeRef node(libraryCounterPair.first->node(name));
 
 		if (node)
 		{
@@ -269,11 +269,11 @@ NodeRef Manager::node(const std::string& library, const std::string& name) const
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		if (i->first->name() == library)
+		if (libraryCounterPair.first->name() == library)
 		{
-			const NodeRef node(i->first->node(name));
+			const NodeRef node(libraryCounterPair.first->node(name));
 
 			if (node)
 			{
@@ -293,9 +293,9 @@ NodeRefs Manager::nodes(const std::string& name) const
 
 	NodeRefs nodes;
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		const NodeRefs subNodes(i->first->nodes(name));
+		const NodeRefs subNodes(libraryCounterPair.first->nodes(name));
 		nodes.insert(nodes.end(), subNodes.begin(), subNodes.end());
 	}
 
@@ -306,11 +306,11 @@ NodeRefs Manager::nodes(const std::string& library, const std::string& name) con
 {
 	const ScopedLock scopedLock(managerLock_);
 
-	for (Libraries::const_iterator i = libraries_.cbegin(); i != libraries_.cend(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		if (i->first->name() == library)
+		if (libraryCounterPair.first->name() == library)
 		{
-			return i->first->nodes(name);
+			return libraryCounterPair.first->nodes(name);
 		}
 	}
 
@@ -326,9 +326,9 @@ void Manager::release()
 
 	permanentSceneMap_.clear();
 
-	for (Libraries::iterator i = libraries_.begin(); i != libraries_.end(); ++i)
+	for (const LibraryCounterPair& libraryCounterPair : libraries_)
 	{
-		i->first->release();
+		libraryCounterPair.first->release();
 	}
 
 	libraries_.clear();
@@ -341,18 +341,18 @@ bool Manager::unregisterLibrary(const std::string& name)
 	const ScopedLock mLock(managerLock_);
 	const ScopedLock lLock(libraryLock_);
 
-	for (Libraries::iterator i = libraries_.begin(); i != libraries_.end(); ++i)
+	for (Libraries::iterator iLibrary = libraries_.begin(); iLibrary != libraries_.end(); ++iLibrary)
 	{
-		ocean_assert(i->first);
+		ocean_assert(iLibrary->first);
 
-		if (i->first->name() == name)
+		if (iLibrary->first->name() == name)
 		{
-			ocean_assert(i->second >= 1u);
-			i->second--;
+			ocean_assert(iLibrary->second >= 1u);
+			iLibrary->second--;
 
-			if (i->second == 0u)
+			if (iLibrary->second == 0u)
 			{
-				libraries_.erase(i);
+				libraries_.erase(iLibrary);
 
 				Log::debug() << "Successfully unregistered scene description library '" << name << "'";
 
