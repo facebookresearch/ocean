@@ -150,6 +150,11 @@ Rendering::NodeRef OBJScene::createTriangles(const Rendering::EngineRef& engine)
 
 				ocean_assert(vertexIndices.size() >= 3);
 
+				if (vertexIndices.size() < 3)
+				{
+					continue;
+				}
+
 				vertices.emplace_back(vertices_[vertexIndices[0]]);
 				vertices.emplace_back(vertices_[vertexIndices[1]]);
 				vertices.emplace_back(vertices_[vertexIndices[2]]);

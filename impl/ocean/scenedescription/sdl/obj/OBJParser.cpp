@@ -287,6 +287,11 @@ void OBJParser::parseFace(OBJScene& scene)
 		}
 	}
 
+	if (vertexIndices.size() < 3)
+	{
+		throw OceanException(std::string("A face needs at least three vertex indices, got ") + String::toAString(vertexIndices.size()) + ".");
+	}
+
 	if (normalIndices.size() != vertexIndices.size() && normalIndices.empty() == false)
 	{
 		throw OceanException("Invalid number of normal indices.");
