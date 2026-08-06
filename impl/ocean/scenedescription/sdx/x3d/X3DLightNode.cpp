@@ -89,8 +89,9 @@ void X3DLightNode::onFieldChanged(const std::string& fieldName)
 			{
 				renderingLightSource->setAmbientColor(color_.value().damped(float(ambientIntensity_.value())));
 			}
-			else if (fieldName == "diffuseColor")
+			else if (fieldName == "color")
 			{
+				renderingLightSource->setAmbientColor(color_.value().damped(float(ambientIntensity_.value())));
 				renderingLightSource->setDiffuseColor(color_.value());
 			}
 			else if (fieldName == "intensity")

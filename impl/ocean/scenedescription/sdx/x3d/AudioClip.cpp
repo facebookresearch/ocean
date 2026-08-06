@@ -139,7 +139,7 @@ void AudioClip::onFieldChanged(const std::string& fieldName)
 			finiteMedium->setLoop(loop_.value());
 		}
 	}
-	else if (fieldName == "speed")
+	else if (fieldName == "pitch")
 	{
 		const Media::FiniteMediumRef finiteMedium(soundMedium_);
 
