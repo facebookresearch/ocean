@@ -644,7 +644,7 @@ void ClassicParser::parseField(SingleNode& field)
 
 			if (node->sceneId() == scenePtr_->sceneId())
 			{
-				field.setValue(node);
+				field.setValue(node, sceneTimestamp_);
 				found = true;
 				break;
 			}
