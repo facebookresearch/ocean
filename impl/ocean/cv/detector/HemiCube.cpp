@@ -160,8 +160,8 @@ void HemiCube::merge(const FiniteLines2& lines, const Scalar maxLineDistance, co
 			// A good match is supposed to have a small distance of the endpoints from the line segments (maxDistance*, the smaller, the better) and
 			// the segments should be as parallel as possible, i.e. scalar product of the line normals should be as close to 1 as possible (worst case: orthogonal lines, scalar product 0)
 			// The match value if ratio of the max. distance and the inverse of the scalar product, best possible match value: 0, worst match: infinity
-			const Scalar maxDistanceLineToSimilarLine = std::max(line.normal() * (similarLine.point0() - line.point0()), line.normal() * (similarLine.point1() - line.point0()));
-			const Scalar maxDistanceSimilarLineToLine = std::max(similarLine.normal() * (line.point0() - similarLine.point0()), similarLine.normal() * (line.point1() - similarLine.point0()));
+			const Scalar maxDistanceLineToSimilarLine = std::max(Numeric::abs(line.normal() * (similarLine.point0() - line.point0())), Numeric::abs(line.normal() * (similarLine.point1() - line.point0())));
+			const Scalar maxDistanceSimilarLineToLine = std::max(Numeric::abs(similarLine.normal() * (line.point0() - similarLine.point0())), Numeric::abs(similarLine.normal() * (line.point1() - similarLine.point0())));
 			const Scalar normalAlignment = std::max(Numeric::abs(line.normal() * similarLine.normal()), Numeric::weakEps());
 			ocean_assert(Numeric::isInsideRange(Numeric::weakEps(), normalAlignment, Scalar(1)));
 			const Scalar matchValue = std::max(maxDistanceLineToSimilarLine, maxDistanceSimilarLineToLine) / normalAlignment;
