@@ -930,9 +930,9 @@ inline void FrameColorAdjustment::colorMatchingTransfer8BitPerChannelSubset(cons
 			for (unsigned int n = 0u; n < tChannels; ++n)
 			{
 				Scalar colorTransValue = pixFrame[n];
-				colorTransValue -= refMean[n];
+				colorTransValue -= frameMean[n];
 				colorTransValue *= (refStd[n] / frameStd[n]);
-				colorTransValue += frameMean[n];
+				colorTransValue += refMean[n];
 				target[n] = (uint8_t)(minmax<int>(0, Numeric::round32(colorTransValue), 255));
 			}
 		}
