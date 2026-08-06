@@ -43,27 +43,27 @@ class OCEAN_CV_SYNTHESIS_EXPORT InitializerHomographyMappingAdaptionF1 :
 		 * @param layer The layer for that the initial mapping has to be provided
 		 * @param sourceLayer Source synthesis layer with same dimension as the initializer layer and float accuracy
 		 * @param randomGenerator Random number generator
-		 * @param homography Homography transformation that is applied
+		 * @param previous_H_current The homography transforming a point defined in the current layer into a point defined in the previous layer: previousPoint = previous_H_current * currentPoint, must be valid
 		 */
-		inline InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerF1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& homography);
+		inline InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerF1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& previous_H_current);
 
 		/**
 		 * Creates a new initializer object.
 		 * @param layer The layer for that the initial mapping has to be provided
 		 * @param sourceMapping Source mapping with same dimension as the initializer layer and float accuracy
 		 * @param randomGenerator Random number generator
-		 * @param homography Homography transformation that is applied
+		 * @param previous_H_current The homography transforming a point defined in the current layer into a point defined in the previous layer: previousPoint = previous_H_current * currentPoint, must be valid
 		 */
-		inline InitializerHomographyMappingAdaptionF1(LayerF1& layer, const MappingF1& sourceMapping, RandomGenerator& randomGenerator, const SquareMatrix3& homography);
+		inline InitializerHomographyMappingAdaptionF1(LayerF1& layer, const MappingF1& sourceMapping, RandomGenerator& randomGenerator, const SquareMatrix3& previous_H_current);
 
 		/**
 		 * Creates a new initializer object.
 		 * @param layer The layer for that the initial mapping has to be provided
 		 * @param sourceLayer Source synthesis layer with same dimension as the initializer layer and integer accuracy
 		 * @param randomGenerator Random number generator
-		 * @param homography Homography transformation that is applied
+		 * @param previous_H_current The homography transforming a point defined in the current layer into a point defined in the previous layer: previousPoint = previous_H_current * currentPoint, must be valid
 		 */
-		inline InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerI1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& homography);
+		inline InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerI1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& previous_H_current);
 
 	private:
 
@@ -102,11 +102,11 @@ class OCEAN_CV_SYNTHESIS_EXPORT InitializerHomographyMappingAdaptionF1 :
 		/// Source mapping to be adapted with integer accuracy.
 		const MappingI1* sourceMappingI1_;
 
-		/// Homography transformation.
-		const SquareMatrix3 homography_;
+		/// The homography transforming a point defined in the current layer into a point defined in the previous layer.
+		const SquareMatrix3 previous_H_current_;
 };
 
-inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerF1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& homography) :
+inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerF1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& previous_H_current) :
 	Initializer(layer),
 	InitializerF(layer),
 	InitializerRandomized(layer, randomGenerator),
@@ -114,12 +114,12 @@ inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdapt
 	Initializer1(layer),
 	sourceMappingF1_(&sourceLayer.mappingF1()),
 	sourceMappingI1_(nullptr),
-	homography_(homography)
+	previous_H_current_(previous_H_current)
 {
 	// nothing to do here
 }
 
-inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdaptionF1(LayerF1& layer, const MappingF1& sourceMapping, RandomGenerator& randomGenerator, const SquareMatrix3& homography) :
+inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdaptionF1(LayerF1& layer, const MappingF1& sourceMapping, RandomGenerator& randomGenerator, const SquareMatrix3& previous_H_current) :
 	Initializer(layer),
 	InitializerF(layer),
 	InitializerRandomized(layer, randomGenerator),
@@ -127,12 +127,12 @@ inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdapt
 	Initializer1(layer),
 	sourceMappingF1_(&sourceMapping),
 	sourceMappingI1_(nullptr),
-	homography_(homography)
+	previous_H_current_(previous_H_current)
 {
 	// nothing to do here
 }
 
-inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerI1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& homography) :
+inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdaptionF1(LayerF1& layer, const LayerI1& sourceLayer, RandomGenerator& randomGenerator, const SquareMatrix3& previous_H_current) :
 	Initializer(layer),
 	InitializerF(layer),
 	InitializerRandomized(layer, randomGenerator),
@@ -140,7 +140,7 @@ inline InitializerHomographyMappingAdaptionF1::InitializerHomographyMappingAdapt
 	Initializer1(layer),
 	sourceMappingF1_(nullptr),
 	sourceMappingI1_(&sourceLayer.mappingI1()),
-	homography_(homography)
+	previous_H_current_(previous_H_current)
 {
 	// nothing to do here
 }

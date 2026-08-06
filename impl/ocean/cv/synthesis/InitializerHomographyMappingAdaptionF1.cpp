@@ -35,7 +35,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 	ocean_assert(sourceMappingF1_);
 
 	const uint8_t* const maskData = layerF_.mask().constdata<uint8_t>();
-	const SquareMatrix3 invertedHomography(homography_.inverted());
+	const SquareMatrix3 current_H_previous(previous_H_current_.inverted());
 
 	const unsigned int layerWidth = layerF_.width();
 	const unsigned int layerHeight = layerF_.height();
@@ -57,7 +57,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 			if (maskData[y * maskStrideElements + x] != 0xFF)
 			{
 				const Vector2 currentPosition = Vector2(Scalar(x), Scalar(y));
-				const Vector2 previousPosition(homography_ * currentPosition);
+				const Vector2 previousPosition(previous_H_current_ * currentPosition);
 
 				const int left = int(previousPosition.x());
 				const int top = int(previousPosition.y());
@@ -89,10 +89,10 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 						ocean_assert(tx_ >= 0 && tx_ <= 1);
 						ocean_assert(ty_ >= 0 && ty_ <= 1);
 
-						const Vector2 newPositionTopLeft(invertedHomography * Vector2(Scalar(positionTopLeft.x()), Scalar(positionTopLeft.y())));
-						const Vector2 newPositionTopRight(invertedHomography * Vector2(Scalar(positionTopRight.x()), Scalar(positionTopRight.y())));
-						const Vector2 newPositionBottomLeft(invertedHomography * Vector2(Scalar(positionBottomLeft.x()), Scalar(positionBottomLeft.y())));
-						const Vector2 newPositionBottomRight(invertedHomography * Vector2(Scalar(positionBottomRight.x()), Scalar(positionBottomRight.y())));
+						const Vector2 newPositionTopLeft(current_H_previous * Vector2(Scalar(positionTopLeft.x()), Scalar(positionTopLeft.y())));
+						const Vector2 newPositionTopRight(current_H_previous * Vector2(Scalar(positionTopRight.x()), Scalar(positionTopRight.y())));
+						const Vector2 newPositionBottomLeft(current_H_previous * Vector2(Scalar(positionBottomLeft.x()), Scalar(positionBottomLeft.y())));
+						const Vector2 newPositionBottomRight(current_H_previous * Vector2(Scalar(positionBottomRight.x()), Scalar(positionBottomRight.y())));
 
 						Vector2 newPosition;
 
@@ -281,7 +281,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 	ocean_assert(sourceMappingI1_);
 
 	const uint8_t* const maskData = layerF_.mask().constdata<uint8_t>();
-	const SquareMatrix3 invertedHomography(homography_.inverted());
+	const SquareMatrix3 current_H_previous(previous_H_current_.inverted());
 
 	const unsigned int layerWidth = layerF_.width();
 	const unsigned int layerHeight = layerF_.height();
@@ -302,7 +302,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 		{
 			if (maskData[y * maskStrideElements + x] != 0xFF)
 			{
-				const Vector2 previousMaskPosition(homography_ * Vector2(Scalar(x), Scalar(y)));
+				const Vector2 previousMaskPosition(previous_H_current_ * Vector2(Scalar(x), Scalar(y)));
 
 				const int mainX = Numeric::round32(previousMaskPosition.x());
 				const int mainY = Numeric::round32(previousMaskPosition.y());
@@ -337,10 +337,10 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 					ocean_assert(tx_ >= 0 && tx_ <= 1);
 					ocean_assert(ty_ >= 0 && ty_ <= 1);
 
-					const Vector2 outPosition0(invertedHomography * Vector2(Scalar(inPosition0.x()), Scalar(inPosition0.y())));
-					const Vector2 outPosition1(invertedHomography * Vector2(Scalar(inPosition1.x()), Scalar(inPosition1.y())));
-					const Vector2 outPosition2(invertedHomography * Vector2(Scalar(inPosition2.x()), Scalar(inPosition2.y())));
-					const Vector2 outPosition3(invertedHomography * Vector2(Scalar(inPosition3.x()), Scalar(inPosition3.y())));
+					const Vector2 outPosition0(current_H_previous * Vector2(Scalar(inPosition0.x()), Scalar(inPosition0.y())));
+					const Vector2 outPosition1(current_H_previous * Vector2(Scalar(inPosition1.x()), Scalar(inPosition1.y())));
+					const Vector2 outPosition2(current_H_previous * Vector2(Scalar(inPosition2.x()), Scalar(inPosition2.y())));
+					const Vector2 outPosition3(current_H_previous * Vector2(Scalar(inPosition3.x()), Scalar(inPosition3.y())));
 
 					Vector2 newPosition(-1, -1);
 
@@ -445,7 +445,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 
 							ocean_assert(Vector2(Scalar(left), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
 
-							const Vector2 outDirection(invertedHomography * Vector2(Scalar(inPosition0.x() + 1u), Scalar(inPosition0.y() + 1u)) - outPosition0);
+							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition0.x() + 1u), Scalar(inPosition0.y() + 1u)) - outPosition0);
 							const Vector2 outPerpendicular(outDirection.perpendicular());
 							ocean_assert(Vector2(1, 1).cross(Vector2(-1, 1)) > 0);
 
@@ -552,7 +552,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 							const Scalar td = inDirection * inPosition;
 							const Scalar tp = inPerpendicular * inPosition;
 
-							const Vector2 outDirection(invertedHomography * Vector2(Scalar(inPosition1.x() - 1u), Scalar(inPosition1.y() + 1u)) - outPosition1);
+							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition1.x() - 1u), Scalar(inPosition1.y() + 1u)) - outPosition1);
 							const Vector2 outPerpendicular(outDirection.perpendicular());
 							ocean_assert(Vector2(-1, 1).cross(Vector2(-1, -1)) > 0);
 
@@ -660,7 +660,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 							const Scalar td = inDirection * inPosition;
 							const Scalar tp = inPerpendicular * inPosition;
 
-							const Vector2 outDirection(invertedHomography * Vector2(Scalar(inPosition2.x() + 1u), Scalar(inPosition2.y() - 1u)) - outPosition2);
+							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition2.x() + 1u), Scalar(inPosition2.y() - 1u)) - outPosition2);
 							const Vector2 outPerpendicular(outDirection.perpendicular());
 							ocean_assert(Vector2(1, -1).cross(Vector2(1, 1)) > 0);
 
@@ -767,7 +767,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 							const Scalar td = inDirection * inPosition;
 							const Scalar tp = inPerpendicular * inPosition;
 
-							const Vector2 outDirection(invertedHomography * Vector2(Scalar(inPosition3.x() - 1u), Scalar(inPosition3.y() - 1u)) - outPosition3);
+							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition3.x() - 1u), Scalar(inPosition3.y() - 1u)) - outPosition3);
 							const Vector2 outPerpendicular(outDirection.perpendicular());
 							ocean_assert(Vector2(-1, -1).cross(Vector2(1, -1)) > 0);
 
