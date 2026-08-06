@@ -89,9 +89,12 @@ bool MultiTextureTransform::onFieldChanging(const std::string& fieldName, const 
 		{
 			registerThisNodeAsParent(*i);
 
-			SmartObjectRef<TextureTransform, Node> textureTransformNode(*i);
-			ocean_assert(textureTransformNode);
-			textureTransformNode->applyTextureTransform();
+			const SmartObjectRef<TextureTransform, Node> textureTransformNode(*i);
+
+			if (textureTransformNode)
+			{
+				textureTransformNode->applyTextureTransform();
+			}
 		}
 
 		return true;

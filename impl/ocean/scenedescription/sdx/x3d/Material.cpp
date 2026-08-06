@@ -183,10 +183,12 @@ bool Material::onFieldChanging(const std::string& fieldName, const Field& field)
 
 					for (NodeRefs::const_iterator i = parents.begin(); i != parents.end(); ++i)
 					{
-						SmartObjectRef<Appearance, Node> appearance(*i);
-						ocean_assert(appearance);
+						const SmartObjectRef<Appearance, Node> appearance(*i);
 
-						appearance->checkTransparencyState();
+						if (appearance)
+						{
+							appearance->checkTransparencyState();
+						}
 					}
 				}
 			}
