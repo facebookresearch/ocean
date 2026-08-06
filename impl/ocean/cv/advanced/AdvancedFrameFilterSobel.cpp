@@ -35,10 +35,21 @@ void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigne
 	ocean_assert(source && target);
 	ocean_assert(firstFrame + numberFrames <= depth);
 
-	const unsigned int beginFilterFrame = max(0, int(firstFrame) - 1) + 1; // inclusive filter position
-	const unsigned int endFilterFrame = min(firstFrame + numberFrames + 1, depth) - 1; // exclusive filter position
+	if (numberFrames == 0u)
+	{
+		return;
+	}
 
 	const unsigned int frameSize = width * height;
+
+	if (width < 3u || height < 3u || depth < 3u)
+	{
+		memset(target + size_t(firstFrame) * size_t(frameSize), 0, size_t(numberFrames) * size_t(frameSize) * sizeof(unsigned short));
+		return;
+	}
+
+	const unsigned int beginFilterFrame = max(0, int(firstFrame) - 1) + 1; // inclusive filter position
+	const unsigned int endFilterFrame = min(firstFrame + numberFrames + 1, depth) - 1; // exclusive filter position
 
 	// set the first frame to zero
 	if (beginFilterFrame == 1u)
