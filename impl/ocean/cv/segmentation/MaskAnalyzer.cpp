@@ -887,7 +887,7 @@ void MaskAnalyzer::findNonUniquePixels8(const uint8_t* mask, const unsigned int 
 		{
 			const uint8_t value = maskRow[x];
 
-			if (value != maskRow[x - 1u] || value != maskRow[x + 1u] || value != maskRowTop[x - 1u] || value != maskRowTop[x] || value != maskRowTop[x + 1u] || value != maskRowBottom[x - 1u] || value != maskRowBottom[x + 1u])
+			if (value != maskRow[x - 1u] || value != maskRow[x + 1u] || value != maskRowTop[x - 1u] || value != maskRowTop[x] || value != maskRowTop[x + 1u] || value != maskRowBottom[x - 1u] || value != maskRowBottom[x] || value != maskRowBottom[x + 1u])
 			{
 				nonUniquePixels.emplace_back(x, y);
 			}

@@ -1253,7 +1253,7 @@ bool TestMaskAnalyzer::testFindNonUniquePixels4(const unsigned int width, const 
 			const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 			const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse);
+			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, 0x00u, 0xFFu, RandomI::boolean(randomGenerator));
 
 			CV::PixelPositions nonUniquePixels;
 			CV::PixelBoundingBox boundingBox;
@@ -1306,7 +1306,7 @@ bool TestMaskAnalyzer::testFindNonUniquePixels8(const unsigned int width, const 
 			const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 			const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse);
+			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, 0x00u, 0xFFu, RandomI::boolean(randomGenerator));
 
 			CV::PixelPositions nonUniquePixels;
 			CV::PixelBoundingBox boundingBox;
@@ -1608,7 +1608,7 @@ bool TestMaskAnalyzer::testCountMaskPixels(const double testDuration)
 	return validation.succeeded();
 }
 
-Frame TestMaskAnalyzer::generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue, const uint8_t nonMaskValue)
+Frame TestMaskAnalyzer::generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue, const uint8_t nonMaskValue, const bool individualPixels)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(maskValue != nonMaskValue);
@@ -1627,6 +1627,21 @@ Frame TestMaskAnalyzer::generateTestMask(RandomGenerator& randomGenerator, const
 		const unsigned int boxHeight = RandomI::random(randomGenerator, 1u, height - boxTop);
 
 		mask.subFrame(boxLeft, boxTop, boxWidth, boxHeight).setValue(maskValue);
+	}
+
+	if (individualPixels)
+	{
+		// the boxes are axis aligned, so they cannot create a pixel which differs from exactly one of its neighbors
+
+		const unsigned int numberPixels = RandomI::random(randomGenerator, 1u, width * height / 8u + 1u);
+
+		for (unsigned int n = 0u; n < numberPixels; ++n)
+		{
+			const unsigned int x = RandomI::random(randomGenerator, width - 1u);
+			const unsigned int y = RandomI::random(randomGenerator, height - 1u);
+
+			mask.pixel<uint8_t>(x, y)[0] = mask.constpixel<uint8_t>(x, y)[0] == maskValue ? nonMaskValue : maskValue;
+		}
 	}
 
 	return mask;
@@ -2347,6 +2362,13 @@ bool TestMaskAnalyzer::validateFindNonUniquePixels8(const Frame& mask, const CV:
 	}
 
 	if (nonUniquePixels.size() != nonUniquePixelsSet.size())
+	{
+		return false;
+	}
+
+	// together with the subset test below an identical size means both sets are equal,
+	// so a pixel which should have been reported but was not makes this fail
+	if (nonUniquePixelsSet.size() != testPixelSet.size())
 	{
 		return false;
 	}

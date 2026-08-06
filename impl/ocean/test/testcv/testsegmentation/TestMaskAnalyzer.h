@@ -238,9 +238,10 @@ class OCEAN_TEST_CV_SEGMENTATION_EXPORT TestMaskAnalyzer : public CV::Segmentati
 		 * @param height The height of the frame that will be generated, range: [1, infinity)
 		 * @param maskValue The value of mask pixels, with range [0, 255]
 		 * @param nonMaskValue The value of non-mask pixels, with range [0, 255] without 'maskValue'
+		 * @param individualPixels True, to additionally flip individual pixels, creating single pixel structures which the boxes alone cannot produce; False, to use boxes only
 		 * @return The generated test frame
 		 */
-		static Frame generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue = 0x00u, const uint8_t nonMaskValue = 0xFFu);
+		static Frame generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue = 0x00u, const uint8_t nonMaskValue = 0xFFu, const bool individualPixels = false);
 
 	protected:
 
