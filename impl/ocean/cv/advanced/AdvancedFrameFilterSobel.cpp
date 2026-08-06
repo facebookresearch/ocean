@@ -22,15 +22,15 @@ void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigne
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit, source, target, width, height, depth, 0u, 0u), 0u, depth, 5u, 6u);
+		worker->executeFunction(Worker::Function::createStatic(&AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8BitSubset, source, target, width, height, depth, 0u, 0u), 0u, depth, 5u, 6u);
 	}
 	else
 	{
-		filterHorizontalVerticalMaximum8Bit(source, target, width, height, depth, 0u, depth);
+		filterHorizontalVerticalMaximum8BitSubset(source, target, width, height, depth, 0u, depth);
 	}
 }
 
-void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigned char* source, unsigned short* target, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int firstFrame, const unsigned int numberFrames)
+void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8BitSubset(const unsigned char* source, unsigned short* target, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int firstFrame, const unsigned int numberFrames)
 {
 	ocean_assert(source && target);
 	ocean_assert(firstFrame + numberFrames <= depth);

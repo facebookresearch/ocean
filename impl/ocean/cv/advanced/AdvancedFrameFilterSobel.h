@@ -73,7 +73,7 @@ class OCEAN_CV_ADVANCED_EXPORT AdvancedFrameFilterSobel
 		 * @param firstFrame First frame to be handled
 		 * @param numberFrames Number of frame to be handled
 		 */
-		static void filterHorizontalVerticalMaximum8Bit(const unsigned char* source, unsigned short* target, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int firstFrame, const unsigned int numberFrames);
+		static void filterHorizontalVerticalMaximum8BitSubset(const unsigned char* source, unsigned short* target, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int firstFrame, const unsigned int numberFrames);
 
 };
 
