@@ -22,10 +22,7 @@ SDXNode::SDXNode(const SDXEnvironment* environment) :
 
 SDXNode::~SDXNode()
 {
-	if (parents_.empty() == false)
-	{
-		ocean_assert(false && "Should be empty");
-	}
+	ocean_assert(parents_.empty() && "Should be empty");
 }
 
 DescriptionType SDXNode::descriptionType() const
@@ -91,9 +88,9 @@ NodeRefs SDXNode::parentNodes() const
 
 	NodeRefs nodes;
 
-	for (NodeIdMap::const_iterator i = parents_.begin(); i != parents_.end(); ++i)
+	for (const NodeIdMap::value_type& parentPair : parents_)
 	{
-		NodeRef parent(environment_->library()->nodeManager().node(i->first));
+		NodeRef parent(environment_->library()->nodeManager().node(parentPair.first));
 
 		if (parent)
 		{
@@ -113,9 +110,9 @@ SDXNodeSet SDXNode::ancestorNodes() const
 
 	SDXNodeSet nodes;
 
-	for (NodeIdMap::const_iterator i = parents_.begin(); i != parents_.end(); ++i)
+	for (const NodeIdMap::value_type& parentPair : parents_)
 	{
-		const SDXNodeRef parent(environment_->library()->nodeManager().node(i->first));
+		const SDXNodeRef parent(environment_->library()->nodeManager().node(parentPair.first));
 
 		if (parent)
 		{
@@ -129,7 +126,7 @@ SDXNodeSet SDXNode::ancestorNodes() const
 
 void SDXNode::initialize(const Rendering::SceneRef& scene, const Timestamp timestamp, const bool reinitialize)
 {
-	if (initialized_ == false || reinitialize)
+	if (!initialized_ || reinitialize)
 	{
 		onInitialize(scene, timestamp);
 		initialized_ = true;
