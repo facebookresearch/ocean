@@ -274,6 +274,7 @@ void JSBase::function<RGBAColor, JSColor::FI_INVERTED>(RGBAColor& thisValue, con
 	if (thisValue.isNormalized())
 	{
 		info.GetReturnValue().Set(createObject<JSColor>(-thisValue, JSContext::currentContext()));
+		return;
 	}
 
 	Log::error() << "Color inverting failed: the color object is not normalized.";
@@ -287,6 +288,7 @@ void JSBase::function<RGBAColor, JSColor::FI_IS_EQUAL>(RGBAColor& thisValue, con
 	if (hasValue<RGBAColor>(info, 0u, value))
 	{
 		info.GetReturnValue().Set(thisValue == value);
+		return;
 	}
 
 	Log::error() << "'Color::isEqual() accepts one Color object only.";
