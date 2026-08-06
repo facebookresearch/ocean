@@ -34,9 +34,9 @@ bool HarrisCornerDetector::PreciseCornerPosition::precisePosition(const unsigned
 	ocean_assert(numberSobelResponses + 2u <= frameWidth_);
 
 	// although we need 5 Sobel responses only (in horizontal direction), our functions below will at least create eight responses (in horizontal direction)
-	const unsigned int firstSobelResponseLeft8 = min(x - 3u, frameWidth_ - numberSobelResponses - 1u);
+	const unsigned int firstSobelResponseLeft8 = min(x - 3u, frameWidth_ - numberSobelResponses - 2u);
 	ocean_assert(firstSobelResponseLeft8 <= x - 3u);
-	ocean_assert(firstSobelResponseLeft8 + numberSobelResponses < frameWidth_);
+	ocean_assert(firstSobelResponseLeft8 + numberSobelResponses + 1u < frameWidth_);
 
 	const uint8_t* const yRowTop = frameData_ + (y - 2u) * frameStrideElements + firstSobelResponseLeft8;
 
