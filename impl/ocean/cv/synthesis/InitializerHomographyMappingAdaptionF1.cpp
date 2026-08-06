@@ -307,486 +307,489 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 				const int mainX = Numeric::round32(previousMaskPosition.x());
 				const int mainY = Numeric::round32(previousMaskPosition.y());
 
-				const PixelPosition& positionMain = sourceMapping[mainY * layerWidth + mainX];
+				const int left = int(previousMaskPosition.x());
+				const int top = int(previousMaskPosition.y());
 
-				if (positionMain)
+				const int right = left + 1;
+				const int bottom = top + 1;
+
+				if (mainX >= 0 && mainY >= 0 && left >= 0 && top >= 0 && right < int(layerWidth) && bottom < int(layerHeight))
 				{
-					const int left = int(previousMaskPosition.x());
-					const int top = int(previousMaskPosition.y());
+					const PixelPosition& positionMain = sourceMapping[mainY * layerWidth + mainX];
 
-					const int right = left + 1;
-					const int bottom = top + 1;
-
-					// **TODO** use previous inpainting mask to determine whether a mapping is valid
-
-					// 0 1
-					// 2 3
-					const PixelPosition& inPosition0 = sourceMapping[top * layerWidth + left];
-					const PixelPosition& inPosition1 = sourceMapping[top * layerWidth + right];
-					const PixelPosition& inPosition2 = sourceMapping[bottom * layerWidth + left];
-					const PixelPosition& inPosition3 = sourceMapping[bottom * layerWidth + right];
-
-					const Scalar tx = previousMaskPosition.x() - Scalar(left);
-					const Scalar ty = previousMaskPosition.y() - Scalar(top);
-					const Scalar tx_ = Scalar(1) - tx;
-					const Scalar ty_ = Scalar(1) - ty;
-
-					ocean_assert(tx >= 0 && tx <= 1);
-					ocean_assert(ty >= 0 && ty <= 1);
-
-					ocean_assert(tx_ >= 0 && tx_ <= 1);
-					ocean_assert(ty_ >= 0 && ty_ <= 1);
-
-					const Vector2 outPosition0(current_H_previous * Vector2(Scalar(inPosition0.x()), Scalar(inPosition0.y())));
-					const Vector2 outPosition1(current_H_previous * Vector2(Scalar(inPosition1.x()), Scalar(inPosition1.y())));
-					const Vector2 outPosition2(current_H_previous * Vector2(Scalar(inPosition2.x()), Scalar(inPosition2.y())));
-					const Vector2 outPosition3(current_H_previous * Vector2(Scalar(inPosition3.x()), Scalar(inPosition3.y())));
-
-					Vector2 newPosition(-1, -1);
-
-					if (mainX == left && mainY == top)
+					if (positionMain)
 					{
-						// position 0 is main position
+						// **TODO** use previous inpainting mask to determine whether a mapping is valid
 
 						// 0 1
 						// 2 3
-						if (inPosition0.east() == inPosition1 && inPosition0.south() == inPosition2 && inPosition0.southEast() == inPosition3)
+						const PixelPosition& inPosition0 = sourceMapping[top * layerWidth + left];
+						const PixelPosition& inPosition1 = sourceMapping[top * layerWidth + right];
+						const PixelPosition& inPosition2 = sourceMapping[bottom * layerWidth + left];
+						const PixelPosition& inPosition3 = sourceMapping[bottom * layerWidth + right];
+
+						const Scalar tx = previousMaskPosition.x() - Scalar(left);
+						const Scalar ty = previousMaskPosition.y() - Scalar(top);
+						const Scalar tx_ = Scalar(1) - tx;
+						const Scalar ty_ = Scalar(1) - ty;
+
+						ocean_assert(tx >= 0 && tx <= 1);
+						ocean_assert(ty >= 0 && ty <= 1);
+
+						ocean_assert(tx_ >= 0 && tx_ <= 1);
+						ocean_assert(ty_ >= 0 && ty_ <= 1);
+
+						const Vector2 outPosition0(current_H_previous * Vector2(Scalar(inPosition0.x()), Scalar(inPosition0.y())));
+						const Vector2 outPosition1(current_H_previous * Vector2(Scalar(inPosition1.x()), Scalar(inPosition1.y())));
+						const Vector2 outPosition2(current_H_previous * Vector2(Scalar(inPosition2.x()), Scalar(inPosition2.y())));
+						const Vector2 outPosition3(current_H_previous * Vector2(Scalar(inPosition3.x()), Scalar(inPosition3.y())));
+
+						Vector2 newPosition(-1, -1);
+
+						if (mainX == left && mainY == top)
 						{
+							// position 0 is main position
+
+							// 0 1
+							// 2 3
+							if (inPosition0.east() == inPosition1 && inPosition0.south() == inPosition2 && inPosition0.southEast() == inPosition3)
+							{
+								// 0 1
+								// 2 3
+
+								newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
+							}
+							else if (inPosition0.east() == inPosition1 && inPosition0.south() == inPosition2)
+							{
+								// 0 1
+								// 2 X
+
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition0, outPosition1, outPosition2);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition0.east() == inPosition1 && inPosition0.southEast() == inPosition3)
+							{
+								// 0 1
+								// X 3
+
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition0, outPosition1, outPosition3);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition0.south() == inPosition2 && inPosition0.southEast() == inPosition3)
+							{
+								// 0 X
+								// 2 3
+
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(right), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition0, outPosition2, outPosition3);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition0.east() == inPosition1)
+							{
+								// 0 1
+								// X X
+
+								const Vector2 outDirection(outPosition1 - outPosition0);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, 0).cross(Vector2(0, 1)) > 0);
+
+								ocean_assert(Vector2(Scalar(left), Scalar(top)) + Vector2(1, 0) * tx + Vector2(0, 1) * ty == previousMaskPosition);
+								newPosition = outPosition0 + outDirection * tx + outPerpendicular * ty;
+							}
+							else if (inPosition0.south() == inPosition2)
+							{
+								// 0 X
+								// 2 X
+
+								const Vector2 outDirection(outPosition2 - outPosition0);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(0, 1).cross(Vector2(1, 0)) < 0);
+
+								ocean_assert(Vector2(Scalar(left), Scalar(top)) + Vector2(0, 1) * ty - Vector2(-1, 0) * tx == previousMaskPosition);
+								newPosition = outPosition0 + outDirection * ty - outPerpendicular * tx;
+							}
+							else if (inPosition0.southEast() == inPosition3)
+							{
+								// 0 X
+								// X 3
+
+								const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(top)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(outPosition3 - outPosition0);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, 1).cross(Vector2(-1, 1)) > 0);
+
+								ocean_assert(Vector2(Scalar(left), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition0 + outDirection * td + outPerpendicular * tp;
+							}
+							else
+							{
+								// 0 X
+								// X X
+
+								const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(top)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								ocean_assert(Vector2(Scalar(left), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+
+								const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition0.x() + 1u), Scalar(inPosition0.y() + 1u)) - outPosition0);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, 1).cross(Vector2(-1, 1)) > 0);
+
+								newPosition = outPosition0 + outDirection * td + outPerpendicular * tp;
+							}
+						}
+						else if (mainX == right && mainY == top)
+						{
+							// position 1 is main position
+
 							// 0 1
 							// 2 3
 
-							newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
-						}
-						else if (inPosition0.east() == inPosition1 && inPosition0.south() == inPosition2)
-						{
-							// 0 1
-							// 2 X
+							if (inPosition1.west() == inPosition0 && inPosition1.southWest() == inPosition2 && inPosition1.south() == inPosition3)
+							{
+								// 0 1
+								// 2 3
 
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition0, outPosition1, outPosition2);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition0.east() == inPosition1 && inPosition0.southEast() == inPosition3)
-						{
-							// 0 1
-							// X 3
+								newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
+							}
+							else if (inPosition1.west() == inPosition0 && inPosition1.southWest() == inPosition2)
+							{
+								// 0 1
+								// 2 X
 
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition0, outPosition1, outPosition3);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition1, outPosition0, outPosition2);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition1.west() == inPosition0 && inPosition1.south() == inPosition3)
+							{
+								// 0 1
+								// X 3
+
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition1, outPosition0, outPosition3);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition1.southWest() == inPosition2 && inPosition1.south() == inPosition3)
+							{
+								// X 1
+								// 2 3
+
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(right), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition1, outPosition2, outPosition3);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition1.west() == inPosition0)
+							{
+								// 0 1
+								// X X
+
+								const Vector2 outDirection(outPosition1 - outPosition0);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, 0).cross(Vector2(0, 1)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(top)) - Vector2(1, 0) * tx_ + Vector2(0, 1) * ty == previousMaskPosition);
+								newPosition = outPosition1 - outDirection * tx_ + outPerpendicular * ty;
+							}
+							else if (inPosition1.south() == inPosition3)
+							{
+								// X 1
+								// X 3
+
+								const Vector2 outDirection(outPosition3 - outPosition1);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(0, 1).cross(Vector2(1, 0)) < 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(top)) + Vector2(0, 1) * ty + Vector2(-1, 0) * tx_ == previousMaskPosition);
+								newPosition = outPosition1 + outDirection * ty + outPerpendicular * tx_;
+							}
+							else if (inPosition1.southWest() == inPosition2)
+							{
+								// X 1
+								// 2 X
+
+								const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(top)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(outPosition2 - outPosition1);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(-1, 1).cross(Vector2(-1, -1)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition1 + outDirection * td + outPerpendicular * tp;
+							}
+							else
+							{
+								// X 1
+								// X X
+
+								const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(top)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition1.x() - 1u), Scalar(inPosition1.y() + 1u)) - outPosition1);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(-1, 1).cross(Vector2(-1, -1)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition1 + outDirection * td + outPerpendicular * tp;
+							}
 						}
-						else if (inPosition0.south() == inPosition2 && inPosition0.southEast() == inPosition3)
+						else if (mainX == left && mainY == bottom)
 						{
-							// 0 X
+							// position 2 is main position
+
+							// 0 1
 							// 2 3
 
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(right), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition0, outPosition2, outPosition3);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition0.east() == inPosition1)
-						{
-							// 0 1
-							// X X
+							if (inPosition2.north() == inPosition0 && inPosition2.northEast() == inPosition1 && inPosition2.east() == inPosition3)
+							{
+								// 0 1
+								// 2 3
 
-							const Vector2 outDirection(outPosition1 - outPosition0);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, 0).cross(Vector2(0, 1)) > 0);
+								newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
+							}
+							else if (inPosition2.north() == inPosition0 && inPosition2.northEast() == inPosition1)
+							{
+								// 0 1
+								// 2 X
 
-							ocean_assert(Vector2(Scalar(left), Scalar(top)) + Vector2(1, 0) * tx + Vector2(0, 1) * ty == previousMaskPosition);
-							newPosition = outPosition0 + outDirection * tx + outPerpendicular * ty;
-						}
-						else if (inPosition0.south() == inPosition2)
-						{
-							// 0 X
-							// 2 X
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)));
+								const Triangle2 outTriangle(outPosition2, outPosition0, outPosition1);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition2.north() == inPosition0 && inPosition2.east() == inPosition3)
+							{
+								// 0 X
+								// 2 3
 
-							const Vector2 outDirection(outPosition2 - outPosition0);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(0, 1).cross(Vector2(1, 0)) < 0);
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition2, outPosition0, outPosition3);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition2.northEast() == inPosition1 && inPosition2.east() == inPosition3)
+							{
+								// X 1
+								// 2 3
 
-							ocean_assert(Vector2(Scalar(left), Scalar(top)) + Vector2(0, 1) * ty - Vector2(-1, 0) * tx == previousMaskPosition);
-							newPosition = outPosition0 + outDirection * ty - outPerpendicular * tx;
-						}
-						else if (inPosition0.southEast() == inPosition3)
-						{
-							// 0 X
-							// X 3
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition2, outPosition1, outPosition3);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition2.north() == inPosition0)
+							{
+								// 0 X
+								// 2 X
 
-							const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
+								const Vector2 outDirection(outPosition0 - outPosition2);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(0, -1).cross(Vector2(1, 0)) > 0);
 
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(top)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
+								ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + Vector2(0, -1) * ty_ + Vector2(1, 0) * tx == previousMaskPosition);
+								newPosition = outPosition2 + outDirection * ty_ + outPerpendicular * tx;
+							}
+							else if (inPosition2.east() == inPosition3)
+							{
+								// X X
+								// 2 3
 
-							const Vector2 outDirection(outPosition3 - outPosition0);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, 1).cross(Vector2(-1, 1)) > 0);
+								const Vector2 outDirection(outPosition3 - outPosition2);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, 0).cross(Vector2(0, 1)) > 0);
 
-							ocean_assert(Vector2(Scalar(left), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition0 + outDirection * td + outPerpendicular * tp;
+								ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + Vector2(1, 0) * tx - Vector2(0, 1) * ty_ == previousMaskPosition);
+								newPosition = outPosition2 + outDirection * tx - outPerpendicular * ty_;
+							}
+							else if (inPosition2.northEast() == inPosition1)
+							{
+								// X 1
+								// 2 X
+
+								const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(bottom)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(outPosition1 - outPosition2);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, -1).cross(Vector2(1, 1)) > 0);
+
+								ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition2 + outDirection * td + outPerpendicular * tp;
+							}
+							else
+							{
+								// X X
+								// 2 X
+
+								const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(bottom)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition2.x() + 1u), Scalar(inPosition2.y() - 1u)) - outPosition2);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(1, -1).cross(Vector2(1, 1)) > 0);
+
+								ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition2 + outDirection * td + outPerpendicular * tp;
+							}
 						}
 						else
 						{
-							// 0 X
-							// X X
+							ocean_assert(mainX == right && mainY == bottom);
 
-							const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
+							// position 3 is main position
 
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(top)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
+							// 0 1
+							// 2 3
 
-							ocean_assert(Vector2(Scalar(left), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+							if (inPosition3.northWest() == inPosition0 && inPosition3.north() == inPosition1 && inPosition3.west() == inPosition2)
+							{
+								newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
+							}
+							else if (inPosition3.northWest() == inPosition0 && inPosition3.north() == inPosition1)
+							{
+								// 0 1
+								// X 3
 
-							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition0.x() + 1u), Scalar(inPosition0.y() + 1u)) - outPosition0);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, 1).cross(Vector2(-1, 1)) > 0);
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)));
+								const Triangle2 outTriangle(outPosition3, outPosition0, outPosition1);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition3.northWest() == inPosition0 && inPosition3.west() == inPosition2)
+							{
+								// 0 X
+								// 2 3
 
-							newPosition = outPosition0 + outDirection * td + outPerpendicular * tp;
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition3, outPosition0, outPosition2);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition3.north() == inPosition1 && inPosition3.west() == inPosition2)
+							{
+								// X 1
+								// 2 3
+
+								const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(bottom)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
+								const Triangle2 outTriangle(outPosition3, outPosition1, outPosition2);
+								newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
+							}
+							else if (inPosition3.north() == inPosition1)
+							{
+								// X 1
+								// X 3
+
+								const Vector2 outDirection(outPosition1 - outPosition3);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(0, -1).cross(Vector2(1, 0)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + Vector2(0, -1) * ty_ - Vector2(1, 0) * tx_ == previousMaskPosition);
+								newPosition = outPosition3 + outDirection * ty_ - outPerpendicular * tx_;
+							}
+							else if (inPosition3.west() == inPosition2)
+							{
+								// X X
+								// 2 3
+
+								const Vector2 outDirection(outPosition2 - outPosition3);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(-1, 0).cross(Vector2(0, -1)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + Vector2(-1, 0) * tx_ + Vector2(0, -1) * ty_ == previousMaskPosition);
+								newPosition = outPosition3 + outDirection * tx_ + outPerpendicular * ty_;
+							}
+							else if (inPosition3.northWest() == inPosition0)
+							{
+								// 0 X
+								// X 3
+
+								const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(bottom)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(outPosition0 - outPosition3);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(-1, -1).cross(Vector2(1, -1)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition3 + outDirection * td + outPerpendicular * tp;
+							}
+							else
+							{
+								// X X
+								// X 3
+
+								const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
+								ocean_assert(inPerpendicular == inDirection.perpendicular());
+								ocean_assert(inDirection.cross(inPerpendicular) > 0);
+
+								const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(bottom)));
+								const Scalar td = inDirection * inPosition;
+								const Scalar tp = inPerpendicular * inPosition;
+
+								const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition3.x() - 1u), Scalar(inPosition3.y() - 1u)) - outPosition3);
+								const Vector2 outPerpendicular(outDirection.perpendicular());
+								ocean_assert(Vector2(-1, -1).cross(Vector2(1, -1)) > 0);
+
+								ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
+								newPosition = outPosition3 + outDirection * td + outPerpendicular * tp;
+							}
 						}
+
+						if (newPosition.x() >= 2 && newPosition.x() < Scalar(layerWidth - 3) && newPosition.y() >= 2 && newPosition.y() < Scalar(layerHeight - 3))
+						{
+							if (maskData[Numeric::round32(newPosition.y()) * maskStrideElements + Numeric::round32(newPosition.x())] == 0xFF)
+							{
+								mapping[y * layerWidth + x] = newPosition;
+								continue;
+							}
+						}
+
+						mapping[y * layerWidth + x] = Vector2(4, 4);
+						continue;
 					}
-					else if (mainX == right && mainY == top)
-					{
-						// position 1 is main position
-
-						// 0 1
-						// 2 3
-
-						if (inPosition1.west() == inPosition0 && inPosition1.southWest() == inPosition2 && inPosition1.south() == inPosition3)
-						{
-							// 0 1
-							// 2 3
-
-							newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
-						}
-						else if (inPosition1.west() == inPosition0 && inPosition1.southWest() == inPosition2)
-						{
-							// 0 1
-							// 2 X
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition1, outPosition0, outPosition2);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition1.west() == inPosition0 && inPosition1.south() == inPosition3)
-						{
-							// 0 1
-							// X 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition1, outPosition0, outPosition3);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition1.southWest() == inPosition2 && inPosition1.south() == inPosition3)
-						{
-							// X 1
-							// 2 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(right), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition1, outPosition2, outPosition3);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition1.west() == inPosition0)
-						{
-							// 0 1
-							// X X
-
-							const Vector2 outDirection(outPosition1 - outPosition0);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, 0).cross(Vector2(0, 1)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(top)) - Vector2(1, 0) * tx_ + Vector2(0, 1) * ty == previousMaskPosition);
-							newPosition = outPosition1 - outDirection * tx_ + outPerpendicular * ty;
-						}
-						else if (inPosition1.south() == inPosition3)
-						{
-							// X 1
-							// X 3
-
-							const Vector2 outDirection(outPosition3 - outPosition1);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(0, 1).cross(Vector2(1, 0)) < 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(top)) + Vector2(0, 1) * ty + Vector2(-1, 0) * tx_ == previousMaskPosition);
-							newPosition = outPosition1 + outDirection * ty + outPerpendicular * tx_;
-						}
-						else if (inPosition1.southWest() == inPosition2)
-						{
-							// X 1
-							// 2 X
-
-							const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
-
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(top)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
-
-							const Vector2 outDirection(outPosition2 - outPosition1);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(-1, 1).cross(Vector2(-1, -1)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition1 + outDirection * td + outPerpendicular * tp;
-						}
-						else
-						{
-							// X 1
-							// X X
-
-							const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
-
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(top)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
-
-							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition1.x() - 1u), Scalar(inPosition1.y() + 1u)) - outPosition1);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(-1, 1).cross(Vector2(-1, -1)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(top)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition1 + outDirection * td + outPerpendicular * tp;
-						}
-					}
-					else if (mainX == left && mainY == bottom)
-					{
-						// position 2 is main position
-
-						// 0 1
-						// 2 3
-
-						if (inPosition2.north() == inPosition0 && inPosition2.northEast() == inPosition1 && inPosition2.east() == inPosition3)
-						{
-							// 0 1
-							// 2 3
-
-							newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
-						}
-						else if (inPosition2.north() == inPosition0 && inPosition2.northEast() == inPosition1)
-						{
-							// 0 1
-							// 2 X
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)));
-							const Triangle2 outTriangle(outPosition2, outPosition0, outPosition1);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition2.north() == inPosition0 && inPosition2.east() == inPosition3)
-						{
-							// 0 X
-							// 2 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition2, outPosition0, outPosition3);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition2.northEast() == inPosition1 && inPosition2.east() == inPosition3)
-						{
-							// X 1
-							// 2 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(left), Scalar(bottom)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(right), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition2, outPosition1, outPosition3);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition2.north() == inPosition0)
-						{
-							// 0 X
-							// 2 X
-
-							const Vector2 outDirection(outPosition0 - outPosition2);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(0, -1).cross(Vector2(1, 0)) > 0);
-
-							ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + Vector2(0, -1) * ty_ + Vector2(1, 0) * tx == previousMaskPosition);
-							newPosition = outPosition2 + outDirection * ty_ + outPerpendicular * tx;
-						}
-						else if (inPosition2.east() == inPosition3)
-						{
-							// X X
-							// 2 3
-
-							const Vector2 outDirection(outPosition3 - outPosition2);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, 0).cross(Vector2(0, 1)) > 0);
-
-							ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + Vector2(1, 0) * tx - Vector2(0, 1) * ty_ == previousMaskPosition);
-							newPosition = outPosition2 + outDirection * tx - outPerpendicular * ty_;
-						}
-						else if (inPosition2.northEast() == inPosition1)
-						{
-							// X 1
-							// 2 X
-
-							const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
-
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(bottom)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
-
-							const Vector2 outDirection(outPosition1 - outPosition2);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, -1).cross(Vector2(1, 1)) > 0);
-
-							ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition2 + outDirection * td + outPerpendicular * tp;
-						}
-						else
-						{
-							// X X
-							// 2 X
-
-							const Vector2 inDirection(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
-
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(left), Scalar(bottom)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
-
-							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition2.x() + 1u), Scalar(inPosition2.y() - 1u)) - outPosition2);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(1, -1).cross(Vector2(1, 1)) > 0);
-
-							ocean_assert(Vector2(Scalar(left), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition2 + outDirection * td + outPerpendicular * tp;
-						}
-					}
-					else
-					{
-						ocean_assert(mainX == right && mainY == bottom);
-
-						// position 3 is main position
-
-						// 0 1
-						// 2 3
-
-						if (inPosition3.northWest() == inPosition0 && inPosition3.north() == inPosition1 && inPosition3.west() == inPosition2)
-						{
-							newPosition = (outPosition0 * tx_ + outPosition1 * tx) * ty_ + (outPosition2 * tx_ + outPosition3 * tx) * ty;
-						}
-						else if (inPosition3.northWest() == inPosition0 && inPosition3.north() == inPosition1)
-						{
-							// 0 1
-							// X 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(right), Scalar(top)));
-							const Triangle2 outTriangle(outPosition3, outPosition0, outPosition1);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition3.northWest() == inPosition0 && inPosition3.west() == inPosition2)
-						{
-							// 0 X
-							// 2 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(bottom)), Vector2(Scalar(left), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition3, outPosition0, outPosition2);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition3.north() == inPosition1 && inPosition3.west() == inPosition2)
-						{
-							// X 1
-							// 2 3
-
-							const Triangle2 inTriangle = Triangle2(Vector2(Scalar(right), Scalar(bottom)), Vector2(Scalar(right), Scalar(top)), Vector2(Scalar(left), Scalar(bottom)));
-							const Triangle2 outTriangle(outPosition3, outPosition1, outPosition2);
-							newPosition = outTriangle.barycentric2cartesian(inTriangle.cartesian2barycentric(previousMaskPosition));
-						}
-						else if (inPosition3.north() == inPosition1)
-						{
-							// X 1
-							// X 3
-
-							const Vector2 outDirection(outPosition1 - outPosition3);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(0, -1).cross(Vector2(1, 0)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + Vector2(0, -1) * ty_ - Vector2(1, 0) * tx_ == previousMaskPosition);
-							newPosition = outPosition3 + outDirection * ty_ - outPerpendicular * tx_;
-						}
-						else if (inPosition3.west() == inPosition2)
-						{
-							// X X
-							// 2 3
-
-							const Vector2 outDirection(outPosition2 - outPosition3);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(-1, 0).cross(Vector2(0, -1)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + Vector2(-1, 0) * tx_ + Vector2(0, -1) * ty_ == previousMaskPosition);
-							newPosition = outPosition3 + outDirection * tx_ + outPerpendicular * ty_;
-						}
-						else if (inPosition3.northWest() == inPosition0)
-						{
-							// 0 X
-							// X 3
-
-							const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
-
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(bottom)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
-
-							const Vector2 outDirection(outPosition0 - outPosition3);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(-1, -1).cross(Vector2(1, -1)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition3 + outDirection * td + outPerpendicular * tp;
-						}
-						else
-						{
-							// X X
-							// X 3
-
-							const Vector2 inDirection(-Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							const Vector2 inPerpendicular(Numeric::sqrt(2) * Scalar(0.5), -Numeric::sqrt(2) * Scalar(0.5));
-							ocean_assert(inPerpendicular == inDirection.perpendicular());
-							ocean_assert(inDirection.cross(inPerpendicular) > 0);
-
-							const Vector2 inPosition(previousMaskPosition - Vector2(Scalar(right), Scalar(bottom)));
-							const Scalar td = inDirection * inPosition;
-							const Scalar tp = inPerpendicular * inPosition;
-
-							const Vector2 outDirection(current_H_previous * Vector2(Scalar(inPosition3.x() - 1u), Scalar(inPosition3.y() - 1u)) - outPosition3);
-							const Vector2 outPerpendicular(outDirection.perpendicular());
-							ocean_assert(Vector2(-1, -1).cross(Vector2(1, -1)) > 0);
-
-							ocean_assert(Vector2(Scalar(right), Scalar(bottom)) + inDirection * td + inPerpendicular * tp == previousMaskPosition);
-							newPosition = outPosition3 + outDirection * td + outPerpendicular * tp;
-						}
-					}
-
-					if (newPosition.x() >= 2 && newPosition.x() < Scalar(layerWidth - 3) && newPosition.y() >= 2 && newPosition.y() < Scalar(layerHeight - 3))
-					{
-						if (maskData[Numeric::round32(newPosition.y()) * maskStrideElements + Numeric::round32(newPosition.x())] == 0xFF)
-						{
-							mapping[y * layerWidth + x] = newPosition;
-							continue;
-						}
-					}
-
-					mapping[y * layerWidth + x] = Vector2(4, 4);
-					continue;
 				}
 
 				while (true)
