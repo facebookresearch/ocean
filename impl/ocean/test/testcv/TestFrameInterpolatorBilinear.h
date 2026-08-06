@@ -138,6 +138,14 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		static bool testResize(const double testDuration, Worker& worker);
 
 		/**
+		 * Tests the bilinear scale function with scale factors which are not derived from the frame dimensions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the CPU load
+		 * @return True, if succeeded
+		 */
+		static bool testScale(const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the frame transformation function applying a lookup table.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the CPU load
@@ -246,6 +254,21 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		 */
 		template <typename T>
 		static bool testResize(const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourceChannels, const unsigned int targetWidth, const unsigned int targetHeight, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the bilinear scale function for a given frame dimension, channel number, and pair of scale factors.
+		 * @param sourceWidth Width of the source frame in pixel
+		 * @param sourceHeight Height of the source frame in pixel
+		 * @param channels Number of the data channels of the source frame, with range [1, 4]
+		 * @param targetWidth Width of the target frame in pixel
+		 * @param targetHeight Height of the target frame in pixel
+		 * @param xSource_s_xTarget The horizontal scale factor converting a location in the target frame to a location in the source frame, with range (0, infinity)
+		 * @param ySource_s_yTarget The vertical scale factor converting a location in the target frame to a location in the source frame, with range (0, infinity)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the CPU load
+		 * @return True, if succeeded
+		 */
+		static bool testScale(const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int targetWidth, const unsigned int targetHeight, const double xSource_s_xTarget, const double ySource_s_yTarget, const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the special case resize function for image resolutions from 400x400 to 256x256.

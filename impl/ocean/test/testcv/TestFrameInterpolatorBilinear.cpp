@@ -24,6 +24,8 @@
 #include "ocean/test/TestSelector.h"
 #include "ocean/test/Validation.h"
 
+#include <array>
+
 namespace Ocean
 {
 
@@ -184,6 +186,15 @@ bool TestFrameInterpolatorBilinear::test(const unsigned int width, const unsigne
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("scale"))
+	{
+		testResult = testScale(testDuration, worker);
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("specialCasesResize400x400To224x224"))
 	{
 		testResult = testSpecialCasesResize400x400To224x224_8BitPerChannel(testDuration);
@@ -308,6 +319,12 @@ TEST(TestFrameInterpolatorBilinear, ResizeExtremeResolutions)
 {
 	Worker worker;
 	EXPECT_TRUE(TestFrameInterpolatorBilinear::testResizeExtremeResolutions(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameInterpolatorBilinear, Scale)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameInterpolatorBilinear::testScale(GTEST_TEST_DURATION, worker));
 }
 
 // 1920x1080 -> 1800x900
@@ -2100,6 +2117,168 @@ bool TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 	{
 		Log::info() << "Multi-core Performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceMulticore.medianMseconds(), 3u) << "ms";
 		Log::info() << "Multi-core boost factor: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 2u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 2u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 2u) << "x, median: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 2u) << "x";
+	}
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+	const double averageErrorThreshold = 1.5;
+	const unsigned int maximalErrorThreshold = 10u;
+#else
+	const double averageErrorThreshold = 1.0;
+	const unsigned int maximalErrorThreshold = 3u;
+#endif
+
+	ocean_assert(measurements != 0ull);
+	const double averageAbsErrorToInteger = sumAverageError / double(measurements);
+
+	allSucceeded = allSucceeded && averageAbsErrorToInteger <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
+
+	Log::info() << "Validation: average error: " << String::toAString(averageAbsErrorToInteger, 2u) << ", maximal error: " << maximalError;
+
+	if (!allSucceeded)
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFrameInterpolatorBilinear::testScale(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Scale test with scale factors independent of the frame dimensions:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	// 'resize()' derives both factors from the dimension ratio, so a factor can only differ from that ratio
+	// when 'scale()' is called directly; these combinations cover the cases the ratio can never produce
+
+	struct ScaleTest
+	{
+		unsigned int sourceWidth_;
+		unsigned int sourceHeight_;
+		unsigned int targetWidth_;
+		unsigned int targetHeight_;
+		double xSource_s_xTarget_;
+		double ySource_s_yTarget_;
+	};
+
+	const std::array<ScaleTest, 7> scaleTests =
+	{{
+		{64u, 64u, 64u, 64u, 1.0, 1.0}, // identity
+		{64u, 64u, 64u, 64u, 0.5, 0.5}, // equal dimensions, zoom in both directions
+		{64u, 64u, 64u, 64u, 0.5, 1.0}, // equal dimensions, zoom in horizontal direction only
+		{64u, 64u, 64u, 64u, 1.0, 0.5}, // equal dimensions, zoom in vertical direction only
+		{64u, 64u, 32u, 64u, 2.0, 0.5}, // equal heights only
+		{64u, 64u, 64u, 32u, 0.5, 2.0}, // equal widths only
+		{80u, 60u, 80u, 60u, 0.75, 0.4}
+	}};
+
+	for (const ScaleTest& scaleTest : scaleTests)
+	{
+		for (unsigned int channels = 1u; channels <= 4u; ++channels)
+		{
+			if (!testScale(scaleTest.sourceWidth_, scaleTest.sourceHeight_, channels, scaleTest.targetWidth_, scaleTest.targetHeight_, scaleTest.xSource_s_xTarget_, scaleTest.ySource_s_yTarget_, testDuration, worker))
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Scale test: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Scale test: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFrameInterpolatorBilinear::testScale(const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int targetWidth, const unsigned int targetHeight, const double xSource_s_xTarget, const double ySource_s_yTarget, const double testDuration, Worker& worker)
+{
+	ocean_assert(sourceWidth != 0u && sourceHeight != 0u);
+	ocean_assert(targetWidth != 0u && targetHeight != 0u);
+	ocean_assert(channels >= 1u && channels <= 4u);
+	ocean_assert(xSource_s_xTarget > 0.0 && ySource_s_yTarget > 0.0);
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "... " << sourceWidth << "x" << sourceHeight << " -> " << targetWidth << "x" << targetHeight << ", " << channels << " channels, x factor " << String::toAString(xSource_s_xTarget, 3u) << ", y factor " << String::toAString(ySource_s_yTarget, 3u) << ":";
+
+	bool allSucceeded = true;
+
+	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
+
+	RandomGenerator randomGenerator;
+
+	double sumAverageError = 0.0;
+	unsigned int maximalError = 0u;
+	unsigned long long measurements = 0ull;
+
+	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+
+	for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
+	{
+		Worker* useWorker = workerIteration == 0u ? nullptr : &worker;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+
+			Frame sourceFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
+			Frame targetFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
+
+			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+
+			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			switch (channels)
+			{
+				case 1u:
+					CV::FrameInterpolatorBilinear::scale<uint8_t, 1u>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceWidth, sourceHeight, targetWidth, targetHeight, xSource_s_xTarget, ySource_s_yTarget, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+					break;
+
+				case 2u:
+					CV::FrameInterpolatorBilinear::scale<uint8_t, 2u>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceWidth, sourceHeight, targetWidth, targetHeight, xSource_s_xTarget, ySource_s_yTarget, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+					break;
+
+				case 3u:
+					CV::FrameInterpolatorBilinear::scale<uint8_t, 3u>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceWidth, sourceHeight, targetWidth, targetHeight, xSource_s_xTarget, ySource_s_yTarget, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+					break;
+
+				case 4u:
+					CV::FrameInterpolatorBilinear::scale<uint8_t, 4u>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceWidth, sourceHeight, targetWidth, targetHeight, xSource_s_xTarget, ySource_s_yTarget, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+					break;
+
+				default:
+					ocean_assert(false && "Invalid channel number!");
+			}
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
+			{
+				ocean_assert(false && "Invalid padding memory!");
+				allSucceeded = false;
+				break;
+			}
+
+			double averageAbsErrorToInteger = NumericD::maxValue();
+			unsigned int maximalAbsErrorToInteger = (unsigned int)(-1);
+			validateScaleFrame(sourceFrame.constdata<uint8_t>(), sourceWidth, sourceHeight, channels, targetFrame.constdata<uint8_t>(), targetWidth, targetHeight, xSource_s_xTarget, ySource_s_yTarget, sourceFrame.paddingElements(), targetFrame.paddingElements(), &averageAbsErrorToInteger, &maximalAbsErrorToInteger);
+
+			sumAverageError += averageAbsErrorToInteger;
+			maximalError = max(maximalError, maximalAbsErrorToInteger);
+			measurements++;
+		}
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10

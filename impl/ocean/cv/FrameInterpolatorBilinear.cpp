@@ -1969,7 +1969,7 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 	ocean_assert(targetHeight >= 1u && targetHeight <= 65535u);
 	ocean_assert(xTargetToSource > 0.0 && yTargetToSource > 0.0);
 
-	ocean_assert(sourceWidth != targetWidth || sourceHeight != targetHeight);
+	ocean_assert(sourceWidth != targetWidth || sourceHeight != targetHeight || xTargetToSource != 1.0 || yTargetToSource != 1.0);
 
 	const unsigned int sourceStrideElements = sourceWidth * channels + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * channels + targetPaddingElements;
@@ -1997,7 +1997,9 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 
 	RowInterpolationHorizontalFunction rowInterpolationHorizontalFunction = nullptr;
 
-	if (sourceWidth != targetWidth)
+	const bool scalingWidth = sourceWidth != targetWidth || xTargetToSource != 1.0;
+
+	if (scalingWidth)
 	{
 		switch (channels)
 		{
@@ -2027,7 +2029,7 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 	Memory memoryHorizontalInterpolationLocations;
 	Memory memoryHorizontalInterpolationFactors;
 
-	if (sourceWidth != targetWidth)
+	if (scalingWidth)
 	{
 		// in case we are scaling the width of the frame, we use an intermediate buffer and pre-calculated interpolation locations and factors
 
@@ -2185,9 +2187,6 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 
 		if (memoryIntermediateExtendedRow && factorBottom == 0u) // we can simply use the top row
 		{
-			ocean_assert(sourceWidth != targetWidth);
-			ocean_assert(memoryIntermediateExtendedRow);
-
 			ocean_assert(rowInterpolationHorizontalFunction != nullptr);
 
 			// we do not need to interpolate two lines, thus we simply need to copy the row (as we need an additional pixel at the end)
