@@ -363,11 +363,11 @@ bool QRCodeDetector::computePoses(const AnyCamera& anyCamera, const uint8_t* con
 
 		const Scalar normalizedModuleSize = Scalar(2) / Scalar(QRCode::modulesPerSide(version));
 
-		Vector2 topLeft(Numeric::maxValue(), Numeric::maxValue());
-		Vector2 bottomRight(Numeric::minValue(), Numeric::minValue());
-
 		for (unsigned int iPose = 0u; iPose < numberPoses; ++iPose)
 		{
+			Vector2 topLeft(Numeric::maxValue(), Numeric::maxValue());
+			Vector2 bottomRight(Numeric::minValue(), Numeric::minValue());
+
 			for (const Scalar xOffsetInModules : {scale * normalizedModuleSize * Scalar(-6), scale * normalizedModuleSize * Scalar(6)})
 			{
 				for (const Scalar yOffsetInModules : {scale * normalizedModuleSize * Scalar(-6), scale * normalizedModuleSize * Scalar(6)})
