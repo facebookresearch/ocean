@@ -616,7 +616,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsBoolean())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsBoolean())
 				{
 					return false;
 				}
@@ -649,7 +649,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsInt32())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsInt32())
 				{
 					return false;
 				}
@@ -682,7 +682,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsNumber())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsNumber())
 				{
 					return false;
 				}
@@ -715,7 +715,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsNumber())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsNumber())
 				{
 					return false;
 				}
@@ -748,7 +748,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsNumber())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsNumber())
 				{
 					return false;
 				}
@@ -781,7 +781,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsString())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsString())
 				{
 					return false;
 				}
@@ -814,7 +814,7 @@ inline bool JSBase::hasValue(const v8::FunctionCallbackInfo<v8::Value>& info, co
 			{
 				v8::MaybeLocal<v8::Value> element = arrayValue->Get(currentContext, n);
 
-				if (!element.IsEmpty() || !element.ToLocalChecked()->IsObject())
+				if (element.IsEmpty() || !element.ToLocalChecked()->IsObject())
 				{
 					return false;
 				}
