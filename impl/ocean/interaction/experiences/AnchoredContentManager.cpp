@@ -47,11 +47,19 @@ void AnchoredContentManager::ContentObject::setRenderingObjectNode(Rendering::No
 {
 	ocean_assert(renderingObjectNode);
 
-	renderingAnchorTransform_->removeChild(renderingObjectNode_);
+	// the anchor transform is created lazily, once the object is tracked for the first time
+
+	if (renderingAnchorTransform_)
+	{
+		renderingAnchorTransform_->removeChild(renderingObjectNode_);
+	}
 
 	renderingObjectNode_ = std::move(renderingObjectNode);
 
-	renderingAnchorTransform_->addChild(renderingObjectNode_);
+	if (renderingAnchorTransform_)
+	{
+		renderingAnchorTransform_->addChild(renderingObjectNode_);
+	}
 }
 
 AnchoredContentManager::AnchoredContentManager()
