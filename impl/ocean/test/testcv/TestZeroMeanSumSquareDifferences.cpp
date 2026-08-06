@@ -408,6 +408,31 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const double tes
 	Log::info() << " ";
 	Log::info() << " ";
 
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 10u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 11u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 12u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 13u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 14u>(width, height, testDuration));
+
+	Log::info() << " ";
+
+	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<3u, 15u>(width, height, testDuration));
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	OCEAN_EXPECT_TRUE(validation, testBuffer8BitPerChannel<1u, 20u>(width, height, testDuration));
 
 	Log::info() << " ";
