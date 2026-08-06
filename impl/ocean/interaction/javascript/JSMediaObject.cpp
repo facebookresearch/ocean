@@ -492,11 +492,11 @@ void JSBase::function<Media::MediumRef, JSMediaObject::FI_PREFERRED_SOUND_BITS_P
 
 	if (soundMedium)
 	{
-		info.GetReturnValue().Set(soundMedium->soundBitsPerSample());
+		info.GetReturnValue().Set(soundMedium->preferredSoundBitsPerSample());
 	}
 	else
 	{
-		Log::warning() << "The MediumObject does not support the function 'soundBitsPerSample()'";
+		Log::warning() << "The MediumObject does not support the function 'preferredSoundBitsPerSample()'";
 	}
 }
 
