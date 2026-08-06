@@ -101,13 +101,15 @@ class OCEAN_CV_SYNTHESIS_EXPORT MappingI2 : public MappingI
 
 inline MappingI2& MappingI2::operator=(const MappingI2& pixelMapping)
 {
-	Mapping::operator=(pixelMapping);
+	MappingI::operator=(pixelMapping);
+
 	return *this;
 }
 
 inline MappingI2& MappingI2::operator=(MappingI2&& pixelMapping) noexcept
 {
-	Mapping::operator=(std::move(pixelMapping));
+	MappingI::operator=(std::move(pixelMapping));
+
 	return *this;
 }
 
