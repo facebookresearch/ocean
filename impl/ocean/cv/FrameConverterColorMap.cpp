@@ -58,7 +58,7 @@ bool FrameConverterColorMap::Comfort::convertFloat1ChannelToRGB24(const Frame& s
 	ocean_assert(convertedSourceFrame.isValid());
 	ocean_assert(convertedSourceFrame.isPixelFormatCompatible(FrameType::FORMAT_F32));
 
-	if (!target.isValid() || target.width() != source.width() || target.height() != source.height() || target.pixelFormat() != FrameType::FORMAT_RGB24 || target.isReadOnly())
+	if (!target.isValid() || target.width() != source.width() || target.height() != source.height() || target.pixelFormat() != FrameType::FORMAT_RGB24 || target.isReadOnly() || target.pixelOrigin() != source.pixelOrigin())
 	{
 		if (!target.set(FrameType(convertedSourceFrame, FrameType::FORMAT_RGB24), false /*forceOwner*/, true /*forceWritable*/))
 		{
