@@ -212,6 +212,7 @@ void JSBase::function<Vector4, JSVector4::FI_IS_EQUAL>(Vector4& thisValue, const
 	if (hasValue<Vector4>(info, 0u, value))
 	{
 		info.GetReturnValue().Set(thisValue == value);
+		return;
 	}
 
 	Log::error() << "'Vector4::isEqual() accepts one Vector4 object only.";

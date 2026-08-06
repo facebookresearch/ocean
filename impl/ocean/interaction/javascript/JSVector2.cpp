@@ -151,6 +151,7 @@ void JSBase::function<Vector2, JSVector2::FI_IS_EQUAL>(Vector2& thisValue, const
 	if (hasValue<Vector2>(info, 0u, value))
 	{
 		info.GetReturnValue().Set(thisValue == value);
+		return;
 	}
 
 	Log::error() << "'Vector2::isEqual() accepts one Vector2 object only.";
@@ -175,6 +176,7 @@ void JSBase::function<Vector2, JSVector2::FI_DISTANCE>(Vector2& thisValue, const
 	if (hasValue<Vector2>(info, 0u, value))
 	{
 		info.GetReturnValue().Set(double(thisValue.distance(value)));
+		return;
 	}
 
 	Log::error() << "'Vector2::distance() accepts one Vector2 object only.";
