@@ -927,7 +927,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::bu
 	constexpr unsigned int blocks16 = tPixels / 16u;
 	constexpr unsigned int remainingAfterBlocks16 = tPixels % 16u;
 
-	constexpr bool partialBlock16 = remainingAfterBlocks16 > 10u;
+	constexpr bool partialBlock16 = remainingAfterBlocks16 > 10u && blocks16 >= 1u;
 	constexpr unsigned int remainingAfterPartialBlock16 = partialBlock16 ? 0u : remainingAfterBlocks16;
 
 	constexpr unsigned int blocks8 = remainingAfterPartialBlock16 / 8u;
