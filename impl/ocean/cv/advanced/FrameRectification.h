@@ -453,8 +453,9 @@ class OCEAN_CV_ADVANCED_EXPORT FrameRectification
 		 * @param firstTargetRow First target row to be handled
 		 * @param numberTargetRows Number of target rows to be handled
 		 * @tparam tChannels Number of data channels of the given frame, with range [1, infinity)
+		 * @tparam tPixelOriginUpperLeft True, if the pixel origin of the frame (and the rectified frame) is FrameType::ORIGIN_UPPER_LEFT, False otherwise
 		 */
-		template <unsigned int tChannels>
+		template <unsigned int tChannels, bool tPixelOriginUpperLeft>
 		static void triangleObjectLookup8BitPerChannelSubset(const uint8_t* cameraFrame, const unsigned int cameraFrameWidth, const unsigned int cameraFrameHeight, const unsigned int cameraFramePaddingElements, const LookupTable* lookupTable, const Triangle2* triangle2, uint8_t* targetFrame, const unsigned int targetFramePaddingElements, const uint8_t* outsideFrameColor, const unsigned int firstTargetRow, const unsigned int numberTargetRows);
 
 		/**
@@ -542,8 +543,9 @@ class OCEAN_CV_ADVANCED_EXPORT FrameRectification
 		 * @param firstTargetRow First target row to be handled, with range [0, targetHeight - 1]
 		 * @param numberTargetRows The number of target rows to be handled, with range [1, targetHeight - firstTargetRow]
 		 * @tparam tChannels Number of data channels of the given frame, with range [1, infinity)
+		 * @tparam tPixelOriginUpperLeft True, if the pixel origin of the frame (and the rectified frame) is FrameType::ORIGIN_UPPER_LEFT, False otherwise
 		 */
-		template <unsigned int tChannels>
+		template <unsigned int tChannels, bool tPixelOriginUpperLeft>
 		static void triangleObjectMaskLookup8BitPerChannelSubset(const uint8_t* cameraFrame, const unsigned int cameraFrameWidth, const unsigned int cameraFrameHeight, const unsigned int cameraFramePaddingElements, const LookupTable* lookupTable, const Triangle2* triangle2, uint8_t* targetFrame, uint8_t* targetMask, const unsigned int targetFramePaddingElements, const unsigned int targetMaskPaddingElements, const uint8_t maskValue, const unsigned int firstTargetRow, const unsigned int numberTargetRows);
 };
 
@@ -720,11 +722,25 @@ inline void FrameRectification::triangleObjectIF8BitPerChannel(const uint8_t* ca
 
 		if (worker)
 		{
-			worker->executeFunction(Worker::Function::createStatic(triangleObjectLookup8BitPerChannelSubset<tChannels>, cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)(&lookupTable), &triangle2, targetFrame, targetFramePaddingElements, outsideFrameColor ? outsideFrameColor : zeroValue, 0u, 0u), 0u, targetHeight, 9u, 10u, 20u);
+			if (pixelOrigin == FrameType::ORIGIN_UPPER_LEFT)
+			{
+				worker->executeFunction(Worker::Function::createStatic(triangleObjectLookup8BitPerChannelSubset<tChannels, true>, cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)(&lookupTable), &triangle2, targetFrame, targetFramePaddingElements, outsideFrameColor ? outsideFrameColor : zeroValue, 0u, 0u), 0u, targetHeight, 9u, 10u, 20u);
+			}
+			else
+			{
+				worker->executeFunction(Worker::Function::createStatic(triangleObjectLookup8BitPerChannelSubset<tChannels, false>, cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)(&lookupTable), &triangle2, targetFrame, targetFramePaddingElements, outsideFrameColor ? outsideFrameColor : zeroValue, 0u, 0u), 0u, targetHeight, 9u, 10u, 20u);
+			}
 		}
 		else
 		{
-			triangleObjectLookup8BitPerChannelSubset<tChannels>(cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, &lookupTable, &triangle2, targetFrame, targetFramePaddingElements, outsideFrameColor ? outsideFrameColor : zeroValue, 0u, targetHeight);
+			if (pixelOrigin == FrameType::ORIGIN_UPPER_LEFT)
+			{
+				triangleObjectLookup8BitPerChannelSubset<tChannels, true>(cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, &lookupTable, &triangle2, targetFrame, targetFramePaddingElements, outsideFrameColor ? outsideFrameColor : zeroValue, 0u, targetHeight);
+			}
+			else
+			{
+				triangleObjectLookup8BitPerChannelSubset<tChannels, false>(cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, &lookupTable, &triangle2, targetFrame, targetFramePaddingElements, outsideFrameColor ? outsideFrameColor : zeroValue, 0u, targetHeight);
+			}
 		}
 	}
 }
@@ -876,11 +892,25 @@ inline void FrameRectification::triangleObjectMaskIF8BitPerChannel(const uint8_t
 
 		if (worker)
 		{
-			worker->executeFunction(Worker::Function::createStatic(triangleObjectMaskLookup8BitPerChannelSubset<tChannels>, cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)&lookupTable, &triangle2, targetFrame, targetMask, targetFramePaddingElements, targetMaskPaddingElements, maskValue, 0u, 0u), 0u, targetHeight, 11u, 12u, 20u);
+			if (pixelOrigin == FrameType::ORIGIN_UPPER_LEFT)
+			{
+				worker->executeFunction(Worker::Function::createStatic(triangleObjectMaskLookup8BitPerChannelSubset<tChannels, true>, cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)&lookupTable, &triangle2, targetFrame, targetMask, targetFramePaddingElements, targetMaskPaddingElements, maskValue, 0u, 0u), 0u, targetHeight, 11u, 12u, 20u);
+			}
+			else
+			{
+				worker->executeFunction(Worker::Function::createStatic(triangleObjectMaskLookup8BitPerChannelSubset<tChannels, false>, cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)&lookupTable, &triangle2, targetFrame, targetMask, targetFramePaddingElements, targetMaskPaddingElements, maskValue, 0u, 0u), 0u, targetHeight, 11u, 12u, 20u);
+			}
 		}
 		else
 		{
-			triangleObjectMaskLookup8BitPerChannelSubset<tChannels>(cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)(&lookupTable), &triangle2, targetFrame, targetMask, targetFramePaddingElements, targetMaskPaddingElements, maskValue, 0u, targetHeight);
+			if (pixelOrigin == FrameType::ORIGIN_UPPER_LEFT)
+			{
+				triangleObjectMaskLookup8BitPerChannelSubset<tChannels, true>(cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)(&lookupTable), &triangle2, targetFrame, targetMask, targetFramePaddingElements, targetMaskPaddingElements, maskValue, 0u, targetHeight);
+			}
+			else
+			{
+				triangleObjectMaskLookup8BitPerChannelSubset<tChannels, false>(cameraFrame, camera.width(), camera.height(), cameraFramePaddingElements, (const LookupTable*)(&lookupTable), &triangle2, targetFrame, targetMask, targetFramePaddingElements, targetMaskPaddingElements, maskValue, 0u, targetHeight);
+			}
 		}
 	}
 }
@@ -1135,7 +1165,7 @@ void FrameRectification::triangleObjectIF8BitPerChannelSubset(const uint8_t* cam
 	}
 }
 
-template <unsigned int tChannels>
+template <unsigned int tChannels, bool tPixelOriginUpperLeft>
 void FrameRectification::triangleObjectLookup8BitPerChannelSubset(const uint8_t* cameraFrame, const unsigned int cameraFrameWidth, const unsigned int cameraFrameHeight, const unsigned int cameraFramePaddingElements, const LookupTable* lookupTable, const Triangle2* triangle2, uint8_t* targetFrame, const unsigned int targetFramePaddingElements, const uint8_t* outsideFrameColor, const unsigned int firstTargetRow, const unsigned int numberTargetRows)
 {
 	static_assert(tChannels >= 1u, "Invalid channel number!");
@@ -1149,6 +1179,7 @@ void FrameRectification::triangleObjectLookup8BitPerChannelSubset(const uint8_t*
 	const Scalar cameraFrameHeight1 = Scalar(cameraFrameHeight - 1u);
 
 	const unsigned int targetFrameWidth = (unsigned int)(lookupTable->sizeX());
+	const unsigned int targetFrameHeight = (unsigned int)(lookupTable->sizeY());
 
 	const unsigned int targetFrameStrideElements = targetFrameWidth * tChannels + targetFramePaddingElements;
 
@@ -1156,11 +1187,13 @@ void FrameRectification::triangleObjectLookup8BitPerChannelSubset(const uint8_t*
 
 	for (unsigned int y = firstTargetRow; y < firstTargetRow + numberTargetRows; ++y)
 	{
+		const Scalar yCorrected = tPixelOriginUpperLeft ? Scalar(y) : (Scalar(targetFrameHeight - 1u) - Scalar(y));
+
 		uint8_t* targetPixel = targetFrame + y * targetFrameStrideElements;
 
 		for (unsigned int x = 0u; x < targetFrameWidth; ++x)
 		{
-			if (triangle2->isInside(Vector2(Scalar(x), Scalar(y))))
+			if (triangle2->isInside(Vector2(Scalar(x), yCorrected)))
 			{
 				const Vector2 inputPosition(lookupTable->bilinearValue(Scalar(x), Scalar(y)));
 
@@ -1378,7 +1411,7 @@ void FrameRectification::triangleObjectMaskIF8BitPerChannelSubset(const uint8_t*
 	}
 }
 
-template <unsigned int tChannels>
+template <unsigned int tChannels, bool tPixelOriginUpperLeft>
 void FrameRectification::triangleObjectMaskLookup8BitPerChannelSubset(const uint8_t* cameraFrame, const unsigned int cameraFrameWidth, const unsigned int cameraFrameHeight, const unsigned int cameraFramePaddingElements, const LookupTable* lookupTable, const Triangle2* triangle2, uint8_t* targetFrame, uint8_t* targetMask, const unsigned int targetFramePaddingElements, const unsigned int targetMaskPaddingElements, const uint8_t maskValue, const unsigned int firstTargetRow, const unsigned int numberTargetRows)
 {
 	static_assert(tChannels >= 1u, "Invalid channel number!");
@@ -1402,9 +1435,11 @@ void FrameRectification::triangleObjectMaskLookup8BitPerChannelSubset(const uint
 
 	for (unsigned int y = firstTargetRow; y < firstTargetRow + numberTargetRows; ++y)
 	{
+		const Scalar yCorrected = tPixelOriginUpperLeft ? Scalar(y) : (Scalar((unsigned int)(lookupTable->sizeY()) - 1u) - Scalar(y));
+
 		for (unsigned int x = 0u; x < (unsigned int)(lookupTable->sizeX()); ++x)
 		{
-			if (triangle2->isInside(Vector2(Scalar(x), Scalar(y))))
+			if (triangle2->isInside(Vector2(Scalar(x), yCorrected)))
 			{
 				const Vector2 inputPosition(lookupTable->bilinearValue(Scalar(x), Scalar(y)));
 
