@@ -112,12 +112,14 @@ SDXNodeSet SDXNode::ancestorNodes() const
 
 	for (const NodeIdMap::value_type& parentPair : parents_)
 	{
-		const SDXNodeRef parent(environment_->library()->nodeManager().node(parentPair.first));
+		SDXNodeRef parent(environment_->library()->nodeManager().node(parentPair.first));
 
 		if (parent)
 		{
-			const SDXNodeSet ancestor(parent->ancestorNodes());
-			nodes.insert(ancestor.begin(), ancestor.end());
+			SDXNodeSet ancestors(parent->ancestorNodes());
+
+			nodes.insert(std::move(parent));
+			nodes.merge(ancestors);
 		}
 	}
 

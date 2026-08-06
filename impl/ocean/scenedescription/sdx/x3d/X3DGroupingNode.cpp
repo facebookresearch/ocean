@@ -127,7 +127,7 @@ bool X3DGroupingNode::onFieldChanging(const std::string& fieldName, const Field&
 
 			children_.setTimestamp(field.timestamp());
 
-			for (MultiNode::Values::const_iterator i = multiNode.values().begin(); i != multiNode.values().end(); ++i)
+			for (MultiNode::Values::const_iterator i = children_.values().begin(); i != children_.values().end(); ++i)
 			{
 				const SDXNodeRef childNode(*i);
 
