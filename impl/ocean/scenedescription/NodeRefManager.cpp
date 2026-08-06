@@ -240,10 +240,28 @@ void NodeRefManager::unregisterNode(const Node* node)
 
 	if (!node->name().empty())
 	{
-		NameMultiMap::iterator iName(nameMultiMap_.find(node->name()));
-		ocean_assert(iName != nameMultiMap_.cend());
+#ifdef OCEAN_DEBUG
+		bool debugFound = false;
+#endif
+		ocean_assert(nameMultiMap_.find(node->name()) != nameMultiMap_.cend());
 
-		nameMultiMap_.erase(iName);
+		// several nodes may share the same name, so the entry belonging to this node has to be identified
+		const std::pair<NameMultiMap::iterator, NameMultiMap::iterator> nameRange = nameMultiMap_.equal_range(node->name());
+
+		for (NameMultiMap::iterator iName = nameRange.first; iName != nameRange.second; ++iName)
+		{
+			if (iName->second == node->id())
+			{
+				nameMultiMap_.erase(iName);
+
+#ifdef OCEAN_DEBUG
+				debugFound = true;
+#endif
+				break;
+			}
+		}
+
+		ocean_assert(debugFound);
 	}
 
 	nodeMap_.erase(iNode);
