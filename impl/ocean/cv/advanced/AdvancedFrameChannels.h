@@ -1043,7 +1043,7 @@ inline void AdvancedFrameChannels::separateTo1ChannelOnlyTargetFactorNEON<uint8_
 }
 
 template <>
-void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 2u>(const float* const* const sourceFrames, uint8_t* const targetFrame, const unsigned int width, const unsigned int height, const float sourceFactor, const unsigned int* sourceFramesPaddingElements, const unsigned int targetFramePaddingElements)
+inline void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 2u>(const float* const* const sourceFrames, uint8_t* const targetFrame, const unsigned int width, const unsigned int height, const float sourceFactor, const unsigned int* sourceFramesPaddingElements, const unsigned int targetFramePaddingElements)
 {
 	ocean_assert(sourceFrames != nullptr);
 	ocean_assert(targetFrame != nullptr);
@@ -1164,7 +1164,7 @@ void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 2u>(
 }
 
 template <>
-void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 3u>(const float* const* const sourceFrames, uint8_t* const targetFrame, const unsigned int width, const unsigned int height, const float sourceFactor, const unsigned int* sourceFramesPaddingElements, const unsigned int targetFramePaddingElements)
+inline void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 3u>(const float* const* const sourceFrames, uint8_t* const targetFrame, const unsigned int width, const unsigned int height, const float sourceFactor, const unsigned int* sourceFramesPaddingElements, const unsigned int targetFramePaddingElements)
 {
 	ocean_assert(sourceFrames != nullptr);
 	ocean_assert(targetFrame != nullptr);
@@ -1306,7 +1306,7 @@ void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 3u>(
 }
 
 template <>
-void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 4u>(const float* const* const sourceFrames, uint8_t* const targetFrame, const unsigned int width, const unsigned int height, const float sourceFactor, const unsigned int* sourceFramesPaddingElements, const unsigned int targetFramePaddingElements)
+inline void AdvancedFrameChannels::zipChannelsOnlySourceFactorNEON<float, uint8_t, 4u>(const float* const* const sourceFrames, uint8_t* const targetFrame, const unsigned int width, const unsigned int height, const float sourceFactor, const unsigned int* sourceFramesPaddingElements, const unsigned int targetFramePaddingElements)
 {
 	ocean_assert(sourceFrames != nullptr);
 	ocean_assert(targetFrame != nullptr);
