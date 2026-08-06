@@ -74,10 +74,22 @@ void OrientationInterpolator::onFieldChanged(const std::string& fieldName)
 
 void OrientationInterpolator::onSingleValue(const size_t index, const Timestamp eventTimestamp)
 {
-	ocean_assert(index < keyValue_.values().size());
-
-	valueChanged_.setValue(keyValue_.values()[index], eventTimestamp);
-	forwardThatFieldHasBeenChanged("value_changed", valueChanged_);
+	if (index < keyValue_.values().size())
+	{
+		valueChanged_.setValue(keyValue_.values()[index], eventTimestamp);
+		forwardThatFieldHasBeenChanged("value_changed", valueChanged_);
+	}
+	else
+	{
+		if (name_.empty())
+		{
+			Log::warning() << "OrientationInterpolator holds too less key values";
+		}
+		else
+		{
+			Log::warning() << "OrientationInterpolator \"" << name_ << "\" holds too less key values";
+		}
+	}
 }
 
 void OrientationInterpolator::onInterpolate(const size_t leftIndex, const size_t rightIndex, const Scalar interpolationFactor, const Timestamp eventTimestamp)
