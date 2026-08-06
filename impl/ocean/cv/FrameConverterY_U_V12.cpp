@@ -332,8 +332,8 @@ void FrameConverterY_U_V12::mapY_U_V12ToY_UV12(const void** sources, void** targ
 	}
 	else
 	{
-		ocean_assert(uSourcePixelStride >= 3u);
-		ocean_assert(vSourcePixelStride >= 3u);
+		ocean_assert(uSourcePixelStride >= 1u);
+		ocean_assert(vSourcePixelStride >= 1u);
 
 		for (unsigned int x = 0u; x < width_2; ++x)
 		{
