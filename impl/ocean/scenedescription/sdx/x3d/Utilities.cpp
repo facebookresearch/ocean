@@ -107,7 +107,7 @@ bool Utilities::writeIndexedFaceSet(std::ostream& stream, const Vectors3& vertic
 		return false;
 	}
 
-	if (vertices.empty() || (!perVertexNormals.empty() && vertices.size() != perVertexNormals.size()) || (!perVertexColors.empty() && vertices.size() != perVertexColors.size()) || (!perVertexTextureCoordinates.empty() && vertices.size() != perVertexTextureCoordinates.size()))
+	if (vertices.empty() || triangleFaces.empty() || (!perVertexNormals.empty() && vertices.size() != perVertexNormals.size()) || (!perVertexColors.empty() && vertices.size() != perVertexColors.size()) || (!perVertexTextureCoordinates.empty() && vertices.size() != perVertexTextureCoordinates.size()))
 	{
 		ocean_assert(false && "Invalid input!");
 		return false;
@@ -135,17 +135,14 @@ bool Utilities::writeIndexedFaceSet(std::ostream& stream, const Vectors3& vertic
 
 	stream << indentation << "\t\t\t]\n" << indentation << "\t\t}\n";
 
-	if (!perVertexNormals.empty())
+	stream << "\n" << indentation << "\t\tcoordIndex\n" << indentation << "\t\t[\n";
+
+	for (const Rendering::TriangleFace& triangleFace : triangleFaces)
 	{
-		stream << "\n" << indentation << "\t\tcoordIndex\n" << indentation << "\t\t[\n";
-
-		for (const Rendering::TriangleFace& triangleFace : triangleFaces)
-		{
-			stream << valueIndentationSmall << triangleFace[0] << " " << triangleFace[1] << " " << triangleFace[2] << " -1,\n";
-		}
-
-		stream << indentation << "\t\t]\n";
+		stream << valueIndentationSmall << triangleFace[0] << " " << triangleFace[1] << " " << triangleFace[2] << " -1,\n";
 	}
+
+	stream << indentation << "\t\t]\n";
 
 	if (!perVertexNormals.empty())
 	{
