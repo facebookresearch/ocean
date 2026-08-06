@@ -7,6 +7,8 @@
 
 #include "ocean/cv/detector/qrcodes/Utilities.h"
 
+#include "ocean/base/Median.h"
+
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameInterpolatorNearestPixel.h"
 #include "ocean/cv/FrameInterpolatorBilinear.h"
@@ -1200,11 +1202,8 @@ bool Utilities::computeContrast(const AnyCamera& anyCamera, const Frame& yFrame,
 
 	if (medianContrast)
 	{
-		std::partial_sort(intensitiesModule0.begin(), intensitiesModule0.begin() + intensitiesModule0.size() / 2, intensitiesModule0.end());
-		std::partial_sort(intensitiesModule1.begin(), intensitiesModule1.begin() + intensitiesModule1.size() / 2, intensitiesModule1.end());
-
-		const uint8_t medianIntensityModule0 = intensitiesModule0[intensitiesModule0.size() / 2];
-		const uint8_t medianIntensityModule1 = intensitiesModule1[intensitiesModule1.size() / 2];
+		const uint8_t medianIntensityModule0 = Median::median<uint8_t>(intensitiesModule0.data(), intensitiesModule0.size());
+		const uint8_t medianIntensityModule1 = Median::median<uint8_t>(intensitiesModule1.data(), intensitiesModule1.size());
 
 		*medianContrast = (unsigned int)(std::abs(int(medianIntensityModule0) - int(medianIntensityModule1)));
 	}
