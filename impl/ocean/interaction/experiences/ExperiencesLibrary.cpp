@@ -196,6 +196,7 @@ void ExperiencesLibrary::unload(const UserInterface& userInterface, const Render
 	{
 		ocean_assert(iExperience->second);
 		iExperience->second->unload(userInterface, engine, timestamp);
+		iExperience->second->postUnload(userInterface, engine, timestamp);
 	}
 
 	nameToExperienceMap_.clear();
