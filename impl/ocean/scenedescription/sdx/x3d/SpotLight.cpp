@@ -78,17 +78,10 @@ void SpotLight::onInitialize(const Rendering::SceneRef& scene, const Timestamp t
 
 			renderingSpotLight->setPosition(location_.value());
 
-			const Scalar cutOffAngleValue = max(Scalar(0), min(Numeric::pi_2(), cutOffAngle_.value()));
+			const Scalar cutOffAngleValue = std::max(Scalar(0), std::min(Numeric::pi_2(), cutOffAngle_.value()));
 			renderingSpotLight->setConeAngle(cutOffAngleValue);
 
-			Scalar exponent = 0;
-			if (cutOffAngle_.value() > Numeric::eps())
-			{
-				exponent = max(Scalar(0), min(Scalar(1), beamWidth_.value() / cutOffAngle_.value()));
-			}
-
-			// this spot exponent is not the correct mapping, however it's the only way to approximate the beamWidth behavior
-			renderingSpotLight->setSpotExponent(exponent);
+			renderingSpotLight->setSpotExponent(determineSpotExponent(beamWidth_.value(), cutOffAngle_.value()));
 		}
 	}
 	catch(const OceanException& exception)
@@ -130,20 +123,13 @@ void SpotLight::onFieldChanged(const std::string& fieldName)
 
 			if (fieldName == "cutOffAngle")
 			{
-				const Scalar cutOffAngleValue = max(Scalar(0), min(Numeric::pi_2(), cutOffAngle_.value()));
+				const Scalar cutOffAngleValue = std::max(Scalar(0), std::min(Numeric::pi_2(), cutOffAngle_.value()));
 				renderingSpotLight->setConeAngle(cutOffAngleValue);
 			}
 
 			if (fieldName == "beamWidth" || fieldName == "cutOffAngle")
 			{
-				Scalar exponent = 0;
-				if (cutOffAngle_.value() > Numeric::eps())
-				{
-					exponent = 128 * (1 - max(Scalar(0), min(Scalar(1), beamWidth_.value() / cutOffAngle_.value())));
-				}
-
-				// this spot exponent is not the correct mapping, however it's the only way to approximate the beamWidth behavior
-				renderingSpotLight->setSpotExponent(exponent);
+				renderingSpotLight->setSpotExponent(determineSpotExponent(beamWidth_.value(), cutOffAngle_.value()));
 			}
 		}
 	}
@@ -182,6 +168,19 @@ void SpotLight::onGlobalLight(const HomogenousMatrix4& world_T_light)
 size_t SpotLight::objectAddress() const
 {
 	return size_t(this);
+}
+
+Scalar SpotLight::determineSpotExponent(const Scalar beamWidth, const Scalar cutOffAngle)
+{
+	if (cutOffAngle <= Numeric::eps())
+	{
+		return Scalar(0);
+	}
+
+	const Scalar exponent = std::max(Scalar(0), std::min(Scalar(1), beamWidth / cutOffAngle));
+	ocean_assert(exponent >= Scalar(0) && exponent <= Scalar(1));
+
+	return exponent;
 }
 
 }

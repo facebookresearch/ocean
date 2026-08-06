@@ -69,6 +69,16 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT SpotLight : virtual public X3DLightN
 		 */
 		size_t objectAddress() const override;
 
+		/**
+		 * Determines the spot exponent for a given beam width and cut off angle.
+		 * This is not the correct mapping, however it is the only way to approximate the beamWidth behavior.
+		 * Both angles are unvalidated scene file values, so any value is accepted.
+		 * @param beamWidth The beam width in radian, with range (-infinity, infinity), X3D defines [0, PI/2]
+		 * @param cutOffAngle The cut off angle in radian, with range (-infinity, infinity), X3D defines (0, PI/2]
+		 * @return The resulting spot exponent, with range [0, 1]
+		 */
+		static Scalar determineSpotExponent(const Scalar beamWidth, const Scalar cutOffAngle);
+
 	protected:
 
 		/// Attenuation field.
