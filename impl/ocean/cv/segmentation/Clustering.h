@@ -804,7 +804,7 @@ typename Clustering<tChannels>::Segmentation Clustering<tChannels>::findOptimalR
 					clusters = testClusters;
 				}*/
 
-				if (results[n].maximalClusterSize() > results[n].maximalClusterSize())
+				if (results[n].maximalClusterSize() > results[bestIndex].maximalClusterSize())
 				{
 					bestIndex = n;
 				}
