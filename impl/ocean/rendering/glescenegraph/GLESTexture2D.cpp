@@ -324,8 +324,8 @@ GLESTexture2D::TexturePropertiesMap GLESTexture2D::createTexturePropertiesMap()
 	addTextureProperties(map, FrameType::FORMAT_YA16, TextureProperties(GLESAttribute::PT_UNKNOWN, twoChannelsFormat, GL_UNSIGNED_BYTE));
 	addTextureProperties(map, FrameType::FORMAT_Y8_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_UNSIGNED_BYTE));
 	addTextureProperties(map, FrameType::FORMAT_Y8_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_UNSIGNED_BYTE));
-	addTextureProperties(map, FrameType::FORMAT_YUV24, TextureProperties(GLESAttribute::PT_TEXTURE_YUV24, GL_RGB, GL_UNSIGNED_BYTE));
-	addTextureProperties(map, FrameType::FORMAT_YVU24, TextureProperties(GLESAttribute::PT_TEXTURE_YVU24, GL_RGB, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_YUV24, TextureProperties(GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_YUV24 | GLESAttribute::PT_TEXTURE_LIMITED_RANGE), GL_RGB, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_YVU24, TextureProperties(GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_YVU24 | GLESAttribute::PT_TEXTURE_LIMITED_RANGE), GL_RGB, GL_UNSIGNED_BYTE));
 
 	addTextureProperties(map, FrameType::genericPixelFormat<float, 1u>(), TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_FLOAT));
 	addTextureProperties(map, FrameType::genericPixelFormat<float, 2u>(), TextureProperties(GLESAttribute::PT_UNKNOWN, twoChannelsFormat, GL_FLOAT));
@@ -334,17 +334,17 @@ GLESTexture2D::TexturePropertiesMap GLESTexture2D::createTexturePropertiesMap()
 
 	// pixel formats with two planes, the second plane holds both chroma channels
 
-	addTextureProperties(map, FrameType::FORMAT_Y_UV12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_UV12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_UV12_LIMITED_RANGE, TextureProperties(GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_Y_UV12 | GLESAttribute::PT_TEXTURE_LIMITED_RANGE), oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
 	addTextureProperties(map, FrameType::FORMAT_Y_UV12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_UV12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
-	addTextureProperties(map, FrameType::FORMAT_Y_VU12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_VU12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_VU12_LIMITED_RANGE, TextureProperties(GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_Y_VU12 | GLESAttribute::PT_TEXTURE_LIMITED_RANGE), oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
 	addTextureProperties(map, FrameType::FORMAT_Y_VU12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_VU12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
 
 	// pixel formats with three planes, both chroma planes are stacked into the secondary texture,
 	// the Y_U_V12 shader is used for Y_V_U12 as well, the source planes are simply swapped
 
-	addTextureProperties(map, FrameType::FORMAT_Y_U_V12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_1_2));
+	addTextureProperties(map, FrameType::FORMAT_Y_U_V12_LIMITED_RANGE, TextureProperties(GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_Y_U_V12 | GLESAttribute::PT_TEXTURE_LIMITED_RANGE), oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_1_2));
 	addTextureProperties(map, FrameType::FORMAT_Y_U_V12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_1_2));
-	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, TextureProperties(GLESAttribute::ProgramType(GLESAttribute::PT_TEXTURE_Y_U_V12 | GLESAttribute::PT_TEXTURE_LIMITED_RANGE), oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
 	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
 
 #ifndef OCEAN_RENDERING_GLES_USE_ES

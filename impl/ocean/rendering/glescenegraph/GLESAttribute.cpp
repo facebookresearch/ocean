@@ -122,6 +122,11 @@ std::string GLESAttribute::translateProgramType(const GLESAttribute::ProgramType
 		result += "PT_TEXTURES | ";
 	}
 
+	if ((programType & PT_TEXTURE_LIMITED_RANGE) != 0)
+	{
+		result += "PT_TEXTURE_LIMITED_RANGE | ";
+	}
+
 	if ((programType & PT_PHANTOM_VIDEO_FAST) != 0)
 	{
 		result += "PT_PHANTOM_VIDEO_FAST | ";

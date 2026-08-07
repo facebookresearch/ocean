@@ -130,19 +130,29 @@ class OCEAN_RENDERING_GLES_EXPORT GLESProgramManager : public Singleton<GLESProg
 		static const char* partOneTextureLookupBGRA32ToRGBA32_;
 
 		/// The code part containing the macro to convert the 1-texture YUV24 lookup to a RGBA32 value
-		static const char* partOneTextureLookupYUV24ToRGBA32_;
+		static const char* partOneTextureLookupLimitedRangeYUV24ToRGBA32_;
+
+		static const char* partOneTextureLookupFullRangeYUV24ToRGBA32_;
 
 		/// The code part containing the macro to convert the 1-texture YUV24 lookup to a RGBA32 value
-		static const char* partOneTextureLookupYVU24ToRGBA32_;
+		static const char* partOneTextureLookupLimitedRangeYVU24ToRGBA32_;
+
+		static const char* partOneTextureLookupFullRangeYVU24ToRGBA32_;
 
 		/// The code part containing the macro to convert the 2-texture Y_UV12 lookup to a RGBA32 value
-		static const char* partTwoTexturesLookupY_UV12ToRGBA32_;
+		static const char* partTwoTexturesLookupLimitedRangeY_UV12ToRGBA32_;
+
+		static const char* partTwoTexturesLookupFullRangeY_UV12ToRGBA32_;
 
 		/// The code part containing the macro to convert the 2-texture Y_VU12 lookup to a RGBA32 value
-		static const char* partTwoTexturesLookupY_VU12ToRGBA32_;
+		static const char* partTwoTexturesLookupLimitedRangeY_VU12ToRGBA32_;
+
+		static const char* partTwoTexturesLookupFullRangeY_VU12ToRGBA32_;
 
 		/// The code part containing the macro to convert the 2-texture Y_U_V12 lookup to a RGBA32 value
-		static const char* partTwoTexturesLookupY_U_V12ToRGBA32_;
+		static const char* partTwoTexturesLookupLimitedRangeY_U_V12ToRGBA32_;
+
+		static const char* partTwoTexturesLookupFullRangeY_U_V12ToRGBA32_;
 
 		/// The code part defining the Material struct.
 		static const char* partDefinitionMaterial_;

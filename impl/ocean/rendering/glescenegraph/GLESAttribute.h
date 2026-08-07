@@ -75,20 +75,22 @@ class OCEAN_RENDERING_GLES_EXPORT GLESAttribute :
 			PT_TEXTURE_Y_U_V12 = (1u << 14u),
 			/// Shader using multiple textures only.
 			PT_TEXTURES = (1u << 15u),
+			/// The texture holds a pixel format with a limited value range, a pixel format has a full value range by default.
+			PT_TEXTURE_LIMITED_RANGE = (1u << 16u),
 			/// Shader for phantom objects using video see-through Augmented Reality.
-			PT_PHANTOM_VIDEO_FAST = (1u << 16u),
+			PT_PHANTOM_VIDEO_FAST = (1u << 17u),
 			/// Shader for phantom video textures used in video see-through Augmented Reality.
-			PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST = (1u << 17u),
+			PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST = (1u << 18u),
 			/// Shader for text using a transparent grayscale texture.
-			PT_TEXT_TRANSPARENT_Y = (1u << 18u),
+			PT_TEXT_TRANSPARENT_Y = (1u << 19u),
 			/// Shader for text using an opaque grayscale texture.
-			PT_TEXT_OPAQUE_Y = (1u << 19u),
+			PT_TEXT_OPAQUE_Y = (1u << 20u),
 			/// Shader for color ids.
-			PT_COLOR_ID = (1u << 20u),
+			PT_COLOR_ID = (1u << 21u),
 			/// Shader waiting for more specific information.
-			PT_PENDING = (1u << 21u),
+			PT_PENDING = (1u << 22u),
 			/// The shader is a custom shader.
-			PT_CUSTOM = (1u << 22u)
+			PT_CUSTOM = (1u << 23u)
 		};
 
 	public:

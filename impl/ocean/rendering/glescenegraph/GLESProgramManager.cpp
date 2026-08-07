@@ -22,6 +22,7 @@ const char* GLESProgramManager::partPlatform_ =
 	R"SHADER(#version 300 es
 
 			#define OCEAN_LOWP lowp
+			#define OCEAN_MEDIUMP mediump
 
 			#define OCEAN_TEXTURE_TWO_CHANNELS_FIRST r // the first channel in a 2-channel texture
 			#define OCEAN_TEXTURE_TWO_CHANNELS_SECOND a // the second channel in a 2-channel texture
@@ -32,6 +33,7 @@ const char* GLESProgramManager::partPlatform_ =
 	R"SHADER(#version 330
 
 			#define OCEAN_LOWP // does not exist
+			#define OCEAN_MEDIUMP // does not exist
 
 			#define OCEAN_TEXTURE_TWO_CHANNELS_FIRST r // the first channel in a 2-channel texture
 			#define OCEAN_TEXTURE_TWO_CHANNELS_SECOND g // the second channel in a 2-channel texture
@@ -53,44 +55,94 @@ const char* GLESProgramManager::partOneTextureLookupBGRA32ToRGBA32_ =
 		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) texture(TEXTURE, TEXTURE_COORDINATE).bgra
 	)SHADER";
 
-const char* GLESProgramManager::partOneTextureLookupYUV24ToRGBA32_ =
+const char* GLESProgramManager::partOneTextureLookupLimitedRangeYUV24ToRGBA32_ =
 	R"SHADER(
-		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
-		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
+		// CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.1639404296875, 1.1639404296875, 1.1639404296875, 0.0, -0.3909912109375, 2.0179443359375, 1.595947265625, -0.81298828125, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(16.0 / 255.0, 128.0 / 255.0, 128.0 / 255.0);
 
-		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) vec4(colorTransform * (texture(TEXTURE, TEXTURE_COORDINATE).rgb - colorCorrection), 1.0)
+		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (texture(TEXTURE, TEXTURE_COORDINATE).rgb - colorOffset), 1.0)
 	)SHADER";
 
-const char* GLESProgramManager::partOneTextureLookupYVU24ToRGBA32_ =
+const char* GLESProgramManager::partOneTextureLookupFullRangeYUV24ToRGBA32_ =
 	R"SHADER(
-		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
-		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
+		// CV::FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.0, 1.0, 1.0, 0.0, -0.34414, 1.772, 1.402, -0.71414, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(0.0, 128.0 / 255.0, 128.0 / 255.0);
 
-		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) vec4(colorTransform * (texture(TEXTURE, TEXTURE_COORDINATE).rbg - colorCorrection), 1.0)
+		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (texture(TEXTURE, TEXTURE_COORDINATE).rgb - colorOffset), 1.0)
 	)SHADER";
 
-const char* GLESProgramManager::partTwoTexturesLookupY_UV12ToRGBA32_ =
+const char* GLESProgramManager::partOneTextureLookupLimitedRangeYVU24ToRGBA32_ =
 	R"SHADER(
-		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
-		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
+		// CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.1639404296875, 1.1639404296875, 1.1639404296875, 0.0, -0.3909912109375, 2.0179443359375, 1.595947265625, -0.81298828125, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(16.0 / 255.0, 128.0 / 255.0, 128.0 / 255.0);
 
-		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND) - colorCorrection), 1.0)
+		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (texture(TEXTURE, TEXTURE_COORDINATE).rbg - colorOffset), 1.0)
 	)SHADER";
 
-const char* GLESProgramManager::partTwoTexturesLookupY_VU12ToRGBA32_ =
+const char* GLESProgramManager::partOneTextureLookupFullRangeYVU24ToRGBA32_ =
 	R"SHADER(
-		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
-		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
+		// CV::FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.0, 1.0, 1.0, 0.0, -0.34414, 1.772, 1.402, -0.71414, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(0.0, 128.0 / 255.0, 128.0 / 255.0);
 
-		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorCorrection), 1.0)
+		#define OCEAN_ONE_TEXTURE_LOOKUP_TO_RGBA(TEXTURE, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (texture(TEXTURE, TEXTURE_COORDINATE).rbg - colorOffset), 1.0)
 	)SHADER";
 
-const char* GLESProgramManager::partTwoTexturesLookupY_U_V12ToRGBA32_ =
+const char* GLESProgramManager::partTwoTexturesLookupLimitedRangeY_UV12ToRGBA32_ =
 	R"SHADER(
-		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
-		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
+		// CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.1639404296875, 1.1639404296875, 1.1639404296875, 0.0, -0.3909912109375, 2.0179443359375, 1.595947265625, -0.81298828125, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(16.0 / 255.0, 128.0 / 255.0, 128.0 / 255.0);
 
-		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5 + 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorCorrection), 1.0)
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND) - colorOffset), 1.0)
+	)SHADER";
+
+const char* GLESProgramManager::partTwoTexturesLookupFullRangeY_UV12ToRGBA32_ =
+	R"SHADER(
+		// CV::FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.0, 1.0, 1.0, 0.0, -0.34414, 1.772, 1.402, -0.71414, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(0.0, 128.0 / 255.0, 128.0 / 255.0);
+
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND) - colorOffset), 1.0)
+	)SHADER";
+
+const char* GLESProgramManager::partTwoTexturesLookupLimitedRangeY_VU12ToRGBA32_ =
+	R"SHADER(
+		// CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.1639404296875, 1.1639404296875, 1.1639404296875, 0.0, -0.3909912109375, 2.0179443359375, 1.595947265625, -0.81298828125, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(16.0 / 255.0, 128.0 / 255.0, 128.0 / 255.0);
+
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorOffset), 1.0)
+	)SHADER";
+
+const char* GLESProgramManager::partTwoTexturesLookupFullRangeY_VU12ToRGBA32_ =
+	R"SHADER(
+		// CV::FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.0, 1.0, 1.0, 0.0, -0.34414, 1.772, 1.402, -0.71414, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(0.0, 128.0 / 255.0, 128.0 / 255.0);
+
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorOffset), 1.0)
+	)SHADER";
+
+const char* GLESProgramManager::partTwoTexturesLookupLimitedRangeY_U_V12ToRGBA32_ =
+	R"SHADER(
+		// CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.1639404296875, 1.1639404296875, 1.1639404296875, 0.0, -0.3909912109375, 2.0179443359375, 1.595947265625, -0.81298828125, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(16.0 / 255.0, 128.0 / 255.0, 128.0 / 255.0);
+
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5 + 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorOffset), 1.0)
+	)SHADER";
+
+const char* GLESProgramManager::partTwoTexturesLookupFullRangeY_U_V12ToRGBA32_ =
+	R"SHADER(
+		// CV::FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601(), the matrix is column aligned
+		const OCEAN_MEDIUMP mat3 colorTransformationMatrix = mat3(1.0, 1.0, 1.0, 0.0, -0.34414, 1.772, 1.402, -0.71414, 0.0);
+		const OCEAN_MEDIUMP vec3 colorOffset = vec3(0.0, 128.0 / 255.0, 128.0 / 255.0);
+
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransformationMatrix * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5 + 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorOffset), 1.0)
 	)SHADER";
 
 
@@ -1390,7 +1442,9 @@ void GLESProgramManager::release()
 
 GLESProgramManager::ShaderCodes GLESProgramManager::vertexShaderCodes(const GLESAttribute::ProgramType programType) const
 {
-	switch (uint32_t(programType))
+	// the value range only decides which color matrix the fragment shader uses
+
+	switch (uint32_t(programType & ~uint32_t(GLESAttribute::PT_TEXTURE_LIMITED_RANGE)))
 	{
 		case GLESAttribute::PT_STATIC_COLOR:
 		case GLESAttribute::PT_PHANTOM_VIDEO_FAST | GLESAttribute::PT_TEXTURE_Y:
@@ -1501,7 +1555,10 @@ GLESProgramManager::ShaderCodes GLESProgramManager::vertexShaderCodes(const GLES
 
 GLESProgramManager::ShaderCodes GLESProgramManager::fragmentShaderCodes(const GLESAttribute::ProgramType programType) const
 {
-	switch (uint32_t(programType))
+	// the value range decides which color matrix a YUV shader uses, all other decisions are independent of it
+	const bool limitedRange = (programType & GLESAttribute::PT_TEXTURE_LIMITED_RANGE) != 0u;
+
+	switch (uint32_t(programType & ~uint32_t(GLESAttribute::PT_TEXTURE_LIMITED_RANGE)))
 	{
 		case GLESAttribute::PT_STATIC_COLOR:
 		case GLESAttribute::PT_POINTS:
@@ -1531,23 +1588,23 @@ GLESProgramManager::ShaderCodes GLESProgramManager::fragmentShaderCodes(const GL
 
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YUV24:
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YUV24:
-			return {partPlatform_, partOneTextureLookupYUV24ToRGBA32_, programFragmentShaderOneTexture_};
+			return {partPlatform_, limitedRange ? partOneTextureLookupLimitedRangeYUV24ToRGBA32_ : partOneTextureLookupFullRangeYUV24ToRGBA32_, programFragmentShaderOneTexture_};
 
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_YVU24:
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_YVU24:
-			return {partPlatform_, partOneTextureLookupYVU24ToRGBA32_, programFragmentShaderOneTexture_};
+			return {partPlatform_, limitedRange ? partOneTextureLookupLimitedRangeYVU24ToRGBA32_ : partOneTextureLookupFullRangeYVU24ToRGBA32_, programFragmentShaderOneTexture_};
 
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12:
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_VU12:
-			return {partPlatform_, partTwoTexturesLookupY_VU12ToRGBA32_, programFragmentShaderTwoTextures_};
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_VU12ToRGBA32_ : partTwoTexturesLookupFullRangeY_VU12ToRGBA32_, programFragmentShaderTwoTextures_};
 
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12:
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_U_V12:
-			return {partPlatform_, partTwoTexturesLookupY_U_V12ToRGBA32_, programFragmentShaderTwoTextures_};
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_U_V12ToRGBA32_ : partTwoTexturesLookupFullRangeY_U_V12ToRGBA32_, programFragmentShaderTwoTextures_};
 
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12:
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y_UV12:
-			return {partPlatform_, partTwoTexturesLookupY_UV12ToRGBA32_, programFragmentShaderTwoTextures_};
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_UV12ToRGBA32_ : partTwoTexturesLookupFullRangeY_UV12ToRGBA32_, programFragmentShaderTwoTextures_};
 
 		case GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y | GLESAttribute::PT_MATERIAL:
 		case GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y | GLESAttribute::PT_MATERIAL:
@@ -1587,19 +1644,19 @@ GLESProgramManager::ShaderCodes GLESProgramManager::fragmentShaderCodes(const GL
 			return {partPlatform_, partOneTextureLookupRGBA32ToRGBA32_, programFragmentShaderPhantomVideoFastOneTexture_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST | GLESAttribute::PT_TEXTURE_Y_UV12:
-			return {partPlatform_, partTwoTexturesLookupY_UV12ToRGBA32_, programFragmentShaderPhantomVideoFastTwoTextures_};
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_UV12ToRGBA32_ : partTwoTexturesLookupFullRangeY_UV12ToRGBA32_, programFragmentShaderPhantomVideoFastTwoTextures_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST | GLESAttribute::PT_TEXTURE_Y_VU12:
-			return {partPlatform_, partTwoTexturesLookupY_VU12ToRGBA32_, programFragmentShaderPhantomVideoFastTwoTextures_};
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_VU12ToRGBA32_ : partTwoTexturesLookupFullRangeY_VU12ToRGBA32_, programFragmentShaderPhantomVideoFastTwoTextures_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST | GLESAttribute::PT_TEXTURE_YUV24:
-			return {partPlatform_, partOneTextureLookupYUV24ToRGBA32_, programFragmentShaderPhantomVideoFastOneTexture_};
+			return {partPlatform_, limitedRange ? partOneTextureLookupLimitedRangeYUV24ToRGBA32_ : partOneTextureLookupFullRangeYUV24ToRGBA32_, programFragmentShaderPhantomVideoFastOneTexture_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST | GLESAttribute::PT_TEXTURE_YVU24:
-			return {partPlatform_, partOneTextureLookupYVU24ToRGBA32_, programFragmentShaderPhantomVideoFastOneTexture_};
+			return {partPlatform_, limitedRange ? partOneTextureLookupLimitedRangeYVU24ToRGBA32_ : partOneTextureLookupFullRangeYVU24ToRGBA32_, programFragmentShaderPhantomVideoFastOneTexture_};
 
 		case GLESAttribute::PT_PHANTOM_VIDEO_TEXTURE_COORDINATES_FAST | GLESAttribute::PT_TEXTURE_Y_U_V12:
-			return {partPlatform_, partTwoTexturesLookupY_U_V12ToRGBA32_, programFragmentShaderPhantomVideoFastTwoTextures_};
+			return {partPlatform_, limitedRange ? partTwoTexturesLookupLimitedRangeY_U_V12ToRGBA32_ : partTwoTexturesLookupFullRangeY_U_V12ToRGBA32_, programFragmentShaderPhantomVideoFastTwoTextures_};
 
 		default:
 			break;
