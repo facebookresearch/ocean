@@ -604,7 +604,14 @@ inline constexpr bool oceanFalse()
 
 	#define OCEAN_PLATFORM_BUILD_APPLE
 
-	#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR == 1
+	// tvOS must be tested before the iOS branches: Apple sets TARGET_OS_IPHONE (and
+	// TARGET_IPHONE_SIMULATOR on the tvOS simulator) to 1 there, so without this tvOS would
+	// be classified as iOS and would pull in UIKit APIs that tvOS does not provide.
+	#if defined(TARGET_OS_TV) && TARGET_OS_TV == 1
+
+		#define OCEAN_PLATFORM_BUILD_APPLE_TVOS
+
+	#elif defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR == 1
 
 		#define OCEAN_PLATFORM_BUILD_APPLE_IOS_SIMULATOR
 

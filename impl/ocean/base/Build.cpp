@@ -31,6 +31,10 @@ std::string Build::platformType()
 
 	return std::string("ios");
 
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE_TVOS)
+
+	return std::string("tvos");
+
 #elif defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
 
 	return std::string("osx");
