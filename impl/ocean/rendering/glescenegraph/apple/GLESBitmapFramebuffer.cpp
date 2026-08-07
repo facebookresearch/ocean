@@ -170,12 +170,14 @@ bool GLESBitmapFramebuffer::initializeContext()
 		return false;
 	}
 
-	if (CGLCreateContext(pixelFormatObject, nullptr, &contextObject_) != kCGLNoError)
+	const CGLError contextResult = CGLCreateContext(pixelFormatObject, nullptr, &contextObject_);
+
+	CGLDestroyPixelFormat(pixelFormatObject);
+
+	if (contextResult != kCGLNoError)
 	{
 		return false;
 	}
-
-	CGLDestroyPixelFormat(pixelFormatObject);
 
 	CGLSetCurrentContext(contextObject_);
 
