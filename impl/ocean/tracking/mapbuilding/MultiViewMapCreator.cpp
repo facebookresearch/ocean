@@ -518,7 +518,7 @@ void MultiViewMapCreator::determineObservations(const Index32 currentFrameIndex,
 					unsigned int bestPointCurrent = (unsigned int)(-1);
 
 					const int xBin = currentDistributionArray.horizontalBin(projectedImagePoint.x());
-					const int yBin = currentDistributionArray.horizontalBin(projectedImagePoint.y());
+					const int yBin = currentDistributionArray.verticalBin(projectedImagePoint.y());
 
 					for (int y = std::max(0, yBin - 1); y < std::min(yBin + 2, int(currentDistributionArray.verticalBins())); ++y)
 					{
@@ -858,7 +858,7 @@ IndexPairs32 MultiViewMapCreator::matchMonoFeatures(const AnyCamera& cameraA, co
 		const Vector2& imagePointA = imagePointsA[nPointA];
 
 		const int xBin = distributionArrayB.horizontalBin(imagePointA.x());
-		const int yBin = distributionArrayB.horizontalBin(imagePointA.y());
+		const int yBin = distributionArrayB.verticalBin(imagePointA.y());
 
 		for (int y = std::max(0, yBin - 1); y < std::min(yBin + 2, int(distributionArrayB.verticalBins())); ++y)
 		{
