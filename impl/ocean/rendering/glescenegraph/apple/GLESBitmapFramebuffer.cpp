@@ -59,6 +59,11 @@ void GLESBitmapFramebuffer::setViewport(const unsigned int left, const unsigned 
 
 void GLESBitmapFramebuffer::render()
 {
+	if (textureFrambuffer_.isNull() || !textureFrambuffer_->isValid())
+	{
+		return;
+	}
+
 	textureFrambuffer_.force<GLESTextureFramebuffer>().bindFramebuffer();
 
 	GLESFramebuffer::render();
