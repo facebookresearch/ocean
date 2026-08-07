@@ -21,10 +21,10 @@ Geometry::Geometry() :
 
 Geometry::~Geometry()
 {
-	for (Renderables::const_iterator i = geometryRenderables.begin(); i != geometryRenderables.end(); ++i)
+	for (Renderables::value_type& renderablePair : renderables_)
 	{
-		unregisterThisObjectAsParent(i->first);
-		unregisterThisObjectAsParent(i->second);
+		unregisterThisObjectAsParent(renderablePair.first);
+		unregisterThisObjectAsParent(renderablePair.second);
 	}
 }
 
@@ -32,26 +32,32 @@ void Geometry::addRenderable(const RenderableRef& renderable, const AttributeSet
 {
 	const ScopedLock scopedLock(objectLock);
 
-	ocean_assert(geometryRenderables.find(renderable) == geometryRenderables.end());
+	ocean_assert(!renderables_.contains(renderable));
 
 	registerThisObjectAsParent(renderable);
 	registerThisObjectAsParent(attributes);
-	geometryRenderables[renderable] = attributes;
+
+	renderables_[renderable] = attributes;
 }
 
 unsigned int Geometry::numberRenderables() const
 {
-	return (unsigned int)(geometryRenderables.size());
+	return (unsigned int)(renderables_.size());
 }
 
 RenderableRef Geometry::renderable(const unsigned int index) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	unsigned int n = 0;
-	for (Renderables::const_iterator i = geometryRenderables.begin(); i != geometryRenderables.end(); ++i)
+	unsigned int n = 0u;
+
+	for (const Renderables::value_type& renderablePair : renderables_)
+	{
 		if (n++ == index)
-			return i->first;
+		{
+			return renderablePair.first;
+		}
+	}
 
 	return RenderableRef();
 }
@@ -60,10 +66,15 @@ AttributeSetRef Geometry::attributeSet(const unsigned int index) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	unsigned int n = 0;
-	for (Renderables::const_iterator i = geometryRenderables.begin(); i != geometryRenderables.end(); ++i)
+	unsigned int n = 0u;
+
+	for (const Renderables::value_type& renderablePair : renderables_)
+	{
 		if (n++ == index)
-			return i->second;
+		{
+			return renderablePair.second;
+		}
+	}
 
 	return AttributeSetRef();
 }
@@ -72,13 +83,13 @@ void Geometry::removeRenderable(const RenderableRef& renderable)
 {
 	const ScopedLock scopedLock(objectLock);
 
-	Renderables::iterator i = geometryRenderables.find(renderable);
-	ocean_assert(i != geometryRenderables.end());
+	const Renderables::const_iterator iRenderable = renderables_.find(renderable);
+	ocean_assert(iRenderable != renderables_.cend());
 
-	unregisterThisObjectAsParent(i->first);
-	unregisterThisObjectAsParent(i->second);
+	unregisterThisObjectAsParent(iRenderable->first);
+	unregisterThisObjectAsParent(iRenderable->second);
 
-	geometryRenderables.erase(i);
+	renderables_.erase(iRenderable);
 }
 
 Geometry::ObjectType Geometry::type() const

@@ -105,7 +105,7 @@ class OCEAN_RENDERING_EXPORT Geometry : virtual public Node
 	protected:
 
 		/// Renderables object connected to this geometry.
-		Renderables geometryRenderables;
+		Renderables renderables_;
 };
 
 }

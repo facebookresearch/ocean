@@ -35,9 +35,9 @@ BoundingBox GLESGeometry::boundingBox(const bool /*involveLocalTransformation*/)
 {
 	BoundingBox result;
 
-	for (Renderables::const_iterator i = geometryRenderables.cbegin(); i != geometryRenderables.cend(); ++i)
+	for (const Renderables::value_type& renderablePair : renderables_)
 	{
-		const SmartObjectRef<GLESRenderable> renderable(i->first);
+		const SmartObjectRef<GLESRenderable> renderable(renderablePair.first);
 		ocean_assert(renderable);
 
 		if (renderable->boundingBox().isValid())
@@ -72,19 +72,19 @@ void GLESGeometry::addToTraverser(const GLESFramebuffer& /*framebuffer*/, const 
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (!visible_ || geometryRenderables.empty())
+	if (!visible_ || renderables_.empty())
 	{
 		return;
 	}
 
 	const SquareMatrix3 normalMatrix(camera_T_object.rotationMatrix().inverted().transposed());
 
-	for (Renderables::const_iterator i = geometryRenderables.cbegin(); i != geometryRenderables.cend(); ++i)
+	for (const Renderables::value_type& renderablePair : renderables_)
 	{
-		const SmartObjectRef<GLESRenderable> renderable(i->first);
+		const SmartObjectRef<GLESRenderable> renderable(renderablePair.first);
 		ocean_assert(renderable);
 
-		traverser.addRenderable(i->first, i->second, camera_T_object, normalMatrix, lights);
+		traverser.addRenderable(renderablePair.first, renderablePair.second, camera_T_object, normalMatrix, lights);
 	}
 }
 

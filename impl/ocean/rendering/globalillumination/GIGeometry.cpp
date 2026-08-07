@@ -48,14 +48,14 @@ void GIGeometry::removeRenderable(const RenderableRef& renderable)
 
 BoundingBox GIGeometry::boundingBox(const bool /*involveLocalTransformation*/) const
 {
-	if (geometryRenderables.empty())
+	if (renderables_.empty())
 	{
 		return BoundingBox();
 	}
 
-	if (geometryRenderables.size() == 1)
+	if (renderables_.size() == 1)
 	{
-		const SmartObjectRef<GIRenderable> renderable(geometryRenderables.begin()->first);
+		const SmartObjectRef<GIRenderable> renderable(renderables_.begin()->first);
 		ocean_assert(renderable);
 
 		return renderable->boundingBox();
@@ -63,9 +63,9 @@ BoundingBox GIGeometry::boundingBox(const bool /*involveLocalTransformation*/) c
 
 	BoundingBox result;
 
-	for (Renderables::const_iterator i = geometryRenderables.begin(); i != geometryRenderables.end(); ++i)
+	for (const Renderables::value_type& renderablePair : renderables_)
 	{
-		const SmartObjectRef<GIRenderable> renderable(i->first);
+		const SmartObjectRef<GIRenderable> renderable(renderablePair.first);
 		ocean_assert(renderable);
 
 		result += renderable->boundingBox();
@@ -76,14 +76,14 @@ BoundingBox GIGeometry::boundingBox(const bool /*involveLocalTransformation*/) c
 
 BoundingSphere GIGeometry::boundingSphere(const bool /*involveLocalTransformation*/) const
 {
-	if (geometryRenderables.empty())
+	if (renderables_.empty())
 	{
 		return BoundingSphere();
 	}
 
-	if (geometryRenderables.size() == 1)
+	if (renderables_.size() == 1)
 	{
-		const SmartObjectRef<GIRenderable> renderable(geometryRenderables.begin()->first);
+		const SmartObjectRef<GIRenderable> renderable(renderables_.begin()->first);
 		ocean_assert(renderable);
 
 		return renderable->boundingSphere();
@@ -98,12 +98,12 @@ void GIGeometry::buildTracing(TracingGroup& group, const HomogenousMatrix4& mode
 
 	if (nodeVisible)
 	{
-		for (Renderables::const_iterator i = geometryRenderables.begin(); i != geometryRenderables.end(); ++i)
+		for (const Renderables::value_type& renderablePair : renderables_)
 		{
-			const SmartObjectRef<GIRenderable> renderable(i->first);
+			const SmartObjectRef<GIRenderable> renderable(renderablePair.first);
 			ocean_assert(renderable);
 
-			renderable->buildTracing(group, modelTransform, i->second, lightSources);
+			renderable->buildTracing(group, modelTransform, renderablePair.second, lightSources);
 		}
 	}
 }
