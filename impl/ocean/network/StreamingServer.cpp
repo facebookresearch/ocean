@@ -872,14 +872,16 @@ void StreamingServer::onStop(const TCPServer::ConnectionId tcpConnectionId, cons
 		Connection& streamConnection = iConnection->second;
 
 		ChannelMap::iterator iChannel = channelMap_.find(streamConnection.channelId());
-		ocean_assert(iChannel != channelMap_.end());
 
-		if (iChannel->second.stopStream(streamConnection.channelStreamId()))
+		if (iChannel != channelMap_.end())
 		{
-			Log::info() << name_ << " got a stop request " << iConnection->second.address().readable() << " and will receive an accepting response.";
+			if (iChannel->second.stopStream(streamConnection.channelStreamId()))
+			{
+				Log::info() << name_ << " got a stop request " << iConnection->second.address().readable() << " and will receive an accepting response.";
 
-			tcpServer_.send(tcpConnectionId, createResponse(stopResponseP(), sessionId));
-			return;
+				tcpServer_.send(tcpConnectionId, createResponse(stopResponseP(), sessionId));
+				return;
+			}
 		}
 
 		Log::warning() << name_ << " got a stop request from " << iConnection->second.address().readable() << ", however the server didn't accept.";
