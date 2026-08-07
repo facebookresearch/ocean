@@ -234,11 +234,26 @@ bool GLESTexture2D::defineSecondaryTextureObject(const FrameType& frameType)
 	return true;
 }
 
-bool GLESTexture2D::determineAlignment(const unsigned int planeStrideBytes, unsigned int& rowLength, unsigned int& byteAlignment)
+bool GLESTexture2D::determineAlignment(const Frame& frame, const unsigned int planeIndex, unsigned int& rowLength, unsigned int& byteAlignment)
 {
+	ocean_assert(frame.isValid() && planeIndex < frame.numberPlanes());
+
+	const unsigned int planeStrideBytes = frame.strideBytes(planeIndex);
 	ocean_assert(planeStrideBytes >= 1u);
 
-	rowLength = planeStrideBytes;
+	// GL_UNPACK_ROW_LENGTH counts pixels of the plane rather than bytes, so a padding which is not a whole
+	// number of plane pixels cannot be expressed; rowLength is 0 in that case, which GL reads as "use the width"
+	const unsigned int planeStrideElements = frame.strideElements(planeIndex);
+	const unsigned int planeChannels = frame.planeChannels(planeIndex);
+
+	if (planeChannels != 0u && planeStrideElements % planeChannels == 0u)
+	{
+		rowLength = planeStrideElements / planeChannels;
+	}
+	else
+	{
+		rowLength = 0u;
+	}
 
 	if (planeStrideBytes % 4u == 0u)
 	{
@@ -822,13 +837,29 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 		return false;
 	}
 
-	const Frame* primaryTextureFrame = &frame;
+	// GL_UNPACK_ROW_LENGTH can only express a padding which is a whole number of plane pixels,
+	// so any other padding is removed up front rather than being uploaded skewed
+	Frame continuousFrame;
+	for (unsigned int planeIndex = 0u; planeIndex < frame.numberPlanes(); ++planeIndex)
+	{
+		const unsigned int planeChannels = frame.planeChannels(planeIndex);
+
+		if (planeChannels == 0u || frame.strideElements(planeIndex) % planeChannels != 0u)
+		{
+			continuousFrame = Frame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			break;
+		}
+	}
+
+	const Frame& sourceFrame = continuousFrame.isValid() ? continuousFrame : frame;
+
+	const Frame* primaryTextureFrame = &sourceFrame;
 	bool mayNeedSecondaryTexture = true;
 
-	if (frame.frameType() != frameType_)
+	if (sourceFrame.frameType() != frameType_)
 	{
 		CV::FrameConverter::Options convertOptions;
-		if (frame.pixelFormat() == FrameType::FORMAT_Y10_PACKED || frame.pixelFormat() == FrameType::FORMAT_RGGB10_PACKED)
+		if (sourceFrame.pixelFormat() == FrameType::FORMAT_Y10_PACKED || sourceFrame.pixelFormat() == FrameType::FORMAT_RGGB10_PACKED)
 		{
 			ocean_assert(frameType_.pixelFormat() == FrameType::FORMAT_Y8 || frameType_.pixelFormat() == FrameType::FORMAT_RGB24);
 
@@ -836,7 +867,7 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 			convertOptions = CV::FrameConverter::Options(gamma);
 		}
 
-		if (!CV::FrameConverter::Comfort::convert(frame, frameType_.pixelFormat(), frameType_.pixelOrigin(), conversionFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, convertOptions))
+		if (!CV::FrameConverter::Comfort::convert(sourceFrame, frameType_.pixelFormat(), frameType_.pixelOrigin(), conversionFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, convertOptions))
 		{
 			return false;
 		}
@@ -858,16 +889,20 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 
 	unsigned int rowLength = 0u;
 	unsigned int byteAlignment = 0u;
-	if (!determineAlignment(primaryTextureFrame->strideBytes(0u), rowLength, byteAlignment))
+	if (!determineAlignment(*primaryTextureFrame, 0u, rowLength, byteAlignment))
 	{
 		return false;
 	}
 
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, int(rowLength));
 	glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
 	ocean_assert(GL_NO_ERROR == glGetError());
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, primaryTextureFrame->constdata<void>(0u));
 	ocean_assert(GL_NO_ERROR == glGetError());
+
+	// GL_UNPACK_ROW_LENGTH is global state, so it must not leak into any other upload
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 	if (mayNeedSecondaryTexture && determineSecondaryTextureProperties(frameType_, width, height, format, type))
 	{
@@ -886,16 +921,20 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 			{
 				rowLength = 0u;
 				byteAlignment = 0u;
-				if (!determineAlignment(frame.strideBytes(1u), rowLength, byteAlignment))
+				if (!determineAlignment(sourceFrame, 1u, rowLength, byteAlignment))
 				{
 					return false;
 				}
 
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, int(rowLength));
 				glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
 				ocean_assert(GL_NO_ERROR == glGetError());
 
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, frame.constdata<void>(1u));
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, sourceFrame.constdata<void>(1u));
 				ocean_assert(GL_NO_ERROR == glGetError());
+
+				// GL_UNPACK_ROW_LENGTH is global state, so it must not leak into any other upload
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 				break;
 			}
@@ -917,31 +956,39 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 
 				rowLength = 0u;
 				byteAlignment = 0u;
-				if (!determineAlignment(frame.strideBytes(firstPlaneIndex), rowLength, byteAlignment))
+				if (!determineAlignment(sourceFrame, firstPlaneIndex, rowLength, byteAlignment))
 				{
 					return false;
 				}
 
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, int(rowLength));
 				glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
 				ocean_assert(GL_NO_ERROR == glGetError());
 
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height_2, format, type, frame.constdata<void>(firstPlaneIndex));
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height_2, format, type, sourceFrame.constdata<void>(firstPlaneIndex));
 				ocean_assert(GL_NO_ERROR == glGetError());
+
+				// GL_UNPACK_ROW_LENGTH is global state, so it must not leak into any other upload
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 				rowLength = 0u;
 				byteAlignment = 0u;
-				if (!determineAlignment(frame.strideBytes(secondPlaneIndex), rowLength, byteAlignment))
+				if (!determineAlignment(sourceFrame, secondPlaneIndex, rowLength, byteAlignment))
 				{
 					return false;
 				}
 
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, int(rowLength));
 				glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
 				ocean_assert(GL_NO_ERROR == glGetError());
 
 				const GLint& yOffset = GLint(height_2);
 
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, yOffset, width, height_2, format, type, frame.constdata<void>(secondPlaneIndex));
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, yOffset, width, height_2, format, type, sourceFrame.constdata<void>(secondPlaneIndex));
 				ocean_assert(GL_NO_ERROR == glGetError());
+
+				// GL_UNPACK_ROW_LENGTH is global state, so it must not leak into any other upload
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 				break;
 			}

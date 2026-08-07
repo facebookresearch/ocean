@@ -130,13 +130,14 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTexture2D :
 		bool defineSecondaryTextureObject(const FrameType& frameType);
 
 		/**
-		 * Determines the alignment for a plane.
-		 * @param planeStrideBytes The stride of the plane in bytes, with range [1, infinity)
-		 * @param rowLength The resulting row length, with range [1, infinity)
+		 * Determines the unpack parameters for a plane of a frame.
+		 * @param frame The frame providing the plane, must be valid
+		 * @param planeIndex The index of the plane, with range [0, frame.numberPlanes())
+		 * @param rowLength The resulting row length in plane pixels, as GL_UNPACK_ROW_LENGTH expects, with range [1, infinity)
 		 * @param byteAlignment The resulting byte alignment, either 1, 2, or 4
 		 * @return True, if succeeded
 		 */
-		static bool determineAlignment(const unsigned int planeStrideBytes, unsigned int& rowLength, unsigned int& byteAlignment);
+		static bool determineAlignment(const Frame& frame, const unsigned int planeIndex, unsigned int& rowLength, unsigned int& byteAlignment);
 
 		/**
 		 * Returns whether a second texture is necessary for a given frame type.
