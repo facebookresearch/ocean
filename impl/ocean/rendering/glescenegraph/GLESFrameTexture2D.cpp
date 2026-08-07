@@ -39,8 +39,7 @@ bool GLESFrameTexture2D::setTexture(Frame&& frame)
 		return false;
 	}
 
-	FrameType internalFrameType;
-	if (!determineInternalFrameType(frame.frameType(), internalFrameType))
+	if (textureProperties(frame.pixelFormat()) == nullptr)
 	{
 		return false;
 	}

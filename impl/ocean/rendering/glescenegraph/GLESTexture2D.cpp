@@ -125,23 +125,30 @@ void GLESTexture2D::createMipmap()
 	ocean_assert(GL_NO_ERROR == glGetError());
 }
 
-bool GLESTexture2D::defineTextureObject(const FrameType& frameType)
+bool GLESTexture2D::defineTextureObject(const TextureProperties& properties, const FrameType& frameType)
 {
 	ocean_assert(frameType.isValid());
 
-	return definePrimaryTextureObject(frameType) && defineSecondaryTextureObject(frameType);
+	if (!definePrimaryTextureObject(properties, frameType))
+	{
+		return false;
+	}
+
+	if (properties.needsSecondaryTextureObjects())
+	{
+		return defineSecondaryTextureObject(properties, frameType);
+	}
+
+	return true;
 }
 
-bool GLESTexture2D::definePrimaryTextureObject(const FrameType& frameType)
+bool GLESTexture2D::definePrimaryTextureObject(const TextureProperties& properties, const FrameType& frameType)
 {
 	ocean_assert(frameType.isValid());
 
 	unsigned int width = 0u, height = 0u;
 	GLenum format = 0, type = 0;
-	if (!determinePrimaryTextureProperties(frameType, width, height, format, type))
-	{
-		return false;
-	}
+	properties.primaryTextureProperties(frameType, width, height, format, type);
 
 	if (primaryTextureId_ == 0u)
 	{
@@ -197,18 +204,17 @@ bool GLESTexture2D::definePrimaryTextureObject(const FrameType& frameType)
 	return true;
 }
 
-bool GLESTexture2D::defineSecondaryTextureObject(const FrameType& frameType)
+bool GLESTexture2D::defineSecondaryTextureObject(const TextureProperties& properties, const FrameType& frameType)
 {
 	ocean_assert(frameType.isValid());
+	ocean_assert(properties.needsSecondaryTextureObjects());
 
-	if (!needsSecondaryTextureObjects(frameType))
-	{
-		return true;
-	}
+	unsigned int width = 0u;
+	unsigned int height = 0u;
+	GLenum format = 0;
+	GLenum type = 0;
 
-	unsigned int width = 0u, height = 0u;
-	GLenum format = 0, type = 0;
-	if (!determineSecondaryTextureProperties(frameType, width, height, format, type))
+	if (!properties.secondaryTextureProperties(frameType, width, height, format, type))
 	{
 		return false;
 	}
@@ -241,8 +247,8 @@ bool GLESTexture2D::determineAlignment(const Frame& frame, const unsigned int pl
 	const unsigned int planeStrideBytes = frame.strideBytes(planeIndex);
 	ocean_assert(planeStrideBytes >= 1u);
 
-	// GL_UNPACK_ROW_LENGTH counts pixels of the plane rather than bytes, so a padding which is not a whole
-	// number of plane pixels cannot be expressed; rowLength is 0 in that case, which GL reads as "use the width"
+	// GL_UNPACK_ROW_LENGTH counts pixels of the plane rather than bytes, so a padding which is not a whole number of plane pixels cannot be expressed;
+	// rowLength is 0 in that case, which GL reads as "use the width"
 	const unsigned int planeStrideElements = frame.strideElements(planeIndex);
 	const unsigned int planeChannels = frame.planeChannels(planeIndex);
 
@@ -271,370 +277,179 @@ bool GLESTexture2D::determineAlignment(const Frame& frame, const unsigned int pl
 	return true;
 }
 
-bool GLESTexture2D::needsSecondaryTextureObjects(const FrameType& frameType)
+const GLESTexture2D::TextureProperties* GLESTexture2D::textureProperties(const FrameType::PixelFormat pixelFormat)
 {
-	ocean_assert(frameType.isValid());
+	ocean_assert(pixelFormat != FrameType::FORMAT_UNDEFINED);
 
-	switch (frameType.pixelFormat())
+	static const TexturePropertiesMap texturePropertiesMap = createTexturePropertiesMap();
+
+	TexturePropertiesMap::const_iterator iProperties = texturePropertiesMap.find(pixelFormat);
+
+	if (iProperties != texturePropertiesMap.cend())
 	{
-		case FrameType::FORMAT_BGR24:
-		case FrameType::FORMAT_BGRA32:
-		case FrameType::FORMAT_RGB24:
-		case FrameType::FORMAT_RGB4444:
-		case FrameType::FORMAT_RGB5551:
-		case FrameType::FORMAT_RGB565:
-		case FrameType::FORMAT_RGBA32:
-		case FrameType::FORMAT_RGBA4444:
-		case FrameType::FORMAT_YA16:
-		case FrameType::FORMAT_Y8_LIMITED_RANGE:
-		case FrameType::FORMAT_Y8_FULL_RANGE:
-		case FrameType::FORMAT_Y10_PACKED:
-		case FrameType::FORMAT_RGGB10_PACKED:
-			return false;
-
-		case FrameType::FORMAT_YUV24:
-		case FrameType::FORMAT_YVU24:
-			return false;
-
-		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
-		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
-			return true;
-
-		case FrameType::FORMAT_YUYV16:
-			return false;
-
-		default:
-			break;
+		return &iProperties->second;
 	}
 
-	if (frameType.dataType() == FrameType::DT_SIGNED_FLOAT_32)
+	if (FrameType::dataType(pixelFormat) == FrameType::DT_SIGNED_FLOAT_32)
 	{
-		if (frameType.channels() >= 1u && frameType.channels() <= 4u)
+		iProperties = texturePropertiesMap.find(FrameType::genericPixelFormat<float>(FrameType::channels(pixelFormat)));
+
+		if (iProperties != texturePropertiesMap.cend())
 		{
-			return false;
+			return &iProperties->second;
 		}
 	}
 
-	ocean_assert(false && "Missing implementation!");
-	return false;
+	return nullptr;
 }
 
-bool GLESTexture2D::determineInternalFrameType(const FrameType& frameType, FrameType& internalFrameType)
+GLESTexture2D::TexturePropertiesMap GLESTexture2D::createTexturePropertiesMap()
+{
+#ifdef OCEAN_RENDERING_GLES_USE_ES
+	constexpr GLenum oneChannelFormat = GL_LUMINANCE;
+	constexpr GLenum twoChannelsFormat = GL_LUMINANCE_ALPHA;
+#else
+	constexpr GLenum oneChannelFormat = GL_RED;
+	constexpr GLenum twoChannelsFormat = GL_RG;
+#endif
+
+	TexturePropertiesMap map;
+
+	// pixel formats which can be uploaded as they are, with one texture
+
+	addTextureProperties(map, FrameType::FORMAT_BGR24, TextureProperties(GLESAttribute::PT_TEXTURE_BGRA, GL_RGB, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_BGRA32, TextureProperties(GLESAttribute::PT_TEXTURE_BGRA, GL_RGBA, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_RGB24, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_RGB4444, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4));
+	addTextureProperties(map, FrameType::FORMAT_RGB5551, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_SHORT_5_5_5_1));
+	addTextureProperties(map, FrameType::FORMAT_RGB565, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_SHORT_5_6_5));
+	addTextureProperties(map, FrameType::FORMAT_RGBA32, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_RGBA4444, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4));
+	addTextureProperties(map, FrameType::FORMAT_YA16, TextureProperties(GLESAttribute::PT_UNKNOWN, twoChannelsFormat, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_Y8_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_Y8_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_YUV24, TextureProperties(GLESAttribute::PT_TEXTURE_YUV24, GL_RGB, GL_UNSIGNED_BYTE));
+	addTextureProperties(map, FrameType::FORMAT_YVU24, TextureProperties(GLESAttribute::PT_TEXTURE_YVU24, GL_RGB, GL_UNSIGNED_BYTE));
+
+	addTextureProperties(map, FrameType::genericPixelFormat<float, 1u>(), TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_FLOAT));
+	addTextureProperties(map, FrameType::genericPixelFormat<float, 2u>(), TextureProperties(GLESAttribute::PT_UNKNOWN, twoChannelsFormat, GL_FLOAT));
+	addTextureProperties(map, FrameType::genericPixelFormat<float, 3u>(), TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_FLOAT));
+	addTextureProperties(map, FrameType::genericPixelFormat<float, 4u>(), TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_FLOAT));
+
+	// pixel formats with two planes, the second plane holds both chroma channels
+
+	addTextureProperties(map, FrameType::FORMAT_Y_UV12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_UV12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_UV12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_UV12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_VU12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_VU12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_VU12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_VU12, oneChannelFormat, GL_UNSIGNED_BYTE, twoChannelsFormat, GL_UNSIGNED_BYTE, 2u, 2u, SL_PLANE_1));
+
+	// pixel formats with three planes, both chroma planes are stacked into the secondary texture,
+	// the Y_U_V12 shader is used for Y_V_U12 as well, the source planes are simply swapped
+
+	addTextureProperties(map, FrameType::FORMAT_Y_U_V12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_1_2));
+	addTextureProperties(map, FrameType::FORMAT_Y_U_V12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_1_2));
+	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
+	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
+
+	// pixel formats which need a conversion before they can be uploaded, they take the properties of the pixel format they are converted to
+
+	addConvertedTextureProperties(map, FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8);
+	addConvertedTextureProperties(map, FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24);
+	addConvertedTextureProperties(map, FrameType::FORMAT_YUYV16, FrameType::FORMAT_RGB24);
+
+	return map;
+}
+
+GLESTexture2D::TextureProperties::TextureProperties(const GLESAttribute::ProgramType programType, const GLenum primaryFormat, const GLenum primaryType) :
+	programType_(programType),
+	primaryFormat_(primaryFormat),
+	primaryType_(primaryType)
+{
+	ocean_assert(primaryFormat_ != 0 && primaryType_ != 0);
+}
+
+GLESTexture2D::TextureProperties::TextureProperties(const GLESAttribute::ProgramType programType, const GLenum primaryFormat, const GLenum primaryType, const GLenum secondaryFormat, const GLenum secondaryType, const unsigned int secondaryWidthDivisor, const unsigned int secondaryHeightDivisor, const SecondaryLayout secondaryLayout) :
+	programType_(programType),
+	primaryFormat_(primaryFormat),
+	primaryType_(primaryType),
+	secondaryFormat_(secondaryFormat),
+	secondaryType_(secondaryType),
+	secondaryWidthDivisor_(secondaryWidthDivisor),
+	secondaryHeightDivisor_(secondaryHeightDivisor),
+	secondaryLayout_(secondaryLayout)
+{
+	ocean_assert(programType_ != GLESAttribute::PT_UNKNOWN);
+	ocean_assert(primaryFormat_ != 0 && primaryType_ != 0);
+	ocean_assert(secondaryFormat_ != 0 && secondaryType_ != 0);
+	ocean_assert(secondaryWidthDivisor_ >= 1u && secondaryHeightDivisor_ >= 1u);
+	ocean_assert(secondaryLayout_ != SL_NONE);
+}
+
+void GLESTexture2D::addTextureProperties(TexturePropertiesMap& map, const FrameType::PixelFormat pixelFormat, const TextureProperties& properties)
+{
+	// several pixel format names are aliases of each other, e.g., FORMAT_Y_U_V12_LIMITED_RANGE == FORMAT_Y_U_V12
+	const bool inserted = map.emplace(pixelFormat, properties).second;
+	ocean_assert_and_suppress_unused(inserted, inserted);
+}
+
+void GLESTexture2D::addConvertedTextureProperties(TexturePropertiesMap& map, const FrameType::PixelFormat pixelFormat, const FrameType::PixelFormat internalPixelFormat)
+{
+	const TexturePropertiesMap::const_iterator iInternal = map.find(internalPixelFormat);
+	ocean_assert(iInternal != map.cend());
+
+	// a conversion into a pixel format which needs a conversion itself is not supported
+	ocean_assert(iInternal->second.internalPixelFormat_ == FrameType::FORMAT_UNDEFINED);
+
+	TextureProperties properties = iInternal->second;
+	properties.internalPixelFormat_ = internalPixelFormat;
+
+	addTextureProperties(map, pixelFormat, properties);
+}
+
+FrameType GLESTexture2D::TextureProperties::internalFrameType(const FrameType& frameType) const
 {
 	ocean_assert(frameType.isValid());
 
-	switch (frameType.pixelFormat())
+	if (internalPixelFormat_ == FrameType::FORMAT_UNDEFINED)
 	{
-		case FrameType::FORMAT_BGR24:
-		case FrameType::FORMAT_BGRA32:
-		case FrameType::FORMAT_RGB24:
-		case FrameType::FORMAT_RGB4444:
-		case FrameType::FORMAT_RGB5551:
-		case FrameType::FORMAT_RGB565:
-		case FrameType::FORMAT_RGBA32:
-		case FrameType::FORMAT_RGBA4444:
-		case FrameType::FORMAT_YA16:
-		case FrameType::FORMAT_Y8_LIMITED_RANGE:
-		case FrameType::FORMAT_Y8_FULL_RANGE:
-			internalFrameType = frameType;
-			return true;
-
-		case FrameType::FORMAT_Y10_PACKED:
-			internalFrameType = FrameType(frameType, FrameType::FORMAT_Y8);
-			return true;
-
-		case FrameType::FORMAT_RGGB10_PACKED:
-			internalFrameType = FrameType(frameType, FrameType::FORMAT_RGB24);
-			return true;
-
-		case FrameType::FORMAT_YUV24:
-		case FrameType::FORMAT_YVU24:
-		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
-		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
-			internalFrameType = frameType;
-			return true;
-
-		case FrameType::FORMAT_YUYV16:
-			internalFrameType = FrameType(frameType, FrameType::FORMAT_RGB24);
-			return true;
-
-		default:
-			break;
+		return frameType;
 	}
 
-	if (frameType.dataType() == FrameType::DT_SIGNED_FLOAT_32)
-	{
-		if (frameType.channels() >= 1u && frameType.channels() <= 4u)
-		{
-			internalFrameType = frameType;
-			return true;
-		}
-	}
-
-	ocean_assert(false && "Missing implementation!");
-	return false;
+	return FrameType(frameType, internalPixelFormat_);
 }
 
-bool GLESTexture2D::determinePrimaryTextureProperties(const FrameType& frameType, unsigned int& width, unsigned int& height, GLenum& format, GLenum& type)
+void GLESTexture2D::TextureProperties::primaryTextureProperties(const FrameType& frameType, unsigned int& width, unsigned int& height, GLenum& format, GLenum& type) const
 {
 	ocean_assert(frameType.isValid());
 
-	switch (frameType.pixelFormat())
-	{
-		case FrameType::FORMAT_BGR24:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_BGRA32:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGBA;
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_RGB24:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_RGB4444:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_SHORT_4_4_4_4;
-			return true;
-
-		case FrameType::FORMAT_RGB5551:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_SHORT_5_5_5_1;
-			return true;
-
-		case FrameType::FORMAT_RGB565:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_SHORT_5_6_5;
-			return true;
-
-		case FrameType::FORMAT_RGBA32:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGBA;
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_RGBA4444:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGBA;
-			type = GL_UNSIGNED_SHORT_4_4_4_4;
-			return true;
-
-		case FrameType::FORMAT_YA16:
-			width = frameType.width();
-			height = frameType.height();
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-			format = GL_LUMINANCE_ALPHA;
-#else
-			format = GL_RG;
-#endif
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_Y8_LIMITED_RANGE:
-		case FrameType::FORMAT_Y8_FULL_RANGE:
-			width = frameType.width();
-			height = frameType.height();
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-			format = GL_LUMINANCE;
-#else
-			format = GL_RED;
-#endif
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_YUV24:
-		case FrameType::FORMAT_YVU24:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
-		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
-			width = frameType.width();
-			height = frameType.height();
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-			format = GL_LUMINANCE;
-#else
-			format = GL_RED;
-#endif
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_YUYV16:
-			width = frameType.width();
-			height = frameType.height();
-			format = GL_RGB;
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		default:
-			break;
-	}
-
-	if (frameType.dataType() == FrameType::DT_SIGNED_FLOAT_32)
-	{
-		type =  GL_FLOAT;
-
-		switch (frameType.channels())
-		{
-			case 1u:
-				width = frameType.width();
-				height = frameType.height();
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-				format = GL_LUMINANCE;
-#else
-				format = GL_RED;
-#endif
-				return true;
-
-			case 2u:
-				width = frameType.width();
-				height = frameType.height();
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-				format = GL_LUMINANCE_ALPHA;
-#else
-				format = GL_RG;
-#endif
-				return true;
-
-			case 3u:
-				width = frameType.width();
-				height = frameType.height();
-				format = GL_RGB;
-				return true;
-
-			case 4u:
-				width = frameType.width();
-				height = frameType.height();
-				format = GL_RGBA;
-				return true;
-		}
-	}
-
-	ocean_assert(false && "Pixel format not supported!");
-
-	width = 0u;
-	height = 0u;
-	format = 0;
-	type = 0;
-
-	return false;
+	width = frameType.width();
+	height = frameType.height();
+	format = primaryFormat_;
+	type = primaryType_;
 }
 
-bool GLESTexture2D::determineSecondaryTextureProperties(const FrameType& frameType, unsigned int& width, unsigned int& height, GLenum& format, GLenum& type)
+bool GLESTexture2D::TextureProperties::secondaryTextureProperties(const FrameType& frameType, unsigned int& width, unsigned int& height, GLenum& format, GLenum& type) const
 {
 	ocean_assert(frameType.isValid());
 
-	switch (frameType.pixelFormat())
+	if (!needsSecondaryTextureObjects())
 	{
-		case FrameType::FORMAT_BGR24:
-		case FrameType::FORMAT_BGRA32:
-		case FrameType::FORMAT_RGB24:
-		case FrameType::FORMAT_RGB4444:
-		case FrameType::FORMAT_RGB5551:
-		case FrameType::FORMAT_RGB565:
-		case FrameType::FORMAT_RGBA32:
-		case FrameType::FORMAT_RGBA4444:
-		case FrameType::FORMAT_YA16:
-		case FrameType::FORMAT_Y8_LIMITED_RANGE:
-		case FrameType::FORMAT_Y8_FULL_RANGE:
-			width = 0u;
-			height = 0u;
-			format = 0;
-			type = 0;
-			return false;
+		width = 0u;
+		height = 0u;
+		format = 0;
+		type = 0;
 
-		case FrameType::FORMAT_YUV24:
-		case FrameType::FORMAT_YVU24:
-			width = 0u;
-			height = 0u;
-			format = 0;
-			type = 0;
-			return false;
-
-		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
-			width = frameType.width() / 2u;
-			height = frameType.height() / 2u;
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-			format = GL_LUMINANCE_ALPHA;
-#else
-			format = GL_RG;
-#endif
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
-			width = frameType.width() / 2u;
-			height = frameType.height();
-#ifdef OCEAN_RENDERING_GLES_USE_ES
-			format = GL_LUMINANCE;
-#else
-			format = GL_RED;
-#endif
-			type = GL_UNSIGNED_BYTE;
-			return true;
-
-		case FrameType::FORMAT_YUYV16:
-			width = 0u;
-			height = 0u;
-			format = 0;
-			type = 0;
-			return false;
-
-		default:
-			break;
+		return false;
 	}
 
-	ocean_assert(false && "Missing implementation!");
-	width = 0u;
-	height = 0u;
-	format = 0;
-	type = 0;
-	return false;
+	ocean_assert(secondaryWidthDivisor_ != 0u && secondaryHeightDivisor_ != 0u);
+
+	width = frameType.width() / secondaryWidthDivisor_;
+	height = frameType.height() / secondaryHeightDivisor_;
+	format = secondaryFormat_;
+	type = secondaryType_;
+
+	return true;
 }
 
 bool GLESTexture2D::primaryTextureName(const std::string& names, std::string& name)
@@ -791,17 +606,20 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 {
 	ocean_assert(frame.isValid());
 
-	FrameType internalFrameType;
-	if (!determineInternalFrameType(frame, internalFrameType))
+	const TextureProperties* properties = textureProperties(frame.pixelFormat());
+
+	if (properties == nullptr)
 	{
+		ocean_assert(false && "Missing implementation!");
 		return false;
 	}
 
+	const FrameType internalFrameType = properties->internalFrameType(frame.frameType());
 	ocean_assert(internalFrameType.isValid());
 
 	if (internalFrameType != frameType_)
 	{
-		if (!defineTextureObject(internalFrameType))
+		if (!defineTextureObject(*properties, internalFrameType))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -832,10 +650,7 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 	unsigned int width = 0u;
 	unsigned int height = 0u;
 
-	if (!determinePrimaryTextureProperties(frameType_, width, height, format, type))
-	{
-		return false;
-	}
+	properties->primaryTextureProperties(frameType_, width, height, format, type);
 
 	// GL_UNPACK_ROW_LENGTH can only express a padding which is a whole number of plane pixels,
 	// so any other padding is removed up front rather than being uploaded skewed
@@ -904,7 +719,7 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 	// GL_UNPACK_ROW_LENGTH is global state, so it must not leak into any other upload
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	if (mayNeedSecondaryTexture && determineSecondaryTextureProperties(frameType_, width, height, format, type))
+	if (mayNeedSecondaryTexture && properties->secondaryTextureProperties(frameType_, width, height, format, type))
 	{
 		ocean_assert(secondaryTextureId_ != 0u);
 		ocean_assert(GL_NO_ERROR == glGetError());
@@ -912,12 +727,9 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 		glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
 		ocean_assert(GL_NO_ERROR == glGetError());
 
-		switch (frameType_.pixelFormat())
+		switch (properties->secondaryLayout_)
 		{
-			case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
-			case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-			case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-			case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+			case SL_PLANE_1:
 			{
 				rowLength = 0u;
 				byteAlignment = 0u;
@@ -939,18 +751,11 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 				break;
 			}
 
-			case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-			case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-			case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
-			case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
+			case SL_PLANE_1_2:
+			case SL_PLANE_2_1:
 			{
-				const bool uIsFirstPlane = frameType_.pixelFormat() == FrameType::FORMAT_Y_U_V12_LIMITED_RANGE
-												|| frameType_.pixelFormat() == FrameType::FORMAT_Y_U_V12_FULL_RANGE;
-
-
-				// we use the Y_U_V12 shader also for Y_V_U12, just switching the source planes
-				const unsigned int firstPlaneIndex = uIsFirstPlane ? 1u : 2u;
-				const unsigned int secondPlaneIndex = uIsFirstPlane ? 2u : 1u;
+				const unsigned int firstPlaneIndex = properties->secondaryLayout_ == SL_PLANE_1_2 ? 1u : 2u;
+				const unsigned int secondPlaneIndex = properties->secondaryLayout_ == SL_PLANE_1_2 ? 2u : 1u;
 
 				const GLsizei height_2 = height / 2;
 
@@ -993,7 +798,7 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 				break;
 			}
 
-			default:
+			case SL_NONE:
 				ocean_assert(false && "This should never happen!");
 				return false;
 		}
