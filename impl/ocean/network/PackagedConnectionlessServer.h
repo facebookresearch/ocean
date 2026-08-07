@@ -112,10 +112,12 @@ class OCEAN_NETWORK_EXPORT PackagedConnectionlessServer :
 				inline void setRetireTimestamp(const Timestamp timestamp);
 
 				/**
-				 * Sets the number of packages which are still missing.
-				 * @param packages The number of remaining packages
+				 * Marks one package of this message as received.
+				 * A package which has already been received is ignored, so that a duplicated datagram cannot complete a message with missing payload.
+				 * @param packageIndex The index of the received package, an index outside of the message is ignored
+				 * @return True, if this package had not been received before
 				 */
-				inline void setRemaininigPackages(const unsigned int packages);
+				inline bool setPackageReceived(const unsigned int packageIndex);
 
 				/**
 				 * Assign operator.
@@ -138,6 +140,9 @@ class OCEAN_NETWORK_EXPORT PackagedConnectionlessServer :
 
 				/// The number of packages which are still missing.
 				unsigned int remainingPackages_ = 0u;
+
+				/// The received state of each package of this message.
+				std::vector<uint8_t> receivedPackages_;
 
 				/// The entire buffer of the message.
 				Buffer buffer_;
@@ -244,6 +249,7 @@ class OCEAN_NETWORK_EXPORT PackagedConnectionlessServer :
 inline PackagedConnectionlessServer::MessageData::MessageData(const MessageData& messageData) :
 	retireTimestamp_(messageData.retireTimestamp_),
 	remainingPackages_(messageData.remainingPackages_),
+	receivedPackages_(messageData.receivedPackages_),
 	buffer_(messageData.buffer_)
 {
 	// nothing to do here
@@ -252,6 +258,7 @@ inline PackagedConnectionlessServer::MessageData::MessageData(const MessageData&
 inline PackagedConnectionlessServer::MessageData::MessageData(MessageData&& messageData) noexcept :
 	retireTimestamp_(messageData.retireTimestamp_),
 	remainingPackages_(messageData.remainingPackages_),
+	receivedPackages_(std::move(messageData.receivedPackages_)),
 	buffer_(std::move(messageData.buffer_))
 {
 	messageData.retireTimestamp_.toInvalid();
@@ -261,6 +268,7 @@ inline PackagedConnectionlessServer::MessageData::MessageData(MessageData&& mess
 inline PackagedConnectionlessServer::MessageData::MessageData(const Timestamp retireTimestamp, const size_t size, const unsigned int remainingPackages) :
 	retireTimestamp_(retireTimestamp),
 	remainingPackages_(remainingPackages),
+	receivedPackages_(remainingPackages, 0u),
 	buffer_(size)
 {
 	ocean_assert(buffer_.empty() || remainingPackages_ != 0u);
@@ -296,15 +304,27 @@ inline void PackagedConnectionlessServer::MessageData::setRetireTimestamp(const 
 	retireTimestamp_ = timestamp;
 }
 
-inline void PackagedConnectionlessServer::MessageData::setRemaininigPackages(const unsigned int packages)
+inline bool PackagedConnectionlessServer::MessageData::setPackageReceived(const unsigned int packageIndex)
 {
-	remainingPackages_ = packages;
+	// a peer may announce a different package count for a message which is already in flight, so the index is checked against this message
+	if (size_t(packageIndex) >= receivedPackages_.size() || receivedPackages_[packageIndex] != 0u)
+	{
+		return false;
+	}
+
+	receivedPackages_[packageIndex] = 1u;
+
+	ocean_assert(remainingPackages_ >= 1u);
+	--remainingPackages_;
+
+	return true;
 }
 
 inline PackagedConnectionlessServer::MessageData& PackagedConnectionlessServer::MessageData::operator=(const MessageData& messageData)
 {
 	retireTimestamp_ = messageData.retireTimestamp_;
 	remainingPackages_ = messageData.remainingPackages_;
+	receivedPackages_ = messageData.receivedPackages_;
 	buffer_ = messageData.buffer_;
 
 	return *this;
@@ -316,6 +336,7 @@ inline PackagedConnectionlessServer::MessageData& PackagedConnectionlessServer::
 	{
 		retireTimestamp_ = messageData.retireTimestamp_;
 		remainingPackages_ = messageData.remainingPackages_;
+		receivedPackages_ = std::move(messageData.receivedPackages_);
 		buffer_ = std::move(messageData.buffer_);
 
 		messageData.retireTimestamp_.toInvalid();

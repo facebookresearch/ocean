@@ -112,10 +112,7 @@ bool PackagedConnectionlessServer::onScheduler()
 					memcpy(i->second.buffer() + dataStartPosition, packageBuffer_.data() + packageManagmentHeaderSize(), payloadSize);
 					i->second.setRetireTimestamp(Timestamp(currentTimestamp + maximalMessageTime_));
 
-					ocean_assert(i->second.remainingPackages() >= 1u);
-					i->second.setRemaininigPackages(i->second.remainingPackages() - 1u);
-
-					if (i->second.remainingPackages() == 0u)
+					if (i->second.setPackageReceived(packageIndex) && i->second.remainingPackages() == 0u)
 					{
 						receiveCallback_(i->first.address(), i->first.port(), i->second.buffer(), i->second.size(), i->first.messageId());
 						connectionlessServerMessageMap.erase(i);
