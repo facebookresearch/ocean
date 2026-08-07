@@ -98,7 +98,9 @@ bool GLESView::setAspectRatio(const Scalar aspectRatio)
 
 bool GLESView::setNearDistance(const Scalar distance)
 {
-	if (nearDistance_ >= farDistance_ || nearDistance_ < Numeric::eps())
+	const ScopedLock scopedLock(objectLock);
+
+	if (distance <= Numeric::eps() || distance >= farDistance_)
 	{
 		return false;
 	}
@@ -108,8 +110,6 @@ bool GLESView::setNearDistance(const Scalar distance)
 		return true;
 	}
 
-	const ScopedLock scopedLock(objectLock);
-
 	nearDistance_ = distance;
 	calculateProjectionMatrix();
 
@@ -118,7 +118,9 @@ bool GLESView::setNearDistance(const Scalar distance)
 
 bool GLESView::setFarDistance(const Scalar distance)
 {
-	if (farDistance_ <= nearDistance_)
+	const ScopedLock scopedLock(objectLock);
+
+	if (distance <= nearDistance_)
 	{
 		return false;
 	}
@@ -127,8 +129,6 @@ bool GLESView::setFarDistance(const Scalar distance)
 	{
 		return true;
 	}
-
-	const ScopedLock scopedLock(objectLock);
 
 	farDistance_ = distance;
 	calculateProjectionMatrix();
