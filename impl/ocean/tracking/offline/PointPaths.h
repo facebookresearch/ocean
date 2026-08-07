@@ -288,7 +288,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT PointPaths
 		 * @param lowerFrameIndex The index of the frame defining the lower frame range, with range [0, infinity)
 		 * @param upperFrameIndex The index of the frame defining the upper frame range, with range [lowerFrameIndex, infinity)
 		 * @param frameTrackingConfiguration The resulting tracking configuration for the entire frame
-		 * @param intermediateFrames The number of intermediate frames which will be distributed within the specified frame range to determine the best matching configuration
+		 * @param intermediateFrames The number of intermediate frames which will be distributed within the specified frame range to determine the best matching configuration, with range [1, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded

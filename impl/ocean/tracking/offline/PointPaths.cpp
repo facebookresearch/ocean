@@ -1681,9 +1681,9 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 
 	for (unsigned int n = 0u; n < intermediateFrames; ++n)
 	{
-		const unsigned int frameIndex = lowerFrameIndex + (upperFrameIndex - lowerFrameIndex) * n / (intermediateFrames - 1u);
+		const unsigned int frameIndex = intermediateFrames == 1u ? lowerFrameIndex : lowerFrameIndex + (upperFrameIndex - lowerFrameIndex) * n / (intermediateFrames - 1u);
 		ocean_assert(n != 0u || frameIndex == lowerFrameIndex);
-		ocean_assert(n + 1 != intermediateFrames || frameIndex == upperFrameIndex);
+		ocean_assert(intermediateFrames == 1u || n + 1 != intermediateFrames || frameIndex == upperFrameIndex);
 
 		FrameRef frameRef = frameProviderInterface.synchronFrameRequest(frameIndex, 10.0, abort);
 		if (frameRef.isNull())
