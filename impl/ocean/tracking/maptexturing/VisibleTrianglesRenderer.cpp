@@ -195,7 +195,6 @@ bool VisibleTrianglesRenderer::render(const Rendering::Engine& engine, const Ren
 		vertexSet_ = engine.factory().createVertexSet();
 
 		points_ = engine.factory().createPoints();
-		points_->setIndices((unsigned int)(numberIds));
 	}
 
 	ocean_assert(shaderProgramVisibleTriangles_ && shaderProgramOccludedTriangles_ && textureFramebuffer_);
@@ -218,6 +217,8 @@ bool VisibleTrianglesRenderer::render(const Rendering::Engine& engine, const Ren
 		ocean_assert(vertexSet_ && points_);
 
 		vertexSet_.force<Rendering::GLESceneGraph::GLESVertexSet>().setAttribute<uint32_t>("aId", idFrame_.data<uint32_t>(), numberIds);
+
+		points_->setIndices((unsigned int)(numberIds));
 
 		glViewport(0, 0, framebufferWidth, framebufferHeight);
 		ocean_assert(GL_NO_ERROR == glGetError());
