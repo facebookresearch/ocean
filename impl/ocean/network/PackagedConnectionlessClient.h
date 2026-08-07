@@ -23,6 +23,15 @@ namespace Network
 
 /**
  * This class is the base class for all packaged connectionless clients.
+ * The client splits a message into as many datagrams as needed, each carrying the 20 byte package management header documented at PackagedSocket::packageManagmentHeaderSize():
+ * @code
+ * send(data, 3000), with a maximal package size of 1280 bytes and therefore 1260 payload bytes per datagram:
+ *
+ *   datagram 0   [ messageId=7 | messageSize=3000 | dataStartPosition=0    | packageIndex=0 | totalPackages=3 ]  1260 payload bytes
+ *   datagram 1   [ messageId=7 | messageSize=3000 | dataStartPosition=1260 | packageIndex=1 | totalPackages=3 ]  1260 payload bytes
+ *   datagram 2   [ messageId=7 | messageSize=3000 | dataStartPosition=2520 | packageIndex=2 | totalPackages=3 ]   480 payload bytes
+ * @endcode
+ * The message id is incremented per message, so datagrams of different messages can be interleaved on the wire.
  * @ingroup network
  */
 class OCEAN_NETWORK_EXPORT PackagedConnectionlessClient :

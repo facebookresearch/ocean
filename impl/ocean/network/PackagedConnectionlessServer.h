@@ -23,6 +23,10 @@ namespace Network
 
 /**
  * This class is the base class for all package connectionless server.
+ * The server reassembles the datagrams a PackagedConnectionlessClient produced, see PackagedSocket::packageManagmentHeaderSize() for the layout.
+ * A message is identified by (sender address, sender port, message id), and its buffer is sized from the first datagram that arrives.
+ * The receive callback is invoked once every fragment has been seen, an incomplete message is dropped after maximalMessageTime_ seconds.
+ * Because UDP neither guarantees order nor delivery, a message may never complete, and datagrams of different messages may interleave.
  * @ingroup network
  */
 class OCEAN_NETWORK_EXPORT PackagedConnectionlessServer :

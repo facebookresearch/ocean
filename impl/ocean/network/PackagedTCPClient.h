@@ -20,6 +20,8 @@ namespace Network
 
 /**
  * This class implements a TCP client with internal package handling.
+ * Each message is prefixed with a PackagedSocket::PackageHeader, so that the receiver can tell messages apart again after TCP has split or merged them.
+ * @see PackagedSocket::PackageHeader for the layout.
  * @ingroup network
  */
 class OCEAN_NETWORK_EXPORT PackagedTCPClient :

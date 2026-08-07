@@ -69,6 +69,23 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 
 				/**
 				 * Encodes a maintenance data to one combined package.
+				 * The resulting buffer holds the optional header followed by the payload, all fields in host byte order:
+				 * @code
+				 * |<- reservedHeaderSize ->|<-------------------------------------------------- payload -------------------------------------------------->|
+				 * +------------------------+-----------+------------+-----------------+--------+-----------+----------------+------------+-----------------+
+				 * | header, left untouched | timestamp | nameLength | name            | id     | tagLength | tag            | bufferSize | buffer          |
+				 * |                        | 8 byte    | 8 byte     | nameLength byte | 8 byte | 8 byte    | tagLength byte | 8 byte     | bufferSize byte |
+				 * +------------------------+-----------+------------+-----------------+--------+-----------+----------------+------------+-----------------+
+				 * @endcode
+				 * `timestamp` is the timestamp of the maintenance data, a Timestamp and therefore a double.
+				 * `name` is the readable name of the maintenance manager the data originated from, e.g. the application name.
+				 * `id` is the random 64 bit id of that manager, which distinguishes two managers that happen to share a name.
+				 * `tag` describes what the payload is and is what a receiver dispatches on.
+				 * `buffer` is the maintenance payload itself.
+				 * `nameLength`, `tagLength` and `bufferSize` each give the byte count of the variable length field which follows it.
+				 * None of the strings is null terminated on the wire.
+				 * The first `reservedHeaderSize` bytes are left untouched for a transport to write its own header into.
+				 * This is how MaintenanceTCPConnector places its length prefix without copying the payload again.
 				 * @param name The name of the maintenance manager providing the data
 				 * @param id The id of the maintenance manager providing the data
 				 * @param tag The tag of the maintenance data

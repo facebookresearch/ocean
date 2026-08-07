@@ -25,6 +25,10 @@ namespace Network
 
 /**
  * This class is the base class for all packaged sockets.
+ * Packaged sockets add a framing layer on top of the raw socket, so that a message survives being split or merged in transit.
+ * Two independent and mutually incompatible formats exist, both defined here:
+ * - the stream oriented PackageHeader, used by PackagedTCPClient and PackagedTCPServer
+ * - the datagram oriented package management header, used by PackagedConnectionlessClient and PackagedConnectionlessServer, see packageManagmentHeaderSize()
  * @ingroup network
  */
 class OCEAN_NETWORK_EXPORT PackagedSocket : virtual public Socket
@@ -133,7 +137,26 @@ class OCEAN_NETWORK_EXPORT PackagedSocket : virtual public Socket
 		using MemoryBlockQueue = std::queue<MemoryBlock>;
 
 		/**
-		 * Definition of a package header.
+		 * This class implements the header of a packaged stream message.
+		 * The header is written as a raw struct in host byte order, directly followed by the payload:
+		 * @code
+		 * |<---------------------- 24 byte header ----------------------->|< payload >|
+		 * +-------------------+-----------------+-------------------------+-----------+
+		 * | tag               | version         | size                    | payload   |
+		 * | uint64_t          | uint64_t        | uint64_t                | size byte |
+		 * | host byte order   | host byte order | host byte order         |           |
+		 * | always "_OCNPKG_" | always 0        | number of payload bytes |           |
+		 * +-------------------+-----------------+-------------------------+-----------+
+		 * @endcode
+		 * `tag` is the constant "_OCNPKG_" and is identical in every package.
+		 * The receiver only accepts a header carrying it.
+		 * This is how a desynchronized stream, or a peer which is not speaking this protocol, is detected instead of arbitrary bytes being interpreted as a length.
+		 * `version` is the version of this format and is currently always 0.
+		 * isValid() rejects any other value, so a future change of the layout is detected by an old receiver rather than silently misparsed.
+		 * `size` is the number of payload bytes which follow the header, with range [1, maximalPackagedMessageSize()], and does not include the 24 header bytes.
+		 * The payload of one message is never split by the sender.
+		 * The receiver still has to reassemble it, as TCP may deliver the header and the payload across any number of segments.
+		 * Beware: the three fields are in host byte order, so this format does not survive between hosts of different endianness.
 		 */
 		class PackageHeader
 		{
@@ -199,6 +222,25 @@ class OCEAN_NETWORK_EXPORT PackagedSocket : virtual public Socket
 
 		/**
 		 * Returns the size of the package management header in bytes.
+		 * Unlike the stream oriented PackageHeader, this header describes one fragment of a message which the sender has split across several datagrams:
+		 * @code
+		 * |<-------------------- 20 byte package management header -------------------->|<-------- payload --------->|
+		 * +------------+-------------+-------------------+--------------+---------------+----------------------------+
+		 * | messageId  | messageSize | dataStartPosition | packageIndex | totalPackages | payload                    |
+		 * | uint32_t   | uint32_t    | uint32_t          | uint32_t     | uint32_t      | at most maximalPackageSize |
+		 * | big endian | big endian  | big endian        | big endian   | big endian    | minus 20 byte              |
+		 * +------------+-------------+-------------------+--------------+---------------+----------------------------+
+		 * @endcode
+		 * `messageId` is a counter which the sender increments for every message it sends, and it is what ties the fragments of one message together.
+		 * It is unique per sender only, so a message is identified by (sender address, sender port, `messageId`).
+		 * `messageSize` is the size of the whole message rather than of the fragment carrying it.
+		 * Every fragment repeats it, which lets the receiver allocate the reassembly buffer from whichever fragment happens to arrive first.
+		 * `dataStartPosition` is the byte offset of this fragment's payload within the whole message.
+		 * It allows the receiver to place a fragment without knowing which ones came before it.
+		 * `packageIndex` is the index of this fragment, with range [0, `totalPackages`).
+		 * It identifies the fragment itself, which is what allows a duplicate to be recognized as one.
+		 * `totalPackages` is the number of fragments the message was split into, and the message is complete once every index has been seen.
+		 * The last three fields are what makes the format order independent, as UDP may deliver fragments out of order, duplicated, or not at all.
 		 * @return The header's size in bytes
 		 */
 		static constexpr size_t packageManagmentHeaderSize();

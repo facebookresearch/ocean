@@ -31,6 +31,19 @@ namespace Network
  * The sender extracts maintenance data from the local maintenance manager and sends this data to the remote connector (configured as receiver).<br>
  * The receiver receives maintenance data from a remote connector (configured as sender) and places this data into the local maintenance manager.<br>
  * Beware: The maintenance connector must be released explicitly before the program terminates.<br>
+ * This connector does not use the PackagedSocket framing, it defines its own length prefix on top of a plain TCP stream:
+ * @code
+ * |< 8 byte prefix >|<------------------------- payload -------------------------->|
+ * +-----------------+--------------------------------------------------------------+
+ * | totalSize       | payload, as produced by Maintenance::Connector::encodeData() |
+ * | uint64_t        | totalSize minus 8 byte                                       |
+ * | host byte order |                                                              |
+ * +-----------------+--------------------------------------------------------------+
+ * @endcode
+ * `totalSize` is the length of the entire message including the 8 byte prefix itself, so it is always larger than 8.
+ * Unlike PackagedSocket::PackageHeader there is no tag and no version, so a receiver cannot tell a desynchronized stream from a valid length and has to trust whatever arrives.
+ * The receiver buffers whatever TCP delivers and only hands a message on once that many bytes have accumulated.
+ * This is what allows a message to span several segments.
  * @see configurateAsSender(), configurateAsReceiver(), release(), MaintenanceUDPConnector.
  * @ingroup network
  */
