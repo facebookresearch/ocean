@@ -60,7 +60,7 @@ RGBAColor View::backgroundColor() const
 
 BackgroundRef View::background() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (backgrounds_.empty())
 	{
@@ -104,7 +104,7 @@ bool View::setFarDistance(const Scalar distance)
 {
 	ocean_assert(distance > 0);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	try
 	{
@@ -125,7 +125,7 @@ bool View::setNearFarDistance(const Scalar nearDistance, const Scalar farDistanc
 {
 	ocean_assert_and_suppress_unused(nearDistance > 0 && farDistance > 0 && nearDistance < farDistance, nearDistance);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	try
 	{
@@ -159,7 +159,7 @@ void View::addBackground(const BackgroundRef& background)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	registerThisObjectAsParent(background);
 	backgrounds_.push_back(background);
@@ -181,7 +181,7 @@ void View::removeBackground(const BackgroundRef& background)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (Backgrounds::iterator i = backgrounds_.begin(); i != backgrounds_.end(); ++i)
 	{

@@ -48,7 +48,7 @@ Scalar GLESSpotLight::spotExponent() const
 
 void GLESSpotLight::setDirection(const Vector3& direction)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(direction.isUnit(Numeric::weakEps()));
 	direction_ = direction;
@@ -61,7 +61,7 @@ bool GLESSpotLight::setConeAngle(const Scalar angle)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	coneAngle_ = angle;
 
 	return true;
@@ -74,7 +74,7 @@ bool GLESSpotLight::setSpotExponent(const Scalar exponent)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	spotExponent_ = exponent;
 
 	return true;
@@ -88,7 +88,7 @@ void GLESSpotLight::bindLight(GLESShaderProgram& shaderProgram, const Homogenous
 	ocean_assert(!normalMatrix.isSingular());
 	ocean_assert(index < 8u);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	GLESLightSource::bindLight(shaderProgram, camera_T_model, camera_T_world, normalMatrix, index); // The bind light function of the point light object is not used
 

@@ -31,28 +31,28 @@ GLESAbsoluteTransform::~GLESAbsoluteTransform()
 
 GLESAbsoluteTransform::TransformationType GLESAbsoluteTransform::transformationType() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return transformationType_;
 }
 
 Vector2 GLESAbsoluteTransform::headUpRelativePosition() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return headUpPosition_;
 }
 
 HomogenousMatrix4 GLESAbsoluteTransform::transformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return absolute_T_children_;
 }
 
 bool GLESAbsoluteTransform::setTransformationType(const TransformationType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	switch (type)
 	{
@@ -76,7 +76,7 @@ bool GLESAbsoluteTransform::setHeadUpRelativePosition(const Vector2& position)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	headUpPosition_ = position;
 
@@ -87,14 +87,14 @@ void GLESAbsoluteTransform::setTransformation(const HomogenousMatrix4& absolute_
 {
 	ocean_assert(absolute_T_children.isValid());
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	absolute_T_children_ = absolute_T_children;
 }
 
 void GLESAbsoluteTransform::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_parent, const Lights& lights, GLESTraverser& traverser) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!visible_ || nodes_.empty())
 	{

@@ -57,7 +57,7 @@ BoundingSphere Node::boundingSphere(const bool involveLocalTransformation) const
 
 HomogenousMatrix4 Node::worldTransformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const ObjectRefSet parents(parentNodes());
 
@@ -87,7 +87,7 @@ HomogenousMatrix4 Node::worldTransformation() const
 
 HomogenousMatrices4 Node::worldTransformations() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const ObjectRefSet parentObjects(parentNodes());
 

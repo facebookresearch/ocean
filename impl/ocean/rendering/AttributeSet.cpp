@@ -30,7 +30,7 @@ AttributeSet::~AttributeSet()
 
 AttributeRef AttributeSet::attribute(const unsigned int index) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (index >= attributes_.size())
 	{
@@ -53,7 +53,7 @@ AttributeRef AttributeSet::attribute(const unsigned int index) const
 
 AttributeRef AttributeSet::attribute(const ObjectType attributeType) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (const AttributeRef& attribute : attributes_)
 	{
@@ -70,7 +70,7 @@ AttributeRef AttributeSet::attribute(const ObjectType attributeType) const
 
 bool AttributeSet::hasAttribute(const ObjectType attributeType) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (const AttributeRef& attribute : attributes_)
 	{
@@ -87,7 +87,7 @@ bool AttributeSet::hasAttribute(const ObjectType attributeType) const
 
 unsigned int AttributeSet::numberAttributes() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return (unsigned int)(attributes_.size());
 }
@@ -99,7 +99,7 @@ void AttributeSet::addAttribute(const AttributeRef& attribute)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(!attributes_.contains(attribute));
 	ocean_assert(AttributeSet::attribute(attribute->type()).isNull());
@@ -121,7 +121,7 @@ void AttributeSet::addAttribute(const AttributeRef& attribute)
 
 void AttributeSet::removeAttribute(const AttributeRef& attribute)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!attributes_.contains(attribute))
 	{
@@ -134,7 +134,7 @@ void AttributeSet::removeAttribute(const AttributeRef& attribute)
 
 bool AttributeSet::removeAttribute(const ObjectType attributeType)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (Attributes::const_iterator iAttribute = attributes_.cbegin(); iAttribute != attributes_.cend(); ++iAttribute)
 	{

@@ -33,28 +33,28 @@ GLESLineStrips::~GLESLineStrips()
 
 VertexIndexGroups GLESLineStrips::strips() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return strips_;
 }
 
 unsigned int GLESLineStrips::numberStrips() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return (unsigned int)(strips_.size());
 }
 
 Scalar GLESLineStrips::lineWidth() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return lineWidth_;
 }
 
 void GLESLineStrips::setStrips(const VertexIndexGroups& strips)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 #ifdef OCEAN_DEBUG
 	for (const Indices32& strip : strips_)
@@ -125,7 +125,7 @@ void GLESLineStrips::setLineWidth(const Scalar width)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lineWidth_ = width;
 }

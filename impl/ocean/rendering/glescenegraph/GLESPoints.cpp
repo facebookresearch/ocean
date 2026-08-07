@@ -32,14 +32,14 @@ GLESPoints::~GLESPoints()
 
 VertexIndices GLESPoints::indices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return explicitPointIndices_;
 }
 
 unsigned int GLESPoints::numberIndices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(explicitPointIndices_.empty() || numberImplicitPoints_ == 0u);
 
@@ -53,14 +53,14 @@ unsigned int GLESPoints::numberIndices() const
 
 Scalar GLESPoints::pointSize() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return pointSize_;
 }
 
 void GLESPoints::setIndices(const VertexIndices& indices)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (indices.empty())
 	{
@@ -101,7 +101,7 @@ void GLESPoints::setIndices(const VertexIndices& indices)
 
 void GLESPoints::setIndices(const unsigned int numberImplicitPoints)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	release();
 
@@ -114,7 +114,7 @@ void GLESPoints::setPointSize(const Scalar pointSize)
 {
 	ocean_assert(pointSize >= 1);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	pointSize_ = pointSize;
 }

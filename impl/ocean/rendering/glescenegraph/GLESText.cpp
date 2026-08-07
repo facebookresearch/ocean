@@ -122,14 +122,14 @@ GLESText::~GLESText()
 
 std::string GLESText::text() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return text_;
 }
 
 Vector2 GLESText::size() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(resultingSize_.x() >= 0 && resultingSize_.y() >= 0);
 
@@ -161,7 +161,7 @@ Vector2 GLESText::size() const
 
 std::string GLESText::fontFamily(std::string* styleName) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (styleName != nullptr)
 	{
@@ -173,35 +173,35 @@ std::string GLESText::fontFamily(std::string* styleName) const
 
 MaterialRef GLESText::backgroundMaterial() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return backgroundMaterial_;
 }
 
 GLESText::AlignmentMode GLESText::alignmentMode() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return alignmentMode_;
 }
 
 GLESText::HorizontalAnchor GLESText::horizontalAnchor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return horizontalAnchor_;
 }
 
 GLESText::VerticalAnchor GLESText::verticalAnchor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return verticalAnchor_;
 }
 
 void GLESText::setText(const std::string& text)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (text_ != text)
 	{
@@ -224,7 +224,7 @@ bool GLESText::setSize(const Scalar fixedWidth, const Scalar fixedHeight, const 
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (fixedWidthHeight_ != Vector2(fixedWidth, fixedHeight))
 	{
@@ -243,7 +243,7 @@ bool GLESText::setSize(const Scalar fixedWidth, const Scalar fixedHeight, const 
 
 void GLESText::setFont(const std::string& fontFamily, const std::string& styleName)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (fontFamily_ != fontFamily || styleName_ != styleName)
 	{
@@ -255,7 +255,7 @@ void GLESText::setFont(const std::string& fontFamily, const std::string& styleNa
 
 void GLESText::setBackgroundMaterial(const MaterialRef& material)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const float oldTransparency = backgroundMaterial_ ? backgroundMaterial_->transparency() : 0.0f;
 	const float newTransparency = material ? material->transparency() : 0.0f;
@@ -270,7 +270,7 @@ void GLESText::setBackgroundMaterial(const MaterialRef& material)
 
 void GLESText::setAlignmentMode(const AlignmentMode alignmentMode)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (alignmentMode_ != alignmentMode)
 	{
@@ -281,7 +281,7 @@ void GLESText::setAlignmentMode(const AlignmentMode alignmentMode)
 
 void GLESText::setHorizontalAnchor(const HorizontalAnchor horizontalAnchor)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (horizontalAnchor_ != horizontalAnchor)
 	{
@@ -292,7 +292,7 @@ void GLESText::setHorizontalAnchor(const HorizontalAnchor horizontalAnchor)
 
 void GLESText::setVerticalAnchor(const VerticalAnchor verticalAnchor)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (verticalAnchor_ != verticalAnchor)
 	{
@@ -303,7 +303,7 @@ void GLESText::setVerticalAnchor(const VerticalAnchor verticalAnchor)
 
 void GLESText::setGeometryLookupTable(const LookupCorner2<Vector3>& lookupTable)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (lookupTable_ != lookupTable)
 	{
@@ -347,7 +347,7 @@ Strings GLESText::availableStyleNames(const std::string& familyName) const
 
 void GLESText::render(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const HomogenousMatrix4& camera_T_world, const SquareMatrix3& normalMatrix, GLESAttributeSet& attributeSet, const Lights& lights)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (needsRebuild_)
 	{
@@ -411,7 +411,7 @@ GLESText::ObjectType GLESText::type() const
 
 std::string GLESText::descriptiveInformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	std::string result = Object::descriptiveInformation();
 

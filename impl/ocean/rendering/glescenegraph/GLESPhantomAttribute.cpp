@@ -37,7 +37,7 @@ GLESPhantomAttribute::~GLESPhantomAttribute()
 
 void GLESPhantomAttribute::bindAttribute(const GLESFramebuffer& /*framebuffer*/, GLESShaderProgram& shaderProgram)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(GL_NO_ERROR == glGetError());
 

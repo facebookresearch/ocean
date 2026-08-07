@@ -106,7 +106,7 @@ void Framebuffer::addScene(const SceneRef& scene)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 #ifdef OCEAN_DEBUG
 
@@ -128,7 +128,7 @@ void Framebuffer::removeScene(const SceneRef& scene)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (Scenes::iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
 	{
@@ -144,7 +144,7 @@ void Framebuffer::removeScene(const SceneRef& scene)
 
 void Framebuffer::clearScenes()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (Scenes::const_iterator i = framebufferScenes.begin(); i != framebufferScenes.end(); ++i)
 	{

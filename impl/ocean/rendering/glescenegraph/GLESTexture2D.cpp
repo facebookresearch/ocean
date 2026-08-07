@@ -48,21 +48,21 @@ GLESTexture2D::~GLESTexture2D()
 
 GLESTexture2D::WrapType GLESTexture2D::wrapTypeS() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return wrapTypeS_;
 }
 
 GLESTexture2D::WrapType GLESTexture2D::wrapTypeT() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return wrapTypeT_;
 }
 
 bool GLESTexture2D::setWrapTypeS(const WrapType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	wrapTypeS_ = type;
 	return true;
@@ -70,7 +70,7 @@ bool GLESTexture2D::setWrapTypeS(const WrapType type)
 
 bool GLESTexture2D::setWrapTypeT(const WrapType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	wrapTypeT_ = type;
 	return true;
@@ -78,7 +78,7 @@ bool GLESTexture2D::setWrapTypeT(const WrapType type)
 
 std::string GLESTexture2D::textureName() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return textureName_;
 }
@@ -90,7 +90,7 @@ bool GLESTexture2D::setTextureName(const std::string& name)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	textureName_ = name;
 
@@ -511,7 +511,7 @@ unsigned int GLESTexture2D::bindTexture(GLESShaderProgram& shaderProgram, const 
 {
 	ocean_assert(GL_NO_ERROR == glGetError());
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (primaryTextureId_ == 0u)
 	{

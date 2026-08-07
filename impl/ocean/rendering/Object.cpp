@@ -58,11 +58,11 @@ ObjectRefs Object::parentObjects() const
 	ObjectIdMap objectParentsCopy;
 
 	{
-		const ScopedLock scopedLock(objectLock);
+		const ScopedLock scopedLock(objectLock_);
 		objectParentsCopy = objectParents_;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ObjectRefs parentObjects;
 	parentObjects.reserve(objectParentsCopy.size());
@@ -85,7 +85,7 @@ ObjectRefSet Object::parentNodes() const
 	ObjectIdMap objectParentsCopy;
 
 	{
-		const ScopedLock scopedLock(objectLock);
+		const ScopedLock scopedLock(objectLock_);
 		objectParentsCopy = objectParents_;
 	}
 
@@ -116,7 +116,7 @@ ObjectRefSet Object::parentNodes() const
 
 std::string Object::descriptiveInformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (objectName_.empty())
 	{

@@ -37,7 +37,7 @@ bool Scene::useHeadlight() const
 
 void Scene::setUseHeadlight(const bool state)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	useViewHeadlight_ = state;
 }

@@ -42,7 +42,7 @@ Vector3 GLESPointLight::attenuation() const
 
 void GLESPointLight::setPosition(const Vector3& position)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	position_ = position;
 }
@@ -54,7 +54,7 @@ bool GLESPointLight::setAttenuation(const Vector3& factors)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	attenuationFactors_ = factors;
 	return true;
@@ -68,7 +68,7 @@ void GLESPointLight::bindLight(GLESShaderProgram& shaderProgram, const Homogenou
 	ocean_assert(!normalMatrix.isSingular());
 	ocean_assert(index < 8u);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	GLESLightSource::bindLight(shaderProgram, camera_T_model, camera_T_world, normalMatrix, index);
 

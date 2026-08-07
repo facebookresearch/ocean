@@ -85,7 +85,7 @@ bool GLESView::setAspectRatio(const Scalar aspectRatio)
 		return true;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	aspectRatio_ = aspectRatio;
 	calculateProjectionMatrix();
@@ -95,7 +95,7 @@ bool GLESView::setAspectRatio(const Scalar aspectRatio)
 
 bool GLESView::setNearDistance(const Scalar distance)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (distance <= Numeric::eps() || distance >= farDistance_)
 	{
@@ -115,7 +115,7 @@ bool GLESView::setNearDistance(const Scalar distance)
 
 bool GLESView::setFarDistance(const Scalar distance)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (distance <= nearDistance_)
 	{
@@ -140,7 +140,7 @@ bool GLESView::setNearFarDistance(const Scalar nearDistance, const Scalar farDis
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	nearDistance_ = nearDistance;
 	farDistance_  = farDistance;
@@ -154,7 +154,7 @@ void GLESView::setTransformation(const HomogenousMatrix4& transformation)
 	ocean_assert(transformation.isValid());
 	ocean_assert(transformation.rotationMatrix().isOrthonormal(Numeric::weakEps()));
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	world_T_view_ = transformation;
 }
@@ -166,7 +166,7 @@ bool GLESView::setBackgroundColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	backgroundColor_ = color;
 	return true;
@@ -174,14 +174,14 @@ bool GLESView::setBackgroundColor(const RGBAColor& color)
 
 void GLESView::setUseHeadlight(const bool state)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	useHeadlight_ = state;
 }
 
 bool GLESView::setPhantomMode(const PhantomAttribute::PhantomMode mode)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	switch (mode)
 	{

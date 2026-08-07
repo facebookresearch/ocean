@@ -49,7 +49,7 @@ Scalar GISpotLight::spotExponent() const
 
 void GISpotLight::setDirection(const Vector3& direction)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(Numeric::isEqual(direction.length(), 1));
 	lightDirection = direction;
@@ -62,7 +62,7 @@ bool GISpotLight::setConeAngle(const Scalar angle)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	lightConeAngle = angle;
 	lightConeAngleCos = Numeric::cos(lightConeAngle);
 
@@ -76,7 +76,7 @@ bool GISpotLight::setSpotExponent(const Scalar exponent)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	lightSpotExponent = exponent;
 
 	return true;

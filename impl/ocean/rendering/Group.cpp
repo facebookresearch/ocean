@@ -31,7 +31,7 @@ void Group::addChild(const NodeRef& node)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 #ifdef OCEAN_DEBUG
 
@@ -53,7 +53,7 @@ void Group::registerLight(const LightSourceRef& light)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(!lights_.contains(light));
 
@@ -67,7 +67,7 @@ unsigned int Group::numberChildren() const
 
 NodeRef Group::child(const unsigned int index) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (index >= nodes_.size())
 	{
@@ -84,7 +84,7 @@ void Group::removeChild(const NodeRef& node)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const Nodes::const_iterator iNode = std::find(nodes_.cbegin(), nodes_.cend(), node);
 
@@ -105,7 +105,7 @@ void Group::unregisterLight(const LightSourceRef& light)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(lights_.contains(light));
 
@@ -114,7 +114,7 @@ void Group::unregisterLight(const LightSourceRef& light)
 
 void Group::clear()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (const NodeRef& groupNode : nodes_)
 	{

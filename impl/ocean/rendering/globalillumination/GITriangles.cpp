@@ -40,7 +40,7 @@ unsigned int GITriangles::numberFaces() const
 
 BoundingBox GITriangles::boundingBox() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (trianglesFaces.empty())
 	{
@@ -76,7 +76,7 @@ BoundingSphere GITriangles::boundingSphere() const
 
 void GITriangles::setFaces(const TriangleFaces& faces)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	trianglesFaces = faces;
 }
 

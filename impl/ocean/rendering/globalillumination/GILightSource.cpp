@@ -35,25 +35,25 @@ GILightSource::~GILightSource()
 
 RGBAColor GILightSource::ambientColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return lightAmbientColor;
 }
 
 RGBAColor GILightSource::diffuseColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return lightDiffuseColor;
 }
 
 RGBAColor GILightSource::specularColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return lightSpecularColor;
 }
 
 Scalar GILightSource::intensity() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return lightIntensity;
 }
 
@@ -64,7 +64,7 @@ bool GILightSource::enabled() const
 
 void GILightSource::get(RGBAColor& ambient, RGBAColor& diffuse, RGBAColor& specular, Scalar& intensity)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ambient = lightAmbientColor;
 	diffuse = lightDiffuseColor;
@@ -79,7 +79,7 @@ bool GILightSource::setAmbientColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lightAmbientColor = color;
 	return true;
@@ -92,7 +92,7 @@ bool GILightSource::setDiffuseColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lightDiffuseColor = color;
 	return true;
@@ -105,7 +105,7 @@ bool GILightSource::setSpecularColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lightSpecularColor = color;
 	return true;
@@ -118,7 +118,7 @@ bool GILightSource::setIntensity(const Scalar intensity)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lightIntensity = intensity;
 	return true;
@@ -126,7 +126,7 @@ bool GILightSource::setIntensity(const Scalar intensity)
 
 bool GILightSource::set(const RGBAColor& ambient, const RGBAColor& diffuse, const RGBAColor& specular, const Scalar intensity)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	bool result = false;
 

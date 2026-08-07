@@ -30,7 +30,7 @@ Textures::~Textures()
 
 TextureRef Textures::texture(const unsigned int layerIndex) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (layerIndex < textures_.size())
 	{
@@ -42,7 +42,7 @@ TextureRef Textures::texture(const unsigned int layerIndex) const
 
 void Textures::setTexture(const TextureRef& texture, const unsigned int layerIndex)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (layerIndex >= textures_.size())
 	{
@@ -62,7 +62,7 @@ void Textures::addTexture(const TextureRef& texture)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	registerThisObjectAsParent(texture);
 	textures_.push_back(texture);
@@ -70,7 +70,7 @@ void Textures::addTexture(const TextureRef& texture)
 
 bool Textures::hasAlphaTexture() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	for (const TextureRef& textureObject : textures_)
 	{

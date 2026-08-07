@@ -40,7 +40,7 @@ bool GLESWindowFramebuffer::initializeById(const size_t id, const FramebufferRef
 	ocean_assert(id != size_t(0));
 	ocean_assert_and_suppress_unused(shareFramebuffer.isNull() && "Currently we do not allow resource sharing", shareFramebuffer);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (windowHandle_ != nullptr)
 	{
@@ -61,7 +61,7 @@ bool GLESWindowFramebuffer::isAntialiasingSupported(const unsigned int buffers) 
 
 bool GLESWindowFramebuffer::isAntialiasing() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return antialiasingBuffers_ > 1u;
 }
@@ -73,7 +73,7 @@ void GLESWindowFramebuffer::setPreferredPixelFormat(const FrameType::PixelFormat
 
 bool GLESWindowFramebuffer::setSupportAntialiasing(const unsigned int buffers)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (antialiasingBuffers_ == buffers)
 	{

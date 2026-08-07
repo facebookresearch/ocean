@@ -44,7 +44,7 @@ GITexture2D::WrapType GITexture2D::wrapTypeT() const
 
 bool GITexture2D::setWrapTypeS(const WrapType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	wrapTypeS_ = type;
 	return true;
@@ -52,7 +52,7 @@ bool GITexture2D::setWrapTypeS(const WrapType type)
 
 bool GITexture2D::setWrapTypeT(const WrapType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	wrapTypeT_ = type;
 	return true;

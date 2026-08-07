@@ -42,14 +42,14 @@ TextureCoordinates GLESVertexSet::textureCoordinates(const unsigned int /*layerI
 
 std::string GLESVertexSet::phantomTextureCoordinateSystem() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return phantomTextureReferenceCoordinateSystem_;
 }
 
 Vertices GLESVertexSet::vertices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return vertices_;
 }
@@ -61,14 +61,14 @@ RGBAColors GLESVertexSet::colors() const
 
 unsigned int GLESVertexSet::numberNormals() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return bufferNormals_.numberElements();
 }
 
 unsigned int GLESVertexSet::numberTextureCoordinates(const unsigned int layerIndex) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (layerIndex != 0)
 	{
@@ -80,28 +80,28 @@ unsigned int GLESVertexSet::numberTextureCoordinates(const unsigned int layerInd
 
 unsigned int GLESVertexSet::numberVertices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return (unsigned int)(vertices_.size());
 }
 
 unsigned int GLESVertexSet::numberColors() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return bufferColors_.numberElements();
 }
 
 void GLESVertexSet::setNormals(const Normals& normals)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	setNormals(normals.data(), normals.size());
 }
 
 void GLESVertexSet::setNormals(const Vector3* normals, const size_t size)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (size == 0)
 	{
@@ -115,7 +115,7 @@ void GLESVertexSet::setNormals(const Vector3* normals, const size_t size)
 
 void GLESVertexSet::setTextureCoordinates(const TextureCoordinates& textureCoordinates, const unsigned int layerIndex)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (layerIndex != 0)
 	{
@@ -134,7 +134,7 @@ void GLESVertexSet::setTextureCoordinates(const TextureCoordinates& textureCoord
 
 void GLESVertexSet::setPhantomTextureCoordinates(const Vertices& textureCoordinates, const unsigned int layerIndex)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (layerIndex != 0)
 	{
@@ -153,7 +153,7 @@ void GLESVertexSet::setPhantomTextureCoordinates(const Vertices& textureCoordina
 
 void GLESVertexSet::setPhantomTextureCoordinateSystem(const std::string& reference)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	phantomTextureReferenceCoordinateSystem_ = reference;
 }
@@ -165,7 +165,7 @@ void GLESVertexSet::setVertices(const Vertices& vertices)
 
 void GLESVertexSet::setVertices(const Vector3* vertices, const size_t size)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	vertices_ = Vectors3(vertices, vertices + size);
 
@@ -245,7 +245,7 @@ BoundingBox GLESVertexSet::boundingBox(const VertexIndices& vertexIndices) const
 		return BoundingBox();
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (vertices_.empty())
 	{
@@ -270,7 +270,7 @@ BoundingBox GLESVertexSet::boundingBox(const TriangleFaces& triangleFaces) const
 		return BoundingBox();
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (vertices_.empty())
 	{
@@ -298,7 +298,7 @@ BoundingBox GLESVertexSet::boundingBox(const VertexIndexGroups& strips) const
 		return BoundingBox();
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (vertices_.empty())
 	{
@@ -326,7 +326,7 @@ BoundingBox GLESVertexSet::boundingBox(const unsigned int numberVertices) const
 		return BoundingBox();
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (vertices_.empty())
 	{

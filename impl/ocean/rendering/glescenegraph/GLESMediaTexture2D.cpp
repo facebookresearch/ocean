@@ -43,7 +43,7 @@ bool GLESMediaTexture2D::isValid() const
 
 std::string GLESMediaTexture2D::descriptiveInformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	std::string result = Object::descriptiveInformation();
 
@@ -57,7 +57,7 @@ std::string GLESMediaTexture2D::descriptiveInformation() const
 
 void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestamp timestamp)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (frameMedium_.isNull())
 	{

@@ -40,7 +40,7 @@ Vector3 GIPointLight::attenuation() const
 
 void GIPointLight::setPosition(const Vector3& position)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	lightPosition = position;
 }
 
@@ -51,7 +51,7 @@ bool GIPointLight::setAttenuation(const Vector3& factors)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lightAttenuationFactors = factors;
 	return true;

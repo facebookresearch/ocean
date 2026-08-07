@@ -33,7 +33,7 @@ GITextures::~GITextures()
 
 void GITextures::setTexture(const TextureRef& texture, const unsigned int layerIndex)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	Textures::setTexture(texture, layerIndex);
 }
 

@@ -41,7 +41,7 @@ UndistortedBackground::DisplayType UndistortedBackground::displayType() const
 
 void UndistortedBackground::setMedium(const Media::FrameMediumRef& medium)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	medium_ = medium;
 
@@ -65,7 +65,7 @@ bool UndistortedBackground::setDistance(const Scalar distance)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (Numeric::isEqual(distance_, distance))
 	{
@@ -84,7 +84,7 @@ UndistortedBackground::ObjectType UndistortedBackground::type() const
 
 void UndistortedBackground::onDynamicUpdate(const ViewRef& /*view*/, const Timestamp timestamp)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (medium_)
 	{

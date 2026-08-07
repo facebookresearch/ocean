@@ -31,14 +31,14 @@ GLESNode::~GLESNode()
 
 bool GLESNode::visible() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return visible_;
 }
 
 void GLESNode::setVisible(const bool visible)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	visible_ = visible;
 }

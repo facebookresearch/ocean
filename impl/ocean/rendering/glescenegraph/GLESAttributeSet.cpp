@@ -38,7 +38,7 @@ void GLESAttributeSet::addAttribute(const AttributeRef& attribute)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	AttributeSet::addAttribute(attribute);
 	shaderProgramTypeChanged_ = true;
@@ -53,7 +53,7 @@ void GLESAttributeSet::removeAttribute(const AttributeRef& attribute)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	// the counter is only decremented for an attribute this set actually holds, so the membership is determined before the base class drops it
 	if (!attributes_.contains(attribute))
@@ -77,7 +77,7 @@ void GLESAttributeSet::removeAttribute(const AttributeRef& attribute)
 
 void GLESAttributeSet::bindAttributes(const GLESFramebuffer& framebuffer, const SquareMatrix4& projection, const HomogenousMatrix4& camera_T_model, const HomogenousMatrix4& camera_T_world, const SquareMatrix3& normalMatrix, const Lights& lights, const GLESAttribute::ProgramType additionalProgramTypes, GLESAttribute* additionalAttribute)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (shaderProgramTypeIsBasedOnLight_ != !lights.empty())
 	{

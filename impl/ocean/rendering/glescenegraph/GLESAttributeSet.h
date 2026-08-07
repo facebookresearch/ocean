@@ -143,21 +143,21 @@ class OCEAN_RENDERING_GLES_EXPORT GLESAttributeSet :
 
 inline GLESShaderProgramRef GLESAttributeSet::shaderProgram() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return shaderProgram_;
 }
 
 inline bool GLESAttributeSet::containsAttribute(const ObjectType attributeType) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return attributeCounterMap_.find(attributeType) != attributeCounterMap_.cend();
 }
 
 inline void GLESAttributeSet::resetShaderProgram()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	shaderProgramTypeChanged_ = true;
 }

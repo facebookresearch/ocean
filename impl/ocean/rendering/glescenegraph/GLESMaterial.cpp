@@ -37,43 +37,43 @@ GLESMaterial::~GLESMaterial()
 
 RGBAColor GLESMaterial::ambientColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return ambientColor_;
 }
 
 RGBAColor GLESMaterial::diffuseColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return diffuseColor_;
 }
 
 RGBAColor GLESMaterial::emissiveColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return emissiveColor_;
 }
 
 RGBAColor GLESMaterial::specularColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return specularColor_;
 }
 
 float GLESMaterial::specularExponent() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return specularExponent_;
 }
 
 float GLESMaterial::transparency() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return transparency_;
 }
 
 void GLESMaterial::get(RGBAColor& ambient, RGBAColor& diffuse, RGBAColor& emissive, RGBAColor& specular, float& specularExponent, float& transparency)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ambient = ambientColor_;
 	diffuse = diffuseColor_;
@@ -90,7 +90,7 @@ bool GLESMaterial::setAmbientColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ambientColor_ = color;
 	return true;
@@ -103,7 +103,7 @@ bool GLESMaterial::setDiffuseColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	diffuseColor_ = color;
 	return true;
@@ -116,7 +116,7 @@ bool GLESMaterial::setEmissiveColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	emissiveColor_ = color;
 	return true;
@@ -129,7 +129,7 @@ bool GLESMaterial::setSpecularColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	specularColor_ = color;
 	return true;
@@ -142,7 +142,7 @@ bool GLESMaterial::setSpecularExponent(const float specularExponent)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	specularExponent_ = specularExponent;
 	return true;
@@ -155,7 +155,7 @@ bool GLESMaterial::setTransparency(const float transparency)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	transparency_ = transparency;
 	return true;
@@ -163,7 +163,7 @@ bool GLESMaterial::setTransparency(const float transparency)
 
 bool GLESMaterial::set(const RGBAColor& ambient, const RGBAColor& diffuse, const RGBAColor& emissive, const RGBAColor& specular, const float specularExponent, const float transparency)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	bool result = false;
 
@@ -215,7 +215,7 @@ void GLESMaterial::bindMaterial(const GLESFramebuffer& /*framebuffer*/, GLESShad
 {
 	ocean_assert(!materialName.empty());
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(GL_NO_ERROR == glGetError());
 

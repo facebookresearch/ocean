@@ -32,14 +32,14 @@ GLESLines::~GLESLines()
 
 VertexIndices GLESLines::indices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return explicitLineIndices_;
 }
 
 unsigned int GLESLines::numberIndices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(explicitLineIndices_.empty() || numberImplicitLines_ == 0u);
 
@@ -53,14 +53,14 @@ unsigned int GLESLines::numberIndices() const
 
 Scalar GLESLines::lineWidth() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return lineWidth_;
 }
 
 void GLESLines::setIndices(const VertexIndices& indices)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (indices.empty())
 	{
@@ -101,7 +101,7 @@ void GLESLines::setIndices(const VertexIndices& indices)
 
 void GLESLines::setIndices(const unsigned int numberImplicitLines)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	release();
 
@@ -118,7 +118,7 @@ void GLESLines::setLineWidth(const Scalar width)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	lineWidth_ = width;
 }

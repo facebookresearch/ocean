@@ -41,7 +41,7 @@ unsigned int GITriangleStrips::numberStrips() const
 
 BoundingBox GITriangleStrips::boundingBox() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (primitiveStrips.empty())
 	{
@@ -78,7 +78,7 @@ BoundingSphere GITriangleStrips::boundingSphere() const
 
 void GITriangleStrips::setStrips(const VertexIndexGroups& strips)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	primitiveStrips = strips;
 }
 

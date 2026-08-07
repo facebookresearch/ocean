@@ -78,7 +78,7 @@ float GIMaterial::refractionIndex() const
 
 void GIMaterial::get(RGBAColor& ambient, RGBAColor& diffuse, RGBAColor& emissive, RGBAColor& specular, float& specularExponent, float& transparency)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ambient = materialAmbientColor;
 	diffuse = materialDiffuseColor;
@@ -95,7 +95,7 @@ bool GIMaterial::setAmbientColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialAmbientColor = color;
 	return true;
@@ -108,7 +108,7 @@ bool GIMaterial::setDiffuseColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialDiffuseColor = color;
 	return true;
@@ -121,7 +121,7 @@ bool GIMaterial::setEmissiveColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialEmissiveColor = color;
 	return true;
@@ -134,7 +134,7 @@ bool GIMaterial::setSpecularColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialSpecularColor = color;
 	return true;
@@ -147,7 +147,7 @@ bool GIMaterial::setSpecularExponent(const float specularExponent)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialSpecularExponent = specularExponent;
 	return true;
@@ -160,7 +160,7 @@ bool GIMaterial::setTransparency(const float transparency)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialTransparency = transparency;
 	return true;
@@ -173,7 +173,7 @@ bool GIMaterial::setReflectivity(const float reflectivity)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialReflectivity = reflectivity;
 	return true;
@@ -186,7 +186,7 @@ bool GIMaterial::setRefractionIndex(const float index)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	materialRefractionIndex = index;
 	return true;
@@ -194,7 +194,7 @@ bool GIMaterial::setRefractionIndex(const float index)
 
 bool GIMaterial::set(const RGBAColor& ambient, const RGBAColor& diffuse, const RGBAColor& emissive, const RGBAColor& specular, const float specularExponent, const float transparency)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	bool result = false;
 

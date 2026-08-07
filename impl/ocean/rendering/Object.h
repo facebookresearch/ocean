@@ -301,7 +301,7 @@ class OCEAN_RENDERING_EXPORT Object
 	protected:
 
 		/// Lock for the object
-		mutable Lock objectLock;
+		mutable Lock objectLock_;
 
 	private:
 
@@ -327,14 +327,14 @@ inline const std::string& Object::name() const
 
 inline void Object::registerParent(const ObjectId parentId)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	++objectParents_[parentId];
 }
 
 inline void Object::unregisterParent(const ObjectId parentId)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const ObjectIdMap::iterator iParent = objectParents_.find(parentId);
 	ocean_assert(iParent != objectParents_.cend());

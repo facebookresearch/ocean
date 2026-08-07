@@ -48,7 +48,7 @@ void GLESDirectionalLight::bindLight(GLESShaderProgram& shaderProgram, const Hom
 	ocean_assert(!normalMatrix.isSingular());
 	ocean_assert(index < 8u);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	GLESLightSource::bindLight(shaderProgram, camera_T_model, camera_T_world, normalMatrix, index);
 

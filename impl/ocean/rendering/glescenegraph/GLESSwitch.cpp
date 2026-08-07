@@ -30,14 +30,14 @@ GLESSwitch::~GLESSwitch()
 
 Index32 GLESSwitch::activeNode() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return activeNodeIndex_;
 }
 
 void GLESSwitch::setActiveNode(const Index32 index)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (index >= numberChildren() && index != invalidIndex)
 	{
@@ -50,7 +50,7 @@ void GLESSwitch::setActiveNode(const Index32 index)
 
 void GLESSwitch::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_parent, const Lights& lights, GLESTraverser& traverser) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!visible_ || nodes_.empty())
 	{

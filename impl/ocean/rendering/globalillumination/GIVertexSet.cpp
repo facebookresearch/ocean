@@ -28,86 +28,86 @@ GIVertexSet::~GIVertexSet()
 
 Normals GIVertexSet::normals() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return vertexSetNormals;
 }
 
 TextureCoordinates GIVertexSet::textureCoordinates(const unsigned int layerIndex) const
 {
 	ocean_assert(layerIndex < maximalTextureLayers);
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return vertexSetTextureCoordinates[layerIndex];
 }
 
 Vertices GIVertexSet::vertices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return vertexSetVertices;
 }
 
 RGBAColors GIVertexSet::colors() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return vertexSetColors;
 }
 
 unsigned int GIVertexSet::numberNormals() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return (unsigned int)vertexSetNormals.size();
 }
 
 unsigned int GIVertexSet::numberTextureCoordinates(const unsigned int layerIndex) const
 {
 	ocean_assert(layerIndex < maximalTextureLayers);
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return (unsigned int)vertexSetTextureCoordinates[layerIndex].size();
 }
 
 unsigned int GIVertexSet::numberVertices() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return (unsigned int)vertexSetVertices.size();
 }
 
 unsigned int GIVertexSet::numberColors() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return (unsigned int)vertexSetColors.size();
 }
 
 void GIVertexSet::setNormals(const Normals& normals)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	vertexSetNormals = normals;
 }
 
 void GIVertexSet::setTextureCoordinates(const TextureCoordinates& textureCoordinates, const unsigned int layerIndex)
 {
 	ocean_assert(layerIndex < maximalTextureLayers);
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	vertexSetTextureCoordinates[layerIndex] = textureCoordinates;
 }
 
 void GIVertexSet::setVertices(const Vertices& vertices)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	vertexSetVertices = vertices;
 }
 
 void GIVertexSet::setColors(const RGBAColors& colors)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	vertexSetColors = colors;
 }
 
 void GIVertexSet::set(const Vertices& vertices, const Normals& normals, const TextureCoordinates& textureCoordinates, const RGBAColors& colors)
 {
 	ocean_assert(0 < maximalTextureLayers);
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	vertexSetNormals = normals;
 	vertexSetTextureCoordinates[0] = textureCoordinates;

@@ -32,7 +32,7 @@ GLESTriangleFans::~GLESTriangleFans()
 
 VertexIndexGroups GLESTriangleFans::strips() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(vertexBufferPairs_.size() == strips_.size());
 
@@ -41,7 +41,7 @@ VertexIndexGroups GLESTriangleFans::strips() const
 
 unsigned int GLESTriangleFans::numberStrips() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(vertexBufferPairs_.size() == strips_.size());
 
@@ -50,7 +50,7 @@ unsigned int GLESTriangleFans::numberStrips() const
 
 void GLESTriangleFans::setStrips(const VertexIndexGroups& strips)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	// one buffer is created per strip rather than a single buffer being reused, so the previous ones are dropped instead of overwritten
 	release();

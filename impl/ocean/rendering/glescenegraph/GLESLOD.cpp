@@ -30,21 +30,21 @@ GLESLOD::~GLESLOD()
 
 GLESLOD::DistanceRanges GLESLOD::distanceRanges() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return distanceRanges_;
 }
 
 void GLESLOD::setDistanceRanges(const DistanceRanges& ranges)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	distanceRanges_ = ranges;
 }
 
 void GLESLOD::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const Lights& lights, GLESTraverser& traverser) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!visible_ || nodes_.empty())
 	{

@@ -26,7 +26,7 @@ Primitive::~Primitive()
 
 void Primitive::setVertexSet(const VertexSetRef& vertexSet)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	unregisterThisObjectAsParent(vertexSet_);
 	registerThisObjectAsParent(vertexSet);

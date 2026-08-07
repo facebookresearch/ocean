@@ -36,13 +36,13 @@ void GIGeometry::addRenderable(const RenderableRef& renderable, const AttributeS
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	Geometry::addRenderable(renderable, attributes);
 }
 
 void GIGeometry::removeRenderable(const RenderableRef& renderable)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	Geometry::removeRenderable(renderable);
 }
 

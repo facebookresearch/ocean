@@ -34,7 +34,7 @@ GLESTransform::~GLESTransform()
 
 BoundingBox GLESTransform::boundingBox(const bool involveLocalTransformation) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	BoundingBox result;
 
@@ -61,21 +61,21 @@ BoundingBox GLESTransform::boundingBox(const bool involveLocalTransformation) co
 
 HomogenousMatrix4 GLESTransform::transformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return parent_T_object_;
 }
 
 GLESTransform::SharedTransformModifier GLESTransform::transformModifier() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return transformModifier_;
 }
 
 void GLESTransform::setTransformation(const HomogenousMatrix4& parent_T_transform)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	parent_T_object_ = parent_T_transform;
 }
@@ -87,7 +87,7 @@ void GLESTransform::setTransformModifier(SharedTransformModifier transformModifi
 
 void GLESTransform::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_parent, const Lights& lights, GLESTraverser& traverser) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!visible_ || nodes_.empty() || parent_T_object_.rotationMatrix().isNull())
 	{

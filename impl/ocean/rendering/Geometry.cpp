@@ -30,7 +30,7 @@ Geometry::~Geometry()
 
 void Geometry::addRenderable(const RenderableRef& renderable, const AttributeSetRef& attributes)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(!renderables_.contains(renderable));
 
@@ -47,7 +47,7 @@ unsigned int Geometry::numberRenderables() const
 
 RenderableRef Geometry::renderable(const unsigned int index) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	unsigned int n = 0u;
 
@@ -64,7 +64,7 @@ RenderableRef Geometry::renderable(const unsigned int index) const
 
 AttributeSetRef Geometry::attributeSet(const unsigned int index) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	unsigned int n = 0u;
 
@@ -83,7 +83,7 @@ void Geometry::removeRenderable(const RenderableRef& renderable)
 {
 	ocean_assert(renderable);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const Renderables::const_iterator iRenderable = renderables_.find(renderable);
 

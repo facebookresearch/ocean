@@ -36,25 +36,25 @@ GLESLightSource::~GLESLightSource()
 
 RGBAColor GLESLightSource::ambientColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return ambientColor_;
 }
 
 RGBAColor GLESLightSource::diffuseColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return diffuseColor_;
 }
 
 RGBAColor GLESLightSource::specularColor() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return specularColor_;
 }
 
 Scalar GLESLightSource::intensity() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 	return intensity_;
 }
 
@@ -70,7 +70,7 @@ bool GLESLightSource::enabled() const
 
 void GLESLightSource::get(RGBAColor& ambient, RGBAColor& diffuse, RGBAColor& specular, Scalar& intensity)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ambient = ambientColor_;
 	diffuse = diffuseColor_;
@@ -85,7 +85,7 @@ bool GLESLightSource::setAmbientColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ambientColor_ = color;
 	return true;
@@ -98,7 +98,7 @@ bool GLESLightSource::setDiffuseColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	diffuseColor_ = color;
 	return true;
@@ -111,7 +111,7 @@ bool GLESLightSource::setSpecularColor(const RGBAColor& color)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	specularColor_ = color;
 	return true;
@@ -124,7 +124,7 @@ bool GLESLightSource::setIntensity(const Scalar intensity)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	intensity_ = intensity;
 	return true;
@@ -132,14 +132,14 @@ bool GLESLightSource::setIntensity(const Scalar intensity)
 
 void GLESLightSource::setTransformationType(const TransformationType transformationType)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	transformationType_ = transformationType;
 }
 
 bool GLESLightSource::set(const RGBAColor& ambient, const RGBAColor& diffuse, const RGBAColor& specular, const Scalar intensity)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	bool result = false;
 
@@ -180,7 +180,7 @@ void GLESLightSource::bindLight(GLESShaderProgram& shaderProgram, const Homogeno
 	ocean_assert(shaderProgram.isCompiled());
 	ocean_assert(index < 8u);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(enabled_);
 

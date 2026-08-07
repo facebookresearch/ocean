@@ -34,14 +34,14 @@ GLESTextureFramebuffer::~GLESTextureFramebuffer()
 
 std::string GLESTextureFramebuffer::textureName() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return textureName_;
 }
 
 bool GLESTextureFramebuffer::setTextureName(const std::string& name)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	textureName_ = name;
 
@@ -254,21 +254,21 @@ FrameType::PixelFormat GLESTextureFramebuffer::pixelFormat() const
 
 GLESTextureFramebuffer::WrapType GLESTextureFramebuffer::wrapTypeS() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return wrapTypeS_;
 }
 
 GLESTextureFramebuffer::WrapType GLESTextureFramebuffer::wrapTypeT() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return wrapTypeT_;
 }
 
 bool GLESTextureFramebuffer::setPixelFormat(const FrameType::PixelFormat pixelFormat)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (pixelFormat_ == pixelFormat)
 	{
@@ -313,7 +313,7 @@ bool GLESTextureFramebuffer::setPixelFormat(const FrameType::PixelFormat pixelFo
 
 bool GLESTextureFramebuffer::setWrapTypeS(const WrapType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	wrapTypeS_ = type;
 	return true;
@@ -321,7 +321,7 @@ bool GLESTextureFramebuffer::setWrapTypeS(const WrapType type)
 
 bool GLESTextureFramebuffer::setWrapTypeT(const WrapType type)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	wrapTypeT_ = type;
 	return true;
@@ -331,7 +331,7 @@ bool GLESTextureFramebuffer::setMultisamples(const unsigned int multisamples)
 {
 	ocean_assert(multisamples >= 1u);
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 #ifdef OCEAN_RENDERING_GLES_USE_ES
 

@@ -35,42 +35,42 @@ GLESTexture::~GLESTexture()
 
 HomogenousMatrix4 GLESTexture::transformation() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return transformation_;
 }
 
 GLESTexture::EnvironmentMode GLESTexture::environmentMode() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return environmentMode_;
 }
 
 GLESTexture::MinFilterMode GLESTexture::minificationFilterMode() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return minificationFilterMode_;
 }
 
 GLESTexture::MagFilterMode GLESTexture::magnificationFilterMode() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return magnificationFilterMode_;
 }
 
 bool GLESTexture::usingMipmaps() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return useMipmap_;
 }
 
 void GLESTexture::setTransformation(const HomogenousMatrix4& transformation)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(transformation.isValid());
 	transformation_ = transformation;
@@ -78,28 +78,28 @@ void GLESTexture::setTransformation(const HomogenousMatrix4& transformation)
 
 void GLESTexture::setEnvironmentMode(const EnvironmentMode mode)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	environmentMode_ = mode;
 }
 
 void GLESTexture::setMinificationFilterMode(const MinFilterMode mode)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	minificationFilterMode_ = mode;
 }
 
 void GLESTexture::setMagnificationFilterMode(const MagFilterMode mode)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	magnificationFilterMode_ = mode;
 }
 
 void GLESTexture::setUseMipmaps(const bool flag)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (useMipmap_ == flag)
 	{

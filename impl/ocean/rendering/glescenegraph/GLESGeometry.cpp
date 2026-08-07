@@ -56,21 +56,21 @@ void GLESGeometry::addRenderable(const RenderableRef& renderable, const Attribut
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Geometry::addRenderable(renderable, attributes);
 }
 
 void GLESGeometry::removeRenderable(const RenderableRef& renderable)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Geometry::removeRenderable(renderable);
 }
 
 void GLESGeometry::addToTraverser(const GLESFramebuffer& /*framebuffer*/, const SquareMatrix4& /*projectionMatrix*/, const HomogenousMatrix4& camera_T_object, const Lights& lights, GLESTraverser& traverser) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!visible_ || renderables_.empty())
 	{

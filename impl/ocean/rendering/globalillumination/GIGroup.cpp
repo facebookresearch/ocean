@@ -51,7 +51,7 @@ void GIGroup::unregisterLight(const LightSourceRef& light)
 
 BoundingBox GIGroup::boundingBox(const bool /*involveLocalTransformation*/) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	BoundingBox result;
 

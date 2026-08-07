@@ -34,7 +34,7 @@ GITexture::~GITexture()
 
 std::string GITexture::textureName() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return textureName_;
 }
@@ -46,7 +46,7 @@ bool GITexture::setTextureName(const std::string& name)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	textureName_ = name;
 

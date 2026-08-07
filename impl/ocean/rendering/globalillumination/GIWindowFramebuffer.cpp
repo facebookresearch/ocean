@@ -102,7 +102,7 @@ void GIWindowFramebuffer::setShadowTechnique(const ShadowTechnique /*technique*/
 
 void GIWindowFramebuffer::render()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 #if defined(_WINDOWS)
 
@@ -144,7 +144,7 @@ void GIWindowFramebuffer::render()
 
 void GIWindowFramebuffer::release()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	GIFramebuffer::release();
 

@@ -90,7 +90,7 @@ void GLESWindowFramebuffer::render()
 		return;
 	}
 
-	TemporaryScopedLock temporaryScopedLock(objectLock);
+	TemporaryScopedLock temporaryScopedLock(objectLock_);
 		const RenderCallback preRenderCallback(preRenderCallback_);
 		const RenderCallback postRenderCallback(postRenderCallback_);
 	temporaryScopedLock.release();

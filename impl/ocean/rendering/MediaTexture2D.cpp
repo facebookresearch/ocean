@@ -26,14 +26,14 @@ MediaTexture2D::~MediaTexture2D()
 
 Media::FrameMediumRef MediaTexture2D::medium() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return frameMedium_;
 }
 
 void MediaTexture2D::setMedium(const Media::FrameMediumRef& medium)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	frameMedium_ = medium;
 	frameTimestamp_.toInvalid();
@@ -41,7 +41,7 @@ void MediaTexture2D::setMedium(const Media::FrameMediumRef& medium)
 
 bool MediaTexture2D::hasTransparentPixel() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (frameMedium_)
 	{

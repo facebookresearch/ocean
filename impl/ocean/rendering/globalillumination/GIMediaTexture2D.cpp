@@ -81,7 +81,7 @@ bool GIMediaTexture2D::textureColor(const TextureCoordinate& textureCoordinate, 
 
 void GIMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestamp timestamp)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (frameMedium_)
 	{

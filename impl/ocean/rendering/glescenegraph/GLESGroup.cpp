@@ -31,7 +31,7 @@ GLESGroup::~GLESGroup()
 
 BoundingBox GLESGroup::boundingBox(const bool /*involveLocalTransformation*/) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	BoundingBox result;
 
@@ -57,7 +57,7 @@ void GLESGroup::addChild(const NodeRef& node)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Group::addChild(node);
 }
@@ -69,7 +69,7 @@ void GLESGroup::registerLight(const LightSourceRef& light)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Group::registerLight(light);
 }
@@ -81,7 +81,7 @@ void GLESGroup::removeChild(const NodeRef& node)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Group::removeChild(node);
 }
@@ -93,21 +93,21 @@ void GLESGroup::unregisterLight(const LightSourceRef& light)
 		return;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Group::unregisterLight(light);
 }
 
 void GLESGroup::clear()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	Group::clear();
 }
 
 void GLESGroup::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const Lights& lights, GLESTraverser& traverser) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (!visible_ || nodes_.empty())
 	{

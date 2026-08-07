@@ -51,14 +51,14 @@ bool Texture2D::setWrapTypeT(const WrapType /*type*/)
 
 FrameType Texture2D::sourceFrameType() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return sourceFrameType_;
 }
 
 FrameType Texture2D::textureFrameType() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return textureFrameType_;
 }

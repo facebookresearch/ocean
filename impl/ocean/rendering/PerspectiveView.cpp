@@ -40,7 +40,7 @@ bool PerspectiveView::setFovX(const Scalar /*fovx*/)
 
 Scalar PerspectiveView::idealFovX(bool* validCamera) const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (validCamera != nullptr)
 	{
@@ -141,7 +141,7 @@ void PerspectiveView::fitCamera(const NodeRef& node)
 
 	if (!sceneNode)
 	{
-		const ScopedLock scopedLock(objectLock);
+		const ScopedLock scopedLock(objectLock_);
 		const ObjectRefs parents(parentObjects());
 
 		for (const ObjectRef& parent : parents)

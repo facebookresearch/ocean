@@ -508,19 +508,19 @@ class OCEAN_RENDERING_EXPORT Framebuffer : virtual public Object
 
 inline Lock& Framebuffer::lock() const
 {
-	return objectLock;
+	return objectLock_;
 }
 
 inline void Framebuffer::setPreRenderCallback(const RenderCallback& renderCallback)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	preRenderCallback_ = renderCallback;
 }
 
 inline void Framebuffer::setPostRenderCallback(const RenderCallback& renderCallback)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	postRenderCallback_ = renderCallback;
 }

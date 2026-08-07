@@ -153,14 +153,14 @@ void GLESFramebuffer::setShadowTechnique(const ShadowTechnique /*technique*/)
 
 void GLESFramebuffer::setStereoType(const StereoType stereoType)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	stereoType_ = stereoType;
 }
 
 void GLESFramebuffer::render()
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(GL_NO_ERROR == glGetError());
 
@@ -281,7 +281,7 @@ void GLESFramebuffer::render()
 
 bool GLESFramebuffer::intersection(const Line3& ray, RenderableRef& renderable, Vector3& position)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	const SmartObjectRef<GLESView> glesView(framebufferView);
 

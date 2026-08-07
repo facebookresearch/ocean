@@ -44,7 +44,7 @@ bool GLESFrameTexture2D::setTexture(Frame&& frame)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	frame_ = std::move(frame);
 	compressedFrame_.release();
@@ -62,7 +62,7 @@ bool GLESFrameTexture2D::setTexture(CompressedFrame&& compressedFrame)
 		return false;
 	}
 
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	compressedFrame_ = std::move(compressedFrame);
 	frame_.release();
@@ -74,7 +74,7 @@ bool GLESFrameTexture2D::setTexture(CompressedFrame&& compressedFrame)
 
 FrameType GLESFrameTexture2D::sourceFrameType() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	ocean_assert(!frame_.isValid() || !compressedFrame_.isValid());
 
@@ -88,7 +88,7 @@ FrameType GLESFrameTexture2D::sourceFrameType() const
 
 bool GLESFrameTexture2D::hasTransparentPixel() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (frame_.isValid())
 	{
@@ -107,14 +107,14 @@ bool GLESFrameTexture2D::hasTransparentPixel() const
 
 bool GLESFrameTexture2D::isValid() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return primaryTextureId_ != 0u;
 }
 
 void GLESFrameTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestamp /*timestamp*/)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	if (updateNeeded_)
 	{

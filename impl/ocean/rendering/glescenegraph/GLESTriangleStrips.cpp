@@ -33,21 +33,21 @@ GLESTriangleStrips::~GLESTriangleStrips()
 
 VertexIndexGroups GLESTriangleStrips::strips() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return strips_;
 }
 
 unsigned int GLESTriangleStrips::numberStrips() const
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 	return (unsigned int)(strips_.size());
 }
 
 void GLESTriangleStrips::setStrips(const VertexIndexGroups& strips)
 {
-	const ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock_);
 
 #ifdef OCEAN_DEBUG
 	for (const Indices32& strip : strips_)
