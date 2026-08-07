@@ -285,8 +285,10 @@ bool GLESTexture2D::needsSecondaryTextureObjects(const FrameType& frameType)
 		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
 		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
 		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-		case FrameType::FORMAT_Y_U_V12:
-		case FrameType::FORMAT_Y_V_U12:
+		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 			return true;
 
 		case FrameType::FORMAT_YUYV16:
@@ -342,8 +344,10 @@ bool GLESTexture2D::determineInternalFrameType(const FrameType& frameType, Frame
 		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
 		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
 		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-		case FrameType::FORMAT_Y_U_V12:
-		case FrameType::FORMAT_Y_V_U12:
+		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 			internalFrameType = frameType;
 			return true;
 
