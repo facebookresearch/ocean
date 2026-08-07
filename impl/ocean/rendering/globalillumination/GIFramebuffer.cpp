@@ -211,6 +211,14 @@ void GIFramebuffer::render()
 		return;
 	}
 
+	if (!frame_.isValid())
+	{
+		ocean_assert(false && "The framebuffer does not have a valid viewport!");
+		return;
+	}
+
+	frame_.setValue(0x00u);
+
 	LightSources lightSources;
 
 	if (framebufferView->useHeadlight())

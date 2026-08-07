@@ -120,7 +120,6 @@ void GIWindowFramebuffer::render()
 
 #endif
 
-	frame_.setValue(0x00u);
 	GIFramebuffer::render();
 
 #if defined(_WINDOWS)
