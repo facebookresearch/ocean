@@ -112,7 +112,12 @@ void GITransform::buildTracing(TracingGroup& group, const HomogenousMatrix4& mod
 
 			for (const LightSourceRef& light : lights_)
 			{
-				newLightSources.emplace_back(light, newModelTransform);
+				ocean_assert(light);
+
+				if (light->enabled() && light->intensity() > 0)
+				{
+					newLightSources.emplace_back(light, newModelTransform);
+				}
 			}
 
 			for (const NodeRef& groupNode : nodes_)
