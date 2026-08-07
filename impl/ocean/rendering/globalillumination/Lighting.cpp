@@ -186,12 +186,19 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 
 			RayIntersection innerIntersection;
 			object.findNearestIntersection(Line3(objectPosition, innerRefractionDirection), innerIntersection, false, Numeric::eps());
-			ocean_assert(innerIntersection);
 
-			const Vector3& outerRefractionPosition = innerIntersection.position();
-			const Vector3 outerRefractionNormal = -innerIntersection.normal();
+			// an open or single sided mesh has no back face for the ray to leave through, in which case the
+			// ray passes straight through as if there were no refraction rather than starting at the origin
+			Vector3 outerRefractionPosition(objectPosition);
+			Vector3 outerRefractionDirection(viewObjectDirection);
 
-			const Vector3 outerRefractionDirection = (-innerRefractionDirection).refract(outerRefractionNormal, Scalar(1.05 / 1));//material.refractionIndex(), 1);
+			if (innerIntersection)
+			{
+				const Vector3 outerRefractionNormal = -innerIntersection.normal();
+
+				outerRefractionPosition = innerIntersection.position();
+				outerRefractionDirection = (-innerRefractionDirection).refract(outerRefractionNormal, Scalar(1.05 / 1));//material.refractionIndex(), 1);
+			}
 
 			RayIntersection outerIntersection;
 			root.findNearestIntersection(Line3(outerRefractionPosition, outerRefractionDirection), outerIntersection, true, Numeric::eps());//, object);
