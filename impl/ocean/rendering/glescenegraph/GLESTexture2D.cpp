@@ -320,11 +320,7 @@ GLESTexture2D::TexturePropertiesMap GLESTexture2D::createTexturePropertiesMap()
 	addTextureProperties(map, FrameType::FORMAT_BGR24, TextureProperties(GLESAttribute::PT_TEXTURE_BGRA, GL_RGB, GL_UNSIGNED_BYTE));
 	addTextureProperties(map, FrameType::FORMAT_BGRA32, TextureProperties(GLESAttribute::PT_TEXTURE_BGRA, GL_RGBA, GL_UNSIGNED_BYTE));
 	addTextureProperties(map, FrameType::FORMAT_RGB24, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
-	addTextureProperties(map, FrameType::FORMAT_RGB4444, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4));
-	addTextureProperties(map, FrameType::FORMAT_RGB5551, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_SHORT_5_5_5_1));
-	addTextureProperties(map, FrameType::FORMAT_RGB565, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGB, GL_UNSIGNED_SHORT_5_6_5));
 	addTextureProperties(map, FrameType::FORMAT_RGBA32, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
-	addTextureProperties(map, FrameType::FORMAT_RGBA4444, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4));
 	addTextureProperties(map, FrameType::FORMAT_YA16, TextureProperties(GLESAttribute::PT_UNKNOWN, twoChannelsFormat, GL_UNSIGNED_BYTE));
 	addTextureProperties(map, FrameType::FORMAT_Y8_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_UNSIGNED_BYTE));
 	addTextureProperties(map, FrameType::FORMAT_Y8_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y, oneChannelFormat, GL_UNSIGNED_BYTE));
@@ -351,8 +347,22 @@ GLESTexture2D::TexturePropertiesMap GLESTexture2D::createTexturePropertiesMap()
 	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
 	addTextureProperties(map, FrameType::FORMAT_Y_V_U12_FULL_RANGE, TextureProperties(GLESAttribute::PT_TEXTURE_Y_U_V12, oneChannelFormat, GL_UNSIGNED_BYTE, oneChannelFormat, GL_UNSIGNED_BYTE, 2u, 1u, SL_PLANE_2_1));
 
+#ifndef OCEAN_RENDERING_GLES_USE_ES
+
+	// Ocean stores the first channel in the lowest bits of the 16 bit value, so only the reversed GL types match the memory layout.
+	// They do not exist in OpenGL ES, and Ocean has no CPU converter for these pixel formats either,
+	// so with OpenGL ES there is no correct way to upload them and the pixel formats are not supported at all.
+	// The unused bits of FORMAT_RGB4444 and FORMAT_RGB5551 end up in the alpha channel of the texture.
+
+	addTextureProperties(map, FrameType::FORMAT_RGB4444, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4_REV));
+	addTextureProperties(map, FrameType::FORMAT_RGB5551, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_1_5_5_5_REV));
+	addTextureProperties(map, FrameType::FORMAT_RGBA4444, TextureProperties(GLESAttribute::PT_TEXTURE_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4_REV));
+
+#endif // OCEAN_RENDERING_GLES_USE_ES
+
 	// pixel formats which need a conversion before they can be uploaded, they take the properties of the pixel format they are converted to
 
+	addConvertedTextureProperties(map, FrameType::FORMAT_RGB565, FrameType::FORMAT_RGB24);
 	addConvertedTextureProperties(map, FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8);
 	addConvertedTextureProperties(map, FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24);
 	addConvertedTextureProperties(map, FrameType::FORMAT_YUYV16, FrameType::FORMAT_RGB24);
