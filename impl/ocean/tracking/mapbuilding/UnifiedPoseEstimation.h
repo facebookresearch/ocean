@@ -149,9 +149,9 @@ void UnifiedBruteForcePoseEstimation::determineBruteForceMatchings(const TDescri
 	ocean_assert(numberDescriptorsB != 0);
 
 	Indices32 indicesB2A(numberDescriptorsB);
-	Indices32 floatDistances(numberDescriptorsB);
+	std::vector<TDescriptorDistance> descriptorDistances(numberDescriptorsB);
 
-	PoseEstimationT::determineUnguidedBruteForceMatchings<TDescriptorA, TDescriptorB, TDescriptorDistance, tDescriptorDistanceFunction>(descriptorsA, numberDescriptorsA, descriptorsB, numberDescriptorsB, maximalDescriptorDistance, indicesB2A.data(), worker);
+	PoseEstimationT::determineUnguidedBruteForceMatchings<TDescriptorA, TDescriptorB, TDescriptorDistance, tDescriptorDistanceFunction>(descriptorsA, numberDescriptorsA, descriptorsB, numberDescriptorsB, maximalDescriptorDistance, indicesB2A.data(), worker, descriptorDistances.data());
 
 	for (size_t n = 0; n < indicesB2A.size(); ++n)
 	{
@@ -164,7 +164,7 @@ void UnifiedBruteForcePoseEstimation::determineBruteForceMatchings(const TDescri
 
 			if (distances != nullptr)
 			{
-				distances->emplace_back(double(floatDistances[n]));
+				distances->emplace_back(double(descriptorDistances[n]));
 			}
 		}
 	}
