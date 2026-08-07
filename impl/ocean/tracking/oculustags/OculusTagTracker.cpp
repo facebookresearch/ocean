@@ -513,9 +513,9 @@ bool OculusTagTracker::extractRectifiedTagImage(const AnyCamera& anyCameraA, con
 		const HomogenousMatrix4 flippedCameraB_T_tag = AnyCamera::standard2InvertedFlipped(tag_T_device * device_T_cameraB);
 		ocean_assert(flippedCameraA_T_tag.isValid() && flippedCameraB_T_tag.isValid());
 
-		const Vector3 tagCenterPoint = Vector3(Scalar(0.5), Scalar(0.5), 0) * tag.tagSize();
+		const Vector3 tagCenterPoint = Vector3(Scalar(0.5), Scalar(-0.5), 0) * tag.tagSize();
 		const Vector2 imagePointA = anyCameraA.projectToImageIF(flippedCameraA_T_tag * tagCenterPoint);
-		const Vector2 imagePointB = anyCameraA.projectToImageIF(flippedCameraB_T_tag * tagCenterPoint);
+		const Vector2 imagePointB = anyCameraB.projectToImageIF(flippedCameraB_T_tag * tagCenterPoint);
 
 		useFrameA = imageCenter.sqrDistance(imagePointA) < imageCenter.sqrDistance(imagePointB);
 	}
