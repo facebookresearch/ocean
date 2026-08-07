@@ -76,40 +76,50 @@ bool PackagedConnectionlessServer::onScheduler()
 			const unsigned int packageIndex = Data::fromBigEndian(headerValues[3]);
 			const unsigned int totalPackages = Data::fromBigEndian(headerValues[4]);
 
-			OCEAN_SUPPRESS_UNUSED_WARNING(packageIndex);
+			// the header sizes the reassembly buffer, so it is validated before anything is allocated for it,
+			// the message cannot be larger than the payload the announced number of packages can carry
+			const size_t maximalPayloadSize = maximalPackageSize_ - packageManagmentHeaderSize();
 
-			const Triple messageTriple(Address4(senderAddress.sin_addr.s_addr), Port(senderAddress.sin_port), messageId);
-
-			MessageMap::iterator i = connectionlessServerMessageMap.find(messageTriple);
-			if (i == connectionlessServerMessageMap.end())
+			if (messageSize == 0u || size_t(messageSize) > maximalPackagedMessageSize() || totalPackages == 0u || packageIndex >= totalPackages || dataStartPosition >= messageSize
+					|| size_t(messageSize) > size_t(totalPackages) * maximalPayloadSize)
 			{
-				i = connectionlessServerMessageMap.insert(std::make_pair(messageTriple, MessageData(Timestamp(false), size_t(messageSize), totalPackages))).first;
-			}
-
-			const size_t payloadSize = size - packageManagmentHeaderSize();
-			ocean_assert(payloadSize < packageBuffer_.size());
-
-			if (dataStartPosition + payloadSize > i->second.size())
-			{
-				connectionlessServerMessageMap.erase(i);
-
-				if (receiveCallback_)
-				{
-					receiveCallback_(messageTriple.address(), messageTriple.port(), nullptr, 0, messageTriple.messageId());
-				}
+				Log::warning() << "Invalid UDP package";
 			}
 			else
 			{
-				memcpy(i->second.buffer() + dataStartPosition, packageBuffer_.data() + packageManagmentHeaderSize(), payloadSize);
-				i->second.setRetireTimestamp(Timestamp(currentTimestamp + maximalMessageTime_));
+				const Triple messageTriple(Address4(senderAddress.sin_addr.s_addr), Port(senderAddress.sin_port), messageId);
 
-				ocean_assert(i->second.remainingPackages() >= 1u);
-				i->second.setRemaininigPackages(i->second.remainingPackages() - 1u);
-
-				if (i->second.remainingPackages() == 0u)
+				MessageMap::iterator i = connectionlessServerMessageMap.find(messageTriple);
+				if (i == connectionlessServerMessageMap.end())
 				{
-					receiveCallback_(i->first.address(), i->first.port(), i->second.buffer(), i->second.size(), i->first.messageId());
+					i = connectionlessServerMessageMap.insert(std::make_pair(messageTriple, MessageData(Timestamp(false), size_t(messageSize), totalPackages))).first;
+				}
+
+				const size_t payloadSize = size - packageManagmentHeaderSize();
+				ocean_assert(payloadSize < packageBuffer_.size());
+
+				if (dataStartPosition + payloadSize > i->second.size())
+				{
 					connectionlessServerMessageMap.erase(i);
+
+					if (receiveCallback_)
+					{
+						receiveCallback_(messageTriple.address(), messageTriple.port(), nullptr, 0, messageTriple.messageId());
+					}
+				}
+				else
+				{
+					memcpy(i->second.buffer() + dataStartPosition, packageBuffer_.data() + packageManagmentHeaderSize(), payloadSize);
+					i->second.setRetireTimestamp(Timestamp(currentTimestamp + maximalMessageTime_));
+
+					ocean_assert(i->second.remainingPackages() >= 1u);
+					i->second.setRemaininigPackages(i->second.remainingPackages() - 1u);
+
+					if (i->second.remainingPackages() == 0u)
+					{
+						receiveCallback_(i->first.address(), i->first.port(), i->second.buffer(), i->second.size(), i->first.messageId());
+						connectionlessServerMessageMap.erase(i);
+					}
 				}
 			}
 		}
