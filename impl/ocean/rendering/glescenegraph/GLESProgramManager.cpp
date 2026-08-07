@@ -1459,6 +1459,7 @@ GLESProgramManager::ShaderCodes GLESProgramManager::vertexShaderCodes(const GLES
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_Y:
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_RGBA:
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_UPPER_LEFT | GLESAttribute::PT_TEXTURE_BGRA:
+		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_Y:
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_RGBA:
 		case GLESAttribute::PT_MATERIAL | GLESAttribute::PT_LIGHT | GLESAttribute::PT_TEXTURE_LOWER_LEFT | GLESAttribute::PT_TEXTURE_BGRA:
 			return {partPlatform_, partDefinitionMaterial_, partDefinitionLight_, partFunctionLighting_, programVertexShaderMaterialLightTexture_};
