@@ -217,7 +217,7 @@ void GLESTriangles::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (vertexSet_.isNull() || explicitTriangleFaces_.empty())
+	if (vertexSet_.isNull() || (explicitTriangleFaces_.empty() && numberImplicitTriangleFaces_ == 0u))
 	{
 		return;
 	}

@@ -244,7 +244,7 @@ void GLESPoints::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (vertexSet_.isNull() || explicitPointIndices_.empty())
+	if (vertexSet_.isNull() || (explicitPointIndices_.empty() && numberImplicitPoints_ == 0u))
 	{
 		return;
 	}

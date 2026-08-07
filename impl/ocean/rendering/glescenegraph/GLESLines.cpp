@@ -237,7 +237,7 @@ void GLESLines::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (vertexSet_.isNull() || explicitLineIndices_.empty())
+	if (vertexSet_.isNull() || (explicitLineIndices_.empty() && numberImplicitLines_ == 0u))
 	{
 		return;
 	}
