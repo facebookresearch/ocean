@@ -212,7 +212,7 @@ Vectors3 TriangleFace::calculateSmoothedPerVertexNormals(const TriangleFaces& fa
 
 	for (Vector3& normal : normals)
 	{
-		normal.normalizedOrZero();
+		normal.normalize();
 	}
 
 	return normals;
