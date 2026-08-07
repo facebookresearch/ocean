@@ -13,7 +13,6 @@
 #include "ocean/base/Lock.h"
 #include "ocean/base/ObjectRef.h"
 
-#include <map>
 #include <set>
 
 namespace Ocean
@@ -41,7 +40,7 @@ using ObjectRef = Ocean::ObjectRef<Object>;
 using ObjectRefs = std::vector<ObjectRef>;
 
 /**
- * Definition of a vector holding rendering object references.
+ * Definition of a set holding rendering object references.
  * @ingroup rendering
  */
 using ObjectRefSet = std::set<ObjectRef>;
@@ -59,7 +58,7 @@ class OCEAN_RENDERING_EXPORT Object
 		/**
 		 * Definition of different object type.
 		 */
-		enum ObjectType
+		enum ObjectType : uint32_t
 		{
 			/// Unknown type.
 			TYPE_UNKNOWN,
@@ -307,44 +306,44 @@ class OCEAN_RENDERING_EXPORT Object
 	private:
 
 		/// Unique object id.
-		ObjectId objectId;
+		ObjectId objectId_ = invalidObjectId;
 
 		/// Object name.
-		std::string objectName;
+		std::string objectName_;
 
-		/// Object ids of parent objects.
-		ObjectIdMap objectParents;
+		/// Object ids of parent objects, with the number of times each parent has registered itself.
+		ObjectIdMap objectParents_;
 };
 
 inline ObjectId Object::id() const
 {
-	return objectId;
+	return objectId_;
 }
 
 inline const std::string& Object::name() const
 {
-	return objectName;
+	return objectName_;
 }
 
 inline void Object::registerParent(const ObjectId parentId)
 {
 	const ScopedLock scopedLock(objectLock);
 
-	++objectParents.insert(std::make_pair(parentId, 0)).first->second;
+	++objectParents_[parentId];
 }
 
 inline void Object::unregisterParent(const ObjectId parentId)
 {
 	const ScopedLock scopedLock(objectLock);
 
-	ObjectIdMap::iterator i = objectParents.find(parentId);
-	ocean_assert(i != objectParents.end());
+	const ObjectIdMap::iterator iParent = objectParents_.find(parentId);
+	ocean_assert(iParent != objectParents_.cend());
 
-	ocean_assert(i->second != 0);
+	ocean_assert(iParent->second != 0u);
 
-	if (--i->second == 0)
+	if (--iParent->second == 0u)
 	{
-		objectParents.erase(i);
+		objectParents_.erase(iParent);
 	}
 }
 

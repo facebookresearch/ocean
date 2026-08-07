@@ -11,41 +11,35 @@
 #include "ocean/rendering/Node.h"
 #include "ocean/rendering/ObjectRef.h"
 
+#include <atomic>
+
 namespace Ocean
 {
 
 namespace Rendering
 {
 
-Object::Object() :
-	objectId(invalidObjectId)
+Object::Object()
 {
-	static Lock objectIdCounterLock;
+	static std::atomic<ObjectId> objectIdCounter(ObjectId(0));
 
-	const ScopedLock scopedLock(objectIdCounterLock);
-
-	static ObjectId objectIdCounter = ObjectId(0);
-
-	objectId = ++objectIdCounter;
+	objectId_ = ++objectIdCounter;
 }
 
 Object::~Object()
 {
-	if (objectParents.empty() == false)
-	{
-		ocean_assert(objectParents.empty());
-	}
+	ocean_assert(objectParents_.empty());
 }
 
 void Object::setName(const std::string& name)
 {
-	if (objectName == name)
+	if (objectName_ == name)
 	{
 		return;
 	}
 
-	ObjectRefManager::get().changeRegisteredObject(objectId, objectName, name);
-	objectName = name;
+	ObjectRefManager::get().changeRegisteredObject(objectId_, objectName_, name);
+	objectName_ = name;
 }
 
 Engine& Object::engine() const
@@ -65,15 +59,17 @@ ObjectRefs Object::parentObjects() const
 
 	{
 		const ScopedLock scopedLock(objectLock);
-		objectParentsCopy = objectParents;
+		objectParentsCopy = objectParents_;
 	}
 
 	const ScopedLock scopedLock(objectLock);
 
 	ObjectRefs parentObjects;
-	for (ObjectIdMap::const_iterator i = objectParentsCopy.begin(); i != objectParentsCopy.end(); ++i)
+	parentObjects.reserve(objectParentsCopy.size());
+
+	for (const ObjectIdMap::value_type& parentPair : objectParentsCopy)
 	{
-		const ObjectRef parent(engine().object(i->first));
+		const ObjectRef parent(engine().object(parentPair.first));
 
 		if (parent)
 		{
@@ -90,13 +86,14 @@ ObjectRefSet Object::parentNodes() const
 
 	{
 		const ScopedLock scopedLock(objectLock);
-		objectParentsCopy = objectParents;
+		objectParentsCopy = objectParents_;
 	}
 
 	ObjectRefSet parentNodes;
-	for (ObjectIdMap::const_iterator i = objectParentsCopy.begin(); i != objectParentsCopy.end(); ++i)
+
+	for (const ObjectIdMap::value_type& parentPair : objectParentsCopy)
 	{
-		const ObjectRef parent(engine().object(i->first));
+		const ObjectRef parent(engine().object(parentPair.first));
 
 		if (parent)
 		{
@@ -108,8 +105,8 @@ ObjectRefSet Object::parentNodes() const
 			}
 			else
 			{
-				ObjectRefSet parentParentObjects(parent->parentNodes());
-				parentNodes.insert(parentParentObjects.begin(), parentParentObjects.end());
+				const ObjectRefSet parentParentObjects(parent->parentNodes());
+				parentNodes.insert(parentParentObjects.cbegin(), parentParentObjects.cend());
 			}
 		}
 	}
@@ -121,14 +118,12 @@ std::string Object::descriptiveInformation() const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (objectName.empty())
+	if (objectName_.empty())
 	{
-		return std::string("Object with type ") + Object::translateObjectType(type());
+		return "Object with type " + Object::translateObjectType(type());
 	}
-	else
-	{
-		return std::string("Object '") + objectName + std::string("' with type ") + Object::translateObjectType(type());
-	}
+
+	return "Object '" + objectName_ + "' with type " + Object::translateObjectType(type());
 }
 
 std::string Object::translateObjectType(const ObjectType objectType)
