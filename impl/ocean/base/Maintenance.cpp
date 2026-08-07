@@ -31,32 +31,36 @@ void Maintenance::Connector::encodeData(const std::string& name, const unsigned 
 	encodedBuffer.resize(headerSize + 8 + 8 + name.length() + 8 + 8 + 8 + tag.length() + buffer.size());
 	unsigned char* data = encodedBuffer.data() + headerSize;
 
-	ocean_assert(data + 8 < encodedBuffer.data() + encodedBuffer.size());
-	*((Timestamp*)data) = timestamp;
+	const unsigned long long nameLength = (unsigned long long)(name.length());
+	const unsigned long long tagLength = (unsigned long long)(tag.length());
+	const unsigned long long bufferSize = (unsigned long long)(buffer.size());
+
+	ocean_assert(data + 8 <= encodedBuffer.data() + encodedBuffer.size());
+	memcpy(data, &timestamp, 8);
 	data += 8;
 
-	ocean_assert(data + 8 < encodedBuffer.data() + encodedBuffer.size());
-	*((unsigned long long*)data) = (unsigned long long)name.length();
+	ocean_assert(data + 8 <= encodedBuffer.data() + encodedBuffer.size());
+	memcpy(data, &nameLength, 8);
 	data += 8;
 
-	ocean_assert(data + name.length() < encodedBuffer.data() + encodedBuffer.size());
+	ocean_assert(data + name.length() <= encodedBuffer.data() + encodedBuffer.size());
 	memcpy(data, name.c_str(), name.length());
 	data += name.length();
 
-	ocean_assert(data + 8 < encodedBuffer.data() + encodedBuffer.size());
-	*((unsigned long long*)data) = id;
+	ocean_assert(data + 8 <= encodedBuffer.data() + encodedBuffer.size());
+	memcpy(data, &id, 8);
 	data += 8;
 
-	ocean_assert(data + 8 < encodedBuffer.data() + encodedBuffer.size());
-	*((unsigned long long*)data) = (unsigned long long)tag.length();
+	ocean_assert(data + 8 <= encodedBuffer.data() + encodedBuffer.size());
+	memcpy(data, &tagLength, 8);
 	data += 8;
 
-	ocean_assert(data + tag.length() < encodedBuffer.data() + encodedBuffer.size());
+	ocean_assert(data + tag.length() <= encodedBuffer.data() + encodedBuffer.size());
 	memcpy(data, tag.c_str(), tag.length());
 	data += tag.length();
 
-	ocean_assert(data + 8 < encodedBuffer.data() + encodedBuffer.size());
-	*((unsigned long long*)data) = (unsigned long long)buffer.size();
+	ocean_assert(data + 8 <= encodedBuffer.data() + encodedBuffer.size());
+	memcpy(data, &bufferSize, 8);
 	data += 8;
 
 	ocean_assert(data + buffer.size() <= encodedBuffer.data() + encodedBuffer.size());
@@ -85,23 +89,24 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 		return false;
 	}
 
-	const unsigned char* data = (unsigned char*)encodedBuffer;
+	const unsigned char* data = (const unsigned char*)(encodedBuffer);
 	const unsigned char* const dataEnd = data + encodedBufferSize;
 
 	unsigned long long size;
 
-	timestamp = *((Timestamp*)data);
+	memcpy(&timestamp, data, 8);
 	data += 8;
 
-	if (data + 8 > dataEnd)
+	if (dataEnd - data < 8)
 	{
 		return false;
 	}
 
-	size = *((unsigned long long*)data);
+	memcpy(&size, data, 8);
 	data += 8;
 
-	if (data + size > dataEnd || size > encodedBufferSize)
+	// the remaining bytes are compared against the size instead of advancing the pointer by it, as the size is not trusted yet
+	if (size > (unsigned long long)(dataEnd - data))
 	{
 		return false;
 	}
@@ -109,23 +114,23 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	name = std::string((const char*)data, size_t(size));
 	data += size;
 
-	if (data + 8 > dataEnd)
+	if (dataEnd - data < 8)
 	{
 		return false;
 	}
 
-	id = *((unsigned long long*)data);
+	memcpy(&id, data, 8);
 	data += 8;
 
-	if (data + 8 > dataEnd)
+	if (dataEnd - data < 8)
 	{
 		return false;
 	}
 
-	size = *((unsigned long long*)data);
+	memcpy(&size, data, 8);
 	data += 8;
 
-	if (data + size > dataEnd || size > encodedBufferSize)
+	if (size > (unsigned long long)(dataEnd - data))
 	{
 		return false;
 	}
@@ -133,15 +138,15 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	tag = std::string((const char*)data, size_t(size));
 	data += size;
 
-	if (data + 8 > dataEnd)
+	if (dataEnd - data < 8)
 	{
 		return false;
 	}
 
-	size = *((unsigned long long*)data);
+	memcpy(&size, data, 8);
 	data += 8;
 
-	if (data + size > dataEnd || size > encodedBufferSize)
+	if (size > (unsigned long long)(dataEnd - data))
 	{
 		return false;
 	}
