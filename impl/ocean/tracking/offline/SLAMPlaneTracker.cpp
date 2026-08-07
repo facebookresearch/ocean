@@ -1244,7 +1244,7 @@ bool SLAMPlaneTracker::updateObjectTransformation()
 
 	const Vector3& zAxis = plane_.normal();
 
-	const Vector2 distortedCameraTop(undistortedOrigin.x(), undistortedOrigin.y() * Scalar(0.5));
+	const Vector2 distortedCameraTop(distortedOrigin.x(), distortedOrigin.y() * Scalar(0.5));
 	const Vector2 undistortedCameraTop(camera_.undistort<true>(distortedCameraTop));
 
 	const Line3 topRay(camera_.ray(undistortedCameraTop, initialPose_));
