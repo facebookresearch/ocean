@@ -173,9 +173,11 @@ bool MaintenanceTCPConnector::extractRelatedBuffer(BufferQueue& bufferQueue, Buf
 
 	const unsigned long long bufferSize = ((unsigned long long*)bufferQueue.front().data())[0];
 
-	ocean_assert(bufferSize < 1024ull * 1024ull * 1024ull * 64ull);
-	if (bufferSize >= 1024ull * 1024ull * 1024ull * 64ull)
+	// the size covers the 8 byte header itself, and a broken prefix cannot be resynchronized so the queue is dropped
+	ocean_assert(bufferSize > 8ull && bufferSize < 1024ull * 1024ull * 1024ull * 64ull);
+	if (bufferSize <= 8ull || bufferSize >= 1024ull * 1024ull * 1024ull * 64ull)
 	{
+		bufferQueue.clear();
 		return false;
 	}
 
