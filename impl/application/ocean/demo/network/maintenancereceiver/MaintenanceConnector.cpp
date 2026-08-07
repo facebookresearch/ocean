@@ -24,44 +24,49 @@ bool startConnector(const bool useTCPConnector, const unsigned short port)
 		Log::info() << "The port of the receiver is invalid!";
 		return false;
 	}
+
+	Log::info() << "The " << (useTCPConnector ? std::string("TCP") : std::string("UDP")) << " receiver has started on port: " << hostPort.readable();
+	Log::info() << " ";
+
+	ObjectRef<Maintenance::Connector> maintenanceConnector;
+
+	if (useTCPConnector)
+	{
+		Network::MaintenanceTCPConnector* connector = new Network::MaintenanceTCPConnector();
+		connector->configurateAsReceiver(hostPort);
+
+		maintenanceConnector = ObjectRef<Maintenance::Connector>(connector);
+	}
 	else
 	{
-		Log::info() << "The " << (useTCPConnector ? std::string("TCP") : std::string("UDP")) << " receiver has started on port: " << hostPort.readable();
-		Log::info() << " ";
+		Network::MaintenanceUDPConnector* connector = new Network::MaintenanceUDPConnector();
+		connector->configurateAsReceiver(hostPort);
 
-		ObjectRef<Maintenance::Connector> maintenanceConnector;
+		maintenanceConnector = ObjectRef<Maintenance::Connector>(connector);
+	}
 
-		if (useTCPConnector)
+	std::string name;
+	std::string tag;
+	uint64_t id = 0ull;
+	Maintenance::Buffer buffer;
+	Timestamp timestamp;
+
+	while (true)
+	{
+		if (Maintenance::get().receive(name, id, tag, buffer, timestamp))
 		{
-			Network::MaintenanceTCPConnector* connector = new Network::MaintenanceTCPConnector();
-			connector->configurateAsReceiver(hostPort);
-
-			maintenanceConnector = ObjectRef<Maintenance::Connector>(connector);
+			if (name.empty())
+			{
+				Log::info() << std::string((const char*)(buffer.data()), buffer.size());
+			}
+			else
+			{
+				Log::info() << name + std::string(": ") + std::string((const char*)(buffer.data()), buffer.size());
+			}
 		}
 		else
 		{
-			Network::MaintenanceUDPConnector* connector = new Network::MaintenanceUDPConnector();
-			connector->configurateAsReceiver(hostPort);
-
-			maintenanceConnector = ObjectRef<Maintenance::Connector>(connector);
-		}
-
-		std::string name, tag;
-		unsigned long long id;
-		Maintenance::Buffer buffer;
-		Timestamp timestamp;
-
-		while (true)
-		{
-			if (Maintenance::get().receive(name, id, tag, buffer, timestamp))
-			{
-				if (name.empty())
-					Log::info() << std::string((char*)buffer.data(), buffer.size());
-				else
-					Log::info() << name + std::string(": ") + std::string((char*)buffer.data(), buffer.size());
-			}
-			else
-				Thread::sleep(1u);
+			Thread::sleep(1u);
 		}
 	}
 

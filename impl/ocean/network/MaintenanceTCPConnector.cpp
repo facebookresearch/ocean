@@ -7,6 +7,8 @@
 
 #include "ocean/network/MaintenanceTCPConnector.h"
 
+#include "ocean/math/Numeric.h"
+
 namespace Ocean
 {
 
@@ -18,14 +20,14 @@ MaintenanceTCPConnector::MaintenanceTCPConnector() :
 {
 	startThread();
 
-	tcpServer.setConnectionRequestCallback(TCPServer::ConnectionRequestCallback::create(*this, &MaintenanceTCPConnector::onConnectionRequest));
-	tcpServer.setReceiveCallback(TCPServer::ReceiveCallback::create(*this, &MaintenanceTCPConnector::onReceiveTCPData));
+	tcpServer_.setConnectionRequestCallback(TCPServer::ConnectionRequestCallback::create(*this, &MaintenanceTCPConnector::onConnectionRequest));
+	tcpServer_.setReceiveCallback(TCPServer::ReceiveCallback::create(*this, &MaintenanceTCPConnector::onReceiveTCPData));
 }
 
 MaintenanceTCPConnector::~MaintenanceTCPConnector()
 {
-	tcpServer.setConnectionRequestCallback(TCPServer::ConnectionRequestCallback());
-	tcpServer.setReceiveCallback(TCPServer::ReceiveCallback());
+	tcpServer_.setConnectionRequestCallback(TCPServer::ConnectionRequestCallback());
+	tcpServer_.setReceiveCallback(TCPServer::ReceiveCallback());
 
 	stopThreadExplicitly();
 }
@@ -39,7 +41,7 @@ void MaintenanceTCPConnector::configurateAsSender(const Address4& address, const
 	clientTargetAddress_ = address;
 	clientTargetPort_ = port;
 
-	tcpServer.stop();
+	tcpServer_.stop();
 	serverSourcePort_ = Port();
 }
 
@@ -53,16 +55,15 @@ void MaintenanceTCPConnector::configurateAsReceiver(const Port& port)
 	clientTargetPort_ = Port();
 
 	serverSourcePort_ = port;
-	tcpServer.setPort(serverSourcePort_);
-	tcpServer.start();
+	tcpServer_.setPort(serverSourcePort_);
+	tcpServer_.start();
 }
 
 void MaintenanceTCPConnector::threadRun()
 {
-	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
-
-	std::string maintenanceName, maintenanceTag;
-	unsigned long long maintenanceId = (unsigned long long)(-1);
+	std::string maintenanceName;
+	std::string maintenanceTag;
+	uint64_t maintenanceId = uint64_t(-1);
 	Maintenance::Buffer maintenanceBuffer;
 	Timestamp maintenanceTimestamp;
 
@@ -87,10 +88,11 @@ void MaintenanceTCPConnector::threadRun()
 				{
 					encodeData(maintenanceName, maintenanceId, maintenanceTag, maintenanceBuffer, maintenanceTimestamp, 8, encodedSenderBuffer_);
 
-					((unsigned long long*)encodedSenderBuffer_.data())[0] = (unsigned long long)encodedSenderBuffer_.size();
+					const uint64_t encodedSenderBufferSize = uint64_t(encodedSenderBuffer_.size());
+					memcpy(encodedSenderBuffer_.data(), &encodedSenderBufferSize, sizeof(uint64_t));
 				}
 
-				const TCPClient::SocketResult sendResult = tcpClient.send(encodedSenderBuffer_.data(), encodedSenderBuffer_.size());
+				const TCPClient::SocketResult sendResult = tcpClient_.send(encodedSenderBuffer_.data(), encodedSenderBuffer_.size());
 
 				if (sendResult == TCPClient::SR_SUCCEEDED)
 				{
@@ -98,7 +100,7 @@ void MaintenanceTCPConnector::threadRun()
 				}
 				else if (sendResult == TCPClient::SR_NOT_CONNECTED)
 				{
-					tcpClient.connect(clientTargetAddress_, clientTargetPort_, 10u);
+					tcpClient_.connect(clientTargetAddress_, clientTargetPort_, 10u);
 					sleep(1u);
 				}
 			}
@@ -114,11 +116,11 @@ void MaintenanceTCPConnector::threadRun()
 			encodedReceiverBuffers.resize(bufferQueueMap_.size());
 			size_t bufferIndex = 0;
 
-			for (BufferQueueMap::iterator i = bufferQueueMap_.begin(); i != bufferQueueMap_.end(); ++i)
+			for (BufferQueueMap::value_type& connectionQueuePair : bufferQueueMap_)
 			{
-				if (!i->second.empty() && extractRelatedBuffer(i->second, encodedReceiverBuffers[bufferIndex]))
+				if (!connectionQueuePair.second.empty() && extractRelatedBuffer(connectionQueuePair.second, encodedReceiverBuffers[bufferIndex]))
 				{
-					bufferIndex++;
+					++bufferIndex;
 				}
 			}
 
@@ -153,13 +155,10 @@ void MaintenanceTCPConnector::onReceiveTCPData(const TCPServer::ConnectionId con
 	bufferQueueMap_[connectionId].push_back(std::move(receivedBuffer));
 }
 
-bool MaintenanceTCPConnector::onConnectionRequest(const Address4& address, const Port& port, TCPServer::ConnectionId connectionId)
+bool MaintenanceTCPConnector::onConnectionRequest(const Address4& address, const Port& port, TCPServer::ConnectionId /*connectionId*/)
 {
-	ocean_assert(address.isValid() && port.isValid());
-
-	OCEAN_SUPPRESS_UNUSED_WARNING(address);
-	OCEAN_SUPPRESS_UNUSED_WARNING(port);
-	OCEAN_SUPPRESS_UNUSED_WARNING(connectionId);
+	ocean_assert_and_suppress_unused(address.isValid(), address);
+	ocean_assert_and_suppress_unused(port.isValid(), port);
 
 	return true;
 }
@@ -171,7 +170,8 @@ bool MaintenanceTCPConnector::extractRelatedBuffer(BufferQueue& bufferQueue, Buf
 		return false;
 	}
 
-	const unsigned long long bufferSize = ((unsigned long long*)bufferQueue.front().data())[0];
+	uint64_t bufferSize;
+	memcpy(&bufferSize, bufferQueue.front().data(), sizeof(uint64_t));
 
 	// the size covers the 8 byte header itself, and a broken prefix cannot be resynchronized so the queue is dropped
 	ocean_assert(bufferSize > 8ull && bufferSize < 1024ull * 1024ull * 1024ull * 64ull);
@@ -181,10 +181,10 @@ bool MaintenanceTCPConnector::extractRelatedBuffer(BufferQueue& bufferQueue, Buf
 		return false;
 	}
 
-	unsigned long long availableBytes = 0u;
-	for (BufferQueue::const_iterator i = bufferQueue.begin(); availableBytes < bufferSize && i != bufferQueue.end(); ++i)
+	uint64_t availableBytes = 0ull;
+	for (BufferQueue::const_iterator iQueue = bufferQueue.begin(); availableBytes < bufferSize && iQueue != bufferQueue.end(); ++iQueue)
 	{
-		availableBytes += (unsigned long long)i->size();
+		availableBytes += uint64_t(iQueue->size());
 	}
 
 	if (availableBytes < bufferSize)
@@ -192,16 +192,21 @@ bool MaintenanceTCPConnector::extractRelatedBuffer(BufferQueue& bufferQueue, Buf
 		return false;
 	}
 
+	if (!NumericT<size_t>::isInsideValueRange(bufferSize))
+	{
+		return false;
+	}
+
 	buffer.resize(size_t(bufferSize));
 
-	unsigned char* data = buffer.data();
+	uint8_t* data = buffer.data();
 	size_t remaining = size_t(bufferSize);
 
 	while (!bufferQueue.empty())
 	{
 		Buffer& frontBuffer = bufferQueue.front();
 
-		const size_t bytes = min(remaining, frontBuffer.size());
+		const size_t bytes = std::min(remaining, frontBuffer.size());
 
 		memcpy(data, frontBuffer.data(), bytes);
 		data += bytes;

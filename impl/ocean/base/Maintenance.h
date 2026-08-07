@@ -38,7 +38,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		using Buffer = std::vector<unsigned char>;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * This class is the base class for all maintenance connectors.
@@ -65,7 +65,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * @return True, if succeeded
 				 * @see Maintenance::place().
 				 */
-				static bool place(const std::string& name, const unsigned long long id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp);
+				static bool place(const std::string& name, const uint64_t id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp);
 
 				/**
 				 * Encodes a maintenance data to one combined package.
@@ -77,7 +77,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * @param reservedHeaderSize The number of bytes which will be reserved for the header, so that the resulting buffer has an optional header followed by the payload data
 				 * @param encodedBuffer The resulting encoded package
 				 */
-				static void encodeData(const std::string& name, const unsigned long long id, const std::string& tag, const Buffer& buffer, const Timestamp timestamp, const size_t reservedHeaderSize, Buffer& encodedBuffer);
+				static void encodeData(const std::string& name, const uint64_t id, const std::string& tag, const Buffer& buffer, const Timestamp timestamp, const size_t reservedHeaderSize, Buffer& encodedBuffer);
 
 				/**
 				 * Decodes a package buffer to maintenance data with corresponding information.
@@ -90,7 +90,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * @param timestamp The timestamp of the maintenance data
 				 * @return True, if succeeded
 				 */
-				static bool decodeData(const void* encodedBuffer, const size_t encodedBufferSize, std::string& name, unsigned long long& id, std::string& tag, Buffer& buffer, Timestamp& timestamp);
+				static bool decodeData(const void* encodedBuffer, const size_t encodedBufferSize, std::string& name, uint64_t& id, std::string& tag, Buffer& buffer, Timestamp& timestamp);
 		};
 
 	protected:
@@ -105,19 +105,19 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				/**
 				 * Creates a new empty element.
 				 */
-				inline Element();
+				Element() = default;
 
 				/**
 				 * Copy constructor.
 				 * @param element The element to be copied
 				 */
-				inline Element(const Element& element);
+				Element(const Element& element) = default;
 
 				/**
 				 * Move constructor.
 				 * @param element The element to be moved
 				 */
-				inline Element(Element&& element);
+				Element(Element&& element) = default;
 
 				/**
 				 * Creates a new maintenance element.
@@ -127,7 +127,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * @param tag The tag of the maintenance data
 				 * @param buffer The maintenance data as buffer
 				 */
-				inline Element(const std::string& name, const unsigned long long id, const Timestamp timestamp, const std::string& tag, const Buffer& buffer);
+				inline Element(const std::string& name, const uint64_t id, const Timestamp timestamp, const std::string& tag, const Buffer& buffer);
 
 				/**
 				 * Creates a new maintenance element.
@@ -137,7 +137,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * @param tag The tag of the maintenance data
 				 * @param buffer The maintenance data as buffer, will be moved
 				 */
-				inline Element(const std::string& name, const unsigned long long id, const Timestamp timestamp, const std::string& tag, Buffer&& buffer);
+				inline Element(const std::string& name, const uint64_t id, const Timestamp timestamp, const std::string& tag, Buffer&& buffer);
 
 				/**
 				 * Returns the name of the maintenance manager to which the maintenance of this element data has been sent.
@@ -155,7 +155,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * Return sthe id of the maintenance manager to which the maintenance data of this element has been sent.
 				 * @return The id of the maintenance manager
 				 */
-				inline unsigned long long id() const;
+				inline uint64_t id() const;
 
 				/**
 				 * The timestamp of the maintenance data of this element.
@@ -192,31 +192,31 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 				 * @param element The second element to be copied
 				 * @return Reference to this element
 				 */
-				inline Element& operator=(const Element& element);
+				Element& operator=(const Element& element) = default;
 
 				/**
 				 * Assign operator.
 				 * @param element The second element to be moved
 				 * @return Reference to this element
 				 */
-				inline Element& operator=(Element&& element);
+				Element& operator=(Element&& element) = default;
 
 			protected:
 
 				/// The name of the manager to which the data has been sent.
-				std::string elementName;
+				std::string name_;
 
 				/// The id of the manager to which the data has been sent.
-				unsigned long long elementId;
+				uint64_t id_ = 0ull;
 
 				/// The timestamp of the data.
-				Timestamp elementTimestamp;
+				Timestamp timestamp_ = Timestamp(false);
 
 				/// The tag of the data.
-				std::string elementTag;
+				std::string tag_;
 
 				/// The buffer of the data.
-				Buffer elementBuffer;
+				Buffer buffer_;
 		};
 
 		/**
@@ -246,7 +246,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		 * The id provides a random 64 bit number allowing to distinguish between individual maintenance managers with same name (e.g., distributed in a large system connected by a network).
 		 * @return The random id of this manager
 		 */
-		inline unsigned long long id() const;
+		inline uint64_t id() const;
 
 		/**
 		 * Returns whether this maintenance manager is currently empty (does not hold any maintenance data, information or messages).
@@ -317,7 +317,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		 * @param timestamp The timestamp of the maintenance data
 		 * @return True, this manager had data which has been received
 		 */
-		bool receive(std::string& name, unsigned long long& id, std::string& tag, Buffer& buffer, Timestamp& timestamp);
+		bool receive(std::string& name, uint64_t& id, std::string& tag, Buffer& buffer, Timestamp& timestamp);
 
 		/**
 		 * Combines two buffers.
@@ -352,7 +352,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		 * @return True, if succeeded
 		 * @see Connector::place().
 		 */
-		bool place(const std::string& name, const unsigned long long id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp);
+		bool place(const std::string& name, const uint64_t id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp);
 
 	protected:
 
@@ -363,7 +363,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		std::string maintenanceName;
 
 		/// The random id of this manager.
-		unsigned long long maintenanceId;
+		uint64_t maintenanceId;
 
 		/// The maintenance element queue.
 		ElementQueue maintenanceElementQueue;
@@ -377,120 +377,64 @@ inline Maintenance::Connector::Connector()
 	// nothing to do here
 }
 
-inline Maintenance::Element::Element() :
-	elementId(0ull),
-	elementTimestamp(false)
+inline Maintenance::Element::Element(const std::string& name, const uint64_t id, const Timestamp timestamp, const std::string& tag, const Buffer& buffer) :
+	name_(name),
+	id_(id),
+	timestamp_(timestamp),
+	tag_(tag),
+	buffer_(buffer)
 {
 	// nothing to do here
 }
 
-inline Maintenance::Element::Element(const Element& element) :
-	elementName(element.elementName),
-	elementId(element.elementId),
-	elementTimestamp(element.elementTimestamp),
-	elementTag(element.elementTag),
-	elementBuffer(element.elementBuffer)
-{
-	// nothing to do here
-}
-
-inline Maintenance::Element::Element(Element&& element) :
-	elementName(std::move(element.elementName)),
-	elementId(element.elementId),
-	elementTimestamp(element.elementTimestamp),
-	elementTag(std::move(element.elementTag)),
-	elementBuffer(std::move(element.elementBuffer))
-{
-	element.elementId = 0ull;
-	element.elementTimestamp.toInvalid();
-}
-
-inline Maintenance::Element::Element(const std::string& name, const unsigned long long id, const Timestamp timestamp, const std::string& tag, const Buffer& buffer) :
-	elementName(name),
-	elementId(id),
-	elementTimestamp(timestamp),
-	elementTag(tag),
-	elementBuffer(buffer)
-{
-	// nothing to do here
-}
-
-inline Maintenance::Element::Element(const std::string& name, const unsigned long long id, const Timestamp timestamp, const std::string& tag, Buffer&& buffer) :
-	elementName(name),
-	elementId(id),
-	elementTimestamp(timestamp),
-	elementTag(tag),
-	elementBuffer(std::move(buffer))
+inline Maintenance::Element::Element(const std::string& name, const uint64_t id, const Timestamp timestamp, const std::string& tag, Buffer&& buffer) :
+	name_(name),
+	id_(id),
+	timestamp_(timestamp),
+	tag_(tag),
+	buffer_(std::move(buffer))
 {
 	// nothing to do here
 }
 
 inline const std::string& Maintenance::Element::name() const
 {
-	return elementName;
+	return name_;
 }
 
 inline std::string& Maintenance::Element::name()
 {
-	return elementName;
+	return name_;
 }
 
-inline unsigned long long Maintenance::Element::id() const
+inline uint64_t Maintenance::Element::id() const
 {
-	return elementId;
+	return id_;
 }
 
 inline Timestamp Maintenance::Element::timestamp() const
 {
-	return elementTimestamp;
+	return timestamp_;
 }
 
 inline const std::string& Maintenance::Element::tag() const
 {
-	return elementTag;
+	return tag_;
 }
 
 inline std::string& Maintenance::Element::tag()
 {
-	return elementTag;
+	return tag_;
 }
 
 inline const Maintenance::Buffer& Maintenance::Element::buffer() const
 {
-	return elementBuffer;
+	return buffer_;
 }
 
 inline Maintenance::Buffer& Maintenance::Element::buffer()
 {
-	return elementBuffer;
-}
-
-inline Maintenance::Element& Maintenance::Element::operator=(const Element& element)
-{
-	elementName = element.elementName;
-	elementId = element.elementId;
-	elementTimestamp = element.elementTimestamp;
-	elementTag = element.elementTag;
-	elementBuffer = element.elementBuffer;
-
-	return *this;
-}
-
-inline Maintenance::Element& Maintenance::Element::operator=(Element&& element)
-{
-	if (this != &element)
-	{
-		elementName = std::move(element.elementName);
-		elementId = element.elementId;
-		elementTimestamp = element.elementTimestamp;
-		elementTag = std::move(element.elementTag);
-		elementBuffer = std::move(element.elementBuffer);
-
-		element.elementId = 0ull;
-		element.elementTimestamp.toInvalid();
-	}
-
-	return *this;
+	return buffer_;
 }
 
 inline Maintenance::Maintenance() :
@@ -515,7 +459,7 @@ inline std::string Maintenance::name() const
 	return maintenanceName;
 }
 
-inline unsigned long long Maintenance::id() const
+inline uint64_t Maintenance::id() const
 {
 	const ScopedLock scopedLock(maintenanceLock);
 	return maintenanceId;

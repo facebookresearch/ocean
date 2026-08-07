@@ -10,12 +10,12 @@
 namespace Ocean
 {
 
-bool Maintenance::Connector::place(const std::string& name, const unsigned long long id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp)
+bool Maintenance::Connector::place(const std::string& name, const uint64_t id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp)
 {
 	return Maintenance::get().place(name, id, tag, std::move(buffer), timestamp);
 }
 
-void Maintenance::Connector::encodeData(const std::string& name, const unsigned long long id, const std::string& tag, const Buffer& buffer, const Timestamp timestamp, const size_t headerSize, Buffer& encodedBuffer)
+void Maintenance::Connector::encodeData(const std::string& name, const uint64_t id, const std::string& tag, const Buffer& buffer, const Timestamp timestamp, const size_t headerSize, Buffer& encodedBuffer)
 {
 	// header: headerSize byte
 	// timestamp: 8 byte
@@ -25,15 +25,13 @@ void Maintenance::Connector::encodeData(const std::string& name, const unsigned 
 	// buffer: 8 byte + 1 byte * buffer.size()
 
 	static_assert(sizeof(Timestamp) == 8, "Invalid data type!");
-	static_assert(sizeof(unsigned char) == 1, "Invalid data type!");
-	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 
 	encodedBuffer.resize(headerSize + 8 + 8 + name.length() + 8 + 8 + 8 + tag.length() + buffer.size());
-	unsigned char* data = encodedBuffer.data() + headerSize;
+	uint8_t* data = encodedBuffer.data() + headerSize;
 
-	const unsigned long long nameLength = (unsigned long long)(name.length());
-	const unsigned long long tagLength = (unsigned long long)(tag.length());
-	const unsigned long long bufferSize = (unsigned long long)(buffer.size());
+	const uint64_t nameLength = uint64_t(name.length());
+	const uint64_t tagLength = uint64_t(tag.length());
+	const uint64_t bufferSize = uint64_t(buffer.size());
 
 	ocean_assert(data + 8 <= encodedBuffer.data() + encodedBuffer.size());
 	memcpy(data, &timestamp, 8);
@@ -70,7 +68,7 @@ void Maintenance::Connector::encodeData(const std::string& name, const unsigned 
 	ocean_assert(data == encodedBuffer.data() + encodedBuffer.size());
 }
 
-bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t encodedBufferSize, std::string& name, unsigned long long& id, std::string& tag, Buffer& buffer, Timestamp& timestamp)
+bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t encodedBufferSize, std::string& name, uint64_t& id, std::string& tag, Buffer& buffer, Timestamp& timestamp)
 {
 	ocean_assert(encodedBuffer != nullptr && encodedBufferSize != 0);
 
@@ -81,18 +79,16 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	// buffer: 8 byte + 1 byte * buffer.size()
 
 	static_assert(sizeof(Timestamp) == 8, "Invalid data type!");
-	static_assert(sizeof(unsigned char) == 1, "Invalid data type!");
-	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 
 	if (encodedBufferSize < 8 + 8 + 8 + 8 + 8)
 	{
 		return false;
 	}
 
-	const unsigned char* data = (const unsigned char*)(encodedBuffer);
-	const unsigned char* const dataEnd = data + encodedBufferSize;
+	const uint8_t* data = (const uint8_t*)(encodedBuffer);
+	const uint8_t* const dataEnd = data + encodedBufferSize;
 
-	unsigned long long size;
+	uint64_t size;
 
 	memcpy(&timestamp, data, 8);
 	data += 8;
@@ -106,7 +102,7 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	data += 8;
 
 	// the remaining bytes are compared against the size instead of advancing the pointer by it, as the size is not trusted yet
-	if (size > (unsigned long long)(dataEnd - data))
+	if (size > uint64_t(dataEnd - data))
 	{
 		return false;
 	}
@@ -130,7 +126,7 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	memcpy(&size, data, 8);
 	data += 8;
 
-	if (size > (unsigned long long)(dataEnd - data))
+	if (size > uint64_t(dataEnd - data))
 	{
 		return false;
 	}
@@ -146,7 +142,7 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	memcpy(&size, data, 8);
 	data += 8;
 
-	if (size > (unsigned long long)(dataEnd - data))
+	if (size > uint64_t(dataEnd - data))
 	{
 		return false;
 	}
@@ -160,7 +156,7 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 
 bool Maintenance::send(const std::string& tag, const void* data, const size_t size, const Timestamp timestamp)
 {
-	ocean_assert(data && size != 0);
+	ocean_assert(data != nullptr && size != 0);
 
 	const ScopedLock scopedLock(maintenanceLock);
 
@@ -202,7 +198,7 @@ bool Maintenance::send(const std::string& tag, Buffer&& buffer, const Timestamp 
 	return true;
 }
 
-bool Maintenance::place(const std::string& name, const unsigned long long id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp)
+bool Maintenance::place(const std::string& name, const uint64_t id, const std::string& tag, Buffer&& buffer, const Timestamp timestamp)
 {
 	const ScopedLock scopedLock(maintenanceLock);
 
@@ -215,7 +211,7 @@ bool Maintenance::place(const std::string& name, const unsigned long long id, co
 	return true;
 }
 
-bool Maintenance::receive(std::string& name, unsigned long long& id, std::string& tag, Buffer& buffer, Timestamp& timestamp)
+bool Maintenance::receive(std::string& name, uint64_t& id, std::string& tag, Buffer& buffer, Timestamp& timestamp)
 {
 	const ScopedLock scopedLock(maintenanceLock);
 

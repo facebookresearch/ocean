@@ -18,12 +18,12 @@ MaintenanceUDPConnector::MaintenanceUDPConnector() :
 {
 	startThread();
 
-	udpServer.setReceiveCallback(PackagedUDPServer::ReceiveCallback::create(*this, &MaintenanceUDPConnector::onReceiveUDPMessage));
+	udpServer_.setReceiveCallback(PackagedUDPServer::ReceiveCallback::create(*this, &MaintenanceUDPConnector::onReceiveUDPMessage));
 }
 
 MaintenanceUDPConnector::~MaintenanceUDPConnector()
 {
-	udpServer.setReceiveCallback(PackagedUDPServer::ReceiveCallback());
+	udpServer_.setReceiveCallback(PackagedUDPServer::ReceiveCallback());
 
 	stopThreadExplicitly();
 }
@@ -37,7 +37,7 @@ void MaintenanceUDPConnector::configurateAsSender(const Address4& address, const
 	clientTargetAddress_ = address;
 	clientTargetPort_ = port;
 
-	udpServer.stop();
+	udpServer_.stop();
 	serverSourcePort_ = Port();
 }
 
@@ -51,14 +51,14 @@ void MaintenanceUDPConnector::configurateAsReceiver(const Port& port)
 	clientTargetPort_ = Port();
 
 	serverSourcePort_ = port;
-	udpServer.setPort(serverSourcePort_);
-	udpServer.start();
+	udpServer_.setPort(serverSourcePort_);
+	udpServer_.start();
 }
 
 void MaintenanceUDPConnector::threadRun()
 {
 	std::string maintenanceName, maintenanceTag;
-	unsigned long long maintenanceId;
+	uint64_t maintenanceId;
 	Maintenance::Buffer maintenanceBuffer;
 	Timestamp maintenanceTimestamp;
 
@@ -80,7 +80,7 @@ void MaintenanceUDPConnector::threadRun()
 				temporalScopedLock.release();
 
 				encodeData(maintenanceName, maintenanceId, maintenanceTag, maintenanceBuffer, maintenanceTimestamp, 0, encodedBuffer);
-				udpClient.send(clientTargetAddress_, clientTargetPort_, encodedBuffer.data(), encodedBuffer.size());
+				udpClient_.send(clientTargetAddress_, clientTargetPort_, encodedBuffer.data(), encodedBuffer.size());
 			}
 			else
 			{

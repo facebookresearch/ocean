@@ -121,10 +121,10 @@ class OCEAN_NETWORK_EXPORT MaintenanceUDPConnector :
 		Port serverSourcePort_;
 
 		/// The UDP client of this connector, used if this connector is a sender.
-		PackagedUDPClient udpClient;
+		PackagedUDPClient udpClient_;
 
 		/// The UDP server of this connector, used if this connector is a receiver.
-		PackagedUDPServer udpServer;
+		PackagedUDPServer udpServer_;
 
 		/// The queue of maintenance data.
 		BufferQueue bufferQueue_;

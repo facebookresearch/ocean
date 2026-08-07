@@ -147,10 +147,10 @@ class OCEAN_NETWORK_EXPORT MaintenanceTCPConnector :
 		Port serverSourcePort_;
 
 		/// The TCP client of this connector, used if this connector is a sender.
-		TCPClient tcpClient;
+		TCPClient tcpClient_;
 
 		/// The TCP server of this connector, used if this connector is a receiver.
-		TCPServer tcpServer;
+		TCPServer tcpServer_;
 
 		/// The map of received buffers.
 		BufferQueueMap bufferQueueMap_;
