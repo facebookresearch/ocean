@@ -4840,7 +4840,17 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubset(const uint8_t* input,
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
 
+	// sizeX() is a size_t, but everything it feeds here is unsigned int: the output
+	// stride, the loop counters, and Ocean's frame API. So narrow it once, and verify
+	// the cast round-trips - bilinearValues() always fills the full sizeX(), so a
+	// truncated count would size the row lookup buffer too small.
 	const unsigned int columns = (unsigned int)(input_LT_output->sizeX());
+
+	if (size_t(columns) != input_LT_output->sizeX())
+	{
+		ocean_assert(false && "Lookup table is wider than 32 bits!");
+		return;
+	}
 
 	const unsigned int outputStrideElements = tChannels * columns + outputPaddingElements;
 
@@ -4851,6 +4861,14 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubset(const uint8_t* input,
 
 	Memory rowLookupMemory = Memory::create<Vector2>(columns);
 	Vector2* const rowLookupData = rowLookupMemory.data<Vector2>();
+
+	if (rowLookupData == nullptr)
+	{
+		// Memory leaves the buffer nullptr if the allocation fails, while
+		// bilinearValues() below writes values[0] unconditionally
+		ocean_assert(false && "Failed to allocate the row lookup buffer!");
+		return;
+	}
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
@@ -4896,7 +4914,17 @@ void FrameInterpolatorBilinear::lookupSubset(const T* input, const unsigned int 
 	const T zeroColor[tChannels] = {T(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
 
+	// sizeX() is a size_t, but everything it feeds here is unsigned int: the output
+	// stride, the loop counters, and Ocean's frame API. So narrow it once, and verify
+	// the cast round-trips - bilinearValues() always fills the full sizeX(), so a
+	// truncated count would size the row lookup buffer too small.
 	const unsigned int columns = (unsigned int)(input_LT_output->sizeX());
+
+	if (size_t(columns) != input_LT_output->sizeX())
+	{
+		ocean_assert(false && "Lookup table is wider than 32 bits!");
+		return;
+	}
 
 	const unsigned int outputStrideElements = tChannels * columns + outputPaddingElements;
 
@@ -4907,6 +4935,14 @@ void FrameInterpolatorBilinear::lookupSubset(const T* input, const unsigned int 
 
 	Memory rowLookupMemory = Memory::create<Vector2>(columns);
 	Vector2* const rowLookupData = rowLookupMemory.data<Vector2>();
+
+	if (rowLookupData == nullptr)
+	{
+		// Memory leaves the buffer nullptr if the allocation fails, while
+		// bilinearValues() below writes values[0] unconditionally
+		ocean_assert(false && "Failed to allocate the row lookup buffer!");
+		return;
+	}
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
@@ -4949,7 +4985,18 @@ inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const 
 
 	const uint8x16_t constantBorderColor_u_8x16 = vdupq_n_u8(borderColor ? *borderColor : 0u);
 
+	// sizeX() is a size_t, but everything it feeds here is unsigned int: the output
+	// stride, the loop counters, and Ocean's frame API. So narrow it once, and verify
+	// the cast round-trips - bilinearValues() always fills the full sizeX(), so a
+	// truncated count would size the row lookup buffer too small.
 	const unsigned int outputWidth = (unsigned int)(input_LT_output->sizeX());
+
+	if (size_t(outputWidth) != input_LT_output->sizeX())
+	{
+		ocean_assert(false && "Lookup table is wider than 32 bits!");
+		return;
+	}
+
 	ocean_assert(outputWidth >= 8u);
 
 	static_assert(std::is_same<Vector2, LookupTable::Type>::value, "Invalid data type!");
@@ -4959,6 +5006,14 @@ inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const 
 
 	Memory rowLookupMemory = Memory::create<VectorF2>(outputWidth);
 	VectorF2* const rowLookupData = rowLookupMemory.data<VectorF2>();
+
+	if (rowLookupData == nullptr)
+	{
+		// Memory leaves the buffer nullptr if the allocation fails, while
+		// bilinearValues() below writes values[0] unconditionally
+		ocean_assert(false && "Failed to allocate the row lookup buffer!");
+		return;
+	}
 
 	const float32x4_t constantZero_f_32x4 = vdupq_n_f32(0.0f); // [0.0f, 0.0f, 0.0f, 0.0f]
 	const float32x4_t constantEight_f_32x4 = vdupq_n_f32(8.0f); // [4.0f, 4.0f, 4.0f, 4.0f]
@@ -5149,7 +5204,18 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
 
+	// sizeX() is a size_t, but everything it feeds here is unsigned int: the output
+	// stride, the loop counters, and Ocean's frame API. So narrow it once, and verify
+	// the cast round-trips - bilinearValues() always fills the full sizeX(), so a
+	// truncated count would size the row lookup buffer too small.
 	const unsigned int outputWidth = (unsigned int)(input_LT_output->sizeX());
+
+	if (size_t(outputWidth) != input_LT_output->sizeX())
+	{
+		ocean_assert(false && "Lookup table is wider than 32 bits!");
+		return;
+	}
+
 	ocean_assert(outputWidth >= 4u);
 
 	static_assert(std::is_same<Vector2, LookupTable::Type>::value, "Invalid data type!");
@@ -5159,6 +5225,14 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 
 	Memory rowLookupMemory = Memory::create<VectorF2>(outputWidth);
 	VectorF2* const rowLookupData = rowLookupMemory.data<VectorF2>();
+
+	if (rowLookupData == nullptr)
+	{
+		// Memory leaves the buffer nullptr if the allocation fails, while
+		// bilinearValues() below writes values[0] unconditionally
+		ocean_assert(false && "Failed to allocate the row lookup buffer!");
+		return;
+	}
 
 	const float32x4_t constantZero_f_32x4 = vdupq_n_f32(0.0f); // [0.0f, 0.0f, 0.0f, 0.0f]
 	const float32x4_t constantFour_f_32x4 = vdupq_n_f32(4.0f); // [4.0f, 4.0f, 4.0f, 4.0f]
@@ -5364,7 +5438,17 @@ void FrameInterpolatorBilinear::lookupMask8BitPerChannelSubset(const uint8_t* in
 
 	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
+	// sizeX() is a size_t, but everything it feeds here is unsigned int: the output
+	// stride, the loop counters, and Ocean's frame API. So narrow it once, and verify
+	// the cast round-trips - bilinearValues() always fills the full sizeX(), so a
+	// truncated count would size the row lookup buffer too small.
 	const unsigned int columns = (unsigned int)(input_LT_output->sizeX());
+
+	if (size_t(columns) != input_LT_output->sizeX())
+	{
+		ocean_assert(false && "Lookup table is wider than 32 bits!");
+		return;
+	}
 
 	const unsigned int outputStrideElements = tChannels * columns + outputPaddingElements;
 	const unsigned int outputMaskStrideElements = columns + outputMaskPaddingElements;
@@ -5376,6 +5460,14 @@ void FrameInterpolatorBilinear::lookupMask8BitPerChannelSubset(const uint8_t* in
 
 	Memory rowLookupMemory = Memory::create<Vector2>(columns);
 	Vector2* const rowLookupData = rowLookupMemory.data<Vector2>();
+
+	if (rowLookupData == nullptr)
+	{
+		// Memory leaves the buffer nullptr if the allocation fails, while
+		// bilinearValues() below writes values[0] unconditionally
+		ocean_assert(false && "Failed to allocate the row lookup buffer!");
+		return;
+	}
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
