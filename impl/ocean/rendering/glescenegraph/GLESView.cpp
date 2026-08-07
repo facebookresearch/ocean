@@ -6,11 +6,8 @@
  */
 
 #include "ocean/rendering/glescenegraph/GLESView.h"
-#include "ocean/rendering/glescenegraph/GLESGroup.h"
-#include "ocean/rendering/glescenegraph/GLESNode.h"
-#include "ocean/rendering/glescenegraph/GLESScene.h"
 
-#include "ocean/rendering/Manager.h"
+#include "ocean/rendering/Engine.h"
 
 namespace Ocean
 {
@@ -172,7 +169,7 @@ bool GLESView::setBackgroundColor(const RGBAColor& color)
 	const ScopedLock scopedLock(objectLock);
 
 	backgroundColor_ = color;
-	return false;
+	return true;
 }
 
 void GLESView::setUseHeadlight(const bool state)

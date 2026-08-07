@@ -169,7 +169,7 @@ bool GIView::setBackgroundColor(const RGBAColor& color)
 	}
 
 	viewBackgroundColor = color;
-	return false;
+	return true;
 }
 
 void GIView::setUseHeadlight(const bool state)
