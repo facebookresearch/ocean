@@ -96,6 +96,11 @@ bool FeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera&
 	const uint32_t* linedIntegralImage = createLinedIntegralImage(frame, worker);
 	ocean_assert(linedIntegralImage != nullptr);
 
+	if (linedIntegralImage == nullptr)
+	{
+		return false;
+	}
+
 	HomogenousMatrix4 pose;
 	const bool trackerResult = determinePose(frame, linedIntegralImage, pinholeCamera, frameIsUndistorted, pose, worker);
 
