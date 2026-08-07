@@ -441,14 +441,14 @@ bool HTTPClient::url2uri(const std::string& url, std::string& protocol, std::str
 
 bool HTTPClient::parseHeader(const char* data, const size_t size, HTTPHeader& header)
 {
-	ocean_assert(data && size > 0);
+	ocean_assert(data != nullptr && size > 0);
 
-	if (!data || size < 4)
+	if (data == nullptr || size < 5)
 	{
 		return false;
 	}
 
-	if (std::string(data, 5) != "HTTP/")
+	if (memcmp(data, "HTTP/", 5) != 0)
 	{
 		return false;
 	}
