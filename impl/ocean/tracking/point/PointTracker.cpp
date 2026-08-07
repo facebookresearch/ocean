@@ -31,6 +31,7 @@ PointTracker::PointTracker(PointTracker&& pointTracker) noexcept
 }
 
 PointTracker::PointTracker(const PointTracker& pointTracker) :
+	trackingMode_(pointTracker.trackingMode_),
 	database_(pointTracker.database_),
 	previousFramePyramid_(pointTracker.previousFramePyramid_, true /*copyData*/),
 	currentFramePyramid_(pointTracker.currentFramePyramid_, true /*copyData*/),
@@ -234,6 +235,9 @@ PointTracker& PointTracker::operator=(PointTracker&& pointTracker) noexcept
 {
 	if (this != &pointTracker)
 	{
+		trackingMode_ = pointTracker.trackingMode_;
+		pointTracker.trackingMode_ = TM_ZM_SSD_7;
+
 		database_ = std::move(pointTracker.database_);
 
 		previousFramePyramid_ = std::move(pointTracker.previousFramePyramid_);
@@ -254,6 +258,8 @@ PointTracker& PointTracker::operator=(const PointTracker& pointTracker)
 {
 	if (this != &pointTracker)
 	{
+		trackingMode_ = pointTracker.trackingMode_;
+
 		database_ = pointTracker.database_;
 
 		previousFramePyramid_ = CV::FramePyramid(pointTracker.previousFramePyramid_, true /*copyData*/);
