@@ -76,6 +76,12 @@ class OCEAN_NETWORK_EXPORT PackagedTCPServer :
 		 */
 		void onReceived(const ConnectionId connectionId, const void* data, const size_t size) override;
 
+		/**
+		 * Internal event function for a connection which is about to be removed from this server.
+		 * @see ConnectionOrientedServer::onRemoveConnection().
+		 */
+		void onRemoveConnection(const ConnectionId connectionId) override;
+
 	protected:
 
 		/// The map mapping connection ids to ConnectionMemory objects.

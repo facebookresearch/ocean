@@ -104,6 +104,8 @@ bool TCPServer::disconnect(const ConnectionId connectionId)
 	close(connectionObject.id());
 #endif
 
+	onRemoveConnection(connectionId);
+
 	connectionMap_.erase(iConnection);
 
 	return true;

@@ -195,6 +195,8 @@ bool ConnectionOrientedServer::onScheduler()
 					disconnectCallback_(iConnection->first);
 				}
 
+				onRemoveConnection(iConnection->first);
+
 				iConnection = connectionMap_.erase(iConnection);
 				continue;
 			}
@@ -218,6 +220,8 @@ bool ConnectionOrientedServer::onScheduler()
 				disconnectCallback_(iConnection->first);
 			}
 
+			onRemoveConnection(iConnection->first);
+
 			iConnection = connectionMap_.erase(iConnection);
 			continue;
 		}
@@ -226,6 +230,11 @@ bool ConnectionOrientedServer::onScheduler()
 	}
 
 	return busy;
+}
+
+void ConnectionOrientedServer::onRemoveConnection(const ConnectionId /*connectionId*/)
+{
+	// nothing to do here
 }
 
 size_t ConnectionOrientedServer::onSend(const ConnectionId connectionId, const void* data, const size_t size)

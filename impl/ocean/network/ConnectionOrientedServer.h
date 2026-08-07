@@ -210,6 +210,13 @@ class OCEAN_NETWORK_EXPORT ConnectionOrientedServer : virtual public Server
 		 */
 		virtual void onReceived(const ConnectionId connectionId, const void* data, const size_t size);
 
+		/**
+		 * Internal event function for a connection which is about to be removed from this server.
+		 * Allows a derived class to release any state it keeps for that connection, the connection is still in the connection map when this is called.
+		 * @param connectionId The id of the connection which will be removed
+		 */
+		virtual void onRemoveConnection(const ConnectionId connectionId);
+
 	protected:
 
 		/// Map holding all valid connections.

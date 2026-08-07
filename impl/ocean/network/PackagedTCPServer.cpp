@@ -32,6 +32,13 @@ size_t PackagedTCPServer::onSend(const ConnectionId connectionId, const void* da
 	return TCPServer::onSend(connectionId, data, size);
 }
 
+void PackagedTCPServer::onRemoveConnection(const ConnectionId connectionId)
+{
+	connectionMemoryMap_.erase(connectionId);
+
+	TCPServer::onRemoveConnection(connectionId);
+}
+
 void PackagedTCPServer::onReceived(const ConnectionId connectionId, const void* data, const size_t size)
 {
 	ConnectionMemory& connectionMemory = connectionMemoryMap_[connectionId];
