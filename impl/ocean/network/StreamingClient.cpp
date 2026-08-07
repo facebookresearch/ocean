@@ -283,11 +283,13 @@ std::string StreamingClient::channelDataType(const std::string& channel)
 		Log::info() << " sent a data type request message.";
 	}
 
-	std::string response, value;
+	std::string response;
+	std::string value;
 
 	if (messageQueue_.pop(sessionId, responseTimeout_, response, value) == false || response != dataTypeRequestResponseP())
 	{
 		Log::error() << name_ << " received no answer for the data type request.";
+		return std::string();
 	}
 
 	Log::info() << name_ << " received the following data type \"" << value << "\".";
