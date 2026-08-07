@@ -2630,7 +2630,7 @@ template <bool tThreadSafe>
 inline bool Database::validPoseRange(const Index32 lowerPoseId, const Index32 startPoseId, const Index32 upperPoseId, Index32& rangeLowerPoseId, Index32& rangeUpperPoseId) const
 {
 	ocean_assert(startPoseId != invalidId);
-	ocean_assert_and_suppress_unused(lowerPoseId <= startPoseId && startPoseId <= upperPoseId, lowerPoseId);
+	ocean_assert(lowerPoseId <= startPoseId && startPoseId <= upperPoseId);
 
 	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
 
@@ -2641,7 +2641,7 @@ inline bool Database::validPoseRange(const Index32 lowerPoseId, const Index32 st
 	rangeLowerPoseId = startPoseId;
 	rangeUpperPoseId = startPoseId;
 
-	for (unsigned int id = startPoseId - 1; id != (unsigned int)(-1); --id)
+	for (unsigned int id = startPoseId - 1; id != (unsigned int)(-1) && id >= lowerPoseId; --id)
 	{
 		i = databasePoseMap.find(id);
 
