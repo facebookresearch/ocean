@@ -716,6 +716,12 @@ void StreamingServer::onServerPort(const TCPServer::ConnectionId tcpConnectionId
 
 void StreamingServer::onChannelSelect(const TCPServer::ConnectionId tcpConnectionId, const std::string& value, const SessionId sessionId)
 {
+	if (channelMap_.empty())
+	{
+		tcpServer_.send(tcpConnectionId, createResponse(channelSelectResponseN(), "No channel available", sessionId));
+		return;
+	}
+
 	ChannelMap::iterator iChannel;
 	for (iChannel = channelMap_.begin(); iChannel != channelMap_.end(); ++iChannel)
 	{
