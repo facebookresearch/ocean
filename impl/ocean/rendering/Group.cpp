@@ -88,10 +88,12 @@ void Group::removeChild(const NodeRef& node)
 
 	const Nodes::const_iterator iNode = std::find(nodes_.cbegin(), nodes_.cend(), node);
 
-	if (iNode != nodes_.cend())
+	if (iNode == nodes_.cend())
 	{
-		nodes_.erase(iNode);
+		return;
 	}
+
+	nodes_.erase(iNode);
 
 	unregisterThisObjectAsParent(node);
 }
