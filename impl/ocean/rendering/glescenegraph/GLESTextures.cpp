@@ -108,8 +108,7 @@ GLESAttribute::ProgramType GLESTextures::necessaryShader() const
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_RGBA);
 				break;
 
-			case FrameType::FORMAT_Y_U_V24_LIMITED_RANGE: // we are currently using the same shader for limited and full value range, may have a minor impact on color precision
-			case FrameType::FORMAT_Y_U_V24_FULL_RANGE:
+			case FrameType::FORMAT_YUV24:
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_YUV24);
 				break;
 
