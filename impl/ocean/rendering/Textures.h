@@ -99,12 +99,12 @@ class OCEAN_RENDERING_EXPORT Textures : virtual public Attribute
 	protected:
 
 		/// Vector holding texture objects.
-		TextureObjects textures;
+		TextureObjects textures_;
 };
 
 inline unsigned int Textures::numberTextures() const
 {
-	return (unsigned int)(textures.size());
+	return (unsigned int)(textures_.size());
 }
 
 }

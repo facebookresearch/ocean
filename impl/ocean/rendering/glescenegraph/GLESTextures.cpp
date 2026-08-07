@@ -39,12 +39,12 @@ void GLESTextures::setTexture(const TextureRef& texture, const unsigned int laye
 
 void GLESTextures::bindAttribute(const GLESFramebuffer& /*framebuffer*/, GLESShaderProgram& shaderProgram)
 {
-	for (size_t n = 0; n < textures.size(); ++n)
+	for (size_t nTexture = 0; nTexture < textures_.size(); ++nTexture)
 	{
-		const SmartObjectRef<GLESTexture> texture(textures[n]);
+		const SmartObjectRef<GLESTexture> texture(textures_[nTexture]);
 		ocean_assert(texture);
 
-		texture->bindTexture(shaderProgram, (unsigned int)(n));
+		texture->bindTexture(shaderProgram, (unsigned int)(nTexture));
 	}
 }
 

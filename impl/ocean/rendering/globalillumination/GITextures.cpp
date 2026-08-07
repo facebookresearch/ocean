@@ -39,12 +39,12 @@ void GITextures::setTexture(const TextureRef& texture, const unsigned int layerI
 
 bool GITextures::textureColor(const TextureCoordinate& textureCoordinate, RGBAColor& color) const
 {
-	if (textures.empty())
+	if (textures_.empty())
 	{
 		return false;
 	}
 
-	const SmartObjectRef<GITexture2D> texture(textures.front());
+	const SmartObjectRef<GITexture2D> texture(textures_.front());
 
 	if (!texture)
 	{

@@ -22,9 +22,9 @@ Textures::Textures() :
 
 Textures::~Textures()
 {
-	for (TextureObjects::const_iterator i = textures.begin(); i != textures.end(); ++i)
+	for (const TextureRef& texture : textures_)
 	{
-		unregisterThisObjectAsParent(*i);
+		unregisterThisObjectAsParent(texture);
 	}
 }
 
@@ -32,9 +32,9 @@ TextureRef Textures::texture(const unsigned int layerIndex) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (layerIndex < textures.size())
+	if (layerIndex < textures_.size())
 	{
-		return textures[layerIndex];
+		return textures_[layerIndex];
 	}
 
 	return TextureRef();
@@ -44,15 +44,15 @@ void Textures::setTexture(const TextureRef& texture, const unsigned int layerInd
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (layerIndex >= textures.size())
+	if (layerIndex >= textures_.size())
 	{
-		textures.resize(layerIndex + 1);
+		textures_.resize(layerIndex + 1);
 	}
 
-	unregisterThisObjectAsParent(textures[layerIndex]);
+	unregisterThisObjectAsParent(textures_[layerIndex]);
 	registerThisObjectAsParent(texture);
 
-	textures[layerIndex] = texture;
+	textures_[layerIndex] = texture;
 }
 
 void Textures::addTexture(const TextureRef& texture)
@@ -65,16 +65,16 @@ void Textures::addTexture(const TextureRef& texture)
 	const ScopedLock scopedLock(objectLock);
 
 	registerThisObjectAsParent(texture);
-	textures.push_back(texture);
+	textures_.push_back(texture);
 }
 
 bool Textures::hasAlphaTexture() const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	for (TextureObjects::const_iterator i = textures.begin(); i != textures.end(); ++i)
+	for (const TextureRef& textureObject : textures_)
 	{
-		const Texture2DRef texture(*i);
+		const Texture2DRef texture(textureObject);
 
 		if (texture)
 		{
