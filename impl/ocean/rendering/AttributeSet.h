@@ -117,7 +117,7 @@ class OCEAN_RENDERING_EXPORT AttributeSet : virtual public Object
 	protected:
 
 		/// Set holding registered attributes.
-		Attributes setAttributes;
+		Attributes attributes_;
 };
 
 }

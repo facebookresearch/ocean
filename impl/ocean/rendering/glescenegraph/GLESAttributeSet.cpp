@@ -126,9 +126,9 @@ void GLESAttributeSet::bindAttributes(const GLESFramebuffer& framebuffer, const 
 	{
 		shaderProgram_->bind(framebuffer, projection, camera_T_model, camera_T_world, normalMatrix);
 
-		for (Attributes::const_iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
+		for (const AttributeRef& attribute : attributes_)
 		{
-			const SmartObjectRef<GLESAttribute> glesAttribute(*i);
+			const SmartObjectRef<GLESAttribute> glesAttribute(attribute);
 			ocean_assert(glesAttribute);
 
 			glesAttribute->bindAttribute(framebuffer, *shaderProgram_);
@@ -139,7 +139,7 @@ void GLESAttributeSet::bindAttributes(const GLESFramebuffer& framebuffer, const 
 			additionalAttribute->bindAttribute(framebuffer, *shaderProgram_);
 		}
 
-		if (setAttributes.empty() && additionalAttribute == nullptr)
+		if (attributes_.empty() && additionalAttribute == nullptr)
 		{
 			// we have the PT_STATIC_COLOR shader
 
@@ -183,9 +183,10 @@ void GLESAttributeSet::bindAttributes(const GLESFramebuffer& framebuffer, const 
 
 void GLESAttributeSet::unbindAttributes()
 {
-	for (Attributes::const_reverse_iterator i = setAttributes.rbegin(); i != setAttributes.rend(); ++i)
+	// unbound in reverse order, mirroring how bindAttributes() bound them
+	for (Attributes::const_reverse_iterator iAttribute = attributes_.crbegin(); iAttribute != attributes_.crend(); ++iAttribute)
 	{
-		const SmartObjectRef<GLESAttribute> glesAttribute(*i);
+		const SmartObjectRef<GLESAttribute> glesAttribute(*iAttribute);
 		ocean_assert(glesAttribute);
 
 		glesAttribute->unbindAttribute();
@@ -194,16 +195,16 @@ void GLESAttributeSet::unbindAttributes()
 
 GLESAttribute::ProgramType GLESAttributeSet::determineShaderType(const Lights& lights, const GLESAttribute::ProgramType additionalProgramTypes, const GLESAttribute* additionalAttribute) const
 {
-	if (setAttributes.empty() && additionalAttribute == nullptr)
+	if (attributes_.empty() && additionalAttribute == nullptr)
 	{
 		return GLESAttribute::PT_STATIC_COLOR;
 	}
 
 	GLESAttribute::ProgramType result = GLESAttribute::PT_UNKNOWN;
 
-	for (Attributes::const_iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
+	for (const AttributeRef& attribute : attributes_)
 	{
-		const SmartObjectRef<GLESAttribute> glesAttribute(*i);
+		const SmartObjectRef<GLESAttribute> glesAttribute(attribute);
 		ocean_assert(glesAttribute);
 
 		result = GLESAttribute::ProgramType(result | glesAttribute->necessaryShader());

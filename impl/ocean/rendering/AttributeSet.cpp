@@ -22,21 +22,30 @@ AttributeSet::AttributeSet() :
 
 AttributeSet::~AttributeSet()
 {
-	for (Attributes::const_iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
-		unregisterThisObjectAsParent(*i);
+	for (const AttributeRef& attribute : attributes_)
+	{
+		unregisterThisObjectAsParent(attribute);
+	}
 }
 
 AttributeRef AttributeSet::attribute(const unsigned int index) const
 {
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	if (index >= setAttributes.size())
+	if (index >= attributes_.size())
+	{
 		return ObjectRef();
+	}
 
-	unsigned int n = 0;
-	for (Attributes::const_iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
+	unsigned int n = 0u;
+
+	for (const AttributeRef& attribute : attributes_)
+	{
 		if (index == n++)
-			return *i;
+		{
+			return attribute;
+		}
+	}
 
 	ocean_assert(false && "This should never happen");
 	return ObjectRef();
@@ -44,13 +53,16 @@ AttributeRef AttributeSet::attribute(const unsigned int index) const
 
 AttributeRef AttributeSet::attribute(const ObjectType attributeType) const
 {
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	for (Attributes::const_iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
+	for (const AttributeRef& attribute : attributes_)
 	{
-		ocean_assert(*i);
-		if ((*i)->type() == attributeType)
-			return *i;
+		ocean_assert(attribute);
+
+		if (attribute->type() == attributeType)
+		{
+			return attribute;
+		}
 	}
 
 	return ObjectRef();
@@ -58,13 +70,16 @@ AttributeRef AttributeSet::attribute(const ObjectType attributeType) const
 
 bool AttributeSet::hasAttribute(const ObjectType attributeType) const
 {
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	for (Attributes::const_iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
+	for (const AttributeRef& attribute : attributes_)
 	{
-		ocean_assert(*i);
-		if ((*i)->type() == attributeType)
+		ocean_assert(attribute);
+
+		if (attribute->type() == attributeType)
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -72,55 +87,61 @@ bool AttributeSet::hasAttribute(const ObjectType attributeType) const
 
 unsigned int AttributeSet::numberAttributes() const
 {
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	return (unsigned int)(setAttributes.size());
+	return (unsigned int)(attributes_.size());
 }
 
 void AttributeSet::addAttribute(const AttributeRef& attribute)
 {
 	if (attribute.isNull())
+	{
 		return;
+	}
 
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	ocean_assert(setAttributes.find(attribute) == setAttributes.end());
+	ocean_assert(!attributes_.contains(attribute));
 	ocean_assert(AttributeSet::attribute(attribute->type()).isNull());
 
 #ifdef OCEAN_DEBUG
 
-	ShaderProgramRef shaderProgram(attribute);
+	const ShaderProgramRef shaderProgram(attribute);
+
 	if (shaderProgram)
+	{
 		ocean_assert(shaderProgram->isCompiled());
+	}
 
 #endif
 
 	registerThisObjectAsParent(attribute);
-	setAttributes.insert(attribute);
+	attributes_.insert(attribute);
 }
 
 void AttributeSet::removeAttribute(const AttributeRef& attribute)
 {
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	ocean_assert(setAttributes.find(attribute) != setAttributes.end());
+	ocean_assert(attributes_.contains(attribute));
 
 	unregisterThisObjectAsParent(attribute);
-	setAttributes.erase(attribute);
+	attributes_.erase(attribute);
 }
 
 bool AttributeSet::removeAttribute(const ObjectType attributeType)
 {
-	ScopedLock scopedLock(objectLock);
+	const ScopedLock scopedLock(objectLock);
 
-	for (Attributes::iterator i = setAttributes.begin(); i != setAttributes.end(); ++i)
+	for (Attributes::const_iterator iAttribute = attributes_.cbegin(); iAttribute != attributes_.cend(); ++iAttribute)
 	{
-		ocean_assert(*i);
-		if ((*i)->type() == attributeType)
-		{
-			unregisterThisObjectAsParent(*i);
+		ocean_assert(*iAttribute);
 
-			setAttributes.erase(i);
+		if ((*iAttribute)->type() == attributeType)
+		{
+			unregisterThisObjectAsParent(*iAttribute);
+
+			attributes_.erase(iAttribute);
 			return true;
 		}
 	}
