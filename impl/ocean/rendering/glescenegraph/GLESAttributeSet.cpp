@@ -55,17 +55,23 @@ void GLESAttributeSet::removeAttribute(const AttributeRef& attribute)
 
 	const ScopedLock scopedLock(objectLock);
 
+	// the counter is only decremented for an attribute this set actually holds, so the membership is determined before the base class drops it
+	if (!attributes_.contains(attribute))
+	{
+		return;
+	}
+
 	AttributeSet::removeAttribute(attribute);
 	shaderProgramTypeChanged_ = true;
 
-	AttributeCounterMap::iterator i = attributeCounterMap_.find(attribute->type());
+	const AttributeCounterMap::iterator iAttribute = attributeCounterMap_.find(attribute->type());
 
-	ocean_assert(i != attributeCounterMap_.cend());
-	ocean_assert(i->second >= 1u);
+	ocean_assert(iAttribute != attributeCounterMap_.cend());
+	ocean_assert(iAttribute->second >= 1u);
 
-	if (--i->second == 0u)
+	if (--iAttribute->second == 0u)
 	{
-		attributeCounterMap_.erase(i);
+		attributeCounterMap_.erase(iAttribute);
 	}
 }
 

@@ -123,7 +123,10 @@ void AttributeSet::removeAttribute(const AttributeRef& attribute)
 {
 	const ScopedLock scopedLock(objectLock);
 
-	ocean_assert(attributes_.contains(attribute));
+	if (!attributes_.contains(attribute))
+	{
+		return;
+	}
 
 	unregisterThisObjectAsParent(attribute);
 	attributes_.erase(attribute);
