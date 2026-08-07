@@ -81,10 +81,16 @@ AttributeSetRef Geometry::attributeSet(const unsigned int index) const
 
 void Geometry::removeRenderable(const RenderableRef& renderable)
 {
+	ocean_assert(renderable);
+
 	const ScopedLock scopedLock(objectLock);
 
 	const Renderables::const_iterator iRenderable = renderables_.find(renderable);
-	ocean_assert(iRenderable != renderables_.cend());
+
+	if (iRenderable == renderables_.cend())
+	{
+		return;
+	}
 
 	unregisterThisObjectAsParent(iRenderable->first);
 	unregisterThisObjectAsParent(iRenderable->second);
