@@ -87,8 +87,8 @@ class OCEAN_RENDERING_EXPORT Background : virtual public Node
 
 	protected:
 
-		/// Background distance;
-		Scalar backgroundDistance;
+		/// The distance of this background.
+		Scalar distance_ = Scalar(1000);
 
 		/**
 		 * Creates a new background object.

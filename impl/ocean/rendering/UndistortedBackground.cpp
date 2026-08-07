@@ -67,12 +67,12 @@ bool UndistortedBackground::setDistance(const Scalar distance)
 
 	const ScopedLock scopedLock(objectLock);
 
-	if (Numeric::isEqual(backgroundDistance, distance))
+	if (Numeric::isEqual(distance_, distance))
 	{
 		return true;
 	}
 
-	backgroundDistance = distance;
+	distance_ = distance;
 	cameraChanged_ = true;
 	return true;
 }

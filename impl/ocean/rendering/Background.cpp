@@ -14,8 +14,7 @@ namespace Rendering
 {
 
 Background::Background() :
-	Node(),
-	backgroundDistance(1000)
+	Node()
 {
 	// nothing to do here
 }
@@ -27,7 +26,7 @@ Background::~Background()
 
 Scalar Background::distance() const
 {
-	return backgroundDistance;
+	return distance_;
 }
 
 Vector3 Background::position() const
@@ -47,7 +46,7 @@ bool Background::setDistance(const Scalar distance)
 		return false;
 	}
 
-	backgroundDistance = distance;
+	distance_ = distance;
 	return true;
 }
 

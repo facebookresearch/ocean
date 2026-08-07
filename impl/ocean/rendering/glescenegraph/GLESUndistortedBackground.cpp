@@ -136,7 +136,7 @@ void GLESUndistortedBackground::rebuildPrimitive()
 {
 	ocean_assert(mediumCamera_);
 	ocean_assert(horizontalElements_ > 0u && verticalElements_ > 0u);
-	ocean_assert(backgroundDistance > Numeric::eps());
+	ocean_assert(distance_ > Numeric::eps());
 
 	if (!mediumCamera_)
 	{
@@ -153,7 +153,7 @@ void GLESUndistortedBackground::rebuildPrimitive()
 		const AnyCameraPinhole& anyCameraPinhole = dynamic_cast<const AnyCameraPinhole&>(*mediumCamera_);
 		const PinholeCamera& pinholeCamera = anyCameraPinhole.actualCamera();
 
-		const SquareMatrix4 frustumMatrix(pinholeCamera.frustumMatrix(Scalar(0.01), backgroundDistance));
+		const SquareMatrix4 frustumMatrix(pinholeCamera.frustumMatrix(Scalar(0.01), distance_));
 
 		const Scalar scalingValues[16] =
 		{
@@ -167,10 +167,10 @@ void GLESUndistortedBackground::rebuildPrimitive()
 
 		normalizedCameraFrustumMatrix_ = scalingMatrix * frustumMatrix * HomogenousMatrix4(backgroundPosition, backgroundOrientation).inverted();
 
-		const Scalar left = -Numeric::tan(pinholeCamera.fovXLeft()) * backgroundDistance;
-		const Scalar right = Numeric::tan(pinholeCamera.fovXRight()) * backgroundDistance;
-		const Scalar top = Numeric::tan(pinholeCamera.fovYTop()) * backgroundDistance;
-		const Scalar bottom = -Numeric::tan(pinholeCamera.fovYBottom()) * backgroundDistance;
+		const Scalar left = -Numeric::tan(pinholeCamera.fovXLeft()) * distance_;
+		const Scalar right = Numeric::tan(pinholeCamera.fovXRight()) * distance_;
+		const Scalar top = Numeric::tan(pinholeCamera.fovYTop()) * distance_;
+		const Scalar bottom = -Numeric::tan(pinholeCamera.fovYBottom()) * distance_;
 
 		const Scalar horizontalStep = (right - left) / Scalar(horizontalElements_);
 		const Scalar verticalStep = (top - bottom) / Scalar(verticalElements_);
@@ -192,8 +192,8 @@ void GLESUndistortedBackground::rebuildPrimitive()
 
 			for (unsigned int x = 0; x <= horizontalElements_; x++)
 			{
-				vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y) * verticalStep, -backgroundDistance);
-				vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y + 1) * verticalStep, -backgroundDistance);
+				vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y) * verticalStep, -distance_);
+				vertices.emplace_back(left + Scalar(x) * horizontalStep, top - Scalar(y + 1) * verticalStep, -distance_);
 
 				const Scalar xTexel = Scalar(x) / Scalar(horizontalElements_);
 				const Scalar xPixel = Scalar(pinholeCamera.width() - 1) * xTexel;
@@ -244,8 +244,8 @@ void GLESUndistortedBackground::rebuildPrimitive()
 				const Scalar xPixel = Scalar(mediumCamera_->width() - 1) * xTexel;
 				ocean_assert(xPixel >= 0 && xPixel < Scalar(mediumCamera_->width()));
 
-				const Vector3 topRay = mediumCamera_->vector(Vector2(xPixel, yPixelTop), true /*makeUnitVector*/) * backgroundDistance;
-				const Vector3 bottomRay = mediumCamera_->vector(Vector2(xPixel, yPixelBottom), true /*makeUnitVector*/) * backgroundDistance;
+				const Vector3 topRay = mediumCamera_->vector(Vector2(xPixel, yPixelTop), true /*makeUnitVector*/) * distance_;
+				const Vector3 bottomRay = mediumCamera_->vector(Vector2(xPixel, yPixelBottom), true /*makeUnitVector*/) * distance_;
 
 				vertices.push_back(topRay);
 				vertices.push_back(bottomRay);
