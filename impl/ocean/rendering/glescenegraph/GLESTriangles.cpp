@@ -217,12 +217,12 @@ void GLESTriangles::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (primitiveVertexSet.isNull() || explicitTriangleFaces_.empty())
+	if (vertexSet_.isNull() || explicitTriangleFaces_.empty())
 	{
 		return;
 	}
 
-	const SmartObjectRef<GLESVertexSet> glesVertexSet(primitiveVertexSet);
+	const SmartObjectRef<GLESVertexSet> glesVertexSet(vertexSet_);
 	ocean_assert(glesVertexSet);
 
 	if (explicitTriangleFaces_.empty())

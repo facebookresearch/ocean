@@ -47,13 +47,13 @@ BoundingBox GITriangles::boundingBox() const
 		return BoundingBox();
 	}
 
-	if (primitiveVertexSet.isNull())
+	if (vertexSet_.isNull())
 	{
 		return BoundingBox();
 	}
 
 	BoundingBox boundingBox;
-	const Vertices vertices(primitiveVertexSet->vertices());
+	const Vertices vertices(vertexSet_->vertices());
 
 	for (TriangleFaces::const_iterator i = trianglesFaces.begin(); i != trianglesFaces.end(); ++i)
 	{
@@ -84,7 +84,7 @@ void GITriangles::buildTracing(TracingGroup& group, const HomogenousMatrix4& mod
 {
 	TracingMesh* mesh = new TracingMesh();
 
-	const SmartObjectRef<GIVertexSet> vertexSet(primitiveVertexSet);
+	const SmartObjectRef<GIVertexSet> vertexSet(vertexSet_);
 	ocean_assert(vertexSet);
 
 	mesh->setTriangles(vertexSet->vertices(), vertexSet->normals(), vertexSet->textureCoordinates(0), trianglesFaces, modelTransform, boundingBox());

@@ -75,12 +75,12 @@ class OCEAN_RENDERING_EXPORT Primitive : virtual public Renderable
 	protected:
 
 		/// Vertex set object.
-		VertexSetRef primitiveVertexSet;
+		VertexSetRef vertexSet_;
 };
 
 inline const VertexSetRef& Primitive::vertexSet() const
 {
-	return primitiveVertexSet;
+	return vertexSet_;
 }
 
 }

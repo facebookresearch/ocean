@@ -21,17 +21,17 @@ Primitive::Primitive() :
 
 Primitive::~Primitive()
 {
-	unregisterThisObjectAsParent(primitiveVertexSet);
+	unregisterThisObjectAsParent(vertexSet_);
 }
 
 void Primitive::setVertexSet(const VertexSetRef& vertexSet)
 {
 	const ScopedLock scopedLock(objectLock);
 
-	unregisterThisObjectAsParent(primitiveVertexSet);
+	unregisterThisObjectAsParent(vertexSet_);
 	registerThisObjectAsParent(vertexSet);
 
-	primitiveVertexSet = vertexSet;
+	vertexSet_ = vertexSet;
 }
 
 Primitive::ObjectType Primitive::type() const

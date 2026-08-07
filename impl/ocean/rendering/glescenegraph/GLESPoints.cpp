@@ -244,12 +244,12 @@ void GLESPoints::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (primitiveVertexSet.isNull() || explicitPointIndices_.empty())
+	if (vertexSet_.isNull() || explicitPointIndices_.empty())
 	{
 		return;
 	}
 
-	const SmartObjectRef<GLESVertexSet> glesVertexSet(primitiveVertexSet);
+	const SmartObjectRef<GLESVertexSet> glesVertexSet(vertexSet_);
 	ocean_assert(glesVertexSet);
 
 	if (explicitPointIndices_.empty())

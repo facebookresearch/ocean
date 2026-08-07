@@ -239,12 +239,12 @@ void GLESLineStrips::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (primitiveVertexSet.isNull() || strips_.empty())
+	if (vertexSet_.isNull() || strips_.empty())
 	{
 		return;
 	}
 
-	const SmartObjectRef<GLESVertexSet> glesVertexSet(primitiveVertexSet);
+	const SmartObjectRef<GLESVertexSet> glesVertexSet(vertexSet_);
 	ocean_assert(glesVertexSet);
 
 	boundingBox_ = glesVertexSet->boundingBox(strips_);

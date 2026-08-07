@@ -100,12 +100,12 @@ void GLESTriangleFans::render(const GLESFramebuffer& framebuffer, const SquareMa
 	{
 		glesVertexSet->bindVertexSet(attributeSet.shaderProgram()->id());
 
-		for (VertexBufferPairs::const_iterator i = vertexBufferPairs_.cbegin(); i != vertexBufferPairs_.cend(); ++i)
+		for (const VertexBufferPair& vertexBufferPair : vertexBufferPairs_)
 		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i->first);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferPair.first);
 			ocean_assert(GL_NO_ERROR == glGetError());
 
-			glDrawElements(GL_TRIANGLE_FAN, i->second, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLE_FAN, vertexBufferPair.second, GL_UNSIGNED_INT, nullptr);
 			ocean_assert(GL_NO_ERROR == glGetError());
 		}
 	}
@@ -132,21 +132,21 @@ void GLESTriangleFans::render(const SquareMatrix4& projectionMatrix, const Homog
 
 	glesVertexSet->bindVertexSet(shaderProgram.id());
 
-	for (VertexBufferPairs::const_iterator i = vertexBufferPairs_.cbegin(); i != vertexBufferPairs_.cend(); ++i)
+	for (const VertexBufferPair& vertexBufferPair : vertexBufferPairs_)
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i->first);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferPair.first);
 		ocean_assert(GL_NO_ERROR == glGetError());
 
-		glDrawElements(GL_TRIANGLE_FAN, i->second, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLE_FAN, vertexBufferPair.second, GL_UNSIGNED_INT, nullptr);
 		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 }
 
 void GLESTriangleFans::release()
 {
-	for (VertexBufferPairs::const_iterator i = vertexBufferPairs_.begin(); i != vertexBufferPairs_.end(); ++i)
+	for (const VertexBufferPair& vertexBufferPair : vertexBufferPairs_)
 	{
-		glDeleteBuffers(1, &i->first);
+		glDeleteBuffers(1, &vertexBufferPair.first);
 		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 
@@ -159,12 +159,12 @@ void GLESTriangleFans::updateBoundingBox()
 {
 	boundingBox_ = BoundingBox();
 
-	if (primitiveVertexSet.isNull() || strips_.empty())
+	if (vertexSet_.isNull() || strips_.empty())
 	{
 		return;
 	}
 
-	const SmartObjectRef<GLESVertexSet> glesVertexSet(primitiveVertexSet);
+	const SmartObjectRef<GLESVertexSet> glesVertexSet(vertexSet_);
 	ocean_assert(glesVertexSet);
 
 	boundingBox_ = glesVertexSet->boundingBox(strips_);
