@@ -35,15 +35,15 @@ void Group::addChild(const NodeRef& node)
 
 #ifdef OCEAN_DEBUG
 
-	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+	for (const NodeRef& groupNode : nodes_)
 	{
-		ocean_assert(node != *i);
+		ocean_assert(node != groupNode);
 	}
 
 #endif // OCEAN_DEBUG
 
 	registerThisObjectAsParent(node);
-	groupNodes.push_back(node);
+	nodes_.push_back(node);
 }
 
 void Group::registerLight(const LightSourceRef& light)
@@ -55,26 +55,26 @@ void Group::registerLight(const LightSourceRef& light)
 
 	const ScopedLock scopedLock(objectLock);
 
-	ocean_assert(groupLights.find(light) == groupLights.end());
+	ocean_assert(!lights_.contains(light));
 
-	groupLights.insert(light);
+	lights_.insert(light);
 }
 
 unsigned int Group::numberChildren() const
 {
-	return (unsigned int)(groupNodes.size());
+	return (unsigned int)(nodes_.size());
 }
 
 NodeRef Group::child(const unsigned int index) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (index >= groupNodes.size())
+	if (index >= nodes_.size())
 	{
 		return NodeRef();
 	}
 
-	return groupNodes[index];
+	return nodes_[index];
 }
 
 void Group::removeChild(const NodeRef& node)
@@ -86,13 +86,11 @@ void Group::removeChild(const NodeRef& node)
 
 	const ScopedLock scopedLock(objectLock);
 
-	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+	const Nodes::const_iterator iNode = std::find(nodes_.cbegin(), nodes_.cend(), node);
+
+	if (iNode != nodes_.cend())
 	{
-		if (node == *i)
-		{
-			groupNodes.erase(i);
-			break;
-		}
+		nodes_.erase(iNode);
 	}
 
 	unregisterThisObjectAsParent(node);
@@ -107,21 +105,21 @@ void Group::unregisterLight(const LightSourceRef& light)
 
 	const ScopedLock scopedLock(objectLock);
 
-	ocean_assert(groupLights.find(light) != groupLights.end());
+	ocean_assert(lights_.contains(light));
 
-	groupLights.erase(light);
+	lights_.erase(light);
 }
 
 void Group::clear()
 {
 	const ScopedLock scopedLock(objectLock);
 
-	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+	for (const NodeRef& groupNode : nodes_)
 	{
-		unregisterThisObjectAsParent(*i);
+		unregisterThisObjectAsParent(groupNode);
 	}
 
-	groupNodes.clear();
+	nodes_.clear();
 }
 
 Group::ObjectType Group::type() const

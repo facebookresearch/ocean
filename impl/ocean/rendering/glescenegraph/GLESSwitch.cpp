@@ -52,14 +52,14 @@ void GLESSwitch::addToTraverser(const GLESFramebuffer& framebuffer, const Square
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (!visible_ || groupNodes.empty())
+	if (!visible_ || nodes_.empty())
 	{
 		return;
 	}
 
 	if (activeNodeIndex_ != invalidIndex && activeNodeIndex_ < numberChildren())
 	{
-		const SmartObjectRef<GLESNode> node(groupNodes[activeNodeIndex_]);
+		const SmartObjectRef<GLESNode> node(nodes_[activeNodeIndex_]);
 		ocean_assert(node);
 
 		node->addToTraverser(framebuffer, projectionMatrix, camera_T_parent, lights, traverser);

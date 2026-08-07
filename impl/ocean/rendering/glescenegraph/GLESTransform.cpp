@@ -38,7 +38,7 @@ BoundingBox GLESTransform::boundingBox(const bool involveLocalTransformation) co
 
 	BoundingBox result;
 
-	for (const NodeRef& groupNode : groupNodes)
+	for (const NodeRef& groupNode : nodes_)
 	{
 		ocean_assert(groupNode);
 		const BoundingBox groupBoundingBox = groupNode->boundingBox(true /*involveLocalTransformation*/);
@@ -89,18 +89,18 @@ void GLESTransform::addToTraverser(const GLESFramebuffer& framebuffer, const Squ
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (!visible_ || groupNodes.empty() || parent_T_object_.rotationMatrix().isNull())
+	if (!visible_ || nodes_.empty() || parent_T_object_.rotationMatrix().isNull())
 	{
 		return;
 	}
 
 	const HomogenousMatrix4 camera_T_object = transformModifier_ ? (camera_T_parent * parent_T_object_ * transformModifier_->transformation()) : (camera_T_parent * parent_T_object_);
 
-	if (groupLights.empty())
+	if (lights_.empty())
 	{
-		for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+		for (const NodeRef& groupNode : nodes_)
 		{
-			const SmartObjectRef<GLESNode> node(*i);
+			const SmartObjectRef<GLESNode> node(groupNode);
 			ocean_assert(node);
 
 			node->addToTraverser(framebuffer, projectionMatrix, camera_T_object, lights, traverser);
@@ -109,19 +109,19 @@ void GLESTransform::addToTraverser(const GLESFramebuffer& framebuffer, const Squ
 	else
 	{
 		Lights newLights(lights);
-		newLights.reserve(newLights.size() + groupLights.size());
+		newLights.reserve(newLights.size() + lights_.size());
 
-		for (LightSet::const_iterator i = groupLights.begin(); i != groupLights.end(); ++i)
+		for (const LightSourceRef& light : lights_)
 		{
-			if ((*i)->enabled())
+			if (light->enabled())
 			{
-				newLights.emplace_back(*i, camera_T_object);
+				newLights.emplace_back(light, camera_T_object);
 			}
 		}
 
-		for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+		for (const NodeRef& groupNode : nodes_)
 		{
-			const SmartObjectRef<GLESNode> node(*i);
+			const SmartObjectRef<GLESNode> node(groupNode);
 			ocean_assert(node);
 
 			node->addToTraverser(framebuffer, projectionMatrix, camera_T_object, newLights, traverser);

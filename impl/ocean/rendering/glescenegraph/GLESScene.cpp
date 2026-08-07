@@ -34,7 +34,7 @@ void GLESScene::addToTraverser(const GLESFramebuffer& framebuffer, const SquareM
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (!visible_ || groupNodes.empty() || parent_T_object_.rotationMatrix().isNull())
+	if (!visible_ || nodes_.empty() || parent_T_object_.rotationMatrix().isNull())
 	{
 		return;
 	}
@@ -60,11 +60,11 @@ void GLESScene::addToTraverser(const GLESFramebuffer& framebuffer, const SquareM
 
 	const HomogenousMatrix4 camera_T_object = transformModifier_ ? (camera_T_parent * parent_T_object_ * transformModifier_->transformation()) : (camera_T_parent * parent_T_object_);
 
-	if (groupLights.empty())
+	if (lights_.empty())
 	{
-		for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+		for (const NodeRef& groupNode : nodes_)
 		{
-			const SmartObjectRef<GLESNode> node(*i);
+			const SmartObjectRef<GLESNode> node(groupNode);
 			ocean_assert(node);
 
 			node->addToTraverser(framebuffer, projectionMatrix, camera_T_object, newLights, traverser);
@@ -72,17 +72,17 @@ void GLESScene::addToTraverser(const GLESFramebuffer& framebuffer, const SquareM
 	}
 	else
 	{
-		for (LightSet::const_iterator i = groupLights.begin(); i != groupLights.end(); ++i)
+		for (const LightSourceRef& light : lights_)
 		{
-			if ((*i)->enabled())
+			if (light->enabled())
 			{
-				newLights.emplace_back(*i, camera_T_object);
+				newLights.emplace_back(light, camera_T_object);
 			}
 		}
 
-		for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+		for (const NodeRef& groupNode : nodes_)
 		{
-			const SmartObjectRef<GLESNode> node(*i);
+			const SmartObjectRef<GLESNode> node(groupNode);
 			ocean_assert(node);
 
 			node->addToTraverser(framebuffer, projectionMatrix, camera_T_object, newLights, traverser);

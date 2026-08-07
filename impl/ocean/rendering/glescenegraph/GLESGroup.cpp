@@ -35,7 +35,7 @@ BoundingBox GLESGroup::boundingBox(const bool /*involveLocalTransformation*/) co
 
 	BoundingBox result;
 
-	for (const NodeRef& groupNode : groupNodes)
+	for (const NodeRef& groupNode : nodes_)
 	{
 		ocean_assert(groupNode);
 
@@ -109,14 +109,14 @@ void GLESGroup::addToTraverser(const GLESFramebuffer& framebuffer, const SquareM
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (!visible_ || groupNodes.empty())
+	if (!visible_ || nodes_.empty())
 	{
 		return;
 	}
 
-	if (groupLights.empty())
+	if (lights_.empty())
 	{
-		for (const NodeRef& groupNode : groupNodes)
+		for (const NodeRef& groupNode : nodes_)
 		{
 			const SmartObjectRef<GLESNode> node(groupNode);
 			ocean_assert(node);
@@ -127,9 +127,9 @@ void GLESGroup::addToTraverser(const GLESFramebuffer& framebuffer, const SquareM
 	else
 	{
 		Lights newLights(lights);
-		newLights.reserve(newLights.size() + groupLights.size());
+		newLights.reserve(newLights.size() + lights_.size());
 
-		for (const LightSourceRef& light : groupLights)
+		for (const LightSourceRef& light : lights_)
 		{
 			ocean_assert(light);
 
@@ -139,7 +139,7 @@ void GLESGroup::addToTraverser(const GLESFramebuffer& framebuffer, const SquareM
 			}
 		}
 
-		for (const NodeRef& groupNode : groupNodes)
+		for (const NodeRef& groupNode : nodes_)
 		{
 			const SmartObjectRef<GLESNode> node(groupNode);
 			ocean_assert(node);

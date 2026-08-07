@@ -46,7 +46,7 @@ void GLESLOD::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMat
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (!visible_ || groupNodes.empty())
+	if (!visible_ || nodes_.empty())
 	{
 		return;
 	}
@@ -55,23 +55,23 @@ void GLESLOD::addToTraverser(const GLESFramebuffer& framebuffer, const SquareMat
 
 	// n+1 range values for n objects
 
-	for (size_t n = 1; n < distanceRanges_.size() && n <= groupNodes.size(); ++n)
+	for (size_t n = 1; n < distanceRanges_.size() && n <= nodes_.size(); ++n)
 	{
 		if (distanceRanges_[n - 1] <= distance && distance <= distanceRanges_[n])
 		{
-			const SmartObjectRef<GLESNode> node(groupNodes[n - 1]);
+			const SmartObjectRef<GLESNode> node(nodes_[n - 1]);
 			ocean_assert(node);
 
-			if (groupLights.empty())
+			if (lights_.empty())
 			{
 				node->addToTraverser(framebuffer, projectionMatrix, camera_T_object, lights, traverser);
 			}
 			else
 			{
 				Lights newLights(lights);
-				newLights.reserve(newLights.size() + groupLights.size());
+				newLights.reserve(newLights.size() + lights_.size());
 
-				for (const LightSourceRef& light : groupLights)
+				for (const LightSourceRef& light : lights_)
 				{
 					ocean_assert(light);
 

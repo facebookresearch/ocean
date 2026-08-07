@@ -115,10 +115,10 @@ class OCEAN_RENDERING_EXPORT Group : virtual public Node
 	protected:
 
 		/// Child nodes connected to this group
-		Nodes groupNodes;
+		Nodes nodes_;
 
 		/// Set holding all lights lighting object in this group
-		LightSet groupLights;
+		LightSet lights_;
 };
 
 }

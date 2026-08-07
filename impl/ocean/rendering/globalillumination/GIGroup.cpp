@@ -55,7 +55,7 @@ BoundingBox GIGroup::boundingBox(const bool /*involveLocalTransformation*/) cons
 
 	BoundingBox result;
 
-	for (const NodeRef& groupNode : groupNodes)
+	for (const NodeRef& groupNode : nodes_)
 	{
 		ocean_assert(groupNode);
 
@@ -81,11 +81,11 @@ void GIGroup::buildTracing(TracingGroup& group, const HomogenousMatrix4& modelTr
 
 	if (nodeVisible)
 	{
-		if (groupLights.empty())
+		if (lights_.empty())
 		{
-			for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+			for (const NodeRef& groupNode : nodes_)
 			{
-				SmartObjectRef<GINode> node(*i);
+				const SmartObjectRef<GINode> node(groupNode);
 				ocean_assert(node);
 
 				node->buildTracing(group, modelTransform, lightSources);
@@ -95,14 +95,14 @@ void GIGroup::buildTracing(TracingGroup& group, const HomogenousMatrix4& modelTr
 		{
 			LightSources newLightSources(lightSources);
 
-			for (LightSet::const_iterator i = groupLights.begin(); i != groupLights.end(); ++i)
+			for (const LightSourceRef& light : lights_)
 			{
-				newLightSources.emplace_back(*i, modelTransform);
+				newLightSources.emplace_back(light, modelTransform);
 			}
 
-			for (Nodes::const_iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+			for (const NodeRef& groupNode : nodes_)
 			{
-				SmartObjectRef<GINode> node(*i);
+				const SmartObjectRef<GINode> node(groupNode);
 				ocean_assert(node);
 
 				node->buildTracing(group, modelTransform, newLightSources);
