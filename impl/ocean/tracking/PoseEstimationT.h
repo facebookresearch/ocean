@@ -569,6 +569,12 @@ bool PoseEstimationT::determinePoseBruteForceWithArbitraryDescriptorOrder(const 
 		validIndices.clear();
 		if (Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, guidedIterations, maximalSqrProjectionError, &validIndices))
 		{
+			if (validIndices.size() < size_t(minimalNumberCorrespondences))
+			{
+				world_T_camera.toNull();
+				return false;
+			}
+
 			if (usedObjectPointIndices != nullptr)
 			{
 				ocean_assert(useInternalIndices);
