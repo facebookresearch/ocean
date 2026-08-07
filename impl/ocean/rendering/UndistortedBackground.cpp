@@ -101,6 +101,8 @@ void UndistortedBackground::onDynamicUpdate(const ViewRef& /*view*/, const Times
 					{
 						cameraChanged_ = true;
 					}
+
+					mediumCamera_ = anyCamera;
 				}
 			}
 			else
