@@ -7,8 +7,6 @@
 
 #include "ocean/scenedescription/sdx/x3d/X3DInterpolatorNode.h"
 
-#include "ocean/base/String.h"
-
 namespace Ocean
 {
 
@@ -83,12 +81,12 @@ bool X3DInterpolatorNode::onFieldChanging(const std::string& fieldName, const Fi
 				if (left == keyMap_.begin())
 				{
 					ocean_assert(fraction <= left->first);
-					onSingleValue(0, field.timestamp());
+					onSingleValue(left->second.first, field.timestamp());
 				}
 				else if (left == keyMap_.end())
 				{
-					ocean_assert(fraction > (--keyMap_.end())->first);
-					onSingleValue(keyMap_.size() - 1, field.timestamp());
+					ocean_assert(fraction > keyMap_.crbegin()->first);
+					onSingleValue(keyMap_.crbegin()->second.second, field.timestamp());
 				}
 				else if (Numeric::isEqual(left->first, fraction))
 				{
@@ -98,7 +96,6 @@ bool X3DInterpolatorNode::onFieldChanging(const std::string& fieldName, const Fi
 				{
 					KeyMap::const_iterator right = left;
 					--left;
-
 
 					ocean_assert(left->first < fraction && right->first >= fraction);
 
