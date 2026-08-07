@@ -60,13 +60,13 @@ class OCEAN_RENDERING_GI_EXPORT TracingMesh : public TracingObject
 				 * Determines the nearest intersection with between this tracing object and a given 3D ray.
 				 * @see TracingObject::findNearestIntersection().
 				 */
-				void findNearestIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, RayIntersection& intersection, const bool frontFace, const Scalar eps, const TracingObject* excludedObject = nullptr) const;
+				void findNearestIntersection(const Line3& ray, const TracingMesh& mesh, RayIntersection& intersection, const bool frontFace, const Scalar eps, const TracingObject* excludedObject = nullptr) const;
 
 				/**
 				 * Determines whether this tracing object has an intersection with a provided 3D ray.
 				 * @see TracingObject::hasIntersection().
 				 */
-				bool hasIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, const Scalar maximalDistance = Numeric::maxValue(), const TracingObject* excludedObject = nullptr) const;
+				bool hasIntersection(const Line3& ray, const TracingMesh& mesh, const Scalar maximalDistance = Numeric::maxValue(), const TracingObject* excludedObject = nullptr) const;
 
 			protected:
 

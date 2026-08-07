@@ -101,7 +101,7 @@ TracingMesh::Octree::Octree(const VertexIndices& indices, const TracingMesh& mes
 	}
 }
 
-void TracingMesh::Octree::findNearestIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, RayIntersection& intersection, const bool frontFace, const Scalar eps, const TracingObject* excludedObject) const
+void TracingMesh::Octree::findNearestIntersection(const Line3& ray, const TracingMesh& mesh, RayIntersection& intersection, const bool frontFace, const Scalar eps, const TracingObject* excludedObject) const
 {
 	ocean_assert(ray.isValid());
 
@@ -114,7 +114,7 @@ void TracingMesh::Octree::findNearestIntersection(const Line3& ray, const Homoge
 	{
 		for (unsigned int n = 0u; n < 8u && octreeChildren[n]; ++n)
 		{
-			octreeChildren[n]->findNearestIntersection(ray, objectTransformation, invertedObjectTransformation, mesh, intersection, frontFace, eps, excludedObject);
+			octreeChildren[n]->findNearestIntersection(ray, mesh, intersection, frontFace, eps, excludedObject);
 		}
 	}
 	else
@@ -166,11 +166,11 @@ void TracingMesh::Octree::findNearestIntersection(const Line3& ray, const Homoge
 	}
 }
 
-bool TracingMesh::Octree::hasIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, const Scalar maximalDistance, const TracingObject* excludedObject) const
+bool TracingMesh::Octree::hasIntersection(const Line3& ray, const TracingMesh& mesh, const Scalar maximalDistance, const TracingObject* excludedObject) const
 {
 	ocean_assert(ray.isValid());
 
-	if (octreeBoundingBox.hasIntersection(ray, invertedObjectTransformation))
+	if (octreeBoundingBox.hasIntersection(ray))
 	{
 		Vector3 intersectionPoint;
 		Scalar intersectionDistance;
@@ -179,7 +179,7 @@ bool TracingMesh::Octree::hasIntersection(const Line3& ray, const HomogenousMatr
 		{
 			for (unsigned int n = 0u; n < 8u && octreeChildren[n]; ++n)
 			{
-				if (octreeChildren[n]->hasIntersection(ray, objectTransformation, invertedObjectTransformation, mesh, maximalDistance, excludedObject))
+				if (octreeChildren[n]->hasIntersection(ray, mesh, maximalDistance, excludedObject))
 				{
 					return true;
 				}
@@ -575,7 +575,7 @@ void TracingMesh::findNearestIntersection(const Line3& ray, RayIntersection& int
 	}
 
 	ocean_assert(tracingOctree);
-	tracingOctree->findNearestIntersection(ray, objectTransformation_, invertedObjectTransformation_, *this, intersection, frontFace, eps, excludedObject);
+	tracingOctree->findNearestIntersection(ray, *this, intersection, frontFace, eps, excludedObject);
 }
 
 bool TracingMesh::hasIntersection(const Line3& ray, const Scalar maximalDistance, const TracingObject* excludedObject) const
@@ -592,7 +592,7 @@ bool TracingMesh::hasIntersection(const Line3& ray, const Scalar maximalDistance
 	}
 
 	ocean_assert(tracingOctree);
-	return tracingOctree->hasIntersection(ray, objectTransformation_, invertedObjectTransformation_, *this, maximalDistance, excludedObject);
+	return tracingOctree->hasIntersection(ray, *this, maximalDistance, excludedObject);
 }
 
 bool TracingMesh::determineDampingColor(const Line3& ray, RGBAColor& color, const Scalar maximalDistance) const
@@ -608,7 +608,7 @@ bool TracingMesh::determineDampingColor(const Line3& ray, RGBAColor& color, cons
 	RayIntersection intersection;
 
 	ocean_assert(tracingOctree);
-	tracingOctree->findNearestIntersection(ray, objectTransformation_, invertedObjectTransformation_, *this, intersection, true, Numeric::eps());
+	tracingOctree->findNearestIntersection(ray, *this, intersection, true, Numeric::eps());
 	if (!intersection || intersection.distance() >= maximalDistance)
 	{
 		return true;
