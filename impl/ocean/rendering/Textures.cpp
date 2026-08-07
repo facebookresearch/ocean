@@ -76,9 +76,9 @@ bool Textures::hasAlphaTexture() const
 	{
 		const Texture2DRef texture(textureObject);
 
-		if (texture)
+		if (texture && texture->hasTransparentPixel())
 		{
-			return texture->hasTransparentPixel();
+			return true;
 		}
 	}
 
