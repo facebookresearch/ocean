@@ -249,6 +249,7 @@ void GLESWindowFramebuffer::release()
 	if (contextHandle_ != nullptr)
 	{
 		wglDeleteContext(contextHandle_);
+		contextHandle_ = nullptr;
 	}
 
 	ReleaseDC(windowHandle_, windowDC_);
