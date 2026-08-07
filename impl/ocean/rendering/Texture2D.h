@@ -85,10 +85,18 @@ class OCEAN_RENDERING_EXPORT Texture2D : virtual public Texture
 		virtual bool setWrapTypeT(const WrapType type);
 
 		/**
-		 * Returns the frame type of this 2D texture.
-		 * @return Texture frame type
+		 * Returns the frame type of the image which was provided for this texture.
+		 * This is the frame type before any conversion, so it can differ from textureFrameType().
+		 * @return The frame type of the source image, invalid if the texture does not have an image yet
 		 */
-		virtual FrameType frameType() const;
+		virtual FrameType sourceFrameType() const;
+
+		/**
+		 * Returns the frame type of the image data which is stored in the graphic hardware.
+		 * Pixel formats without a matching texture format are converted first, so this can differ from sourceFrameType().
+		 * @return The frame type of the texture, invalid as long as no image has been uploaded
+		 */
+		virtual FrameType textureFrameType() const;
 
 		/**
 		 * Returns whether this texture contains at least one transparent pixel.
@@ -125,8 +133,11 @@ class OCEAN_RENDERING_EXPORT Texture2D : virtual public Texture
 
 	protected:
 
-		/// The frame type of the current frame.
-		FrameType frameType_;
+		/// The frame type of the image which was provided for this texture.
+		FrameType sourceFrameType_;
+
+		/// The frame type of the image data which is stored in the graphic hardware.
+		FrameType textureFrameType_;
 
 		/// The timestamp of the current frame.
 		Timestamp frameTimestamp_;

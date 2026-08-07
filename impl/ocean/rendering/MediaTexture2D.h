@@ -55,12 +55,6 @@ class OCEAN_RENDERING_EXPORT MediaTexture2D : virtual public Texture2D
 		virtual void setMedium(const Media::FrameMediumRef& medium);
 
 		/**
-		 * Returns the frame type of this texture.
-		 * @return Texture frame type
-		 */
-		FrameType frameType() const override;
-
-		/**
 		 * Returns whether this texture contains at least one transparent pixel.
 		 * @return True, if so
 		 */

@@ -47,10 +47,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 		bool setTexture(CompressedFrame&& compressedFrame) override;
 
 		/**
-		 * Returns the frame type of this 2D texture.
-		 * @see Texture2D::frameType()
+		 * Returns the frame type of the image which was provided for this texture.
+		 * @see Texture2D::sourceFrameType()
 		 */
-		FrameType frameType() const override;
+		FrameType sourceFrameType() const override;
 
 		/**
 		 * Returns whether this texture contains at least one transparent pixel.

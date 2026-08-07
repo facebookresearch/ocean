@@ -542,7 +542,7 @@ unsigned int GLESTexture2D::bindTexture(GLESShaderProgram& shaderProgram, const 
 	const GLint locationTextureOriginLowerLeft = glGetUniformLocation(shaderProgram.id(), "textureOriginLowerLeft");
 	if (locationTextureOriginLowerLeft != -1)
 	{
-		setUniform(locationTextureOriginLowerLeft, frameType_.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT ? 1 : 0);
+		setUniform(locationTextureOriginLowerLeft, textureFrameType_.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT ? 1 : 0);
 	}
 
 	std::string primaryTexture;
@@ -617,7 +617,9 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 	const FrameType internalFrameType = properties->internalFrameType(frame.frameType());
 	ocean_assert(internalFrameType.isValid());
 
-	if (internalFrameType != frameType_)
+	sourceFrameType_ = frame.frameType();
+
+	if (internalFrameType != textureFrameType_)
 	{
 		if (!defineTextureObject(*properties, internalFrameType))
 		{
@@ -625,9 +627,9 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 			return false;
 		}
 
-		const bool resetShaderProgram = frameType_.isValid();
+		const bool resetShaderProgram = textureFrameType_.isValid();
 
-		frameType_ = internalFrameType;
+		textureFrameType_ = internalFrameType;
 
 		if (resetShaderProgram)
 		{
@@ -650,7 +652,7 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 	unsigned int width = 0u;
 	unsigned int height = 0u;
 
-	properties->primaryTextureProperties(frameType_, width, height, format, type);
+	properties->primaryTextureProperties(textureFrameType_, width, height, format, type);
 
 	// GL_UNPACK_ROW_LENGTH can only express a padding which is a whole number of plane pixels,
 	// so any other padding is removed up front rather than being uploaded skewed
@@ -671,18 +673,18 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 	const Frame* primaryTextureFrame = &sourceFrame;
 	bool mayNeedSecondaryTexture = true;
 
-	if (sourceFrame.frameType() != frameType_)
+	if (sourceFrame.frameType() != textureFrameType_)
 	{
 		CV::FrameConverter::Options convertOptions;
 		if (sourceFrame.pixelFormat() == FrameType::FORMAT_Y10_PACKED || sourceFrame.pixelFormat() == FrameType::FORMAT_RGGB10_PACKED)
 		{
-			ocean_assert(frameType_.pixelFormat() == FrameType::FORMAT_Y8 || frameType_.pixelFormat() == FrameType::FORMAT_RGB24);
+			ocean_assert(textureFrameType_.pixelFormat() == FrameType::FORMAT_Y8 || textureFrameType_.pixelFormat() == FrameType::FORMAT_RGB24);
 
 			constexpr float gamma = 0.7f;
 			convertOptions = CV::FrameConverter::Options(gamma);
 		}
 
-		if (!CV::FrameConverter::Comfort::convert(sourceFrame, frameType_.pixelFormat(), frameType_.pixelOrigin(), conversionFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, convertOptions))
+		if (!CV::FrameConverter::Comfort::convert(sourceFrame, textureFrameType_.pixelFormat(), textureFrameType_.pixelOrigin(), conversionFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, convertOptions))
 		{
 			return false;
 		}
@@ -719,7 +721,7 @@ bool GLESTexture2D::updateTexture(const Frame& frame)
 	// GL_UNPACK_ROW_LENGTH is global state, so it must not leak into any other upload
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	if (mayNeedSecondaryTexture && properties->secondaryTextureProperties(frameType_, width, height, format, type))
+	if (mayNeedSecondaryTexture && properties->secondaryTextureProperties(textureFrameType_, width, height, format, type))
 	{
 		ocean_assert(secondaryTextureId_ != 0u);
 		ocean_assert(GL_NO_ERROR == glGetError());

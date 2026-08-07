@@ -74,7 +74,7 @@ GLESAttribute::ProgramType GLESTextures::necessaryShader() const
 		const SmartObjectRef<GLESTexture2D> texture2D(firstTexture);
 		ocean_assert(texture2D);
 
-		const FrameType frameType = texture2D->frameType();
+		const FrameType frameType = texture2D->sourceFrameType();
 
 		if (frameType.pixelFormat() == FrameType::FORMAT_UNDEFINED
 				|| frameType.pixelOrigin() == FrameType::ORIGIN_INVALID)

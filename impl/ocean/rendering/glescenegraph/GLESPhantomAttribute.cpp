@@ -186,7 +186,7 @@ GLESAttribute::ProgramType GLESPhantomAttribute::necessaryShader() const
 		return type;
 	}
 
-	switch (phantomUndistortedBackgroundTexture->frameType().pixelFormat())
+	switch (phantomUndistortedBackgroundTexture->textureFrameType().pixelFormat())
 	{
 		case FrameType::FORMAT_BGR24:
 		case FrameType::FORMAT_BGRA32:

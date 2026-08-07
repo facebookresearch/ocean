@@ -49,9 +49,18 @@ bool Texture2D::setWrapTypeT(const WrapType /*type*/)
 	throw NotSupportedException("Texture2D::setWrapTypeT() is not supported.");
 }
 
-FrameType Texture2D::frameType() const
+FrameType Texture2D::sourceFrameType() const
 {
-	return FrameType();
+	const ScopedLock scopedLock(objectLock);
+
+	return sourceFrameType_;
+}
+
+FrameType Texture2D::textureFrameType() const
+{
+	const ScopedLock scopedLock(objectLock);
+
+	return textureFrameType_;
 }
 
 bool Texture2D::hasTransparentPixel() const

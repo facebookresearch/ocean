@@ -72,7 +72,7 @@ bool GLESFrameTexture2D::setTexture(CompressedFrame&& compressedFrame)
 	return true;
 }
 
-FrameType GLESFrameTexture2D::frameType() const
+FrameType GLESFrameTexture2D::sourceFrameType() const
 {
 	const ScopedLock scopedLock(objectLock);
 
@@ -159,7 +159,7 @@ bool GLESFrameTexture2D::updateTexture(const CompressedFrame& compressedFrame)
 		return false;
 	}
 
-	frameType_ = compressedFrame.internalFrameType();
+	textureFrameType_ = compressedFrame.internalFrameType();
 
 	unsigned int width = compressedFrame.internalFrameType().width();
 	unsigned int height = compressedFrame.internalFrameType().height();
