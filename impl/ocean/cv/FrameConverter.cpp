@@ -1044,7 +1044,7 @@ bool FrameConverter::Comfort::convertGenericFormats(const Frame& source, const F
 
 MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_FullRangeYUV24_BT601()
 {
-	// BT.601, analog RGB to (analog) YPbPr
+	// BT.601, full range RGB to full range YCbCr
 
 	// Color space with full range:
 	// RGB input value range:  [0, 255]x[0, 255]x[0, 255]
@@ -1056,7 +1056,7 @@ MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_FullRangeYUV24_BT
 	//                                                       | 1 |
 
 	// Approximation with 7 bit precision:
-	//       | Y |     |  38     75    15     0    128 |   | R |
+	//       | Y |     |  38     75    15     0 *  128 |   | R |
 	// 128 * | U |  =  | -22    -42    64    128 * 128 | * | G |
 	//       | V |     |  64    -54   -10    128 * 128 |   | B |
 	//                                                     | 1 |
@@ -1099,7 +1099,7 @@ MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_FullRangeYVU24_BT
 
 MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_LimitedRangeYUV24_BT601()
 {
-	// BT.601, analog RGB to (digital) YCbCr
+	// BT.601, full range RGB to limited range YCbCr
 
 	// Color space with limited range:
 	// RGB input value range:  [0, 255]x[0, 255]x[0, 255]
@@ -1108,6 +1108,12 @@ MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_LimitedRangeYUV24
 	// | Y |   |  0.2578125   0.5039063   0.09765625  16.0  |   | R |
 	// | U | = | -0.1484375  -0.2890625   0.4375      128.0 | * | G |
 	// | V |   |  0.4375     -0.3671875  -0.0703125   128.0 |   | B |
+	//                                                          | 1 |
+
+	// this is the fixed point matrix the integer implementations are derived from, the exact BT.601 matrix deviates by up to 0.002:
+	// | Y |   |  0.2567882   0.5041294   0.0979059   16.0  |   | R |
+	// | U | = | -0.1482229  -0.2909928   0.4392157   128.0 | * | G |
+	// | V |   |  0.4392157  -0.3677883  -0.0714274   128.0 |   | B |
 	//                                                          | 1 |
 
 	// Approximation with 7 bit precision:
@@ -1168,9 +1174,9 @@ MatrixD FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_BT
 
 MatrixD FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601()
 {
-	// BT.601, (analog) YPbPr to analog RGB
+	// BT.601, full range YCbCr to full range RGB
 
-	// Color space with limited range:
+	// Color space with full range:
 	// YUV input value range:  [0, 255]x[0, 255]x[0, 255]
 	// RGB output value range: [0, 255]x[0, 255]x[0, 255]
 
@@ -1221,9 +1227,9 @@ MatrixD FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_An
 
 MatrixD FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_Android()
 {
-	// Android-specific (analog) YPbPr to analog RGB, however quite close to BT.601
+	// Android-specific full range YCbCr to full range RGB, however quite close to BT.601
 
-	// Color space with limited range:
+	// Color space with full range:
 	// YUV input value range:  [0, 255]x[0, 255]x[0, 255]
 	// RGB output value range: [0, 255]x[0, 255]x[0, 255]
 
@@ -1269,9 +1275,9 @@ MatrixD FrameConverter::transformationMatrix_FullRangeYVU24_To_FullRangeBGR24_An
 
 MatrixD FrameConverter::transformationMatrix_FullRangeYVU24_To_FullRangeRGB24_Android()
 {
-	// Android-specific (analog) YPbPr to analog RGB, however quite close to BT.601
+	// Android-specific full range YCbCr to full range RGB, however quite close to BT.601
 
-	// Color space with limited range:
+	// Color space with full range:
 	// YUV input value range:  [0, 255]x[0, 255]x[0, 255]
 	// RGB output value range: [0, 255]x[0, 255]x[0, 255]
 
@@ -1303,7 +1309,7 @@ MatrixD FrameConverter::transformationMatrix_FullRangeYVU24_To_FullRangeRGB24_An
 
 MatrixD FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601()
 {
-	// BT.601, (digital) YCbCr to analog RGB
+	// BT.601, limited range YCbCr to full range RGB
 
 	// Color space with limited range:
 	// YUV input value range:  [16, 235]x[16, 240]x[16, 240]
@@ -1313,6 +1319,12 @@ MatrixD FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24
 	// | G |  =  | 1.1639404296875  -0.3909912109375 -0.81298828125    135.486328125 | * | U |
 	// | B |     | 1.1639404296875   2.0179443359375  0.0             -276.919921875 |   | V |
 	//                                                                                   | 1 |
+
+	// this is the fixed point matrix the integer implementations are derived from, the exact BT.601 matrix deviates by up to 0.001:
+	// | R |     | 1.1643836   0.0         1.5960268  -222.921566 |   | Y |
+	// | G |  =  | 1.1643836  -0.3917623  -0.8129676   135.575295 | * | U |
+	// | B |     | 1.1643836   2.0172321   0.0        -276.835851 |   | V |
+	//                                                                | 1 |
 
 	// Approximation with 13 bit precision:
 	//        | R |     | 9535     0         13074 |   | Y -  16 |

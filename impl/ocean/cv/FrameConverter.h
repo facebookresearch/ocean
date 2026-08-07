@@ -1048,7 +1048,13 @@ class OCEAN_CV_EXPORT FrameConverter
 		static void patchFrameMirroredBorder(const T* source, T* buffer, const unsigned int width, const unsigned int height, const unsigned int x, const unsigned int y, const unsigned int patchSize, const unsigned int sourcePaddingElements, const unsigned int bufferPaddingElements);
 
 		/**
-		 * Returns the 3x4 color space transformation matrix from full range RGB24 to full range YUV24 using BT.601, analog RGB to (analog) YPbPr.
+		 * Returns the 3x4 color space transformation matrix from full range RGB24 to full range YUV24 using BT.601, full range RGB to full range YCbCr, the digitized YPbPr equations.
+		 * Ocean's YUV24 holds the channels in the order Y, Cb, Cr, and YVU24 in the order Y, Cr, Cb.
+		 * A full range channel covers [0, 255], a limited range channel covers [16, 235] for Y and [16, 240] for Cb and Cr.
+		 * All matrices are affine, the fourth column holds the offset which is added after the multiplication.
+		 * All values are digital, 8 bit with an offset of 128, so the color space is YCbCr and not the analog YPbPr of component video.
+		 * The full range matrices are the YPbPr equations scaled to 8 bit, the limited range matrices additionally compress the channels to the studio swing of BT.601.
+		 * The analog YUV of PAL is yet another color space with different coefficients, U = 0.492 * (B - Y) and V = 0.877 * (R - Y), and does not belong here.
 		 * Below the precise transformation matrices are given:
 		 * <pre>
 		 * RGB input value range:  [0, 255]x[0, 255]x[0, 255]
@@ -1059,7 +1065,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * | V |   |  0.5        -0.418688   -0.081312   128 |   | B |
 		 *                                                       | 1 |
 		 * Approximation with 7 bit precision:
-		 *       | Y |     |  38     75    15      0   128 |   | R |
+		 *       | Y |     |  38     75    15      0 * 128 |   | R |
 		 * 128 * | U |  =  | -22    -42    64    128 * 128 | * | G |
 		 *       | V |     |  64    -54   -10    128 * 128 |   | B |
 		 *                                                     | 1 |
@@ -1070,15 +1076,16 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeRGB24_To_FullRangeYUV24_BT601();
 
 		/**
-		 * Returns the 3x4 color space transformation matrix from full range RGB24 to full range YVU24 using BT.601, analog RGB to (analog) YPbPr.
+		 * Returns the 3x4 color space transformation matrix from full range RGB24 to full range YVU24 using BT.601, full range RGB to full range YCrCb, the digitized YPbPr equations.
 		 * @return The 3x4 transformation matrix
 		 * @see transformationMatrix_FullRangeRGB24_To_FullRangeYUV24_BT601().
 		 */
 		static MatrixD transformationMatrix_FullRangeRGB24_To_FullRangeYVU24_BT601();
 
 		/**
-		 * Returns the 3x4 color space transformation matrix from full range RGB24 to limited range YUV24 using BT.601, analog RGB to (digital) YCbCr.
-		 * Below the precise transformation matrices are given:
+		 * Returns the 3x4 color space transformation matrix from full range RGB24 to limited range YUV24 using BT.601, full range RGB to limited range YCbCr, studio swing.
+		 * The matrix below is not the mathematically exact BT.601 matrix but the fixed point matrix the integer implementations are derived from, the exact matrix is given for comparison.
+		 * Below the transformation matrices are given:
 		 * <pre>
 		 * RGB input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * YUV output value range: [16, 235]x[16, 240]x[16, 240]
@@ -1087,7 +1094,12 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * | U | = | -0.1484375  -0.2890625   0.4375      128.0 | * | G |
 		 * | V |   |  0.4375     -0.3671875  -0.0703125   128.0 |   | B |
 		 *                                                          | 1 |
-		 * Approximation with 7 bit precision:
+		 * The exact BT.601 matrix, the matrix above deviates by up to 0.002:
+		 * | Y |   |  0.2567882   0.5041294   0.0979059   16.0  |   | R |
+		 * | U | = | -0.1482229  -0.2909928   0.4392157   128.0 | * | G |
+		 * | V |   |  0.4392157  -0.3677883  -0.0714274   128.0 |   | B |
+		 *                                                          | 1 |
+		 * Approximation with 7 bit precision, 0.5039063 and 0.09765625 are rounded to 64 and 13:
 		 *       | Y |     |  33     64    13     16 * 128 |   | R |
 		 * 128 * | U |  =  | -19    -37    56    128 * 128 | * | G |
 		 *       | V |     |  56    -47   -9     128 * 128 |   | B |
@@ -1099,14 +1111,14 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeRGB24_To_LimitedRangeYUV24_BT601();
 
 		/**
-		 * Returns the 3x4 color space transformation matrix from full range RGB24 to limited range YVU24 using BT.601, analog RGB to (digital) YCbCr.
+		 * Returns the 3x4 color space transformation matrix from full range RGB24 to limited range YVU24 using BT.601, full range RGB to limited range YCrCb, studio swing.
 		 * @return The 3x4 transformation matrix
 		 * @see transformationMatrix_FullRangeRGB24_To_LimitedRangeYUV24_BT601().
 		 */
 		static MatrixD transformationMatrix_FullRangeRGB24_To_LimitedRangeYVU24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from full range YUV24 to full range BGR24 using BT.601, (analog) YPbPr to analog BGR.
+		 * Returns the color space transformation matrix from full range YUV24 to full range BGR24 using BT.601, full range YCbCr to full range BGR, the digitized YPbPr equations.
 		 * Below the precise transformation matrices are given:
 		 * <pre>
 		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255]
@@ -1123,15 +1135,15 @@ class OCEAN_CV_EXPORT FrameConverter
 		 *       | R |     | 64    0     90 |   | V - 128 |
 		 * </pre>
 		 * @return The 3x4 transformation matrix
-		 * @see transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_Android().
+		 * @see transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601(), transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_Android().
 		 */
 		static MatrixD transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from full range YUV24 to full range RGB24 using BT.601, (analog) YPbPr to analog RGB.
+		 * Returns the color space transformation matrix from full range YUV24 to full range RGB24 using BT.601, full range YCbCr to full range RGB, the digitized YPbPr equations.
 		 * Below the precise transformation matrices are given:
 		 * <pre>
-		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255s]
+		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * RGB output value range: [0, 255]x[0, 255]x[0, 255]
 		 *
 		 * | R |     | 1.0     0.0        1.402     -179.456   |   | Y |
@@ -1150,7 +1162,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from full range YUV24 to full range BGR24 similar to BT.601, (analog) YPbPr to analog BGR.
+		 * Returns the color space transformation matrix from full range YUV24 to full range BGR24 similar to BT.601, full range YCbCr to full range BGR.
 		 * This transformation matrix is close to the official BT.601 standard and used on Android for conversion from Y'UV420sp (NV21).<br>
 		 * @see transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_Android().
 		 * @return The 3x4 transformation matrix
@@ -1158,12 +1170,12 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_Android();
 
 		/**
-		 * Returns the color space transformation matrix from full range YUV24 to full range RGB24 similar to BT.601, (analog) YPbPr to analog RGB.
+		 * Returns the color space transformation matrix from full range YUV24 to full range RGB24 similar to BT.601, full range YCbCr to full range RGB.
 		 * This transformation matrix is close to the official BT.601 standard and used on Android for conversion from Y'UV420sp (NV21).<br>
 		 * The conversion can be found in Android's source code: /media/libstagefright/yuv/YUVImage.cpp<br>
 		 * Below the precise transformation matrices are given:
 		 * <pre>
-		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255s]
+		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * RGB output value range: [0, 255]x[0, 255]x[0, 255]
 		 *
 		 * | R |     | 1.0     0.0         1.370705  |   |    Y    |     | 1.0     0.0         1.370705   -175.45024  |   | Y |
@@ -1182,7 +1194,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeYUV24_To_FullRangeRGB24_Android();
 
 		/**
-		 * Returns the color space transformation matrix from full range YVU24 to full range BGR24 similar to BT.601, (analog) YPbPr to analog BGR.
+		 * Returns the color space transformation matrix from full range YVU24 to full range BGR24 similar to BT.601, full range YCrCb to full range BGR.
 		 * This transformation matrix is close to the official BT.601 standard and used on Android for conversion from Y'UV420sp (NV21).<br>
 		 * @see transformationMatrix_FullRangeYVU24_To_FullRangeRGB24_Android().
 		 * @return The 3x4 transformation matrix
@@ -1190,12 +1202,12 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeYVU24_To_FullRangeBGR24_Android();
 
 		/**
-		 * Returns the color space transformation matrix from full range YVU24 to full range RGB24 similar to BT.601, (analog) YPbPr to analog RGB.
+		 * Returns the color space transformation matrix from full range YVU24 to full range RGB24 similar to BT.601, full range YCrCb to full range RGB.
 		 * This transformation matrix is close to the official BT.601 standard and used on Android for conversion from Y'UV420sp (NV21).<br>
 		 * The conversion can be found in Android's source code: /media/libstagefright/yuv/YUVImage.cpp<br>
 		 * Below the precise transformation matrices are given:
 		 * <pre>
-		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255s]
+		 * YUV input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * RGB output value range: [0, 255]x[0, 255]x[0, 255]
 		 *
 		 * | R |     | 1.0     1.370705    0.0      |   |    Y    |     | 1.0    1.370705    0.0        -175.45024  |   | Y |
@@ -1213,8 +1225,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeYVU24_To_FullRangeRGB24_Android();
 
 		/**
-		 * Returns the color space transformation matrix from limited range YUV24 to full range RGB24 using BT.601, (digital) YCbCr to analog RGB.
-		 * Below the precise transformation matrices are given:
+		 * Returns the color space transformation matrix from limited range YUV24 to full range RGB24 using BT.601, limited range YCbCr to full range RGB, studio swing.
+		 * The matrix below is not the mathematically exact BT.601 matrix but the fixed point matrix the integer implementations are derived from, the exact matrix is given for comparison.
+		 * Below the transformation matrices are given:
 		 * <pre>
 		 * YUV input value range:  [16, 235]x[16, 240]x[16, 240]
 		 * RGB output value range: [0, 255]x[0, 255]x[0, 255]
@@ -1223,6 +1236,12 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * | G |  =  | 1.1639404296875  -0.3909912109375 -0.81298828125    135.486328125 | * | U |
 		 * | B |     | 1.1639404296875   2.0179443359375  0.0             -276.919921875 |   | V |
 		 *                                                                                   | 1 |
+		 *
+		 * The exact BT.601 matrix, the matrix above deviates by up to 0.001:
+		 * | R |     | 1.1643836   0.0         1.5960268  -222.921566 |   | Y |
+		 * | G |  =  | 1.1643836  -0.3917623  -0.8129676   135.575295 | * | U |
+		 * | B |     | 1.1643836   2.0172321   0.0        -276.835851 |   | V |
+		 *                                                                | 1 |
 		 *
 		 * Approximation with 13 bit precision:
 		 *        | R |     | 9535     0         13074 |   | Y -  16 |
@@ -1250,18 +1269,18 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from full range BGR24 to limited range YUV24 using BT.601, analog RGB to (digital) YCbCr.
+		 * Returns the color space transformation matrix from full range BGR24 to limited range YUV24 using BT.601, full range BGR to limited range YCbCr, studio swing.
 		 * <pre>
 		 * BGR input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * YUV output value range: [16, 235]x[16, 240]x[16, 240]
 		 * </pre>
 		 * @return The 3x4 transformation matrix
-		 * @see transformationMatrixFullRangeRGB24ToLimitedRangeYUV24_BT601().
+		 * @see transformationMatrix_FullRangeRGB24_To_LimitedRangeYUV24_BT601().
 		 */
 		static MatrixD transformationMatrix_FullRangeBGR24_To_LimitedRangeYUV24_BT601();
 
 		/**
-		 * Returns the 3x4 color space transformation matrix from full range BGR24 to full range YUV24 using BT.601, analog BGR to (analog) YPbPr.
+		 * Returns the 3x4 color space transformation matrix from full range BGR24 to full range YUV24 using BT.601, full range BGR to full range YCbCr, the digitized YPbPr equations.
 		 * Below the precise transformation matrices are given:
 		 * <pre>
 		 * BGR input value range:  [0, 255]x[0, 255]x[0, 255]
@@ -1272,7 +1291,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * | V |   | -0.081312   -0.418688    0.5        128 |   | R |
 		 *                                                       | 1 |
 		 * Approximation with 7 bit precision:
-		 *       | Y |     |  15     75    38      0   128 |   | B |
+		 *       | Y |     |  15     75    38      0 * 128 |   | B |
 		 * 128 * | U |  =  |  64    -42   -22    128 * 128 | * | G |
 		 *       | V |     | -10    -54    64    128 * 128 |   | R |
 		 *                                                     | 1 |
@@ -1283,7 +1302,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeBGR24_To_FullRangeYUV24_BT601();
 
 		/**
-		 * Returns the 3x4 color space transformation matrix from full range BGR24 to full range YVU24 using BT.601, analog BGR to (analog) YPbPr.
+		 * Returns the 3x4 color space transformation matrix from full range BGR24 to full range YVU24 using BT.601, full range BGR to full range YCrCb, the digitized YPbPr equations.
 		 * Below the precise transformation matrices are given:
 		 * <pre>
 		 * BGR input value range:  [0, 255]x[0, 255]x[0, 255]
@@ -1295,40 +1314,40 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeBGR24_To_FullRangeYVU24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from limited range YUV24 to full range BGR24 using BT.601, (digital) YCbCr to analog BGR.
+		 * Returns the color space transformation matrix from limited range YUV24 to full range BGR24 using BT.601, limited range YCbCr to full range BGR, studio swing.
 		 * <pre>
 		 * YUV input value range:  [16, 235]x[16, 240]x[16, 240]
 		 * BGR output value range: [0, 255]x[0, 255]x[0, 255]
 		 * </pre>
 		 * @return The 3x4 transformation matrix
-		 * @see transformationMatrixLimitedRangeYUV24ToFullRangeRGB24_BT601().
+		 * @see transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601().
 		 */
 		static MatrixD transformationMatrix_LimitedRangeYUV24_To_FullRangeBGR24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from limited range YVU24 to full range BGR24 using BT.601, (digital) YCrCb to analog BGR.
+		 * Returns the color space transformation matrix from limited range YVU24 to full range BGR24 using BT.601, limited range YCrCb to full range BGR, studio swing.
 		 * <pre>
 		 * YVU input value range:  [16, 235]x[16, 240]x[16, 240]
 		 * BGR output value range: [0, 255]x[0, 255]x[0, 255]
 		 * </pre>
 		 * @return The 3x4 transformation matrix
-		 * @see transformationMatrixLimitedRangeYUV24ToFullRangeRGB24_BT601().
+		 * @see transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601().
 		 */
 		static MatrixD transformationMatrix_LimitedRangeYVU24_To_FullRangeBGR24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from limited range YVU24 to full range RGB24 using BT.601, (digital) YCrCb to analog RGB.
+		 * Returns the color space transformation matrix from limited range YVU24 to full range RGB24 using BT.601, limited range YCrCb to full range RGB, studio swing.
 		 * <pre>
 		 * YVU input value range:  [16, 235]x[16, 240]x[16, 240]
 		 * RGB output value range: [0, 255]x[0, 255]x[0, 255]
 		 * </pre>
 		 * @return The 3x4 transformation matrix
-		 * @see transformationMatrixLimitedRangeYUV24ToFullRangeRGB24_BT601().
+		 * @see transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601().
 		 */
 		static MatrixD transformationMatrix_LimitedRangeYVU24_To_FullRangeRGB24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from full range YVU24 to full range RGB24 using BT.601, (digital) YCrCb to analog RGB.
+		 * Returns the color space transformation matrix from full range YVU24 to full range RGB24 using BT.601, full range YCrCb to full range RGB, the digitized YPbPr equations.
 		 * <pre>
 		 * YVU input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * RGB output value range: [0, 255]x[0, 255]x[0, 255]
@@ -1339,7 +1358,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		static MatrixD transformationMatrix_FullRangeYVU24_To_FullRangeRGB24_BT601();
 
 		/**
-		 * Returns the color space transformation matrix from full range YVU24 to full range BGR24 using BT.601, (digital) YCrCb to analog BGR.
+		 * Returns the color space transformation matrix from full range YVU24 to full range BGR24 using BT.601, full range YCrCb to full range BGR, the digitized YPbPr equations.
 		 * <pre>
 		 * YVU input value range:  [0, 255]x[0, 255]x[0, 255]
 		 * BGR output value range: [0, 255]x[0, 255]x[0, 255]
