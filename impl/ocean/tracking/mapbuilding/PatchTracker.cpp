@@ -226,7 +226,7 @@ bool PatchTracker::trackRecording(Devices::DevicePlayer& devicePlayer, const Str
 		if (frame.isNull() || !currentAnyCamera)
 		{
 			ocean_assert(false && "This should never happen!");
-			return 1;
+			return false;
 		}
 
 		const ScopedValueT<unsigned int> scopedFrameIndex(frameIndex, frameIndex + 1u);
