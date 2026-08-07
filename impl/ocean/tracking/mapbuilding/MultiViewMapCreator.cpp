@@ -492,7 +492,7 @@ void MultiViewMapCreator::determineObservations(const Index32 currentFrameIndex,
 		const Geometry::SpatialDistribution::DistributionArray& currentDistributionArray = currentDistributionArrays[cameraIndex];
 		const CV::Detector::FREAKDescriptors32& currentDescriptors = currentDescriptorGroups_[cameraIndex];
 
-		currentMatchStatementGroups.emplace_back(currentImagePoints.size(), 0u);
+		currentMatchStatementGroups.emplace_back(currentImagePoints.size(), Index32(-1));
 
 		Indices32& currentMatchStatements = currentMatchStatementGroups.back();
 
@@ -552,7 +552,7 @@ void MultiViewMapCreator::determineObservations(const Index32 currentFrameIndex,
 						ocean_assert(bestPointCurrent < currentMatchStatements.size());
 						Index32& currentMatchStatement = currentMatchStatements[bestPointCurrent];
 
-						if (currentMatchStatement != 0u)
+						if (currentMatchStatement != Index32(-1))
 						{
 							// the image points has already been matched with another feature point, we need to join the two features
 
@@ -612,7 +612,7 @@ void MultiViewMapCreator::determineObservations(const Index32 currentFrameIndex,
 
 		for (size_t nPoint = currentMatchStatements.size() - 1; nPoint < currentMatchStatements.size(); --nPoint)
 		{
-			if (currentMatchStatements[nPoint] != 0u)
+			if (currentMatchStatements[nPoint] != Index32(-1))
 			{
 				imagePoints[nPoint] = imagePoints.back();
 				imagePoints.pop_back();
