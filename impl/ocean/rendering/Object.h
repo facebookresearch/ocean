@@ -197,7 +197,7 @@ class OCEAN_RENDERING_EXPORT Object
 		 * Returns the name of this object.
 		 * @return Object name
 		 */
-		inline const std::string& name() const;
+		inline std::string name() const;
 
 		/**
 		 * Sets or changes the name of this object.
@@ -320,8 +320,10 @@ inline ObjectId Object::id() const
 	return objectId_;
 }
 
-inline const std::string& Object::name() const
+inline std::string Object::name() const
 {
+	const ScopedLock scopedLock(objectLock_);
+
 	return objectName_;
 }
 

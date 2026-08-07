@@ -121,7 +121,7 @@ ObjectRef ObjectRefManager::registerObject(Object* object)
 
 	ObjectRef objectRef(object, ObjectRef::ReleaseCallback(ObjectRefManager::get(), &ObjectRefManager::unregisterObject));
 
-	const std::string& name(object->name());
+	const std::string name(object->name());
 	const ObjectId objectId(object->id());
 	ocean_assert(objectId != invalidObjectId);
 

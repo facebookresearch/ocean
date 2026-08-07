@@ -33,13 +33,20 @@ Object::~Object()
 
 void Object::setName(const std::string& name)
 {
-	if (objectName_ == name)
-	{
-		return;
-	}
+	TemporaryScopedLock scopedLock(objectLock_);
 
-	ObjectRefManager::get().changeRegisteredObject(objectId_, objectName_, name);
-	objectName_ = name;
+		if (objectName_ == name)
+		{
+			return;
+		}
+
+		const std::string oldName(std::move(objectName_));
+		objectName_ = name;
+
+	scopedLock.release();
+
+	// ObjectRefManager acquires the object lock while holding its own lock, so this call must not hold the object lock
+	ObjectRefManager::get().changeRegisteredObject(objectId_, oldName, name);
 }
 
 Engine& Object::engine() const
@@ -61,8 +68,6 @@ ObjectRefs Object::parentObjects() const
 		const ScopedLock scopedLock(objectLock_);
 		objectParentsCopy = objectParents_;
 	}
-
-	const ScopedLock scopedLock(objectLock_);
 
 	ObjectRefs parentObjects;
 	parentObjects.reserve(objectParentsCopy.size());
