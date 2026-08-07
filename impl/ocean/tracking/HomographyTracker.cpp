@@ -181,7 +181,7 @@ bool HomographyTracker::trackPoints(const Frame& yPreviousFrame, const CV::Frame
 		}
 	}
 
-	return true;
+	return !usedIndices.empty();
 }
 
 }
