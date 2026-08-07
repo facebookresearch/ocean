@@ -52,9 +52,11 @@ void GLESTriangleFans::setStrips(const VertexIndexGroups& strips)
 {
 	const ScopedLock scopedLock(objectLock);
 
+	// one buffer is created per strip rather than a single buffer being reused, so the previous ones are dropped instead of overwritten
+	release();
+
 	if (strips.empty() || strips.front().empty())
 	{
-		release();
 		return;
 	}
 
@@ -150,6 +152,7 @@ void GLESTriangleFans::release()
 		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 
+	vertexBufferPairs_.clear();
 	strips_.clear();
 
 	boundingBox_ = BoundingBox();
