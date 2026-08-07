@@ -229,6 +229,7 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 	Buffer responseBuffer;
 	size_t responseBufferPosition = 0;
 	size_t responsePendingChunkSize = 0;
+	size_t responsePendingTerminatorSize = 0;
 
 	do
 	{
@@ -249,8 +250,10 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 
 			if (!buffer.empty())
 			{
-				if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data(), buffer.size(), responsePendingChunkSize))
+				if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data(), buffer.size(), responsePendingChunkSize, responsePendingTerminatorSize))
+				{
 					break;
+				}
 
 				startTimestamp.toNow();
 			}
@@ -286,7 +289,7 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 
 				if (buffer.size() > responseHeader.length())
 				{
-					if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data() + responseHeader.length(), buffer.size() - responseHeader.length(), responsePendingChunkSize))
+					if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data() + responseHeader.length(), buffer.size() - responseHeader.length(), responsePendingChunkSize, responsePendingTerminatorSize))
 					{
 						break;
 					}
@@ -497,7 +500,7 @@ bool HTTPClient::parseHeader(const char* data, const size_t size, HTTPHeader& he
 	}
 }
 
-bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bufferPosition, const char* payload, size_t payloadSize, size_t& pendingChunkSize)
+bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bufferPosition, const char* payload, size_t payloadSize, size_t& pendingChunkSize, size_t& pendingTerminatorSize)
 {
 	ocean_assert(header.isValid());
 	ocean_assert(header.code() == HTTPHeader::RC_OK);
@@ -516,6 +519,21 @@ bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bu
 
 	if (header.transferEncodingChunked())
 	{
+		// a chunk terminator can be split across two payloads, so the part which did not arrive yet is skipped here
+		if (pendingTerminatorSize != 0)
+		{
+			const size_t skip = min(payloadSize, pendingTerminatorSize);
+
+			pendingTerminatorSize -= skip;
+			payloadSize -= skip;
+			payload += skip;
+
+			if (payloadSize == 0)
+			{
+				return false;
+			}
+		}
+
 		// check whether we have to start with a new chunk
 		if (pendingChunkSize == 0)
 		{
@@ -567,14 +585,19 @@ bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bu
 		// we need to remove the end-chunk signs ('\r\n')
 		if (pendingChunkSize == 0)
 		{
-			payloadSize -= 2;
-			payload += 2;
+			pendingTerminatorSize = 2;
+
+			const size_t skip = min(payloadSize, pendingTerminatorSize);
+
+			pendingTerminatorSize -= skip;
+			payloadSize -= skip;
+			payload += skip;
 		}
 	}
 
 	if (payloadSize != 0)
 	{
-		return appendData(header, buffer, bufferPosition, payload, payloadSize, pendingChunkSize);
+		return appendData(header, buffer, bufferPosition, payload, payloadSize, pendingChunkSize, pendingTerminatorSize);
 	}
 
 	if (!header.transferEncodingChunked() && header.contentLength() != 0 && bufferPosition >= header.contentLength())

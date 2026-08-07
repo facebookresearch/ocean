@@ -350,9 +350,10 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 		 * @param payload The source data
 		 * @param payloadSize The sizeof the source data
 		 * @param pendingChunkSize Input and output size of the current chunk
+		 * @param pendingTerminatorSize Input and output number of bytes of the chunk terminator which are still to be skipped, with range [0, 2]
 		 * @return True, if the given payload was the last payload for the target buffer
 		 */
-		static bool appendData(const HTTPHeader& header, Buffer& buffer, size_t& bufferPosition, const char* payload, size_t payloadSize, size_t& pendingChunkSize);
+		static bool appendData(const HTTPHeader& header, Buffer& buffer, size_t& bufferPosition, const char* payload, size_t payloadSize, size_t& pendingChunkSize, size_t& pendingTerminatorSize);
 
 		/**
 		 * Returns one line from a data buffer.
