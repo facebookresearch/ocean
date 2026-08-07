@@ -1185,15 +1185,19 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 	{
 		const CV::SubRegion subRegion(projectedTriangles);
 
-		for (size_t n = 0; n < imagePoints.size(); ++n)
+		for (size_t nImage = 0; nImage < imagePoints.size(); /*noop*/)
 		{
-			if (subRegion.isInside(imagePoints[n]))
+			if (subRegion.isInside(imagePoints[nImage]))
 			{
-				imagePoints[n] = imagePoints.back();
+				imagePoints[nImage] = imagePoints.back();
 				imagePoints.pop_back();
 
-				imagePointDescriptors[n] = imagePointDescriptors.back();
+				imagePointDescriptors[nImage] = imagePointDescriptors.back();
 				imagePointDescriptors.pop_back();
+			}
+			else
+			{
+				++nImage;
 			}
 		}
 	}
@@ -1358,15 +1362,19 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 			{
 				// now we remove all features lying in the current subset
 
-				for (size_t n = 0; n < imagePoints.size(); ++n)
+				for (size_t nImage = 0; nImage < imagePoints.size(); /*noop*/)
 				{
-					if (subRegion.isInside(imagePoints[n]))
+					if (subRegion.isInside(imagePoints[nImage]))
 					{
-						imagePoints[n] = imagePoints.back();
-						imagePointDescriptors[n] = imagePointDescriptors.back();
+						imagePoints[nImage] = imagePoints.back();
+						imagePointDescriptors[nImage] = imagePointDescriptors.back();
 
 						imagePoints.pop_back();
 						imagePointDescriptors.pop_back();
+					}
+					else
+					{
+						++nImage;
 					}
 				}
 			}
