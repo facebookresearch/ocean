@@ -898,6 +898,8 @@ void NewTextureGenerator::threadRun()
 			oldUsedKeyframeIds = usedKeyframeIds;
 		}
 
+		scopedLock.relock(lock_);
+
 		// remove all keyframes not used
 		for (KeyframeMap::iterator iKeyframe = keyframeMap_.begin(); iKeyframe != keyframeMap_.end(); /*noop*/)
 		{
@@ -925,8 +927,6 @@ void NewTextureGenerator::threadRun()
 
 			Log::info() << " ";
 		}
-
-		scopedLock.relock(lock_);
 
 		for (TexturedMeshMap::const_iterator iMesh = texturedMeshMap.begin(); iMesh != texturedMeshMap.cend(); ++iMesh)
 		{
