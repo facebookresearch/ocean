@@ -4325,7 +4325,7 @@ Indices32 Database::objectPointIds(const Indices32& poseIds, const Vector3& refe
 				if (iO->second.priority() >= minimalPriority && ((tMatchPosition && iO->second.point() == referencePosition) || (!tMatchPosition && iO->second.point() != referencePosition)))
 				{
 					bool visibleInAllPoses = true;
-					for (size_t n = 1; n < poseIds.size(); ++n)
+					for (size_t n = 1; visibleInAllPoses && n < poseIds.size(); ++n)
 						visibleInAllPoses = databasePoseObjectPointMap.find(index64(poseIds[n], objectPointId)) != databasePoseObjectPointMap.end();
 
 					if (visibleInAllPoses)
