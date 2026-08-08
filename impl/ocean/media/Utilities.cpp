@@ -133,7 +133,7 @@ bool Utilities::decodeFrame(const uint8_t*& data, size_t& size, Frame& frame)
 
 	const size_t bytesData = size_t(((unsigned long long*)(data + 8 + bytesType))[0]);
 
-	if (8 + bytesType + 8 + bytesData > size)
+	if (bytesData > size - 16 - bytesType)
 	{
 		return false;
 	}
