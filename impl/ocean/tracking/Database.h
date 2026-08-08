@@ -136,7 +136,7 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The image point id of this object.
-				Index32 objectImagePointId;
+				Index32 imagePointId_ = invalidId;
 		};
 
 		/**
@@ -167,7 +167,7 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The object point id of this object.
-				Index32 objectObjectPointId;
+				Index32 objectPointId_ = invalidId;
 		};
 
 		/**
@@ -198,7 +198,7 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The camera pose id of this object.
-				Index32 objectPoseId;
+				Index32 poseId_ = invalidId;
 		};
 
 		/**
@@ -275,22 +275,22 @@ class OCEAN_TRACKING_EXPORT Database
 				 * Returns the number of image points of this accessor.
 				 * @return The number of image points
 				 */
-				virtual size_t size() const;
+				size_t size() const override;
 
 				/**
 				 * Returns a specific image point identified by the index within from the specified image point ids.
 				 * @param index The index within the given image point ids, with range [0, size())
 				 * @return The reference to the image point
 				 */
-				virtual const Vector2& operator[](const size_t& index) const;
+				const Vector2& operator[](const size_t& index) const override;
 
 			protected:
 
 				/// The reference to the database holding the individual image points.
-				const Database& accessorDatabase;
+				const Database& database_;
 
 				/// The reference to the image point ids.
-				const Indices32& accessorImagePointIds;
+				const Indices32& imagePointIds_;
 		};
 
 		/**
@@ -314,22 +314,22 @@ class OCEAN_TRACKING_EXPORT Database
 				 * Returns the number of image points of this accessor.
 				 * @return The number of image points
 				 */
-				virtual size_t size() const;
+				size_t size() const override;
 
 				/**
 				 * Returns a specific image point identified by the index within from the specified topology.
 				 * @param index The index within the given topology, with range [0, size())
 				 * @return The reference to the image point
 				 */
-				virtual const Vector2& operator[](const size_t& index) const;
+				const Vector2& operator[](const size_t& index) const override;
 
 			protected:
 
 				/// The reference to the database holding the individual image points.
-				const Database& accessorDatabase;
+				const Database& database_;
 
 				/// The topology between poses and image points.
-				const PoseImagePointTopology& accessorTopology;
+				const PoseImagePointTopology& topology_;
 		};
 
 		/**
@@ -353,22 +353,22 @@ class OCEAN_TRACKING_EXPORT Database
 				 * Returns the number of object points of this accessor.
 				 * @return The number of object points
 				 */
-				virtual size_t size() const;
+				size_t size() const override;
 
 				/**
 				 * Returns a specific object point identified by the index within from the specified object point ids.
 				 * @param index The index within the given object point ids, with range [0, size())
 				 * @return The reference to the object point
 				 */
-				virtual const Vector3& operator[](const size_t& index) const;
+				const Vector3& operator[](const size_t& index) const override;
 
 			protected:
 
 				/// The reference to the database holding the individual object points.
-				const Database& accessorDatabase;
+				const Database& database_;
 
 				/// The reference to the object point ids.
-				const Indices32& accessorObjectPointIds;
+				const Indices32& objectPointIds_;
 		};
 
 		/**
@@ -392,22 +392,22 @@ class OCEAN_TRACKING_EXPORT Database
 				 * Returns the number of poses of this accessor.
 				 * @return The number of poses
 				 */
-				virtual size_t size() const;
+				size_t size() const override;
 
 				/**
 				 * Returns a specific pose identified by the index within from the specified pose ids.
 				 * @param index The index within the given pose ids, with range [0, size())
 				 * @return The reference to the pose
 				 */
-				virtual const HomogenousMatrix4& operator[](const size_t& index) const;
+				const HomogenousMatrix4& operator[](const size_t& index) const override;
 
 			protected:
 
 				/// The reference to the database holding the individual object points.
-				const Database& accessorDatabase;
+				const Database& database_;
 
 				/// The reference to the pose ids.
-				const Indices32& accessorPoseIds;
+				const Indices32& poseIds_;
 		};
 
 		/**
@@ -431,22 +431,22 @@ class OCEAN_TRACKING_EXPORT Database
 				 * Returns the number of poses of this accessor.
 				 * @return The number of poses
 				 */
-				virtual size_t size() const;
+				size_t size() const override;
 
 				/**
 				 * Returns a specific pose identified by the index within from the specified topology.
 				 * @param index The index within the given topology, with range [0, size())
 				 * @return The reference to the pose
 				 */
-				virtual const HomogenousMatrix4& operator[](const size_t& index) const;
+				const HomogenousMatrix4& operator[](const size_t& index) const override;
 
 			protected:
 
 				/// The reference to the database holding the individual image points.
-				const Database& accessorDatabase;
+				const Database& database_;
 
 				/// The topology between poses and image points.
-				const PoseImagePointTopology& accessorTopology;
+				const PoseImagePointTopology& topology_;
 		};
 
 	protected:
@@ -461,7 +461,7 @@ class OCEAN_TRACKING_EXPORT Database
 				/**
 				 * Creates a default object.
 				 */
-				inline ImagePointData();
+				ImagePointData() = default;
 
 				/**
 				 * Creates a new image point object.
@@ -510,13 +510,13 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The location of the 2D image point of this object.
-				Vector2 dataPoint;
+				Vector2 point_ = Vector2(Numeric::minValue(), Numeric::minValue());
 
 				/// The id of the pose which belongs to this object.
-				Index32 dataPoseId;
+				Index32 poseId_ = invalidId;
 
 				/// The id of the object point which belongs to this object.
-				Index32 dataObjectPointId;
+				Index32 objectPointId_ = invalidId;
 		};
 
 		/**
@@ -547,7 +547,7 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The set of registered image point ids of this object.
-				IndexSet32 dataImagePointIds;
+				IndexSet32 imagePointIds_;
 		};
 
 		/**
@@ -591,10 +591,10 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The pose of this object.
-				HomogenousMatrix4 world_T_camera_;
+				HomogenousMatrix4 world_T_camera_ = HomogenousMatrix4(false);
 
 				/// The field of view value of this object.
-				Scalar dataFov;
+				Scalar fov_ = Scalar(-1);
 		};
 
 		/**
@@ -638,10 +638,10 @@ class OCEAN_TRACKING_EXPORT Database
 			protected:
 
 				/// The 3D object point of this object.
-				Vector3 dataPoint;
+				Vector3 point_ = invalidObjectPoint();
 
 				/// The priority value of this object.
-				Scalar dataPriority;
+				Scalar priority_ = Scalar(-1);
 		};
 
 		/**
@@ -674,7 +674,7 @@ class OCEAN_TRACKING_EXPORT Database
 		/**
 		 * Creates a new empty database object.
 		 */
-		inline Database();
+		Database() = default;
 
 		/**
 		 * Copy constructor.
@@ -1878,28 +1878,28 @@ class OCEAN_TRACKING_EXPORT Database
 	protected:
 
 		/// The map mapping unique pose ids to pose data instances.
-		PoseMap databasePoseMap;
+		PoseMap poseMap_;
 
 		/// The map mapping unique object point ids to object point data instances.
-		ObjectPointMap databaseObjectPointMap;
+		ObjectPointMap objectPointMap_;
 
 		/// The map mapping unique image points ids to image point data instances.
-		ImagePointMap databaseImagePointMap;
+		ImagePointMap imagePointMap_;
 
 		/// The map mapping a pair of pose id and object point id to image point ids.
-		Index64To32Map databasePoseObjectPointMap;
+		Index64To32Map poseObjectPointMap_;
 
 		/// The number of poses.
-		unsigned int databasePoses;
+		unsigned int poses_ = 0u;
 
 		/// The counter for unique object point ids.
-		Index32 databaseObjectPointIdCounter;
+		Index32 objectPointIdCounter_ = invalidId;
 
 		/// The counter for unique image point ids.
-		Index32 databaseImagePointIdCounter;
+		Index32 imagePointIdCounter_ = invalidId;
 
 		/// The lock for the entire database.
-		mutable Lock databaseLock;
+		mutable Lock lock_;
 };
 
 inline Vector3 Database::invalidObjectPoint()
@@ -1909,8 +1909,8 @@ inline Vector3 Database::invalidObjectPoint()
 
 template <bool tThreadSafe>
 inline Database::ConstImagePointAccessorIds<tThreadSafe>::ConstImagePointAccessorIds(const Database& database, const Indices32& imagePointIds) :
-	accessorDatabase(database),
-	accessorImagePointIds(imagePointIds)
+	database_(database),
+	imagePointIds_(imagePointIds)
 {
 	// nothing to do here
 }
@@ -1918,20 +1918,20 @@ inline Database::ConstImagePointAccessorIds<tThreadSafe>::ConstImagePointAccesso
 template <bool tThreadSafe>
 size_t Database::ConstImagePointAccessorIds<tThreadSafe>::size() const
 {
-	return accessorImagePointIds.size();
+	return imagePointIds_.size();
 }
 
 template <bool tThreadSafe>
 const Vector2& Database::ConstImagePointAccessorIds<tThreadSafe>::operator[](const size_t& index) const
 {
-	ocean_assert(index < accessorImagePointIds.size());
-	return accessorDatabase.imagePoint<tThreadSafe>(accessorImagePointIds[index]);
+	ocean_assert(index < imagePointIds_.size());
+	return database_.imagePoint<tThreadSafe>(imagePointIds_[index]);
 }
 
 template <bool tThreadSafe>
 inline Database::ConstImagePointAccessorTopology<tThreadSafe>::ConstImagePointAccessorTopology(const Database& database, const PoseImagePointTopology& topology) :
-	accessorDatabase(database),
-	accessorTopology(topology)
+	database_(database),
+	topology_(topology)
 {
 	// nothing to do here
 }
@@ -1939,20 +1939,20 @@ inline Database::ConstImagePointAccessorTopology<tThreadSafe>::ConstImagePointAc
 template <bool tThreadSafe>
 size_t Database::ConstImagePointAccessorTopology<tThreadSafe>::size() const
 {
-	return accessorTopology.size();
+	return topology_.size();
 }
 
 template <bool tThreadSafe>
 const Vector2& Database::ConstImagePointAccessorTopology<tThreadSafe>::operator[](const size_t& index) const
 {
-	ocean_assert(index < accessorTopology.size());
-	return accessorDatabase.imagePoint<tThreadSafe>(accessorTopology[index].imagePointId());
+	ocean_assert(index < topology_.size());
+	return database_.imagePoint<tThreadSafe>(topology_[index].imagePointId());
 }
 
 template <bool tThreadSafe>
 inline Database::ConstObjectPointAccessorIds<tThreadSafe>::ConstObjectPointAccessorIds(const Database& database, const Indices32& objectPointIds) :
-	accessorDatabase(database),
-	accessorObjectPointIds(objectPointIds)
+	database_(database),
+	objectPointIds_(objectPointIds)
 {
 	// nothing to do here
 }
@@ -1960,20 +1960,20 @@ inline Database::ConstObjectPointAccessorIds<tThreadSafe>::ConstObjectPointAcces
 template <bool tThreadSafe>
 size_t Database::ConstObjectPointAccessorIds<tThreadSafe>::size() const
 {
-	return accessorObjectPointIds.size();
+	return objectPointIds_.size();
 }
 
 template <bool tThreadSafe>
 const Vector3& Database::ConstObjectPointAccessorIds<tThreadSafe>::operator[](const size_t& index) const
 {
-	ocean_assert(index < accessorObjectPointIds.size());
-	return accessorDatabase.objectPoint<tThreadSafe>(accessorObjectPointIds[index]);
+	ocean_assert(index < objectPointIds_.size());
+	return database_.objectPoint<tThreadSafe>(objectPointIds_[index]);
 }
 
 template <bool tThreadSafe>
 inline Database::ConstPoseAccessorIds<tThreadSafe>::ConstPoseAccessorIds(const Database& database, const Indices32& poseIds) :
-	accessorDatabase(database),
-	accessorPoseIds(poseIds)
+	database_(database),
+	poseIds_(poseIds)
 {
 	// nothing to do here
 }
@@ -1981,20 +1981,20 @@ inline Database::ConstPoseAccessorIds<tThreadSafe>::ConstPoseAccessorIds(const D
 template <bool tThreadSafe>
 size_t Database::ConstPoseAccessorIds<tThreadSafe>::size() const
 {
-	return accessorPoseIds.size();
+	return poseIds_.size();
 }
 
 template <bool tThreadSafe>
 const HomogenousMatrix4& Database::ConstPoseAccessorIds<tThreadSafe>::operator[](const size_t& index) const
 {
-	ocean_assert(index < accessorPoseIds.size());
-	return accessorDatabase.pose<tThreadSafe>(accessorPoseIds[index]);
+	ocean_assert(index < poseIds_.size());
+	return database_.pose<tThreadSafe>(poseIds_[index]);
 }
 
 template <bool tThreadSafe>
 inline Database::ConstPoseAccessorTopology<tThreadSafe>::ConstPoseAccessorTopology(const Database& database, const PoseImagePointTopology& topology) :
-	accessorDatabase(database),
-	accessorTopology(topology)
+	database_(database),
+	topology_(topology)
 {
 	// nothing to do here
 }
@@ -2002,62 +2002,62 @@ inline Database::ConstPoseAccessorTopology<tThreadSafe>::ConstPoseAccessorTopolo
 template <bool tThreadSafe>
 size_t Database::ConstPoseAccessorTopology<tThreadSafe>::size() const
 {
-	return accessorTopology.size();
+	return topology_.size();
 }
 
 template <bool tThreadSafe>
 const HomogenousMatrix4& Database::ConstPoseAccessorTopology<tThreadSafe>::operator[](const size_t& index) const
 {
-	ocean_assert(index < accessorTopology.size());
-	return accessorDatabase.pose<tThreadSafe>(accessorTopology[index].poseId());
+	ocean_assert(index < topology_.size());
+	return database_.pose<tThreadSafe>(topology_[index].poseId());
 }
 
 inline Database::ImagePointObject::ImagePointObject(const Index32 imagePointId) :
-	objectImagePointId(imagePointId)
+	imagePointId_(imagePointId)
 {
 	// nothing to do here
 }
 
 inline Index32 Database::ImagePointObject::imagePointId() const
 {
-	return objectImagePointId;
+	return imagePointId_;
 }
 
 inline void Database::ImagePointObject::setImagePointId(const Index32 imagePointId)
 {
-	objectImagePointId = imagePointId;
+	imagePointId_ = imagePointId;
 }
 
 inline Database::ObjectPointObject::ObjectPointObject(const Index32 objectPointId) :
-	objectObjectPointId(objectPointId)
+	objectPointId_(objectPointId)
 {
 	// nothing to do here
 }
 
 inline Index32 Database::ObjectPointObject::objectPointId() const
 {
-	return objectObjectPointId;
+	return objectPointId_;
 }
 
 inline void Database::ObjectPointObject::setObjectPointId(const Index32 objectPointId)
 {
-	objectObjectPointId = objectPointId;
+	objectPointId_ = objectPointId;
 }
 
 inline Database::PoseObject::PoseObject(const Index32 poseId) :
-	objectPoseId(poseId)
+	poseId_(poseId)
 {
 	// nothing to do here
 }
 
 inline Index32 Database::PoseObject::poseId() const
 {
-	return objectPoseId;
+	return poseId_;
 }
 
 inline void Database::PoseObject::setPoseId(const Index32 poseId)
 {
-	objectPoseId = poseId;
+	poseId_ = poseId;
 }
 
 inline Database::TopologyTriple::TopologyTriple(const Index32 poseId, const Index32 objectPointId, const Index32 imagePointId) :
@@ -2070,77 +2070,69 @@ inline Database::TopologyTriple::TopologyTriple(const Index32 poseId, const Inde
 
 inline Database::PoseImagePointPair::PoseImagePointPair(const Index32 poseId, const Index32 imagePointId) :
 	ImagePointObject(imagePointId),
-  PoseObject(poseId)
-{
-	// nothing to do here
-}
-
-inline Database::ImagePointData::ImagePointData() :
-	dataPoint(Numeric::minValue(), Numeric::minValue()),
-	dataPoseId(invalidId),
-	dataObjectPointId(invalidId)
+	PoseObject(poseId)
 {
 	// nothing to do here
 }
 
 inline Database::ImagePointData::ImagePointData(const Vector2& point, const Index32 poseId, const Index32 objectPointId) :
-	dataPoint(point),
-	dataPoseId(poseId),
-	dataObjectPointId(objectPointId)
+	point_(point),
+	poseId_(poseId),
+	objectPointId_(objectPointId)
 {
 	// nothing to do here
 }
 
 inline const Vector2& Database::ImagePointData::point() const
 {
-	return dataPoint;
+	return point_;
 }
 
 inline Index32 Database::ImagePointData::poseId() const
 {
-	return dataPoseId;
+	return poseId_;
 }
 
 inline Index32 Database::ImagePointData::objectPointId() const
 {
-	return dataObjectPointId;
+	return objectPointId_;
 }
 
 inline void Database::ImagePointData::setPoint(const Vector2& point)
 {
-	dataPoint = point;
+	point_ = point;
 }
 
 inline void Database::ImagePointData::setPoseId(const Index32 poseId)
 {
-	dataPoseId = poseId;
+	poseId_ = poseId;
 }
 
 inline void Database::ImagePointData::setObjectPointId(const Index32 objectPointId)
 {
-	dataObjectPointId = objectPointId;
+	objectPointId_ = objectPointId;
 }
 
 inline const IndexSet32& Database::Data::imagePointIds() const
 {
-	return dataImagePointIds;
+	return imagePointIds_;
 }
 
 inline void Database::Data::registerImagePoint(const Index32 imagePointId)
 {
-	ocean_assert(dataImagePointIds.find(imagePointId) == dataImagePointIds.end());
-	dataImagePointIds.insert(imagePointId);
+	ocean_assert(imagePointIds_.find(imagePointId) == imagePointIds_.end());
+	imagePointIds_.insert(imagePointId);
 }
 
 inline void Database::Data::unregisterImagePoint(const Index32 imagePointId)
 {
-	ocean_assert(dataImagePointIds.find(imagePointId) != dataImagePointIds.end());
-	dataImagePointIds.erase(imagePointId);
+	ocean_assert(imagePointIds_.find(imagePointId) != imagePointIds_.end());
+	imagePointIds_.erase(imagePointId);
 }
 
 inline Database::PoseData::PoseData(const HomogenousMatrix4& world_T_camera, const Scalar fov) :
 	world_T_camera_(world_T_camera),
-	dataFov(fov)
+	fov_(fov)
 {
 	// nothing to do here
 }
@@ -2152,7 +2144,7 @@ inline const HomogenousMatrix4& Database::PoseData::pose() const
 
 inline Scalar Database::PoseData::fov() const
 {
-	return dataFov;
+	return fov_;
 }
 
 inline void Database::PoseData::setPose(const HomogenousMatrix4& world_T_camera)
@@ -2162,105 +2154,97 @@ inline void Database::PoseData::setPose(const HomogenousMatrix4& world_T_camera)
 
 inline void Database::PoseData::setFov(const Scalar fov)
 {
-	dataFov = fov;
+	fov_ = fov;
 }
 
 inline Database::ObjectPointData::ObjectPointData(const Vector3& point, const Scalar priority) :
-	dataPoint(point),
-	dataPriority(priority)
+	point_(point),
+	priority_(priority)
 {
 	// nothing to do here
 }
 
 inline const Vector3& Database::ObjectPointData::point() const
 {
-	return dataPoint;
+	return point_;
 }
 
 inline Scalar Database::ObjectPointData::priority() const
 {
-	return dataPriority;
+	return priority_;
 }
 
 inline void Database::ObjectPointData::setPoint(const Vector3& point)
 {
-	dataPoint = point;
+	point_ = point;
 }
 
 inline void Database::ObjectPointData::setPriority(const Scalar priority)
 {
-	dataPriority = priority;
-}
-
-inline Database::Database() :
-	databasePoses(0u),
-	databaseObjectPointIdCounter(invalidId),
-	databaseImagePointIdCounter(invalidId)
-{
-	// nothing to do here
+	priority_ = priority;
 }
 
 inline Database::Database(const Database& database) :
-	databasePoseMap(database.databasePoseMap),
-	databaseObjectPointMap(database.databaseObjectPointMap),
-	databaseImagePointMap(database.databaseImagePointMap),
-	databasePoseObjectPointMap(database.databasePoseObjectPointMap),
-	databasePoses(database.databasePoses),
-	databaseObjectPointIdCounter(database.databaseObjectPointIdCounter),
-	databaseImagePointIdCounter(database.databaseImagePointIdCounter)
+	poseMap_(database.poseMap_),
+	objectPointMap_(database.objectPointMap_),
+	imagePointMap_(database.imagePointMap_),
+	poseObjectPointMap_(database.poseObjectPointMap_),
+	poses_(database.poses_),
+	objectPointIdCounter_(database.objectPointIdCounter_),
+	imagePointIdCounter_(database.imagePointIdCounter_)
 {
 	// nothing to do here
 }
 
 inline Database::Database(Database&& database) noexcept :
-	databasePoseMap(std::move(database.databasePoseMap)),
-	databaseObjectPointMap(std::move(database.databaseObjectPointMap)),
-	databaseImagePointMap(std::move(database.databaseImagePointMap)),
-	databasePoseObjectPointMap(std::move(database.databasePoseObjectPointMap)),
-	databasePoses(database.databasePoses),
-	databaseObjectPointIdCounter(database.databaseObjectPointIdCounter),
-	databaseImagePointIdCounter(database.databaseImagePointIdCounter)
+	poseMap_(std::move(database.poseMap_)),
+	objectPointMap_(std::move(database.objectPointMap_)),
+	imagePointMap_(std::move(database.imagePointMap_)),
+	poseObjectPointMap_(std::move(database.poseObjectPointMap_)),
+	poses_(database.poses_),
+	objectPointIdCounter_(database.objectPointIdCounter_),
+	imagePointIdCounter_(database.imagePointIdCounter_)
 {
-	database.databasePoses = 0u;
-	database.databaseObjectPointIdCounter = invalidId;
-	database.databaseImagePointIdCounter = invalidId;
+	database.poses_ = 0u;
+	database.objectPointIdCounter_ = invalidId;
+	database.imagePointIdCounter_ = invalidId;
 }
 
 inline Lock& Database::lock()
 {
-	return databaseLock;
+	return lock_;
 }
 
 template <bool tThreadSafe>
 inline bool Database::isEmpty() const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	return databasePoseMap.empty() && databaseObjectPointMap.empty() && databaseImagePointMap.empty();
+	return poseMap_.empty() && objectPointMap_.empty() && imagePointMap_.empty();
 }
 
 template <bool tThreadSafe>
 inline size_t Database::poseNumber() const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	return databasePoseMap.size();
+	return poseMap_.size();
 }
 
 template <bool tThreadSafe>
 inline size_t Database::objectPointNumber() const
 {
-  const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+  const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-  return databaseObjectPointMap.size();
+  return objectPointMap_.size();
 }
 
 template <bool tThreadSafe>
 inline size_t Database::imagePointNumber() const
 {
-  const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+  const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-  return databaseImagePointMap.size();
+  return imagePointMap_.size();
 }
 
 template <bool tThreadSafe>
@@ -2268,26 +2252,26 @@ inline const Vector2& Database::imagePoint(const Index32 imagePointId) const
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databaseImagePointMap.find(imagePointId) != databaseImagePointMap.end());
-	return databaseImagePointMap.find(imagePointId)->second.point();
+	ocean_assert(imagePointMap_.find(imagePointId) != imagePointMap_.end());
+	return imagePointMap_.find(imagePointId)->second.point();
 }
 
 template <bool tThreadSafe>
 inline Vectors2 Database::imagePoints(const Indices32& imagePointIds) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors2 imagePoints;
 	imagePoints.reserve(imagePointIds.size());
 
-	for (Indices32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+	for (const Index32 imagePointId : imagePointIds)
 	{
-		ocean_assert(*i != invalidId);
-		ocean_assert(databaseImagePointMap.find(*i) != databaseImagePointMap.end());
+		ocean_assert(imagePointId != invalidId);
+		ocean_assert(imagePointMap_.find(imagePointId) != imagePointMap_.end());
 
-		imagePoints.push_back(databaseImagePointMap.find(*i)->second.point());
+		imagePoints.push_back(imagePointMap_.find(imagePointId)->second.point());
 	}
 
 	return imagePoints;
@@ -2296,17 +2280,17 @@ inline Vectors2 Database::imagePoints(const Indices32& imagePointIds) const
 template <bool tThreadSafe>
 inline Vectors2 Database::imagePoints(const IndexSet32& imagePointIds) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors2 imagePoints;
 	imagePoints.reserve(imagePointIds.size());
 
-	for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+	for (const Index32 imagePointId : imagePointIds)
 	{
-		ocean_assert(*i != invalidId);
-		ocean_assert(databaseImagePointMap.find(*i) != databaseImagePointMap.end());
+		ocean_assert(imagePointId != invalidId);
+		ocean_assert(imagePointMap_.find(imagePointId) != imagePointMap_.end());
 
-		imagePoints.push_back(databaseImagePointMap.find(*i)->second.point());
+		imagePoints.push_back(imagePointMap_.find(imagePointId)->second.point());
 	}
 
 	return imagePoints;
@@ -2317,24 +2301,32 @@ inline bool Database::hasObservation(const Index32 poseId, const Index32 objectP
 {
 	ocean_assert(objectPointId != invalidId && poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const Index64To32Map::const_iterator i = databasePoseObjectPointMap.find(index64(poseId, objectPointId));
+	const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(poseId, objectPointId));
 
-	if (i == databasePoseObjectPointMap.end())
+	if (iPoseObjectPoint == poseObjectPointMap_.end())
+	{
 		return false;
+	}
 
 	if (!point && !pointId)
+	{
 		return true;
+	}
 
-	const ImagePointMap::const_iterator iI = databaseImagePointMap.find(i->second);
-	ocean_assert(iI != databaseImagePointMap.end());
+	const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(iPoseObjectPoint->second);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
-	if (point)
-		*point = iI->second.point();
+	if (point != nullptr)
+	{
+		*point = iImagePoint->second.point();
+	}
 
-	if (pointId)
-		*pointId = iI->first;
+	if (pointId != nullptr)
+	{
+		*pointId = iImagePoint->first;
+	}
 
 	return true;
 }
@@ -2344,10 +2336,10 @@ inline const Vector3& Database::objectPoint(const Index32 objectPointId) const
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databaseObjectPointMap.find(objectPointId) != databaseObjectPointMap.end());
-	return databaseObjectPointMap.find(objectPointId)->second.point();
+	ocean_assert(objectPointMap_.find(objectPointId) != objectPointMap_.end());
+	return objectPointMap_.find(objectPointId)->second.point();
 }
 
 template <bool tThreadSafe>
@@ -2355,13 +2347,13 @@ inline const Vector3& Database::objectPoint(const Index32 objectPointId, Scalar&
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator i = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(i != databaseObjectPointMap.end());
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	objectPointPriority = i->second.priority();
-	return i->second.point();
+	objectPointPriority = iObjectPoint->second.priority();
+	return iObjectPoint->second.point();
 }
 
 template <bool tThreadSafe>
@@ -2369,22 +2361,24 @@ inline Scalar Database::objectPointPriority(const Index32 objectPointId) const
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databaseObjectPointMap.find(objectPointId) != databaseObjectPointMap.end());
-	return databaseObjectPointMap.find(objectPointId)->second.priority();
+	ocean_assert(objectPointMap_.find(objectPointId) != objectPointMap_.end());
+	return objectPointMap_.find(objectPointId)->second.priority();
 }
 
 template <bool tThreadSafe>
 inline Vectors3 Database::objectPoints() const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors3 objectPoints;
-	objectPoints.reserve(databaseObjectPointMap.size());
+	objectPoints.reserve(objectPointMap_.size());
 
-	for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-		objectPoints.push_back(i->second.point());
+	for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+	{
+		objectPoints.push_back(iObjectPoint->second.point());
+	}
 
 	return objectPoints;
 }
@@ -2394,28 +2388,34 @@ inline Vectors3 Database::objectPoints(const Vector3& referencePosition, Indices
 {
 	ocean_assert(!objectPointIds || objectPointIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors3 objectPoints;
-	objectPoints.reserve(databaseObjectPointMap.size());
+	objectPoints.reserve(objectPointMap_.size());
 
-	if (objectPointIds)
+	if (objectPointIds != nullptr)
 	{
 		objectPointIds->clear();
-		objectPointIds->reserve(databaseObjectPointMap.size());
+		objectPointIds->reserve(objectPointMap_.size());
 
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-			if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == referencePosition) || (!tMatchPosition && i->second.point() != referencePosition)))
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+		{
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
 			{
-				objectPoints.push_back(i->second.point());
-				objectPointIds->push_back(i->first);
+				objectPoints.push_back(iObjectPoint->second.point());
+				objectPointIds->push_back(iObjectPoint->first);
 			}
+		}
 	}
 	else
 	{
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-			if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == referencePosition) || (!tMatchPosition && i->second.point() != referencePosition)))
-				objectPoints.push_back(i->second.point());
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+		{
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
+			{
+				objectPoints.push_back(iObjectPoint->second.point());
+			}
+		}
 	}
 
 	return objectPoints;
@@ -2424,17 +2424,17 @@ inline Vectors3 Database::objectPoints(const Vector3& referencePosition, Indices
 template <bool tThreadSafe>
 inline Vectors3 Database::objectPoints(const Indices32& objectPointIds) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors3 objectPoints;
 	objectPoints.reserve(objectPointIds.size());
 
-	for (Indices32::const_iterator i = objectPointIds.begin(); i != objectPointIds.end(); ++i)
+	for (const Index32 objectPointId : objectPointIds)
 	{
-		ocean_assert(*i != invalidId);
-		ocean_assert(databaseObjectPointMap.find(*i) != databaseObjectPointMap.end());
+		ocean_assert(objectPointId != invalidId);
+		ocean_assert(objectPointMap_.find(objectPointId) != objectPointMap_.end());
 
-		objectPoints.push_back(databaseObjectPointMap.find(*i)->second.point());
+		objectPoints.push_back(objectPointMap_.find(objectPointId)->second.point());
 	}
 
 	return objectPoints;
@@ -2445,10 +2445,10 @@ inline const HomogenousMatrix4& Database::pose(const Index32 poseId) const
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databasePoseMap.find(poseId) != databasePoseMap.end());
-	return databasePoseMap.find(poseId)->second.pose();
+	ocean_assert(poseMap_.find(poseId) != poseMap_.end());
+	return poseMap_.find(poseId)->second.pose();
 }
 
 template <bool tThreadSafe>
@@ -2456,15 +2456,15 @@ inline HomogenousMatrices4 Database::poses(const Index32* poseIds, const size_t 
 {
 	ocean_assert(poseIds != nullptr && size != 0);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	HomogenousMatrices4 result;
 	result.reserve(size);
 
 	for (size_t n = 0; n < size; ++n)
 	{
-		ocean_assert(databasePoseMap.find(poseIds[n]) != databasePoseMap.end());
-		result.push_back(databasePoseMap.find(poseIds[n])->second.pose());
+		ocean_assert(poseMap_.find(poseIds[n]) != poseMap_.end());
+		result.push_back(poseMap_.find(poseIds[n])->second.pose());
 	}
 
 	return result;
@@ -2475,16 +2475,16 @@ inline SquareMatrices3 Database::rotationalPoses(const Index32* poseIds, const s
 {
 	ocean_assert(poseIds != nullptr && size != 0);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	SquareMatrices3 result;
 	result.reserve(size);
 
 	for (size_t n = 0; n < size; ++n)
 	{
-		ocean_assert(databasePoseMap.find(poseIds[n]) != databasePoseMap.end());
+		ocean_assert(poseMap_.find(poseIds[n]) != poseMap_.end());
 
-		const HomogenousMatrix4& pose = databasePoseMap.find(poseIds[n])->second.pose();
+		const HomogenousMatrix4& pose = poseMap_.find(poseIds[n])->second.pose();
 
 		ocean_assert(pose.translation().isNull());
 		result.push_back(pose.rotationMatrix());
@@ -2498,28 +2498,34 @@ inline HomogenousMatrices4 Database::poses(const HomogenousMatrix4& referencePos
 {
 	ocean_assert(!poseIds || poseIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	HomogenousMatrices4 poses;
-	poses.reserve(databasePoseMap.size());
+	poses.reserve(poseMap_.size());
 
-	if (poseIds)
+	if (poseIds != nullptr)
 	{
 		poseIds->clear();
-		poseIds->reserve(databasePoseMap.size());
+		poseIds->reserve(poseMap_.size());
 
-		for (PoseMap::const_iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
-			if ((tMatchPose && i->second.pose() == referencePose) || (!tMatchPose && i->second.pose() != referencePose))
+		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		{
+			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
 			{
-				poses.push_back(i->second.pose());
-				poseIds->push_back(i->first);
+				poses.push_back(iPose->second.pose());
+				poseIds->push_back(iPose->first);
 			}
+		}
 	}
 	else
 	{
-		for (PoseMap::const_iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
-			if ((tMatchPose && i->second.pose() == referencePose) || (!tMatchPose && i->second.pose() != referencePose))
-				poses.push_back(i->second.pose());
+		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		{
+			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
+			{
+				poses.push_back(iPose->second.pose());
+			}
+		}
 	}
 
 	return poses;
@@ -2530,7 +2536,7 @@ inline HomogenousMatrices4 Database::poses(const Index32 lowerPoseId, const Inde
 {
 	ocean_assert(lowerPoseId <= upperPoseId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	HomogenousMatrices4 poses;
 	poses.reserve(upperPoseId - lowerPoseId + 1u);
@@ -2538,11 +2544,15 @@ inline HomogenousMatrices4 Database::poses(const Index32 lowerPoseId, const Inde
 	for (unsigned int n = lowerPoseId; n <= upperPoseId; ++n)
 	{
 		// **TODO** the performance can be improved if we iterate through the map
-		PoseMap::const_iterator i = databasePoseMap.find(n);
-		if (i != databasePoseMap.end())
-			poses.push_back(i->second.pose());
+		PoseMap::const_iterator iPose = poseMap_.find(n);
+		if (iPose != poseMap_.end())
+		{
+			poses.push_back(iPose->second.pose());
+		}
 		else
+		{
 			poses.push_back(HomogenousMatrix4(false));
+		}
 	}
 
 	return poses;
@@ -2553,28 +2563,34 @@ inline Indices32 Database::poseIds(const HomogenousMatrix4& referencePose, Homog
 {
 	ocean_assert(!poses || poses->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 poseIds;
-	poseIds.reserve(databasePoseMap.size());
+	poseIds.reserve(poseMap_.size());
 
-	if (poses)
+	if (poses != nullptr)
 	{
 		poses->clear();
-		poses->reserve(databasePoseMap.size());
+		poses->reserve(poseMap_.size());
 
-		for (PoseMap::const_iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
-			if ((tMatchPose && i->second.pose() == referencePose) || (!tMatchPose && i->second.pose() != referencePose))
+		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		{
+			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
 			{
-				poseIds.push_back(i->first);
-				poses->push_back(i->second.pose());
+				poseIds.push_back(iPose->first);
+				poses->push_back(iPose->second.pose());
 			}
+		}
 	}
 	else
 	{
-		for (PoseMap::const_iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
-			if ((tMatchPose && i->second.pose() == referencePose) || (!tMatchPose && i->second.pose() != referencePose))
-				poseIds.push_back(i->first);
+		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+		{
+			if ((tMatchPose && iPose->second.pose() == referencePose) || (!tMatchPose && iPose->second.pose() != referencePose))
+			{
+				poseIds.push_back(iPose->first);
+			}
+		}
 	}
 
 	return poseIds;
@@ -2583,13 +2599,15 @@ inline Indices32 Database::poseIds(const HomogenousMatrix4& referencePose, Homog
 template <bool tThreadSafe>
 inline bool Database::poseBorders(Index32& lowerPoseId, Index32& upperPoseId) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	if (databasePoseMap.empty())
+	if (poseMap_.empty())
+	{
 		return false;
+	}
 
-	lowerPoseId = databasePoseMap.begin()->first;
-	upperPoseId = databasePoseMap.rbegin()->first;
+	lowerPoseId = poseMap_.begin()->first;
+	upperPoseId = poseMap_.rbegin()->first;
 
 	return true;
 }
@@ -2597,30 +2615,38 @@ inline bool Database::poseBorders(Index32& lowerPoseId, Index32& upperPoseId) co
 template <bool tThreadSafe>
 inline bool Database::validPoseBorders(Index32& rangeLowerPoseId, Index32& rangeUpperPoseId) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	if (databasePoseMap.empty())
+	if (poseMap_.empty())
+	{
 		return false;
+	}
 
 	rangeLowerPoseId = invalidId;
 	rangeUpperPoseId = invalidId;
 
-	for (PoseMap::const_iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
-		if (i->second.pose().isValid())
+	for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
+	{
+		if (iPose->second.pose().isValid())
 		{
-			rangeLowerPoseId = i->first;
+			rangeLowerPoseId = iPose->first;
 			break;
 		}
+	}
 
 	if (rangeLowerPoseId == invalidId)
+	{
 		return false;
+	}
 
-	for (PoseMap::const_reverse_iterator i = databasePoseMap.rbegin(); i != databasePoseMap.rend(); ++i)
-		if (i->second.pose().isValid())
+	for (PoseMap::const_reverse_iterator iPose = poseMap_.rbegin(); iPose != poseMap_.rend(); ++iPose)
+	{
+		if (iPose->second.pose().isValid())
 		{
-			rangeUpperPoseId = i->first;
+			rangeUpperPoseId = iPose->first;
 			break;
 		}
+	}
 
 	ocean_assert(rangeLowerPoseId <= rangeUpperPoseId);
 	return true;
@@ -2632,31 +2658,37 @@ inline bool Database::validPoseRange(const Index32 lowerPoseId, const Index32 st
 	ocean_assert(startPoseId != invalidId);
 	ocean_assert(lowerPoseId <= startPoseId && startPoseId <= upperPoseId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	PoseMap::const_iterator i = databasePoseMap.find(startPoseId);
-	if (i == databasePoseMap.end() || !(i->second.pose().isValid()))
+	PoseMap::const_iterator iPose = poseMap_.find(startPoseId);
+	if (iPose == poseMap_.end() || !(iPose->second.pose().isValid()))
+	{
 		return false;
+	}
 
 	rangeLowerPoseId = startPoseId;
 	rangeUpperPoseId = startPoseId;
 
 	for (unsigned int id = startPoseId - 1; id != (unsigned int)(-1) && id >= lowerPoseId; --id)
 	{
-		i = databasePoseMap.find(id);
+		iPose = poseMap_.find(id);
 
-		if (i == databasePoseMap.end() || !(i->second.pose().isValid()))
+		if (iPose == poseMap_.end() || !(iPose->second.pose().isValid()))
+		{
 			break;
+		}
 
 		rangeLowerPoseId = id;
 	}
 
 	for (unsigned int id = startPoseId + 1u; id <= upperPoseId; ++id)
 	{
-		i = databasePoseMap.find(id);
+		iPose = poseMap_.find(id);
 
-		if (i == databasePoseMap.end() || !(i->second.pose().isValid()))
+		if (iPose == poseMap_.end() || !(iPose->second.pose().isValid()))
+		{
 			break;
+		}
 
 		rangeUpperPoseId = id;
 	}
@@ -2670,9 +2702,11 @@ inline bool Database::largestValidPoseRange(const Index32 lowerPoseId, const Ind
 	ocean_assert(lowerPoseId <= upperPoseId);
 
 	if (lowerPoseId > upperPoseId)
+	{
 		return false;
+	}
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	const HomogenousMatrices4 rangePoses(poses<false>(lowerPoseId, upperPoseId));
 
@@ -2680,10 +2714,13 @@ inline bool Database::largestValidPoseRange(const Index32 lowerPoseId, const Ind
 	unsigned int firstIndex = (unsigned int)(-1);
 
 	for (unsigned int n = 0u; n < rangePoses.size(); ++n)
+	{
 		if (firstIndex == (unsigned int)(-1))
 		{
 			if (rangePoses[n].isValid())
+			{
 				firstIndex = n;
+			}
 		}
 		else if (!rangePoses[n].isValid())
 		{
@@ -2700,14 +2737,19 @@ inline bool Database::largestValidPoseRange(const Index32 lowerPoseId, const Ind
 
 				// check whether the remaining part is too small to be larger than the currently best range
 				if (rangePoses.size() - n < bestRangeSize)
+				{
 					return true;
+				}
 			}
 
 			firstIndex = (unsigned int)(-1);
 		}
+	}
 
 	if (firstIndex == (unsigned int)(-1))
+	{
 		return bestRangeSize != 0u;
+	}
 
 	const unsigned int lastIndex =  (unsigned int)rangePoses.size() - 1u;
 	ocean_assert(firstIndex >= 0u && lastIndex < (unsigned int)rangePoses.size());
@@ -2731,7 +2773,7 @@ inline bool Database::poseWithMostCorrespondences(const Index32 lowerPoseId, con
 	ocean_assert(lowerPoseId != invalidId && upperPoseId != invalidId);
 	ocean_assert(lowerPoseId <= upperPoseId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Index32 bestPoseId = invalidId;
 	unsigned int bestCorrespondences = 0u;
@@ -2746,11 +2788,15 @@ inline bool Database::poseWithMostCorrespondences(const Index32 lowerPoseId, con
 		}
 	}
 
-	if (poseId)
+	if (poseId != nullptr)
+	{
 		*poseId = bestPoseId;
+	}
 
-	if (correspondences)
+	if (correspondences != nullptr)
+	{
 		*correspondences = bestCorrespondences;
+	}
 
 	return bestCorrespondences != 0u;
 }
@@ -2761,7 +2807,7 @@ inline bool Database::poseWithLeastCorrespondences(const Index32 lowerPoseId, co
 	ocean_assert(lowerPoseId != invalidId && upperPoseId != invalidId);
 	ocean_assert(lowerPoseId <= upperPoseId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Index32 worstPoseId = invalidId;
 	unsigned int worstCorrespondences = (unsigned int)(-1);
@@ -2771,7 +2817,9 @@ inline bool Database::poseWithLeastCorrespondences(const Index32 lowerPoseId, co
 	for (unsigned int id = lowerPoseId; id <= upperPoseId; ++id)
 	{
 		if (tNeedValidPose && (!hasPose<false>(id, &pose) || !pose.isValid()))
+		{
 			continue;
+		}
 
 		const unsigned int value = numberCorrespondences<false, tMatchPosition, false>(id, referenceObjectPoint);
 		if (value < worstCorrespondences)
@@ -2781,11 +2829,15 @@ inline bool Database::poseWithLeastCorrespondences(const Index32 lowerPoseId, co
 		}
 	}
 
-	if (poseId)
+	if (poseId != nullptr)
+	{
 		*poseId = worstPoseId;
+	}
 
-	if (correspondences)
+	if (correspondences != nullptr)
+	{
 		*correspondences = worstCorrespondences;
+	}
 
 	return worstCorrespondences != (unsigned int)(-1);
 }
@@ -2797,26 +2849,30 @@ inline bool Database::poseWithMostObservations(const IndexSet32& poseCandidates,
 	ocean_assert(!majorObjectPointIds.empty());
 
 	if (majorObjectPointIds.empty())
+	{
 		return false;
+	}
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	unsigned int bestMajorCount = 0u;
 	unsigned int bestMinorCount = 0u;
 
 	Index32 bestPoseId = invalidId;
 
-	for (IndexSet32::const_iterator iP = poseCandidates.begin(); iP != poseCandidates.end(); ++iP)
+	for (const Index32 poseCandidate : poseCandidates)
 	{
-		const Index32 poseId = *iP;
+		const Index32 poseId = poseCandidate;
 
 		unsigned int majorCount = 0u;
 		unsigned int remaining = (unsigned int)majorObjectPointIds.size();
 
-		for (IndexSet32::const_iterator i = majorObjectPointIds.begin(); majorCount + remaining >= bestMajorCount && i != majorObjectPointIds.end(); ++i)
+		for (IndexSet32::const_iterator iId = majorObjectPointIds.begin(); majorCount + remaining >= bestMajorCount && iId != majorObjectPointIds.end(); ++iId)
 		{
-			if (databasePoseObjectPointMap.find(index64(poseId, *i)) != databasePoseObjectPointMap.end())
+			if (poseObjectPointMap_.find(index64(poseId, *iId)) != poseObjectPointMap_.end())
+			{
 				majorCount++;
+			}
 
 			remaining--;
 		}
@@ -2826,10 +2882,12 @@ inline bool Database::poseWithMostObservations(const IndexSet32& poseCandidates,
 			unsigned int minorCount = 0u;
 			remaining = (unsigned int)minorObjectPointIds.size();
 
-			for (IndexSet32::const_iterator i = minorObjectPointIds.begin(); minorCount + remaining >= bestMinorCount && i != minorObjectPointIds.end(); ++i)
+			for (IndexSet32::const_iterator iId = minorObjectPointIds.begin(); minorCount + remaining >= bestMinorCount && iId != minorObjectPointIds.end(); ++iId)
 			{
-				if (databasePoseObjectPointMap.find(index64(poseId, *i)) != databasePoseObjectPointMap.end())
+				if (poseObjectPointMap_.find(index64(poseId, *iId)) != poseObjectPointMap_.end())
+				{
 					minorCount++;
+				}
 
 				remaining--;
 			}
@@ -2844,32 +2902,42 @@ inline bool Database::poseWithMostObservations(const IndexSet32& poseCandidates,
 	}
 
 	if (bestPoseId == invalidId)
+	{
 		return false;
+	}
 
 	pose = bestPoseId;
 
-	if (visibleMajorObjectPointIds)
+	if (visibleMajorObjectPointIds != nullptr)
 	{
 		ocean_assert(visibleMajorObjectPointIds->empty());
 		visibleMajorObjectPointIds->clear();
 		visibleMajorObjectPointIds->reserve(bestMajorCount);
 
-		for (IndexSet32::const_iterator i = majorObjectPointIds.begin(); i != majorObjectPointIds.end(); ++i)
-			if (databasePoseObjectPointMap.find(index64(bestPoseId, *i)) != databasePoseObjectPointMap.end())
-				visibleMajorObjectPointIds->push_back(*i);
+		for (const Index32 majorObjectPointId : majorObjectPointIds)
+		{
+			if (poseObjectPointMap_.find(index64(bestPoseId, majorObjectPointId)) != poseObjectPointMap_.end())
+			{
+				visibleMajorObjectPointIds->push_back(majorObjectPointId);
+			}
+		}
 
 		ocean_assert(bestMajorCount == visibleMajorObjectPointIds->size());
 	}
 
-	if (visibleMinorObjectPointIds)
+	if (visibleMinorObjectPointIds != nullptr)
 	{
 		ocean_assert(visibleMinorObjectPointIds->empty());
 		visibleMinorObjectPointIds->clear();
 		visibleMinorObjectPointIds->reserve(minorObjectPointIds.size());
 
-		for (IndexSet32::const_iterator i = minorObjectPointIds.begin(); i != minorObjectPointIds.end(); ++i)
-			if (databasePoseObjectPointMap.find(index64(bestPoseId, *i)) != databasePoseObjectPointMap.end())
-				visibleMinorObjectPointIds->push_back(*i);
+		for (const Index32 minorObjectPointId : minorObjectPointIds)
+		{
+			if (poseObjectPointMap_.find(index64(bestPoseId, minorObjectPointId)) != poseObjectPointMap_.end())
+			{
+				visibleMinorObjectPointIds->push_back(minorObjectPointId);
+			}
+		}
 
 		ocean_assert(bestMinorCount == visibleMinorObjectPointIds->size());
 	}
@@ -2882,13 +2950,17 @@ inline unsigned int Database::numberObservations(const Index32 poseId, const Ind
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	unsigned int number = 0u;
 
-	for (Indices32::const_iterator i = objectPointIds.begin(); i != objectPointIds.end(); ++i)
-		if (databasePoseObjectPointMap.find(index64(poseId, *i)) != databasePoseObjectPointMap.end())
+	for (const Index32 objectPointId : objectPointIds)
+	{
+		if (poseObjectPointMap_.find(index64(poseId, objectPointId)) != poseObjectPointMap_.end())
+		{
 			number++;
+		}
+	}
 
 	return number;
 }
@@ -2898,25 +2970,29 @@ inline unsigned int Database::numberCorrespondences(const Index32 poseId, const 
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-	if (iP == databasePoseMap.end() || (tNeedValidPose && !(iP->second.pose().isValid())))
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	if (iPose == poseMap_.end() || (tNeedValidPose && !(iPose->second.pose().isValid())))
+	{
 		return 0u;
+	}
 
 	unsigned int count = 0u;
 
-	const IndexSet32& imagePointIds = iP->second.imagePointIds();
-	for (IndexSet32::const_iterator iI = imagePointIds.begin(); iI != imagePointIds.end(); ++iI)
+	const IndexSet32& imagePointIds = iPose->second.imagePointIds();
+	for (const Index32 imagePointId : imagePointIds)
 	{
-		const ImagePointMap::const_iterator i = databaseImagePointMap.find(*iI);
-		ocean_assert(i != databaseImagePointMap.end());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(i->second.objectPointId());
-		ocean_assert(iO != databaseObjectPointMap.end());
+		const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(iImagePoint->second.objectPointId());
+		ocean_assert(iObjectPoint != objectPointMap_.end());
 
-		if (iO->second.priority() >= minimalPriority && ((tMatchPosition && iO->second.point() == referenceObjectPoint) || (!tMatchPosition && iO->second.point() != referenceObjectPoint)))
+		if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referenceObjectPoint) || (!tMatchPosition && iObjectPoint->second.point() != referenceObjectPoint)))
+		{
 			count++;
+		}
 	}
 
 	return count;
@@ -2929,7 +3005,7 @@ inline Indices32 Database::numberCorrespondences(const Index32 lowerPoseId, cons
 
 	const unsigned int frames = upperPoseId - lowerPoseId + 1u;
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 result;
 
@@ -2944,7 +3020,9 @@ inline Indices32 Database::numberCorrespondences(const Index32 lowerPoseId, cons
 		result.reserve(frames);
 
 		for (unsigned int n = lowerPoseId; n <= upperPoseId; ++n)
+		{
 			result.push_back(numberCorrespondences<false, tMatchPosition, tNeedValidPose>(n, referenceObjectPoint, minimalPriority));
+		}
 	}
 
 	return result;
@@ -2953,15 +3031,19 @@ inline Indices32 Database::numberCorrespondences(const Index32 lowerPoseId, cons
 template <bool tThreadSafe>
 inline bool Database::hasImagePoint(const Index32 imagePointId, Vector2* imagePoint) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ImagePointMap::const_iterator i = databaseImagePointMap.find(imagePointId);
+	const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
 
-	if (i == databaseImagePointMap.end())
+	if (iImagePoint == imagePointMap_.end())
+	{
 		return false;
+	}
 
-	if (imagePoint)
-		*imagePoint = i->second.point();
+	if (imagePoint != nullptr)
+	{
+		*imagePoint = iImagePoint->second.point();
+	}
 
 	return true;
 }
@@ -2969,10 +3051,10 @@ inline bool Database::hasImagePoint(const Index32 imagePointId, Vector2* imagePo
 template <bool tThreadSafe>
 inline Index32 Database::addImagePoint(const Vector2& imagePoint)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	databaseImagePointMap.insert(std::make_pair(++databaseImagePointIdCounter, ImagePointData(imagePoint)));
-	return databaseImagePointIdCounter;
+	imagePointMap_.insert(std::make_pair(++imagePointIdCounter_, ImagePointData(imagePoint)));
+	return imagePointIdCounter_;
 }
 
 template <bool tThreadSafe>
@@ -2980,45 +3062,49 @@ inline void Database::removeImagePoint(const Index32 imagePointId)
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ImagePointMap::iterator i = databaseImagePointMap.find(imagePointId);
-	ocean_assert(i != databaseImagePointMap.end());
+	const ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
 	// we need to remove all connections of the specified image point
-	const ImagePointData& data = i->second;
+	const ImagePointData& data = iImagePoint->second;
 
 	if (data.poseId() != invalidId)
 	{
-		PoseMap::iterator iP = databasePoseMap.find(data.poseId());
-		ocean_assert(iP != databasePoseMap.end());
+		PoseMap::iterator iPose = poseMap_.find(data.poseId());
+		ocean_assert(iPose != poseMap_.end());
 
-		iP->second.unregisterImagePoint(imagePointId);
+		iPose->second.unregisterImagePoint(imagePointId);
 	}
 
 	if (data.objectPointId() != invalidId)
 	{
-		ObjectPointMap::iterator iO = databaseObjectPointMap.find(data.objectPointId());
-		ocean_assert(iO != databaseObjectPointMap.end());
+		ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(data.objectPointId());
+		ocean_assert(iObjectPoint != objectPointMap_.end());
 
-		iO->second.unregisterImagePoint(imagePointId);
+		iObjectPoint->second.unregisterImagePoint(imagePointId);
 	}
 
-	databaseImagePointMap.erase(i);
+	imagePointMap_.erase(iImagePoint);
 }
 
 template <bool tThreadSafe>
 inline bool Database::hasObjectPoint(const Index32 objectPointId, Vector3* objectPoint) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator i = databaseObjectPointMap.find(objectPointId);
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
 
-	if (i == databaseObjectPointMap.end())
+	if (iObjectPoint == objectPointMap_.end())
+	{
 		return false;
+	}
 
-	if (objectPoint)
-		*objectPoint = i->second.point();
+	if (objectPoint != nullptr)
+	{
+		*objectPoint = iObjectPoint->second.point();
+	}
 
 	return true;
 }
@@ -3026,23 +3112,23 @@ inline bool Database::hasObjectPoint(const Index32 objectPointId, Vector3* objec
 template <bool tThreadSafe>
 inline Index32 Database::addObjectPoint(const Vector3& objectPoint, const Scalar priority)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databaseObjectPointMap.find(databaseObjectPointIdCounter + 1u) == databaseObjectPointMap.end() && "You mixed calls with the add-objectPoint-function using external object point ids!");
+	ocean_assert(objectPointMap_.find(objectPointIdCounter_ + 1u) == objectPointMap_.end() && "You mixed calls with the add-objectPoint-function using external object point ids!");
 
-	databaseObjectPointMap.insert(std::make_pair(++databaseObjectPointIdCounter, ObjectPointData(objectPoint, priority)));
-	return databaseObjectPointIdCounter;
+	objectPointMap_.insert(std::make_pair(++objectPointIdCounter_, ObjectPointData(objectPoint, priority)));
+	return objectPointIdCounter_;
 }
 
 template <bool tThreadSafe>
 inline void Database::addObjectPoint(const Index32 objectPointId, const Vector3& objectPoint, const Scalar priority)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databaseObjectPointMap.find(objectPointId) == databaseObjectPointMap.end());
-	ocean_assert((databaseObjectPointIdCounter == invalidId || objectPointId + 1u <= databaseObjectPointIdCounter) && "You mixed calls with the add-objectPoint-function using external object point ids!");
+	ocean_assert(objectPointMap_.find(objectPointId) == objectPointMap_.end());
+	ocean_assert((objectPointIdCounter_ == invalidId || objectPointId + 1u <= objectPointIdCounter_) && "You mixed calls with the add-objectPoint-function using external object point ids!");
 
-	databaseObjectPointMap[objectPointId] = ObjectPointData(objectPoint, priority);
+	objectPointMap_[objectPointId] = ObjectPointData(objectPoint, priority);
 }
 
 inline Index32 Database::addObjectPointFromDatabase(const Database& secondDatabase, const Index32 secondDatabaseObjectPointId, const SquareMatrix3& imagePointTransformation, const Index32 newObjectPointId, const Index32 secondDatabaseLowerPoseId, const Index32 secondDatabaseUpperPoseId, const bool forExistingPosesOnly)
@@ -3079,9 +3165,9 @@ inline Index32 Database::addObjectPointFromDatabase(const Database& secondDataba
 
 	const IndexSet32& secondDatabaseImagePointIds = secondDatabase.imagePointsFromObjectPoint<false>(secondDatabaseObjectPointId);
 
-	for (IndexSet32::const_iterator i = secondDatabaseImagePointIds.cbegin(); i != secondDatabaseImagePointIds.cend(); ++i)
+	for (IndexSet32::const_iterator iId = secondDatabaseImagePointIds.cbegin(); iId != secondDatabaseImagePointIds.cend(); ++iId)
 	{
-		const Index32& secondDatabaseImagePointId = *i;
+		const Index32& secondDatabaseImagePointId = *iId;
 
 		const Index32 poseId = secondDatabase.poseFromImagePoint<false>(secondDatabaseImagePointId);
 
@@ -3132,30 +3218,30 @@ inline void Database::removeObjectPoint(const Index32 objectPointId)
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::iterator i = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(i != databaseObjectPointMap.end());
+	const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
 	// we need to remove all connections of the specified object point
 
-	const ObjectPointData& data = i->second;
+	const ObjectPointData& data = iObjectPoint->second;
 
-	for (IndexSet32::const_iterator iI = data.imagePointIds().begin(); iI != data.imagePointIds().end(); ++iI)
+	for (const Index32 imagePointId : data.imagePointIds())
 	{
-		ImagePointMap::iterator iP = databaseImagePointMap.find(*iI);
-		ocean_assert(iP != databaseImagePointMap.end());
+		ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		if (iP->second.poseId() != invalidId)
+		if (iImagePoint->second.poseId() != invalidId)
 		{
-			ocean_assert(databasePoseObjectPointMap.find(index64(iP->second.poseId(), objectPointId)) != databasePoseObjectPointMap.end());
-			databasePoseObjectPointMap.erase(index64(iP->second.poseId(), objectPointId));
+			ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), objectPointId)) != poseObjectPointMap_.end());
+			poseObjectPointMap_.erase(index64(iImagePoint->second.poseId(), objectPointId));
 		}
 
-		iP->second.setObjectPointId(invalidId);
+		iImagePoint->second.setObjectPointId(invalidId);
 	}
 
-	databaseObjectPointMap.erase(i);
+	objectPointMap_.erase(iObjectPoint);
 }
 
 template <bool tThreadSafe>
@@ -3163,10 +3249,10 @@ void Database::removeObjectPointAndAttachedImagePoints(const Index32 objectPoint
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::iterator iObjectPoint = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iObjectPoint != databaseObjectPointMap.cend());
+	const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.cend());
 
 	// we need to remove all connections of the specified object point
 
@@ -3174,26 +3260,26 @@ void Database::removeObjectPointAndAttachedImagePoints(const Index32 objectPoint
 
 	for (const Index32& imagePointId : objectPointData.imagePointIds())
 	{
-		const ImagePointMap::iterator iImagePoint = databaseImagePointMap.find(imagePointId);
-		ocean_assert(iImagePoint != databaseImagePointMap.cend());
+		const ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.cend());
 
 		if (iImagePoint->second.poseId() != invalidId)
 		{
-			ocean_assert(databasePoseObjectPointMap.find(index64(iImagePoint->second.poseId(), objectPointId)) != databasePoseObjectPointMap.cend());
-			databasePoseObjectPointMap.erase(index64(iImagePoint->second.poseId(), objectPointId));
+			ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), objectPointId)) != poseObjectPointMap_.cend());
+			poseObjectPointMap_.erase(index64(iImagePoint->second.poseId(), objectPointId));
 		}
 
 		const Index32 poseId = iImagePoint->second.poseId();
 
-		PoseMap::iterator iPose = databasePoseMap.find(poseId);
-		ocean_assert(iPose != databasePoseMap.cend());
+		PoseMap::iterator iPose = poseMap_.find(poseId);
+		ocean_assert(iPose != poseMap_.cend());
 
 		iPose->second.unregisterImagePoint(imagePointId);
 
-		databaseImagePointMap.erase(iImagePoint);
+		imagePointMap_.erase(iImagePoint);
 	}
 
-	databaseObjectPointMap.erase(iObjectPoint);
+	objectPointMap_.erase(iObjectPoint);
 }
 
 template <bool tThreadSafe>
@@ -3201,32 +3287,32 @@ inline void Database::renameObjectPoint(const Index32 oldObjectPointId, const In
 {
 	ocean_assert(oldObjectPointId != invalidId && newObjectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ocean_assert(databaseObjectPointMap.find(newObjectPointId) == databaseObjectPointMap.end());
+	ocean_assert(objectPointMap_.find(newObjectPointId) == objectPointMap_.end());
 
-	ObjectPointMap::iterator iOld = databaseObjectPointMap.find(oldObjectPointId);
-	ocean_assert(iOld != databaseObjectPointMap.end());
+	ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(oldObjectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	const IndexSet32& imagePointIds = iOld->second.imagePointIds();
+	const IndexSet32& imagePointIds = iObjectPoint->second.imagePointIds();
 
-	for (IndexSet32::const_iterator iI = imagePointIds.begin(); iI != imagePointIds.end(); ++iI)
+	for (const Index32 imagePointId : imagePointIds)
 	{
-		ImagePointMap::iterator iIData = databaseImagePointMap.find(*iI);
-		ocean_assert(iIData != databaseImagePointMap.end());
+		ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		ocean_assert(iIData->second.objectPointId() == oldObjectPointId);
-		iIData->second.setObjectPointId(newObjectPointId);
+		ocean_assert(iImagePoint->second.objectPointId() == oldObjectPointId);
+		iImagePoint->second.setObjectPointId(newObjectPointId);
 
-		ocean_assert(databasePoseObjectPointMap.find(index64(iIData->second.poseId(), oldObjectPointId)) != databasePoseObjectPointMap.end());
-		databasePoseObjectPointMap.erase(index64(iIData->second.poseId(), oldObjectPointId));
+		ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), oldObjectPointId)) != poseObjectPointMap_.end());
+		poseObjectPointMap_.erase(index64(iImagePoint->second.poseId(), oldObjectPointId));
 
-		ocean_assert(databasePoseObjectPointMap.find(index64(iIData->second.poseId(), newObjectPointId)) == databasePoseObjectPointMap.end());
-		databasePoseObjectPointMap.insert(std::make_pair(index64(iIData->second.poseId(), newObjectPointId), newObjectPointId));
+		ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), newObjectPointId)) == poseObjectPointMap_.end());
+		poseObjectPointMap_.insert(std::make_pair(index64(iImagePoint->second.poseId(), newObjectPointId), newObjectPointId));
 	}
 
-	databaseObjectPointMap.insert(std::make_pair(newObjectPointId, std::move(iOld->second)));
-	databaseObjectPointMap.erase(iOld);
+	objectPointMap_.insert(std::make_pair(newObjectPointId, std::move(iObjectPoint->second)));
+	objectPointMap_.erase(iObjectPoint);
 }
 
 template <bool tThreadSafe>
@@ -3234,13 +3320,13 @@ inline void Database::mergeObjectPoints(const Index32 remainingObjectPointId, co
 {
 	ocean_assert(remainingObjectPointId != invalidId && removingObjectPointId != invalidId && remainingObjectPointId != removingObjectPointId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ObjectPointMap::iterator iObjectPointRemaining = databaseObjectPointMap.find(remainingObjectPointId);
-	ocean_assert(iObjectPointRemaining != databaseObjectPointMap.cend());
+	ObjectPointMap::iterator iObjectPointRemaining = objectPointMap_.find(remainingObjectPointId);
+	ocean_assert(iObjectPointRemaining != objectPointMap_.cend());
 
-	ObjectPointMap::const_iterator iObjectPointRemoving = databaseObjectPointMap.find(removingObjectPointId);
-	ocean_assert(iObjectPointRemoving != databaseObjectPointMap.cend());
+	ObjectPointMap::const_iterator iObjectPointRemoving = objectPointMap_.find(removingObjectPointId);
+	ocean_assert(iObjectPointRemoving != objectPointMap_.cend());
 
 #ifdef OCEAN_DEBUG
 	const IndexSet32 debugPoseIdsRemaining = posesFromObjectPoint<false>(remainingObjectPointId);
@@ -3252,16 +3338,16 @@ inline void Database::mergeObjectPoints(const Index32 remainingObjectPointId, co
 	{
 		iObjectPointRemaining->second.registerImagePoint(imagePointIdRemoving);
 
-		ImagePointMap::iterator iImagePointRemoving = databaseImagePointMap.find(imagePointIdRemoving);
-		ocean_assert(iImagePointRemoving != databaseImagePointMap.cend());
+		ImagePointMap::iterator iImagePointRemoving = imagePointMap_.find(imagePointIdRemoving);
+		ocean_assert(iImagePointRemoving != imagePointMap_.cend());
 
 		const Index32 poseIdRemoving = iImagePointRemoving->second.poseId();
 
-		ocean_assert(databasePoseObjectPointMap.find(index64(poseIdRemoving, removingObjectPointId)) != databasePoseObjectPointMap.cend());
-		databasePoseObjectPointMap.erase(index64(poseIdRemoving, removingObjectPointId));
+		ocean_assert(poseObjectPointMap_.find(index64(poseIdRemoving, removingObjectPointId)) != poseObjectPointMap_.cend());
+		poseObjectPointMap_.erase(index64(poseIdRemoving, removingObjectPointId));
 
-		ocean_assert(databasePoseObjectPointMap.find(index64(poseIdRemoving, remainingObjectPointId)) == databasePoseObjectPointMap.cend());
-		databasePoseObjectPointMap.emplace(index64(poseIdRemoving, remainingObjectPointId), imagePointIdRemoving);
+		ocean_assert(poseObjectPointMap_.find(index64(poseIdRemoving, remainingObjectPointId)) == poseObjectPointMap_.cend());
+		poseObjectPointMap_.emplace(index64(poseIdRemoving, remainingObjectPointId), imagePointIdRemoving);
 
 		iImagePointRemoving->second.setObjectPointId(remainingObjectPointId);
 	}
@@ -3269,7 +3355,7 @@ inline void Database::mergeObjectPoints(const Index32 remainingObjectPointId, co
 	iObjectPointRemaining->second.setPoint(newPoint);
 	iObjectPointRemaining->second.setPriority(newPriority);
 
-	databaseObjectPointMap.erase(iObjectPointRemoving);
+	objectPointMap_.erase(iObjectPointRemoving);
 }
 
 template <bool tThreadSafe>
@@ -3277,14 +3363,18 @@ inline bool Database::hasPose(const Index32 poseId, HomogenousMatrix4* pose) con
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator i = databasePoseMap.find(poseId);
-	if (i == databasePoseMap.end())
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	if (iPose == poseMap_.end())
+	{
 		return false;
+	}
 
-	if (pose)
-		*pose = i->second.pose();
+	if (pose != nullptr)
+	{
+		*pose = iPose->second.pose();
+	}
 
 	return true;
 }
@@ -3292,18 +3382,18 @@ inline bool Database::hasPose(const Index32 poseId, HomogenousMatrix4* pose) con
 template <bool tThreadSafe>
 inline bool Database::addPose(const Index32 poseId, const HomogenousMatrix4& pose)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator i = databasePoseMap.find(poseId);
-	if (i != databasePoseMap.end())
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	if (iPose != poseMap_.end())
 	{
 		ocean_assert(false && "Invalid pose id!");
 		return false;
 	}
 
-	databasePoseMap.insert(std::make_pair(poseId, PoseData(pose)));
+	poseMap_.insert(std::make_pair(poseId, PoseData(pose)));
 
-	databasePoses = max(databasePoses, poseId + 1u);
+	poses_ = max(poses_, poseId + 1u);
 
 	return true;
 }
@@ -3313,24 +3403,24 @@ inline void Database::removePose(const Index32 poseId)
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::iterator i = databasePoseMap.find(poseId);
-	ocean_assert(i != databasePoseMap.end());
+	const PoseMap::iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
 	// we need to remove all connections of the specified pose
 
-	const PoseData& data = i->second;
+	const PoseData& data = iPose->second;
 
-	for (IndexSet32::const_iterator iI = data.imagePointIds().begin(); iI != data.imagePointIds().end(); ++iI)
+	for (const Index32 imagePointId : data.imagePointIds())
 	{
-		ImagePointMap::iterator iP = databaseImagePointMap.find(*iI);
-		ocean_assert(iP != databaseImagePointMap.end());
+		ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		iP->second.setPoseId(invalidId);
+		iImagePoint->second.setPoseId(invalidId);
 	}
 
-	databasePoseMap.erase(i);
+	poseMap_.erase(iPose);
 }
 
 template <bool tThreadSafe>
@@ -3338,12 +3428,12 @@ inline Index32 Database::poseFromImagePoint(const Index32 imagePointId) const
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ImagePointMap::const_iterator i = databaseImagePointMap.find(imagePointId);
-	ocean_assert(i != databaseImagePointMap.end());
+	const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
-	return i->second.poseId();
+	return iImagePoint->second.poseId();
 }
 
 template <bool tThreadSafe>
@@ -3351,12 +3441,12 @@ inline size_t Database::numberImagePointsFromObjectPoint(const Index32 objectPoi
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iO != databaseObjectPointMap.end());
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	const IndexSet32& ids = iO->second.imagePointIds();
+	const IndexSet32& ids = iObjectPoint->second.imagePointIds();
 
 	return ids.size();
 }
@@ -3368,31 +3458,35 @@ inline void Database::observationsFromObjectPoint(const Index32 objectPointId, I
 	ocean_assert(poseIds.empty() && imagePointIds.empty());
 	ocean_assert(imagePoints == nullptr || imagePoints->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iO != databaseObjectPointMap.end());
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	const IndexSet32& ids = iO->second.imagePointIds();
+	const IndexSet32& ids = iObjectPoint->second.imagePointIds();
 
 	poseIds.reserve(ids.size());
 	imagePointIds.reserve(ids.size());
 
-	if (imagePoints)
-		imagePoints->reserve(ids.size());
-
-	for (IndexSet32::const_iterator i = ids.begin(); i != ids.end(); ++i)
+	if (imagePoints != nullptr)
 	{
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+		imagePoints->reserve(ids.size());
+	}
 
-		if (iI->second.poseId() != invalidId)
+	for (const Index32 id : ids)
+	{
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(id);
+		ocean_assert(iImagePoint != imagePointMap_.end());
+
+		if (iImagePoint->second.poseId() != invalidId)
 		{
-			poseIds.push_back(iI->second.poseId());
-			imagePointIds.push_back(*i);
+			poseIds.push_back(iImagePoint->second.poseId());
+			imagePointIds.push_back(id);
 
-			if (imagePoints)
-				imagePoints->push_back(iI->second.point());
+			if (imagePoints != nullptr)
+			{
+				imagePoints->push_back(iImagePoint->second.point());
+			}
 		}
 	}
 }
@@ -3406,25 +3500,27 @@ inline void Database::observationsFromObjectPoint(const Index32 objectPointId, c
 	ocean_assert(imagePointIds == nullptr || imagePointIds->empty());
 	ocean_assert(imagePoints == nullptr || imagePoints->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	for (size_t n = 0; n < poseIdCandidates.size(); ++n)
 	{
 		const Index32 poseId = poseIdCandidates[n];
 
-		const Index64To32Map::const_iterator i = databasePoseObjectPointMap.find(index64(poseId, objectPointId));
+		const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(poseId, objectPointId));
 
-		if (i != databasePoseObjectPointMap.end())
+		if (iPoseObjectPoint != poseObjectPointMap_.end())
 		{
 			validPoseIndices.push_back((unsigned int)n);
 
-			if (imagePointIds)
-				imagePointIds->push_back(i->second);
-
-			if (imagePoints)
+			if (imagePointIds != nullptr)
 			{
-				ocean_assert(databaseImagePointMap.find(i->second) != databaseImagePointMap.end());
-				imagePoints->push_back(databaseImagePointMap.find(i->second)->second.point());
+				imagePointIds->push_back(iPoseObjectPoint->second);
+			}
+
+			if (imagePoints != nullptr)
+			{
+				ocean_assert(imagePointMap_.find(iPoseObjectPoint->second) != imagePointMap_.end());
+				imagePoints->push_back(imagePointMap_.find(iPoseObjectPoint->second)->second.point());
 			}
 		}
 	}
@@ -3435,12 +3531,12 @@ inline Index32 Database::objectPointFromImagePoint(const Index32 imagePointId) c
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ImagePointMap::const_iterator i = databaseImagePointMap.find(imagePointId);
-	ocean_assert(i != databaseImagePointMap.end());
+	const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
-	return i->second.objectPointId();
+	return iImagePoint->second.objectPointId();
 }
 
 template <bool tThreadSafe>
@@ -3448,12 +3544,12 @@ inline const IndexSet32& Database::imagePointsFromPose(const Index32 poseId) con
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator i = databasePoseMap.find(poseId);
-	ocean_assert(i != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	return i->second.imagePointIds();
+	return iPose->second.imagePointIds();
 }
 
 template <bool tThreadSafe>
@@ -3461,12 +3557,12 @@ inline const IndexSet32& Database::imagePointsFromObjectPoint(const Index32 obje
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator i = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(i != databaseObjectPointMap.cend());
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.cend());
 
-	return i->second.imagePointIds();
+	return iObjectPoint->second.imagePointIds();
 }
 
 template <bool tThreadSafe>
@@ -3474,17 +3570,17 @@ inline IndexSet32 Database::posesFromObjectPoint(const Index32 objectPointId) co
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator iObjectPoint = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iObjectPoint != databaseObjectPointMap.cend());
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.cend());
 
 	IndexSet32 result;
 
 	for (const Index32& imagePointId : iObjectPoint->second.imagePointIds())
 	{
-		const ImagePointMap::const_iterator iImagePoint = databaseImagePointMap.find(imagePointId);
-		ocean_assert(iImagePoint != databaseImagePointMap.cend());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.cend());
 
 		result.emplace(iImagePoint->second.poseId());
 	}
@@ -3497,25 +3593,25 @@ inline void Database::attachImagePointToObjectPoint(const Index32 imagePointId, 
 {
 	ocean_assert(imagePointId != invalidId && objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ImagePointMap::iterator iI = databaseImagePointMap.find(imagePointId);
-	ocean_assert(iI != databaseImagePointMap.end());
-	ocean_assert(iI->second.objectPointId() == invalidId);
+	ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
+	ocean_assert(iImagePoint->second.objectPointId() == invalidId);
 
-	iI->second.setObjectPointId(objectPointId);
+	iImagePoint->second.setObjectPointId(objectPointId);
 
-	ObjectPointMap::iterator iO = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iO != databaseObjectPointMap.end());
+	ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	iO->second.registerImagePoint(imagePointId);
+	iObjectPoint->second.registerImagePoint(imagePointId);
 
-	if (iI->second.poseId() != invalidId)
+	if (iImagePoint->second.poseId() != invalidId)
 	{
-		const Index64 poseObjectPointId(index64(iI->second.poseId(), objectPointId));
+		const Index64 poseObjectPointId(index64(iImagePoint->second.poseId(), objectPointId));
 
-		ocean_assert(databasePoseObjectPointMap.find(poseObjectPointId) == databasePoseObjectPointMap.end());
-		databasePoseObjectPointMap.insert(std::make_pair(poseObjectPointId, imagePointId));
+		ocean_assert(poseObjectPointMap_.find(poseObjectPointId) == poseObjectPointMap_.end());
+		poseObjectPointMap_.insert(std::make_pair(poseObjectPointId, imagePointId));
 	}
 }
 
@@ -3524,27 +3620,27 @@ inline void Database::detachImagePointFromObjectPoint(const Index32 imagePointId
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ImagePointMap::iterator iI = databaseImagePointMap.find(imagePointId);
-	ocean_assert(iI != databaseImagePointMap.end());
+	ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
-	const Index32 objectPointId = iI->second.objectPointId();
+	const Index32 objectPointId = iImagePoint->second.objectPointId();
 	ocean_assert(objectPointId != invalidId);
 
-	iI->second.setObjectPointId(invalidId);
+	iImagePoint->second.setObjectPointId(invalidId);
 
-	ObjectPointMap::iterator iO = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iO != databaseObjectPointMap.end());
+	ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	iO->second.unregisterImagePoint(imagePointId);
+	iObjectPoint->second.unregisterImagePoint(imagePointId);
 
-	if (iI->second.poseId() != invalidId)
+	if (iImagePoint->second.poseId() != invalidId)
 	{
-		const Index64 poseObjectPointId(index64(iI->second.poseId(), objectPointId));
+		const Index64 poseObjectPointId(index64(iImagePoint->second.poseId(), objectPointId));
 
-		ocean_assert(databasePoseObjectPointMap.find(poseObjectPointId) != databasePoseObjectPointMap.end());
-		databasePoseObjectPointMap.erase(poseObjectPointId);
+		ocean_assert(poseObjectPointMap_.find(poseObjectPointId) != poseObjectPointMap_.end());
+		poseObjectPointMap_.erase(poseObjectPointId);
 	}
 }
 
@@ -3553,25 +3649,25 @@ inline void Database::attachImagePointToPose(const Index32 imagePointId, const I
 {
 	ocean_assert(imagePointId != invalidId && poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ImagePointMap::iterator iI = databaseImagePointMap.find(imagePointId);
-	ocean_assert(iI != databaseImagePointMap.end());
-	ocean_assert(iI->second.poseId() == invalidId);
+	ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
+	ocean_assert(iImagePoint->second.poseId() == invalidId);
 
-	iI->second.setPoseId(poseId);
+	iImagePoint->second.setPoseId(poseId);
 
-	PoseMap::iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	PoseMap::iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	iP->second.registerImagePoint(imagePointId);
+	iPose->second.registerImagePoint(imagePointId);
 
-	if (iI->second.objectPointId() != invalidId)
+	if (iImagePoint->second.objectPointId() != invalidId)
 	{
-		const Index64 poseObjectPointId(index64(poseId, iI->second.objectPointId()));
+		const Index64 poseObjectPointId(index64(poseId, iImagePoint->second.objectPointId()));
 
-		ocean_assert(databasePoseObjectPointMap.find(poseObjectPointId) == databasePoseObjectPointMap.end());
-		databasePoseObjectPointMap.insert(std::make_pair(poseObjectPointId, imagePointId));
+		ocean_assert(poseObjectPointMap_.find(poseObjectPointId) == poseObjectPointMap_.end());
+		poseObjectPointMap_.insert(std::make_pair(poseObjectPointId, imagePointId));
 	}
 }
 
@@ -3580,27 +3676,27 @@ inline void Database::detachImagePointFromPose(const Index32 imagePointId)
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	ImagePointMap::iterator iI = databaseImagePointMap.find(imagePointId);
-	ocean_assert(iI != databaseImagePointMap.end());
+	ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
-	const Index32 poseId = iI->second.poseId();
+	const Index32 poseId = iImagePoint->second.poseId();
 	ocean_assert(poseId != invalidId);
 
-	iI->second.setPoseId(invalidId);
+	iImagePoint->second.setPoseId(invalidId);
 
-	PoseMap::iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	PoseMap::iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	iP->second.unregisterImagePoint(imagePointId);
+	iPose->second.unregisterImagePoint(imagePointId);
 
-	if (iI->second.objectPointId() != invalidId)
+	if (iImagePoint->second.objectPointId() != invalidId)
 	{
-		const Index64 poseObjectPointId(index64(poseId, iI->second.objectPointId()));
+		const Index64 poseObjectPointId(index64(poseId, iImagePoint->second.objectPointId()));
 
-		ocean_assert(databasePoseObjectPointMap.find(poseObjectPointId) != databasePoseObjectPointMap.end());
-		databasePoseObjectPointMap.erase(poseObjectPointId);
+		ocean_assert(poseObjectPointMap_.find(poseObjectPointId) != poseObjectPointMap_.end());
+		poseObjectPointMap_.erase(poseObjectPointId);
 	}
 }
 
@@ -3609,12 +3705,12 @@ inline void Database::setImagePoint(const Index32 imagePointId, const Vector2& i
 {
 	ocean_assert(imagePointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ImagePointMap::iterator i = databaseImagePointMap.find(imagePointId);
-	ocean_assert(i != databaseImagePointMap.end());
+	const ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
+	ocean_assert(iImagePoint != imagePointMap_.end());
 
-	i->second.setPoint(imagePoint);
+	iImagePoint->second.setPoint(imagePoint);
 }
 
 template <bool tThreadSafe>
@@ -3622,12 +3718,12 @@ inline void Database::setObjectPoint(const Index32 objectPointId, const Vector3&
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::iterator i = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(i != databaseObjectPointMap.end());
+	const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	i->second.setPoint(objectPoint);
+	iObjectPoint->second.setPoint(objectPoint);
 }
 
 template <bool tThreadSafe>
@@ -3635,14 +3731,14 @@ inline void Database::setObjectPoints(const Index32* objectPointIds, const Vecto
 {
 	ocean_assert(objectPointIds && objectPoints);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	for (size_t n = 0; n < number; ++ n)
 	{
-		const ObjectPointMap::iterator i = databaseObjectPointMap.find(objectPointIds[n]);
-		ocean_assert(i != databaseObjectPointMap.end());
+		const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointIds[n]);
+		ocean_assert(iObjectPoint != objectPointMap_.end());
 
-		i->second.setPoint(objectPoints[n]);
+		iObjectPoint->second.setPoint(objectPoints[n]);
 	}
 }
 
@@ -3651,24 +3747,26 @@ inline void Database::setObjectPoints(const Index32* objectPointIds, const size_
 {
 	ocean_assert(objectPointIds);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	for (size_t n = 0; n < number; ++ n)
 	{
-		const ObjectPointMap::iterator i = databaseObjectPointMap.find(objectPointIds[n]);
-		ocean_assert(i != databaseObjectPointMap.end());
+		const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointIds[n]);
+		ocean_assert(iObjectPoint != objectPointMap_.end());
 
-		i->second.setPoint(referenceObjectPoint);
+		iObjectPoint->second.setPoint(referenceObjectPoint);
 	}
 }
 
 template <bool tThreadSafe>
 inline void Database::setObjectPoints(const Vector3& objectPoint)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	for (ObjectPointMap::iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-		i->second.setPoint(objectPoint);
+	for (ObjectPointMap::iterator iObjectPoint = objectPointMap_.begin(); iObjectPoint != objectPointMap_.end(); ++iObjectPoint)
+	{
+		iObjectPoint->second.setPoint(objectPoint);
+	}
 }
 
 template <bool tThreadSafe>
@@ -3676,13 +3774,13 @@ inline void Database::setObjectPoint(const Index32 objectPointId, const Vector3&
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::iterator i = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(i != databaseObjectPointMap.end());
+	const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	i->second.setPoint(objectPoint);
-	i->second.setPriority(priority);
+	iObjectPoint->second.setPoint(objectPoint);
+	iObjectPoint->second.setPriority(priority);
 }
 
 template <bool tThreadSafe>
@@ -3690,12 +3788,12 @@ inline void Database::setObjectPointPriority(const Index32 objectPointId, const 
 {
 	ocean_assert(objectPointId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::iterator i = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(i != databaseObjectPointMap.end());
+	const ObjectPointMap::iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	i->second.setPriority(priority);
+	iObjectPoint->second.setPriority(priority);
 }
 
 template <bool tThreadSafe>
@@ -3703,12 +3801,12 @@ inline void Database::setPose(const Index32 poseId, const HomogenousMatrix4& pos
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::iterator i = databasePoseMap.find(poseId);
-	ocean_assert(i != databasePoseMap.end());
+	const PoseMap::iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	i->second.setPose(pose);
+	iPose->second.setPose(pose);
 }
 
 template <bool tThreadSafe>
@@ -3716,41 +3814,43 @@ inline void Database::setPoses(const Index32* poseIds, const HomogenousMatrix4* 
 {
 	ocean_assert(poseIds && poses);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	for (size_t n = 0; n < number; ++n)
 	{
-		const PoseMap::iterator i = databasePoseMap.find(poseIds[n]);
-		ocean_assert(i != databasePoseMap.end());
+		const PoseMap::iterator iPose = poseMap_.find(poseIds[n]);
+		ocean_assert(iPose != poseMap_.end());
 
-		i->second.setPose(poses[n]);
+		iPose->second.setPose(poses[n]);
 	}
 }
 
 template <bool tThreadSafe>
 inline void Database::setPoses(const ShiftVector<HomogenousMatrix4>& poses)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	for (ShiftVector<HomogenousMatrix4>::Index n = poses.firstIndex(); n < poses.endIndex(); ++n)
 	{
 		ocean_assert(n >= 0);
 		const unsigned int poseId = (unsigned int)n;
 
-		const PoseMap::iterator i = databasePoseMap.find(poseId);
-		ocean_assert(i != databasePoseMap.end());
+		const PoseMap::iterator iPose = poseMap_.find(poseId);
+		ocean_assert(iPose != poseMap_.end());
 
-		i->second.setPose(poses[n]);
+		iPose->second.setPose(poses[n]);
 	}
 }
 
 template <bool tThreadSafe>
 inline void Database::setPoses(const HomogenousMatrix4& pose)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	for (PoseMap::iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
-		i->second.setPose(pose);
+	for (PoseMap::iterator iPose = poseMap_.begin(); iPose != poseMap_.end(); ++iPose)
+	{
+		iPose->second.setPose(pose);
+	}
 }
 
 template <bool tThreadSafe>
@@ -3758,12 +3858,12 @@ const IndexSet32& Database::imagePointIds(const Index32 poseId) const
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator i = databasePoseMap.find(poseId);
-	ocean_assert(i != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	return i->second.imagePointIds();
+	return iPose->second.imagePointIds();
 }
 
 template <bool tThreadSafe>
@@ -3772,7 +3872,7 @@ inline Indices32 Database::imagePointIds(const Index32 poseId, Indices32& object
 	ocean_assert(poseId != invalidId);
 	ocean_assert(!objectPointIds.empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 ids;
 	ids.reserve(objectPointIds.size());
@@ -3780,16 +3880,16 @@ inline Indices32 Database::imagePointIds(const Index32 poseId, Indices32& object
 	Indices32 validObjectPointIds;
 	validObjectPointIds.reserve(objectPointIds.size());
 
-	for (Indices32::const_iterator i = objectPointIds.begin(); i != objectPointIds.end(); ++i)
+	for (const Index32 objectPointId : objectPointIds)
 	{
-		const Index64To32Map::const_iterator iPO = databasePoseObjectPointMap.find(index64(poseId, *i));
+		const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(poseId, objectPointId));
 
-		if (iPO != databasePoseObjectPointMap.end())
+		if (iPoseObjectPoint != poseObjectPointMap_.end())
 		{
-			ocean_assert(databaseImagePointMap.find(iPO->second) != databaseImagePointMap.end());
+			ocean_assert(imagePointMap_.find(iPoseObjectPoint->second) != imagePointMap_.end());
 
-			ids.push_back(iPO->second);
-			validObjectPointIds.push_back(*i);
+			ids.push_back(iPoseObjectPoint->second);
+			validObjectPointIds.push_back(objectPointId);
 		}
 	}
 
@@ -3800,25 +3900,25 @@ inline Indices32 Database::imagePointIds(const Index32 poseId, Indices32& object
 template <bool tThreadSafe>
 Indices32 Database::imagePointIds(Vectors2* imagePoints) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 result;
-	result.reserve(databaseImagePointMap.size());
+	result.reserve(imagePointMap_.size());
 
 	if (imagePoints != nullptr)
 	{
-		for (ImagePointMap::const_iterator i = databaseImagePointMap.cbegin(); i != databaseImagePointMap.cend(); ++i)
+		for (ImagePointMap::const_iterator iImagePoint = imagePointMap_.cbegin(); iImagePoint != imagePointMap_.cend(); ++iImagePoint)
 		{
-			result.emplace_back(i->first);
+			result.emplace_back(iImagePoint->first);
 
-			imagePoints->emplace_back(i->second.point());
+			imagePoints->emplace_back(iImagePoint->second.point());
 		}
 	}
 	else
 	{
-		for (ImagePointMap::const_iterator i = databaseImagePointMap.cbegin(); i != databaseImagePointMap.cend(); ++i)
+		for (ImagePointMap::const_iterator iImagePoint = imagePointMap_.cbegin(); iImagePoint != imagePointMap_.cend(); ++iImagePoint)
 		{
-			result.emplace_back(i->first);
+			result.emplace_back(iImagePoint->first);
 		}
 	}
 
@@ -3828,39 +3928,39 @@ Indices32 Database::imagePointIds(Vectors2* imagePoints) const
 template <bool tThreadSafe>
 Indices32 Database::objectPointIds(Vectors3* objectPoints, Scalars* priorities) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 result;
-	result.reserve(databaseObjectPointMap.size());
+	result.reserve(objectPointMap_.size());
 
 	if (objectPoints != nullptr)
 	{
 		objectPoints->clear();
-		objectPoints->reserve(databaseObjectPointMap.size());
+		objectPoints->reserve(objectPointMap_.size());
 
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.cbegin(); i != databaseObjectPointMap.cend(); ++i)
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
 		{
-			result.emplace_back(i->first);
+			result.emplace_back(iObjectPoint->first);
 
-			objectPoints->emplace_back(i->second.point());
+			objectPoints->emplace_back(iObjectPoint->second.point());
 		}
 	}
 	else
 	{
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.cbegin(); i != databaseObjectPointMap.cend(); ++i)
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
 		{
-			result.emplace_back(i->first);
+			result.emplace_back(iObjectPoint->first);
 		}
 	}
 
 	if (priorities != nullptr)
 	{
 		priorities->clear();
-		priorities->reserve(databaseObjectPointMap.size());
+		priorities->reserve(objectPointMap_.size());
 
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.cbegin(); i != databaseObjectPointMap.cend(); ++i)
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
 		{
-			priorities->emplace_back(i->second.priority());
+			priorities->emplace_back(iObjectPoint->second.priority());
 		}
 	}
 
@@ -3871,16 +3971,22 @@ template <bool tThreadSafe>
 Indices32 Database::objectPointIds(const IndexSet32& outlierObjectPointIds) const
 {
 	if (outlierObjectPointIds.empty())
+	{
 		return objectPointIds<tThreadSafe>();
+	}
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 result;
-	result.reserve(databaseObjectPointMap.size());
+	result.reserve(objectPointMap_.size());
 
-	for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-		if (outlierObjectPointIds.find(i->first) == outlierObjectPointIds.end())
-			result.push_back(i->first);
+	for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+	{
+		if (outlierObjectPointIds.find(iObjectPoint->first) == outlierObjectPointIds.end())
+		{
+			result.push_back(iObjectPoint->first);
+		}
+	}
 
 	return result;
 }
@@ -3888,28 +3994,28 @@ Indices32 Database::objectPointIds(const IndexSet32& outlierObjectPointIds) cons
 template <bool tThreadSafe>
 Indices32 Database::poseIds(HomogenousMatrices4* world_T_cameras) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 result;
-	result.reserve(databasePoseMap.size());
+	result.reserve(poseMap_.size());
 
 	if (world_T_cameras != nullptr)
 	{
 		world_T_cameras->clear();
-		world_T_cameras->reserve(databasePoseMap.size());
+		world_T_cameras->reserve(poseMap_.size());
 
-		for (PoseMap::const_iterator i = databasePoseMap.cbegin(); i != databasePoseMap.cend(); ++i)
+		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
 		{
-			result.emplace_back(i->first);
+			result.emplace_back(iPose->first);
 
-			world_T_cameras->emplace_back(i->second.pose());
+			world_T_cameras->emplace_back(iPose->second.pose());
 		}
 	}
 	else
 	{
-		for (PoseMap::const_iterator i = databasePoseMap.cbegin(); i != databasePoseMap.cend(); ++i)
+		for (PoseMap::const_iterator iPose = poseMap_.cbegin(); iPose != poseMap_.cend(); ++iPose)
 		{
-			result.emplace_back(i->first);
+			result.emplace_back(iPose->first);
 		}
 	}
 
@@ -3922,28 +4028,32 @@ Vectors2 Database::imagePoints(const Index32 poseId, Indices32* imagePointIds) c
 	ocean_assert(poseId != invalidId);
 	ocean_assert(imagePointIds == nullptr || imagePointIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
 	Vectors2 result;
-	result.reserve(iP->second.imagePointIds().size());
+	result.reserve(iPose->second.imagePointIds().size());
 
-	if (imagePointIds)
-		imagePointIds->reserve(iP->second.imagePointIds().size());
-
-	for (IndexSet32::const_iterator i = iP->second.imagePointIds().begin(); i != iP->second.imagePointIds().end(); ++i)
+	if (imagePointIds != nullptr)
 	{
-		ocean_assert(*i != invalidId);
+		imagePointIds->reserve(iPose->second.imagePointIds().size());
+	}
 
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+	for (const Index32 imagePointId : iPose->second.imagePointIds())
+	{
+		ocean_assert(imagePointId != invalidId);
 
-		result.push_back(iI->second.point());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		if (imagePointIds)
-			imagePointIds->push_back(*i);
+		result.push_back(iImagePoint->second.point());
+
+		if (imagePointIds != nullptr)
+		{
+			imagePointIds->push_back(imagePointId);
+		}
 	}
 
 	return result;
@@ -3952,27 +4062,33 @@ Vectors2 Database::imagePoints(const Index32 poseId, Indices32* imagePointIds) c
 template <bool tThreadSafe, bool tMatchPosition>
 Indices32 Database::objectPointIds(const Vector3& referencePosition, Vectors3* objectPoints, const Scalar minimalPriority) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 objectPointIds;
 
-	if (objectPoints)
+	if (objectPoints != nullptr)
 	{
 		ocean_assert(objectPoints->empty());
 		objectPoints->clear();
 
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-			if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == referencePosition) || (!tMatchPosition && i->second.point() != referencePosition)))
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+		{
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
 			{
-				objectPointIds.push_back(i->first);
-				objectPoints->push_back(i->second.point());
+				objectPointIds.push_back(iObjectPoint->first);
+				objectPoints->push_back(iObjectPoint->second.point());
 			}
+		}
 	}
 	else
 	{
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-			if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == referencePosition) || (!tMatchPosition && i->second.point() != referencePosition)))
-				objectPointIds.push_back(i->first);
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+		{
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
+			{
+				objectPointIds.push_back(iObjectPoint->first);
+			}
+		}
 	}
 
 	return objectPointIds;
@@ -3981,29 +4097,35 @@ Indices32 Database::objectPointIds(const Vector3& referencePosition, Vectors3* o
 template <bool tThreadSafe, bool tMatchPosition>
 Indices32 Database::objectPointIds(const IndexSet32& outlierObjectPointIds, const Vector3& referencePosition, Vectors3* objectPoints, const Scalar minimalPriority) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 objectPointIds;
 
-	if (objectPoints)
+	if (objectPoints != nullptr)
 	{
 		ocean_assert(objectPoints->empty());
 		objectPoints->clear();
 
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-			if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == referencePosition) || (!tMatchPosition && i->second.point() != referencePosition))
-					&& outlierObjectPointIds.find(i->first) == outlierObjectPointIds.end())
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+		{
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition))
+					&& outlierObjectPointIds.find(iObjectPoint->first) == outlierObjectPointIds.end())
 			{
-				objectPointIds.push_back(i->first);
-				objectPoints->push_back(i->second.point());
+				objectPointIds.push_back(iObjectPoint->first);
+				objectPoints->push_back(iObjectPoint->second.point());
 			}
+		}
 	}
 	else
 	{
-		for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-			if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == referencePosition) || (!tMatchPosition && i->second.point() != referencePosition))
-					&& outlierObjectPointIds.find(i->first) == outlierObjectPointIds.end())
-				objectPointIds.push_back(i->first);
+		for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+		{
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition))
+					&& outlierObjectPointIds.find(iObjectPoint->first) == outlierObjectPointIds.end())
+			{
+				objectPointIds.push_back(iObjectPoint->first);
+			}
+		}
 	}
 
 	return objectPointIds;
@@ -4012,24 +4134,28 @@ Indices32 Database::objectPointIds(const IndexSet32& outlierObjectPointIds, cons
 template <bool tThreadSafe, bool tMatchPosition>
 inline IndexPairs32 Database::objectPointIdsWithNumberOfObservations(const Vector3& referencePosition, const Scalar minimalPriority, Worker* worker) const
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Indices32 objectPointIds;
-	objectPointIds.reserve(databaseObjectPointMap.size());
+	objectPointIds.reserve(objectPointMap_.size());
 
-	for (ObjectPointMap::const_iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
-		objectPointIds.push_back(i->first);
+	for (ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.cbegin(); iObjectPoint != objectPointMap_.cend(); ++iObjectPoint)
+	{
+		objectPointIds.push_back(iObjectPoint->first);
+	}
 
 	IndexPairs32 result;
 	result.reserve(objectPointIds.size());
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Lock lock;
 		worker->executeFunction(Worker::Function::create(*this, &Database::objectPointIdsWithNumberOfObservationsSubset<tMatchPosition>, (const Index32*)objectPointIds.data(), &referencePosition, minimalPriority, &result, &lock, 0u, 0u), 0u, (unsigned int)objectPointIds.size());
 	}
 	else
+	{
 		objectPointIdsWithNumberOfObservationsSubset<tMatchPosition>((const Index32*)objectPointIds.data(), &referencePosition, minimalPriority, &result, nullptr, 0u, (unsigned int)objectPointIds.size());
+	}
 
 	return result;
 }
@@ -4040,36 +4166,38 @@ Indices32 Database::objectPointIds(const Index32 poseId, Vectors3* objectPoints)
 	ocean_assert(poseId != invalidId);
 	ocean_assert(objectPoints == nullptr || objectPoints->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	const IndexSet32& imagePointIds = iP->second.imagePointIds();
+	const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
 	Indices32 result;
 	result.reserve(imagePointIds.size());
 
-	if (objectPoints)
-		objectPoints->reserve(imagePointIds.size());
-
-	for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+	if (objectPoints != nullptr)
 	{
-		ocean_assert(*i != invalidId);
+		objectPoints->reserve(imagePointIds.size());
+	}
 
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+	for (const Index32 imagePointId : imagePointIds)
+	{
+		ocean_assert(imagePointId != invalidId);
 
-		const Index32 objectPointId = iI->second.objectPointId();
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
+
+		const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 		if (objectPointId != invalidId)
 		{
 			result.push_back(objectPointId);
 
-			if (objectPoints)
+			if (objectPoints != nullptr)
 			{
-				ocean_assert(databaseObjectPointMap.find(*i) != databaseObjectPointMap.end());
-				objectPoints->push_back(databaseObjectPointMap.find(*i)->second.point());
+				ocean_assert(objectPointMap_.find(imagePointId) != objectPointMap_.end());
+				objectPoints->push_back(objectPointMap_.find(imagePointId)->second.point());
 			}
 		}
 	}
@@ -4085,41 +4213,45 @@ Indices32 Database::objectPointIds(const Index32 poseId, const Vector3& referenc
 	ocean_assert(poseId != invalidId);
 	ocean_assert(objectPoints == nullptr || objectPoints->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	const IndexSet32& imagePointIds = iP->second.imagePointIds();
+	const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
 	Indices32 result;
 	result.reserve(imagePointIds.size());
 
-	if (objectPoints)
-		objectPoints->reserve(imagePointIds.size());
-
-	for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+	if (objectPoints != nullptr)
 	{
-		ocean_assert(*i != invalidId);
+		objectPoints->reserve(imagePointIds.size());
+	}
 
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+	for (const Index32 imagePointId : imagePointIds)
+	{
+		ocean_assert(imagePointId != invalidId);
 
-		const Index32 objectPointId = iI->second.objectPointId();
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
+
+		const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 		if (objectPointId != invalidId)
 		{
-			const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-			ocean_assert(iO != databaseObjectPointMap.end());
+			const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+			ocean_assert(iObjectPoint != objectPointMap_.end());
 
-			const Vector3& objectPoint = iO->second.point();
+			const Vector3& objectPoint = iObjectPoint->second.point();
 
-			if (iO->second.priority() >= minimalPriority && ((tMatchPosition && objectPoint == referencePosition) || (!tMatchPosition && objectPoint != referencePosition)))
+			if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && objectPoint == referencePosition) || (!tMatchPosition && objectPoint != referencePosition)))
 			{
 				result.push_back(objectPointId);
 
-				if (objectPoints)
+				if (objectPoints != nullptr)
+				{
 					objectPoints->push_back(objectPoint);
+				}
 			}
 		}
 	}
@@ -4135,48 +4267,52 @@ Indices32 Database::objectPointIds(const Indices32 poseIds, Vectors3* objectPoin
 	ocean_assert(!poseIds.empty());
 	ocean_assert(objectPoints == nullptr || objectPoints->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	IndexSet32 objectPointIds;
 
-	for (Indices32::const_iterator iP = poseIds.begin(); iP != poseIds.end(); ++iP)
+	for (const Index32 poseId : poseIds)
 	{
-		const PoseMap::const_iterator iPM = databasePoseMap.find(*iP);
-		ocean_assert(iPM != databasePoseMap.end());
+		const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+		ocean_assert(iPose != poseMap_.end());
 
-		const IndexSet32& imagePointIds = iPM->second.imagePointIds();
+		const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
-		for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+		for (IndexSet32::const_iterator iId = imagePointIds.cbegin(); iId != imagePointIds.cend(); ++iId)
 		{
-			ocean_assert(*i != invalidId);
+			ocean_assert(*iId != invalidId);
 
-			const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-			ocean_assert(iI != databaseImagePointMap.end());
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(*iId);
+			ocean_assert(iImagePoint != imagePointMap_.end());
 
-			const Index32 objectPointId = iI->second.objectPointId();
+			const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 			if (objectPointId != invalidId)
+			{
 				objectPointIds.insert(objectPointId);
+			}
 		}
 	}
 
 	Indices32 result;
 
-	if (objectPoints)
+	if (objectPoints != nullptr)
 	{
 		result.reserve(objectPointIds.size());
 		objectPoints->reserve(objectPointIds.size());
 
-		for (IndexSet32::const_iterator i = objectPointIds.begin(); i != objectPointIds.end(); ++i)
+		for (IndexSet32::const_iterator iId = objectPointIds.cbegin(); iId != objectPointIds.cend(); ++iId)
 		{
-			ocean_assert(databaseObjectPointMap.find(*i) != databaseObjectPointMap.end());
+			ocean_assert(objectPointMap_.find(*iId) != objectPointMap_.end());
 
-			result.push_back(*i);
-			objectPoints->push_back(databaseObjectPointMap.find(*i)->second.point());
+			result.push_back(*iId);
+			objectPoints->push_back(objectPointMap_.find(*iId)->second.point());
 		}
 	}
 	else
+	{
 		result = Indices32(objectPointIds.begin(), objectPointIds.end());
+	}
 
 	return result;
 }
@@ -4187,46 +4323,52 @@ Indices32 Database::objectPointIds(const Index32 lowerPoseId, const Index32 uppe
 	ocean_assert(lowerPoseId <= upperPoseId);
 	ocean_assert(objectPoints == nullptr || objectPoints->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	if constexpr (tVisibleInAllPoses)
 	{
 		Indices32 result;
 
-		const PoseMap::const_iterator iPM = databasePoseMap.find(lowerPoseId);
+		const PoseMap::const_iterator iPose = poseMap_.find(lowerPoseId);
 
 		// if the lower pose does not exist the object points cannot be visible in all poses anymore
-		if (iPM == databasePoseMap.end())
-			return Indices32();
-
-		const IndexSet32& imagePointIds = iPM->second.imagePointIds();
-
-		for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+		if (iPose == poseMap_.end())
 		{
-			ocean_assert(*i != invalidId);
+			return Indices32();
+		}
 
-			const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-			ocean_assert(iI != databaseImagePointMap.end());
+		const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
-			const Index32 objectPointId = iI->second.objectPointId();
+		for (const Index32 imagePointId : imagePointIds)
+		{
+			ocean_assert(imagePointId != invalidId);
+
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+			ocean_assert(iImagePoint != imagePointMap_.end());
+
+			const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 			if (objectPointId != invalidId)
 			{
-				const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-				ocean_assert(iO != databaseObjectPointMap.end());
+				const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+				ocean_assert(iObjectPoint != objectPointMap_.end());
 
-				if (iO->second.priority() >= minimalPriority && ((tMatchPosition && iO->second.point() == referencePosition) || (!tMatchPosition && iO->second.point() != referencePosition)))
+				if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
 				{
 					bool visibleInAllPoses = true;
 					for (unsigned int n = lowerPoseId + 1u; visibleInAllPoses && n <= upperPoseId; ++n)
-						visibleInAllPoses = databasePoseObjectPointMap.find(index64(n, objectPointId)) != databasePoseObjectPointMap.end();
+					{
+						visibleInAllPoses = poseObjectPointMap_.find(index64(n, objectPointId)) != poseObjectPointMap_.end();
+					}
 
 					if (visibleInAllPoses)
 					{
 						result.push_back(objectPointId);
 
-						if (objectPoints)
-							objectPoints->push_back(iO->second.point());
+						if (objectPoints != nullptr)
+						{
+							objectPoints->push_back(iObjectPoint->second.point());
+						}
 					}
 				}
 			}
@@ -4244,34 +4386,36 @@ Indices32 Database::objectPointIds(const Index32 lowerPoseId, const Index32 uppe
 
 		for (unsigned int n = lowerPoseId; n <= upperPoseId; ++n)
 		{
-			const PoseMap::const_iterator iPM = databasePoseMap.find(n);
+			const PoseMap::const_iterator iPose = poseMap_.find(n);
 
-			if (iPM != databasePoseMap.end())
+			if (iPose != poseMap_.end())
 			{
-				const IndexSet32& imagePointIds = iPM->second.imagePointIds();
+				const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
-				for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+				for (const Index32 imagePointId : imagePointIds)
 				{
-					ocean_assert(*i != invalidId);
+					ocean_assert(imagePointId != invalidId);
 
-					const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-					ocean_assert(iI != databaseImagePointMap.end());
+					const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+					ocean_assert(iImagePoint != imagePointMap_.end());
 
-					const Index32 objectPointId = iI->second.objectPointId();
+					const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 					if (objectPointId != invalidId && objectPointIds.find(objectPointId) == objectPointIds.end())
 					{
 						objectPointIds.insert(objectPointId);
 
-						const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-						ocean_assert(iO != databaseObjectPointMap.end());
+						const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+						ocean_assert(iObjectPoint != objectPointMap_.end());
 
-						if (iO->second.priority() >= minimalPriority && ((tMatchPosition && iO->second.point() == referencePosition) || (!tMatchPosition && iO->second.point() != referencePosition)))
+						if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
 						{
 							result.push_back(objectPointId);
 
-							if (objectPoints)
-								objectPoints->push_back(iO->second.point());
+							if (objectPoints != nullptr)
+							{
+								objectPoints->push_back(iObjectPoint->second.point());
+							}
 						}
 					}
 				}
@@ -4292,48 +4436,56 @@ Indices32 Database::objectPointIds(const Indices32& poseIds, const Vector3& refe
 	ocean_assert(objectPoints == nullptr || objectPoints->empty());
 
 	if (poseIds.empty())
+	{
 		return Indices32();
+	}
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	if constexpr (tVisibleInAllPoses)
 	{
 		Indices32 result;
 
-		const PoseMap::const_iterator iPM = databasePoseMap.find(poseIds.front());
+		const PoseMap::const_iterator iPose = poseMap_.find(poseIds.front());
 
 		// if the first pose does not exist the object points cannot be visible in all poses anymore
-		if (iPM == databasePoseMap.end())
-			return Indices32();
-
-		const IndexSet32& imagePointIds = iPM->second.imagePointIds();
-
-		for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+		if (iPose == poseMap_.end())
 		{
-			ocean_assert(*i != invalidId);
+			return Indices32();
+		}
 
-			const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-			ocean_assert(iI != databaseImagePointMap.end());
+		const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
-			const Index32 objectPointId = iI->second.objectPointId();
+		for (const Index32 imagePointId : imagePointIds)
+		{
+			ocean_assert(imagePointId != invalidId);
+
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+			ocean_assert(iImagePoint != imagePointMap_.end());
+
+			const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 			if (objectPointId != invalidId)
 			{
-				const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-				ocean_assert(iO != databaseObjectPointMap.end());
+				const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+				ocean_assert(iObjectPoint != objectPointMap_.end());
 
-				if (iO->second.priority() >= minimalPriority && ((tMatchPosition && iO->second.point() == referencePosition) || (!tMatchPosition && iO->second.point() != referencePosition)))
+				if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
 				{
 					bool visibleInAllPoses = true;
 					for (size_t n = 1; visibleInAllPoses && n < poseIds.size(); ++n)
-						visibleInAllPoses = databasePoseObjectPointMap.find(index64(poseIds[n], objectPointId)) != databasePoseObjectPointMap.end();
+					{
+						visibleInAllPoses = poseObjectPointMap_.find(index64(poseIds[n], objectPointId)) != poseObjectPointMap_.end();
+					}
 
 					if (visibleInAllPoses)
 					{
 						result.push_back(objectPointId);
 
-						if (objectPoints)
-							objectPoints->push_back(iO->second.point());
+						if (objectPoints != nullptr)
+						{
+							objectPoints->push_back(iObjectPoint->second.point());
+						}
 					}
 				}
 			}
@@ -4351,34 +4503,36 @@ Indices32 Database::objectPointIds(const Indices32& poseIds, const Vector3& refe
 
 		for (size_t n = 0; n < poseIds.size(); ++n)
 		{
-			const PoseMap::const_iterator iPM = databasePoseMap.find(poseIds[n]);
+			const PoseMap::const_iterator iPose = poseMap_.find(poseIds[n]);
 
-			if (iPM != databasePoseMap.end())
+			if (iPose != poseMap_.end())
 			{
-				const IndexSet32& imagePointIds = iPM->second.imagePointIds();
+				const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
-				for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+				for (const Index32 imagePointId : imagePointIds)
 				{
-					ocean_assert(*i != invalidId);
+					ocean_assert(imagePointId != invalidId);
 
-					const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-					ocean_assert(iI != databaseImagePointMap.end());
+					const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+					ocean_assert(iImagePoint != imagePointMap_.end());
 
-					const Index32 objectPointId = iI->second.objectPointId();
+					const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 					if (objectPointId != invalidId && objectPointIds.find(objectPointId) == objectPointIds.end())
 					{
 						objectPointIds.insert(objectPointId);
 
-						const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-						ocean_assert(iO != databaseObjectPointMap.end());
+						const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+						ocean_assert(iObjectPoint != objectPointMap_.end());
 
-						if (iO->second.priority() >= minimalPriority && ((tMatchPosition && iO->second.point() == referencePosition) || (!tMatchPosition && iO->second.point() != referencePosition)))
+						if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)))
 						{
 							result.push_back(objectPointId);
 
-							if (objectPoints)
-								objectPoints->push_back(iO->second.point());
+							if (objectPoints != nullptr)
+							{
+								objectPoints->push_back(iObjectPoint->second.point());
+							}
 						}
 					}
 				}
@@ -4397,15 +4551,17 @@ Vectors2 Database::imagePointsWithObjectPoints(const Index32 poseId, Indices32& 
 {
 	ocean_assert(poseId != invalidId);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
 
-	ocean_assert(iP != databasePoseMap.end());
-	if (iP == databasePoseMap.end())
+	ocean_assert(iPose != poseMap_.end());
+	if (iPose == poseMap_.end())
+	{
 		return Vectors2();
+	}
 
-	const IndexSet32& imagePointIds = iP->second.imagePointIds();
+	const IndexSet32& imagePointIds = iPose->second.imagePointIds();
 
 	Vectors2 result;
 	result.reserve(imagePointIds.size());
@@ -4414,17 +4570,17 @@ Vectors2 Database::imagePointsWithObjectPoints(const Index32 poseId, Indices32& 
 	objectPointIds.clear();
 	objectPointIds.reserve(imagePointIds.size());
 
-	for (IndexSet32::const_iterator i = imagePointIds.cbegin(); i != imagePointIds.cend(); ++i)
+	for (const Index32 imagePointId : imagePointIds)
 	{
-		ocean_assert(*i != invalidId);
+		ocean_assert(imagePointId != invalidId);
 
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		if (iI->second.objectPointId() != invalidId)
+		if (iImagePoint->second.objectPointId() != invalidId)
 		{
-			result.push_back(iI->second.point());
-			objectPointIds.push_back(iI->second.objectPointId());
+			result.push_back(iImagePoint->second.point());
+			objectPointIds.push_back(iImagePoint->second.objectPointId());
 		}
 	}
 
@@ -4440,7 +4596,7 @@ Vectors2 Database::imagePointsFromObjectPoints(const Index32 poseId, Indices32& 
 	ocean_assert(!objectPointIds.empty());
 	ocean_assert(imagePointIds == nullptr || imagePointIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors2 points;
 	points.reserve(objectPointIds.size());
@@ -4448,21 +4604,23 @@ Vectors2 Database::imagePointsFromObjectPoints(const Index32 poseId, Indices32& 
 	Indices32 validObjectPointIds;
 	validObjectPointIds.reserve(objectPointIds.size());
 
-	for (Indices32::const_iterator i = objectPointIds.begin(); i != objectPointIds.end(); ++i)
+	for (const Index32 objectPointId : objectPointIds)
 	{
-		const Index64To32Map::const_iterator iPO = databasePoseObjectPointMap.find(index64(poseId, *i));
+		const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(poseId, objectPointId));
 
-		if (iPO != databasePoseObjectPointMap.end())
+		if (iPoseObjectPoint != poseObjectPointMap_.end())
 		{
-			ocean_assert(iPO->second != invalidId);
-			const ImagePointMap::const_iterator iI = databaseImagePointMap.find(iPO->second);
-			ocean_assert(iI != databaseImagePointMap.end());
+			ocean_assert(iPoseObjectPoint->second != invalidId);
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(iPoseObjectPoint->second);
+			ocean_assert(iImagePoint != imagePointMap_.end());
 
-			points.push_back(iI->second.point());
-			validObjectPointIds.push_back(*i);
+			points.push_back(iImagePoint->second.point());
+			validObjectPointIds.push_back(objectPointId);
 
-			if (imagePointIds)
-				imagePointIds->push_back(iPO->second);
+			if (imagePointIds != nullptr)
+			{
+				imagePointIds->push_back(iPoseObjectPoint->second);
+			}
 		}
 	}
 
@@ -4487,7 +4645,7 @@ Vectors2 Database::imagePointsFromObjectPoints(const Index32 poseId, const Index
 	ocean_assert(objectPointIds && numberObjectPointIds != 0);
 	ocean_assert(imagePointIds == nullptr || imagePointIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	Vectors2 points;
 	points.reserve(numberObjectPointIds);
@@ -4496,19 +4654,21 @@ Vectors2 Database::imagePointsFromObjectPoints(const Index32 poseId, const Index
 	{
 		const Index32 objectPointId = objectPointIds[n];
 
-		const Index64To32Map::const_iterator iPO = databasePoseObjectPointMap.find(index64(poseId, objectPointId));
+		const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(poseId, objectPointId));
 
-		if (iPO != databasePoseObjectPointMap.end())
+		if (iPoseObjectPoint != poseObjectPointMap_.end())
 		{
-			ocean_assert(iPO->second != invalidId);
-			const ImagePointMap::const_iterator iI = databaseImagePointMap.find(iPO->second);
-			ocean_assert(iI != databaseImagePointMap.end());
+			ocean_assert(iPoseObjectPoint->second != invalidId);
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(iPoseObjectPoint->second);
+			ocean_assert(iImagePoint != imagePointMap_.end());
 
-			points.push_back(iI->second.point());
+			points.push_back(iImagePoint->second.point());
 			validIndices.push_back((unsigned int)n);
 
-			if (imagePointIds)
-				imagePointIds->push_back(iPO->second);
+			if (imagePointIds != nullptr)
+			{
+				imagePointIds->push_back(iPoseObjectPoint->second);
+			}
 		}
 	}
 
@@ -4521,37 +4681,43 @@ Database::ImagePointGroups Database::imagePointGroups(const Indices32 poseIds, I
 	ocean_assert(!poseIds.empty());
 	ocean_assert(IndexSet32(poseIds.begin(), poseIds.end()).size() == poseIds.size());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	ImagePointsMap intermediate;
 
-	for (Indices32::const_iterator iP = poseIds.begin(); iP != poseIds.end(); ++iP)
+	for (const Index32 poseId : poseIds)
 	{
-		ocean_assert(*iP != invalidId);
-		ocean_assert(databasePoseMap.find(*iP) != databasePoseMap.end());
+		ocean_assert(poseId != invalidId);
+		ocean_assert(poseMap_.find(poseId) != poseMap_.end());
 
-		const PoseData& poseData = databasePoseMap.find(*iP)->second;
+		const PoseData& poseData = poseMap_.find(poseId)->second;
 
-		for (IndexSet32::const_iterator iI = poseData.imagePointIds().begin(); iI != poseData.imagePointIds().end(); ++iI)
+		for (const Index32 imagePointId : poseData.imagePointIds())
 		{
-			const ImagePointMap::const_iterator i = databaseImagePointMap.find(*iI);
-			ocean_assert(i != databaseImagePointMap.end());
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+			ocean_assert(iImagePoint != imagePointMap_.end());
 
-			if (i->second.objectPointId() != invalidId)
-				intermediate[i->second.objectPointId()].push_back(i->second.point());
+			if (iImagePoint->second.objectPointId() != invalidId)
+			{
+				intermediate[iImagePoint->second.objectPointId()].push_back(iImagePoint->second.point());
+			}
 		}
 	}
 
 	ImagePointGroups result(poseIds.size());
 
-	for (ImagePointsMap::iterator i = intermediate.begin(); i != intermediate.end(); ++i)
-		if (i->second.size() == poseIds.size())
+	for (ImagePointsMap::iterator iImagePoints = intermediate.begin(); iImagePoints != intermediate.end(); ++iImagePoints)
+	{
+		if (iImagePoints->second.size() == poseIds.size())
 		{
-			objectPointIds.push_back(i->first);
+			objectPointIds.push_back(iImagePoints->first);
 
 			for (size_t n = 0; n < poseIds.size(); ++n)
-				result[n].push_back(i->second[n]);
+			{
+				result[n].push_back(iImagePoints->second[n]);
+			}
 		}
+	}
 
 	return result;
 }
@@ -4562,45 +4728,49 @@ Database::IdIdPointPairsMap Database::imagePoints(const Index32 poseId, const bo
 	ocean_assert(poseId != invalidId);
 	ocean_assert(maximalObservations == 0 || minimalObservations <= maximalObservations);
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	IdIdPointPairsMap result;
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	const PoseData& poseData = iP->second;
+	const PoseData& poseData = iPose->second;
 
-	for (IndexSet32::const_iterator iI = poseData.imagePointIds().begin(); iI != poseData.imagePointIds().end(); ++iI)
+	for (const Index32 imagePointId : poseData.imagePointIds())
 	{
-		const ImagePointMap::const_iterator i = databaseImagePointMap.find(*iI);
-		ocean_assert(i != databaseImagePointMap.end());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		const Index32 objectPointId = i->second.objectPointId();
+		const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 		if (objectPointId != invalidId)
 		{
 			IdPointPairs imagePointPairs;
-			imagePointPairs.push_back(std::make_pair(*iI, i->second.point()));
+			imagePointPairs.emplace_back(imagePointId, iImagePoint->second.point());
 
 			// now find the consecutive image points
 			Index32 pId = poseId;
 
-			while (((previous && pId-- != 0u) || (!previous && ++pId < databasePoses)) && (maximalObservations == 0 || imagePointPairs.size() < maximalObservations))
+			while (((previous && pId-- != 0u) || (!previous && ++pId < poses_)) && (maximalObservations == 0 || imagePointPairs.size() < maximalObservations))
 			{
-				const Index64To32Map::const_iterator iPO = databasePoseObjectPointMap.find(index64(pId, objectPointId));
+				const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(pId, objectPointId));
 
-				if (iPO == databasePoseObjectPointMap.end())
+				if (iPoseObjectPoint == poseObjectPointMap_.end())
+				{
 					break;
+				}
 
-				const ImagePointMap::const_iterator otherPO = databaseImagePointMap.find(iPO->second);
-				ocean_assert(otherPO != databaseImagePointMap.end());
+				const ImagePointMap::const_iterator iOtherImagePoint = imagePointMap_.find(iPoseObjectPoint->second);
+				ocean_assert(iOtherImagePoint != imagePointMap_.end());
 
-				imagePointPairs.push_back(std::make_pair(iPO->second, otherPO->second.point()));
+				imagePointPairs.emplace_back(iPoseObjectPoint->second, iOtherImagePoint->second.point());
 			}
 
 			if (minimalObservations == 0 || imagePointPairs.size() >= minimalObservations)
+			{
 				result[objectPointId] = imagePointPairs;
+			}
 		}
 	}
 
@@ -4615,33 +4785,35 @@ void Database::imagePoints(const Index32 pose0, const Index32 pose1, Vectors2& p
 
 	ocean_assert(points0.size() == points1.size());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP0 = databasePoseMap.find(pose0);
-	ocean_assert(iP0 != databasePoseMap.end());
+	const PoseMap::const_iterator iPose0 = poseMap_.find(pose0);
+	ocean_assert(iPose0 != poseMap_.end());
 
-	const PoseData& poseData0 = iP0->second;
+	const PoseData& poseData0 = iPose0->second;
 
-	for (IndexSet32::const_iterator i = poseData0.imagePointIds().begin(); i != poseData0.imagePointIds().end(); ++i)
+	for (const Index32 imagePointId : poseData0.imagePointIds())
 	{
-		const ImagePointMap::const_iterator iI0 = databaseImagePointMap.find(*i);
-		ocean_assert(iI0 != databaseImagePointMap.end());
+		const ImagePointMap::const_iterator iImagePoint0 = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint0 != imagePointMap_.end());
 
-		ocean_assert(iI0->second.poseId() == pose0);
-		if (iI0->second.objectPointId() != invalidId)
+		ocean_assert(iImagePoint0->second.poseId() == pose0);
+		if (iImagePoint0->second.objectPointId() != invalidId)
 		{
-			const Index64To32Map::const_iterator iPO = databasePoseObjectPointMap.find(index64(pose1, iI0->second.objectPointId()));
+			const Index64To32Map::const_iterator iPoseObjectPoint = poseObjectPointMap_.find(index64(pose1, iImagePoint0->second.objectPointId()));
 
-			if (iPO != databasePoseObjectPointMap.end())
+			if (iPoseObjectPoint != poseObjectPointMap_.end())
 			{
-				const ImagePointMap::const_iterator iI1 = databaseImagePointMap.find(iPO->second);
-				ocean_assert(iI1 != databaseImagePointMap.end());
+				const ImagePointMap::const_iterator iImagePoint1 = imagePointMap_.find(iPoseObjectPoint->second);
+				ocean_assert(iImagePoint1 != imagePointMap_.end());
 
-				points0.push_back(iI0->second.point());
-				points1.push_back(iI1->second.point());
+				points0.push_back(iImagePoint0->second.point());
+				points1.push_back(iImagePoint1->second.point());
 
-				if (objectPointIds)
-					objectPointIds->push_back(iI0->second.objectPointId());
+				if (objectPointIds != nullptr)
+				{
+					objectPointIds->push_back(iImagePoint0->second.objectPointId());
+				}
 			}
 		}
 	}
@@ -4656,47 +4828,47 @@ void Database::imagePointsObjectPoints(const Index32 poseId, Vectors2& imagePoin
 	ocean_assert(imagePointIds == nullptr || imagePointIds->empty());
 	ocean_assert(objectPointIds == nullptr || objectPointIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iPose = databasePoseMap.find(poseId);
-	ocean_assert(iPose != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
 	const PoseData& poseData = iPose->second;
 
 	imagePoints.reserve(poseData.imagePointIds().size());
 	objectPoints.reserve(poseData.imagePointIds().size());
 
-	if (imagePointIds)
+	if (imagePointIds != nullptr)
 	{
 		imagePointIds->reserve(poseData.imagePointIds().size());
 	}
 
-	if (objectPointIds)
+	if (objectPointIds != nullptr)
 	{
 		objectPointIds->reserve(poseData.imagePointIds().size());
 	}
 
 	for (const Index32& imagePointId : poseData.imagePointIds())
 	{
-		const ImagePointMap::const_iterator iImagePoint = databaseImagePointMap.find(imagePointId);
-		ocean_assert(iImagePoint != databaseImagePointMap.end());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
 		if (iImagePoint->second.objectPointId() != invalidId)
 		{
-			const ObjectPointMap::const_iterator iObjectPoint = databaseObjectPointMap.find(iImagePoint->second.objectPointId());
-			ocean_assert(iObjectPoint != databaseObjectPointMap.end());
+			const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(iImagePoint->second.objectPointId());
+			ocean_assert(iObjectPoint != objectPointMap_.end());
 
 			if (((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)) && (minimalObservations == 0 || iObjectPoint->second.imagePointIds().size() >= minimalObservations))
 			{
 				imagePoints.push_back(iImagePoint->second.point());
 				objectPoints.push_back(iObjectPoint->second.point());
 
-				if (imagePointIds)
+				if (imagePointIds != nullptr)
 				{
 					imagePointIds->push_back(iImagePoint->first);
 				}
 
-				if (objectPointIds)
+				if (objectPointIds != nullptr)
 				{
 					objectPointIds->push_back(iImagePoint->second.objectPointId());
 				}
@@ -4719,12 +4891,12 @@ void Database::imagePointsObjectPoints(const Index32 poseId, const IndexSet32& p
 
 	ocean_assert(!priorityIds.empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-	ocean_assert(iP != databasePoseMap.end());
+	const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+	ocean_assert(iPose != poseMap_.end());
 
-	const PoseData& poseData = iP->second;
+	const PoseData& poseData = iPose->second;
 
 	priorityImagePoints.reserve(poseData.imagePointIds().size());
 	priorityObjectPoints.reserve(poseData.imagePointIds().size());
@@ -4732,53 +4904,69 @@ void Database::imagePointsObjectPoints(const Index32 poseId, const IndexSet32& p
 	remainingImagePoints.reserve(poseData.imagePointIds().size());
 	remainingObjectPoints.reserve(poseData.imagePointIds().size());
 
-	if (priorityImagePointIds)
-		priorityImagePointIds->reserve(poseData.imagePointIds().size());
-
-	if (priorityObjectPointIds)
-		priorityObjectPointIds->reserve(poseData.imagePointIds().size());
-
-	if (remainingImagePointIds)
-		remainingImagePointIds->reserve(poseData.imagePointIds().size());
-
-	if (remainingObjectPointIds)
-		remainingObjectPointIds->reserve(poseData.imagePointIds().size());
-
-	for (IndexSet32::const_iterator i = poseData.imagePointIds().begin(); i != poseData.imagePointIds().end(); ++i)
+	if (priorityImagePointIds != nullptr)
 	{
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+		priorityImagePointIds->reserve(poseData.imagePointIds().size());
+	}
 
-		if (iI->second.objectPointId() != invalidId)
+	if (priorityObjectPointIds != nullptr)
+	{
+		priorityObjectPointIds->reserve(poseData.imagePointIds().size());
+	}
+
+	if (remainingImagePointIds != nullptr)
+	{
+		remainingImagePointIds->reserve(poseData.imagePointIds().size());
+	}
+
+	if (remainingObjectPointIds != nullptr)
+	{
+		remainingObjectPointIds->reserve(poseData.imagePointIds().size());
+	}
+
+	for (const Index32 imagePointId : poseData.imagePointIds())
+	{
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
+
+		if (iImagePoint->second.objectPointId() != invalidId)
 		{
-			const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(iI->second.objectPointId());
-			ocean_assert(iO != databaseObjectPointMap.end());
+			const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(iImagePoint->second.objectPointId());
+			ocean_assert(iObjectPoint != objectPointMap_.end());
 
-			if (((tMatchPosition && iO->second.point() == referencePosition) || (!tMatchPosition && iO->second.point() != referencePosition)) && (minimalObservations == 0 || iO->second.imagePointIds().size() >= minimalObservations))
+			if (((tMatchPosition && iObjectPoint->second.point() == referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != referencePosition)) && (minimalObservations == 0 || iObjectPoint->second.imagePointIds().size() >= minimalObservations))
 			{
-				ocean_assert(iO->first == iI->second.objectPointId());
+				ocean_assert(iObjectPoint->first == iImagePoint->second.objectPointId());
 
-				if (priorityIds.find(iO->first) != priorityIds.end())
+				if (priorityIds.find(iObjectPoint->first) != priorityIds.end())
 				{
-					priorityImagePoints.push_back(iI->second.point());
-					priorityObjectPoints.push_back(iO->second.point());
+					priorityImagePoints.push_back(iImagePoint->second.point());
+					priorityObjectPoints.push_back(iObjectPoint->second.point());
 
-					if (priorityImagePointIds)
-						priorityImagePointIds->push_back(iI->first);
+					if (priorityImagePointIds != nullptr)
+					{
+						priorityImagePointIds->push_back(iImagePoint->first);
+					}
 
-					if (priorityObjectPointIds)
-						priorityObjectPointIds->push_back(iI->second.objectPointId());
+					if (priorityObjectPointIds != nullptr)
+					{
+						priorityObjectPointIds->push_back(iImagePoint->second.objectPointId());
+					}
 				}
 				else
 				{
-					remainingImagePoints.push_back(iI->second.point());
-					remainingObjectPoints.push_back(iO->second.point());
+					remainingImagePoints.push_back(iImagePoint->second.point());
+					remainingObjectPoints.push_back(iObjectPoint->second.point());
 
-					if (remainingImagePointIds)
-						remainingImagePointIds->push_back(iI->first);
+					if (remainingImagePointIds != nullptr)
+					{
+						remainingImagePointIds->push_back(iImagePoint->first);
+					}
 
-					if (remainingObjectPointIds)
-						remainingObjectPointIds->push_back(iI->second.objectPointId());
+					if (remainingObjectPointIds != nullptr)
+					{
+						remainingObjectPointIds->push_back(iImagePoint->second.objectPointId());
+					}
 				}
 			}
 		}
@@ -4794,37 +4982,43 @@ void Database::posesImagePoints(const Index32 objectPointId, HomogenousMatrices4
 	ocean_assert(poseIds == nullptr || poseIds->empty());
 	ocean_assert(imagePointIds == nullptr || imagePointIds->empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	const ObjectPointMap::const_iterator iO = databaseObjectPointMap.find(objectPointId);
-	ocean_assert(iO != databaseObjectPointMap.end());
+	const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+	ocean_assert(iObjectPoint != objectPointMap_.end());
 
-	const IndexSet32& imagePointCandidateIds = iO->second.imagePointIds();
+	const IndexSet32& imagePointCandidateIds = iObjectPoint->second.imagePointIds();
 
 	poses.reserve(imagePointCandidateIds.size());
 	imagePoints.reserve(imagePointCandidateIds.size());
 
-	if (poseIds)
-		poseIds->reserve(imagePointCandidateIds.size());
-
-	if (imagePointIds)
-		imagePointIds->reserve(imagePointCandidateIds.size());
-
-	for (IndexSet32::const_iterator i = imagePointCandidateIds.begin(); i != imagePointCandidateIds.end(); ++i)
+	if (poseIds != nullptr)
 	{
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+		poseIds->reserve(imagePointCandidateIds.size());
+	}
 
-		const Vector2& imagePoint = iI->second.point();
-		const Index32 poseId = iI->second.poseId();
+	if (imagePointIds != nullptr)
+	{
+		imagePointIds->reserve(imagePointCandidateIds.size());
+	}
+
+	for (const Index32 imagePointCandidateId : imagePointCandidateIds)
+	{
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointCandidateId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
+
+		const Vector2& imagePoint = iImagePoint->second.point();
+		const Index32 poseId = iImagePoint->second.poseId();
 
 		if (poseId == invalidId || (lowerPoseId != invalidId && poseId < lowerPoseId) || (upperPoseId != invalidId && poseId > upperPoseId))
+		{
 			continue;
+		}
 
-		const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-		ocean_assert(iP != databasePoseMap.end());
+		const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+		ocean_assert(iPose != poseMap_.end());
 
-		const HomogenousMatrix4& pose = iP->second.pose();
+		const HomogenousMatrix4& pose = iPose->second.pose();
 
 		if ((tMatchPose && pose == referencePose) || (!tMatchPose && pose != referencePose))
 		{
@@ -4833,11 +5027,15 @@ void Database::posesImagePoints(const Index32 objectPointId, HomogenousMatrices4
 			imagePoints.push_back(imagePoint);
 			poses.push_back(pose);
 
-			if (poseIds)
+			if (poseIds != nullptr)
+			{
 				poseIds->push_back(poseId);
+			}
 
-			if (imagePointIds)
-				imagePointIds->push_back(*i);
+			if (imagePointIds != nullptr)
+			{
+				imagePointIds->push_back(imagePointCandidateId);
+			}
 		}
 	}
 }
@@ -4847,26 +5045,28 @@ Database::TopologyTriples Database::topologyTriples(const Indices32& poseIds) co
 {
 	ocean_assert(!poseIds.empty());
 
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	TopologyTriples result;
 
-	for (Indices32::const_iterator iiP = poseIds.begin(); iiP != poseIds.end(); ++iiP)
+	for (const Index32 poseId : poseIds)
 	{
-		const PoseMap::const_iterator iP = databasePoseMap.find(*iiP);
-		ocean_assert(iP != databasePoseMap.end());
+		const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+		ocean_assert(iPose != poseMap_.end());
 
-		const IndexSet32& poseImagePoints = iP->second.imagePointIds();
+		const IndexSet32& poseImagePoints = iPose->second.imagePointIds();
 
-		for (IndexSet32::const_iterator iI = poseImagePoints.begin(); iI != poseImagePoints.end(); ++iI)
+		for (IndexSet32::const_iterator iId = poseImagePoints.cbegin(); iId != poseImagePoints.cend(); ++iId)
 		{
-			const ImagePointMap::const_iterator i = databaseImagePointMap.find(*iI);
-			ocean_assert(i != databaseImagePointMap.end());
+			const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(*iId);
+			ocean_assert(iImagePoint != imagePointMap_.end());
 
-			const Index32 objectPointId = i->second.objectPointId();
+			const Index32 objectPointId = iImagePoint->second.objectPointId();
 
 			if (objectPointId != invalidId)
-				result.push_back(TopologyTriple(*iiP, objectPointId, *iI));
+			{
+				result.push_back(TopologyTriple(poseId, objectPointId, *iId));
+			}
 		}
 	}
 
@@ -4876,59 +5076,59 @@ Database::TopologyTriples Database::topologyTriples(const Indices32& poseIds) co
 template <bool tThreadSafe>
 inline void Database::clear()
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	databasePoseMap.clear();
-	databaseObjectPointMap.clear();
-	databaseImagePointMap.clear();
-	databasePoseObjectPointMap.clear();
+	poseMap_.clear();
+	objectPointMap_.clear();
+	imagePointMap_.clear();
+	poseObjectPointMap_.clear();
 
-	databasePoses = 0u;
+	poses_ = 0u;
 
-	databaseObjectPointIdCounter = invalidId;
-	databaseImagePointIdCounter = invalidId;
+	objectPointIdCounter_ = invalidId;
+	imagePointIdCounter_ = invalidId;
 }
 
 template <bool tThreadSafe>
 inline void Database::reset(const Vector3& referenceObjectPoint, const HomogenousMatrix4& referencePose)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
-	for (ObjectPointMap::iterator i = databaseObjectPointMap.begin(); i != databaseObjectPointMap.end(); ++i)
+	for (ObjectPointMap::iterator iObjectPoint = objectPointMap_.begin(); iObjectPoint != objectPointMap_.end(); ++iObjectPoint)
 	{
-		i->second.setPoint(referenceObjectPoint);
+		iObjectPoint->second.setPoint(referenceObjectPoint);
 	}
 
-	for (PoseMap::iterator i = databasePoseMap.begin(); i != databasePoseMap.end(); ++i)
+	for (PoseMap::iterator iPose = poseMap_.begin(); iPose != poseMap_.end(); ++iPose)
 	{
-		i->second.setPose(referencePose);
+		iPose->second.setPose(referencePose);
 	}
 }
 
 template <typename T, bool tThreadSafe>
 void Database::reset(const size_t numberPoses, const Index32* poseIds, const HomogenousMatrixT4<T>* poses, const size_t numberObjectPoints, const Index32* objectPointIds, const VectorT3<T>* objectPoints, const T* objectPointPriorities, const size_t numberImagePoints, const Index32* imagePointIds, const VectorT2<T>* imagePoints, const Index32* topologyPoseIds, const Index32* topologyObjectPointIds)
 {
-	const TemplatedScopedLock<tThreadSafe> scopedLock(databaseLock);
+	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
 	clear<false>();
 
-	databasePoses = 0u;
-	databaseObjectPointIdCounter = 0u;
-	databaseImagePointIdCounter = 0u;
+	poses_ = 0u;
+	objectPointIdCounter_ = 0u;
+	imagePointIdCounter_ = 0u;
 
 	for (size_t n = 0; n < numberPoses; ++n)
 	{
 		const Index32& poseId = poseIds[n];
 		const HomogenousMatrixT4<T>& pose = poses[n];
 
-		ocean_assert(databasePoseMap.find(poseId) == databasePoseMap.cend());
-		databasePoseMap.emplace(poseId, PoseData(HomogenousMatrix4(pose)));
+		ocean_assert(poseMap_.find(poseId) == poseMap_.cend());
+		poseMap_.emplace(poseId, PoseData(HomogenousMatrix4(pose)));
 
 		ocean_assert(poseId != invalidId);
-		databasePoses = max(databasePoses, poseId + 1u);
+		poses_ = max(poses_, poseId + 1u);
 	}
 
-	databaseObjectPointMap.reserve(numberObjectPoints);
+	objectPointMap_.reserve(numberObjectPoints);
 
 	for (size_t n = 0; n < numberObjectPoints; ++n)
 	{
@@ -4936,23 +5136,23 @@ void Database::reset(const size_t numberPoses, const Index32* poseIds, const Hom
 		const VectorT3<T>& objectPoint = objectPoints[n];
 		const T& objectPointPriority = objectPointPriorities[n];
 
-		ocean_assert(databaseObjectPointMap.find(objectPointId) == databaseObjectPointMap.cend());
+		ocean_assert(objectPointMap_.find(objectPointId) == objectPointMap_.cend());
 
 		if (objectPoint == VectorT3<T>(NumericT<T>::minValue(), NumericT<T>::minValue(), NumericT<T>::minValue()))
 		{
-			databaseObjectPointMap.emplace(objectPointId, ObjectPointData(invalidObjectPoint(), Scalar(objectPointPriority)));
+			objectPointMap_.emplace(objectPointId, ObjectPointData(invalidObjectPoint(), Scalar(objectPointPriority)));
 		}
 		else
 		{
-			databaseObjectPointMap.emplace(objectPointId, ObjectPointData(Vector3(objectPoint), Scalar(objectPointPriority)));
+			objectPointMap_.emplace(objectPointId, ObjectPointData(Vector3(objectPoint), Scalar(objectPointPriority)));
 		}
 
 		ocean_assert(objectPointId != invalidId);
-		databaseObjectPointIdCounter = max(databaseObjectPointIdCounter, objectPointId);
+		objectPointIdCounter_ = max(objectPointIdCounter_, objectPointId);
 	}
 
-	databaseImagePointMap.reserve(numberImagePoints);
-	databasePoseObjectPointMap.reserve(numberImagePoints);
+	imagePointMap_.reserve(numberImagePoints);
+	poseObjectPointMap_.reserve(numberImagePoints);
 
 	for (size_t n = 0; n < numberImagePoints; ++n)
 	{
@@ -4962,24 +5162,24 @@ void Database::reset(const size_t numberPoses, const Index32* poseIds, const Hom
 		const Index32& topologyPoseId = topologyPoseIds[n];
 		const Index32& topologyObjectPointId = topologyObjectPointIds[n];
 
-		ocean_assert(databaseImagePointMap.find(imagePointId) == databaseImagePointMap.cend());
-		databaseImagePointMap.emplace(imagePointId, ImagePointData(Vector2(imagePoint), topologyPoseId, topologyObjectPointId));
+		ocean_assert(imagePointMap_.find(imagePointId) == imagePointMap_.cend());
+		imagePointMap_.emplace(imagePointId, ImagePointData(Vector2(imagePoint), topologyPoseId, topologyObjectPointId));
 
 		ocean_assert((topologyPoseId == invalidId && topologyObjectPointId == invalidId) || (topologyPoseId != invalidId && topologyObjectPointId != invalidId));
 
 		if (topologyPoseId != invalidId)
 		{
-			databasePoseObjectPointMap.emplace(index64(topologyPoseId, topologyObjectPointId), imagePointId);
+			poseObjectPointMap_.emplace(index64(topologyPoseId, topologyObjectPointId), imagePointId);
 
-			ocean_assert(databasePoseMap.find(topologyPoseId) != databasePoseMap.cend());
-			databasePoseMap[topologyPoseId].registerImagePoint(imagePointId);
+			ocean_assert(poseMap_.find(topologyPoseId) != poseMap_.cend());
+			poseMap_[topologyPoseId].registerImagePoint(imagePointId);
 
-			ocean_assert(databaseObjectPointMap.find(topologyObjectPointId) != databaseObjectPointMap.cend());
-			databaseObjectPointMap[topologyObjectPointId].registerImagePoint(imagePointId);
+			ocean_assert(objectPointMap_.find(topologyObjectPointId) != objectPointMap_.cend());
+			objectPointMap_[topologyObjectPointId].registerImagePoint(imagePointId);
 		}
 
 		ocean_assert(imagePointId != invalidId);
-		databaseImagePointIdCounter = max(databaseImagePointIdCounter, imagePointId);
+		imagePointIdCounter_ = max(imagePointIdCounter_, imagePointId);
 	}
 }
 
@@ -4991,8 +5191,12 @@ inline Indices32 Database::filterTopologyTriplesPoses(const TopologyTriples& top
 	result.reserve(topologyTriples.size());
 
 	for (unsigned int n = 0u; n < topologyTriples.size(); ++n)
+	{
 		if (poseIds.find(topologyTriples[n].poseId()) != poseIds.end())
+		{
 			result.push_back(n);
+		}
+	}
 
 	return result;
 }
@@ -5005,8 +5209,12 @@ inline Indices32 Database::filterTopologyTriplesObjectPoints(const TopologyTripl
 	result.reserve(topologyTriples.size());
 
 	for (unsigned int n = 0u; n < topologyTriples.size(); ++n)
+	{
 		if (objectPointIds.find(topologyTriples[n].objectPointId()) != objectPointIds.end())
+		{
 			result.push_back(n);
+		}
+	}
 
 	return result;
 }
@@ -5019,8 +5227,12 @@ inline Indices32 Database::filterTopologyTriplesImagePoints(const TopologyTriple
 	result.reserve(topologyTriples.size());
 
 	for (unsigned int n = 0u; n < topologyTriples.size(); ++n)
+	{
 		if (imagePointIds.find(topologyTriples[n].imagePointId()) != imagePointIds.end())
+		{
 			result.push_back(n);
+		}
+	}
 
 	return result;
 }
@@ -5030,18 +5242,22 @@ inline Indices32 Database::reliableObjectPoints(const TopologyTriples& topologyT
 	ocean_assert(!topologyTriples.empty());
 
 	Index32To32Map objectPointCounterMap;
-	for (TopologyTriples::const_iterator i = topologyTriples.begin(); i != topologyTriples.end(); ++i)
+	for (TopologyTriples::const_iterator iTopology = topologyTriples.cbegin(); iTopology != topologyTriples.cend(); ++iTopology)
 	{
-		ocean_assert(i->objectPointId() != invalidId);
-		objectPointCounterMap[i->objectPointId()]++;
+		ocean_assert(iTopology->objectPointId() != invalidId);
+		objectPointCounterMap[iTopology->objectPointId()]++;
 	}
 
 	Indices32 objectPointIds;
 	objectPointIds.reserve(objectPointCounterMap.size());
 
-	for (Index32To32Map::const_iterator i = objectPointCounterMap.begin(); i != objectPointCounterMap.end(); ++i)
-		if (i->second >= minimalObservations)
-			objectPointIds.push_back(i->first);
+	for (Index32To32Map::const_iterator iCounter = objectPointCounterMap.cbegin(); iCounter != objectPointCounterMap.cend(); ++iCounter)
+	{
+		if (iCounter->second >= minimalObservations)
+		{
+			objectPointIds.push_back(iCounter->first);
+		}
+	}
 
 	return objectPointIds;
 }
@@ -5050,14 +5266,14 @@ inline Database& Database::operator=(const Database& database)
 {
 	if (this != &database)
 	{
-		databasePoseMap = database.databasePoseMap;
-		databaseObjectPointMap = database.databaseObjectPointMap;
-		databaseImagePointMap = database.databaseImagePointMap;
-		databasePoseObjectPointMap = database.databasePoseObjectPointMap;
+		poseMap_ = database.poseMap_;
+		objectPointMap_ = database.objectPointMap_;
+		imagePointMap_ = database.imagePointMap_;
+		poseObjectPointMap_ = database.poseObjectPointMap_;
 
-		databasePoses = database.databasePoses;
-		databaseObjectPointIdCounter = database.databaseObjectPointIdCounter;
-		databaseImagePointIdCounter = database.databaseImagePointIdCounter;
+		poses_ = database.poses_;
+		objectPointIdCounter_ = database.objectPointIdCounter_;
+		imagePointIdCounter_ = database.imagePointIdCounter_;
 	}
 
 	return *this;
@@ -5067,18 +5283,18 @@ inline Database& Database::operator=(Database&& database) noexcept
 {
 	if (this != &database)
 	{
-		databasePoseMap = std::move(database.databasePoseMap);
-		databaseObjectPointMap = std::move(database.databaseObjectPointMap);
-		databaseImagePointMap = std::move(database.databaseImagePointMap);
-		databasePoseObjectPointMap = std::move(database.databasePoseObjectPointMap);
+		poseMap_ = std::move(database.poseMap_);
+		objectPointMap_ = std::move(database.objectPointMap_);
+		imagePointMap_ = std::move(database.imagePointMap_);
+		poseObjectPointMap_ = std::move(database.poseObjectPointMap_);
 
-		databasePoses = database.databasePoses;
-		databaseObjectPointIdCounter = database.databaseObjectPointIdCounter;
-		databaseImagePointIdCounter = database.databaseImagePointIdCounter;
+		poses_ = database.poses_;
+		objectPointIdCounter_ = database.objectPointIdCounter_;
+		imagePointIdCounter_ = database.imagePointIdCounter_;
 
-		database.databasePoses = 0u;
-		database.databaseObjectPointIdCounter = invalidId;
-		database.databaseImagePointIdCounter = invalidId;
+		database.poses_ = 0u;
+		database.objectPointIdCounter_ = invalidId;
+		database.imagePointIdCounter_ = invalidId;
 	}
 
 	return *this;
@@ -5096,7 +5312,9 @@ inline void Database::numberCorrespondencesSubset(const Index32 lowerPoseId, con
 	ocean_assert(referenceObjectPoint && correspondences);
 
 	for (unsigned int n = firstPose; n < firstPose + numberPoses; ++n)
+	{
 		correspondences[n] = numberCorrespondences<false, tMatchPosition, tNeedValidPose>(lowerPoseId + n, *referenceObjectPoint, minimalPriority);
+	}
 }
 
 template <bool tMatchPosition>
@@ -5109,43 +5327,49 @@ void Database::objectPointIdsWithNumberOfObservationsSubset(const Index32* objec
 
 	for (unsigned int n = firstObjectPoint; n < firstObjectPoint + numberObjectPoints; ++n)
 	{
-		const ObjectPointMap::const_iterator i = databaseObjectPointMap.find(objectPointIds[n]);
-		if (i->second.priority() >= minimalPriority && ((tMatchPosition && i->second.point() == *referencePosition) || (!tMatchPosition && i->second.point() != *referencePosition)))
-			localPairs.push_back(std::make_pair(i->first, numberValidPoses(i->first, i->second.imagePointIds())));
+		const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointIds[n]);
+		if (iObjectPoint->second.priority() >= minimalPriority && ((tMatchPosition && iObjectPoint->second.point() == *referencePosition) || (!tMatchPosition && iObjectPoint->second.point() != *referencePosition)))
+		{
+			localPairs.emplace_back(iObjectPoint->first, numberValidPoses(iObjectPoint->first, iObjectPoint->second.imagePointIds()));
+		}
 	}
 
-	if (lock)
+	if (lock != nullptr)
 	{
 		const ScopedLock scopedLock(*lock);
 		pairs->insert(pairs->end(), localPairs.begin(), localPairs.end());
 	}
 	else
+	{
 		*pairs = std::move(localPairs);
+	}
 }
 
 inline unsigned int Database::numberValidPoses(const Index32 objectPointId, const IndexSet32& imagePointIds) const
 {
 	ocean_assert_and_suppress_unused(objectPointId != invalidId, objectPointId);
 
-	ocean_assert(databaseObjectPointMap.find(objectPointId) != databaseObjectPointMap.end());
-	ocean_assert(databaseObjectPointMap.find(objectPointId)->second.imagePointIds() == imagePointIds);
+	ocean_assert(objectPointMap_.find(objectPointId) != objectPointMap_.end());
+	ocean_assert(objectPointMap_.find(objectPointId)->second.imagePointIds() == imagePointIds);
 
 	unsigned int validPoses = 0u;
 
-	for (IndexSet32::const_iterator i = imagePointIds.begin(); i != imagePointIds.end(); ++i)
+	for (const Index32 imagePointId : imagePointIds)
 	{
-		const ImagePointMap::const_iterator iI = databaseImagePointMap.find(*i);
-		ocean_assert(iI != databaseImagePointMap.end());
+		const ImagePointMap::const_iterator iImagePoint = imagePointMap_.find(imagePointId);
+		ocean_assert(iImagePoint != imagePointMap_.end());
 
-		const Index32 poseId = iI->second.poseId();
+		const Index32 poseId = iImagePoint->second.poseId();
 
-		const PoseMap::const_iterator iP = databasePoseMap.find(poseId);
-		ocean_assert(iP != databasePoseMap.end());
+		const PoseMap::const_iterator iPose = poseMap_.find(poseId);
+		ocean_assert(iPose != poseMap_.end());
 
-		const HomogenousMatrix4& pose = iP->second.pose();
+		const HomogenousMatrix4& pose = iPose->second.pose();
 
 		if (pose.isValid())
+		{
 			validPoses++;
+		}
 	}
 
 	return validPoses;
