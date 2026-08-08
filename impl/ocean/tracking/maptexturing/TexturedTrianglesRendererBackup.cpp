@@ -330,6 +330,8 @@ bool TexturedTrianglesRendererBackup::renderMesh(const Rendering::Engine& engine
 	if (iFramebuffer == textureFramebufferMap_.cend())
 	{
 		iFramebuffer = textureFramebufferMap_.emplace(meshId, engine.factory().createTextureFramebuffer()).first;
+
+		clearFramebuffer = true;
 	}
 
 	const Rendering::TextureFramebufferRef& textureFramebuffer = iFramebuffer->second;
