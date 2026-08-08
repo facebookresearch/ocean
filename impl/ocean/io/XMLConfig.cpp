@@ -798,7 +798,7 @@ XMLConfig::XMLValue& XMLConfig::operator[](const std::string& name)
 bool XMLConfig::isEmpty() const
 {
 	ocean_assert(xmlDocument_);
-	return xmlDocument_->FirstChildElement() != nullptr;
+	return xmlDocument_->FirstChildElement() == nullptr;
 }
 
 const tinyxml2::XMLText* XMLConfig::firstText(const tinyxml2::XMLNode* xmlNode)
