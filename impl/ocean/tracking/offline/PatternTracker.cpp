@@ -644,6 +644,14 @@ PatternTracker::PatternTracker() :
 	patternCorners_[3] = Vector3(0, 0, 0);
 }
 
+PatternTracker::~PatternTracker()
+{
+	// the frame requests of the tracking thread are aborted via 'shouldStop_', 'stopThreadExplicitly()' alone would wait for them
+	shouldStop_ = true;
+
+	stopThreadExplicitly();
+}
+
 bool PatternTracker::setPattern(const Frame& frame, const Vector2& dimension)
 {
 	if (patternFrame_)

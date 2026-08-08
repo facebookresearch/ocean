@@ -329,6 +329,11 @@ class OCEAN_TRACKING_OFFLINE_EXPORT PatternTracker :
 		PatternTracker();
 
 		/**
+		 * Destructs a tracker object.
+		 */
+		~PatternTracker() override;
+
+		/**
 		 * Returns the current dimension of the tracking pattern.
 		 * @return Current tracking pattern dimension
 		 */
