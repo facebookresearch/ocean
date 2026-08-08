@@ -218,14 +218,18 @@ Basemap::TileIndexPairs Basemap::TileIndexPair::createNeighborhoodTiles(const Ti
 	ocean_assert(tileIndexPair.isValid());
 	ocean_assert(tileIndexPair.isInside(numberTilesOnLevel));
 
-	TileIndexPairs neighborhoodTiles;
-	neighborhoodTiles.reserve(9);
-
 	const unsigned int beginLatitudeIndex = (unsigned int)(std::max(0, int(tileIndexPair.latitudeIndex_) - int(maxDistance)));
 	const unsigned int endLatitudeIndex = std::min(tileIndexPair.latitudeIndex() + maxDistance + 1u, numberTilesOnLevel);
 
 	const unsigned int beginLongitudeIndex = (unsigned int)(std::max(0, int(tileIndexPair.longitudeIndex_) - int(maxDistance)));
 	const unsigned int endLongitudeIndex = std::min(tileIndexPair.longitudeIndex() + maxDistance + 1u, numberTilesOnLevel);
+
+	// the neighborhood is clipped at the borders of the tile grid, so it can be smaller than (maxDistance * 2 + 1)^2
+
+	const size_t expectedTiles = size_t(endLatitudeIndex - beginLatitudeIndex) * size_t(endLongitudeIndex - beginLongitudeIndex);
+
+	TileIndexPairs neighborhoodTiles;
+	neighborhoodTiles.reserve(expectedTiles);
 
 	for (unsigned int laIndex = beginLatitudeIndex; laIndex < endLatitudeIndex; ++laIndex)
 	{
@@ -235,7 +239,7 @@ Basemap::TileIndexPairs Basemap::TileIndexPair::createNeighborhoodTiles(const Ti
 		}
 	}
 
-	ocean_assert(neighborhoodTiles.size() >= 4 && neighborhoodTiles.size() <= 9);
+	ocean_assert(neighborhoodTiles.size() == expectedTiles);
 	return neighborhoodTiles;
 }
 
