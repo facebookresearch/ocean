@@ -15,7 +15,9 @@
 #include "ocean/math/Math.h"
 
 #include <array>
+#include <fstream>
 #include <istream>
+#include <sstream>
 
 namespace Ocean
 {
@@ -208,21 +210,21 @@ class OCEAN_IO_EXPORT Scanner
 
 				/**
 				 * Returns the integer value of this token.
-				 * @return Integer value
+				 * @return Integer value, with range (-infinity, infinity)
 				 */
-				int integer() const;
+				int32_t integer() const;
 
 				/**
-				 * Returns the float value of this token.
-				 * @return Float value
+				 * Returns the floating point value of this token.
+				 * @return Floating point value, with range (-infinity, infinity)
 				 */
-				Scalar number() const;
+				double number() const;
 
 				/**
-				 * Returns the integer or float value of this token.
-				 * @return Integer or float value as float value
+				 * Returns the integer or floating point value of this token.
+				 * @return Integer or floating point value, as floating point value, with range (-infinity, infinity)
 				 */
-				Scalar integerOrNumber() const;
+				double integerOrNumber() const;
 
 				/**
 				 * Returns the remaining line of this token.

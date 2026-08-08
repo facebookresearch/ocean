@@ -12,11 +12,6 @@
 
 #include "ocean/math/Numeric.h"
 
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-
 namespace Ocean
 {
 
@@ -89,7 +84,7 @@ const std::string& Scanner::Token::identifier() const
 	return data_;
 }
 
-int Scanner::Token::integer() const
+int32_t Scanner::Token::integer() const
 {
 	if (type_ != TOKEN_INTEGER)
 	{
@@ -109,7 +104,7 @@ int Scanner::Token::integer() const
 	throw OceanException(std::string("Failed to parse integer: ") + data_);
 }
 
-Scalar Scanner::Token::number() const
+double Scanner::Token::number() const
 {
 	if (type_ != TOKEN_NUMBER)
 	{
@@ -123,17 +118,33 @@ Scalar Scanner::Token::number() const
 
 	if (String::isNumber(data_, true /*acceptInteger*/, &value))
 	{
-		return Scalar(value);
+		return value;
 	}
 
 	throw OceanException(std::string("Failed to parse number: ") + data_);
 }
 
-Scalar Scanner::Token::integerOrNumber() const
+double Scanner::Token::integerOrNumber() const
 {
 	if (type_ == TOKEN_INTEGER)
 	{
-		return Scalar(integer());
+		int32_t integerValue = NumericT<int32_t>::minValue();
+
+		if (String::isInteger32(data_, &integerValue))
+		{
+			return double(integerValue);
+		}
+
+		// the literal does not fit into 32 bit, the caller asked for an integer or a number, so it is provided as number
+
+		double numberValue = 0.0;
+
+		if (String::isNumber(data_, true /*acceptInteger*/, &numberValue))
+		{
+			return numberValue;
+		}
+
+		throw OceanException(std::string("Failed to parse integer: ") + data_);
 	}
 
 	return number();
