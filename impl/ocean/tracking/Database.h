@@ -3304,11 +3304,18 @@ inline void Database::renameObjectPoint(const Index32 oldObjectPointId, const In
 		ocean_assert(iImagePoint->second.objectPointId() == oldObjectPointId);
 		iImagePoint->second.setObjectPointId(newObjectPointId);
 
-		ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), oldObjectPointId)) != poseObjectPointMap_.end());
-		poseObjectPointMap_.erase(index64(iImagePoint->second.poseId(), oldObjectPointId));
+		if (iImagePoint->second.poseId() != invalidId)
+		{
+			const Index64 oldPoseObjectPointId = index64(iImagePoint->second.poseId(), oldObjectPointId);
 
-		ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), newObjectPointId)) == poseObjectPointMap_.end());
-		poseObjectPointMap_.insert(std::make_pair(index64(iImagePoint->second.poseId(), newObjectPointId), newObjectPointId));
+			ocean_assert(poseObjectPointMap_.find(oldPoseObjectPointId) != poseObjectPointMap_.cend());
+			poseObjectPointMap_.erase(oldPoseObjectPointId);
+
+			const Index64 newPoseObjectPointId = index64(iImagePoint->second.poseId(), newObjectPointId);
+
+			ocean_assert(poseObjectPointMap_.find(newPoseObjectPointId) == poseObjectPointMap_.cend());
+			poseObjectPointMap_.insert(std::make_pair(newPoseObjectPointId, imagePointId));
+		}
 	}
 
 	objectPointMap_.insert(std::make_pair(newObjectPointId, std::move(iObjectPoint->second)));
