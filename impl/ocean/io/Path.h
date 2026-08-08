@@ -30,7 +30,7 @@ class OCEAN_IO_EXPORT Path
 		/**
 		 * Definition of different path types.
 		 */
-		enum Type
+		enum Type : int32_t
 		{
 			/// Invalid path type.
 			TYPE_INVALID = 0,
@@ -49,7 +49,7 @@ class OCEAN_IO_EXPORT Path
 		/**
 		 * Definition of path separators.
 		 */
-		enum Separator
+		enum Separator : char
 		{
 			/// Undefined separator.
 			SEPARATOR_UNDEFINED = 0,

@@ -190,16 +190,16 @@ char Path::defaultSeparator()
 {
 #if defined(_WINDOWS)
 
-	return '\\';
+	return SEPARATOR_BACKSLASH;
 
 #elif defined(_ANDROID) || defined(__APPLE__) || defined(__linux__) || defined(__EMSCRIPTEN__)
 
-	return '/';
+	return SEPARATOR_SLASH;
 
 #else
 
 	#error Check the implementation for this platform.
-	return '/';
+	return SEPARATOR_SLASH;
 
 #endif
 }
@@ -219,12 +219,12 @@ bool Path::operator==(const Path& right) const
 #if defined(_WINDOWS)
 
 	// on windows platform paths are not case sensitive
-	bool caseSensitive = false;
+	constexpr bool caseSensitive = false;
 
 #elif defined(_ANDROID) || defined(__APPLE__) || defined(__linux__) || defined(__EMSCRIPTEN__)
 
 	// on linux platform paths are case sensitive
-	bool caseSensitive = true;
+	constexpr bool caseSensitive = true;
 
 #else
 
@@ -232,19 +232,42 @@ bool Path::operator==(const Path& right) const
 
 #endif
 
+	std::string::const_iterator iLeft = pathValue_.begin();
+	std::string::const_iterator iRight = right.pathValue_.begin();
 
-	std::string::const_iterator iR = right.pathValue_.begin();
-	for (std::string::const_iterator iL = pathValue_.begin(); iL != pathValue_.end(); ++iL)
+	while (iLeft != pathValue_.end())
 	{
-		ocean_assert(iR != right.pathValue_.end());
+		ocean_assert(iRight != right.pathValue_.end());
 
-		const bool ls = isSeparator(*iL);
-		const bool rs = isSeparator(*iR);
+		const bool separatorLeft = isSeparator(*iLeft);
+		const bool separatorRight = isSeparator(*iRight);
 
-		if (ls != rs || (!ls && !rs && ((caseSensitive && *iL != *iR) || (!caseSensitive && tolower(*iL) != tolower(*iR)))))
+		if (separatorLeft != separatorRight)
 		{
 			return false;
 		}
+
+		if (!separatorLeft && !separatorRight)
+		{
+			if constexpr (caseSensitive)
+			{
+				if (*iLeft != *iRight)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				// tolower() is undefined for negative values, so the characters need to be converted first
+				if (tolower((unsigned char)(*iLeft)) != tolower((unsigned char)(*iRight)))
+				{
+					return false;
+				}
+			}
+		}
+
+		++iLeft;
+		++iRight;
 	}
 
 	return true;
