@@ -1337,10 +1337,24 @@ bool Scanner::readNumber(Token& token, const bool consumeBytes)
 
 	size_t pos = 1;
 	bool exponent = false;
+	bool dot = get() == '.';
 
 	while (true)
 	{
 		uint8_t c = get(pos++);
+
+		if (c == '.')
+		{
+			// a number holds at most one dot, and no dot behind the exponent
+
+			if (dot || exponent)
+			{
+				return false;
+			}
+
+			dot = true;
+			continue;
+		}
 
 		if (followingCharTable_[c] & CHAR_NUMBER)
 		{
@@ -1356,8 +1370,18 @@ bool Scanner::readNumber(Token& token, const bool consumeBytes)
 		{
 			exponent = true;
 
-			c = get(pos++);
-			if (c != '+' && c != '-')
+			// the sign of the exponent is optional, but at least one digit must follow
+
+			const uint8_t signCharacter = get(pos);
+
+			if (signCharacter == '+' || signCharacter == '-')
+			{
+				++pos;
+			}
+
+			const uint8_t digitCharacter = get(pos);
+
+			if (digitCharacter < '0' || digitCharacter > '9')
 			{
 				return false;
 			}

@@ -378,6 +378,36 @@ class OCEAN_BASE_EXPORT String
 
 		/**
 		 * Returns whether a given string stores a number value.
+		 * The string may start with a sign, may hold one dot, and may end with an exponent, the sign of the exponent is optional but at least one digit must follow it.
+		 * <pre>
+		 * value          acceptInteger = false   acceptInteger = true
+		 * "10.4"         accepted                accepted
+		 * "-9.0"         accepted                accepted
+		 * "+10.2"        accepted                accepted
+		 * "1."           accepted                accepted
+		 * ".5"           accepted                accepted
+		 * "-.5"          accepted                accepted
+		 * "1e5"          accepted                accepted
+		 * "1E5"          accepted                accepted
+		 * "1e+5"         accepted                accepted
+		 * ".5e3"         accepted                accepted
+		 * "-10.23e+10"   accepted                accepted
+		 * "10.5E-3"      accepted                accepted
+		 * "5"            rejected                accepted
+		 * "-5"           rejected                accepted
+		 * "+5"           rejected                accepted
+		 * "1.2.3"        rejected                rejected
+		 * "1..2"         rejected                rejected
+		 * "1e5.5"        rejected                rejected
+		 * "1e5e5"        rejected                rejected
+		 * "1e"           rejected                rejected
+		 * "1e+"          rejected                rejected
+		 * "0x10"         rejected                rejected
+		 * "1,5"          rejected                rejected
+		 * " 5"           rejected                rejected
+		 * "5 "           rejected                rejected
+		 * ""             rejected                rejected
+		 * </pre>
 		 * Any beginning or ending white space will violate the value conditions, therefore provide a trimmed string value.
 		 * @param stringValue String to be checked
 		 * @param acceptInteger True, if also strict integers will be accepted

@@ -648,6 +648,8 @@ class OCEAN_IO_EXPORT Scanner
 
 		/**
 		 * Tries to read a number as next token.
+		 * A number may start with a minus or a dot, holds at most one dot, and may end with an exponent, the sign of the exponent is optional but at least one digit must follow it.
+		 * The accepted format matches `String::isNumber()`, so that `Token::number()` can always convert the resulting token.
 		 * @param token Returning token
 		 * @param consumeBytes Determines whether the scanner consumes the read characters
 		 * @return True, if succeeded
