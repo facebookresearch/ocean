@@ -488,7 +488,8 @@ std::vector<bool> FileConfig::FileValue::boolValues() const
 			break;
 		}
 
-		start = stop;
+		// the separator must not become part of the next element, the comparison above is exact
+		start = string_.find_first_not_of(' ', stop);
 	}
 
 	return result;
