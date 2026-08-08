@@ -40,7 +40,10 @@ namespace Offline
 
 SLAMTracker::~SLAMTracker()
 {
+	// stop() unregisters the scheduler callback and requests the stop, but does not wait for the tracking thread
 	stop();
+
+	stopThreadExplicitly();
 }
 
 bool SLAMTracker::start()
