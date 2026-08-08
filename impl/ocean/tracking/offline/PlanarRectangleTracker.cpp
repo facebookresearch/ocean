@@ -526,6 +526,9 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizePose(const Frame& cu
 	Vectors3 objectPoints;
 	objectPoints.reserve(intermediateObjectPoints.size());
 
+	Vectors2 usedRectifiedInitialPoints;
+	usedRectifiedInitialPoints.reserve(intermediateObjectPoints.size());
+
 	for (size_t n = 0; n < rectifiedCurrentPoints.size(); n++)
 	{
 		// we apply the homography and an distortion as the current frame is distorted
@@ -536,6 +539,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizePose(const Frame& cu
 		{
 			cameraCurrentPoints.push_back(currentPoint);
 			objectPoints.push_back(intermediateObjectPoints[n]);
+			usedRectifiedInitialPoints.push_back(rectifiedInitialPoints[n]);
 		}
 	}
 
@@ -564,7 +568,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizePose(const Frame& cu
 		{
 			if (sqrErrors[n] <= Scalar(5 * 5)) // we accept a projection error of 5 pixels
 			{
-				validInitialImagePoints->push_back(camera_.distort<true>(initialHomography * rectifiedInitialPoints[n]));
+				validInitialImagePoints->push_back(camera_.distort<true>(initialHomography * usedRectifiedInitialPoints[n]));
 				validCurrentImagePoints->push_back(cameraCurrentPoints[n]);
 			}
 		}
