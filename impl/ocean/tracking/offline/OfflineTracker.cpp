@@ -448,7 +448,7 @@ void OfflineTracker::extrapolateCenterPoses(const OfflinePoses::Index invalidInd
 	{
 		leftValidIndex = invalidIndex - 1;
 
-		for (OfflinePoses::Index i = invalidIndex; i < invalidIndex + OfflinePoses::Index(number * 2u); ++i)
+		for (OfflinePoses::Index i = invalidIndex; i < invalidIndex + OfflinePoses::Index(number * 2u) && i < offlinePoses.endIndex(); ++i)
 		{
 			if (offlinePoses[i].isValid())
 			{
@@ -465,7 +465,7 @@ void OfflineTracker::extrapolateCenterPoses(const OfflinePoses::Index invalidInd
 
 		rightValidIndex = invalidIndex + 1;
 
-		for (OfflinePoses::Index i = invalidIndex; i > invalidIndex - OfflinePoses::Index(number * 2u); --i)
+		for (OfflinePoses::Index i = invalidIndex; i > invalidIndex - OfflinePoses::Index(number * 2u) && i >= offlinePoses.firstIndex(); --i)
 		{
 			if (offlinePoses[i].isValid())
 			{
@@ -480,18 +480,21 @@ void OfflineTracker::extrapolateCenterPoses(const OfflinePoses::Index invalidInd
 	ocean_assert(leftValidIndex != -1);
 	ocean_assert(rightValidIndex != -1);
 
+	if (leftValidIndex == -1 || rightValidIndex == -1)
+	{
+		// no valid pose within the search range, without this check the index would be used below and the number of invalid poses would underflow
+		return;
+	}
+
 	ocean_assert(offlinePoses[leftValidIndex].isValid());
 	ocean_assert(offlinePoses[rightValidIndex].isValid());
-
-	ocean_assert(leftValidIndex - 1 >= offlinePoses.firstIndex());
-	ocean_assert(rightValidIndex + 1 <= offlinePoses.lastIndex());
 
 	const size_t invalidPoses = rightValidIndex - leftValidIndex - 1;
 
 	OfflinePoses leftPoses(leftValidIndex + 1, invalidPoses), rightPoses(leftValidIndex + 1, invalidPoses);
 
 	// check whether we have two valid poses on the left
-	if (offlinePoses[leftValidIndex - 1].isValid())
+	if (offlinePoses.isValidIndex(leftValidIndex - 1) && offlinePoses[leftValidIndex - 1].isValid())
 	{
 		// check how many poses can be used for extrapolation
 		OfflinePoses::Index lastValidIndex = leftValidIndex - 1;
@@ -536,7 +539,7 @@ void OfflineTracker::extrapolateCenterPoses(const OfflinePoses::Index invalidInd
 	}
 
 	// check whether we have two valid poses on the right
-	if (offlinePoses[rightValidIndex + 1].isValid())
+	if (offlinePoses.isValidIndex(rightValidIndex + 1) && offlinePoses[rightValidIndex + 1].isValid())
 	{
 		// check how many poses can be used for extrapolation
 		OfflinePoses::Index lastValidIndex = rightValidIndex + 1;
