@@ -149,12 +149,13 @@ OculusTagTracker& OculusTagTracker::operator=(OculusTagTracker&& otherTracker)
 		frameCounter_ = otherTracker.frameCounter_;
 		trackedTagMap_ = std::move(otherTracker.trackedTagMap_);
 
+		previous_world_T_device_ = otherTracker.previous_world_T_device_;
+
 		for (unsigned int cameraIndex = 0u; cameraIndex < 2u; ++cameraIndex)
 		{
 			previousYFrames_[cameraIndex] = std::move(otherTracker.previousYFrames_[cameraIndex]);
 			previousFramePyramids_[cameraIndex] = std::move(otherTracker.previousFramePyramids_[cameraIndex]);
 
-			previous_world_T_device_[cameraIndex] = std::move(otherTracker.previous_world_T_device_[cameraIndex]);
 			previousDevice_T_cameras_[cameraIndex] = std::move(otherTracker.previousDevice_T_cameras_[cameraIndex]);
 		}
 	}
