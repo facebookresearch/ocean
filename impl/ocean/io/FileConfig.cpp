@@ -917,12 +917,12 @@ bool FileConfig::readSubValues(FileValues& values, Scanner& scanner, bool stopWi
 					valueString += std::string("\"") + multiValueToken.raw() + std::string("\"");
 					multiValueType = TYPE_MULTI_STRING;
 				}
-				else if (valueToken.isKeyword(ConfigScanner::KEYWORD_TRUE) && (multiValueType == TYPE_UNDEFINED || multiValueType == TYPE_MULTI_BOOL))
+				else if (multiValueToken.isKeyword(ConfigScanner::KEYWORD_TRUE) && (multiValueType == TYPE_UNDEFINED || multiValueType == TYPE_MULTI_BOOL))
 				{
 					valueString += "true";
 					multiValueType = TYPE_MULTI_BOOL;
 				}
-				else if (valueToken.isKeyword(ConfigScanner::KEYWORD_FALSE) && (multiValueType == TYPE_UNDEFINED || multiValueType == TYPE_MULTI_BOOL))
+				else if (multiValueToken.isKeyword(ConfigScanner::KEYWORD_FALSE) && (multiValueType == TYPE_UNDEFINED || multiValueType == TYPE_MULTI_BOOL))
 				{
 					valueString += "false";
 					multiValueType = TYPE_MULTI_BOOL;
