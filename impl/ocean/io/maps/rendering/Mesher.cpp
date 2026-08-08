@@ -125,8 +125,6 @@ Mesher::Mesh Mesher::createRoads(const Basemap::SharedObjects& objects, const do
 
 		const Scalar metricNormalization = Scalar(double(targetSize) / titleMetricExtent);
 
-		const Scalar normalizedGroundPlaneOffset = groundPlaneOffset * metricNormalization;
-
 		switch (object->objectType())
 		{
 			case Basemap::Object::OT_ROAD:
@@ -134,7 +132,7 @@ Mesher::Mesh Mesher::createRoads(const Basemap::SharedObjects& objects, const do
 				const Basemap::Road* road = reinterpret_cast<Basemap::Road*>(object.get());
 				ocean_assert(road != nullptr);
 
-				addRoad(*road, origin, pixelPositionNormalization, metricNormalization, vertices, normals, triangleFaces, normalizedGroundPlaneOffset, roadWidthMap);
+				addRoad(*road, origin, pixelPositionNormalization, metricNormalization, vertices, normals, triangleFaces, groundPlaneOffset, roadWidthMap);
 				break;
 			}
 
@@ -172,8 +170,6 @@ Mesher::Mesh Mesher::createTransits(const Basemap::SharedObjects& objects, const
 
 		const Scalar metricNormalization = Scalar(double(targetSize) / titleMetricExtent);
 
-		const Scalar normalizedGroundPlaneOffset = groundPlaneOffset * metricNormalization;
-
 		switch (object->objectType())
 		{
 			case Basemap::Object::OT_TRANSIT:
@@ -181,7 +177,7 @@ Mesher::Mesh Mesher::createTransits(const Basemap::SharedObjects& objects, const
 				const Basemap::Transit* transit = reinterpret_cast<Basemap::Transit*>(object.get());
 				ocean_assert(transit != nullptr);
 
-				addTransit(*transit, origin, pixelPositionNormalization, metricNormalization, vertices, normals, triangleFaces, normalizedGroundPlaneOffset);
+				addTransit(*transit, origin, pixelPositionNormalization, metricNormalization, vertices, normals, triangleFaces, groundPlaneOffset);
 				break;
 			}
 
