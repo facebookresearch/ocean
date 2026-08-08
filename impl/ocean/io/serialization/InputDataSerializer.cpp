@@ -68,9 +68,9 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 
 	bool correctEndOfStreamIndication = false;
 
-	if (preparsedChannels != nullptr)
+	if (preparsedChannels != nullptr || isStreamCorrupted != nullptr)
 	{
-		// we pre-parse the channels to ensure that we can register the channels before the first sample arrives
+		// we pre-parse the channels to ensure that we can register the channels before the first sample arrives, the pre-parsing is also the only way to determine whether the stream is corrupted
 
 		Channels channels;
 		channels.reserve(16);
@@ -164,7 +164,10 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 			return false;
 		}
 
-		*preparsedChannels = std::move(channels);
+		if (preparsedChannels != nullptr)
+		{
+			*preparsedChannels = std::move(channels);
+		}
 	}
 
 	if (isStreamCorrupted != nullptr)

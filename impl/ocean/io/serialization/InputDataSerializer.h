@@ -141,7 +141,7 @@ class OCEAN_IO_SERIALIZATION_EXPORT InputDataSerializer : public DataSerializer
 		/**
 		 * Initializes the input data serializer.
 		 * The serializer will create the input stream and read the header.
-		 * Optionally, the serializer can pre-parse all channels before returning.
+		 * Optionally, the serializer can pre-parse all channels before returning, the stream is pre-parsed whenever at least one of both output parameters is requested.
 		 * @param preparsedChannels Optional output parameter to receive all channels that were pre-parsed, nullptr if not of interest
 		 * @param isStreamCorrupted Optional output parameter to receive whether the stream is corrupted (missing end-of-stream indication), nullptr if not of interest
 		 * @return True, if succeeded
