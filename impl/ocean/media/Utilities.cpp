@@ -12,6 +12,8 @@
 #include "ocean/media/ImageRecorder.h"
 #include "ocean/media/Manager.h"
 
+#include <cstring>
+
 namespace Ocean
 {
 
@@ -97,12 +99,12 @@ bool Utilities::saveImage(const Frame& frame, const std::string& imageType, std:
 
 void Utilities::encodeFrame(const Frame& frame, const std::string& imageType, Buffer& buffer)
 {
-	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
-
 	const size_t offset = buffer.size();
 	buffer.resize(buffer.size() + 8 + 8 + imageType.size());
 
-	((unsigned long long*)(buffer.data() + offset))[0] = (unsigned long long)imageType.size();
+	const uint64_t bytesType = uint64_t(imageType.size());
+	memcpy(buffer.data() + offset, &bytesType, sizeof(bytesType));
+
 	memcpy(buffer.data() + offset + 8, imageType.c_str(), imageType.size());
 
 	if (frame.isValid())
@@ -110,33 +112,38 @@ void Utilities::encodeFrame(const Frame& frame, const std::string& imageType, Bu
 		Media::Utilities::saveImage(frame, imageType, buffer);
 	}
 
-	((unsigned long long*)(buffer.data() + offset + 8 + imageType.size()))[0] = (unsigned long long)(buffer.size() - offset - 8 - 8 - imageType.size());
+	const uint64_t bytesData = uint64_t(buffer.size() - offset - 8 - 8 - imageType.size());
+	memcpy(buffer.data() + offset + 8 + imageType.size(), &bytesData, sizeof(bytesData));
 }
 
 bool Utilities::decodeFrame(const uint8_t*& data, size_t& size, Frame& frame)
 {
-	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
-
 	if (size < 16)
 	{
 		return false;
 	}
 
-	const size_t bytesType = size_t(((unsigned long long*)data)[0]);
+	uint64_t bytesTypeValue = 0ull;
+	memcpy(&bytesTypeValue, data, sizeof(bytesTypeValue));
 
-	if (bytesType > size - 16)
+	if (bytesTypeValue > uint64_t(size - 16))
 	{
 		return false;
 	}
+
+	const size_t bytesType = size_t(bytesTypeValue);
 
 	std::string frameType((char*)data + 8, bytesType);
 
-	const size_t bytesData = size_t(((unsigned long long*)(data + 8 + bytesType))[0]);
+	uint64_t bytesDataValue = 0ull;
+	memcpy(&bytesDataValue, data + 8 + bytesType, sizeof(bytesDataValue));
 
-	if (bytesData > size - 16 - bytesType)
+	if (bytesDataValue > uint64_t(size - 16 - bytesType))
 	{
 		return false;
 	}
+
+	const size_t bytesData = size_t(bytesDataValue);
 
 	frame = loadImage(data + 8 + bytesType + 8, bytesData, frameType);
 
