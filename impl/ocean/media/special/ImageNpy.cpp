@@ -67,19 +67,19 @@ Frame ImageNpy::decodeImage(const void* buffer, const size_t size)
 	switch (frameType.bytesPerDataType())
 	{
 		case 1u:
-			CV::FrameTransposer::transpose<uint8_t, 1u>((const uint8_t*)(remainingBuffer), frame.data<uint8_t>(), frame.width(), frame.height(), sourcePaddingElements, frame.paddingElements(), nullptr);
+			CV::FrameTransposer::transpose<uint8_t, 1u>((const uint8_t*)(remainingBuffer), frame.data<uint8_t>(), frame.height(), frame.width(), sourcePaddingElements, frame.paddingElements(), nullptr);
 			break;
 
 		case 2u:
-			CV::FrameTransposer::transpose<uint16_t, 1u>((const uint16_t*)(remainingBuffer), frame.data<uint16_t>(), frame.width(), frame.height(), sourcePaddingElements, frame.paddingElements(), nullptr);
+			CV::FrameTransposer::transpose<uint16_t, 1u>((const uint16_t*)(remainingBuffer), frame.data<uint16_t>(), frame.height(), frame.width(), sourcePaddingElements, frame.paddingElements(), nullptr);
 			break;
 
 		case 4u:
-			CV::FrameTransposer::transpose<uint32_t, 1u>((const uint32_t*)(remainingBuffer), frame.data<uint32_t>(), frame.width(), frame.height(), sourcePaddingElements, frame.paddingElements(), nullptr);
+			CV::FrameTransposer::transpose<uint32_t, 1u>((const uint32_t*)(remainingBuffer), frame.data<uint32_t>(), frame.height(), frame.width(), sourcePaddingElements, frame.paddingElements(), nullptr);
 			break;
 
 		case 8u:
-			CV::FrameTransposer::transpose<uint64_t, 1u>((const uint64_t*)(remainingBuffer), frame.data<uint64_t>(), frame.width(), frame.height(), sourcePaddingElements, frame.paddingElements(), nullptr);
+			CV::FrameTransposer::transpose<uint64_t, 1u>((const uint64_t*)(remainingBuffer), frame.data<uint64_t>(), frame.height(), frame.width(), sourcePaddingElements, frame.paddingElements(), nullptr);
 			break;
 
 		default:
