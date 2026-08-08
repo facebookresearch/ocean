@@ -12,7 +12,7 @@
 
 #include "ocean/base/Config.h"
 
-#include <map>
+#include <memory>
 
 // @cond
 namespace tinyxml2
@@ -250,7 +250,7 @@ class OCEAN_IO_EXPORT XMLConfig final : public Config
 		/**
 		 * Definition of a vector holding values.
 		 */
-		using XMLValues = std::vector<XMLValue*>;
+		using XMLValues = std::vector<std::unique_ptr<XMLValue>>;
 
 	public:
 
@@ -391,7 +391,7 @@ class OCEAN_IO_EXPORT XMLConfig final : public Config
 	protected:
 
 		/// XML parser.
-		tinyxml2::XMLDocument* xmlDocument_ = nullptr;
+		std::unique_ptr<tinyxml2::XMLDocument> xmlDocument_;
 
 		/// XML values.
 		XMLValues xmlIntermediateValues_;

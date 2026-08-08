@@ -99,7 +99,7 @@ XMLConfig::XMLValue& XMLConfig::XMLValue::value(const unsigned int index, std::s
 				name = std::string(element->Name());
 			}
 
-			xmlConfig_->xmlIntermediateValues_.push_back(new XMLValue(xmlConfig_, element));
+			xmlConfig_->xmlIntermediateValues_.push_back(std::make_unique<XMLValue>(xmlConfig_, element));
 			return *xmlConfig_->xmlIntermediateValues_.back();
 		}
 
@@ -131,8 +131,8 @@ bool XMLConfig::XMLValue::value(const unsigned int index, std::string& name, Val
 				name = std::string(element->Name());
 			}
 
-			xmlConfig_->xmlIntermediateValues_.push_back(new XMLValue(xmlConfig_, element));
-			*value = xmlConfig_->xmlIntermediateValues_.back();
+			xmlConfig_->xmlIntermediateValues_.push_back(std::make_unique<XMLValue>(xmlConfig_, element));
+			*value = xmlConfig_->xmlIntermediateValues_.back().get();
 			return true;
 		}
 
@@ -157,7 +157,7 @@ XMLConfig::XMLValue& XMLConfig::XMLValue::value(const std::string& name, const u
 	{
 		if (count == index)
 		{
-			xmlConfig_->xmlIntermediateValues_.push_back(new XMLValue(xmlConfig_, element));
+			xmlConfig_->xmlIntermediateValues_.push_back(std::make_unique<XMLValue>(xmlConfig_, element));
 			return *xmlConfig_->xmlIntermediateValues_.back();
 		}
 
@@ -184,8 +184,8 @@ bool XMLConfig::XMLValue::value(const std::string& name, const unsigned int inde
 	{
 		if (count == index)
 		{
-			xmlConfig_->xmlIntermediateValues_.push_back(new XMLValue(xmlConfig_, element));
-			*value = xmlConfig_->xmlIntermediateValues_.back();
+			xmlConfig_->xmlIntermediateValues_.push_back(std::make_unique<XMLValue>(xmlConfig_, element));
+			*value = xmlConfig_->xmlIntermediateValues_.back().get();
 			return true;
 		}
 
@@ -206,7 +206,7 @@ XMLConfig::XMLValue& XMLConfig::XMLValue::add(const std::string& name)
 	tinyxml2::XMLElement* element = xmlNode_->GetDocument()->NewElement(name.c_str());
 	xmlNode_->InsertEndChild(element);
 
-	xmlConfig_->xmlIntermediateValues_.push_back(new XMLValue(xmlConfig_, element));
+	xmlConfig_->xmlIntermediateValues_.push_back(std::make_unique<XMLValue>(xmlConfig_, element));
 	return *xmlConfig_->xmlIntermediateValues_.back();
 }
 
@@ -478,13 +478,14 @@ XMLConfig::XMLValue::operator bool() const
 }
 
 XMLConfig::XMLConfig() :
+	xmlDocument_(std::make_unique<tinyxml2::XMLDocument>()),
 	inputStream_(inputFileStream_)
 {
 	// nothing to do here
 }
 
 XMLConfig::XMLConfig(const std::string& filename, const bool read) :
-	xmlDocument_(new tinyxml2::XMLDocument()),
+	xmlDocument_(std::make_unique<tinyxml2::XMLDocument>()),
 	filename_(filename),
 	inputStream_(inputFileStream_)
 {
@@ -497,7 +498,7 @@ XMLConfig::XMLConfig(const std::string& filename, const bool read) :
 }
 
 XMLConfig::XMLConfig(std::istream& inputStream, const bool read) :
-	xmlDocument_(new tinyxml2::XMLDocument()),
+	xmlDocument_(std::make_unique<tinyxml2::XMLDocument>()),
 	inputStream_(inputStream)
 {
 	if (read)
@@ -508,12 +509,7 @@ XMLConfig::XMLConfig(std::istream& inputStream, const bool read) :
 
 XMLConfig::~XMLConfig()
 {
-	for (XMLValues::iterator i = xmlIntermediateValues_.begin(); i != xmlIntermediateValues_.end(); ++i)
-	{
-		delete *i;
-	}
-
-	delete xmlDocument_;
+	// nothing to do here
 }
 
 bool XMLConfig::setFilename(const std::string& filename, const bool read)
@@ -738,7 +734,7 @@ XMLConfig::XMLValue& XMLConfig::value(const unsigned int index, std::string& nam
 {
 	ocean_assert(xmlDocument_);
 
-	XMLValue value(this, xmlDocument_);
+	XMLValue value(this, xmlDocument_.get());
 	return value.value(index, name);
 }
 
@@ -747,7 +743,7 @@ bool XMLConfig::value(const unsigned int index, std::string& name, Value** value
 	ocean_assert(value);
 	ocean_assert(xmlDocument_);
 
-	XMLValue xmlValue(this, xmlDocument_);
+	XMLValue xmlValue(this, xmlDocument_.get());
 	return xmlValue.value(index, name, value);
 }
 
@@ -755,7 +751,7 @@ XMLConfig::XMLValue& XMLConfig::value(const std::string& name, const unsigned in
 {
 	ocean_assert(xmlDocument_);
 
-	XMLValue value(this, xmlDocument_);
+	XMLValue value(this, xmlDocument_.get());
 	return value.value(name, index);
 }
 
@@ -764,7 +760,7 @@ bool XMLConfig::value(const std::string& name, const unsigned int index, Value**
 	ocean_assert(value);
 	ocean_assert(xmlDocument_);
 
-	XMLValue xmlValue(this, xmlDocument_);
+	XMLValue xmlValue(this, xmlDocument_.get());
 	return xmlValue.value(name, index, value);
 }
 
@@ -782,7 +778,7 @@ XMLConfig::XMLValue& XMLConfig::add(const std::string& name)
 
 	xmlDocument_->InsertEndChild(newElement);
 
-	xmlIntermediateValues_.push_back(new XMLValue(this, newElement));
+	xmlIntermediateValues_.push_back(std::make_unique<XMLValue>(this, newElement));
 	return *xmlIntermediateValues_.back();
 }
 
