@@ -3263,18 +3263,18 @@ void Database::removeObjectPointAndAttachedImagePoints(const Index32 objectPoint
 		const ImagePointMap::iterator iImagePoint = imagePointMap_.find(imagePointId);
 		ocean_assert(iImagePoint != imagePointMap_.cend());
 
-		if (iImagePoint->second.poseId() != invalidId)
-		{
-			ocean_assert(poseObjectPointMap_.find(index64(iImagePoint->second.poseId(), objectPointId)) != poseObjectPointMap_.cend());
-			poseObjectPointMap_.erase(index64(iImagePoint->second.poseId(), objectPointId));
-		}
-
 		const Index32 poseId = iImagePoint->second.poseId();
 
-		PoseMap::iterator iPose = poseMap_.find(poseId);
-		ocean_assert(iPose != poseMap_.cend());
+		if (poseId != invalidId)
+		{
+			ocean_assert(poseObjectPointMap_.find(index64(poseId, objectPointId)) != poseObjectPointMap_.cend());
+			poseObjectPointMap_.erase(index64(poseId, objectPointId));
 
-		iPose->second.unregisterImagePoint(imagePointId);
+			const PoseMap::iterator iPose = poseMap_.find(poseId);
+			ocean_assert(iPose != poseMap_.cend());
+
+			iPose->second.unregisterImagePoint(imagePointId);
+		}
 
 		imagePointMap_.erase(iImagePoint);
 	}
