@@ -850,7 +850,7 @@ Basemap::SharedObject Basemap::parseTransit(vtzero::feature& vtzeroFeature, Pixe
 				}
 				else
 				{
-					ocean_assert(false && "Invalid type!");
+					Log::warning() << "Unknown basemap transit class: " << value.to_string();
 				}
 			}
 		}
