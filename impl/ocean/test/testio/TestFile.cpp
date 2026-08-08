@@ -39,6 +39,42 @@ bool TestFile::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("name"))
+	{
+		testResult = testName();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("base"))
+	{
+		testResult = testBase();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("basename"))
+	{
+		testResult = testBaseName();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
+	if (selector.shouldRun("extension"))
+	{
+		testResult = testExtension();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	Log::info() << testResult;
 
 	return testResult.succeeded();
@@ -49,6 +85,26 @@ bool TestFile::test(const double testDuration, const TestSelector& selector)
 TEST(TestFile, FileExists)
 {
 	EXPECT_TRUE(TestFile::testFileExists(GTEST_TEST_DURATION));
+}
+
+TEST(TestFile, Name)
+{
+	EXPECT_TRUE(TestFile::testName());
+}
+
+TEST(TestFile, Base)
+{
+	EXPECT_TRUE(TestFile::testBase());
+}
+
+TEST(TestFile, BaseName)
+{
+	EXPECT_TRUE(TestFile::testBaseName());
+}
+
+TEST(TestFile, Extension)
+{
+	EXPECT_TRUE(TestFile::testExtension());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -105,6 +161,132 @@ bool TestFile::testFileExists(const double testDuration)
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFile::testName()
+{
+	Log::info() << "Name test:";
+
+	Validation validation;
+
+	// the paths are relative, an absolute path is platform specific
+
+	const FilenamePairs filenamePairs =
+	{
+		{"example.bmp", "example.bmp"},
+		{"example", "example"},
+		{"example.tar.gz", "example.tar.gz"},
+		{"second/example.bmp", "example.bmp"},
+		{"first/second/example.txt", "example.txt"},
+		{"first/second/example", "example"},
+		{"first.second/example", "example"},
+		{"first.second/example.txt", "example.txt"}
+	};
+
+	for (const FilenamePair& filenamePair : filenamePairs)
+	{
+		const IO::File file(filenamePair.first);
+
+		OCEAN_EXPECT_TRUE(validation, file.isValid());
+		OCEAN_EXPECT_EQUAL(validation, file.name(), filenamePair.second);
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFile::testBase()
+{
+	Log::info() << "Base test:";
+
+	Validation validation;
+
+	const FilenamePairs filenamePairs =
+	{
+		{"example.bmp", "example"},
+		{"example", "example"},
+		{"example.tar.gz", "example.tar"},
+		{"second/example.bmp", "second/example"},
+		{"first/second/example.txt", "first/second/example"},
+		{"first/second/example", "first/second/example"},
+		{"first.second/example", "first.second/example"},
+		{"first.second/example.txt", "first.second/example"}
+	};
+
+	for (const FilenamePair& filenamePair : filenamePairs)
+	{
+		const IO::File file(filenamePair.first);
+
+		OCEAN_EXPECT_TRUE(validation, file.isValid());
+		OCEAN_EXPECT_EQUAL(validation, file.base(), filenamePair.second);
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFile::testBaseName()
+{
+	Log::info() << "Base name test:";
+
+	Validation validation;
+
+	const FilenamePairs filenamePairs =
+	{
+		{"example.bmp", "example"},
+		{"example", "example"},
+		{"example.tar.gz", "example.tar"},
+		{"second/example.bmp", "example"},
+		{"first/second/example.txt", "example"},
+		{"first/second/example", "example"},
+		{"first.second/example", "example"},
+		{"first.second/example.txt", "example"}
+	};
+
+	for (const FilenamePair& filenamePair : filenamePairs)
+	{
+		const IO::File file(filenamePair.first);
+
+		OCEAN_EXPECT_TRUE(validation, file.isValid());
+		OCEAN_EXPECT_EQUAL(validation, file.baseName(), filenamePair.second);
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFile::testExtension()
+{
+	Log::info() << "Extension test:";
+
+	Validation validation;
+
+	const FilenamePairs filenamePairs =
+	{
+		{"example.bmp", "bmp"},
+		{"example", ""},
+		{"example.tar.gz", "gz"},
+		{"second/example.bmp", "bmp"},
+		{"first/second/example.txt", "txt"},
+		{"first/second/example", ""},
+		{"first.second/example", ""},
+		{"first.second/example.txt", "txt"}
+	};
+
+	for (const FilenamePair& filenamePair : filenamePairs)
+	{
+		const IO::File file(filenamePair.first);
+
+		OCEAN_EXPECT_TRUE(validation, file.isValid());
+		OCEAN_EXPECT_EQUAL(validation, file.extension(), filenamePair.second);
+	}
 
 	Log::info() << "Validation: " << validation;
 

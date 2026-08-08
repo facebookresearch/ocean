@@ -91,28 +91,28 @@ std::string File::base() const
 {
 	ocean_assert(isValid());
 
-	const std::string::size_type pos = pathValue_.rfind('.');
+	const std::string::size_type dotPosition = extensionPosition(pathValue_);
 
-	if (pos == std::string::npos)
+	if (dotPosition == std::string::npos)
 	{
-		return std::string();
+		return pathValue_;
 	}
 
-	return pathValue_.substr(0, pos);
+	return pathValue_.substr(0, dotPosition);
 }
 
 std::string File::extension() const
 {
 	ocean_assert(isValid());
 
-	const std::string::size_type pos = pathValue_.rfind('.');
+	const std::string::size_type dotPosition = extensionPosition(pathValue_);
 
-	if (pos == std::string::npos)
+	if (dotPosition == std::string::npos)
 	{
 		return std::string();
 	}
 
-	return pathValue_.substr(pos + 1);
+	return pathValue_.substr(dotPosition + 1);
 }
 
 std::string File::name() const
@@ -147,16 +147,36 @@ std::string File::baseName() const
 		}
 	}
 
-	// the extension is separated by the last dot within the local name, a dot in a directory does not count
+	const std::string::size_type dotPosition = extensionPosition(pathValue_);
 
-	const std::string::size_type dotPosition = pathValue_.rfind('.');
-
-	if (dotPosition == std::string::npos || dotPosition < nameStart)
+	if (dotPosition == std::string::npos)
 	{
 		return pathValue_.substr(nameStart);
 	}
 
 	return pathValue_.substr(nameStart, dotPosition - nameStart);
+}
+
+std::string::size_type File::extensionPosition(const std::string& path)
+{
+	const std::string::size_type dotPosition = path.rfind('.');
+
+	if (dotPosition == std::string::npos)
+	{
+		return std::string::npos;
+	}
+
+	// a dot within a directory does not separate an extension
+
+	for (std::string::size_type n = dotPosition + 1; n < path.size(); ++n)
+	{
+		if (isSeparator(path[n]))
+		{
+			return std::string::npos;
+		}
+	}
+
+	return dotPosition;
 }
 
 ScopedFile::~ScopedFile()

@@ -454,7 +454,7 @@ bool ImageFileSequence::determineSequence()
 	}
 
 	const std::string fileBase = file.base();
-	if (fileBase.empty())
+	if (fileBase.empty() || file.extension().empty())
 	{
 		return false;
 	}

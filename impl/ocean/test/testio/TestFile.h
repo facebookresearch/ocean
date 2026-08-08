@@ -12,6 +12,10 @@
 
 #include "ocean/test/TestSelector.h"
 
+#include <string>
+#include <utility>
+#include <vector>
+
 namespace Ocean
 {
 
@@ -27,6 +31,18 @@ namespace TestIO
  */
 class OCEAN_TEST_IO_EXPORT TestFile
 {
+	protected:
+
+		/**
+		 * Definition of a pair combining a filename with the expected result.
+		 */
+		using FilenamePair = std::pair<std::string, std::string>;
+
+		/**
+		 * Definition of a vector holding pairs of filenames and expected results.
+		 */
+		using FilenamePairs = std::vector<FilenamePair>;
+
 	public:
 
 		/**
@@ -43,6 +59,30 @@ class OCEAN_TEST_IO_EXPORT TestFile
 		 * @return True, if succeeded
 		 */
 		static bool testFileExists(const double testDuration);
+
+		/**
+		 * Tests the name function.
+		 * @return True, if succeeded
+		 */
+		static bool testName();
+
+		/**
+		 * Tests the base function.
+		 * @return True, if succeeded
+		 */
+		static bool testBase();
+
+		/**
+		 * Tests the base name function.
+		 * @return True, if succeeded
+		 */
+		static bool testBaseName();
+
+		/**
+		 * Tests the extension function.
+		 * @return True, if succeeded
+		 */
+		static bool testExtension();
 };
 
 }

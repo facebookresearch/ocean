@@ -69,30 +69,60 @@ class OCEAN_IO_EXPORT File : public Path
 		/**
 		 * Returns the base of this file.
 		 * The file's base is the entire file path without file extension (and the character in front of the extension).<br>
-		 * The base of e.g. "example.bmp" is "example"; "/first/second/example.txt" is "/first/second/example"
+		 * In case the file does not have an extension, the base is the entire file path.
+		 * <pre>
+		 * File:                      base():
+		 * "example.bmp"              "example"
+		 * "example"                  "example"
+		 * "example.tar.gz"           "example.tar"
+		 * "/first/second/image.png"  "/first/second/image"
+		 * "first.second/example"     "first.second/example"
+		 * </pre>
 		 * @return File base
 		 */
 		std::string base() const;
 
 		/**
 		 * Returns the extension of this file.
-		 * The file's extension of e.g. "example.bmp" is "bmp".
-		 * @return File extension
+		 * A dot within a directory does not separate an extension.
+		 * <pre>
+		 * File:                      extension():
+		 * "example.bmp"              "bmp"
+		 * "example"                  ""
+		 * "example.tar.gz"           "gz"
+		 * "/first/second/image.png"  "png"
+		 * "first.second/example"     ""
+		 * </pre>
+		 * @return File extension, empty if the file does not have an extension
 		 */
 		std::string extension() const;
 
 		/**
 		 * Returns the name of this file.
-		 * The file's name is the local filename including the file extension without the prefix path.<br>
-		 * The name of e.g. "example.bmp" is "example.bmp"; "/first/second/example.txt" is "example.txt"
+		 * The file's name is the local filename including the file extension without the prefix path.
+		 * <pre>
+		 * File:                      name():
+		 * "example.bmp"              "example.bmp"
+		 * "example"                  "example"
+		 * "example.tar.gz"           "example.tar.gz"
+		 * "/first/second/image.png"  "image.png"
+		 * "first.second/example"     "example"
+		 * </pre>
 		 * @return File name
 		 */
 		std::string name() const;
 
 		/**
 		 * Returns the base name of this file.
-		 * The base name is the local filename without extension.<br>
-		 * The base name of e.g. "example.bmp" is "example"; "/first/second/example.txt" is "example"
+		 * The base name is the local filename without extension.
+		 * <pre>
+		 * File:                      baseName():
+		 * "example.bmp"              "example"
+		 * "example"                  "example"
+		 * "example.tar.gz"           "example.tar"
+		 * "/first/second/image.png"  "image"
+		 * "first.second/example"     "example"
+		 * </pre>
 		 * @return File base name
 		 */
 		std::string baseName() const;
@@ -107,6 +137,16 @@ class OCEAN_IO_EXPORT File : public Path
 		static bool existsApple(const std::string& file);
 
 #endif // defined(__APPLE__)
+
+	protected:
+
+		/**
+		 * Returns the position of the dot separating the extension from the remaining path.
+		 * A dot within a directory does not separate an extension, e.g. "first.second/example" does not have an extension.
+		 * @param path The path for which the position will be determined
+		 * @return The position of the dot, 'npos' if the path does not have an extension
+		 */
+		static std::string::size_type extensionPosition(const std::string& path);
 };
 
 /**
