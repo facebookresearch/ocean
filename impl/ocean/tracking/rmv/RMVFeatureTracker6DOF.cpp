@@ -741,7 +741,9 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 	HomogenousMatrix4 resultingFlippedCamera_T_world;
 	IndexPairs32 correspondences;
 
-	if (numberImagePoints < numberObjectPoints)
+	const bool lessImagePoints = numberImagePoints < numberObjectPoints;
+
+	if (lessImagePoints)
 	{
 		if (!RandomModelVariation::optimizedPoseFromPointCloudsWithOneInitialPoseIF<true>(roughFlippedCamera_T_world, camera, objectPoints.data(), numberObjectPoints, imagePoints.data(), numberImagePoints, numberImagePoints * 60u / 100u, trackerRandomGenerator_, resultingFlippedCamera_T_world, Geometry::Error::ED_APPROXIMATED, maxPixelError0, Vector3(maximalTranslationSmall, maximalTranslationSmall, maximalTranslationSmall), Numeric::deg2rad(5), timeout, nullptr, &correspondences, nullptr, worker))
 		{
@@ -779,11 +781,16 @@ bool RMVFeatureTracker6DOF::determinePoseWithRoughPose(const HomogenousMatrix4& 
 
 	for (const IndexPair32& correspondence : correspondences)
 	{
-		ocean_assert(correspondence.first < imagePoints.size());
-		ocean_assert(correspondence.second < trackerFeatureMap_.objectPoints().size());
+		// the correspondences hold the index of the smaller point group first, so image point first for the tLessImagePoints case and object point first otherwise
 
-		validObjectPoints.push_back(trackerFeatureMap_.objectPoints()[correspondence.first]);
-		validImagePoints.push_back(imagePoints[correspondence.second]);
+		const Index32 imagePointIndex = lessImagePoints ? correspondence.first : correspondence.second;
+		const Index32 objectPointIndex = lessImagePoints ? correspondence.second : correspondence.first;
+
+		ocean_assert(imagePointIndex < imagePoints.size());
+		ocean_assert(objectPointIndex < trackerFeatureMap_.objectPoints().size());
+
+		validObjectPoints.push_back(trackerFeatureMap_.objectPoints()[objectPointIndex]);
+		validImagePoints.push_back(imagePoints[imagePointIndex]);
 	}
 
 	ocean_assert(!validImagePoints.empty());
