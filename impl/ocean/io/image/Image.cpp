@@ -63,14 +63,14 @@ bool encodeImage(const Frame& frame, const std::string& imageType, std::vector<u
 #if defined(__APPLE__)
 	bool result = Media::ImageIO::Image::encodeImage(frame, imageType, buffer, properties);
 #elif defined(_WINDOWS)
-	bool result = Media::WIC::Image::encodeImage(frame, imageType, buffer /*, properties*/);
+	bool result = Media::WIC::Image::encodeImage(frame, imageType, buffer, false /*allowConversion*/ /*, hasBeenConverted*/);
 #else
-	bool result = Media::OpenImageLibraries::Image::encodeImage(frame, imageType, buffer, true /*allowConversion*/, nullptr /*hasBeenConverted*/, properties);
+	bool result = Media::OpenImageLibraries::Image::encodeImage(frame, imageType, buffer, false /*allowConversion*/, nullptr /*hasBeenConverted*/, properties);
 #endif
 
 	if (result == false)
 	{
-		result = Media::Special::Image::encodeImage(frame, imageType, buffer /*, properties*/);
+		result = Media::Special::Image::encodeImage(frame, imageType, buffer, false /*allowConversion*/ /*, hasBeenConverted*/);
 	}
 
 	return result;
@@ -113,14 +113,14 @@ bool writeImage(const Frame& frame, const std::string& filename, const Propertie
 #if defined(__APPLE__)
 	bool result = Media::ImageIO::Image::writeImage(frame, filename, properties);
 #elif defined(_WINDOWS)
-	bool result = Media::WIC::Image::writeImage(frame, filename /*, properties*/);
+	bool result = Media::WIC::Image::writeImage(frame, filename, false /*allowConversion*/ /*, hasBeenConverted*/);
 #else
-	bool result = Media::OpenImageLibraries::Image::writeImage(frame, filename, true /*allowConversion*/, nullptr /*hasBeenConverted*/, properties);
+	bool result = Media::OpenImageLibraries::Image::writeImage(frame, filename, false /*allowConversion*/, nullptr /*hasBeenConverted*/, properties);
 #endif
 
 	if (result == false)
 	{
-		result = Media::Special::Image::writeImage(frame, filename /*, properties*/);
+		result = Media::Special::Image::writeImage(frame, filename, false /*allowConversion*/ /*, hasBeenConverted*/);
 	}
 
 	return result;
