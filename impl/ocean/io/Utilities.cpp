@@ -149,7 +149,7 @@ bool Utilities::decodeVectors2(const uint8_t*& data, size_t& size, Vectors2& vec
 
 	const size_t number = size_t(((unsigned long long*)data)[0]);
 
-	if (number * 8 * 2 > size - 8)
+	if (number > (size - 8) / (8 * 2))
 	{
 		return false;
 	}
@@ -220,7 +220,7 @@ bool Utilities::decodeVectors3(const uint8_t*& data, size_t& size, Vectors3& vec
 
 	const size_t number = size_t(((unsigned long long*)data)[0]);
 
-	if (number * 8 * 3 > size - 8)
+	if (number > (size - 8) / (8 * 3))
 	{
 		return false;
 	}
@@ -293,7 +293,7 @@ bool Utilities::decodeVectors4(const uint8_t*& data, size_t& size, Vectors4& vec
 
 	const size_t number = size_t(((unsigned long long*)data)[0]);
 
-	if (number * 8 * 4 > size - 8)
+	if (number > (size - 8) / (8 * 4))
 	{
 		return false;
 	}
