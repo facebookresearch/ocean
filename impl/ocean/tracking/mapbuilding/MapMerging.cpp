@@ -1078,13 +1078,19 @@ bool MapMerging::mergeMaps(const PinholeCamera& sourceCamera, const Database& so
 
 			for (size_t n = mergedPairs.size() - 1; n >= 1; --n)
 			{
-				const UnorderedIndexSet32& mergingCorrespondingSourceObjectPoints = correspondingSourceTargetObjectPointPairs[mergedPairs[n]].first;
-				const UnorderedIndexSet32& mergingCorrespondingTargetObjectPoints = correspondingSourceTargetObjectPointPairs[mergedPairs[n]].second;
+				const size_t mergingIndex = size_t(mergedPairs[n]);
+
+				const UnorderedIndexSet32& mergingCorrespondingSourceObjectPoints = correspondingSourceTargetObjectPointPairs[mergingIndex].first;
+				const UnorderedIndexSet32& mergingCorrespondingTargetObjectPoints = correspondingSourceTargetObjectPointPairs[mergingIndex].second;
 
 				firstCorrespondingSourceObjectPoints.insert(mergingCorrespondingSourceObjectPoints.cbegin(), mergingCorrespondingSourceObjectPoints.cend());
 				firstCorrespondingTargetObjectPoints.insert(mergingCorrespondingTargetObjectPoints.cbegin(), mergingCorrespondingTargetObjectPoints.cend());
 
-				correspondingSourceTargetObjectPointPairs[n] = std::move(correspondingSourceTargetObjectPointPairs.back());
+				if (mergingIndex + 1 != correspondingSourceTargetObjectPointPairs.size())
+				{
+					correspondingSourceTargetObjectPointPairs[mergingIndex] = std::move(correspondingSourceTargetObjectPointPairs.back());
+				}
+
 				correspondingSourceTargetObjectPointPairs.pop_back();
 			}
 		}
