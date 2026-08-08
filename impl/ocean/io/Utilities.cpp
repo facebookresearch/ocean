@@ -73,14 +73,8 @@ void Utilities::encodeHomogenousMatrix4(const HomogenousMatrix4& matrix, Buffer&
 	const size_t offset = buffer.size();
 	buffer.resize(buffer.size() + 8 * 16);
 
-	if constexpr (std::is_same<HomogenousMatrix4, HomogenousMatrixD4>::value)
-	{
-		*((HomogenousMatrixD4*)(buffer.data() + offset)) = HomogenousMatrixD4(matrix);
-	}
-	else
-	{
-		*((HomogenousMatrixD4*)(buffer.data() + offset)) = (HomogenousMatrixD4&)matrix;
-	}
+	const HomogenousMatrixD4 value(matrix);
+	memcpy(buffer.data() + offset, &value, sizeof(value));
 }
 
 bool Utilities::decodeHomogenousMatrix4(const uint8_t*& data, size_t& size, HomogenousMatrix4& matrix)
@@ -94,14 +88,10 @@ bool Utilities::decodeHomogenousMatrix4(const uint8_t*& data, size_t& size, Homo
 		return false;
 	}
 
-	if constexpr (std::is_same<HomogenousMatrix4, HomogenousMatrixD4>::value)
-	{
-		matrix = *((HomogenousMatrix4*)data);
-	}
-	else
-	{
-		matrix = HomogenousMatrix4(*((HomogenousMatrixD4*)data));
-	}
+	HomogenousMatrixD4 value;
+	memcpy(&value, data, sizeof(value));
+
+	matrix = HomogenousMatrix4(value);
 
 	data += 8 * 16;
 	size -= 8 * 16;
