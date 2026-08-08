@@ -492,7 +492,7 @@ std::vector<bool> JSONConfig::JSONValue::boolValues() const
 			break;
 		}
 
-		start = stop;
+		start = stop + 1;
 	}
 
 	return result;
@@ -526,7 +526,7 @@ std::vector<int> JSONConfig::JSONValue::integerValues() const
 			break;
 		}
 
-		start = stop;
+		start = stop + 1;
 	}
 
 	return result;
@@ -560,7 +560,7 @@ std::vector<double> JSONConfig::JSONValue::numberValues() const
 			break;
 		}
 
-		start = stop;
+		start = stop + 1;
 	}
 
 	return result;
@@ -592,7 +592,8 @@ Strings JSONConfig::JSONValue::stringValues() const
 
 		result.push_back(subString);
 
-		start = stop + 1;
+		// the next element starts at the next opening quote, not behind the closing one
+		start = valueString_.find('\"', stop + 1);
 	}
 
 	return result;
