@@ -2514,7 +2514,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndTwoPosesIF(const P
 		ocean_assert(invertedFirstCovariances->rows() == objectPoints.size() * 2 && invertedFirstCovariances->columns() == 2);
 		ocean_assert(invertedSecondCovariances->rows() == objectPoints.size() * 2 && invertedSecondCovariances->columns() == 2);
 
-		if (invertedFirstCovariances->rows() != objectPoints.size() * 2 && invertedFirstCovariances->columns() == 2 && invertedSecondCovariances->rows() != objectPoints.size() * 2 && invertedSecondCovariances->columns() == 2)
+		if (invertedFirstCovariances->rows() != objectPoints.size() * 2 || invertedFirstCovariances->columns() != 2 || invertedSecondCovariances->rows() != objectPoints.size() * 2 || invertedSecondCovariances->columns() != 2)
 		{
 			return false;
 		}
