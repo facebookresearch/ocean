@@ -88,6 +88,7 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 					break;
 				}
 
+				stream_ = nullptr;
 				return false;
 			}
 
@@ -111,6 +112,7 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 			uint32_t payloadSize = 0u;
 			if (!inputBitstream.read<uint32_t>(payloadSize))
 			{
+				stream_ = nullptr;
 				return false;
 			}
 
@@ -121,6 +123,7 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 				if (!channelIdSet.emplace(channelId).second)
 				{
 					ocean_assert(false && "This should never happen!");
+					stream_ = nullptr;
 					return false;
 				}
 
@@ -131,6 +134,7 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 				DataSampleChannelConfiguration dataSampleChannelConfiguration;
 				if (!dataSampleChannelConfiguration.readSample(inputBitstream) || !dataSampleChannelConfiguration.isValid())
 				{
+					stream_ = nullptr;
 					return false;
 				}
 
@@ -149,6 +153,7 @@ bool InputDataSerializer::initialize(Channels* preparsedChannels, bool* isStream
 			{
 				if (!inputBitstream.skip(uint64_t(payloadSize)))
 				{
+					stream_ = nullptr;
 					return false;
 				}
 			}
