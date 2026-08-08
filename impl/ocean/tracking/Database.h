@@ -4196,8 +4196,10 @@ Indices32 Database::objectPointIds(const Index32 poseId, Vectors3* objectPoints)
 
 			if (objectPoints != nullptr)
 			{
-				ocean_assert(objectPointMap_.find(imagePointId) != objectPointMap_.end());
-				objectPoints->push_back(objectPointMap_.find(imagePointId)->second.point());
+				const ObjectPointMap::const_iterator iObjectPoint = objectPointMap_.find(objectPointId);
+				ocean_assert(iObjectPoint != objectPointMap_.cend());
+
+				objectPoints->push_back(iObjectPoint->second.point());
 			}
 		}
 	}
