@@ -526,7 +526,7 @@ size_t MapMerging::mergeObjectPoints(Database& database, FreakMultiDescriptorMap
 					if (world_T_observationCamera.isValid())
 					{
 						const Vector2& observationImagePoint = observationImagePoints[n];
-						const Vector2 projectedCandidateObjectPoint = pinholeCamera.projectToImage<true>(world_T_camera, candidateObjectPoint, true);
+						const Vector2 projectedCandidateObjectPoint = pinholeCamera.projectToImage<true>(world_T_observationCamera, candidateObjectPoint, true);
 
 						const Scalar sqrDistance = projectedCandidateObjectPoint.sqrDistance(observationImagePoint);
 
@@ -557,9 +557,9 @@ size_t MapMerging::mergeObjectPoints(Database& database, FreakMultiDescriptorMap
 					if (world_T_observationCamera.isValid())
 					{
 						const Vector2& observationImagePoint = observationImagePoints[n];
-						const Vector2 projectedCandidateObjectPoint = pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, true);
+						const Vector2 projectedObjectPoint = pinholeCamera.projectToImage<true>(world_T_observationCamera, objectPoint, true);
 
-						const Scalar sqrDistance = projectedCandidateObjectPoint.sqrDistance(observationImagePoint);
+						const Scalar sqrDistance = projectedObjectPoint.sqrDistance(observationImagePoint);
 
 						if (sqrDistance <= Numeric::sqr(maximalProjectionError))
 						{
