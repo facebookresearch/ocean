@@ -17,6 +17,8 @@
 #include "ocean/io/serialization/DataTimestamp.h"
 #include "ocean/io/serialization/DataSample.h"
 
+#include <atomic>
+
 namespace Ocean
 {
 
@@ -349,7 +351,7 @@ class OCEAN_IO_SERIALIZATION_EXPORT DataSerializer : protected Thread
 		State state_ = S_IDLE;
 
 		/// True, if the serializer succeeded; False, if an error occurred.
-		bool succeeded_ = true;
+		std::atomic<bool> succeeded_ = true;
 
 		/// The lock for thread-safe access.
 		mutable Lock lock_;
