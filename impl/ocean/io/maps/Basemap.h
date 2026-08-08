@@ -1413,7 +1413,7 @@ inline bool Basemap::Tile::isValid() const
 
 constexpr inline unsigned int Basemap::Tile::numberTiles(const unsigned int level)
 {
-	ocean_assert(level >= 1u && level < 22u);
+	ocean_assert(level >= 1u && level <= 22u);
 
 	return 1u << level;
 }

@@ -486,7 +486,7 @@ void Basemap::Tile::clear()
 
 Basemap::TileIndexPair Basemap::Tile::calculateTile(const unsigned int level, const double latitude, const double longitude, double* latitudeTileFraction, double* longitudeTileFraction)
 {
-	ocean_assert(level >= 1u && level < 22u);
+	ocean_assert(level >= 1u && level <= 22u);
 	ocean_assert(latitude >= -90.0 && latitude <= 90.0);
 	ocean_assert(longitude >= -180.0 && longitude <= 180.0);
 
@@ -526,7 +526,7 @@ Basemap::TileIndexPair Basemap::Tile::calculateTile(const unsigned int level, co
 
 void Basemap::Tile::calculateTileFractions(const unsigned int level, const double latitude, const double longitude, const TileIndexPair& tileIndexPair, double& latitudeTileFraction, double& longitudeTileFraction)
 {
-	ocean_assert(level >= 1u && level < 22u);
+	ocean_assert(level >= 1u && level <= 22u);
 	ocean_assert(latitude >= -90.0 && latitude <= 90.0);
 	ocean_assert(longitude >= -180.0 && longitude <= 180.0);
 	ocean_assert(tileIndexPair.isValid());
