@@ -134,31 +134,29 @@ std::string File::baseName() const
 {
 	ocean_assert(isValid());
 
-	std::string::size_type startPos = pathValue_.rfind('.');
+	// the local name starts behind the last separator
 
-	if (startPos == 0)
-	{
-		return std::string();
-	}
+	std::string::size_type nameStart = 0;
 
-	if (startPos == std::string::npos)
-	{
-		startPos = pathValue_.size() - 1;
-	}
-	else
-	{
-		startPos--;
-	}
-
-	for (size_t n = startPos; n != (size_t)-1; --n)
+	for (size_t n = pathValue_.size() - 1; n != (size_t)(-1); --n)
 	{
 		if (isSeparator(pathValue_[n]))
 		{
-			return pathValue_.substr(n + 1, startPos - n);
+			nameStart = n + 1;
+			break;
 		}
 	}
 
-	return pathValue_;
+	// the extension is separated by the last dot within the local name, a dot in a directory does not count
+
+	const std::string::size_type dotPosition = pathValue_.rfind('.');
+
+	if (dotPosition == std::string::npos || dotPosition < nameStart)
+	{
+		return pathValue_.substr(nameStart);
+	}
+
+	return pathValue_.substr(nameStart, dotPosition - nameStart);
 }
 
 ScopedFile::~ScopedFile()
