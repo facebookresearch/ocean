@@ -317,7 +317,7 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * Factory functions are used to create camera objects from JSON model configurations.
 		 * @param modelName The name of the camera model, e.g., "Custom Camera", must be valid
 		 * @param factoryFunction The factory function to create cameras of the specified model, nullptr to unregister a factory
-		 * @return True if the factory was registered successfully, false if a factory for the same model name already exists
+		 * @return True if the factory was registered or unregistered successfully, false if a factory for the same model name already exists, or if no factory was registered for the model name to unregister
 		 */
 		bool registerFactoryFunction(const std::string& modelName, FactoryFunction&& factoryFunction);
 
@@ -326,7 +326,7 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * Serializer functions are used to convert camera objects to JSON strings.
 		 * @param modelName The name of the camera model, e.g., "Ocean Pinhole", "Ocean Fisheye", must be valid
 		 * @param serializerFunction The serializer function to serialize cameras of the specified model, nullptr to unregister a serializer
-		 * @return True if the serializer was registered successfully, false if a serializer for the same model name already exists
+		 * @return True if the serializer was registered or unregistered successfully, false if a serializer for the same model name already exists, or if no serializer was registered for the model name to unregister
 		 */
 		bool registerSerializerFunction(const std::string& modelName, SerializerFunction&& serializerFunction);
 

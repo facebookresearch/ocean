@@ -418,7 +418,7 @@ bool CameraCalibrationManager::registerFactoryFunction(const std::string& modelN
 	{
 		ocean_assert(factoryFunctionMap_.contains(modelName));
 
-		factoryFunctionMap_.erase(modelName);
+		return factoryFunctionMap_.erase(modelName) != 0;
 	}
 
 	return factoryFunctionMap_.emplace(modelName, std::move(factoryFunction)).second;
@@ -438,7 +438,7 @@ bool CameraCalibrationManager::registerSerializerFunction(const std::string& mod
 	{
 		ocean_assert(serializerFunctionMap_.contains(modelName));
 
-		serializerFunctionMap_.erase(modelName);
+		return serializerFunctionMap_.erase(modelName) != 0;
 	}
 
 	return serializerFunctionMap_.emplace(modelName, std::move(serializerFunction)).second;
