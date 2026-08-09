@@ -1457,6 +1457,52 @@ bool TestSpecial::testNpyDecodeSyntheticHeaders()
 	}
 
 	{
+		// numpy writes '|' as the byte order of any single byte type, so this is what np.save() of a uint8 array produces
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '|u1', 'fortran_order': False, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.pixelFormat(), FrameType::FORMAT_Y8);
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), 3u);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), 2u);
+
+			const uint8_t expected[2][3] = {{1u, 2u, 3u}, {4u, 5u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// the same for a signed single byte type, and combined with the column-major layout
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '|i1', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		OCEAN_EXPECT_TRUE(validation, Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size()).isValid());
+	}
+
+	{
+		// big endian data would need to be swapped, which the decoder does not do, so it must be rejected
+
+		const uint8_t payload[24] = {};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '>f4', 'fortran_order': False, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		OCEAN_EXPECT_FALSE(validation, Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size()).isValid());
+	}
+
+	{
 		// a payload smaller than the shape must be rejected
 
 		const uint8_t payload[2] = {1u, 2u};

@@ -204,9 +204,9 @@ bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 	}
 
 	// parsing descr:
-	// 'descr:' '<f4'
+	// 'descr:' '<f4', the byte order is '<' for little endian and '|' for a data type to which the byte order does not apply
 
-	const std::string::size_type positionDescr = headerData.find("'descr': '<");
+	const std::string::size_type positionDescr = headerData.find("'descr': '");
 	if (positionDescr == std::string::npos)
 	{
 		return false;
@@ -214,6 +214,15 @@ bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 
 	if (positionDescr + 14 >= headerData.size() || headerData[positionDescr + 13] != '\'')
 	{
+		return false;
+	}
+
+	const char byteOrder = headerData[positionDescr + 10];
+
+	if (byteOrder != '<' && byteOrder != '|')
+	{
+		// big endian data would need to be swapped, which is not supported
+
 		return false;
 	}
 
