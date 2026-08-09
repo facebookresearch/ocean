@@ -37,7 +37,12 @@ double ImageFileSequence::duration() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return double(images() * double(preferredFrameType_.frequency()));
+	if (NumericD::isEqualEps(preferredFrameType_.frequency()))
+	{
+		return double(images());
+	}
+
+	return double(images()) / double(preferredFrameType_.frequency());
 }
 
 double ImageFileSequence::normalDuration() const
