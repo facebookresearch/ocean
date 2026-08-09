@@ -618,9 +618,6 @@ bool QRCodeDetector3D::computePoseStereo(const SharedAnyCamera& sharedAnyCameraA
 	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameraA;
 	const HomogenousMatrix4 world_T_cameraB = world_T_device * device_T_cameraB;
 
-	const HomogenousMatrix4 cameraA_T_world = world_T_cameraA.inverted();
-	const HomogenousMatrix4 cameraB_T_world = world_T_cameraB.inverted();
-
 	const Vectors3 normalizedObjectPoints = Utilities::CoordinateSystem::computeFinderPatternCentersInObjectSpace(version);
 	ocean_assert(normalizedObjectPoints.size() == 3);
 
@@ -647,9 +644,6 @@ bool QRCodeDetector3D::computePoseStereo(const SharedAnyCamera& sharedAnyCameraA
 
 		const HomogenousMatrix4& world_T_camera0 = useCameraA ? world_T_cameraA : world_T_cameraB;
 		const HomogenousMatrix4& world_T_camera1 = useCameraA ? world_T_cameraB : world_T_cameraA;
-
-		const HomogenousMatrix4 camera0_T_world = useCameraA ? cameraA_T_world : cameraB_T_world;
-		const HomogenousMatrix4 camera1_T_world = useCameraA ? cameraB_T_world : cameraA_T_world;
 
 		const FinderPatternTriplet finderPatternTriplet0 = useCameraA ? finderPatternTripletA : finderPatternTripletB;
 		const FinderPatternTriplet finderPatternTriplet1 = useCameraA ? finderPatternTripletB : finderPatternTripletA;
