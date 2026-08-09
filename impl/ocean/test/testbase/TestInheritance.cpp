@@ -10,6 +10,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/math/Numeric.h"
+
 #include "ocean/test/TestResult.h"
 #include "ocean/test/TestSelector.h"
 
@@ -591,7 +593,7 @@ bool TestInheritance::testNormal(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result > 0 || result <= 0)
+	if (result != NumericD::minValue())
 	{
 		Log::info() << "Objects with " << size << " function calls:";
 
@@ -775,7 +777,7 @@ bool TestInheritance::testVirtual(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result > 0 || result <= 0)
+	if (result != NumericD::minValue())
 	{
 		Log::info() << "Objects with " << size << " function calls:";
 
@@ -1014,7 +1016,7 @@ bool TestInheritance::testDiamond(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result > 0 || result <= 0)
+	if (result != NumericD::minValue())
 	{
 		Log::info() << "Objects with " << size << " function calls:";
 
