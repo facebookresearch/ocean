@@ -225,7 +225,7 @@ bool ImageFileSequence::setPosition(const double position)
 		return false;
 	}
 
-	frameIndex_ = (unsigned int)(frameIndex);
+	frameIndex_ = frameStartIndex_ + (unsigned int)(frameIndex);
 	return true;
 }
 
