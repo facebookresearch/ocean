@@ -96,6 +96,15 @@ bool TestSpecial::test(const double testDuration, const TestSelector& selector)
 		Log::info() << " ";
 	}
 
+	if (selector.shouldRun("npydecodesyntheticheaders"))
+	{
+		testResult = testNpyDecodeSyntheticHeaders();
+
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+	}
+
 	if (selector.shouldRun("npydecodestresstest"))
 	{
 #ifdef OCEAN_DEBUG
@@ -346,6 +355,11 @@ TEST(TestSpecial, NpyImageUint64UpperLeft)
 TEST(TestSpecial, NpyImageUint64LowerLeft)
 {
 	EXPECT_TRUE(TestSpecial::testNpyImageEncodeDecode(1920u, 1080u, FrameType::genericPixelFormat<uint64_t, 1u>(), FrameType::ORIGIN_LOWER_LEFT, GTEST_TEST_DURATION));
+}
+
+TEST(TestSpecial, NpyDecodeSyntheticHeaders)
+{
+	EXPECT_TRUE(TestSpecial::testNpyDecodeSyntheticHeaders());
 }
 
 #ifndef OCEAN_DEBUG
@@ -1140,6 +1154,316 @@ bool TestSpecial::testNpyImageEncodeDecode(const unsigned int width, const unsig
 
 	Log::info() << "Encoding: Best: " << performanceEncoding.bestMseconds() << "ms, worst: " << performanceEncoding.worstMseconds() << "ms, average: " << performanceEncoding.averageMseconds() << "ms";
 	Log::info() << "Decoding: Best: " << performanceDecoding.bestMseconds() << "ms, worst: " << performanceDecoding.worstMseconds() << "ms, average: " << performanceDecoding.averageMseconds() << "ms";
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+namespace
+{
+
+/**
+ * Creates an NPY buffer from a header dictionary and a payload.
+ * @param dictionary The header dictionary, without the trailing newline
+ * @param payload The payload to append, can be empty
+ * @param payloadSize The size of the payload, in bytes
+ * @return The resulting buffer
+ */
+std::vector<uint8_t> createNpyBuffer(const std::string& dictionary, const void* payload, const size_t payloadSize)
+{
+	const std::string header = dictionary + "\n";
+
+	std::vector<uint8_t> buffer = {0x93u, 'N', 'U', 'M', 'P', 'Y', 0x01u, 0x00u};
+
+	const uint16_t headerLength = uint16_t(header.size());
+	buffer.resize(buffer.size() + sizeof(headerLength));
+	memcpy(buffer.data() + buffer.size() - sizeof(headerLength), &headerLength, sizeof(headerLength));
+
+	buffer.insert(buffer.cend(), header.cbegin(), header.cend());
+
+	if (payloadSize != 0)
+	{
+		const uint8_t* payloadData = (const uint8_t*)(payload);
+		buffer.insert(buffer.cend(), payloadData, payloadData + payloadSize);
+	}
+
+	return buffer;
+}
+
+}
+
+bool TestSpecial::testNpyDecodeSyntheticHeaders()
+{
+	Log::info() << "NPY decode with synthetic headers test:";
+
+	Validation validation;
+
+	// the encoder writes 'fortran_order': False only, so the column-major branch needs a hand-written header
+	// shape is (rows, columns), a column-major payload stores element (r, c) at offset c * rows + r
+
+	{
+		// row-major reference, 1 2 3 / 4 5 6
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u1', 'fortran_order': False, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), 3u);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), 2u);
+
+			const uint8_t expected[2][3] = {{1u, 2u, 3u}, {4u, 5u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major, non-square, 1 3 5 / 2 4 6
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u1', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), 3u);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), 2u);
+
+			const uint8_t expected[2][3] = {{1u, 3u, 5u}, {2u, 4u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major, the transposed shape, 1 4 / 2 5 / 3 6
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u1', 'fortran_order': True, 'shape': (3, 2), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), 2u);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), 3u);
+
+			const uint8_t expected[3][2] = {{1u, 4u}, {2u, 5u}, {3u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major and square, identical before and after the transpose fix
+
+		const uint8_t payload[4] = {1u, 2u, 3u, 4u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u1', 'fortran_order': True, 'shape': (2, 2), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			const uint8_t expected[2][2] = {{1u, 3u}, {2u, 4u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major with a 16 bit type, the decoder has one switch case per data type size
+
+		const uint16_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u2', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			const uint16_t expected[2][3] = {{1u, 3u, 5u}, {2u, 4u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint16_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major with a 32 bit type
+
+		const uint32_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u4', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			const uint32_t expected[2][3] = {{1u, 3u, 5u}, {2u, 4u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint32_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major with a 64 bit type
+
+		const uint64_t payload[6] = {1ull, 2ull, 3ull, 4ull, 5ull, 6ull};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u8', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			const uint64_t expected[2][3] = {{1ull, 3ull, 5ull}, {2ull, 4ull, 6ull}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint64_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// column-major crossing the transposer's 8x8 block boundary, element (r, c) is at c * rows + r
+
+		constexpr unsigned int rows = 10u;
+		constexpr unsigned int columns = 17u;
+
+		std::vector<uint8_t> payload(rows * columns);
+
+		for (size_t n = 0; n < payload.size(); ++n)
+		{
+			payload[n] = uint8_t(n);
+		}
+
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u1', 'fortran_order': True, 'shape': (10, 17), }", payload.data(), payload.size());
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), columns);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), rows);
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(y)[x], uint8_t(x * rows + y));
+				}
+			}
+		}
+	}
+
+	{
+		// the dtype must be located relative to 'descr', not at a fixed offset
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'fortran_order': False, 'descr': '<u1', 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.pixelFormat(), FrameType::FORMAT_Y8);
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), 3u);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), 2u);
+		}
+	}
+
+	{
+		// an earlier key must not be mistaken for the dtype
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'abcde': '<f4', 'descr': '<u1', 'fortran_order': False, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.pixelFormat(), FrameType::FORMAT_Y8);
+		}
+	}
+
+	{
+		// an unknown dtype must be rejected
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'fortran_order': False, 'descr': '<zz', 'shape': (2, 3), }", payload, sizeof(payload));
+
+		OCEAN_EXPECT_FALSE(validation, Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size()).isValid());
+	}
+
+	{
+		// a payload smaller than the shape must be rejected
+
+		const uint8_t payload[2] = {1u, 2u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '<u1', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		OCEAN_EXPECT_FALSE(validation, Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size()).isValid());
+	}
 
 	Log::info() << "Validation: " << validation;
 

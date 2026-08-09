@@ -119,6 +119,13 @@ class OCEAN_TEST_MEDIA_EXPORT TestSpecial
 		static bool testNpyImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration);
 
 		/**
+		 * Tests the NPY decoder with hand-written headers.
+		 * The encoder writes row-major data only, so the column-major decoder and the header parser cannot be reached with an encode/decode round trip.
+		 * @return True, if succeeded
+		 */
+		static bool testNpyDecodeSyntheticHeaders();
+
+		/**
 		 * Applies a stress test for the NPY decoder.
 		 * @return True, if succeeded
 		 */
