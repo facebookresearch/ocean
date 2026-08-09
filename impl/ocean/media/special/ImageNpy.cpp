@@ -212,12 +212,12 @@ bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 		return false;
 	}
 
-	if (positionDescr + 14 >= headerData.size() || headerData[14] != '\'')
+	if (positionDescr + 14 >= headerData.size() || headerData[positionDescr + 13] != '\'')
 	{
 		return false;
 	}
 
-	const FrameType::PixelFormat pixelFormat = translatePixelFormat(String::toLower(headerData.substr(12, 2)));
+	const FrameType::PixelFormat pixelFormat = translatePixelFormat(String::toLower(headerData.substr(positionDescr + 11, 2)));
 
 	if (pixelFormat == FrameType::FORMAT_UNDEFINED)
 	{
