@@ -341,6 +341,13 @@ bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 			}
 			else if (columns == -1)
 			{
+				if (headerData[n] == ',')
+				{
+					// a further dimension follows, e.g. a multi channel image, which this decoder does not support
+
+					return false;
+				}
+
 				columns = value;
 				break;
 			}

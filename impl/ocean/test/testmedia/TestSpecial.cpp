@@ -1503,6 +1503,32 @@ bool TestSpecial::testNpyDecodeSyntheticHeaders()
 	}
 
 	{
+		// a three dimensional shape, e.g. an RGB numpy array, must be rejected rather than silently decoded as one channel
+
+		const uint8_t payload[18] = {};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '|u1', 'fortran_order': False, 'shape': (2, 3, 3), }", payload, sizeof(payload));
+
+		OCEAN_EXPECT_FALSE(validation, Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size()).isValid());
+	}
+
+	{
+		// a shape with a space before the closing bracket must still be accepted
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '|u1', 'fortran_order': False, 'shape': (2, 3 ), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.width(), 3u);
+			OCEAN_EXPECT_EQUAL(validation, frame.height(), 2u);
+		}
+	}
+
+	{
 		// a payload smaller than the shape must be rejected
 
 		const uint8_t payload[2] = {1u, 2u};
