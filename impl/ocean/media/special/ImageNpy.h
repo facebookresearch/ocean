@@ -75,9 +75,18 @@ class OCEAN_MEDIA_SPECIAL_EXPORT ImageNpy
 		 * @param size The size of the buffer in bytes, will be reduced if the header could be read successfully, must be valid
 		 * @param frameType The resulting frame type
 		 * @param isRowMajor True, if the data is given in row-major order; False, if the data is given in column-major order
+		 * @param isBigEndian True, if the elements are stored in big endian order; False, if they are stored in little endian order or if the byte order does not apply
 		 * @return True, if succeeded
 		 */
-		static bool readHeader(const uint8_t*& data, size_t& size, FrameType& frameType, bool& isRowMajor);
+		static bool readHeader(const uint8_t*& data, size_t& size, FrameType& frameType, bool& isRowMajor, bool& isBigEndian);
+
+		/**
+		 * Swaps the byte order of every element of a frame in place.
+		 * The frame must hold one channel, elements of one byte are left unchanged.
+		 * @param frame The frame to be swapped, must be valid
+		 * @return True, if succeeded
+		 */
+		static bool swapByteOrder(Frame& frame);
 
 		/**
 		 * Translates the pixel format.

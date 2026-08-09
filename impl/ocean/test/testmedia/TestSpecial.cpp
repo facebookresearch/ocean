@@ -1494,12 +1494,93 @@ bool TestSpecial::testNpyDecodeSyntheticHeaders()
 	}
 
 	{
-		// big endian data would need to be swapped, which the decoder does not do, so it must be rejected
+		// big endian float data must be byte swapped while decoding
 
-		const uint8_t payload[24] = {};
+		const float values[6] = {1.5f, -2.25f, 0.0f, 1024.5f, -0.125f, 3.0f};
+
+		uint8_t payload[sizeof(values)];
+
+		for (size_t n = 0; n < 6; ++n)
+		{
+			uint8_t littleEndian[4];
+			memcpy(littleEndian, values + n, 4);
+
+			for (size_t nByte = 0; nByte < 4; ++nByte)
+			{
+				payload[n * 4 + nByte] = littleEndian[3 - nByte];
+			}
+		}
+
 		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '>f4', 'fortran_order': False, 'shape': (2, 3), }", payload, sizeof(payload));
 
-		OCEAN_EXPECT_FALSE(validation, Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size()).isValid());
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.pixelFormat(), FrameType::FORMAT_F32);
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<float>(y)[x], values[y * frame.width() + x]);
+				}
+			}
+		}
+	}
+
+	{
+		// a big endian 16 bit image, also in the column-major layout
+
+		const uint16_t values[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+
+		uint8_t payload[sizeof(values)];
+
+		for (size_t n = 0; n < 6; ++n)
+		{
+			payload[n * 2 + 0] = uint8_t(values[n] >> 8u);
+			payload[n * 2 + 1] = uint8_t(values[n] & 0xFFu);
+		}
+
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '>u2', 'fortran_order': True, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			// column-major, so element (r, c) is at c * rows + r
+
+			const uint16_t expected[2][3] = {{1u, 3u, 5u}, {2u, 4u, 6u}};
+
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint16_t>(y)[x], expected[y][x]);
+				}
+			}
+		}
+	}
+
+	{
+		// a big endian single byte type needs no swap and must decode unchanged
+
+		const uint8_t payload[6] = {1u, 2u, 3u, 4u, 5u, 6u};
+		const std::vector<uint8_t> buffer = createNpyBuffer("{'descr': '>u1', 'fortran_order': False, 'shape': (2, 3), }", payload, sizeof(payload));
+
+		const Frame frame = Media::Special::ImageNpy::decodeImage(buffer.data(), buffer.size());
+
+		OCEAN_EXPECT_TRUE(validation, frame.isValid());
+
+		if (frame.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(0u)[0], uint8_t(1u));
+			OCEAN_EXPECT_EQUAL(validation, frame.constrow<uint8_t>(1u)[2], uint8_t(6u));
+		}
 	}
 
 	{

@@ -33,8 +33,9 @@ Frame ImageNpy::decodeImage(const void* buffer, const size_t size)
 
 	FrameType frameType;
 	bool isRowMajor = false;
+	bool isBigEndian = false;
 
-	if (!readHeader(remainingBuffer, remainingSize, frameType, isRowMajor))
+	if (!readHeader(remainingBuffer, remainingSize, frameType, isRowMajor, isBigEndian))
 	{
 		return Frame();
 	}
@@ -59,7 +60,14 @@ Frame ImageNpy::decodeImage(const void* buffer, const size_t size)
 
 	if (isRowMajor)
 	{
-		return Frame(frameType, (const void*)(remainingBuffer), Frame::CM_COPY_REMOVE_PADDING_LAYOUT, sourcePaddingElements);
+		Frame frame(frameType, (const void*)(remainingBuffer), Frame::CM_COPY_REMOVE_PADDING_LAYOUT, sourcePaddingElements);
+
+		if (isBigEndian && !swapByteOrder(frame))
+		{
+			return Frame();
+		}
+
+		return frame;
 	}
 
 	Frame frame(frameType);
@@ -87,7 +95,57 @@ Frame ImageNpy::decodeImage(const void* buffer, const size_t size)
 			return Frame();
 	}
 
+	// the transpose moves entire elements, so the byte order is unaffected by it and can be corrected afterwards
+
+	if (isBigEndian && !swapByteOrder(frame))
+	{
+		return Frame();
+	}
+
 	return frame;
+}
+
+bool ImageNpy::swapByteOrder(Frame& frame)
+{
+	ocean_assert(frame.isValid());
+	ocean_assert(frame.channels() == 1u);
+
+	const unsigned int bytesPerDataType = frame.frameType().bytesPerDataType();
+
+	if (bytesPerDataType <= 1u)
+	{
+		return true;
+	}
+
+	// the frame holds one channel of 'bytesPerDataType' bytes, so interpreting each element as that many 8 bit channels turns the byte swap into a reversal of the channel order
+
+	Frame swappedFrame(frame.frameType());
+
+	const unsigned int sourcePaddingElements = frame.paddingElements() * bytesPerDataType;
+	const unsigned int targetPaddingElements = swappedFrame.paddingElements() * bytesPerDataType;
+
+	switch (bytesPerDataType)
+	{
+		case 2u:
+			CV::FrameChannels::reverseChannelOrder<uint8_t, 2u>(frame.constdata<uint8_t>(), swappedFrame.data<uint8_t>(), frame.width(), frame.height(), CV::FrameChannels::CONVERT_NORMAL, sourcePaddingElements, targetPaddingElements, nullptr);
+			break;
+
+		case 4u:
+			CV::FrameChannels::reverseChannelOrder<uint8_t, 4u>(frame.constdata<uint8_t>(), swappedFrame.data<uint8_t>(), frame.width(), frame.height(), CV::FrameChannels::CONVERT_NORMAL, sourcePaddingElements, targetPaddingElements, nullptr);
+			break;
+
+		case 8u:
+			CV::FrameChannels::reverseChannelOrder<uint8_t, 8u>(frame.constdata<uint8_t>(), swappedFrame.data<uint8_t>(), frame.width(), frame.height(), CV::FrameChannels::CONVERT_NORMAL, sourcePaddingElements, targetPaddingElements, nullptr);
+			break;
+
+		default:
+			ocean_assert(false && "Invalid pixel format!");
+			return false;
+	}
+
+	frame = std::move(swappedFrame);
+
+	return true;
 }
 
 bool ImageNpy::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer)
@@ -161,7 +219,7 @@ bool ImageNpy::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer)
 	return true;
 }
 
-bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameType, bool& isRowMajor)
+bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameType, bool& isRowMajor, bool& isBigEndian)
 {
 	if (size < 10)
 	{
@@ -217,12 +275,12 @@ bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 		return false;
 	}
 
+	// the byte order is '<' for little endian, '>' for big endian, and '|' for a data type to which it does not apply
+
 	const char byteOrder = headerData[positionDescr + 10];
 
-	if (byteOrder != '<' && byteOrder != '|')
+	if (byteOrder != '<' && byteOrder != '>' && byteOrder != '|')
 	{
-		// big endian data would need to be swapped, which is not supported
-
 		return false;
 	}
 
@@ -377,6 +435,7 @@ bool ImageNpy::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 	size -= 10 + headerLength;
 
 	isRowMajor = !fortranOrder;
+	isBigEndian = byteOrder == '>';
 
 	return true;
 }
