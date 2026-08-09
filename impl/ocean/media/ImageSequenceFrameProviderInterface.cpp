@@ -43,7 +43,7 @@ ImageSequenceFrameProviderInterface::~ImageSequenceFrameProviderInterface()
 
 	const Timestamp startTimestamp(true);
 
-	while (startTimestamp + 10.0 < Timestamp(true))
+	while (startTimestamp + 10.0 > Timestamp(true))
 	{
 		Thread::sleep(1u);
 
@@ -54,7 +54,6 @@ ImageSequenceFrameProviderInterface::~ImageSequenceFrameProviderInterface()
 			return;
 		}
 	}
-	while (pendingAsynchronousRequests_ != 0u);
 
 	ocean_assert(false && "Still pending asynchronous requests");
 }
