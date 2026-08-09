@@ -273,7 +273,7 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 
 	// SamplesPerPixel and Orientation are optional in TIFF 6.0, so they need the 'Defaulted' variant which supplies the spec default when the tag is absent
 
-	unsigned int samplesPerPixel = 0u;
+	uint16_t samplesPerPixel = 0u;
 
 	if (TIFFGetFieldDefaulted(*scopedTiff, TIFFTAG_SAMPLESPERPIXEL, &samplesPerPixel) != 1)
 	{
