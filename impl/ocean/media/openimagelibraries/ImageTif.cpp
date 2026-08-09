@@ -265,14 +265,29 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 
 	unsigned int width = 0u;
 	unsigned int height = 0u;
+
+	if (TIFFGetField(*scopedTiff, TIFFTAG_IMAGEWIDTH, &width) != 1 || TIFFGetField(*scopedTiff, TIFFTAG_IMAGELENGTH, &height) != 1)
+	{
+		return Frame();
+	}
+
+	// SamplesPerPixel and Orientation are optional in TIFF 6.0, so they need the 'Defaulted' variant which supplies the spec default when the tag is absent
+
 	unsigned int samplesPerPixel = 0u;
-	if (TIFFGetField(*scopedTiff, TIFFTAG_IMAGEWIDTH, &width) != 1 || TIFFGetField(*scopedTiff, TIFFTAG_IMAGELENGTH, &height) != 1 || TIFFGetField(*scopedTiff, TIFFTAG_SAMPLESPERPIXEL, &samplesPerPixel) != 1 || width == 0u || height == 0u || samplesPerPixel == 0u)
+
+	if (TIFFGetFieldDefaulted(*scopedTiff, TIFFTAG_SAMPLESPERPIXEL, &samplesPerPixel) != 1)
 	{
 		return Frame();
 	}
 
 	unsigned short orientation = (unsigned short)(-1);
-	if (TIFFGetField(*scopedTiff, TIFFTAG_ORIENTATION, &orientation) != 1 || (orientation != ORIENTATION_TOPLEFT && orientation != ORIENTATION_BOTLEFT))
+
+	if (TIFFGetFieldDefaulted(*scopedTiff, TIFFTAG_ORIENTATION, &orientation) != 1)
+	{
+		return Frame();
+	}
+
+	if (width == 0u || height == 0u || samplesPerPixel == 0u || (orientation != ORIENTATION_TOPLEFT && orientation != ORIENTATION_BOTLEFT))
 	{
 		return Frame();
 	}
