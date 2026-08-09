@@ -581,15 +581,11 @@ Strings FileConfig::FileValue::stringValues() const
 			break;
 		}
 
-		const std::string subString = string_.substr(start + 1, stop - start - 1);
-		if (subString.empty())
-		{
-			break;
-		}
+		result.push_back(string_.substr(start + 1, stop - start - 1));
 
-		result.push_back(subString);
+		// the next element starts at the next opening quote, not behind the closing one
 
-		start = stop + 1;
+		start = string_.find('\"', stop + 1);
 	}
 
 	return result;
