@@ -2554,8 +2554,6 @@ bool SLAMTracker::extendStableObjectPointsPartially(const PinholeCamera& pinhole
 
 		return extendStableObjectPointsPartiallyTranslational(pinholeCamera, database, lowerFrame, upperFrame, correspondenceThreshold, finalLowerValidPoseRange, finalUpperValidPoseRange, abort, progress);
 	}
-
-	return false;
 }
 
 bool SLAMTracker::extendStableObjectPointsFullRotational(const PinholeCamera& pinholeCamera, Database& database, const unsigned int lowerFrame, const unsigned int upperFrame, const Solver3::RelativeThreshold& correspondenceThreshold, unsigned int* finalLowerValidPoseRange, unsigned int* finalUpperValidPoseRange, bool* abort, Scalar* /*progress*/)
