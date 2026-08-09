@@ -300,6 +300,14 @@ bool PatchTracker::trackRecording(Devices::DevicePlayer& devicePlayer, const Str
 #endif
 	}
 
+	if (patchTracker.database_.isEmpty<false>())
+	{
+		Log::error() << "The recording did not provide any trackable frame.";
+		return false;
+	}
+
+	ocean_assert(currentAnyCamera);
+
 	anyCamera = std::move(currentAnyCamera);
 
 	database = std::move(patchTracker.database_);
