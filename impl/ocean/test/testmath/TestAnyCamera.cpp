@@ -157,7 +157,36 @@ bool TestAnyCamera::testConstructor(const double testDuration)
 					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height + RandomI::random(randomGenerator, 1u, 10u), fovX, principalPointX, principalPointY)))
 					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, std::max(T(0.01), fovX + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator)), principalPointX, principalPointY)))
 					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, fovX, principalPointX + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator), principalPointY)))
-					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, fovX, principalPointX, principalPointY + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator)))));		}
+					|| anyCamera.isEqual(AnyCameraPinholeT<T>(PinholeCameraT<T>(width, height, fovX, principalPointX, principalPointY + RandomT<T>::scalar(randomGenerator, T(0.01), T(1)) * RandomT<T>::sign(randomGenerator)))));
+		}
+
+		{
+			// testing a PinholeCamera with a principal point outside of the image, as the sub-frame constructor creates it
+
+			const unsigned int width = RandomI::random(randomGenerator, 640u, 1920u);
+			const unsigned int height = RandomI::random(randomGenerator, 480u, 1080u);
+
+			const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(35), NumericT<T>::deg2rad(70));
+
+			const PinholeCameraT<T> pinholeCamera(width, height, fovX);
+
+			const unsigned int subFrameWidth = RandomI::random(randomGenerator, 32u, width / 4u);
+			const unsigned int subFrameHeight = RandomI::random(randomGenerator, 32u, height / 4u);
+
+			// the sub-frame starts right of and below the principal point, so that the principal point of the sub-frame camera is negative
+			const T subFrameLeft = RandomT<T>::scalar(randomGenerator, pinholeCamera.principalPointX() + T(1), T(width - subFrameWidth));
+			const T subFrameTop = RandomT<T>::scalar(randomGenerator, pinholeCamera.principalPointY() + T(1), T(height - subFrameHeight));
+
+			const PinholeCameraT<T> subFrameCamera(subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, pinholeCamera);
+
+			OCEAN_EXPECT_LESS(validation, subFrameCamera.principalPointX(), T(0));
+			OCEAN_EXPECT_LESS(validation, subFrameCamera.principalPointY(), T(0));
+
+			const AnyCameraPinholeT<T> anyCamera(subFrameCamera);
+
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(subFrameCamera.fovX(), anyCamera.fovX(), T(0.01)));
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(subFrameCamera.fovY(), anyCamera.fovY(), T(0.01)));
+		}
 
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 640u, 1920u);

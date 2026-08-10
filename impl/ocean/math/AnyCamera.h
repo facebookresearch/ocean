@@ -2397,7 +2397,8 @@ inline T CameraWrapperT<T, TCameraWrapperBase>::fovX() const
 		return T(0);
 	}
 
-	const T leftAngle = NumericT<T>::abs(NumericT<T>::atan(-TCameraWrapperBase::principalPointX() * TCameraWrapperBase::inverseFocalLengthX()));
+	// the left angle is negative in case the principal point lies left of the image, so that the field of view is the difference of both angles
+	const T leftAngle = NumericT<T>::atan(TCameraWrapperBase::principalPointX() * TCameraWrapperBase::inverseFocalLengthX());
 
 	if (T(TCameraWrapperBase::width()) <= TCameraWrapperBase::principalPointX())
 	{
@@ -2426,7 +2427,8 @@ inline T CameraWrapperT<T, TCameraWrapperBase>::fovY() const
 		return T(0);
 	}
 
-	const T topAngle = NumericT<T>::abs(NumericT<T>::atan(-TCameraWrapperBase::principalPointY() * TCameraWrapperBase::inverseFocalLengthY()));
+	// the top angle is negative in case the principal point lies above the image, so that the field of view is the difference of both angles
+	const T topAngle = NumericT<T>::atan(TCameraWrapperBase::principalPointY() * TCameraWrapperBase::inverseFocalLengthY());
 
 	if (T(TCameraWrapperBase::height()) <= TCameraWrapperBase::principalPointY())
 	{
