@@ -531,6 +531,12 @@ int Device::determineIsochronousTransferLayout(libusb_context* usbContext, const
 	ocean_assert(maxVideoFrameSize != 0u);
 	ocean_assert(maxPayloadTransferSize != 0u);
 
+	if (maxPayloadTransferSize == 0u)
+	{
+		// every altsetting would satisfy the packet size check below, including a zero-bandwidth altsetting without any endpoint, which would then divide by zero
+		return -1;
+	}
+
 	transferSize = 0;
 
 	for (int altsettingIndex = 0; altsettingIndex < interface.num_altsetting; ++altsettingIndex)

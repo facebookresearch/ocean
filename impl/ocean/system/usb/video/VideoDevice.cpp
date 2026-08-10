@@ -1912,6 +1912,9 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	if (dwMaxPayloadTransferSize == 0u)
 	{
 		Log::error() << "Unknown maximal payload size";
+
+		claimedVideoStreamInterfaceSubscription_.release();
+		return false;
 	}
 
 	if (activeClockFrequency_ == 0u)
