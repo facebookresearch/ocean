@@ -1250,7 +1250,7 @@ bool VideoDevice::Sample::append(const PayloadHeader& payloadHeader, const void 
 		{
 			const size_t newBufferSize = buffer_.size() + std::max(size, size_t(1024 * 10));
 
-			if (newBufferSize > sampleMaxPayloadSize_)
+			if (newBufferSize <= sampleMaxPayloadSize_)
 			{
 				buffer_.resize(newBufferSize);
 
