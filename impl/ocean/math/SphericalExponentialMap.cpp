@@ -48,7 +48,14 @@ SphericalExponentialMap::SphericalExponentialMap(const Vector3& reference, const
 		{
 			// we have a 180 deg rotation between both vectors, so we need to determine a vector perpendicular to both vectors lying in the X-Z plane
 
-			const Vector3 axis(Vector3(0, 1, 0).cross(reference));
+			Vector3 axis(Vector3(0, 1, 0).cross(reference));
+
+			if (!axis.normalize())
+			{
+				// reference is parallel to the y-axis, so that every axis lying in the X-Z plane is perpendicular to reference
+				axis = Vector3(1, 0, 0);
+			}
+
 			ocean_assert(Numeric::isEqualEps(axis[1]) && Numeric::isEqual(axis.length(), 1));
 
 			mapRotationAxis = Vector2(axis[0], axis[2]) * Numeric::pi();

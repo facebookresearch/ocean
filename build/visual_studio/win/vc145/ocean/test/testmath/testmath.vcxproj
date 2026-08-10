@@ -89,6 +89,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRotation.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSparseMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphericalExponentialMap.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphere3.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix2.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix3.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRotation.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSparseMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphericalExponentialMap.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphere3.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix2.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix3.h" />

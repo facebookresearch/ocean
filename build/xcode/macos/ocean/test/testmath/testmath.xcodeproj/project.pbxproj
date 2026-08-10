@@ -21,6 +21,7 @@
 		5D9370B21BC6D19C0046ACD4 /* TestBox3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2801BAB379B0000B274 /* TestBox3.cpp */; };
 		5D9370B31BC6D19C0046ACD4 /* TestMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28B1BAB379B0000B274 /* TestMatrix.cpp */; };
 		5D9370B41BC6D19C0046ACD4 /* TestSphere3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */; };
+		A71AA47AF760CDF5B44627DE /* TestSphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CF27DDD4E49C892EAD22C10 /* TestSphericalExponentialMap.cpp */; };
 		5D9370B51BC6D19C0046ACD4 /* TestLookup2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2891BAB379B0000B274 /* TestLookup2.cpp */; };
 		5D9370B61BC6D19C0046ACD4 /* TestRotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28F1BAB379B0000B274 /* TestRotation.cpp */; };
 		5D9370B71BC6D19C0046ACD4 /* TestVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2951BAB379B0000B274 /* TestVector3.cpp */; };
@@ -62,6 +63,7 @@
 		5D9370DD1BC6D19C0046ACD4 /* TestBox2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2B51BAB37AB0000B274 /* TestBox2.h */; };
 		5D9370DE1BC6D19C0046ACD4 /* TestVector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2CB1BAB37AB0000B274 /* TestVector3.h */; };
 		5D9370DF1BC6D19C0046ACD4 /* TestSphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */; };
+		6F41C19F0A76366A604767BE /* TestSphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 6440C33A8B164953ACC6AB82 /* TestSphericalExponentialMap.h */; };
 		5D9370E01BC6D19C0046ACD4 /* TestRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C41BAB37AB0000B274 /* TestRandom.h */; };
 		5D9370E11BC6D19C0046ACD4 /* TestVector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2CA1BAB37AB0000B274 /* TestVector2.h */; };
 		5D9370E21BC6D19C0046ACD4 /* TestLookup2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2BF1BAB37AB0000B274 /* TestLookup2.h */; };
@@ -86,6 +88,7 @@
 		5DB3A2A91BAB379B0000B274 /* TestRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28E1BAB379B0000B274 /* TestRandom.cpp */; };
 		5DB3A2AA1BAB379B0000B274 /* TestRotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28F1BAB379B0000B274 /* TestRotation.cpp */; };
 		5DB3A2AB1BAB379B0000B274 /* TestSphere3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */; };
+		BB3804CA47CBBBB137D6CAB1 /* TestSphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CF27DDD4E49C892EAD22C10 /* TestSphericalExponentialMap.cpp */; };
 		5DB3A2AC1BAB379B0000B274 /* TestSquareMatrix2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2911BAB379B0000B274 /* TestSquareMatrix2.cpp */; };
 		5DB3A2AD1BAB379B0000B274 /* TestSquareMatrix3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2921BAB379B0000B274 /* TestSquareMatrix3.cpp */; };
 		5DB3A2AE1BAB379B0000B274 /* TestSquareMatrix4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2931BAB379B0000B274 /* TestSquareMatrix4.cpp */; };
@@ -113,6 +116,7 @@
 		5DB3A2DF1BAB37AB0000B274 /* TestRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C41BAB37AB0000B274 /* TestRandom.h */; };
 		5DB3A2E01BAB37AB0000B274 /* TestRotation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C51BAB37AB0000B274 /* TestRotation.h */; };
 		5DB3A2E11BAB37AB0000B274 /* TestSphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */; };
+		B7FE7D0E4A8F6F0E5BB1BDC1 /* TestSphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 6440C33A8B164953ACC6AB82 /* TestSphericalExponentialMap.h */; };
 		5DB3A2E21BAB37AB0000B274 /* TestSquareMatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C71BAB37AB0000B274 /* TestSquareMatrix2.h */; };
 		5DB3A2E31BAB37AB0000B274 /* TestSquareMatrix3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C81BAB37AB0000B274 /* TestSquareMatrix3.h */; };
 		5DB3A2E41BAB37AB0000B274 /* TestSquareMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C91BAB37AB0000B274 /* TestSquareMatrix4.h */; };
@@ -130,6 +134,7 @@
 		5DD14AB41D953FE100CCA9F0 /* TestBox3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2801BAB379B0000B274 /* TestBox3.cpp */; };
 		5DD14AB51D953FE100CCA9F0 /* TestMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28B1BAB379B0000B274 /* TestMatrix.cpp */; };
 		5DD14AB61D953FE100CCA9F0 /* TestSphere3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */; };
+		BEB49BAE79690462AF1B2424 /* TestSphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CF27DDD4E49C892EAD22C10 /* TestSphericalExponentialMap.cpp */; };
 		5DD14AB71D953FE100CCA9F0 /* TestLookup2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2891BAB379B0000B274 /* TestLookup2.cpp */; };
 		5DD14AB81D953FE100CCA9F0 /* TestRotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28F1BAB379B0000B274 /* TestRotation.cpp */; };
 		5DD14AB91D953FE100CCA9F0 /* TestVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2951BAB379B0000B274 /* TestVector3.cpp */; };
@@ -177,6 +182,7 @@
 		5DD14AE51D953FE100CCA9F0 /* TestStaticMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3E10741CAABB2200EC2283 /* TestStaticMatrix.h */; };
 		5DD14AE61D953FE100CCA9F0 /* TestVector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2CB1BAB37AB0000B274 /* TestVector3.h */; };
 		5DD14AE71D953FE100CCA9F0 /* TestSphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */; };
+		C5425AE991395B7D4DAF365E /* TestSphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 6440C33A8B164953ACC6AB82 /* TestSphericalExponentialMap.h */; };
 		5DD14AE81D953FE100CCA9F0 /* TestRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C41BAB37AB0000B274 /* TestRandom.h */; };
 		5DD14AE91D953FE100CCA9F0 /* TestVector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2CA1BAB37AB0000B274 /* TestVector2.h */; };
 		5DD14AEA1D953FE100CCA9F0 /* TestQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD2BA2E1D660AE50062D5BF /* TestQuaternion.h */; };
@@ -316,6 +322,7 @@
 		C0E9B1431DACEF1400895C4B /* TestBox3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2801BAB379B0000B274 /* TestBox3.cpp */; };
 		C0E9B1441DACEF1400895C4B /* TestMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28B1BAB379B0000B274 /* TestMatrix.cpp */; };
 		C0E9B1451DACEF1400895C4B /* TestSphere3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */; };
+		0EA2F74AF6F76D84841D6C9C /* TestSphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CF27DDD4E49C892EAD22C10 /* TestSphericalExponentialMap.cpp */; };
 		C0E9B1461DACEF1400895C4B /* TestLookup2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2891BAB379B0000B274 /* TestLookup2.cpp */; };
 		C0E9B1471DACEF1400895C4B /* TestRotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A28F1BAB379B0000B274 /* TestRotation.cpp */; };
 		C0E9B1481DACEF1400895C4B /* TestVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2951BAB379B0000B274 /* TestVector3.cpp */; };
@@ -363,6 +370,7 @@
 		C0E9B1741DACEF1400895C4B /* TestStaticMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3E10741CAABB2200EC2283 /* TestStaticMatrix.h */; };
 		C0E9B1751DACEF1400895C4B /* TestVector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2CB1BAB37AB0000B274 /* TestVector3.h */; };
 		C0E9B1761DACEF1400895C4B /* TestSphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */; };
+		10E2178F5A8E5829A3D046C6 /* TestSphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 6440C33A8B164953ACC6AB82 /* TestSphericalExponentialMap.h */; };
 		C0E9B1771DACEF1400895C4B /* TestRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2C41BAB37AB0000B274 /* TestRandom.h */; };
 		C0E9B1781DACEF1400895C4B /* TestVector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2CA1BAB37AB0000B274 /* TestVector2.h */; };
 		C0E9B1791DACEF1400895C4B /* TestQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD2BA2E1D660AE50062D5BF /* TestQuaternion.h */; };
@@ -403,6 +411,7 @@
 		5DB3A28E1BAB379B0000B274 /* TestRandom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestRandom.cpp; path = ../../../../../../impl/ocean/test/testmath/TestRandom.cpp; sourceTree = "<group>"; };
 		5DB3A28F1BAB379B0000B274 /* TestRotation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestRotation.cpp; path = ../../../../../../impl/ocean/test/testmath/TestRotation.cpp; sourceTree = "<group>"; };
 		5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSphere3.cpp; path = ../../../../../../impl/ocean/test/testmath/TestSphere3.cpp; sourceTree = "<group>"; };
+		2CF27DDD4E49C892EAD22C10 /* TestSphericalExponentialMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSphericalExponentialMap.cpp; path = ../../../../../../impl/ocean/test/testmath/TestSphericalExponentialMap.cpp; sourceTree = "<group>"; };
 		5DB3A2911BAB379B0000B274 /* TestSquareMatrix2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSquareMatrix2.cpp; path = ../../../../../../impl/ocean/test/testmath/TestSquareMatrix2.cpp; sourceTree = "<group>"; };
 		5DB3A2921BAB379B0000B274 /* TestSquareMatrix3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSquareMatrix3.cpp; path = ../../../../../../impl/ocean/test/testmath/TestSquareMatrix3.cpp; sourceTree = "<group>"; };
 		5DB3A2931BAB379B0000B274 /* TestSquareMatrix4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSquareMatrix4.cpp; path = ../../../../../../impl/ocean/test/testmath/TestSquareMatrix4.cpp; sourceTree = "<group>"; };
@@ -430,6 +439,7 @@
 		5DB3A2C41BAB37AB0000B274 /* TestRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestRandom.h; path = ../../../../../../impl/ocean/test/testmath/TestRandom.h; sourceTree = "<group>"; };
 		5DB3A2C51BAB37AB0000B274 /* TestRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestRotation.h; path = ../../../../../../impl/ocean/test/testmath/TestRotation.h; sourceTree = "<group>"; };
 		5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSphere3.h; path = ../../../../../../impl/ocean/test/testmath/TestSphere3.h; sourceTree = "<group>"; };
+		6440C33A8B164953ACC6AB82 /* TestSphericalExponentialMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSphericalExponentialMap.h; path = ../../../../../../impl/ocean/test/testmath/TestSphericalExponentialMap.h; sourceTree = "<group>"; };
 		5DB3A2C71BAB37AB0000B274 /* TestSquareMatrix2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSquareMatrix2.h; path = ../../../../../../impl/ocean/test/testmath/TestSquareMatrix2.h; sourceTree = "<group>"; };
 		5DB3A2C81BAB37AB0000B274 /* TestSquareMatrix3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSquareMatrix3.h; path = ../../../../../../impl/ocean/test/testmath/TestSquareMatrix3.h; sourceTree = "<group>"; };
 		5DB3A2C91BAB37AB0000B274 /* TestSquareMatrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSquareMatrix4.h; path = ../../../../../../impl/ocean/test/testmath/TestSquareMatrix4.h; sourceTree = "<group>"; };
@@ -548,6 +558,7 @@
 				C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */,
 				C0F6E5CD1E1E92AB00F90052 /* TestSparseMatrix.h */,
 				5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */,
+				6440C33A8B164953ACC6AB82 /* TestSphericalExponentialMap.h */,
 				5DB3A2C71BAB37AB0000B274 /* TestSquareMatrix2.h */,
 				5DB3A2C81BAB37AB0000B274 /* TestSquareMatrix3.h */,
 				5DB3A2C91BAB37AB0000B274 /* TestSquareMatrix4.h */,
@@ -621,6 +632,7 @@
 				C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */,
 				C0F6E5CF1E1E92BD00F90052 /* TestSparseMatrix.cpp */,
 				5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */,
+				2CF27DDD4E49C892EAD22C10 /* TestSphericalExponentialMap.cpp */,
 				5DB3A2911BAB379B0000B274 /* TestSquareMatrix2.cpp */,
 				5DB3A2921BAB379B0000B274 /* TestSquareMatrix3.cpp */,
 				5DB3A2931BAB379B0000B274 /* TestSquareMatrix4.cpp */,
@@ -682,6 +694,7 @@
 				5D3E10761CAABB2200EC2283 /* TestStaticMatrix.h in Headers */,
 				5D9370DE1BC6D19C0046ACD4 /* TestVector3.h in Headers */,
 				5D9370DF1BC6D19C0046ACD4 /* TestSphere3.h in Headers */,
+				6F41C19F0A76366A604767BE /* TestSphericalExponentialMap.h in Headers */,
 				5D9370E01BC6D19C0046ACD4 /* TestRandom.h in Headers */,
 				5D9370E11BC6D19C0046ACD4 /* TestVector2.h in Headers */,
 				5DD2BA301D660AE50062D5BF /* TestQuaternion.h in Headers */,
@@ -735,6 +748,7 @@
 				5D3E10751CAABB2200EC2283 /* TestStaticMatrix.h in Headers */,
 				5DB3A2E61BAB37AB0000B274 /* TestVector3.h in Headers */,
 				5DB3A2E11BAB37AB0000B274 /* TestSphere3.h in Headers */,
+				B7FE7D0E4A8F6F0E5BB1BDC1 /* TestSphericalExponentialMap.h in Headers */,
 				5DB3A2DF1BAB37AB0000B274 /* TestRandom.h in Headers */,
 				5DB3A2E51BAB37AB0000B274 /* TestVector2.h in Headers */,
 				5DD2BA2F1D660AE50062D5BF /* TestQuaternion.h in Headers */,
@@ -788,6 +802,7 @@
 				5DD14AE51D953FE100CCA9F0 /* TestStaticMatrix.h in Headers */,
 				5DD14AE61D953FE100CCA9F0 /* TestVector3.h in Headers */,
 				5DD14AE71D953FE100CCA9F0 /* TestSphere3.h in Headers */,
+				C5425AE991395B7D4DAF365E /* TestSphericalExponentialMap.h in Headers */,
 				5DD14AE81D953FE100CCA9F0 /* TestRandom.h in Headers */,
 				5DD14AE91D953FE100CCA9F0 /* TestVector2.h in Headers */,
 				5DD14AEA1D953FE100CCA9F0 /* TestQuaternion.h in Headers */,
@@ -841,6 +856,7 @@
 				C0E9B1741DACEF1400895C4B /* TestStaticMatrix.h in Headers */,
 				C0E9B1751DACEF1400895C4B /* TestVector3.h in Headers */,
 				C0E9B1761DACEF1400895C4B /* TestSphere3.h in Headers */,
+				10E2178F5A8E5829A3D046C6 /* TestSphericalExponentialMap.h in Headers */,
 				C0E9B1771DACEF1400895C4B /* TestRandom.h in Headers */,
 				C0E9B1781DACEF1400895C4B /* TestVector2.h in Headers */,
 				C0E9B1791DACEF1400895C4B /* TestQuaternion.h in Headers */,
@@ -1025,6 +1041,7 @@
 				5D9370B21BC6D19C0046ACD4 /* TestBox3.cpp in Sources */,
 				5D9370B31BC6D19C0046ACD4 /* TestMatrix.cpp in Sources */,
 				5D9370B41BC6D19C0046ACD4 /* TestSphere3.cpp in Sources */,
+				A71AA47AF760CDF5B44627DE /* TestSphericalExponentialMap.cpp in Sources */,
 				5D9370B51BC6D19C0046ACD4 /* TestLookup2.cpp in Sources */,
 				938A38A1276EB2EB00DC5251 /* TestRGBAColor.cpp in Sources */,
 				5D9370B61BC6D19C0046ACD4 /* TestRotation.cpp in Sources */,
@@ -1078,6 +1095,7 @@
 				5DB3A29B1BAB379B0000B274 /* TestBox3.cpp in Sources */,
 				5DB3A2A61BAB379B0000B274 /* TestMatrix.cpp in Sources */,
 				5DB3A2AB1BAB379B0000B274 /* TestSphere3.cpp in Sources */,
+				BB3804CA47CBBBB137D6CAB1 /* TestSphericalExponentialMap.cpp in Sources */,
 				5DB3A2A41BAB379B0000B274 /* TestLookup2.cpp in Sources */,
 				938A38A0276EB2EB00DC5251 /* TestRGBAColor.cpp in Sources */,
 				5DB3A2AA1BAB379B0000B274 /* TestRotation.cpp in Sources */,
@@ -1131,6 +1149,7 @@
 				5DD14AB41D953FE100CCA9F0 /* TestBox3.cpp in Sources */,
 				5DD14AB51D953FE100CCA9F0 /* TestMatrix.cpp in Sources */,
 				5DD14AB61D953FE100CCA9F0 /* TestSphere3.cpp in Sources */,
+				BEB49BAE79690462AF1B2424 /* TestSphericalExponentialMap.cpp in Sources */,
 				5DD14AB71D953FE100CCA9F0 /* TestLookup2.cpp in Sources */,
 				938A38A2276EB2EB00DC5251 /* TestRGBAColor.cpp in Sources */,
 				5DD14AB81D953FE100CCA9F0 /* TestRotation.cpp in Sources */,
@@ -1184,6 +1203,7 @@
 				C0E9B1431DACEF1400895C4B /* TestBox3.cpp in Sources */,
 				C0E9B1441DACEF1400895C4B /* TestMatrix.cpp in Sources */,
 				C0E9B1451DACEF1400895C4B /* TestSphere3.cpp in Sources */,
+				0EA2F74AF6F76D84841D6C9C /* TestSphericalExponentialMap.cpp in Sources */,
 				C0E9B1461DACEF1400895C4B /* TestLookup2.cpp in Sources */,
 				938A38A3276EB2EB00DC5251 /* TestRGBAColor.cpp in Sources */,
 				C0E9B1471DACEF1400895C4B /* TestRotation.cpp in Sources */,

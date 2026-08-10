@@ -43,6 +43,7 @@
 #include "ocean/test/testmath/TestSampleMap.h"
 #include "ocean/test/testmath/TestAutomaticDifferentiation.h"
 #include "ocean/test/testmath/TestSparseMatrix.h"
+#include "ocean/test/testmath/TestSphericalExponentialMap.h"
 #include "ocean/test/testmath/TestSphere3.h"
 #include "ocean/test/testmath/TestSquareMatrix2.h"
 #include "ocean/test/testmath/TestSquareMatrix3.h"
@@ -446,6 +447,15 @@ bool testMath(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		testResult = TestExponentialMap::test(testDuration, subSelector);
+	}
+
+	if (TestSelector subSelector = selector.shouldRun("sphericalexponentialmap"))
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		testResult = TestSphericalExponentialMap::test(testDuration, subSelector);
 	}
 
 	if (TestSelector subSelector = selector.shouldRun("sparsematrix"))
