@@ -549,6 +549,13 @@ int Device::determineIsochronousTransferLayout(libusb_context* usbContext, const
 		{
 			const libusb_endpoint_descriptor& endpointDescriptor = altSetting.endpoint[endpointIndex];
 
+			// a SuperSpeed altsetting can expose several endpoints and each of them carries a companion descriptor, so the address has to be checked for both variants below
+
+			if (endpointDescriptor.bEndpointAddress != endpointAddress)
+			{
+				continue;
+			}
+
 			libusb_ss_endpoint_companion_descriptor* endpointCompanionDescriptor = nullptr;
 			if (libusb_get_ss_endpoint_companion_descriptor(usbContext, &endpointDescriptor, &endpointCompanionDescriptor) == LIBUSB_SUCCESS)
 			{
@@ -559,22 +566,20 @@ int Device::determineIsochronousTransferLayout(libusb_context* usbContext, const
 			}
 			else
 			{
-				if (endpointDescriptor.bEndpointAddress == endpointAddress)
-				{
-					const uint16_t wMaxPacketSize = endpointDescriptor.wMaxPacketSize;
-					ocean_assert((wMaxPacketSize & 0xE000u) == 0u); // the upper 3 bits should always be zero, otherwise we may have USB 3.0
+				const uint16_t wMaxPacketSize = endpointDescriptor.wMaxPacketSize;
+				ocean_assert((wMaxPacketSize & 0xE000u) == 0u); // the upper 3 bits should always be zero, otherwise we may have USB 3.0
 
-					const uint16_t sizePerTransaction = wMaxPacketSize & 0x7FFu; // the lower 11 bits provide the actual size of the transaction
+				const uint16_t sizePerTransaction = wMaxPacketSize & 0x7FFu; // the lower 11 bits provide the actual size of the transaction
 
-					const uint16_t additionalTransactions = (wMaxPacketSize >> 11u) & 0b11u; // the next two bytes give the number of additional transactions
-					ocean_assert(additionalTransactions <= 2u);
+				const uint16_t additionalTransactions = (wMaxPacketSize >> 11u) & 0b11u; // the next two bytes give the number of additional transactions
+				ocean_assert(additionalTransactions <= 2u);
 
-					const uint16_t overallTransactions = additionalTransactions + 1u;
+				const uint16_t overallTransactions = additionalTransactions + 1u;
 
-					endpointPacketSize = uint32_t(sizePerTransaction) * uint32_t(overallTransactions);
-					break;
-				}
+				endpointPacketSize = uint32_t(sizePerTransaction) * uint32_t(overallTransactions);
 			}
+
+			break;
 		}
 
 		if (endpointPacketSize >= maxPayloadTransferSize)
